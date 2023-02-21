@@ -10,12 +10,10 @@ Author :  Allister Hamilton
 Mail : allister.hamilton @mds.ac.nz
 **************************************************************************/
 
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
@@ -30,7 +28,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public bool QuitGameBool;
     public bool BackBool;
     public bool MenuBool;
-
+    [Space(10)] //creates a gap in the inspector
     public bool SpeedBool;
 
     void Start()
@@ -38,18 +36,21 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         //this finds all images in the button and makes sure only the top is raycastable so the button clicks properly
         List<Image> ImageList = GameManager.FindComponent<Image>(transform);
 
+        //change the childs to not be raycastable so it doesnt interfare with this
         for (int i = 0; i < ImageList.Count; i++)
         {
             ImageList[i].raycastTarget = i == 0;
         }
     }
 
+    //checks to see if the pointer has exited the button
     public void OnPointerExit(PointerEventData eventData)
     {
         ChangeSizeVoid(1f);
         ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
     }
 
+    //checks to see if the pointer has entered the button
     public void OnPointerEnter(PointerEventData eventData)
     {
         GameManager.global.SoundManager.PlaySound(GameManager.global.HoverAudioClip);
@@ -57,12 +58,14 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         ChangeColourVoid(Color.white);
     }
 
+    //checks to see if the mouse was clicked ontop of the button
     public void OnPointerDown(PointerEventData eventData)
     {
         GameManager.global.SoundManager.PlaySound(GameManager.global.ClickAudioClip);
         ChangeSizeVoid(0.9f);
     }
 
+    //checks to see if the mouse was let go ontop of the button
     public void OnPointerClick(PointerEventData eventData)
     {
         OnPointerEnter(eventData);
@@ -71,19 +74,15 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         {
             Application.Quit();
         }
+
         if (PlayGameBool)
         {
-            // GameManager.global.SoundManager.PlaySound(GameManager.global.GameStart);
-            // GameManager.global.MusicManager.StopSelectedSound(GameManager.global.MenuMusic);
-
             GameManager.global.NextScene(1);
-            // PlayerPrefs.SetInt("Skip Introduction")
         }
 
         if (SpeedBool)
         {
             Time.timeScale = Time.timeScale == 2 ? 1 : 2;
-            // Debug.Log(transform.GetChild(0).GetComponent<TextMeshPro>());
             GetComponent<Image>().color = Time.timeScale == 2 ? Color.red : Color.white;
             transform.GetChild(0).GetComponent<TMP_Text>().text = Time.timeScale == 2 ? ">>" : ">";
         }
@@ -96,7 +95,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         if (RestartBool)
         {
             Time.timeScale = 1f;
-            //Debug.Log(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
             GameManager.global.NextScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
         }
 
@@ -108,9 +106,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         if (MenuBool)
         {
             Time.timeScale = 1f;
-            //   GameManager.global.MusicManager.StopSelectedSound(GameManager.global.GameMusic);
-
-
             GameManager.global.NextScene(0);
         }
     }
@@ -121,6 +116,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         transform.localScale = new Vector3(shrinkFloat, shrinkFloat, shrinkFloat);
     }
 
+    //change the color when its clicked for more visual feedback
     void ChangeColourVoid(Color _color)
     {
         GetComponent<Image>().color = _color;
