@@ -165,17 +165,11 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < layerNameArray.Length; i++)
         {
+            //bit shifting layers
             layerMaskInt = layerMaskInt | 1 << LayerMask.NameToLayer(layerNameArray[i]);
         }
 
         return layerMaskInt;
-    }
-
-    //makes a smooth scene transition
-    public void NextScene(int index)
-    {
-        StartCoroutine(ChangeSceneIEnumerator(index));
-
     }
 
     //this function manages the anim component and plays / reverses anim
@@ -220,13 +214,7 @@ public class GameManager : MonoBehaviour
         return new AnimationState(); //something default, will likely return error that needs to be corrected anyways
     }
 
-    public void CameraEnableVoid(Camera cameraEnable, bool enabled)
-    {
-
-        cameraEnable.enabled = true;
-        cameraEnable.GetComponent<AudioListener>().enabled = enabled;
-    }
-
+    //changes all layers of an animation so multiple can play at the same time
     public static void ChangeAnimationLayers(Animation animation)
     {
         if (animation)
@@ -242,34 +230,32 @@ public class GameManager : MonoBehaviour
     }
 
 
+    //makes a smooth scene transition
+    public void NextScene(int index)
+    {
+        //run a coroutine by calling it in GameManager ensures that if the object wont be destroyed and break the coroutine
+        StartCoroutine(ChangeSceneIEnumerator(index));
+
+    }
+
     //waits for loading animation to complete
     public IEnumerator ChangeSceneIEnumerator(int index)
     {
         AnimationState state = PlayAnimation(GetComponent<Animation>(), "Load In");
 
-        //  SoundManager.PlaySound(GameManager.global.LoadingSound);
-
-
-        /*
-        yield return new WaitUntil(() => menuBool ? MainMenu.global : SceneMechanics.global);
-
-        Camera sceneCamera = menuBool ? MainMenu.global.SceneCamera : SceneMechanics.global.SceneCamera;
-        Camera oppositeCamera = !menuBool ? MainMenu.global.SceneCamera : SceneMechanics.global.SceneCamera;
-
-        CameraEnableVoid(sceneCamera, true);
-        CameraEnableVoid(oppositeCamera, false);
-
-        PlayAnimation(sceneCamera.GetComponent<Animation>(), "Fade To");
-        PlayAnimation(oppositeCamera.GetComponent<Animation>(), "Fade From");
-                SceneManager.LoadScene(menuBool ? 0 : 1, LoadSceneMode.Additive);
-
-
-        */
+        //switches between music
         GameManager.global.MusicManager.PlayMusic(index == 2 ? GameManager.global.GameMusic : GameManager.global.MenuMusic);
 
+        //wait until the animation is done
         yield return new WaitUntil(() => !state.enabled);
+
+        //gets the scene index and loads it async
         AsyncOperation operation = SceneManager.LoadSceneAsync(index);
+
+        //wait until the scene has finished loading
         yield return new WaitUntil(() => operation.isDone);
+
+        //play the outro loading animation
         state = PlayAnimation(GetComponent<Animation>(), "Load Out");
     }
 }

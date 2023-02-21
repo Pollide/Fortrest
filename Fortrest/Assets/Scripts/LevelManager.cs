@@ -20,8 +20,6 @@ public class LevelManager : MonoBehaviour
     RaycastHit BuildingHit;
 
     Vector3 lastPanPosition;
-    Vector3 FirstPoint;
-    Vector3 SecondPoint;
     bool OnceDetection;
 
     public List<Transform> TargetsList = new List<Transform>();
@@ -57,11 +55,12 @@ public class LevelManager : MonoBehaviour
         {
             if (BuildingHit.transform || !EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject == null)
             {
-                Vector3 cameraPositionVector = new Vector3((float)System.Math.Round(SceneCamera.transform.position.x, 2), (float)System.Math.Round(SceneCamera.transform.position.y, 2), (float)System.Math.Round(SceneCamera.transform.position.z, 2));
+                // Vector3 cameraPositionVector = SceneCamera.ScreenPointToRay(Input.mousePosition).p;
 
-                if (BuildingHit.transform || Physics.Raycast(SceneCamera.ScreenPointToRay(Input.mousePosition), out BuildingHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Building" })))
+                if (Physics.Raycast(SceneCamera.ScreenPointToRay(Input.mousePosition), out BuildingHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Building" })))
                 {
-                    BuildingHit.transform.position = new Vector3(BuildingHit.point.x, BuildingHit.transform.position.y, BuildingHit.point.z); //move building to mouse position
+                    //  BuildingHit.transform.position = new Vector3(BuildingHit.point.x, BuildingHit.transform.position.y, BuildingHit.point.z); //move building to mouse position
+                    //  BuildingHit.transform.GetComponent<Building>().DragBuildingVoid(                                                                                                                     // CurrentUnitSelected.transform.parent.position = new Vector3(Input.mousePosition.x, 0f, Input.mousePosition.z); //Position
                 }
             }
         }

@@ -17,11 +17,12 @@ using UnityEngine;
 public class Menu : MonoBehaviour
 {
     public static Menu global;
+
     public GameObject OptionsCanvas;
     public GameObject MenuCanvas;
 
     private void Awake()
     {
-        global = this;
+        global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
     }
 }

@@ -16,6 +16,11 @@ using UnityEngine;
 
 public class Building : MonoBehaviour
 {
+
+    Vector3 PreviousPos;
+    Vector3 screenPoint;
+    Vector3 offset;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,5 +42,25 @@ public class Building : MonoBehaviour
         LevelManager.global.TargetsList.Add(transform);
     }
 
+    public void OnMouseDown()
+    {
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(0))
+        {
+            PreviousPos = transform.position;
+            screenPoint = Camera.main.WorldToScreenPoint(PreviousPos);
+            offset = PreviousPos - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+        }
+    }
+    public void OnMouseDrag()
+    {
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+        {
+            Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
+            Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
+            curPosition = new Vector3(Mathf.Round(curPosition.x), transform.position.y, Mathf.Round(curPosition.z));
+            transform.position = curPosition;
 
+            PreviousPos = transform.position;
+        }
+    }
 }
