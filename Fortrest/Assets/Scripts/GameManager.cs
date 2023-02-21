@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
 
             if (PlayerPrefs.GetInt("Quick Load") > 0)
             {
+                PlayAnimation(GetComponent<Animation>(), "Load In", true, true);
                 PlayerPrefs.SetInt("Quick Load", 0);
                 NextScene(quickLoadInt);
             }

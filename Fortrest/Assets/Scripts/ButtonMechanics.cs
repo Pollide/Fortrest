@@ -16,6 +16,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -30,6 +31,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public bool BackBool;
     public bool MenuBool;
 
+    public bool SpeedBool;
 
     void Start()
     {
@@ -77,6 +79,15 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             GameManager.global.NextScene(1);
             // PlayerPrefs.SetInt("Skip Introduction")
         }
+
+        if (SpeedBool)
+        {
+            Time.timeScale = Time.timeScale == 2 ? 1 : 2;
+            // Debug.Log(transform.GetChild(0).GetComponent<TextMeshPro>());
+            GetComponent<Image>().color = Time.timeScale == 2 ? Color.red : Color.white;
+            transform.GetChild(0).GetComponent<TMP_Text>().text = Time.timeScale == 2 ? ">>" : ">";
+        }
+
         if (OptionsBool)
         {
             Menu.global.OptionsCanvas.SetActive(true);
