@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 public class LevelManager : MonoBehaviour
 {
@@ -16,14 +17,14 @@ public class LevelManager : MonoBehaviour
     public float[] BoundsX = new float[] { -10f, 5f };
     public float[] BoundsZ = new float[] { -18f, -4f };
     public float[] ZoomBounds = new float[] { 10f, 85f };
+    RaycastHit BuildingHit;
 
     Vector3 lastPanPosition;
     Vector3 FirstPoint;
     Vector3 SecondPoint;
-
-    float yAngle;
-    float yAngleTemp;
     bool OnceDetection;
+
+    public List<Transform> TargetsList = new List<Transform>();
 
     private void Awake()
     {
@@ -47,26 +48,28 @@ public class LevelManager : MonoBehaviour
 
         HandleMouse();
 
-        if (Input.touchCount > 0)
-        {
-            if (Input.GetTouch(0).phase == TouchPhase.Began)
-            {
-                FirstPoint = Input.GetTouch(0).position;
-
-                yAngleTemp = yAngle;
-            }
-            if (Input.GetTouch(0).phase == TouchPhase.Moved)
-            {
-                SecondPoint = Input.GetTouch(0).position;
-
-                yAngle = yAngleTemp + (SecondPoint.y - FirstPoint.y) * 90 / Screen.height;
-                SceneCamera.transform.rotation = Quaternion.Euler(yAngle, 0.0f, 0.0f);
-            }
-        }
-
-        PanSpeed = SceneCamera.orthographicSize / 2.5f;
+        HandleBuildingVoid();
     }
 
+    void HandleBuildingVoid()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            if (BuildingHit.transform || !EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject == null)
+            {
+                Vector3 cameraPositionVector = new Vector3((float)System.Math.Round(SceneCamera.transform.position.x, 2), (float)System.Math.Round(SceneCamera.transform.position.y, 2), (float)System.Math.Round(SceneCamera.transform.position.z, 2));
+
+                if (BuildingHit.transform || Physics.Raycast(SceneCamera.ScreenPointToRay(Input.mousePosition), out BuildingHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Building" })))
+                {
+                    BuildingHit.transform.position = new Vector3(BuildingHit.point.x, BuildingHit.transform.position.y, BuildingHit.point.z); //move building to mouse position
+                }
+            }
+        }
+        else
+        {
+            BuildingHit = new RaycastHit();
+        }
+    }
     void HandleMouse()
     {
         // On mouse down, capture it's position.
@@ -90,18 +93,13 @@ public class LevelManager : MonoBehaviour
         {
             scroll = 0.1f;
         }
-        ZoomCamera(scroll, ZoomSpeedMouse);
-    }
 
-
-    void ZoomCamera(float offset, float speed)
-    {
-        if (offset == 0)
+        if (scroll != 0)
         {
-            return;
+            SceneCamera.orthographicSize = Mathf.Clamp(SceneCamera.orthographicSize - (scroll * ZoomSpeedMouse), ZoomBounds[0], ZoomBounds[1]);
         }
 
-        SceneCamera.orthographicSize = Mathf.Clamp(SceneCamera.orthographicSize - (offset * speed), ZoomBounds[0], ZoomBounds[1]);
+        PanSpeed = SceneCamera.orthographicSize / 2.5f;
     }
 
     void PanCamera(Vector3 newPanPosition)

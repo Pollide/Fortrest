@@ -19,89 +19,62 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager global; //can be accessed anywhere
 
-    public SFXManager SoundManager;
-    public SFXManager MusicManager;
+    public SFXManager SoundManager; //manages all sound effects
+    public SFXManager MusicManager; //manages all music
 
-    public AudioClip MenuMusic;
-    public AudioClip GameMusic;
-    public AudioClip PauseMusic;
+    public AudioClip MenuMusic; //the music that plays in the menu scene
+    public AudioClip GameMusic;  //the music that plays in the game scene
+    public AudioClip PauseMusic;  //the music that plays when paused
 
-    public AudioClip Click;
-    public AudioClip HoverClick;
+    public AudioClip ClickAudioClip; //the sfx that plays when the mouse presses a button
+    public AudioClip HoverAudioClip; //the sfx that plays when the mouse hovers over a button
 
+    //runs on the frame it was awake on
     void Awake()
     {
+        //checks if itself exists, as they can only be one
         if (global)
         {
+            //destroys the duplicate
             Destroy(gameObject);
         }
         else
         {
+            //itself doesnt exist so set it
             global = this;
-            DontDestroyOnLoad(gameObject);
-            GameManager.global.MusicManager.PlayMusic(MenuMusic);
-            if (PlayerPrefs.GetInt("Game Started") == 0)
-            {
-                PlayerPrefs.SetInt("Game Started", 1);
 
-                PlayerPrefs.SetFloat("Music", 0.65f);
-                PlayerPrefs.SetFloat("Sound", 0.9f);
-                PlayerPrefs.SetInt("Level Unlocked" + 1, 1);
+            //keeps it between scenes
+            DontDestroyOnLoad(gameObject);
+
+            //plays the menu music
+            GameManager.global.MusicManager.PlayMusic(MenuMusic);
+
+            //this checks if it is the first time playing the game. It wont run again
+            if (PlayerPrefs.GetInt("First Time") == 0)
+            {
+                PlayerPrefs.SetInt("First Time", 1);
+
+                PlayerPrefs.SetFloat("Music", 0.65f); //sets the music level
+                PlayerPrefs.SetFloat("Sound", 0.9f); //sets the sound volume
             }
+
+            //quick load is an editor feature that I added to help other peers when testing projects.
+            //Basically when your in another scene, the pref will save then redirect to the menu scene.
+            //Then will check the saved pref and redirect you back to the scene you were in. The reason this is done
+            //is to get the GameManager into the game scene, as it exists in the menu scene to begin with.
 
             int quickLoadInt = PlayerPrefs.GetInt("Quick Load");
 
             if (PlayerPrefs.GetInt("Quick Load") > 0)
             {
-                PlayAnimation(GetComponent<Animation>(), "Load In", true, true);
-                PlayerPrefs.SetInt("Quick Load", 0);
-                NextScene(quickLoadInt);
+                PlayAnimation(GetComponent<Animation>(), "Load In", true, true); //forces the load animation to start on
+                PlayerPrefs.SetInt("Quick Load", 0); //now set it to zero as no need for the feature to exist until next time a peer runs another scene
+                NextScene(quickLoadInt); //go to that next scene
             }
         }
     }
 
-    public static Vector3 ColorToVector(Color color)
-    {
-        return new Vector3(color.r, color.g, color.b);
-    }
-
-    public static bool VectorCompare(Vector3 leftVector, Vector3 rightVector, bool larger, bool smaller, float closeFloat = 0.01f)
-    {
-        bool xBool = ValueCompare(leftVector.x, rightVector.x, larger, smaller, closeFloat);
-        bool yBool = ValueCompare(leftVector.y, rightVector.y, larger, smaller, closeFloat);
-        bool zBool = ValueCompare(leftVector.z, rightVector.z, larger, smaller, closeFloat);
-
-        return xBool && yBool && zBool;
-    }
-
-
-    public static bool ValueCompare(float left, float right, bool larger, bool smaller = false, float closeFloat = 0.01f)
-    {
-        //	Debug.Log(left + " - " + closeFloat + " <= " + right + " --- " + (left - closeFloat <= right));
-
-        //checks opposite, if smaller is false, then it assumes larger is active.
-
-        //      not smaller  so  larger                                  not larger   so   smaller
-
-        bool overBool = left + closeFloat >= right;
-        bool underBool = left - closeFloat <= right;
-
-        bool returnBool = true;
-
-        if (larger)
-        {
-            returnBool = returnBool && overBool;
-        }
-
-        if (smaller || !larger)
-        {
-            returnBool = returnBool && underBool;
-        }
-
-        return returnBool;
-    }
-
-
+    //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
     {
         //will run this once or if i = -1
@@ -129,7 +102,7 @@ public class GameManager : MonoBehaviour
                 {
                     //sets the valueInt to the max as it went below the min
                     valueInt = minValue + (valueInt - maxValue) - 1;
-                    i = -1;
+                    i = -1; //setting i as -1 means that the next loop will ++ and make it i = 0, which is default
                 }
                 else
                 {
@@ -146,21 +119,29 @@ public class GameManager : MonoBehaviour
     //searches through childs infinetly and finds the component requested (T is not assigned until the function is called)
     public static List<T> FindComponent<T>(Transform searching, List<T> componentList = default) where T : Component //T is generic type
     {
+        //if component list is default, then it will create one
         if (componentList == default)
         {
             componentList = new List<T>();
-            Component componentParent = searching.GetComponent(typeof(T));
-            if (componentParent)
+            Component componentParent = searching.GetComponent(typeof(T)); //T is a generic type variable which can be anything. This makes it very robust with handling multiple components
+            
+            if (componentParent) //checks if the parent has the component, then add it. Adding the parent helps with continuity.
             {
-                componentList.Add((T)componentParent);
+                componentList.Add((T)componentParent);//to add it to the list, must convert Component to T by calling (T)
             }
         }
 
+        //for loop runs through all children of the 'searching' parent
         for (int i = 0; i < searching.childCount; i++)
         {
+            //the child that is actively being searched
             Transform searched = searching.GetChild(i); //active transfoorm
+
+            //if the child has more children, then it will 
             if (searched.childCount > 0)
                 componentList = FindComponent(searching.GetChild(i), componentList); //next depth  
+          
+            //found the component
             Component captured = searched.GetComponent(typeof(T));
             if (captured)
             {
@@ -174,9 +155,10 @@ public class GameManager : MonoBehaviour
     //unity uses bit shifting to properly detect what layers should be masked, if the array is null, it will only see the "Default" layer.
     public static int ReturnBitShift(string[] layerNameArray = null)
     {
+        //array
         if (layerNameArray == null)
         {
-            layerNameArray = new string[] { "Default" };
+            layerNameArray = new string[] { "Default" }; 
         }
 
         int layerMaskInt = 0;
