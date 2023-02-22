@@ -16,14 +16,22 @@ using UnityEngine;
 
 public class Building : MonoBehaviour
 {
+    public static Building global;
 
     Vector3 PreviousPos;
     Vector3 screenPoint;
     Vector3 offset;
 
+    void Awake()
+    {
+        global = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        LevelManager.global.buildingList.Add(transform);
+
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.isKinematic = true; //prevents any forces acting upon it

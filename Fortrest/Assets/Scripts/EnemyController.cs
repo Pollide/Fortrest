@@ -9,48 +9,91 @@ public class EnemyController : MonoBehaviour
 
     NavMeshAgent agent; // Nav mesh agent component
     Transform bestTarget; // Target that the enemy will go towards
-    public List<Transform> targetsList; // List of possible targets for the enemy
+    public bool chasing; // Enemy chases the player mode
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
+        PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
     }
 
     void Update()
     {
-        // float distance = Vector3.Distance(target.position, transform.position);
+        float shortestDistance = 9999; // Assign huge default value
 
-        // if (distance <= lookRadius)
-        // {
-        //     agent.SetDestination(target.position);
-        // }
-
-        float shortestDistance = 9999; // Assign huge value
-
-        if (!bestTarget) // If the enemy does not have a current target
+        if (LevelManager.global.buildingList.Count == 0) // Enemies will chase the player if no structure is left around
         {
-            for (int i = 0; i < targetsList.Count; i++) // Goes through the list of targets
-            {
-                float compare = Vector3.Distance(transform.position, targetsList[i].transform.position); // Distance from enemy to each target
+            chasing = true;
+        }
 
-                if (compare < shortestDistance) // Only true if a new shorter distance is found
+        if (chasing)
+        {
+            bestTarget = GameObject.FindGameObjectWithTag("Player").transform; // TEMPORARY EASY CODE
+
+            if (LevelManager.global.buildingList.Count != 0) // If there are still targets other than the player
+            {
+                Invoke("ChasePlayerTimer", 5.0f); // Enemy stops chasing the player after 5s
+
+                float chaseDistance = Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position); // TEMPORARY EASY CODE
+
+                if (chaseDistance >= 10.0f) // Enemy stops chasing when the player gets too far
                 {
-                    shortestDistance = compare; // New shortest distance is assigned
-                    bestTarget = targetsList[i].transform; // Enemy's target is now the closest item in the list
+                    bestTarget = null;
+                    chasing = false;
+                }
+            }
+            
+            agent.SetDestination(bestTarget.position); // Makes the AI move
+
+            if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.3f) // Checks if enemy reached target
+            {
+                FaceTarget();
+            }
+        }
+        else
+        {
+            if (!bestTarget) // If the enemy does not have a current target
+            {
+                for (int i = 0; i < LevelManager.global.buildingList.Count; i++) // Goes through the list of targets
+                {
+                    if (LevelManager.global.buildingList[i] != null)
+                    {
+                        float compare = Vector3.Distance(transform.position, LevelManager.global.buildingList[i].transform.position); // Distance from enemy to each target
+
+                        if (compare < shortestDistance) // Only true if a new shorter distance is found
+                        {
+                            shortestDistance = compare; // New shortest distance is assigned
+                            bestTarget = LevelManager.global.buildingList[i].transform; // Enemy's target is now the closest item in the list
+                        }
+                    }
+                }
+            }
+
+            else
+            {
+                agent.SetDestination(bestTarget.position); // Sets the nav mesh agent destination
+
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.3f) // Checks if enemy reached target
+                {
+                    //FaceTarget();
+                    LevelManager.global.buildingList.Remove(bestTarget); // Removes target from list
+                    Destroy(bestTarget.gameObject); // Destroys target object
                 }
             }
         }
+    }
 
-        else
-        {
-            agent.SetDestination(bestTarget.position); // Sets the nav mesh agent destination
+    private void FaceTarget() // Making sure the enemy always faces what it is attacking
+    {
+        Vector3 direction = (bestTarget.position - transform.position).normalized; // Gets a direction using a normalized vector
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)); // Obtaining a rotation angle
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5.0f); // Smoothly rotating towards target
+    }
 
-            if (Vector3.Distance(transform.position, bestTarget.position) <= GetComponent<NavMeshAgent>().stoppingDistance + 0.3f) // Checks if enemy reached target
-            {
-                targetsList.Remove(bestTarget); // Removes target from list
-                Destroy(bestTarget.gameObject); // Destroys target object
-            }
-        }
+    private void ChasePlayerTimer()
+    {
+        bestTarget = null;
+        chasing = false;
     }
 
     //private void OnDrawGizmosSelected() // Used to draw gizmos

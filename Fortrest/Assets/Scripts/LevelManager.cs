@@ -23,6 +23,7 @@ public class LevelManager : MonoBehaviour
     bool OnceDetection;
 
     public List<Transform> TargetsList = new List<Transform>();
+    public List<Transform> buildingList = new List<Transform>();
 
     private void Awake()
     {
