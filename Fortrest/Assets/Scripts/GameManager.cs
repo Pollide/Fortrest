@@ -46,6 +46,8 @@ public class GameManager : MonoBehaviour
             //keeps it between scenes
             DontDestroyOnLoad(gameObject);
 
+           // GameObect.
+
             //plays the menu music
             GameManager.global.MusicManager.PlayMusic(MenuMusic);
 
@@ -233,6 +235,11 @@ public class GameManager : MonoBehaviour
     //makes a smooth scene transition
     public void NextScene(int index)
     {
+        if(index >= SceneManager.sceneCountInBuildSettings)
+        {
+            index = 0;
+        }
+
         //run a coroutine by calling it in GameManager ensures that if the object wont be destroyed and break the coroutine
         StartCoroutine(ChangeSceneIEnumerator(index));
 
