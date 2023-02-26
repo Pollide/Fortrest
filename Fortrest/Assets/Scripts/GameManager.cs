@@ -46,9 +46,9 @@ public class GameManager : MonoBehaviour
             //keeps it between scenes
             DontDestroyOnLoad(gameObject);
 
-
-
-            DontDestroyOnLoad(new GameObject().AddComponent<EventSystem>().gameObject);
+            GameObject eventSystemGameObject = new GameObject().AddComponent<EventSystem>().gameObject;
+            eventSystemGameObject.AddComponent<StandaloneInputModule>();
+            DontDestroyOnLoad(eventSystemGameObject);
            
 
             //plays the menu music
