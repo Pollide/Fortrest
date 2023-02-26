@@ -22,6 +22,7 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         playerModes = PlayerModes.ResourceMode;
+
         resourceModeImage.enabled = true;
         buildModeImage.enabled = false;
         combatModeImage.enabled = false;
@@ -35,22 +36,33 @@ public class PlayerModeHandler : MonoBehaviour
             switch (playerModes)
             {
                 case PlayerModes.BuildMode:
+
                     playerModes = PlayerModes.ResourceMode;
+
                     buildModeImage.enabled = false;
                     resourceModeImage.enabled = true;
                     combatModeImage.enabled = false;
+
                     break;
+
                 case PlayerModes.CombatMode:
+
                     playerModes = PlayerModes.BuildMode;
+
                     buildModeImage.enabled = true;
                     resourceModeImage.enabled = false;
                     combatModeImage.enabled = false;
+
                     break;
+
                 case PlayerModes.ResourceMode:
+
                     playerModes = PlayerModes.CombatMode;
+
                     buildModeImage.enabled = false;
                     resourceModeImage.enabled = false;
                     combatModeImage.enabled = true;
+
                     break;
             }
         }

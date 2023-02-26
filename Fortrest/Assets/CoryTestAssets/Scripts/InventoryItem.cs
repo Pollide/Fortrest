@@ -30,16 +30,27 @@ public class InventoryItem : MonoBehaviour
             switch (type)
             {
                 case ItemType.Food:
+
                     inventoryManager.AddFood(1);
+
                     break;
+
                 case ItemType.Wood:
+
                     inventoryManager.AddWood(1);
+
                     break;
+
                 case ItemType.Grass:
+
                     inventoryManager.AddGrass(1);
+
                     break;
+
                 case ItemType.Stone:
+
                     inventoryManager.AddStone(1);
+
                     break;
             }
         }

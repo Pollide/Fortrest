@@ -7,9 +7,13 @@ public class PlayerCharacterController : MonoBehaviour
     // Player Variables
     [Header("Player Variables")]
     public float playerCurrSpeed = 5f;
-    private float playerGrav = -9.81f;
     public float playerGravMultiplier = 3f;
     public float playerJumpHeight = 10f;
+    public float playerEnergy = 100f;
+   
+    private float playerGrav = -9.81f;
+    private float playerVelocity;
+
     CharacterController playerCC;
 
     [Header("Player States")]
@@ -18,8 +22,7 @@ public class PlayerCharacterController : MonoBehaviour
 
     // Variable for movement direction
     private Vector3 moveDirection;
-    private float playerVelocity;
-
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -49,6 +52,7 @@ public class PlayerCharacterController : MonoBehaviour
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
             playerisMoving = true;
+
             moveDirection = new Vector3(_horizontalMove, 0.0f, _verticalMove);
 
             if (moveDirection.magnitude > 1)
