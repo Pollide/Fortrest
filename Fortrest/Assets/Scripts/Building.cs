@@ -57,9 +57,16 @@ public class Building : MonoBehaviour
             PreviousPos = transform.position;
             screenPoint = Camera.main.WorldToScreenPoint(PreviousPos);
             offset = PreviousPos - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
+            LevelManager.global.ActiveBuildingGameObject = gameObject;
         }
     }
-    public void OnMouseDrag()
+
+    public void OnMouseUp()
+    {
+        LevelManager.global.ActiveBuildingGameObject = null;
+    }
+
+        public void OnMouseDrag()
     {
         if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {

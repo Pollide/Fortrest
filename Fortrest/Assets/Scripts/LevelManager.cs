@@ -25,6 +25,8 @@ public class LevelManager : MonoBehaviour
     public List<Transform> TargetsList = new List<Transform>();
     public List<Transform> buildingList = new List<Transform>();
 
+    public GameObject ActiveBuildingGameObject;
+
     private void Awake()
     {
         global = this;
@@ -44,6 +46,9 @@ public class LevelManager : MonoBehaviour
             enabled = false;
             return;
         }
+
+        if (ActiveBuildingGameObject)
+            return;
 
         HandleMouse();
 
