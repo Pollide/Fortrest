@@ -17,13 +17,14 @@ public class LevelManager : MonoBehaviour
     public float[] BoundsX = new float[] { -10f, 5f };
     public float[] BoundsZ = new float[] { -18f, -4f };
     public float[] ZoomBounds = new float[] { 10f, 85f };
-    RaycastHit BuildingHit;
 
     Vector3 lastPanPosition;
     bool OnceDetection;
 
-    public List<Transform> TargetsList = new List<Transform>();
-    public List<Transform> buildingList = new List<Transform>();
+    public List<Transform> EnemyList = new List<Transform>();
+    public List<Transform> BuildingList = new List<Transform>();
+
+    public GameObject ActiveBuildingGameObject;
 
     private void Awake()
     {
@@ -45,30 +46,10 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
+        if (ActiveBuildingGameObject)
+            return;
+
         HandleMouse();
-
-        HandleBuildingVoid();
-    }
-
-    void HandleBuildingVoid()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            if (BuildingHit.transform || !EventSystem.current.IsPointerOverGameObject() && EventSystem.current.currentSelectedGameObject == null)
-            {
-                // Vector3 cameraPositionVector = SceneCamera.ScreenPointToRay(Input.mousePosition).p;
-
-                if (Physics.Raycast(SceneCamera.ScreenPointToRay(Input.mousePosition), out BuildingHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Building" })))
-                {
-                    //  BuildingHit.transform.position = new Vector3(BuildingHit.point.x, BuildingHit.transform.position.y, BuildingHit.point.z); //move building to mouse position
-                    //  BuildingHit.transform.GetComponent<Building>().DragBuildingVoid(                                                                                                                     // CurrentUnitSelected.transform.parent.position = new Vector3(Input.mousePosition.x, 0f, Input.mousePosition.z); //Position
-                }
-            }
-        }
-        else
-        {
-            BuildingHit = new RaycastHit();
-        }
     }
     void HandleMouse()
     {

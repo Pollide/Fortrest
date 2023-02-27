@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 5569601162832024541}
   - component: {fileID: 5569601162832024530}
   - component: {fileID: 5569601162832024542}
-  - component: {fileID: 5569601162832024537}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -115,6 +114,7 @@ MonoBehaviour:
   playerCurrSpeed: 8
   playerGravMultiplier: 2
   playerJumpHeight: 10
+  playerEnergy: 100
   playerCanMove: 1
   playerisMoving: 0
 --- !u!143 &5569601162832024542
@@ -135,22 +135,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5569601162832024537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5569601162832024528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e3a0300095007940b25ee07dba51e04, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerModes: 0
-  buildModeImage: {fileID: 0}
-  resourceModeImage: {fileID: 0}
-  combatModeImage: {fileID: 0}
 --- !u!1 &5569601164179657938
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,55 +164,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5569601162832024531}
-  - {fileID: 8335984588110304613}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8936052646208795330
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8335984588110304613}
-  - component: {fileID: 5111729572939859976}
-  m_Layer: 0
-  m_Name: InventoryManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8335984588110304613
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8936052646208795330}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 103.339935, y: -189.19136, z: 641.32}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5569601164179657949}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5111729572939859976
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8936052646208795330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15a1f0b36e2f48d43972fae321df2baa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wood: 0
-  stone: 0
-  grass: 0
-  food: 0
