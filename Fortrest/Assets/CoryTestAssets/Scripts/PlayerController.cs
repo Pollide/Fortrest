@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerCharacterController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
+    public static PlayerController global;
     // Player Variables
     [Header("Player Variables")]
     public float playerCurrSpeed = 5f;
     public float playerGravMultiplier = 3f;
     public float playerJumpHeight = 10f;
     public float playerEnergy = 100f;
-   
+
     private float playerGrav = -9.81f;
     private float playerVelocity;
 
@@ -22,12 +23,13 @@ public class PlayerCharacterController : MonoBehaviour
 
     // Variable for movement direction
     private Vector3 moveDirection;
-   
+
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         // Get Character controller that is attached to the player
         playerCC = GetComponent<CharacterController>();
+        global = this;
     }
 
     // Update is called once per frame
@@ -39,7 +41,7 @@ public class PlayerCharacterController : MonoBehaviour
             // Local veriables for input keys
             float horizontalMovement = Input.GetAxis("Horizontal");
             float verticalMovement = Input.GetAxis("Vertical");
-           
+
             Jump();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
@@ -101,7 +103,7 @@ public class PlayerCharacterController : MonoBehaviour
         {
             playerVelocity += playerGrav * playerGravMultiplier * Time.deltaTime;
         }
-        
+
         moveDirection.y = playerVelocity;
     }
 }
