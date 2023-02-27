@@ -26,7 +26,7 @@ public class Building : MonoBehaviour
     public enum BuildingType
     {
         Cannon,
-        Tree,
+        Wood,
         Rock,
         Grass,
         Food,
@@ -116,8 +116,8 @@ public class Building : MonoBehaviour
 
     private void GiveResources()
     {
-
-        Instantiate(Resources.Load(resourceObject.ToString() + " Drop"), new Vector3(gameObject.transform.position.x + Random.Range(-1, 1), gameObject.transform.position.y + Random.Range(0, 2), gameObject.transform.position.z + Random.Range(-1, 1)), transform.rotation);
+        Debug.Log(resourceObject.ToString() + " Drop" + " ");
+        Instantiate(Resources.Load(resourceObject.ToString() + " Drop"), new Vector3(transform.position.x + Random.Range(-1, 1), transform.position.y + Random.Range(0, 2), transform.position.z + Random.Range(-1, 1)), transform.rotation);
 
         /*
         switch (resourceObject)
