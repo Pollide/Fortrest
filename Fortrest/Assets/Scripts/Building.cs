@@ -27,7 +27,7 @@ public class Building : MonoBehaviour
     {
         Cannon,
         Wood,
-        Rock,
+        Stone,
         Grass,
         Food,
     }
