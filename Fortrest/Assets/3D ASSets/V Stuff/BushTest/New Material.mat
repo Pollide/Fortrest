@@ -24,6 +24,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: eee1457269720ab4bb7e8851fcb129d7,
     type: 3}
   m_ValidKeywords:
+  - ADDITIONAL_LIGHT_CALCULATE_SHADOWS
   - MAIN_LIGHT_CALCULATE_SHADOWS
   - _ALPHATEST_ON
   - _MAIN_LIGHT_SHADOWS_CASCADE
@@ -150,6 +151,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - ADDITIONAL_LIGHT_CALCULATE_SHADOWS: 1
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
     - _AlphaClip: 1
     - _Blend: 0
