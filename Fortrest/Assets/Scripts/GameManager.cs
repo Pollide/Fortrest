@@ -14,7 +14,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.EventSystems;
 public class GameManager : MonoBehaviour
 {
     public static GameManager global; //can be accessed anywhere
@@ -45,6 +45,11 @@ public class GameManager : MonoBehaviour
 
             //keeps it between scenes
             DontDestroyOnLoad(gameObject);
+
+            GameObject eventSystemGameObject = new GameObject().AddComponent<EventSystem>().gameObject;
+            eventSystemGameObject.AddComponent<StandaloneInputModule>();
+            DontDestroyOnLoad(eventSystemGameObject);
+           
 
             //plays the menu music
             GameManager.global.MusicManager.PlayMusic(MenuMusic);
@@ -233,6 +238,11 @@ public class GameManager : MonoBehaviour
     //makes a smooth scene transition
     public void NextScene(int index)
     {
+        if(index >= SceneManager.sceneCountInBuildSettings)
+        {
+            index = 0;
+        }
+
         //run a coroutine by calling it in GameManager ensures that if the object wont be destroyed and break the coroutine
         StartCoroutine(ChangeSceneIEnumerator(index));
 

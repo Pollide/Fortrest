@@ -15,6 +15,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
@@ -30,6 +31,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public bool MenuBool;
     [Space(10)] //creates a gap in the inspector
     public bool SpeedBool;
+    public bool NextScene;
 
     void Start()
     {
@@ -107,6 +109,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         {
             Time.timeScale = 1f;
             GameManager.global.NextScene(0);
+        }
+        if (NextScene)
+        {
+            Time.timeScale = 1f;
+            GameManager.global.NextScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 
