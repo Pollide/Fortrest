@@ -4,22 +4,30 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private Vector3 offset;
     public Transform playerPosition;
-    public float smoothTime;
+    private Vector3 offset;
     private Vector3 currentVelocity = Vector3.zero;
-    private bool lockCamera = true;
-    public float cameraDistance;
+    [SerializeField] private float cameraDistance;
+    [SerializeField] private bool lockCamera;
+    [SerializeField] private float smoothTime;
+    [SerializeField] private float maxSmooth = 0.25f;
+    [SerializeField] private float minSmooth = 0.01f;
+    [SerializeField] private float max;
+    
 
     private void Awake()
     {
+        lockCamera = true;
         offset = transform.position - playerPosition.position;
+        max = maxSmooth - minSmooth;
     }
 
     private void Update()
-    {
+    {             
         Vector3 targetPosition = playerPosition.position + offset;
         cameraDistance = Vector3.Distance(targetPosition, transform.position);
+        float i = cameraDistance / (max * 50);
+        smoothTime = Mathf.Lerp(minSmooth, maxSmooth, i);
 
         if (Input.GetKeyDown(KeyCode.CapsLock))
         {
@@ -29,9 +37,9 @@ public class CameraFollow : MonoBehaviour
 
         if (lockCamera)
         {
-            if (Vector3.Distance(targetPosition, transform.position) > 0.1f)
+            if (cameraDistance > 0.1f)
             {
-                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
+                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);               
             }
             else
             {
