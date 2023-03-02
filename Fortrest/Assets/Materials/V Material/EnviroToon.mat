@@ -7,19 +7,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Terrain
-  m_Shader: {fileID: -6465566751694194690, guid: eee1457269720ab4bb7e8851fcb129d7,
+  m_Name: EnviroToon
+  m_Shader: {fileID: -6465566751694194690, guid: f5c521c2c595bc740a2ccd54b1386243,
     type: 3}
   m_ValidKeywords:
   - ADDITIONAL_LIGHT_CALCULATE_SHADOWS
   - MAIN_LIGHT_CALCULATE_SHADOWS
-  - _ADDITIONAL_LIGHTS
   - _ADDITIONAL_LIGHT_SHADOWS
   - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
-  m_InvalidKeywords:
-  - ADDITIONAL_LIGHT_SHADOWS
-  - REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -55,7 +52,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Diffuse:
-        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+        m_Texture: {fileID: 2800000, guid: 5acfe6882065e444ebe989377381d0e1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -83,7 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Specular:
-        m_Texture: {fileID: 2800000, guid: 0b5ef3e80ef9f084da1191ef15cb9df8, type: 3}
+        m_Texture: {fileID: 2800000, guid: 98fbcd056e4283d49a178d8ca861065c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ToonRamp:
@@ -107,7 +104,6 @@ Material:
     - ADDITIONAL_LIGHT_CALCULATE_SHADOWS: 1
     - ADDITIONAL_LIGHT_SHADOWS: 1
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
-    - REQUIRES_VERTEX_SHADOW_COORD_INTERPOLATOR: 1
     - _ADDITIONAL_LIGHTS: 1
     - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _AlphaClip: 0
@@ -128,11 +124,12 @@ Material:
     - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metallic: 0
     - _OcclusionStrength: 1
+    - _Offset_Values: 0
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RimAlpha: 0
+    - _RimAlpha: 0.5
     - _RimAmount: 1
     - _RimThreshold: 1
     - _SHADOWS_SOFT: 1
@@ -142,7 +139,8 @@ Material:
     - _Specular_Intensity: 0
     - _SrcBlend: 1
     - _Surface: 0
-    - _Use_Metallic_Texture: 0
+    - _Tiling_Values: 3.96
+    - _Use_Metallic_Texture: 1
     - _WorkflowMode: 1
     - _ZTest: 4
     - _ZWrite: 1
@@ -151,11 +149,11 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RimColor: {r: 0.3190192, g: 0.6320754, b: 0.348077, a: 0}
+    - _RimColor: {r: 1, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _White: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &8751200676462241901
+--- !u!114 &3468832856249936121
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
