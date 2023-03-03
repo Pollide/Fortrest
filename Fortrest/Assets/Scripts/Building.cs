@@ -36,15 +36,18 @@ public class Building : MonoBehaviour
 
     private float health;
     public float maxHealth = 5;
+    public float energyConsumptionPerClick = 2;
     public int resourceAmount = 5;
 
     public Image healthBarImage;
 
-
+    private PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+
         health = maxHealth;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
@@ -111,6 +114,7 @@ public class Building : MonoBehaviour
                 GiveResources();
                 Destroy(gameObject);
             }
+            playerController.ApplyEnergyDamage(energyConsumptionPerClick);
         }
     }
 
