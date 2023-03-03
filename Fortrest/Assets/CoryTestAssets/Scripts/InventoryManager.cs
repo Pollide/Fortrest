@@ -5,6 +5,7 @@ using TMPro;
 
 public class InventoryManager : MonoBehaviour
 {
+    public static InventoryManager global;
     [Header("Item Stack Sizes")]
     public int wood = 0;
     public int stone = 0;
@@ -15,6 +16,11 @@ public class InventoryManager : MonoBehaviour
     public TextMeshProUGUI stoneAmount;
     public TextMeshProUGUI grassAmount;
     public TextMeshProUGUI foodAmount;
+
+    private void Awake()
+    {
+        global = this;
+    }
 
     private void Update()
     {
