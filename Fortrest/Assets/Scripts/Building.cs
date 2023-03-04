@@ -36,15 +36,18 @@ public class Building : MonoBehaviour
 
     private float health;
     public float maxHealth = 5;
+    public float energyConsumptionPerClick = 2;
     public int resourceAmount = 5;
 
     public Image healthBarImage;
 
-
+    private PlayerController playerController;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
+
         health = maxHealth;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
@@ -97,8 +100,10 @@ public class Building : MonoBehaviour
 
     private void OnMouseOver()
     {
+        PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
+
         float minDistanceFloat = 2;
-        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButtonDown(0) && NaturalBool)
+        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButtonDown(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode)
         {
             if (health > 1)
             {
@@ -111,6 +116,7 @@ public class Building : MonoBehaviour
                 GiveResources();
                 Destroy(gameObject);
             }
+            playerController.ApplyEnergyDamage(energyConsumptionPerClick);
         }
     }
 
