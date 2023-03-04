@@ -10,8 +10,9 @@ public enum PlayerModes
     CombatMode
 }
 
+
 public class PlayerModeHandler : MonoBehaviour
-{
+{   
     public PlayerModes playerModes;
 
     public Image buildModeImage;

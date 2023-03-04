@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public float playerJumpHeight = 10f;
     public float playerEnergy = 100f;
     public float maxPlayerEnergy = 100f;
+
     public Image playerEnergyBarImage;
 
     private float playerGrav = -9.81f;
@@ -55,6 +56,7 @@ public class PlayerController : MonoBehaviour
             Jump();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
+            Eat();
         }
 
         if (playerEnergy >= maxPlayerEnergy)
@@ -143,5 +145,21 @@ public class PlayerController : MonoBehaviour
     public void ApplyEnergyDamage(float amount)
     {
         playerEnergy -= amount;
+    }
+
+    public void ApplyEnergyRestore(float amount)
+    {
+        playerEnergy += amount;
+    }
+
+    private void Eat()
+    {
+        InventoryManager inventory = GameObject.Find("Level Manager").GetComponent<InventoryManager>();
+
+        if (Input.GetKeyDown(KeyCode.E) && inventory.food > 0 && playerEnergy < maxPlayerEnergy)
+        {
+            ApplyEnergyRestore(5f);
+            inventory.MinusFood(1);
+        }
     }
 }
