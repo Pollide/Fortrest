@@ -26,8 +26,33 @@ public class GameManager : MonoBehaviour
     public AudioClip GameMusic;  //the music that plays in the game scene
     public AudioClip PauseMusic;  //the music that plays when paused
 
-    public AudioClip ClickAudioClip; //the sfx that plays when the mouse presses a button
-    public AudioClip HoverAudioClip; //the sfx that plays when the mouse hovers over a button
+    public AudioClip CollectSound; //the sfx that plays when the mouse presses a button
+    public AudioClip EnemyAttack1Sound; 
+    public AudioClip EnemyAttack2Sound; 
+    public AudioClip EnemyDead1Sound;
+    public AudioClip EnemyDead2Sound;
+    public AudioClip EnemyHit1Sound; 
+    public AudioClip EnemyHit2Sound; 
+    public AudioClip Enemy1Sound; 
+    public AudioClip Enemy2Sound; 
+    public AudioClip Enemy3Sound; 
+    public AudioClip MenuClick1Sound; 
+    public AudioClip MenuClick2Sound; 
+    public AudioClip Pickaxe1Sound; 
+    public AudioClip Pickaxe2Sound; 
+    public AudioClip Pickaxe3Sound; 
+    public AudioClip PlayerAttackSound;
+    public AudioClip PlayerHitSound;
+    public AudioClip PlayerJumpSound;
+    public AudioClip Footstep1Sound;
+    public AudioClip Footstep2Sound;
+    public AudioClip SwordSwing1Sound;
+    public AudioClip SwordSwing2Sound;
+    public AudioClip SwordSwing3Sound;
+    public AudioClip TreeChop1Sound;
+    public AudioClip TreeChop2Sound;
+    public AudioClip TreeChop3Sound;
+    public AudioClip TurretPlaceSound;
 
     //runs on the frame it was awake on
     void Awake()
