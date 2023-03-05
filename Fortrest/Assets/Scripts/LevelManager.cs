@@ -23,7 +23,6 @@ public class LevelManager : MonoBehaviour
 
     // public List<Transform> EnemyList = new List<Transform>();
     public List<Transform> BuildingList = new List<Transform>();
-    public List<Transform> TurretList = new List<Transform>();
 
     public GameObject ActiveBuildingGameObject;
 

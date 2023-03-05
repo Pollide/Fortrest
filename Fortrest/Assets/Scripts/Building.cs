@@ -43,8 +43,6 @@ public class Building : MonoBehaviour
 
     private PlayerController playerController;
 
-    public bool isCannon;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -66,7 +64,10 @@ public class Building : MonoBehaviour
             transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
         }
 
-        LevelManager.global.BuildingList.Add(transform);
+        if (resourceObject == BuildingType.Cannon)
+        {
+            LevelManager.global.BuildingList.Add(transform);
+        }
     }
 
     public void OnMouseDown()
