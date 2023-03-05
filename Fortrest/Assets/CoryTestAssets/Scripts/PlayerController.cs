@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour
     [Header("Player States")]
     public bool playerCanMove = true;
     public bool playerisMoving = false;
+    public bool playerisAttacking = false;
+
+    public List<Transform> enemyList = new List<Transform>();
 
     // Variable for movement direction
     private Vector3 moveDirection;
@@ -57,6 +60,7 @@ public class PlayerController : MonoBehaviour
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
             Eat();
+            Attack();
         }
 
         if (playerEnergy >= maxPlayerEnergy)
@@ -124,6 +128,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             playerVelocity += playerJumpHeight;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerJumpSound);
         }
     }
 
@@ -160,6 +165,24 @@ public class PlayerController : MonoBehaviour
         {
             ApplyEnergyRestore(5f);
             inventory.MinusFood(1);
+        }
+    }
+
+    private void Attack()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
+            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
+            for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
+            {
+                if (Vector3.Distance(transform.position, enemyList[i].transform.position) <= 1.5f) // Distance from player to enemy
+                {
+                    playerisAttacking = true;
+                    enemyList[i].GetComponent<EnemyController>().chasing = true;
+                    break;
+                }
+            }
         }
     }
 }

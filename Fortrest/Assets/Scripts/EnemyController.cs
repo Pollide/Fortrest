@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
+        PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
     }
 
     void Update()
