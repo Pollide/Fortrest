@@ -21,7 +21,7 @@ public class LevelManager : MonoBehaviour
     Vector3 lastPanPosition;
     bool OnceDetection;
 
-    public List<Transform> EnemyList = new List<Transform>();
+    // public List<Transform> EnemyList = new List<Transform>();
     public List<Transform> BuildingList = new List<Transform>();
 
     public GameObject ActiveBuildingGameObject;
