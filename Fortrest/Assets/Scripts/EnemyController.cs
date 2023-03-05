@@ -8,9 +8,12 @@ public class EnemyController : MonoBehaviour
     // public float lookRadius = 10.0f; // Distance that the enemy will start chasing you
 
     NavMeshAgent agent; // Nav mesh agent component
-    Transform bestTarget; // Target that the enemy will go towards
+    [SerializeField] Transform bestTarget; // Target that the enemy will go towards
     public bool chasing; // Enemy chases the player mode
     private Transform playerPosition;
+
+    public float attackTimer;
+    public float attackTimerMax = 200;
 
     void Start()
     {
@@ -45,11 +48,14 @@ public class EnemyController : MonoBehaviour
                 }
             }
 
-            agent.SetDestination(bestTarget.position); // Makes the AI move
-
-            if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.3f) // Checks if enemy reached target
+            if (bestTarget != null)
             {
-                FaceTarget();
+                agent.SetDestination(bestTarget.position); // Makes the AI move
+
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.3f) // Checks if enemy reached target
+                {
+                    FaceTarget();
+                }
             }
         }
         else
@@ -75,11 +81,24 @@ public class EnemyController : MonoBehaviour
             {
                 agent.SetDestination(bestTarget.position); // Sets the nav mesh agent destination
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.3f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
                 {
-                    //FaceTarget();
-                    LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
-                    Destroy(bestTarget.gameObject); // Destroys target object
+                    attackTimer++;
+                    Building building = bestTarget.GetComponent<Building>();
+                    if (building)
+                    {
+                        if (building.GetHealth() > 0 && attackTimer >= attackTimerMax)
+                        {
+                            building.healthBarImage.fillAmount = Mathf.Clamp(building.GetHealth() / building.maxHealth, 0, 1f);
+                            building.TakeDamage(1f);
+                            attackTimer = 0;
+                        }
+                        else if (building.GetHealth() == 0)
+                        {
+                            RemoveTarget();
+                            building.DestroyBuilding();
+                        }
+                    }
                 }
             }
         }
@@ -96,6 +115,11 @@ public class EnemyController : MonoBehaviour
     {
         bestTarget = null;
         chasing = false;
+    }
+
+    public void RemoveTarget()
+    {
+        LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
     }
 
     //private void OnDrawGizmosSelected() // Used to draw gizmos

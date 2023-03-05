@@ -105,19 +105,19 @@ public class Building : MonoBehaviour
     {
         PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
 
-        float minDistanceFloat = 2;
+        float minDistanceFloat = 3;
         if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButtonDown(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode)
         {
             if (health > 1)
             {
-                health--;
+                TakeDamage(1);
                 healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
             }
             else if (health == 1)
             {
-                health--;
+                TakeDamage(1);
                 GiveResources();
-                Destroy(gameObject);
+                DestroyBuilding();
             }
             playerController.ApplyEnergyDamage(energyConsumptionPerClick);
         }
@@ -130,38 +130,25 @@ public class Building : MonoBehaviour
         {
             Instantiate(Resources.Load(resourceObject.ToString() + " Drop"), new Vector3(transform.position.x + Random.Range(-1, 1), transform.position.y + Random.Range(0, 2), transform.position.z + Random.Range(-1, 1)), transform.rotation);
         }
-        /*
-        switch (resourceObject)
-        {
+    }
 
+    public void TakeDamage(float amount)
+    {
+        health -= amount;
+    }
 
-            case ResourceType.Tree:
-                for (int i = 0; i < resourceAmount; i++)
-                {
-                    Instantiate(wood, new Vector3(gameObject.transform.position.x + Random.Range(-1, 1), gameObject.transform.position.y + Random.Range(0, 2), gameObject.transform.position.z + Random.Range(-1, 1)), gameObject.transform.rotation);
-                }
-                break;
-            case ResourceType.Rock:
-                for (int i = 0; i < resourceAmount; i++)
-                {
-                    Instantiate(stone, new Vector3(gameObject.transform.position.x + Random.Range(-1, 1), gameObject.transform.position.y + Random.Range(0, 2), gameObject.transform.position.z + Random.Range(-1, 1)), gameObject.transform.rotation);
-                }
-                break;
-            case ResourceType.Grass:
-                for (int i = 0; i < resourceAmount; i++)
-                {
-                    Instantiate(grass, new Vector3(gameObject.transform.position.x + Random.Range(-1, 1), gameObject.transform.position.y + Random.Range(0, 2), gameObject.transform.position.z + Random.Range(-1, 1)), gameObject.transform.rotation);
-                }
-                break;
-            case ResourceType.Food:
-                for (int i = 0; i < resourceAmount; i++)
-                {
-                    Instantiate(food, new Vector3(gameObject.transform.position.x + Random.Range(-1, 1), gameObject.transform.position.y + Random.Range(0, 2), gameObject.transform.position.z + Random.Range(-1, 1)), gameObject.transform.rotation);
-                }
-                break;
-            default:
-                break;
-        }
-        */
+    public void Repair(float amount)
+    {
+        health += amount;
+    }
+
+    public float GetHealth()
+    {
+        return health;
+    }
+
+    public void DestroyBuilding()
+    {
+        Destroy(gameObject);
     }
 }
