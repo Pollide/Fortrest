@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
 
     private float playerGrav = -9.81f;
     private float playerVelocity;
+    private float attackCooldown = 1.0f;
+    private float nextAttack;
 
     CharacterController playerCC;
 
@@ -170,8 +172,10 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && Time.time > nextAttack)
         {
+            ApplyEnergyDamage(5.0f);
+            nextAttack = Time.time + attackCooldown;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
             for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
