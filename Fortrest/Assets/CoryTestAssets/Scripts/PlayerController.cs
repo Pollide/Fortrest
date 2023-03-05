@@ -175,14 +175,28 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
             for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
-            {
-                if (Vector3.Distance(transform.position, enemyList[i].transform.position) <= 1.5f) // Distance from player to enemy
-                {
+            {                
+                if (Vector3.Distance(transform.position, enemyList[i].transform.position) <= 3.0f && FacingEnemy(enemyList[i].transform.position)) // Distance from player to enemy
+                {                   
                     playerisAttacking = true;
                     enemyList[i].GetComponent<EnemyController>().chasing = true;
                     break;
                 }
             }
+        }
+    }
+
+    private bool FacingEnemy(Vector3 enemyPosition) // Making sure the enemy always faces what it is attacking
+    {
+        Vector3 enemyDirection = (enemyPosition - transform.position).normalized; // Gets a direction using a normalized vector
+        float angle = Vector3.Angle(transform.forward, enemyDirection);
+        if (angle > -75.0f && angle < 75.0f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

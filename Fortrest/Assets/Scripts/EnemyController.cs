@@ -10,9 +10,11 @@ public class EnemyController : MonoBehaviour
     NavMeshAgent agent; // Nav mesh agent component
     Transform bestTarget; // Target that the enemy will go towards
     public bool chasing; // Enemy chases the player mode
+    private Transform playerPosition;
 
     void Start()
     {
+        playerPosition = PlayerController.global.transform;
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
     }
@@ -28,7 +30,7 @@ public class EnemyController : MonoBehaviour
 
         if (chasing)
         {
-            bestTarget = GameObject.FindGameObjectWithTag("Player").transform; // TEMPORARY EASY CODE
+            bestTarget = playerPosition;
 
             if (LevelManager.global.BuildingList.Count != 0) // If there are still targets other than the player
             {
