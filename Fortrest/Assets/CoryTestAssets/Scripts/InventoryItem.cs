@@ -18,6 +18,7 @@ public class InventoryItem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.CollectSound);
         if (other.CompareTag("Player"))
         {
             Destroy(gameObject);
