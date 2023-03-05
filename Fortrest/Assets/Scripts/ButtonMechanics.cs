@@ -55,7 +55,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the pointer has entered the button
     public void OnPointerEnter(PointerEventData eventData)
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.HoverAudioClip);
+        //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
         ChangeSizeVoid(1.1f);
         ChangeColourVoid(Color.white);
     }
@@ -63,7 +63,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the mouse was clicked ontop of the button
     public void OnPointerDown(PointerEventData eventData)
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.ClickAudioClip);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
         ChangeSizeVoid(0.9f);
     }
 

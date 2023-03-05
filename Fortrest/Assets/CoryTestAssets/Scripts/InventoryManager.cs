@@ -49,4 +49,24 @@ public class InventoryManager : MonoBehaviour
     {
         grass += amount;
     }
+
+    public void MinusFood(int amount)
+    {
+        food -= amount;
+    }
+
+    public void MinusWood(int amount)
+    {
+        wood -= amount;
+    }
+
+    public void MinusStone(int amount)
+    {
+        stone -= amount;
+    }
+
+    public void MinusGrass(int amount)
+    {
+        grass -= amount;
+    }
 }

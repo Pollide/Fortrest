@@ -26,8 +26,33 @@ public class GameManager : MonoBehaviour
     public AudioClip GameMusic;  //the music that plays in the game scene
     public AudioClip PauseMusic;  //the music that plays when paused
 
-    public AudioClip ClickAudioClip; //the sfx that plays when the mouse presses a button
-    public AudioClip HoverAudioClip; //the sfx that plays when the mouse hovers over a button
+    public AudioClip CollectSound; //the sfx that plays when the mouse presses a button
+    public AudioClip EnemyAttack1Sound; 
+    public AudioClip EnemyAttack2Sound; 
+    public AudioClip EnemyDead1Sound;
+    public AudioClip EnemyDead2Sound;
+    public AudioClip EnemyHit1Sound; 
+    public AudioClip EnemyHit2Sound; 
+    public AudioClip Enemy1Sound; 
+    public AudioClip Enemy2Sound; 
+    public AudioClip Enemy3Sound; 
+    public AudioClip MenuClick1Sound; 
+    public AudioClip MenuClick2Sound; 
+    public AudioClip Pickaxe1Sound; 
+    public AudioClip Pickaxe2Sound; 
+    public AudioClip Pickaxe3Sound; 
+    public AudioClip PlayerAttackSound;
+    public AudioClip PlayerHitSound;
+    public AudioClip PlayerJumpSound;
+    public AudioClip Footstep1Sound;
+    public AudioClip Footstep2Sound;
+    public AudioClip SwordSwing1Sound;
+    public AudioClip SwordSwing2Sound;
+    public AudioClip SwordSwing3Sound;
+    public AudioClip TreeChop1Sound;
+    public AudioClip TreeChop2Sound;
+    public AudioClip TreeChop3Sound;
+    public AudioClip TurretPlaceSound;
 
     //runs on the frame it was awake on
     void Awake()
@@ -49,7 +74,7 @@ public class GameManager : MonoBehaviour
             GameObject eventSystemGameObject = new GameObject().AddComponent<EventSystem>().gameObject;
             eventSystemGameObject.AddComponent<StandaloneInputModule>();
             DontDestroyOnLoad(eventSystemGameObject);
-           
+
 
             //plays the menu music
             GameManager.global.MusicManager.PlayMusic(MenuMusic);
@@ -129,7 +154,7 @@ public class GameManager : MonoBehaviour
         {
             componentList = new List<T>();
             Component componentParent = searching.GetComponent(typeof(T)); //T is a generic type variable which can be anything. This makes it very robust with handling multiple components
-            
+
             if (componentParent) //checks if the parent has the component, then add it. Adding the parent helps with continuity.
             {
                 componentList.Add((T)componentParent);//to add it to the list, must convert Component to T by calling (T)
@@ -145,7 +170,7 @@ public class GameManager : MonoBehaviour
             //if the child has more children, then it will 
             if (searched.childCount > 0)
                 componentList = FindComponent(searching.GetChild(i), componentList); //next depth  
-          
+
             //found the component
             Component captured = searched.GetComponent(typeof(T));
             if (captured)
@@ -163,7 +188,7 @@ public class GameManager : MonoBehaviour
         //array
         if (layerNameArray == null)
         {
-            layerNameArray = new string[] { "Default" }; 
+            layerNameArray = new string[] { "Default" };
         }
 
         int layerMaskInt = 0;
@@ -178,7 +203,7 @@ public class GameManager : MonoBehaviour
     }
 
     //this function manages the anim component and plays / reverses anim
-    public AnimationState PlayAnimation(Animation anim, string nameClip = "", bool straight = true, bool quick = false)
+    public static AnimationState PlayAnimation(Animation anim, string nameClip = "", bool straight = true, bool quick = false)
     {
         if (anim) //checks exists
         {
@@ -220,7 +245,7 @@ public class GameManager : MonoBehaviour
     }
 
     //changes all layers of an animation so multiple can play at the same time
-    public static void ChangeAnimationLayers(Animation animation)
+    public static void ChangeAnimationLayers(Animation animation, bool playBool = false)
     {
         if (animation)
         {
@@ -230,6 +255,9 @@ public class GameManager : MonoBehaviour
                 animation[clip.name].layer = indexInt;
                 animation[clip.name].speed = 1;
                 indexInt += 1;
+
+                if (playBool)
+                    animation.Play(clip.name);
             }
         }
     }
@@ -238,7 +266,7 @@ public class GameManager : MonoBehaviour
     //makes a smooth scene transition
     public void NextScene(int index)
     {
-        if(index >= SceneManager.sceneCountInBuildSettings)
+        if (index >= SceneManager.sceneCountInBuildSettings)
         {
             index = 0;
         }
