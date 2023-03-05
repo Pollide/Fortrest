@@ -76,9 +76,6 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(eventSystemGameObject);
 
 
-            //plays the menu music
-            GameManager.global.MusicManager.PlayMusic(MenuMusic);
-
             //this checks if it is the first time playing the game. It wont run again
             if (PlayerPrefs.GetInt("First Time") == 0)
             {
@@ -100,6 +97,10 @@ public class GameManager : MonoBehaviour
                 PlayAnimation(GetComponent<Animation>(), "Load In", true, true); //forces the load animation to start on
                 PlayerPrefs.SetInt("Quick Load", 0); //now set it to zero as no need for the feature to exist until next time a peer runs another scene
                 NextScene(quickLoadInt); //go to that next scene
+            }
+            else
+            {
+                GameManager.global.MusicManager.PlayMusic(MenuMusic);
             }
         }
     }
@@ -282,10 +283,10 @@ public class GameManager : MonoBehaviour
         AnimationState state = PlayAnimation(GetComponent<Animation>(), "Load In");
 
         //switches between music
-        GameManager.global.MusicManager.PlayMusic(index == 2 ? GameManager.global.GameMusic : GameManager.global.MenuMusic);
+        GameManager.global.MusicManager.PlayMusic(index == 1 ? GameManager.global.GameMusic : GameManager.global.MenuMusic);
 
         //wait until the animation is done
-        yield return new WaitUntil(() => !state.enabled);
+        yield return new WaitUntil(() => !state || !state.enabled);
 
         //gets the scene index and loads it async
         AsyncOperation operation = SceneManager.LoadSceneAsync(index);
