@@ -90,20 +90,26 @@ public class Menu : MonoBehaviour
         if (GoForwardBool)
         {
             if (SettingsSelectedBool)
-                SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().text = "Nah screw you\nNo settings";
-            else
-                GameManager.global.NextScene(1);
-        }
-        else
-        {
-            if (SettingsSelectedBool)
-                SignAnimationVoid(SettingsSignAnimation, false);
-            else
-                SignAnimationVoid(LevelsSignAnimation, false);
+            {
+                SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().text = "Nah\nscrew you";
 
-            GameManager.PlayAnimation(CameraAnimation, "Play Menu", false);
-            StartCoroutine(InitalMenuIEnumerator());
+                yield return new WaitUntil(() => InputCheck());
+            }
+            else
+            {
+                GameManager.global.NextScene(1);
+                yield break;
+            }
         }
+
+        if (SettingsSelectedBool)
+            SignAnimationVoid(SettingsSignAnimation, false);
+        else
+            SignAnimationVoid(LevelsSignAnimation, false);
+
+        GameManager.PlayAnimation(CameraAnimation, "Play Menu", false);
+        StartCoroutine(InitalMenuIEnumerator());
+
     }
 
 
