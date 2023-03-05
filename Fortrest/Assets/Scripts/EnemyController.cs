@@ -27,13 +27,13 @@ public class EnemyController : MonoBehaviour
 
         if (chasing)
         {
-            bestTarget = GameObject.FindGameObjectWithTag("Player").transform; // TEMPORARY EASY CODE
+            bestTarget = PlayerController.global.transform;
 
             if (LevelManager.global.BuildingList.Count != 0) // If there are still targets other than the player
             {
                 Invoke("ChasePlayerTimer", 5.0f); // Enemy stops chasing the player after 5s
 
-                float chaseDistance = Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position); // TEMPORARY EASY CODE
+                float chaseDistance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
 
                 if (chaseDistance >= 10.0f) // Enemy stops chasing when the player gets too far
                 {
@@ -55,7 +55,7 @@ public class EnemyController : MonoBehaviour
             {
                 for (int i = 0; i < LevelManager.global.BuildingList.Count; i++) // Goes through the list of targets
                 {
-                    if (LevelManager.global.BuildingList[i] != null)
+                    if (LevelManager.global.BuildingList[i] != null && !LevelManager.global.BuildingList[i].GetComponent<Building>().NaturalBool)
                     {
                         float compare = Vector3.Distance(transform.position, LevelManager.global.BuildingList[i].transform.position); // Distance from enemy to each target
 
