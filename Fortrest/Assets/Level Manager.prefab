@@ -745,6 +745,7 @@ MonoBehaviour:
   ZoomBounds:
   - 10
   - 85
+  EnemyList: []
   BuildingList: []
   ActiveBuildingGameObject: {fileID: 0}
 --- !u!114 &8641661282999495141
@@ -998,6 +999,82 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1224676225204562132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 833482522824766908}
+  - component: {fileID: 6492585631165489976}
+  m_Layer: 0
+  m_Name: Game Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &833482522824766908
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224676225204562132}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6694460402543658492}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6492585631165489976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1224676225204562132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c0106cfbc267bc40932b728c89045ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SoundManager: {fileID: 5322447156780693877}
+  MusicManager: {fileID: 6533541755534190634}
+  MenuMusic: {fileID: 8300000, guid: 275d8c4ca15247149a225d112c77509a, type: 3}
+  GameMusic: {fileID: 8300000, guid: ce3a21dc687b53e459df8a8caa6a79f3, type: 3}
+  PauseMusic: {fileID: 8300000, guid: 476aa43eb17037340a5d2a6076378c1f, type: 3}
+  CollectSound: {fileID: 8300000, guid: 59a32af7f52361b48be7dbf09cbf6956, type: 3}
+  EnemyAttack1Sound: {fileID: 8300000, guid: 5588c592fb9962e488ab269328a864bd, type: 3}
+  EnemyAttack2Sound: {fileID: 8300000, guid: 78fc13636ff000f41b0e3fa43cfb74b4, type: 3}
+  EnemyDead1Sound: {fileID: 8300000, guid: c6886749ca5ea184ab2a6663e5e1a645, type: 3}
+  EnemyDead2Sound: {fileID: 8300000, guid: 7adbfc7491b008c4b83739d3097ec791, type: 3}
+  EnemyHit1Sound: {fileID: 8300000, guid: f59c7f6d5bfa16842aa0439667e0affc, type: 3}
+  EnemyHit2Sound: {fileID: 8300000, guid: 62ae80968e9a87040bbc1ee255d1e09b, type: 3}
+  Enemy1Sound: {fileID: 8300000, guid: b9baa246b0e618748b37110822c196ee, type: 3}
+  Enemy2Sound: {fileID: 8300000, guid: 677f1f954cda1f549b82f91eb30fdec0, type: 3}
+  Enemy3Sound: {fileID: 8300000, guid: 9e8030bb090a133498f5ec04c13ada3d, type: 3}
+  MenuClick1Sound: {fileID: 8300000, guid: 58aeaf1e6b14ced418b753dbd463c14e, type: 3}
+  MenuClick2Sound: {fileID: 8300000, guid: 784e3ff17f60f924ab5d70284b6e28b9, type: 3}
+  Pickaxe1Sound: {fileID: 8300000, guid: b8ab2406649727d4aa04b5130b39d7ae, type: 3}
+  Pickaxe2Sound: {fileID: 8300000, guid: e5c8c6755ddd153429d0da7350d3a20d, type: 3}
+  Pickaxe3Sound: {fileID: 8300000, guid: c395ca5944f4f5747b1f9e2be53ad477, type: 3}
+  PlayerAttackSound: {fileID: 8300000, guid: 55cc9c5a1d9f6d84daf6c0600a983135, type: 3}
+  PlayerHitSound: {fileID: 8300000, guid: 25a7f489ddf2bb24aa60676889277adf, type: 3}
+  PlayerJumpSound: {fileID: 8300000, guid: 37af2d8f68badfd4dabc673a263246e5, type: 3}
+  Footstep1Sound: {fileID: 8300000, guid: 4eb71cc586743b54f946150e1845dfd6, type: 3}
+  Footstep2Sound: {fileID: 8300000, guid: 27061644bb9b7514d93babd508235741, type: 3}
+  SwordSwing1Sound: {fileID: 8300000, guid: 00d4b24cf22522943bf60b847c426f6a, type: 3}
+  SwordSwing2Sound: {fileID: 8300000, guid: 5b2137e4ca7add34fafe00788fb9b1f6, type: 3}
+  SwordSwing3Sound: {fileID: 8300000, guid: f521c647e4439cf4b9466492ecca33ad, type: 3}
+  TreeChop1Sound: {fileID: 8300000, guid: d13603a3dc9436b4baca340503849d80, type: 3}
+  TreeChop2Sound: {fileID: 8300000, guid: 1f3f9a8557c7bd740aafeba0d7633e5f, type: 3}
+  TreeChop3Sound: {fileID: 8300000, guid: 1bbe017bd8e40ae4e97287d447b8a96d, type: 3}
+  TurretPlaceSound: {fileID: 8300000, guid: 60a06551529701f4e81fd7506268ed60, type: 3}
 --- !u!1 &1354247512816183170
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,6 +1322,9 @@ Transform:
   - {fileID: 5602587831011510464}
   - {fileID: 500100697265757557}
   - {fileID: 1999694816697594855}
+  - {fileID: 833482522824766908}
+  - {fileID: 96078708038229209}
+  - {fileID: 3126392890576790225}
   m_Father: {fileID: 927623175018942828}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1345,6 +1425,54 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &2101271306612320088
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 96078708038229209}
+  - component: {fileID: 5322447156780693877}
+  m_Layer: 0
+  m_Name: Sound Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &96078708038229209
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101271306612320088}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6694460402543658492}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5322447156780693877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2101271306612320088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4f15effcc2482d4a955398e6e66e76e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AudioName: Sound
+  SkipToNearEnd: 0
+  PoolPosition: 0
+  SFXList: []
 --- !u!1 &2223620222228759299
 GameObject:
   m_ObjectHideFlags: 0
@@ -1814,6 +1942,54 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &2480629592300087849
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3126392890576790225}
+  - component: {fileID: 6533541755534190634}
+  m_Layer: 0
+  m_Name: Music Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3126392890576790225
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480629592300087849}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6694460402543658492}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6533541755534190634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2480629592300087849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4f15effcc2482d4a955398e6e66e76e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AudioName: Music
+  SkipToNearEnd: 0
+  PoolPosition: 0
+  SFXList: []
 --- !u!1 &3306719168211964927
 GameObject:
   m_ObjectHideFlags: 0

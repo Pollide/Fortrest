@@ -42,6 +42,8 @@ public class Building : MonoBehaviour
     public Image healthBarImage;
 
     private PlayerController playerController;
+    private float gatherCooldown = 0.75f;
+    private float nextGather;
 
     // Start is called before the first frame update
     void Start()
@@ -109,10 +111,19 @@ public class Building : MonoBehaviour
         PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
 
         float minDistanceFloat = 3;
-        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButtonDown(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode)
+        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButtonDown(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
         {
+            nextGather = Time.time + gatherCooldown;
             if (health > 1)
             {
+                if (resourceObject == BuildingType.Stone)
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe2Sound);
+                }
+                else if (resourceObject == BuildingType.Wood)
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.TreeChop1Sound);
+                }
                 TakeDamage(1);
                 healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
             }

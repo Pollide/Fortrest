@@ -32,6 +32,7 @@ public class LevelManager : MonoBehaviour
 
         if (!GameManager.global)
         {
+           
             PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
