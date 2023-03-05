@@ -49,7 +49,7 @@ public class LevelManager : MonoBehaviour
         if (ActiveBuildingGameObject)
             return;
 
-        HandleMouse();
+        //HandleMouse();
     }
     void HandleMouse()
     {
