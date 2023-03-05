@@ -72,7 +72,8 @@ public class Building : MonoBehaviour
 
     public void OnMouseDown()
     {
-        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(0) && !NaturalBool)
+        PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(0) && !NaturalBool && modeHandler.playerModes == PlayerModes.BuildMode)
         {
             PreviousPos = transform.position;
             screenPoint = Camera.main.WorldToScreenPoint(PreviousPos);
@@ -83,13 +84,15 @@ public class Building : MonoBehaviour
 
     public void OnMouseUp()
     {
-        if (!NaturalBool)
+        PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
+        if (!NaturalBool && modeHandler.playerModes == PlayerModes.BuildMode)
             LevelManager.global.ActiveBuildingGameObject = null;
     }
 
     public void OnMouseDrag()
     {
-        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && !NaturalBool)
+        PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && !NaturalBool && modeHandler.playerModes == PlayerModes.BuildMode)
         {
             Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
             Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
