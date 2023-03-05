@@ -249,7 +249,7 @@ public class SFXManager : MonoBehaviour
                 SFXList[PoolPosition].Audio.transform.position = Vector3.zero;
                 SFXList[PoolPosition].Audio.spatialBlend = 0;
             }
-            Debug.Log(clip);
+          //  Debug.Log(clip);
             SetupAudioData(SFXList[PoolPosition], clip, isLooped);
             SFXList[PoolPosition].SFXLoudness = RequestedVolume;
             SFXList[PoolPosition].SpatialTransform = SpatialTransform;
