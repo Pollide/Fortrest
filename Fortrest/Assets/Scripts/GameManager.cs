@@ -91,23 +91,23 @@ public class GameManager : MonoBehaviour
             //is to get the GameManager into the game scene, as it exists in the menu scene to begin with.
 
             int quickLoadInt = PlayerPrefs.GetInt("Quick Load");
-
+           
             if (PlayerPrefs.GetInt("Quick Load") > 0)
             {
                 PlayAnimation(GetComponent<Animation>(), "Load In", true, true); //forces the load animation to start on
                 PlayerPrefs.SetInt("Quick Load", 0); //now set it to zero as no need for the feature to exist until next time a peer runs another scene
                 NextScene(quickLoadInt); //go to that next scene
             }
-            else
-            {
-                GameManager.global.MusicManager.PlayMusic(MenuMusic);
-            }
+
+            NextScene(quickLoadInt, true); //go to that next scene
         }
     }
 
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
     {
+        if (minValue == maxValue)
+            return valueInt;
         //will run this once or if i = -1
         for (int i = 0; i < 1; i++)
         {
@@ -265,7 +265,7 @@ public class GameManager : MonoBehaviour
 
 
     //makes a smooth scene transition
-    public void NextScene(int index)
+    public void NextScene(int index, bool first = false)
     {
         if (index >= SceneManager.sceneCountInBuildSettings)
         {
@@ -273,26 +273,34 @@ public class GameManager : MonoBehaviour
         }
 
         //run a coroutine by calling it in GameManager ensures that if the object wont be destroyed and break the coroutine
-        StartCoroutine(ChangeSceneIEnumerator(index));
+        StartCoroutine(ChangeSceneIEnumerator(index, first));
 
     }
 
     //waits for loading animation to complete
-    public IEnumerator ChangeSceneIEnumerator(int index)
+    public IEnumerator ChangeSceneIEnumerator(int index, bool first)
     {
-        AnimationState state = PlayAnimation(GetComponent<Animation>(), "Load In");
+        AnimationState state = PlayAnimation(GetComponent<Animation>(), "Load In", true, first);
 
+        if (first)
+        {
+            yield return 0;
+        }
         //switches between music
         GameManager.global.MusicManager.PlayMusic(index == 1 ? GameManager.global.GameMusic : GameManager.global.MenuMusic);
 
         //wait until the animation is done
-        yield return new WaitUntil(() => !state || !state.enabled);
+        yield return new WaitUntil(() => !state || !state.enabled || first);
 
         //gets the scene index and loads it async
-        AsyncOperation operation = SceneManager.LoadSceneAsync(index);
+        if (!first)
+        {
+            AsyncOperation operation = SceneManager.LoadSceneAsync(index);
 
-        //wait until the scene has finished loading
-        yield return new WaitUntil(() => operation.isDone);
+            //wait until the scene has finished loading
+            yield return new WaitUntil(() =>  operation.isDone);
+        }
+       
 
         //play the outro loading animation
         state = PlayAnimation(GetComponent<Animation>(), "Load Out");

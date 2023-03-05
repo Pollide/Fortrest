@@ -53,9 +53,9 @@ public class Menu : MonoBehaviour
         yield return new WaitUntil(() => !CameraAnimation.isPlaying);
 
         SignAnimationVoid(WelcomeSignAnimation);
-
+        Debug.Log(1);
         yield return new WaitUntil(() => InputCheck());
-
+        Debug.Log(2);
         SignAnimationVoid(WelcomeSignAnimation, false);
 
         if (GoForwardBool)
