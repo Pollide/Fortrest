@@ -173,7 +173,7 @@ public class PlayerController : MonoBehaviour
     private void Attack()
     {
         PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
-        if (Input.GetMouseButtonDown(0) && Time.time > nextAttack && modeHandler.playerModes == PlayerModes.CombatMode)
+        if (Input.GetMouseButton(0) && Time.time > nextAttack && modeHandler.playerModes == PlayerModes.CombatMode)
         {
             ApplyEnergyDamage(5.0f);
             nextAttack = Time.time + attackCooldown;
