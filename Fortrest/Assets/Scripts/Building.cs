@@ -111,7 +111,7 @@ public class Building : MonoBehaviour
         PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
 
         float minDistanceFloat = 3;
-        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButtonDown(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
+        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
         {
             nextGather = Time.time + gatherCooldown;
             if (health > 1)
