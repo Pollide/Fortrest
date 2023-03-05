@@ -64,7 +64,10 @@ public class Building : MonoBehaviour
             transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
         }
 
-        LevelManager.global.BuildingList.Add(transform);
+        if (resourceObject == BuildingType.Cannon)
+        {
+            LevelManager.global.BuildingList.Add(transform);
+        }
     }
 
     public void OnMouseDown()
