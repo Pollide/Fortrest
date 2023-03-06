@@ -53,9 +53,9 @@ public class Menu : MonoBehaviour
         yield return new WaitUntil(() => !CameraAnimation.isPlaying);
 
         SignAnimationVoid(WelcomeSignAnimation);
-     
+
         yield return new WaitUntil(() => InputCheck());
-     
+
         SignAnimationVoid(WelcomeSignAnimation, false);
 
         if (GoForwardBool)
@@ -153,7 +153,7 @@ public class Menu : MonoBehaviour
             return true;
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
         {
             return true;
         }
