@@ -91,12 +91,14 @@ public class Menu : MonoBehaviour
         {
             if (SettingsSelectedBool)
             {
+                SignAnimationVoid(SettingsSignAnimation, true, true);
                 SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().text = "Nah\nscrew you";
 
                 yield return new WaitUntil(() => InputCheck());
             }
             else
             {
+                SignAnimationVoid(LevelsSignAnimation, true, true);
                 GameManager.global.NextScene(1);
                 yield break;
             }
@@ -135,8 +137,10 @@ public class Menu : MonoBehaviour
 
         if (GoForwardBool)
         {
+            SignAnimationVoid(ExitSignAnimation, true, true);
             Application.Quit();
             GameManager.global.NextScene(0);
+            yield break;
         }
         else
         {
@@ -186,19 +190,22 @@ public class Menu : MonoBehaviour
         return false;
     }
 
-    void SignAnimationVoid(Animation signAnimation, bool forward = true)
+    void SignAnimationVoid(Animation signAnimation, bool forward = true, bool accepted = false)
     {
         if (forward)
-            GameManager.PlayAnimation(signAnimation, "Sign Selected", forward);
+            GameManager.PlayAnimation(signAnimation, accepted ? "Sign Accepted" : "Sign Selected", forward);
 
-        if (forward)
-            signAnimation.Play("Sign Loop");
-        else
+        if (!accepted)
         {
-            GameManager.PlayAnimation(signAnimation, "Sign Loop", false, true);
-            signAnimation.Stop("Sign Loop");
-            // GameManager.PlayAnimation(signAnimation, "Sign Loop", false, true);
-        }
 
+            if (forward)
+                signAnimation.Play("Sign Loop");
+            else
+            {
+                GameManager.PlayAnimation(signAnimation, "Sign Loop", false, true);
+                signAnimation.Stop("Sign Loop");
+                // GameManager.PlayAnimation(signAnimation, "Sign Loop", false, true);
+            }
+        }
     }
 }
