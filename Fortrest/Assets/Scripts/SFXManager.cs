@@ -117,7 +117,6 @@ public class SFXManager : MonoBehaviour
         for (int i = 0; i < SFXList.Count; i++)
         {
             SFXList[i].Audio.volume = PlayerPrefs.GetFloat(AudioName) * SFXList[i].SFXLoudness;
-            Debug.Log(SFXList[i].Audio.volume);
         }
     }
 
@@ -145,7 +144,7 @@ public class SFXManager : MonoBehaviour
 
     public void DynamicVolumeChange(float RequestedQuieterOrLouder = 1, int SpecificPosition = -1)
     {
-  
+
         for (int i = 0; i < SFXList.Count; i++)
         {
             if (SpecificPosition == -1 || i == SpecificPosition)
@@ -249,7 +248,7 @@ public class SFXManager : MonoBehaviour
                 SFXList[PoolPosition].Audio.transform.position = Vector3.zero;
                 SFXList[PoolPosition].Audio.spatialBlend = 0;
             }
-          //  Debug.Log(clip);
+            //  Debug.Log(clip);
             SetupAudioData(SFXList[PoolPosition], clip, isLooped);
             SFXList[PoolPosition].SFXLoudness = RequestedVolume;
             SFXList[PoolPosition].SpatialTransform = SpatialTransform;
@@ -285,9 +284,9 @@ public class SFXManager : MonoBehaviour
                 }
             }
 
- 
 
-            PoolPosition = (int)GameManager.ReturnThresholds(PoolPosition - 1, SFXList.Count-1, 0);
+
+            PoolPosition = (int)GameManager.ReturnThresholds(PoolPosition - 1, SFXList.Count - 1, 0);
 
             SetupAudioData(SFXList[PoolPosition], RequestedMusic, true);
             SFXList[PoolPosition].TransitionTime = 0;

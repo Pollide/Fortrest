@@ -94,6 +94,7 @@ public class GameManager : MonoBehaviour
 
             if (PlayerPrefs.GetInt("Quick Load") > 0)
             {
+                PlayAnimation(GetComponent<Animation>(), "Load In", true, true); //first bool skips this
                 PlayerPrefs.SetInt("Quick Load", 0); //now set it to zero as no need for the feature to exist until next time a peer runs another scene
             }
 
