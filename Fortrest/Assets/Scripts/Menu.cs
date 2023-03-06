@@ -27,7 +27,7 @@ public class Menu : MonoBehaviour
     public Animation ExitSignAnimation;
     public Animation SettingsSignAnimation;
     public Animation LevelsSignAnimation;
-
+    public Color TextColor;
     bool GoForwardBool;
     int GoHorizontalInt;
 
@@ -44,7 +44,7 @@ public class Menu : MonoBehaviour
         GameManager.ChangeAnimationLayers(LevelsSignAnimation);
 
         GameManager.PlayAnimation(CameraAnimation, "Initial Menu");
-
+        TextColor = SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().color;
         StartCoroutine(InitalMenuIEnumerator());
     }
 
@@ -202,8 +202,9 @@ public class Menu : MonoBehaviour
                 signAnimation.Play("Sign Loop");
             else
             {
-                GameManager.PlayAnimation(signAnimation, "Sign Loop", false, true);
+                // GameManager.PlayAnimation(signAnimation, "Sign Loop", false, true);
                 signAnimation.Stop("Sign Loop");
+                SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().color = TextColor;
                 // GameManager.PlayAnimation(signAnimation, "Sign Loop", false, true);
             }
         }
