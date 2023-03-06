@@ -38,6 +38,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _CalculateLightingRamp_abdf794e0d3c486896b9aa3403833f47_ToonRamp_255809187:
+        m_Texture: {fileID: 2800000, guid: ccda879d80f360b45a8d401d444c2e4e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -56,6 +60,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Metallic:
+        m_Texture: {fileID: 2800000, guid: 04d74e5bd0f58174ca336496e914dbc7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -91,6 +99,7 @@ Material:
     - _ADDITIONAL_LIGHTS: 1
     - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _AlphaClip: 0
+    - _Ambience_Multiplier: 1
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -102,8 +111,10 @@ Material:
     - _DstBlend: 0
     - _EdgeDiffuse: 0
     - _EdgeDistanceAttenuation: 0
-    - _EdgeRim: 0
+    - _EdgeRim: 0.523
+    - _EdgeRimAmount: 0.42
     - _EdgeRimOffset: 0
+    - _EdgeRimStrength: 0
     - _EdgeShadowAttenuation: 0
     - _EdgeSpecular: 0
     - _EdgeSpecularOffset: 0
@@ -126,12 +137,15 @@ Material:
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
+    - _Use_Metallic_Textures: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
+    - _Ambient_Color: {r: 0.6415094, g: 0.6415094, b: 0.6415094, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 0.764151, g: 0.764151, b: 0.764151, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _test: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
