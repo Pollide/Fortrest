@@ -27,20 +27,20 @@ public class GameManager : MonoBehaviour
     public AudioClip PauseMusic;  //the music that plays when paused
 
     public AudioClip CollectSound; //the sfx that plays when the mouse presses a button
-    public AudioClip EnemyAttack1Sound; 
-    public AudioClip EnemyAttack2Sound; 
+    public AudioClip EnemyAttack1Sound;
+    public AudioClip EnemyAttack2Sound;
     public AudioClip EnemyDead1Sound;
     public AudioClip EnemyDead2Sound;
-    public AudioClip EnemyHit1Sound; 
-    public AudioClip EnemyHit2Sound; 
-    public AudioClip Enemy1Sound; 
-    public AudioClip Enemy2Sound; 
-    public AudioClip Enemy3Sound; 
-    public AudioClip MenuClick1Sound; 
-    public AudioClip MenuClick2Sound; 
-    public AudioClip Pickaxe1Sound; 
-    public AudioClip Pickaxe2Sound; 
-    public AudioClip Pickaxe3Sound; 
+    public AudioClip EnemyHit1Sound;
+    public AudioClip EnemyHit2Sound;
+    public AudioClip Enemy1Sound;
+    public AudioClip Enemy2Sound;
+    public AudioClip Enemy3Sound;
+    public AudioClip MenuClick1Sound;
+    public AudioClip MenuClick2Sound;
+    public AudioClip Pickaxe1Sound;
+    public AudioClip Pickaxe2Sound;
+    public AudioClip Pickaxe3Sound;
     public AudioClip PlayerAttackSound;
     public AudioClip PlayerHitSound;
     public AudioClip PlayerJumpSound;
@@ -91,15 +91,14 @@ public class GameManager : MonoBehaviour
             //is to get the GameManager into the game scene, as it exists in the menu scene to begin with.
 
             int quickLoadInt = PlayerPrefs.GetInt("Quick Load");
-           
+
             if (PlayerPrefs.GetInt("Quick Load") > 0)
             {
                 PlayAnimation(GetComponent<Animation>(), "Load In", true, true); //forces the load animation to start on
                 PlayerPrefs.SetInt("Quick Load", 0); //now set it to zero as no need for the feature to exist until next time a peer runs another scene
-                NextScene(quickLoadInt); //go to that next scene
             }
 
-            NextScene(quickLoadInt, true); //go to that next scene
+            NextScene(quickLoadInt, quickLoadInt == 0); //go to that next scene
         }
     }
 
@@ -298,9 +297,9 @@ public class GameManager : MonoBehaviour
             AsyncOperation operation = SceneManager.LoadSceneAsync(index);
 
             //wait until the scene has finished loading
-            yield return new WaitUntil(() =>  operation.isDone);
+            yield return new WaitUntil(() => operation.isDone);
         }
-       
+
 
         //play the outro loading animation
         state = PlayAnimation(GetComponent<Animation>(), "Load Out");
