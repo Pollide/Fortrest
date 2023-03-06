@@ -29,7 +29,7 @@ public class Menu : MonoBehaviour
     public Animation LevelsSignAnimation;
 
     bool GoForwardBool;
-    bool GoHorizontalBool;
+    int GoHorizontalInt;
 
     bool SettingsSelectedBool;
 
@@ -54,11 +54,11 @@ public class Menu : MonoBehaviour
 
         SignAnimationVoid(WelcomeSignAnimation);
 
-        yield return new WaitUntil(() => InputCheck());
+        yield return new WaitUntil(() => InputCheck() && GoHorizontalInt != 0);
 
         SignAnimationVoid(WelcomeSignAnimation, false);
 
-        if (GoForwardBool)
+        if (GoHorizontalInt > 0)
             StartCoroutine(LevelMenuIEnumerator());
         else
             StartCoroutine(ExitMenuIEnumerator());
@@ -75,9 +75,9 @@ public class Menu : MonoBehaviour
 
         do
         {
-            yield return new WaitUntil(() => InputCheck(true));
+            yield return new WaitUntil(() => InputCheck());
 
-            if (GoHorizontalBool)
+            if (GoHorizontalInt != 0)
             {
                 SettingsSelectedBool = !SettingsSelectedBool;
                 SignAnimationVoid(SettingsSelectedBool ? SettingsSignAnimation : LevelsSignAnimation);
@@ -85,7 +85,7 @@ public class Menu : MonoBehaviour
             }
             yield return 0;
         }
-        while (GoHorizontalBool);
+        while (GoHorizontalInt == 0 || SettingsSelectedBool ? GoHorizontalInt == 1 : GoHorizontalInt == -1);
 
         if (GoForwardBool)
         {
@@ -107,9 +107,19 @@ public class Menu : MonoBehaviour
         else
             SignAnimationVoid(LevelsSignAnimation, false);
 
-        GameManager.PlayAnimation(CameraAnimation, "Play Menu", false);
-        StartCoroutine(InitalMenuIEnumerator());
 
+
+
+        if (GoHorizontalInt > 0)
+        {
+            GameManager.PlayAnimation(CameraAnimation, "Level To Exit Menu");
+            StartCoroutine(ExitMenuIEnumerator());
+        }
+        else
+        {
+            GameManager.PlayAnimation(CameraAnimation, "Play Menu", false);
+            StartCoroutine(InitalMenuIEnumerator());
+        }
     }
 
 
@@ -131,15 +141,24 @@ public class Menu : MonoBehaviour
         else
         {
             SignAnimationVoid(ExitSignAnimation, false);
-            GameManager.PlayAnimation(CameraAnimation, "Exit Menu", false);
-            StartCoroutine(InitalMenuIEnumerator());
+
+            if (GoHorizontalInt > 0)
+            {
+                GameManager.PlayAnimation(CameraAnimation, "Level To Exit Menu", false);
+                StartCoroutine(LevelMenuIEnumerator());
+            }
+            else
+            {
+                GameManager.PlayAnimation(CameraAnimation, "Exit Menu", false);
+                StartCoroutine(InitalMenuIEnumerator());
+            }
         }
     }
 
-    bool InputCheck(bool horizontalBool = false)
+    bool InputCheck()
     {
         GoForwardBool = false;
-        GoHorizontalBool = false;
+        GoHorizontalInt = 0;
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.W))
         {
@@ -147,9 +166,15 @@ public class Menu : MonoBehaviour
             return true;
         }
 
-        if (horizontalBool && (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D)))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
-            GoHorizontalBool = true;
+            GoHorizontalInt = -1;
+            return true;
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+        {
+            GoHorizontalInt = 1;
             return true;
         }
 
