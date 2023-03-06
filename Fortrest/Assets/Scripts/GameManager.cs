@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
             GameObject eventSystemGameObject = new GameObject().AddComponent<EventSystem>().gameObject;
             eventSystemGameObject.AddComponent<StandaloneInputModule>();
             DontDestroyOnLoad(eventSystemGameObject);
-
+            eventSystemGameObject.name = "Event System";
 
             //this checks if it is the first time playing the game. It wont run again
             if (PlayerPrefs.GetInt("First Time") == 0)
@@ -94,7 +94,6 @@ public class GameManager : MonoBehaviour
 
             if (PlayerPrefs.GetInt("Quick Load") > 0)
             {
-                PlayAnimation(GetComponent<Animation>(), "Load In", true, true); //forces the load animation to start on
                 PlayerPrefs.SetInt("Quick Load", 0); //now set it to zero as no need for the feature to exist until next time a peer runs another scene
             }
 
@@ -281,10 +280,8 @@ public class GameManager : MonoBehaviour
     {
         AnimationState state = PlayAnimation(GetComponent<Animation>(), "Load In", true, first);
 
-        if (first)
-        {
-            yield return 0;
-        }
+        yield return 0; //gives a frame for sfx to load
+
         //switches between music
         GameManager.global.MusicManager.PlayMusic(index == 1 ? GameManager.global.GameMusic : GameManager.global.MenuMusic);
 
