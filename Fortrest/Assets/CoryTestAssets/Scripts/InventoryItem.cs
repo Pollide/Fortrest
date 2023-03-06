@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class InventoryItem : MonoBehaviour
 {
-    private InventoryManager inventoryManager;
 
     public enum ItemType
     {
@@ -16,13 +15,10 @@ public class InventoryItem : MonoBehaviour
 
     public ItemType type;
 
-    private void Start()
-    {
-        inventoryManager = GameObject.Find("InventoryManager").GetComponent<InventoryManager>();
-    }
 
     private void OnTriggerEnter(Collider other)
     {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.CollectSound);
         if (other.CompareTag("Player"))
         {
             Destroy(gameObject);
@@ -31,25 +27,25 @@ public class InventoryItem : MonoBehaviour
             {
                 case ItemType.Food:
 
-                    inventoryManager.AddFood(1);
+                    InventoryManager.global.AddFood(1);
 
                     break;
 
                 case ItemType.Wood:
 
-                    inventoryManager.AddWood(1);
+                    InventoryManager.global.AddWood(1);
 
                     break;
 
                 case ItemType.Grass:
 
-                    inventoryManager.AddGrass(1);
+                    InventoryManager.global.AddGrass(1);
 
                     break;
 
                 case ItemType.Stone:
 
-                    inventoryManager.AddStone(1);
+                    InventoryManager.global.AddStone(1);
 
                     break;
             }

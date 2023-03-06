@@ -26,8 +26,33 @@ public class GameManager : MonoBehaviour
     public AudioClip GameMusic;  //the music that plays in the game scene
     public AudioClip PauseMusic;  //the music that plays when paused
 
-    public AudioClip ClickAudioClip; //the sfx that plays when the mouse presses a button
-    public AudioClip HoverAudioClip; //the sfx that plays when the mouse hovers over a button
+    public AudioClip CollectSound; //the sfx that plays when the mouse presses a button
+    public AudioClip EnemyAttack1Sound; 
+    public AudioClip EnemyAttack2Sound; 
+    public AudioClip EnemyDead1Sound;
+    public AudioClip EnemyDead2Sound;
+    public AudioClip EnemyHit1Sound; 
+    public AudioClip EnemyHit2Sound; 
+    public AudioClip Enemy1Sound; 
+    public AudioClip Enemy2Sound; 
+    public AudioClip Enemy3Sound; 
+    public AudioClip MenuClick1Sound; 
+    public AudioClip MenuClick2Sound; 
+    public AudioClip Pickaxe1Sound; 
+    public AudioClip Pickaxe2Sound; 
+    public AudioClip Pickaxe3Sound; 
+    public AudioClip PlayerAttackSound;
+    public AudioClip PlayerHitSound;
+    public AudioClip PlayerJumpSound;
+    public AudioClip Footstep1Sound;
+    public AudioClip Footstep2Sound;
+    public AudioClip SwordSwing1Sound;
+    public AudioClip SwordSwing2Sound;
+    public AudioClip SwordSwing3Sound;
+    public AudioClip TreeChop1Sound;
+    public AudioClip TreeChop2Sound;
+    public AudioClip TreeChop3Sound;
+    public AudioClip TurretPlaceSound;
 
     //runs on the frame it was awake on
     void Awake()
@@ -49,10 +74,7 @@ public class GameManager : MonoBehaviour
             GameObject eventSystemGameObject = new GameObject().AddComponent<EventSystem>().gameObject;
             eventSystemGameObject.AddComponent<StandaloneInputModule>();
             DontDestroyOnLoad(eventSystemGameObject);
-           
 
-            //plays the menu music
-            GameManager.global.MusicManager.PlayMusic(MenuMusic);
 
             //this checks if it is the first time playing the game. It wont run again
             if (PlayerPrefs.GetInt("First Time") == 0)
@@ -69,19 +91,23 @@ public class GameManager : MonoBehaviour
             //is to get the GameManager into the game scene, as it exists in the menu scene to begin with.
 
             int quickLoadInt = PlayerPrefs.GetInt("Quick Load");
-
+           
             if (PlayerPrefs.GetInt("Quick Load") > 0)
             {
                 PlayAnimation(GetComponent<Animation>(), "Load In", true, true); //forces the load animation to start on
                 PlayerPrefs.SetInt("Quick Load", 0); //now set it to zero as no need for the feature to exist until next time a peer runs another scene
                 NextScene(quickLoadInt); //go to that next scene
             }
+
+            NextScene(quickLoadInt, true); //go to that next scene
         }
     }
 
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
     {
+        if (minValue == maxValue)
+            return valueInt;
         //will run this once or if i = -1
         for (int i = 0; i < 1; i++)
         {
@@ -129,7 +155,7 @@ public class GameManager : MonoBehaviour
         {
             componentList = new List<T>();
             Component componentParent = searching.GetComponent(typeof(T)); //T is a generic type variable which can be anything. This makes it very robust with handling multiple components
-            
+
             if (componentParent) //checks if the parent has the component, then add it. Adding the parent helps with continuity.
             {
                 componentList.Add((T)componentParent);//to add it to the list, must convert Component to T by calling (T)
@@ -145,7 +171,7 @@ public class GameManager : MonoBehaviour
             //if the child has more children, then it will 
             if (searched.childCount > 0)
                 componentList = FindComponent(searching.GetChild(i), componentList); //next depth  
-          
+
             //found the component
             Component captured = searched.GetComponent(typeof(T));
             if (captured)
@@ -163,7 +189,7 @@ public class GameManager : MonoBehaviour
         //array
         if (layerNameArray == null)
         {
-            layerNameArray = new string[] { "Default" }; 
+            layerNameArray = new string[] { "Default" };
         }
 
         int layerMaskInt = 0;
@@ -178,7 +204,7 @@ public class GameManager : MonoBehaviour
     }
 
     //this function manages the anim component and plays / reverses anim
-    public AnimationState PlayAnimation(Animation anim, string nameClip = "", bool straight = true, bool quick = false)
+    public static AnimationState PlayAnimation(Animation anim, string nameClip = "", bool straight = true, bool quick = false)
     {
         if (anim) //checks exists
         {
@@ -220,7 +246,7 @@ public class GameManager : MonoBehaviour
     }
 
     //changes all layers of an animation so multiple can play at the same time
-    public static void ChangeAnimationLayers(Animation animation)
+    public static void ChangeAnimationLayers(Animation animation, bool playBool = false)
     {
         if (animation)
         {
@@ -230,40 +256,51 @@ public class GameManager : MonoBehaviour
                 animation[clip.name].layer = indexInt;
                 animation[clip.name].speed = 1;
                 indexInt += 1;
+
+                if (playBool)
+                    animation.Play(clip.name);
             }
         }
     }
 
 
     //makes a smooth scene transition
-    public void NextScene(int index)
+    public void NextScene(int index, bool first = false)
     {
-        if(index >= SceneManager.sceneCountInBuildSettings)
+        if (index >= SceneManager.sceneCountInBuildSettings)
         {
             index = 0;
         }
 
         //run a coroutine by calling it in GameManager ensures that if the object wont be destroyed and break the coroutine
-        StartCoroutine(ChangeSceneIEnumerator(index));
+        StartCoroutine(ChangeSceneIEnumerator(index, first));
 
     }
 
     //waits for loading animation to complete
-    public IEnumerator ChangeSceneIEnumerator(int index)
+    public IEnumerator ChangeSceneIEnumerator(int index, bool first)
     {
-        AnimationState state = PlayAnimation(GetComponent<Animation>(), "Load In");
+        AnimationState state = PlayAnimation(GetComponent<Animation>(), "Load In", true, first);
 
+        if (first)
+        {
+            yield return 0;
+        }
         //switches between music
-        GameManager.global.MusicManager.PlayMusic(index == 2 ? GameManager.global.GameMusic : GameManager.global.MenuMusic);
+        GameManager.global.MusicManager.PlayMusic(index == 1 ? GameManager.global.GameMusic : GameManager.global.MenuMusic);
 
         //wait until the animation is done
-        yield return new WaitUntil(() => !state.enabled);
+        yield return new WaitUntil(() => !state || !state.enabled || first);
 
         //gets the scene index and loads it async
-        AsyncOperation operation = SceneManager.LoadSceneAsync(index);
+        if (!first)
+        {
+            AsyncOperation operation = SceneManager.LoadSceneAsync(index);
 
-        //wait until the scene has finished loading
-        yield return new WaitUntil(() => operation.isDone);
+            //wait until the scene has finished loading
+            yield return new WaitUntil(() =>  operation.isDone);
+        }
+       
 
         //play the outro loading animation
         state = PlayAnimation(GetComponent<Animation>(), "Load Out");
