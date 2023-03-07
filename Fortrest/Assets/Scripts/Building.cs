@@ -44,6 +44,7 @@ public class Building : MonoBehaviour
     private PlayerController playerController;
     private float gatherCooldown = 0.75f;
     private float nextGather;
+    AnimationState HealthAnimationState;
 
     // Start is called before the first frame update
     void Start()
@@ -58,7 +59,7 @@ public class Building : MonoBehaviour
 
         //grabs all children transforms including itself by finding the component it matches, as I put transform there, it will just grab all of them
         List<Transform> transformList = GameManager.FindComponent<Transform>(transform);
-
+        GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.GetComponent<Animation>());
         //create a for loop from the list
         for (int i = 0; i < transformList.Count; i++)
         {
@@ -72,6 +73,7 @@ public class Building : MonoBehaviour
         }
     }
 
+
     public void OnMouseDown()
     {
         PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
@@ -81,6 +83,7 @@ public class Building : MonoBehaviour
             screenPoint = Camera.main.WorldToScreenPoint(PreviousPos);
             offset = PreviousPos - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
             LevelManager.global.ActiveBuildingGameObject = gameObject;
+
         }
     }
 
@@ -114,6 +117,20 @@ public class Building : MonoBehaviour
         if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
         {
             nextGather = Time.time + gatherCooldown;
+
+
+            if (healthBarImage.transform.parent.GetComponent<Animation>().isPlaying)
+            {
+                Debug.Log("hit");
+                HealthAnimationState.time = 1;
+                GameManager.PlayAnimation(healthBarImage.transform.parent.GetComponent<Animation>(), "Health Hit");
+            }
+            else
+            {
+                Debug.Log(1);
+                HealthAnimationState = GameManager.PlayAnimation(healthBarImage.transform.parent.GetComponent<Animation>(), "Health Appear");
+            }
+
             if (health > 1)
             {
                 if (resourceObject == BuildingType.Stone)
