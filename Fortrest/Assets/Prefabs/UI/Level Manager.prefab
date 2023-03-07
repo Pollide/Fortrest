@@ -747,6 +747,14 @@ MonoBehaviour:
   - 85
   BuildingList: []
   ActiveBuildingGameObject: {fileID: 0}
+  DirectionalLightTransform: {fileID: 7444467798429044014}
+  LanternGlowingMaterial: {fileID: 2100000, guid: d9ff82e589dc9f64fbd2c007f2908677,
+    type: 2}
+  LanternOffMaterial: {fileID: 2100000, guid: 38dad0140edb0ba4fba296af84657a3c, type: 2}
+  LanternSkinnedRenderer: {fileID: 3978699199845624755}
+  NightLightGameObject: {fileID: 1710503156348281927}
+  threshold: 0
+  closing: 0
 --- !u!114 &8641661282999495141
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2317,11 +2325,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5569601162832024530, guid: 3dc4b1a60854b0a469b856b8b8590167,
         type: 3}
-      propertyPath: CharacterAnimator
-      value: 
-      objectReference: {fileID: 1562714176561105138}
-    - target: {fileID: 5569601162832024530, guid: 3dc4b1a60854b0a469b856b8b8590167,
-        type: 3}
       propertyPath: playerEnergyBarImage
       value: 
       objectReference: {fileID: 6215109830017283158}
@@ -2387,9 +2390,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3dc4b1a60854b0a469b856b8b8590167, type: 3}
---- !u!95 &1562714176561105138 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1731484483238194195, guid: 3dc4b1a60854b0a469b856b8b8590167,
+--- !u!1 &1710503156348281927 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1879261342564991142, guid: 3dc4b1a60854b0a469b856b8b8590167,
+    type: 3}
+  m_PrefabInstance: {fileID: 984203322878010593}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &3978699199845624755 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 4224299908721200978, guid: 3dc4b1a60854b0a469b856b8b8590167,
     type: 3}
   m_PrefabInstance: {fileID: 984203322878010593}
   m_PrefabAsset: {fileID: 0}
