@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private float nextAttack;
 
     CharacterController playerCC;
+    public Animator CharacterAnimator;
 
     [Header("Player States")]
     public bool playerCanMove = true;
@@ -92,10 +93,12 @@ public class PlayerController : MonoBehaviour
     // Player movement 
     private void ApplyMovement(float _horizontalMove, float _verticalMove)
     {
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
-        {
-            playerisMoving = true;
+        playerisMoving = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
 
+        CharacterAnimator.SetBool("Moving", playerisMoving);
+
+        if (playerisMoving)
+        {
             moveDirection = new Vector3(_horizontalMove, 0.0f, _verticalMove);
 
             if (moveDirection.magnitude > 1)
@@ -180,9 +183,9 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
             for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
-            {                
+            {
                 if (Vector3.Distance(transform.position, enemyList[i].transform.position) <= 3.0f && FacingEnemy(enemyList[i].transform.position)) // Distance from player to enemy
-                {                   
+                {
                     playerisAttacking = true;
                     enemyList[i].GetComponent<EnemyController>().chasing = true;
                     GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);

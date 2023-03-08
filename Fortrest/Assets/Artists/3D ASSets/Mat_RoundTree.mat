@@ -138,6 +138,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Normal_Map:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -196,6 +200,7 @@ Material:
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
     - _ADDITIONAL_LIGHTS: 1
     - _ADDITIONAL_LIGHT_SHADOWS: 1
+    - _AO: 0
     - _AlphaClip: 1
     - _Ambience_Multiplier: 0
     - _Blend: 0
@@ -232,6 +237,7 @@ Material:
     - _Metallic2: 0
     - _Metallic3: 0
     - _Mode: 1
+    - _Normal_Strength: 0
     - _NumLayersCount: 1
     - _OcclusionStrength: 1
     - _Offset: 0
