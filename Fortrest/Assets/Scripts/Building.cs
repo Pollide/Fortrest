@@ -64,7 +64,8 @@ public class Building : MonoBehaviour
         for (int i = 0; i < transformList.Count; i++)
         {
             //sets all transforms to the building layer, so the mouse will easily be able to click the building
-            transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
+            if (transformList[i].gameObject.layer != LayerMask.NameToLayer("UI"))
+                transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
         }
 
         if (resourceObject == BuildingType.Cannon)
@@ -113,22 +114,24 @@ public class Building : MonoBehaviour
     {
         PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
 
-        float minDistanceFloat = 3;
+        float minDistanceFloat = 4;
         if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
         {
             nextGather = Time.time + gatherCooldown;
 
+            Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
 
-            if (healthBarImage.transform.parent.GetComponent<Animation>().isPlaying)
+
+            if (animation.isPlaying)
             {
-                Debug.Log("hit");
+                // Debug.Log("hit");
                 HealthAnimationState.time = 1;
-                GameManager.PlayAnimation(healthBarImage.transform.parent.GetComponent<Animation>(), "Health Hit");
+                GameManager.PlayAnimation(animation, "Health Hit");
             }
             else
             {
-                Debug.Log(1);
-                HealthAnimationState = GameManager.PlayAnimation(healthBarImage.transform.parent.GetComponent<Animation>(), "Health Appear");
+                //Debug.Log(1);
+                HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
             }
 
             if (health > 1)
@@ -142,7 +145,6 @@ public class Building : MonoBehaviour
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TreeChop1Sound);
                 }
                 TakeDamage(1);
-                healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
             }
             else if (health == 1)
             {
@@ -150,6 +152,7 @@ public class Building : MonoBehaviour
                 GiveResources();
                 DestroyBuilding();
             }
+            healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
             playerController.ApplyEnergyDamage(energyConsumptionPerClick);
         }
     }
