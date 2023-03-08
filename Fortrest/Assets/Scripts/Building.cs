@@ -125,7 +125,7 @@ public class Building : MonoBehaviour
             if (animation.isPlaying)
             {
                 // Debug.Log("hit");
-                HealthAnimationState.time = 1;
+                HealthAnimationState.time = 2;
                 GameManager.PlayAnimation(animation, "Health Hit");
             }
             else
