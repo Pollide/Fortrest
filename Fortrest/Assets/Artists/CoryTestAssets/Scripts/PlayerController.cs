@@ -62,7 +62,6 @@ public class PlayerController : MonoBehaviour
             Jump();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
-            Eat();
             Attack();
         }
 
@@ -160,17 +159,6 @@ public class PlayerController : MonoBehaviour
     public void ApplyEnergyRestore(float amount)
     {
         playerEnergy += amount;
-    }
-
-    private void Eat()
-    {
-        InventoryManager inventory = GameObject.Find("Level Manager").GetComponent<InventoryManager>();
-
-        if (Input.GetKeyDown(KeyCode.E) && inventory.food > 0 && playerEnergy < maxPlayerEnergy)
-        {
-            ApplyEnergyRestore(5f);
-            inventory.MinusFood(1);
-        }
     }
 
     private void Attack()

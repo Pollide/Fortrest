@@ -27,19 +27,13 @@ public class InventoryItem : MonoBehaviour
             {
                 case ItemType.Food:
 
-                    InventoryManager.global.AddFood(1);
+                    PlayerController.global.ApplyEnergyRestore(5);
 
                     break;
 
                 case ItemType.Wood:
 
                     InventoryManager.global.AddWood(1);
-
-                    break;
-
-                case ItemType.Grass:
-
-                    InventoryManager.global.AddGrass(1);
 
                     break;
 
