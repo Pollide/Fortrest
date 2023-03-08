@@ -122,7 +122,7 @@ public class Building : MonoBehaviour
             Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
 
 
-            if (HealthAnimationState.enabled)
+            if (HealthAnimationState != null && HealthAnimationState.enabled)
             {
                 // Debug.Log("hit");
                 HealthAnimationState.time = 1;
