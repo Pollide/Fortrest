@@ -122,10 +122,10 @@ public class Building : MonoBehaviour
             Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
 
 
-            if (animation.isPlaying)
+            if (HealthAnimationState.enabled)
             {
                 // Debug.Log("hit");
-                HealthAnimationState.time = 2;
+                HealthAnimationState.time = 1;
                 GameManager.PlayAnimation(animation, "Health Hit");
             }
             else
@@ -146,12 +146,12 @@ public class Building : MonoBehaviour
                 }
                 TakeDamage(1);
             }
-            else if (health == 1)
+            else
             {
-                TakeDamage(1);
                 GiveResources();
                 DestroyBuilding();
             }
+
             healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
             playerController.ApplyEnergyDamage(energyConsumptionPerClick);
         }
