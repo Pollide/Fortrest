@@ -9,7 +9,6 @@ public class InventoryItem : MonoBehaviour
     {
         Wood,
         Stone,
-        Grass,
         Food
     }
 
