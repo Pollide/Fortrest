@@ -14,12 +14,13 @@ public class InventoryItem : MonoBehaviour
 
     public ItemType type;
 
+    bool soundPlayed;
 
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.CollectSound);
         if (other.CompareTag("Player"))
         {
+            soundPlayed = false;
             Destroy(gameObject);
 
             switch (type)
@@ -42,6 +43,12 @@ public class InventoryItem : MonoBehaviour
 
                     break;
             }
+        }
+
+        if (!soundPlayed)
+        {
+            soundPlayed = true;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.CollectSound);
         }
     }
 }
