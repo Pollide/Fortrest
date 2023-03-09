@@ -15,6 +15,10 @@ public class InventoryItem : MonoBehaviour
     public ItemType type;
 
     bool soundPlayed;
+    [Header("Food Restore Amount")]
+    public float restoreAmount = 5f;
+    [Header("Resource Amount (Stone and Wood)")]
+    public int resourceAmount = 1;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -26,20 +30,23 @@ public class InventoryItem : MonoBehaviour
             switch (type)
             {
                 case ItemType.Food:
-
-                    PlayerController.global.ApplyEnergyRestore(5);
-
+                    
+                    if(PlayerController.global.playerEnergy < PlayerController.global.maxPlayerEnergy)
+                    {
+                        PlayerController.global.ApplyEnergyRestore(restoreAmount);
+                    }
+         
                     break;
 
                 case ItemType.Wood:
 
-                    InventoryManager.global.AddWood(1);
+                    InventoryManager.global.AddWood(resourceAmount);
 
                     break;
 
                 case ItemType.Stone:
 
-                    InventoryManager.global.AddStone(1);
+                    InventoryManager.global.AddStone(resourceAmount);
 
                     break;
             }
