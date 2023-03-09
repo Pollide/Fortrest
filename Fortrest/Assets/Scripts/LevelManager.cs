@@ -25,21 +25,43 @@ public class LevelManager : MonoBehaviour
     public List<Transform> BuildingList = new List<Transform>();
 
     public GameObject ActiveBuildingGameObject;
-
+    public Transform DirectionalLightTransform;
+    public Material LanternGlowingMaterial;
+    public Material LanternOffMaterial;
+    public SkinnedMeshRenderer LanternSkinnedRenderer;
+    public GameObject NightLightGameObject;
+    public float DaylightTimer;
+    public float daySpeed = 2;
     private void Awake()
     {
         global = this;
-
+        DaylightTimer = DirectionalLightTransform.eulerAngles.x;
         if (!GameManager.global)
         {
-           
+
             PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
     }
 
+
     private void Update()
     {
+        DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
+        DaylightTimer += daySpeed * Time.deltaTime;
+
+
+        if (DaylightTimer > 360)
+        {
+            DaylightTimer = 0;
+            //  Debug.Log("DAY COMPLETE");
+        }
+
+        bool nightTimeBool = DaylightTimer > 180;
+
+        NightLightGameObject.SetActive(nightTimeBool);
+        LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             GameManager.global.NextScene(0);

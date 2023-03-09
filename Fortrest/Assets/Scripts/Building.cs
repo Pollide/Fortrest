@@ -44,6 +44,7 @@ public class Building : MonoBehaviour
     private PlayerController playerController;
     private float gatherCooldown = 0.75f;
     private float nextGather;
+    AnimationState HealthAnimationState;
 
     // Start is called before the first frame update
     void Start()
@@ -58,12 +59,13 @@ public class Building : MonoBehaviour
 
         //grabs all children transforms including itself by finding the component it matches, as I put transform there, it will just grab all of them
         List<Transform> transformList = GameManager.FindComponent<Transform>(transform);
-
+        GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
         //create a for loop from the list
         for (int i = 0; i < transformList.Count; i++)
         {
             //sets all transforms to the building layer, so the mouse will easily be able to click the building
-            transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
+            if (transformList[i].gameObject.layer != LayerMask.NameToLayer("UI"))
+                transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
         }
 
         if (resourceObject == BuildingType.Cannon)
@@ -71,6 +73,7 @@ public class Building : MonoBehaviour
             LevelManager.global.BuildingList.Add(transform);
         }
     }
+
 
     public void OnMouseDown()
     {
@@ -81,6 +84,7 @@ public class Building : MonoBehaviour
             screenPoint = Camera.main.WorldToScreenPoint(PreviousPos);
             offset = PreviousPos - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
             LevelManager.global.ActiveBuildingGameObject = gameObject;
+
         }
     }
 
@@ -110,10 +114,26 @@ public class Building : MonoBehaviour
     {
         PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
 
-        float minDistanceFloat = 3;
+        float minDistanceFloat = 4;
         if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
         {
             nextGather = Time.time + gatherCooldown;
+
+            Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
+
+
+            if (HealthAnimationState != null && HealthAnimationState.enabled)
+            {
+                // Debug.Log("hit");
+                HealthAnimationState.time = 1;
+                GameManager.PlayAnimation(animation, "Health Hit");
+            }
+            else
+            {
+                //Debug.Log(1);
+                HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
+            }
+
             if (health > 1)
             {
                 if (resourceObject == BuildingType.Stone)
@@ -124,15 +144,16 @@ public class Building : MonoBehaviour
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TreeChop1Sound);
                 }
+
                 TakeDamage(1);
-                healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
             }
-            else if (health == 1)
+            else
             {
-                TakeDamage(1);
                 GiveResources();
                 DestroyBuilding();
             }
+
+            healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
             playerController.ApplyEnergyDamage(energyConsumptionPerClick);
         }
     }
