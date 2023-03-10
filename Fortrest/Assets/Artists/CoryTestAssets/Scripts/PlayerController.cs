@@ -69,24 +69,12 @@ public class PlayerController : MonoBehaviour
         {
             playerEnergy = maxPlayerEnergy;
         }
-        else if (playerEnergy > maxPlayerEnergy / 2f)
-        {
-            playerEnergyBarImage.color = Color.green;
-        }
-        else if (playerEnergy <= maxPlayerEnergy / 2f && playerEnergy > maxPlayerEnergy / 4f)
-        {
-            playerEnergyBarImage.color = Color.yellow;
-        }
-        else if (playerEnergy <= maxPlayerEnergy / 4f && playerEnergy != 0f)
-        {
-            playerEnergyBarImage.color = Color.red;
-        }
         else
         {
             playerCurrSpeed = playerSlowedSpeed;
         }
 
-        playerEnergyBarImage.fillAmount = Mathf.Clamp(playerEnergy / maxPlayerEnergy, 0, 1f);
+        playerEnergyBarImage.fillAmount = Mathf.Clamp(playerEnergy / maxPlayerEnergy, 0.300f, 0.900f);
     }
 
     // Player movement 
