@@ -160,7 +160,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 foreach (Transform child in parts)
                 {
-                    if (child.GetComponent<MeshRenderer>())
+                    if (child.GetComponent<MeshRenderer>() && child.GetComponent<MeshRenderer>().material != turretBlueprintBlue)
                     {
                         child.GetComponent<MeshRenderer>().material = turretBlueprintBlue;
                     }
@@ -171,7 +171,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 foreach (Transform child in parts)
                 {
-                    if (child.GetComponent<MeshRenderer>())
+                    if (child.GetComponent<MeshRenderer>() && child.GetComponent<MeshRenderer>().material != turretBlueprintRed)
                     {
                         child.GetComponent<MeshRenderer>().material = turretBlueprintRed;
                     }
