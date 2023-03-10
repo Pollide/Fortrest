@@ -82,9 +82,11 @@ public class Building : MonoBehaviour
             LevelManager.global.ActiveBuildingGameObject = null;
     }
 
-    private void OnMouseOver()
+    public void MouseOverVoid()
     {
         float minDistanceFloat = 4;
+
+        // Debug.Log(PlayerModeHandler.global.playerModes + " " + (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode));
         if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
         {
             nextGather = Time.time + gatherCooldown;
@@ -126,6 +128,7 @@ public class Building : MonoBehaviour
 
             PlayerController.global.ApplyEnergyDamage(energyConsumptionPerClick);
         }
+
     }
 
     private void GiveResources()
