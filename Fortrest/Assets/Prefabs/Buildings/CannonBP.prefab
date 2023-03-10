@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 461908100}
   - component: {fileID: 461908103}
   - component: {fileID: 461908102}
-  - component: {fileID: 461908101}
   m_Layer: 0
   m_Name: Cube (1)
   m_TagString: Building
@@ -84,19 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &461908101
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 461908099}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &531117619
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,7 +94,6 @@ GameObject:
   - component: {fileID: 531117620}
   - component: {fileID: 531117623}
   - component: {fileID: 531117622}
-  - component: {fileID: 531117621}
   m_Layer: 0
   m_Name: Cylinder
   m_TagString: Building
@@ -181,20 +166,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &531117621
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531117619}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &669986854
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,7 +177,6 @@ GameObject:
   - component: {fileID: 669986855}
   - component: {fileID: 669986858}
   - component: {fileID: 669986857}
-  - component: {fileID: 669986856}
   m_Layer: 0
   m_Name: Cylinder (1)
   m_TagString: Building
@@ -279,20 +249,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &669986856
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 669986854}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &353762007657324873
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +260,6 @@ GameObject:
   - component: {fileID: 3330487108086186275}
   - component: {fileID: 5499218191795535589}
   - component: {fileID: 6638850944986401468}
-  - component: {fileID: 6995353267642320874}
   m_Layer: 0
   m_Name: Cube (2)
   m_TagString: Building
@@ -377,19 +332,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6995353267642320874
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 353762007657324873}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1829088024434740924
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +343,6 @@ GameObject:
   - component: {fileID: 1829088024434740915}
   - component: {fileID: 1829088024434740912}
   - component: {fileID: 1829088024434740913}
-  - component: {fileID: 1829088024434740914}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Building
@@ -474,19 +415,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &1829088024434740914
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1829088024434740924}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1829088025094860092
 GameObject:
   m_ObjectHideFlags: 0
@@ -497,7 +425,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1829088025094860082}
   - component: {fileID: 1829088025094860083}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: CannonBP
   m_TagString: BuildingBP
   m_Icon: {fileID: 0}
@@ -542,7 +470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 0
-  resourceObject: 0
+  resourceObject: 1
   maxHealth: 5
   energyConsumptionPerClick: 2
   resourceAmount: 5
@@ -558,7 +486,6 @@ GameObject:
   - component: {fileID: 8506261389271624621}
   - component: {fileID: 429943877702489623}
   - component: {fileID: 5992848936525959952}
-  - component: {fileID: 630856221905453125}
   m_Layer: 0
   m_Name: Cylinder (2)
   m_TagString: Building
@@ -631,20 +558,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &630856221905453125
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3480711164636357407}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &3974732638871760416
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,7 +569,6 @@ GameObject:
   - component: {fileID: 3123977547688620801}
   - component: {fileID: 5738158123222385811}
   - component: {fileID: 5250196351379508578}
-  - component: {fileID: 1349309585094209267}
   m_Layer: 0
   m_Name: Cylinder (3)
   m_TagString: Building
@@ -729,20 +641,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &1349309585094209267
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3974732638871760416}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &3980332497628150944
 GameObject:
   m_ObjectHideFlags: 0
@@ -754,7 +652,6 @@ GameObject:
   - component: {fileID: 2531838406318352644}
   - component: {fileID: 1584533211292450348}
   - component: {fileID: 5575230390517817830}
-  - component: {fileID: 2981715613453738451}
   m_Layer: 0
   m_Name: Cylinder (4)
   m_TagString: Building
@@ -827,20 +724,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2981715613453738451
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3980332497628150944}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &5609962609214457545
 GameObject:
   m_ObjectHideFlags: 0
@@ -852,7 +735,6 @@ GameObject:
   - component: {fileID: 956681409613726510}
   - component: {fileID: 5100000244086752492}
   - component: {fileID: 5533297862777726418}
-  - component: {fileID: 2000804158259886711}
   m_Layer: 0
   m_Name: Cylinder (5)
   m_TagString: Building
@@ -925,20 +807,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2000804158259886711
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5609962609214457545}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1001 &4474840095471502556
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -965,6 +833,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_TagString
       value: Building
+      objectReference: {fileID: 0}
+    - target: {fileID: 5210401813966692839, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}

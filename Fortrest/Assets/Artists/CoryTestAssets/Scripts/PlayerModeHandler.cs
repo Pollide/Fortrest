@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public enum PlayerModes
 {
@@ -17,12 +18,20 @@ public class PlayerModeHandler : MonoBehaviour
     public PlayerModes playerModes;
     public GameObject turretPrefabPlaced;
     public GameObject turretBlueprint;
+    Transform[] parts;
+    public Material turretBlueprintRed;
+    public Material turretBlueprintBlue;
     public int constructionCostTurret = 2;
+    public float distanceAwayFromPlayer = 30;
     public LayerMask buildingLayer;
+    public Image buildingMode;
+    public Image resourceMode;
+    public Image combatMode;
 
     private void Awake()
     {
         global = this;
+        parts = turretBlueprint.GetComponentsInChildren<Transform>();
     }
 
     private void Update()
@@ -31,6 +40,22 @@ public class PlayerModeHandler : MonoBehaviour
         {
             DragBuildingBlueprint();
             SpawnBuilding();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            switch (playerModes)
+            {
+                case PlayerModes.BuildMode:
+                    SwitchToCombatMode();
+                    break;
+                case PlayerModes.CombatMode:
+                    SwitchToGatherMode();
+                    break;
+                case PlayerModes.ResourceMode:
+                    SwitchToBuildMode();
+                    break;
+            }
         }
     }
 
@@ -43,11 +68,18 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         playerModes = PlayerModes.ResourceMode;
+        buildingMode.enabled = false;
+        resourceMode.enabled = true;
+        combatMode.enabled = false;
     }
 
     public void SwitchToBuildMode()
     {
         playerModes = PlayerModes.BuildMode;
+
+        buildingMode.enabled = true;
+        resourceMode.enabled = false;
+        combatMode.enabled = false;
     }
 
     public void SwitchToGatherMode()
@@ -58,6 +90,10 @@ public class PlayerModeHandler : MonoBehaviour
         }
 
         playerModes = PlayerModes.ResourceMode;
+
+        buildingMode.enabled = false;
+        resourceMode.enabled = true;
+        combatMode.enabled = false;
     }
 
     public void SwitchToCombatMode()
@@ -68,22 +104,29 @@ public class PlayerModeHandler : MonoBehaviour
         }
 
         playerModes = PlayerModes.CombatMode;
+
+        buildingMode.enabled = false;
+        resourceMode.enabled = false;
+        combatMode.enabled = true;
     }
 
     private void SpawnBuilding()
     {
         if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= constructionCostTurret && !MouseOverUI())
         {
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
 
             if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building"))
             {
                 Vector3 worldPos = hitData.point;
-                worldPos.y = PlayerController.global.transform.position.y;
-                Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
-                InventoryManager.global.wood -= constructionCostTurret;
+
+                if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
+                {
+                    Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
+                    InventoryManager.global.wood -= constructionCostTurret;
+                    Debug.Log("working");
+                }
             }
             else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Player"))
             {
@@ -105,21 +148,35 @@ public class PlayerModeHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitData;
 
-
-
         if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !MouseOverUI())
         {
             turretBlueprint.SetActive(true);
-            turretBlueprint.transform.transform.tag = "Building";
-            for (int i = 0; i < turretBlueprint.transform.childCount; i++)
-            {
-                turretBlueprint.transform.transform.GetChild(i).tag = "Building";
-            }
-
 
             Vector3 worldPos = hitData.point;
 
             turretBlueprint.transform.position = worldPos;
+
+            if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer && InventoryManager.global.wood >= constructionCostTurret)
+            {
+                foreach (Transform child in parts)
+                {
+                    if (child.GetComponent<MeshRenderer>() && child.GetComponent<MeshRenderer>().material != turretBlueprintBlue)
+                    {
+                        child.GetComponent<MeshRenderer>().material = turretBlueprintBlue;
+                    }
+                  
+                }
+            }
+            else
+            {
+                foreach (Transform child in parts)
+                {
+                    if (child.GetComponent<MeshRenderer>() && child.GetComponent<MeshRenderer>().material != turretBlueprintRed)
+                    {
+                        child.GetComponent<MeshRenderer>().material = turretBlueprintRed;
+                    }
+                }
+            } 
         }
         else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
         {

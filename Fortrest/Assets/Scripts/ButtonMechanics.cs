@@ -32,6 +32,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     [Space(10)] //creates a gap in the inspector
     public bool SpeedBool;
     public bool NextScene;
+    public Sprite play;
+    public Sprite fastForward;
 
     void Start()
     {
@@ -49,7 +51,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public void OnPointerExit(PointerEventData eventData)
     {
         ChangeSizeVoid(1f);
-        ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
+        //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
     }
 
     //checks to see if the pointer has entered the button
@@ -57,7 +59,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     {
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
         ChangeSizeVoid(1.1f);
-        ChangeColourVoid(Color.white);
+        //ChangeColourVoid(Color.white);
     }
 
     //checks to see if the mouse was clicked ontop of the button
@@ -86,7 +88,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         {
             Time.timeScale = Time.timeScale == 2 ? 1 : 2;
             GetComponent<Image>().color = Time.timeScale == 2 ? Color.red : Color.white;
-            transform.GetChild(0).GetComponent<TMP_Text>().text = Time.timeScale == 2 ? ">>" : ">";
+            transform.GetComponent<Image>().sprite = Time.timeScale == 2 ? play : fastForward; 
         }
 
         if (OptionsBool)
