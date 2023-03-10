@@ -22,6 +22,7 @@ public class Building : MonoBehaviour
     public enum BuildingType
     {
         Cannon,
+        CannonBP,
         Wood,
         Stone,
         Food,
