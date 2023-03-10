@@ -18,6 +18,9 @@ public class PlayerModeHandler : MonoBehaviour
     public PlayerModes playerModes;
     public GameObject turretPrefabPlaced;
     public GameObject turretBlueprint;
+    Transform[] parts;
+    public Material turretBlueprintRed;
+    public Material turretBlueprintBlue;
     public int constructionCostTurret = 2;
     public float distanceAwayFromPlayer = 30;
     public LayerMask buildingLayer;
@@ -28,6 +31,7 @@ public class PlayerModeHandler : MonoBehaviour
     private void Awake()
     {
         global = this;
+        parts = turretBlueprint.GetComponentsInChildren<Transform>();
     }
 
     private void Update()
@@ -151,6 +155,28 @@ public class PlayerModeHandler : MonoBehaviour
             Vector3 worldPos = hitData.point;
 
             turretBlueprint.transform.position = worldPos;
+
+            if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer && InventoryManager.global.wood >= constructionCostTurret)
+            {
+                foreach (Transform child in parts)
+                {
+                    if (child.GetComponent<MeshRenderer>())
+                    {
+                        child.GetComponent<MeshRenderer>().material = turretBlueprintBlue;
+                    }
+                  
+                }
+            }
+            else
+            {
+                foreach (Transform child in parts)
+                {
+                    if (child.GetComponent<MeshRenderer>())
+                    {
+                        child.GetComponent<MeshRenderer>().material = turretBlueprintRed;
+                    }
+                }
+            } 
         }
         else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
         {
