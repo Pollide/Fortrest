@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public enum PlayerModes
 {
@@ -18,7 +19,11 @@ public class PlayerModeHandler : MonoBehaviour
     public GameObject turretPrefabPlaced;
     public GameObject turretBlueprint;
     public int constructionCostTurret = 2;
+    public float distanceAwayFromPlayer = 30;
     public LayerMask buildingLayer;
+    public Image buildingMode;
+    public Image resourceMode;
+    public Image combatMode;
 
     private void Awake()
     {
@@ -32,6 +37,22 @@ public class PlayerModeHandler : MonoBehaviour
             DragBuildingBlueprint();
             SpawnBuilding();
         }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            switch (playerModes)
+            {
+                case PlayerModes.BuildMode:
+                    SwitchToCombatMode();
+                    break;
+                case PlayerModes.CombatMode:
+                    SwitchToGatherMode();
+                    break;
+                case PlayerModes.ResourceMode:
+                    SwitchToBuildMode();
+                    break;
+            }
+        }
     }
 
     public bool MouseOverUI()
@@ -43,11 +64,18 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         playerModes = PlayerModes.ResourceMode;
+        buildingMode.enabled = false;
+        resourceMode.enabled = true;
+        combatMode.enabled = false;
     }
 
     public void SwitchToBuildMode()
     {
         playerModes = PlayerModes.BuildMode;
+
+        buildingMode.enabled = true;
+        resourceMode.enabled = false;
+        combatMode.enabled = false;
     }
 
     public void SwitchToGatherMode()
@@ -58,6 +86,10 @@ public class PlayerModeHandler : MonoBehaviour
         }
 
         playerModes = PlayerModes.ResourceMode;
+
+        buildingMode.enabled = false;
+        resourceMode.enabled = true;
+        combatMode.enabled = false;
     }
 
     public void SwitchToCombatMode()
@@ -68,6 +100,10 @@ public class PlayerModeHandler : MonoBehaviour
         }
 
         playerModes = PlayerModes.CombatMode;
+
+        buildingMode.enabled = false;
+        resourceMode.enabled = false;
+        combatMode.enabled = true;
     }
 
     private void SpawnBuilding()
@@ -80,8 +116,13 @@ public class PlayerModeHandler : MonoBehaviour
             if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building"))
             {
                 Vector3 worldPos = hitData.point;
-                Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
-                InventoryManager.global.wood -= constructionCostTurret;
+
+                if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
+                {
+                    Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
+                    InventoryManager.global.wood -= constructionCostTurret;
+                    Debug.Log("working");
+                }
             }
             else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Player"))
             {

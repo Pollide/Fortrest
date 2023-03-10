@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         playerEnergy = maxPlayerEnergy;
+        playerEnergyBarImage.fillAmount = 0.935f;
     }
 
     // Update is called once per frame
@@ -68,13 +69,10 @@ public class PlayerController : MonoBehaviour
         if (playerEnergy >= maxPlayerEnergy)
         {
             playerEnergy = maxPlayerEnergy;
-        }
-        else
-        {
-            playerCurrSpeed = playerSlowedSpeed;
+            playerEnergyBarImage.fillAmount = 0.935f;
         }
 
-        playerEnergyBarImage.fillAmount = Mathf.Clamp(playerEnergy / maxPlayerEnergy, 0.300f, 0.900f);
+        playerEnergyBarImage.fillAmount = Mathf.Lerp(0.320f, 0.935f, playerEnergy / maxPlayerEnergy);
     }
 
     // Player movement 
