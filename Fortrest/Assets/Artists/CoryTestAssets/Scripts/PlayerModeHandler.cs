@@ -110,10 +110,10 @@ public class PlayerModeHandler : MonoBehaviour
         if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !MouseOverUI())
         {
             turretBlueprint.SetActive(true);
-
+            turretBlueprint.transform.transform.tag = "Building";
             for (int i = 0; i < turretBlueprint.transform.childCount; i++)
             {
-                turretBlueprint.transform.transform.GetChild(i).tag = "BuildingBP";
+                turretBlueprint.transform.transform.GetChild(i).tag = "Building";
             }
 
 

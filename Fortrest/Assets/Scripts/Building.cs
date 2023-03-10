@@ -82,7 +82,7 @@ public class Building : MonoBehaviour
             LevelManager.global.ActiveBuildingGameObject = null;
     }
 
-    public void MouseOverVoid()
+    public void OnMouseOver()
     {
         float minDistanceFloat = 4;
 
