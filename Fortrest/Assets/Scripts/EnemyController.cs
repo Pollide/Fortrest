@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -10,16 +11,25 @@ public class EnemyController : MonoBehaviour
     NavMeshAgent agent; // Nav mesh agent component
     [SerializeField] Transform bestTarget; // Target that the enemy will go towards
     public bool chasing; // Enemy chases the player mode
+    public bool attacked;
     private Transform playerPosition;
 
     public float attackTimer;
     public float attackTimerMax = 200;
 
+    public float health;
+    private float maxHealth = 3.0f;
+    public Image healthBarImage;
+    AnimationState HealthAnimationState;
+
+
     void Start()
     {
+        health = maxHealth;
         playerPosition = PlayerController.global.transform;
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
+        GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
     }
 
     void Update()
@@ -120,6 +130,28 @@ public class EnemyController : MonoBehaviour
     public void RemoveTarget()
     {
         LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
+    }
+
+    public void Damaged()
+    {
+        Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
+        health -= 1;
+        if (HealthAnimationState != null && HealthAnimationState.enabled)
+        {
+            HealthAnimationState.time = 1;
+            GameManager.PlayAnimation(animation, "Health Hit");
+        }
+        else
+        {
+            HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
+        }
+        healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
+        if (health <= 0)
+        {
+            PlayerController.global.enemyList.Remove(transform);
+            agent.enabled = false;
+            Destroy(gameObject);
+        }
     }
 
     //private void OnDrawGizmosSelected() // Used to draw gizmos

@@ -166,6 +166,7 @@ public class PlayerController : MonoBehaviour
                     playerisAttacking = true;
                     enemyList[i].GetComponent<EnemyController>().chasing = true;
                     GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
+                    enemyList[i].GetComponent<EnemyController>().Damaged();
                     break;
                 }
             }
