@@ -65,6 +65,7 @@ public class Building : MonoBehaviour
         {
             LevelManager.global.BuildingList.Add(transform);
         }
+
     }
 
 
@@ -85,7 +86,7 @@ public class Building : MonoBehaviour
     private void OnMouseOver()
     {
         float minDistanceFloat = 4;
-        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
+        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool /*&& PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode*/ && Time.time > nextGather)
         {
             nextGather = Time.time + gatherCooldown;
 
