@@ -69,6 +69,14 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
+        if (Physics.Raycast(SceneCamera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, GameManager.ReturnBitShift(new string[] { "Building" })))
+        {
+            if (hit.transform.GetComponent<Building>())
+            {
+                hit.transform.GetComponent<Building>().MouseOverVoid();
+            }
+        }
+
         if (ActiveBuildingGameObject)
             return;
 
