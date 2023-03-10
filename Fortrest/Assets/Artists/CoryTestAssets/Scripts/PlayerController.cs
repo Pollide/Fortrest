@@ -141,6 +141,9 @@ public class PlayerController : MonoBehaviour
 
     public void ApplyEnergyDamage(float amount)
     {
+        CharacterAnimator.ResetTrigger("Swing");
+        CharacterAnimator.SetTrigger("Swing");
+
         playerEnergy -= amount;
     }
 
@@ -154,6 +157,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
             ApplyEnergyDamage(5.0f);
+
             nextAttack = Time.time + attackCooldown;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
