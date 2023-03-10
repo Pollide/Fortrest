@@ -32,6 +32,10 @@ public class LevelManager : MonoBehaviour
     public GameObject NightLightGameObject;
     public float DaylightTimer;
     public float daySpeed = 2;
+    public float GoblinTimer;
+    float GoblinThreshold;
+    public GameObject GoblinGameObject;
+
     private void Awake()
     {
         global = this;
@@ -49,7 +53,23 @@ public class LevelManager : MonoBehaviour
     {
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DaylightTimer += daySpeed * Time.deltaTime;
+        GoblinTimer += Time.deltaTime;
 
+        if (GoblinTimer >= GoblinThreshold)
+        {
+            GoblinThreshold = Random.Range(3, 8);
+            GoblinTimer = 0;
+
+            Vector3 spawn = PlayerController.global.transform.position;
+
+
+            spawn.x += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+
+            spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+
+            GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
+
+        }
 
         if (DaylightTimer > 360)
         {
