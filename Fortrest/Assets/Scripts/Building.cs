@@ -65,7 +65,6 @@ public class Building : MonoBehaviour
         {
             LevelManager.global.BuildingList.Add(transform);
         }
-
     }
 
 
