@@ -17,10 +17,6 @@ using UnityEngine.UI;
 
 public class Building : MonoBehaviour
 {
-    Vector3 PreviousPos;
-    Vector3 screenPoint;
-    Vector3 offset;
-
     public bool NaturalBool;
 
     public enum BuildingType
@@ -28,7 +24,6 @@ public class Building : MonoBehaviour
         Cannon,
         Wood,
         Stone,
-        Grass,
         Food,
     }
 
@@ -41,7 +36,6 @@ public class Building : MonoBehaviour
 
     public Image healthBarImage;
 
-    private PlayerController playerController;
     private float gatherCooldown = 0.75f;
     private float nextGather;
     AnimationState HealthAnimationState;
@@ -49,8 +43,6 @@ public class Building : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerController = GameObject.Find("Player").GetComponent<PlayerController>();
-
         health = maxHealth;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
@@ -60,6 +52,7 @@ public class Building : MonoBehaviour
         //grabs all children transforms including itself by finding the component it matches, as I put transform there, it will just grab all of them
         List<Transform> transformList = GameManager.FindComponent<Transform>(transform);
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
+
         //create a for loop from the list
         for (int i = 0; i < transformList.Count; i++)
         {
@@ -77,50 +70,28 @@ public class Building : MonoBehaviour
 
     public void OnMouseDown()
     {
-        PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
-        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(0) && !NaturalBool && modeHandler.playerModes == PlayerModes.BuildMode)
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(0) && !NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
         {
-            PreviousPos = transform.position;
-            screenPoint = Camera.main.WorldToScreenPoint(PreviousPos);
-            offset = PreviousPos - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
             LevelManager.global.ActiveBuildingGameObject = gameObject;
-
         }
     }
 
     public void OnMouseUp()
     {
-        PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
-        if (!NaturalBool && modeHandler.playerModes == PlayerModes.BuildMode)
+        if (!NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
             LevelManager.global.ActiveBuildingGameObject = null;
     }
 
-    public void OnMouseDrag()
+    public void OnMouseOver()
     {
-        PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
-        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && !NaturalBool && modeHandler.playerModes == PlayerModes.BuildMode)
-        {
-            Vector3 curScreenPoint = new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z);
-            Vector3 curPosition = Camera.main.ScreenToWorldPoint(curScreenPoint) + offset;
-            curPosition = new Vector3(Mathf.Round(curPosition.x), transform.position.y, Mathf.Round(curPosition.z));
-            transform.position = curPosition;
-
-            PreviousPos = transform.position;
-        }
-    }
-
-
-    private void OnMouseOver()
-    {
-        PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
-
         float minDistanceFloat = 4;
-        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool && modeHandler.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
+
+        // Debug.Log(PlayerModeHandler.global.playerModes + " " + (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode));
+        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
         {
             nextGather = Time.time + gatherCooldown;
 
             Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
-
 
             if (HealthAnimationState != null && HealthAnimationState.enabled)
             {
@@ -154,8 +125,10 @@ public class Building : MonoBehaviour
             }
 
             healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
-            playerController.ApplyEnergyDamage(energyConsumptionPerClick);
+
+            PlayerController.global.ApplyEnergyDamage(energyConsumptionPerClick);
         }
+
     }
 
     private void GiveResources()

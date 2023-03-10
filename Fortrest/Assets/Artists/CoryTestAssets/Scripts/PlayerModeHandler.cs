@@ -1,71 +1,129 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public enum PlayerModes
 {
     BuildMode,
     ResourceMode,
-    CombatMode
+    CombatMode,
 }
 
 
 public class PlayerModeHandler : MonoBehaviour
-{   
+{
+    public static PlayerModeHandler global;
     public PlayerModes playerModes;
+    public GameObject turretPrefabPlaced;
+    public GameObject turretBlueprint;
+    public int constructionCostTurret = 2;
+    public LayerMask buildingLayer;
 
-    public Image buildModeImage;
-    public Image resourceModeImage;
-    public Image combatModeImage;
+    private void Awake()
+    {
+        global = this;
+    }
+
+    private void Update()
+    {
+        if (playerModes == PlayerModes.BuildMode)
+        {
+            DragBuildingBlueprint();
+            SpawnBuilding();
+        }
+    }
+
+    public bool MouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         playerModes = PlayerModes.ResourceMode;
-
-        resourceModeImage.enabled = true;
-        buildModeImage.enabled = false;
-        combatModeImage.enabled = false;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SwitchToBuildMode()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        playerModes = PlayerModes.BuildMode;
+    }
+
+    public void SwitchToGatherMode()
+    {
+        if (turretBlueprint.activeInHierarchy)
         {
-            switch (playerModes)
+            turretBlueprint.SetActive(false);
+        }
+
+        playerModes = PlayerModes.ResourceMode;
+    }
+
+    public void SwitchToCombatMode()
+    {
+        if (turretBlueprint.activeInHierarchy)
+        {
+            turretBlueprint.SetActive(false);
+        }
+
+        playerModes = PlayerModes.CombatMode;
+    }
+
+    private void SpawnBuilding()
+    {
+        if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= constructionCostTurret && !MouseOverUI())
+        {
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitData;
+
+            if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building"))
             {
-                case PlayerModes.BuildMode:
-
-                    playerModes = PlayerModes.ResourceMode;
-
-                    buildModeImage.enabled = false;
-                    resourceModeImage.enabled = true;
-                    combatModeImage.enabled = false;
-
-                    break;
-
-                case PlayerModes.CombatMode:
-
-                    playerModes = PlayerModes.BuildMode;
-
-                    buildModeImage.enabled = true;
-                    resourceModeImage.enabled = false;
-                    combatModeImage.enabled = false;
-
-                    break;
-
-                case PlayerModes.ResourceMode:
-
-                    playerModes = PlayerModes.CombatMode;
-
-                    buildModeImage.enabled = false;
-                    resourceModeImage.enabled = false;
-                    combatModeImage.enabled = true;
-
-                    break;
+                Vector3 worldPos = hitData.point;
+                worldPos.y = PlayerController.global.transform.position.y;
+                Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
+                InventoryManager.global.wood -= constructionCostTurret;
             }
+            else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Player"))
+            {
+                Debug.Log("Cannot Place Building Here");
+            }
+            else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Building"))
+            {
+                Debug.Log("Building Here");
+            }
+        }
+        else if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood < constructionCostTurret)
+        {
+            Debug.Log("Not Enough Resources");
+        }
+    }
+
+    private void DragBuildingBlueprint()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitData;
+
+
+
+        if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !MouseOverUI())
+        {
+            turretBlueprint.SetActive(true);
+            turretBlueprint.transform.transform.tag = "Building";
+            for (int i = 0; i < turretBlueprint.transform.childCount; i++)
+            {
+                turretBlueprint.transform.transform.GetChild(i).tag = "Building";
+            }
+
+
+            Vector3 worldPos = hitData.point;
+
+            turretBlueprint.transform.position = worldPos;
+        }
+        else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
+        {
+            turretBlueprint.SetActive(false);
         }
     }
 }

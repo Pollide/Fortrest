@@ -62,7 +62,6 @@ public class PlayerController : MonoBehaviour
             Jump();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
-            Eat();
             Attack();
         }
 
@@ -70,24 +69,12 @@ public class PlayerController : MonoBehaviour
         {
             playerEnergy = maxPlayerEnergy;
         }
-        else if (playerEnergy > maxPlayerEnergy / 2f)
-        {
-            playerEnergyBarImage.color = Color.green;
-        }
-        else if (playerEnergy <= maxPlayerEnergy / 2f && playerEnergy > maxPlayerEnergy / 4f)
-        {
-            playerEnergyBarImage.color = Color.yellow;
-        }
-        else if (playerEnergy <= maxPlayerEnergy / 4f && playerEnergy != 0f)
-        {
-            playerEnergyBarImage.color = Color.red;
-        }
         else
         {
             playerCurrSpeed = playerSlowedSpeed;
         }
 
-        playerEnergyBarImage.fillAmount = Mathf.Clamp(playerEnergy / maxPlayerEnergy, 0, 1f);
+        playerEnergyBarImage.fillAmount = Mathf.Clamp(playerEnergy / maxPlayerEnergy, 0.300f, 0.900f);
     }
 
     // Player movement 
@@ -154,6 +141,9 @@ public class PlayerController : MonoBehaviour
 
     public void ApplyEnergyDamage(float amount)
     {
+        CharacterAnimator.ResetTrigger("Swing");
+        CharacterAnimator.SetTrigger("Swing");
+
         playerEnergy -= amount;
     }
 
@@ -162,23 +152,12 @@ public class PlayerController : MonoBehaviour
         playerEnergy += amount;
     }
 
-    private void Eat()
-    {
-        InventoryManager inventory = GameObject.Find("Level Manager").GetComponent<InventoryManager>();
-
-        if (Input.GetKeyDown(KeyCode.E) && inventory.food > 0 && playerEnergy < maxPlayerEnergy)
-        {
-            ApplyEnergyRestore(5f);
-            inventory.MinusFood(1);
-        }
-    }
-
     private void Attack()
     {
-        PlayerModeHandler modeHandler = GameObject.Find("Level Manager").GetComponent<PlayerModeHandler>();
-        if (Input.GetMouseButton(0) && Time.time > nextAttack && modeHandler.playerModes == PlayerModes.CombatMode)
+        if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
             ApplyEnergyDamage(5.0f);
+
             nextAttack = Time.time + attackCooldown;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
