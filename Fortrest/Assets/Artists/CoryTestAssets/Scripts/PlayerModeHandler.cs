@@ -74,12 +74,14 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= constructionCostTurret && !MouseOverUI())
         {
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
 
             if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building"))
             {
                 Vector3 worldPos = hitData.point;
+                worldPos.y = PlayerController.global.transform.position.y;
                 Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
                 InventoryManager.global.wood -= constructionCostTurret;
             }
@@ -103,9 +105,17 @@ public class PlayerModeHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitData;
 
+
+
         if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !MouseOverUI())
         {
             turretBlueprint.SetActive(true);
+            turretBlueprint.transform.transform.tag = "Building";
+            for (int i = 0; i < turretBlueprint.transform.childCount; i++)
+            {
+                turretBlueprint.transform.transform.GetChild(i).tag = "Building";
+            }
+
 
             Vector3 worldPos = hitData.point;
 

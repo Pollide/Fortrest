@@ -69,13 +69,23 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
-        if (Physics.Raycast(SceneCamera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit, GameManager.ReturnBitShift(new string[] { "Building" })))
+        if (PlayerController.global.transform.position.y < -3)
         {
+            GameManager.global.NextScene(1);
+            enabled = false;
+            return;
+        }
+
+        /*
+        if (Physics.Raycast(SceneCamera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
+        {
+            Debug.Log(hit.transform);
             if (hit.transform.GetComponent<Building>())
             {
                 hit.transform.GetComponent<Building>().MouseOverVoid();
             }
         }
+        */
 
         if (ActiveBuildingGameObject)
             return;
