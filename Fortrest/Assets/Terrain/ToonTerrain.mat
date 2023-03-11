@@ -7,15 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: TerrainMat
-  m_Shader: {fileID: -6465566751694194690, guid: f2430893fa2fa4f48ab53ce7e35ed744,
-    type: 3}
-  m_ValidKeywords:
-  - _ADDITIONAL_LIGHTS
-  - _ADDITIONAL_LIGHT_SHADOWS
-  - _MAIN_LIGHT_SHADOWS
-  - _MAIN_LIGHT_SHADOWS_CASCADE
-  - _SHADOWS_SOFT
+  m_Name: ToonTerrain
+  m_Shader: {fileID: 4800000, guid: ea3411f516cd27b44963f52e4eb26d9f, type: 3}
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -26,10 +20,6 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _Albedo:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -38,12 +28,8 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _CalculateLightingRamp_abdf794e0d3c486896b9aa3403833f47_ToonRamp_255809187:
-        m_Texture: {fileID: 2800000, guid: ccda879d80f360b45a8d401d444c2e4e, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CalculateLightingRamp_df6aad7bf753456e84c3924a7fe3856d_ToonRamp_255809187:
-        m_Texture: {fileID: 2800000, guid: ccda879d80f360b45a8d401d444c2e4e, type: 3}
+    - _Control:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -66,15 +52,23 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Metallic:
-        m_Texture: {fileID: 2800000, guid: 0db5afcafa7835e4b99b709169cb660c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Normal_Map:
+    - _Normal0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal3:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -86,16 +80,32 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Smoothness:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Texture2DAsset_c48f87b9beb741b6886084a2ffdb4c2c_Out_0:
-        m_Texture: {fileID: 2800000, guid: ccda879d80f360b45a8d401d444c2e4e, type: 3}
+    - _Splat0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Splat3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TerrainHolesTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _VerticalTex:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -112,11 +122,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ADDITIONAL_LIGHTS: 1
-    - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _AlphaClip: 0
-    - _Ambience_Multiplier: 4.11
-    - _Ambient_Occlusion: 0
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -126,53 +132,29 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
-    - _EdgeDiffuse: 0
-    - _EdgeDistanceAttenuation: 0
-    - _EdgeRim: 0.298
-    - _EdgeRimAmount: 0.7
-    - _EdgeRimStrength: 0
-    - _EdgeShadowAttenuation: 0
-    - _EdgeSpecular: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _MAIN_LIGHT_SHADOWS: 1
-    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metallic: 0
-    - _Noise_Scale: 36.87
-    - _Normal_Strength: 0
     - _OcclusionStrength: 1
-    - _Offset: 0
     - _Parallax: 0.005
-    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _RimAmount: 1
-    - _RimThreshold: 0
-    - _SHADOWS_SOFT: 1
-    - _Smooth: 0
-    - _Smoothness: 0.333
+    - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _Surface: 0
-    - _Tiling: 1
-    - _Use_Metallic_Textures: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _Ambient_Color: {r: 0.30080846, g: 0.3490566, b: 0.28155038, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 0.596513, g: 1, b: 0.3726415, a: 1}
-    - _Color2: {r: 1, g: 0.40155482, b: 0.39215684, a: 0}
-    - _Color_1: {r: 0.16233535, g: 0.6037736, b: 0.18682982, a: 0}
-    - _Color_2: {r: 0.7741848, g: 0.8113207, b: 0.21048418, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _RimColor: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
---- !u!114 &2064635353462508739
+--- !u!114 &5415091747940114785
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
