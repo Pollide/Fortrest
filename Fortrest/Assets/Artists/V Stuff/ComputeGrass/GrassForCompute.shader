@@ -100,7 +100,7 @@ struct DrawVertex
 
             float shadow = 0;
             #if BLEND
-                shadow = 0;
+                shadow = 1;
             #endif
 
 
@@ -118,7 +118,7 @@ struct DrawVertex
                 int pixelLightCount = GetAdditionalLightsCount();
                 for (int j = 0; j < pixelLightCount; ++j) {
                     Light light = GetAdditionalLight(j, i.positionWS, half4(1, 1, 1, 1));
-                    float3 attenuatedLightColor = light.color * (light.distanceAttenuation * light.shadowAttenuation);
+                    float3 attenuatedLightColor = light.color * (light.distanceAttenuation * (light.shadowAttenuation));
                     extraLights += attenuatedLightColor;
 
                 }
@@ -135,18 +135,21 @@ struct DrawVertex
                     _TopTint = _TopTint;
                     // tint the top blades and add in light color             
                     terrainForBlending = lerp(terrainForBlending,terrainForBlending + (_TopTint * float4(i.diffuseColor, 1)) , verticalFade);
-                    final = lerp((terrainForBlending)*shadow , terrainForBlending, shadow);
+                    final = lerp((terrainForBlending)*shadow , terrainForBlending, shadow); 
+                    
                     // add in ambient and attempt to blend in with the shadows
+                    final *= shadow;
+                
                     final += lerp((ambient * terrainForBlending) * _AmbientAdjustment, 0,shadow);
                 #else
                     final = baseColor;
                     // add in shadows
-                    final *= shadow;
+                    final *= baseColor;
                     // if theres a main light, multiply with its color and intensity           
                     final *= float4(mainLight.color,1);
 
                     // add in ambient
-                    //final += (ambient * baseColor);
+                    final += (ambient * baseColor);
                 #endif
                 final += float4(extraLights,1);
                 // fog
