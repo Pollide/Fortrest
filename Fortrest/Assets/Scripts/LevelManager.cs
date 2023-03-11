@@ -35,6 +35,9 @@ public class LevelManager : MonoBehaviour
     public float GoblinTimer;
     float GoblinThreshold;
     public GameObject GoblinGameObject;
+    public List<Building> NaturalBuildingList = new List<Building>();
+    private float gatherCooldown = 0.75f;
+    private float nextGather;
 
     private void Awake()
     {
@@ -83,6 +86,44 @@ public class LevelManager : MonoBehaviour
 
         NightLightGameObject.SetActive(nightTimeBool);
         LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
+
+
+        for (int i = 0; i < NaturalBuildingList.Count; i++)
+        {
+            if (NaturalBuildingList[i])
+            {
+                float minDistanceFloat = 4;
+
+                float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, NaturalBuildingList[i].transform.position);
+                if (distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
+                {
+                    nextGather = Time.time + gatherCooldown;
+
+                    if (NaturalBuildingList[i].health > 1)
+                    {
+                        if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Stone)
+                        {
+                            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
+                        }
+                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
+                        {
+                            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
+                        }
+
+                        NaturalBuildingList[i].TakeDamage(1);
+                    }
+                    else
+                    {
+                        NaturalBuildingList[i].GiveResources();
+                        NaturalBuildingList[i].DestroyBuilding();
+                    }
+
+                    NaturalBuildingList[i].healthBarImage.fillAmount = Mathf.Clamp(NaturalBuildingList[i].health / NaturalBuildingList[i].maxHealth, 0, 1f);
+
+                    PlayerController.global.ApplyEnergyDamage(NaturalBuildingList[i].energyConsumptionPerClick);
+                }
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {

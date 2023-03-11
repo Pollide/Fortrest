@@ -30,15 +30,14 @@ public class Building : MonoBehaviour
 
     public BuildingType resourceObject;
 
-    private float health;
+    [HideInInspector]
+    public float health;
     public float maxHealth = 5;
     public float energyConsumptionPerClick = 2;
     public int resourceAmount = 5;
 
     public Image healthBarImage;
 
-    private float gatherCooldown = 0.75f;
-    private float nextGather;
     AnimationState HealthAnimationState;
 
     // Start is called before the first frame update
@@ -66,9 +65,12 @@ public class Building : MonoBehaviour
         {
             LevelManager.global.BuildingList.Add(transform);
         }
+
+        if (NaturalBool)
+            LevelManager.global.NaturalBuildingList.Add(this);
     }
 
-
+    /*
     public void OnMouseDown()
     {
         if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(0) && !NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
@@ -82,43 +84,8 @@ public class Building : MonoBehaviour
         if (!NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
             LevelManager.global.ActiveBuildingGameObject = null;
     }
-
-    public void OnMouseOver()
-    {
-        float minDistanceFloat = 4;
-
-        // Debug.Log(PlayerModeHandler.global.playerModes + " " + (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode));
-        if (Vector3.Distance(PlayerController.global.transform.position, transform.position) < minDistanceFloat && Input.GetMouseButton(0) && NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
-        {
-            nextGather = Time.time + gatherCooldown;
-
-            if (health > 1)
-            {
-                if (resourceObject == BuildingType.Stone)
-                {
-                    GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
-                }
-                else if (resourceObject == BuildingType.Wood)
-                {
-                    GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
-                }
-
-                TakeDamage(1);
-            }
-            else
-            {
-                GiveResources();
-                DestroyBuilding();
-            }
-
-            healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
-
-            PlayerController.global.ApplyEnergyDamage(energyConsumptionPerClick);
-        }
-
-    }
-
-    private void GiveResources()
+    */
+    public void GiveResources()
     {
         // Debug.Log(resourceObject.ToString() + " Drop" + " ");
         for (int i = 0; i < resourceAmount; i++)
@@ -151,10 +118,12 @@ public class Building : MonoBehaviour
         if (resourceObject == BuildingType.Cannon)
         {
             Destroy(gameObject.transform.parent.gameObject);
+            LevelManager.global.BuildingList.Remove(transform);
         }
         else
         {
             Destroy(gameObject);
+            LevelManager.global.NaturalBuildingList.Remove(this);
         }
     }
 
