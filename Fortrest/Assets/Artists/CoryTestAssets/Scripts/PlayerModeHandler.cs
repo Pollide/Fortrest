@@ -21,7 +21,8 @@ public class PlayerModeHandler : MonoBehaviour
     Transform[] parts;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
-    public int constructionCostTurret = 2;
+    public int woodConstructionCostTurret = 15;
+    public int stoneConstructionCostTurret = 5;
     public float distanceAwayFromPlayer = 30;
     public LayerMask buildingLayer;
     public Image buildingMode;
@@ -112,7 +113,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void SpawnBuilding()
     {
-        if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= constructionCostTurret && !MouseOverUI())
+        if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= woodConstructionCostTurret && InventoryManager.global.wood >= stoneConstructionCostTurret && !MouseOverUI())
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
@@ -124,7 +125,8 @@ public class PlayerModeHandler : MonoBehaviour
                 if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
                 {
                     Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
-                    InventoryManager.global.wood -= constructionCostTurret;
+                    InventoryManager.global.wood -= woodConstructionCostTurret;
+                    InventoryManager.global.stone -= stoneConstructionCostTurret;
                     Debug.Log("working");
                 }
             }
@@ -137,7 +139,7 @@ public class PlayerModeHandler : MonoBehaviour
                 Debug.Log("Building Here");
             }
         }
-        else if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood < constructionCostTurret)
+        else if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood < woodConstructionCostTurret && InventoryManager.global.stone < stoneConstructionCostTurret)
         {
             Debug.Log("Not Enough Resources");
         }
@@ -156,7 +158,9 @@ public class PlayerModeHandler : MonoBehaviour
 
             turretBlueprint.transform.position = worldPos;
 
-            if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer && InventoryManager.global.wood >= constructionCostTurret)
+            if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && 
+                worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer && 
+                InventoryManager.global.wood >= woodConstructionCostTurret && InventoryManager.global.wood >= stoneConstructionCostTurret)
             {
                 foreach (Transform child in parts)
                 {

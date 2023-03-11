@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1402647301061185263}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -87,7 +87,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
 --- !u!114 &1402647301061185263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,10 +103,15 @@ MonoBehaviour:
   bestTarget: {fileID: 0}
   chasing: 0
   attacked: 0
+  isInTurretRange: 0
+  isDead: 0
+  turrets: []
   attackTimer: 0
   attackTimerMax: 200
   health: 0
   healthBarImage: {fileID: 3210049245178552100}
+  noiseTimer: 0
+  noiseTimerMax: 0
 --- !u!1001 &464477322837281895
 PrefabInstance:
   m_ObjectHideFlags: 0

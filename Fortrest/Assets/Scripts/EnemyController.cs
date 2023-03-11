@@ -12,7 +12,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Transform bestTarget; // Target that the enemy will go towards
     public bool chasing; // Enemy chases the player mode
     public bool attacked;
+    public bool isInTurretRange = false;
+    public bool isDead = false;
     private Transform playerPosition;
+    public List<GameObject> turrets = new List<GameObject>();
 
     public float attackTimer;
     public float attackTimerMax = 200;
@@ -110,6 +113,18 @@ public class EnemyController : MonoBehaviour
                         }
                     }
                 }
+            }
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (isInTurretRange)
+        {
+            isDead = true;
+            for (int i = 0; i < turrets.Count; i++)
+            {
+                turrets[i].GetComponent<TurretShooting>().RemoveFromList();
             }
         }
     }
