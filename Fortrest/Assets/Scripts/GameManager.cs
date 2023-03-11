@@ -109,6 +109,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
     {
