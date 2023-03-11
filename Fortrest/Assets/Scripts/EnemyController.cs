@@ -72,24 +72,24 @@ public class EnemyController : MonoBehaviour
             {
                 agent.SetDestination(bestTarget.position); // Makes the AI move
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.3f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
                 {
                     FaceTarget();
-                }
-            }
-            if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
-            {
-                attackTimer++;
-                if (bestTarget == playerPosition)
-                {
-                    if (attackTimer >= attackTimerMax)
+                    attackTimer++;
+                    if (bestTarget == playerPosition)
                     {
-                        Attack();
-                        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
-                        playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
+                        if (attackTimer >= attackTimerMax)
+                        {
+                            Attack();
+                            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
+                            playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
+                        }
                     }
                 }
+                ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
             }
+           
+
         }
         else
         {
@@ -105,6 +105,7 @@ public class EnemyController : MonoBehaviour
                         {
                             shortestDistance = compare; // New shortest distance is assigned
                             bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
+                            ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
                         }
                     }
                 }
@@ -136,8 +137,6 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-
-        ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
     }
 
     void Attack()

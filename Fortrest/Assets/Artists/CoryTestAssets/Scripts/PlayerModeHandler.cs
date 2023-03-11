@@ -123,7 +123,8 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 Vector3 worldPos = hitData.point;
 
-                if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
+                if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && 
+                    worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
                     Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);

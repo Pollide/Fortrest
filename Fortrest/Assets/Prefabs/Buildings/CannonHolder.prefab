@@ -316,7 +316,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5470411218790778867}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.274515, y: 0.080868796, z: -8.839025}
+  m_LocalPosition: {x: 0, y: 0.080868796, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -381,6 +381,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3403094761576245410}
   - component: {fileID: 1570348164251454558}
+  - component: {fileID: 3639712228269685458}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -458,6 +459,19 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.001430559, y: -0.007884115, z: 0.001637131}
     m_Extent: {x: 0.025766369, y: 0.123588085, z: 0.14177974}
   m_DirtyAABB: 0
+--- !u!65 &3639712228269685458
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5494250452786029979}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.09776763, y: 0.04016689, z: 0.11155896}
+  m_Center: {x: 0.0030083277, y: 0.032644134, z: 0.0006630689}
 --- !u!1 &5605559267296590476
 GameObject:
   m_ObjectHideFlags: 0
@@ -503,7 +517,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5605559267296590476}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8f0e2c2a8d9ef56418c9b67898be5657, type: 2}
   m_CullingMode: 0
@@ -668,7 +682,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8828890693626364654}
   m_LocalRotation: {x: 0.19322819, y: 0.31613916, z: -0.06578668, w: 0.926494}
-  m_LocalPosition: {x: 0, y: 0, z: -8.649025}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -678,7 +692,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 23.556, y: 37.685, z: 0.017}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1.4205151, y: 2.4838688}
+  m_AnchoredPosition: {x: 0, y: 2.4838688}
   m_SizeDelta: {x: 3.5221, y: 0.6129}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &912218791167418055
@@ -768,7 +782,7 @@ RotationConstraint:
   m_GameObject: {fileID: 8828890693626364654}
   m_Enabled: 1
   m_Weight: 1
-  m_RotationAtRest: {x: 23.555988, y: 37.684982, z: 0.017004307}
+  m_RotationAtRest: {x: 23.555979, y: 37.68497, z: 0.017005235}
   m_RotationOffset: {x: 0, y: 0, z: 0}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
