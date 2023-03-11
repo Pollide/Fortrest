@@ -148,17 +148,17 @@ public class EnemyController : MonoBehaviour
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyAttack1Sound : GameManager.global.EnemyAttack2Sound, 1, true, 0, false, transform);
     }
 
-    private void OnDestroy()
-    {
-        if (isInTurretRange)
-        {
-            isDead = true;
-            for (int i = 0; i < turrets.Count; i++)
-            {
-                turrets[i].GetComponent<TurretShooting>().RemoveFromList();
-            }
-        }
-    }
+    //private void OnDestroy()
+    //{
+    //    if (isInTurretRange)
+    //    {
+    //        isDead = true;
+    //        for (int i = 0; i < turrets.Count; i++)
+    //        {
+    //            turrets[i].GetComponent<TurretShooting>().RemoveFromList();
+    //        }
+    //    }
+    //}
 
     private void FaceTarget() // Making sure the enemy always faces what it is attacking
     {
@@ -197,6 +197,16 @@ public class EnemyController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyDead1Sound : GameManager.global.EnemyDead2Sound, 1, true, 0, false, transform);
             PlayerController.global.enemyList.Remove(transform);
             agent.enabled = false;
+
+            if (isInTurretRange)
+            {
+                isDead = true;
+                for (int i = 0; i < turrets.Count; i++)
+                {
+                    turrets[i].GetComponent<TurretShooting>().RemoveFromList();
+                }
+            }
+
             Destroy(gameObject);
         }
     }
