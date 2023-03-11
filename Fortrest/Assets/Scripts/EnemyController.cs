@@ -116,6 +116,7 @@ public class EnemyController : MonoBehaviour
 
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
                 {
+                    attackTimer++;
                     Building building = bestTarget.GetComponent<Building>();
                     if (building)
                     {
