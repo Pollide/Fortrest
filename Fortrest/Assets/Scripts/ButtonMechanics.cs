@@ -88,7 +88,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         {
             Time.timeScale = Time.timeScale == 2 ? 1 : 2;
             GetComponent<Image>().color = Time.timeScale == 2 ? Color.red : Color.white;
-            transform.GetComponent<Image>().sprite = Time.timeScale == 2 ? play : fastForward; 
+            transform.GetComponent<Image>().sprite = Time.timeScale == 2 ? play : fastForward;
         }
 
         if (OptionsBool)
@@ -129,5 +129,16 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     void ChangeColourVoid(Color _color)
     {
         GetComponent<Image>().color = _color;
+    }
+
+    void Update()
+    {
+        if (SpeedBool)
+        {
+            if (Input.GetMouseButton(2))
+            {
+                OnPointerClick(null);
+            }
+        }
     }
 }
