@@ -92,15 +92,15 @@ AnimatorStateMachine:
     m_Position: {x: 325.49747, y: 18.831696, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 6745553461875990015}
-    m_Position: {x: 630, y: 90, z: 0}
+    m_Position: {x: 70, y: 90, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
-  m_AnyStatePosition: {x: 70, y: 110, z: 0}
-  m_EntryPosition: {x: 70, y: 160, z: 0}
-  m_ExitPosition: {x: 70, y: 60, z: 0}
+  m_AnyStatePosition: {x: 580, y: 90, z: 0}
+  m_EntryPosition: {x: 580, y: 160, z: 0}
+  m_ExitPosition: {x: 580, y: 30, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: 4228223789390662721}
 --- !u!91 &9100000
@@ -109,7 +109,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Player_Holder
+  m_Name: Goblin Animator
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Moving
@@ -117,13 +117,13 @@ AnimatorController:
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   - m_Name: Swing
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
     m_DefaultBool: 0
-    m_Controller: {fileID: 0}
+    m_Controller: {fileID: 9100000}
   m_AnimatorLayers:
   - serializedVersion: 5
     m_Name: Base Layer
@@ -184,7 +184,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 2951e998411e3064cb3eb99c89e77dab, type: 2}
+  m_Motion: {fileID: 7400000, guid: 7d1efebfc08c0ee4ebd48a7ebdb7feba, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -237,7 +237,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: bb84ffd45bd84364f835a8bc8317ff2b, type: 2}
+  m_Motion: {fileID: 7400000, guid: 92f4df97bca4fa5439fea54b5a6e9699, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -265,7 +265,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: d388074d1e190bd47b5ab22e2b379153, type: 2}
+  m_Motion: {fileID: 7400000, guid: b3b7cd4111bd32c4889807ddfae19327, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
