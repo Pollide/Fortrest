@@ -15,16 +15,20 @@ public class EnemyController : MonoBehaviour
     private Transform playerPosition;
 
     public float attackTimer;
-    public float attackTimerMax = 200;
+    public float attackTimerMax;
 
     public float health;
     private float maxHealth = 3.0f;
     public Image healthBarImage;
     AnimationState HealthAnimationState;
 
+    public float noiseTimer;
+    public float noiseTimerMax;
 
     void Start()
     {
+        noiseTimerMax = 250;
+        attackTimer = 200;
         health = maxHealth;
         playerPosition = PlayerController.global.transform;
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
@@ -35,6 +39,8 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         float shortestDistance = 9999; // Assign huge default value
+
+        MakeNoise();
 
         if (LevelManager.global.BuildingList.Count == 0) // Enemies will chase the player if no structure is left around
         {
@@ -67,6 +73,20 @@ public class EnemyController : MonoBehaviour
                     FaceTarget();
                 }
             }
+            if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
+            {
+                attackTimer++;
+                if (bestTarget == playerPosition)
+                {
+                    if (attackTimer >= attackTimerMax)
+                    {
+                        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyAttack1Sound : GameManager.global.EnemyAttack2Sound);
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f);
+                        playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
+                        attackTimer = 0;
+                    }
+                }
+            }
         }
         else
         {
@@ -93,7 +113,6 @@ public class EnemyController : MonoBehaviour
 
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
                 {
-                    attackTimer++;
                     Building building = bestTarget.GetComponent<Building>();
                     if (building)
                     {
@@ -148,15 +167,21 @@ public class EnemyController : MonoBehaviour
         healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
         if (health <= 0)
         {
+            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyDead1Sound : GameManager.global.EnemyDead2Sound);
             PlayerController.global.enemyList.Remove(transform);
             agent.enabled = false;
             Destroy(gameObject);
         }
     }
 
-    //private void OnDrawGizmosSelected() // Used to draw gizmos
-    //{
-    //    Gizmos.color = Color.magenta; // Defines the gizmo color
-    //    Gizmos.DrawWireSphere(transform.position, lookRadius); // Draws sphere at x position of y radius
-    //}
+    private void MakeNoise()
+    {
+        noiseTimer++;
+        if (noiseTimer >= noiseTimerMax)
+        {
+            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Enemy1Sound : GameManager.global.Enemy2Sound);
+            noiseTimer = 0;
+            noiseTimerMax = Random.Range(500, 1000);
+        }
+    }
 }

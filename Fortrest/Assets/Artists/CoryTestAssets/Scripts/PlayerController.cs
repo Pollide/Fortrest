@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
     // Variable for movement direction
     private Vector3 moveDirection;
 
+    private float footstepTimer;
+    private bool noEnergy;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -73,6 +76,27 @@ public class PlayerController : MonoBehaviour
         }
 
         playerEnergyBarImage.fillAmount = Mathf.Lerp(0.320f, 0.935f, playerEnergy / maxPlayerEnergy);
+
+        if (playerEnergy <= 0)
+        {
+            noEnergy = true;
+            playerCurrSpeed = 4.0f;
+        }
+
+        if (playerisMoving)
+        {
+            footstepTimer += Time.deltaTime * (noEnergy ? 0.5f : 1.0f);
+        }
+        else
+        {
+            footstepTimer = 0;
+        }
+        if (footstepTimer > 0.35f)
+        {
+            footstepTimer = 0;
+            AudioClip step = Random.Range(0, 2) == 0 ? GameManager.global.Footstep1Sound : GameManager.global.Footstep2Sound;
+            GameManager.global.SoundManager.PlaySound(step, 0.1f);
+        }
     }
 
     // Player movement 
