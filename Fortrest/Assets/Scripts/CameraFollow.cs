@@ -31,6 +31,7 @@ public class CameraFollow : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.CapsLock))
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.CameraLockSound);
             lockCamera = !lockCamera;
             return;
         }

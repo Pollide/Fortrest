@@ -35,6 +35,16 @@ public class PlayerController : MonoBehaviour
 
     // Variable for movement direction
     private Vector3 moveDirection;
+    private Vector3 outsideHousePos;
+
+    private float footstepTimer;
+    private bool noEnergy;
+    private bool repaired;
+    private bool sleeping;
+    public GameObject house;
+    private GameObject destroyedHouse;
+    private GameObject repairedHouse;
+    public GameObject bodyShape;
 
     // Start is called before the first frame update
     void Awake()
@@ -46,8 +56,11 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        outsideHousePos = new Vector3(2, 1.5f, 16);
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
+        destroyedHouse = house.transform.Find("Destroyed House").gameObject;
+        repairedHouse = house.transform.Find("Repaired House").gameObject;
     }
 
     // Update is called once per frame
@@ -66,6 +79,8 @@ public class PlayerController : MonoBehaviour
             Attack();
         }
 
+        Sleep();
+
         if (playerEnergy >= maxPlayerEnergy)
         {
             playerEnergy = maxPlayerEnergy;
@@ -73,6 +88,27 @@ public class PlayerController : MonoBehaviour
         }
 
         playerEnergyBarImage.fillAmount = Mathf.Lerp(0.320f, 0.935f, playerEnergy / maxPlayerEnergy);
+
+        if (playerEnergy <= 0)
+        {
+            noEnergy = true;
+            playerCurrSpeed = 4.0f;
+        }
+
+        if (playerisMoving)
+        {
+            footstepTimer += Time.deltaTime * (noEnergy ? 0.5f : 1.0f);
+        }
+        else
+        {
+            footstepTimer = 0;
+        }
+        if (footstepTimer > 0.35f)
+        {
+            footstepTimer = 0;
+            AudioClip step = Random.Range(0, 2) == 0 ? GameManager.global.Footstep1Sound : GameManager.global.Footstep2Sound;
+            GameManager.global.SoundManager.PlaySound(step, 0.1f);
+        }
     }
 
     // Player movement 
@@ -166,7 +202,36 @@ public class PlayerController : MonoBehaviour
                     playerisAttacking = true;
                     enemyList[i].GetComponent<EnemyController>().chasing = true;
                     GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
+                    enemyList[i].GetComponent<EnemyController>().Damaged();
                     break;
+                }
+            }
+        }
+    }
+
+    private void Sleep()
+    {
+        if (Input.GetKeyDown(KeyCode.E) && Vector3.Distance(transform.position, house.transform.position) <= 10.0f)
+        {
+            if (!repaired)
+            {
+                destroyedHouse.SetActive(false);
+                repairedHouse.SetActive(true);
+                repaired = true;
+            }
+            else
+            {
+                if (!sleeping)
+                {
+                    transform.position = house.transform.position;
+                    playerCanMove = false;
+                    sleeping = true;
+                }
+                else
+                {                    
+                    playerCanMove = true;
+                    transform.position = outsideHousePos;
+                    sleeping = false;
                 }
             }
         }
