@@ -92,20 +92,6 @@ public class Building : MonoBehaviour
         {
             nextGather = Time.time + gatherCooldown;
 
-            Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
-
-            if (HealthAnimationState != null && HealthAnimationState.enabled)
-            {
-                // Debug.Log("hit");
-                HealthAnimationState.time = 1;
-                GameManager.PlayAnimation(animation, "Health Hit");
-            }
-            else
-            {
-                //Debug.Log(1);
-                HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
-            }
-
             if (health > 1)
             {
                 if (resourceObject == BuildingType.Stone)
@@ -144,11 +130,15 @@ public class Building : MonoBehaviour
     public void TakeDamage(float amount)
     {
         health -= amount;
+
+        HealthAnimation();
     }
 
     public void Repair(float amount)
     {
         health += amount;
+
+        HealthAnimation();
     }
 
     public float GetHealth()
@@ -158,6 +148,30 @@ public class Building : MonoBehaviour
 
     public void DestroyBuilding()
     {
-        Destroy(gameObject);
+        if (resourceObject == BuildingType.Cannon)
+        {
+            Destroy(gameObject.transform.parent.gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void HealthAnimation()
+    {
+        Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
+
+        if (HealthAnimationState != null && HealthAnimationState.enabled)
+        {
+            // Debug.Log("hit");
+            HealthAnimationState.time = 1;
+            GameManager.PlayAnimation(animation, "Health Hit");
+        }
+        else
+        {
+            //Debug.Log(1);
+            HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
+        }
     }
 }

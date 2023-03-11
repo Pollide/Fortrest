@@ -223,12 +223,14 @@ public class PlayerController : MonoBehaviour
             {
                 if (!sleeping)
                 {
-                    transform.position = house.transform.position;
+                    Vector3 sleepingVector = house.transform.position;
+                    sleepingVector.y = transform.position.y;
+                    transform.position = sleepingVector;
                     playerCanMove = false;
                     sleeping = true;
                 }
                 else
-                {                    
+                {
                     playerCanMove = true;
                     transform.position = outsideHousePos;
                     sleeping = false;

@@ -12,7 +12,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField] Transform bestTarget; // Target that the enemy will go towards
     public bool chasing; // Enemy chases the player mode
     public bool attacked;
+    public bool isInTurretRange = false;
+    public bool isDead = false;
     private Transform playerPosition;
+    public List<GameObject> turrets = new List<GameObject>();
 
     public float attackTimer;
     public float attackTimerMax;
@@ -69,24 +72,24 @@ public class EnemyController : MonoBehaviour
             {
                 agent.SetDestination(bestTarget.position); // Makes the AI move
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.3f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
                 {
                     FaceTarget();
-                }
-            }
-            if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
-            {
-                attackTimer++;
-                if (bestTarget == playerPosition)
-                {
-                    if (attackTimer >= attackTimerMax)
+                    attackTimer++;
+                    if (bestTarget == playerPosition)
                     {
-                        Attack();
-                        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
-                        playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
+                        if (attackTimer >= attackTimerMax)
+                        {
+                            Attack();
+                            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
+                            playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
+                        }
                     }
                 }
+                ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
             }
+           
+
         }
         else
         {
@@ -102,6 +105,7 @@ public class EnemyController : MonoBehaviour
                         {
                             shortestDistance = compare; // New shortest distance is assigned
                             bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
+                            ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
                         }
                     }
                 }
@@ -113,6 +117,7 @@ public class EnemyController : MonoBehaviour
 
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
                 {
+                    attackTimer++;
                     Building building = bestTarget.GetComponent<Building>();
                     if (building)
                     {
@@ -132,8 +137,6 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-
-        ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
     }
 
     void Attack()
@@ -143,6 +146,18 @@ public class EnemyController : MonoBehaviour
         attackTimer = 0;
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyAttack1Sound : GameManager.global.EnemyAttack2Sound, 1, true, 0, false, transform);
     }
+
+    //private void OnDestroy()
+    //{
+    //    if (isInTurretRange)
+    //    {
+    //        isDead = true;
+    //        for (int i = 0; i < turrets.Count; i++)
+    //        {
+    //            turrets[i].GetComponent<TurretShooting>().RemoveFromList();
+    //        }
+    //    }
+    //}
 
     private void FaceTarget() // Making sure the enemy always faces what it is attacking
     {
@@ -181,6 +196,16 @@ public class EnemyController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyDead1Sound : GameManager.global.EnemyDead2Sound, 1, true, 0, false, transform);
             PlayerController.global.enemyList.Remove(transform);
             agent.enabled = false;
+
+            if (isInTurretRange)
+            {
+                isDead = true;
+                for (int i = 0; i < turrets.Count; i++)
+                {
+                    turrets[i].GetComponent<TurretShooting>().RemoveFromList();
+                }
+            }
+
             Destroy(gameObject);
         }
     }
