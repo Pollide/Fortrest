@@ -21,6 +21,8 @@ struct SurfaceVariables {
     float rimAmount;
     float rimThreshold;
 
+    //float attenuationValue;
+
     float3 normal;
     float3 view;
 

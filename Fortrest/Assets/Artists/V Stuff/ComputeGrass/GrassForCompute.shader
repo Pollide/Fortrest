@@ -108,7 +108,7 @@ struct DrawVertex
 
             #if _MAIN_LIGHT_SHADOWS_CASCADE || _MAIN_LIGHT_SHADOWS
                 Light mainLight = GetMainLight(shadowCoord);
-                shadow = mainLight.shadowAttenuation;
+                shadow = mainLight.shadowAttenuation +0.5; //THE ISSUE IS OVER HERE
             #else
                 Light mainLight = GetMainLight();
             #endif
