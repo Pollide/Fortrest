@@ -55,7 +55,17 @@ public class LevelManager : MonoBehaviour
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
 
-        if (GoblinTimer >= GoblinThreshold)
+
+
+        if (DaylightTimer > 360)
+        {
+            DaylightTimer = 0;
+            //  Debug.Log("DAY COMPLETE");
+        }
+
+        bool nightTimeBool = DaylightTimer > 180;
+
+        if (GoblinTimer >= GoblinThreshold && nightTimeBool)
         {
             GoblinThreshold = Random.Range(3, 8);
             GoblinTimer = 0;
@@ -70,14 +80,6 @@ public class LevelManager : MonoBehaviour
             GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
 
         }
-
-        if (DaylightTimer > 360)
-        {
-            DaylightTimer = 0;
-            //  Debug.Log("DAY COMPLETE");
-        }
-
-        bool nightTimeBool = DaylightTimer > 180;
 
         NightLightGameObject.SetActive(nightTimeBool);
         LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
