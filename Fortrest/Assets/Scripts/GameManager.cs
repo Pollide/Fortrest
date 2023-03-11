@@ -53,6 +53,13 @@ public class GameManager : MonoBehaviour
     public AudioClip TreeChop2Sound;
     public AudioClip TreeChop3Sound;
     public AudioClip TurretPlaceSound;
+    public AudioClip TurretShootSound;
+    public AudioClip PlayerEatSound;
+    public AudioClip CameraLockSound;
+    public AudioClip MenuSwooshSound;
+    public AudioClip SpeedButtonClickSound;
+    public AudioClip BushSound;
+    public AudioClip ModeChangeClickSound;
 
     //runs on the frame it was awake on
     void Awake()
