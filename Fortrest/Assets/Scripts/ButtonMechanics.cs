@@ -135,7 +135,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     {
         if (SpeedBool)
         {
-            if (Input.GetMouseButton(2))
+            if (Input.GetMouseButtonDown(1))
             {
                 OnPointerClick(null);
             }
