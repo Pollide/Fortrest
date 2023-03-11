@@ -4,7 +4,7 @@ Shader "Custom/GrassComputeHLSL"
     {
         [Toggle(BLEND)] _BlendFloor("Blend with floor", Float) = 0
         _Fade("Top Fade Offset", Range(-1,10)) = 0
-        _AmbientAdjustment("Ambient Adjustment", Range(-1,10)) = 0
+        _AmbientAdjustment("Ambient Adjustment", Range(-1,10)) = 1.05
     }
 
         HLSLINCLUDE
@@ -146,7 +146,7 @@ struct DrawVertex
                     final *= float4(mainLight.color,1);
 
                     // add in ambient
-                    final += (ambient * baseColor);
+                    //final += (ambient * baseColor);
                 #endif
                 final += float4(extraLights,1);
                 // fog
