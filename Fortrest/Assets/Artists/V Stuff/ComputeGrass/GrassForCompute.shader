@@ -100,7 +100,7 @@ struct DrawVertex
 
             float shadow = 0;
             #if BLEND
-                shadow = 1;
+                shadow = 0;
             #endif
 
 
@@ -132,7 +132,7 @@ struct DrawVertex
 
                 float4 final = float4(0,0,0,0);
                 #if BLEND      
-                    _TopTint = _TopTint * ambient;
+                    _TopTint = _TopTint;
                     // tint the top blades and add in light color             
                     terrainForBlending = lerp(terrainForBlending,terrainForBlending + (_TopTint * float4(i.diffuseColor, 1)) , verticalFade);
                     final = lerp((terrainForBlending)*shadow , terrainForBlending, shadow);
@@ -206,7 +206,7 @@ struct DrawVertex
             #pragma exclude_renderers d3d11_9x
             #pragma target 5.0
 
-            // Support all the various light  ypes and shadow paths
+            // Support all the various light  types and shadow paths
             #pragma multi_compile_shadowcaster
 
             // Register our functions

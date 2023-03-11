@@ -166,18 +166,21 @@ public class Menu : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.W))
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
             GoForwardBool = true;
             return true;
         }
 
         if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
             GoHorizontalInt = -1;
             return true;
         }
 
         if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
             GoHorizontalInt = 1;
             return true;
         }

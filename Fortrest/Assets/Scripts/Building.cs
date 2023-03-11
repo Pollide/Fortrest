@@ -110,11 +110,11 @@ public class Building : MonoBehaviour
             {
                 if (resourceObject == BuildingType.Stone)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe2Sound);
+                    GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
                 }
                 else if (resourceObject == BuildingType.Wood)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.TreeChop1Sound);
+                    GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
                 }
 
                 TakeDamage(1);

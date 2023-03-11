@@ -45,6 +45,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
             switch (playerModes)
             {
                 case PlayerModes.BuildMode:
@@ -124,6 +125,7 @@ public class PlayerModeHandler : MonoBehaviour
 
                 if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
                 {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
                     Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
                     InventoryManager.global.wood -= woodConstructionCostTurret;
                     InventoryManager.global.stone -= stoneConstructionCostTurret;
