@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18306787, g: 0.22874567, b: 0.30669156, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -409,7 +409,7 @@ Light:
   m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!84 &522559306
+--- !u!84 &668079886
 RenderTexture:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -700,89 +700,6 @@ Transform:
   m_Father: {fileID: 812431106}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &1506018287
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Custom_GrassComputeHLSL(Clone)
-  m_Shader: {fileID: 4800000, guid: 107ce86adcf296d4694e8ad2e66efc19, type: 3}
-  m_ValidKeywords:
-  - BLEND
-  - _ADDITIONAL_LIGHTS
-  - _ADDITIONAL_LIGHT_SHADOWS
-  - _MAIN_LIGHT_SHADOWS
-  - _MAIN_LIGHT_SHADOWS_CASCADE
-  - _SHADOWS_SOFT
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _Albedo:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CalculateLightingRamp_abdf794e0d3c486896b9aa3403833f47_ToonRamp_255809187:
-        m_Texture: {fileID: 2800000, guid: ccda879d80f360b45a8d401d444c2e4e, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Metallic:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _ADDITIONAL_LIGHTS: 1
-    - _ADDITIONAL_LIGHT_SHADOWS: 1
-    - _Ambience_Multiplier: 0
-    - _AmbientAdjustment: -1
-    - _BlendFloor: 1
-    - _EdgeDiffuse: 0
-    - _EdgeDistanceAttenuation: 0
-    - _EdgeRim: 0.1
-    - _EdgeRimAmount: 0.7
-    - _EdgeRimStrength: 0
-    - _EdgeShadowAttenuation: 0
-    - _EdgeSpecular: 0
-    - _Fade: -1
-    - _Is_Sand: 0
-    - _MAIN_LIGHT_SHADOWS: 1
-    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
-    - _Noise_Scale: 10
-    - _Offset: 0
-    - _QueueControl: 0
-    - _QueueOffset: 0
-    - _RimThreshold: 0
-    - _SHADOWS_SOFT: 1
-    - _Smoothness: 0
-    - _Tiling: 1
-    - _Use_Metallic_Textures: 0
-    m_Colors:
-    - _Ambient_Color: {r: 0.745283, g: 0.745283, b: 0.745283, a: 0}
-    - _Color_1: {r: 0.34460187, g: 1, b: 0.080188684, a: 0}
-    - _Color_2: {r: 0.7741848, g: 0.8113207, b: 0.21048418, a: 0}
-    - _RimColor: {r: 0, g: 0, b: 0, a: 0}
-  m_BuildTextureStacks: []
 --- !u!4 &1580997454 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7444467798429044014, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
@@ -1011,7 +928,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 64
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 522559306}
+  m_TargetTexture: {fileID: 668079886}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -1063,7 +980,7 @@ Transform:
   m_GameObject: {fileID: 1884974583}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 5.4183044, y: 81.17598, z: 95.86831}
-  m_LocalScale: {x: 1, y: 1.0000405, z: 1.0000405}
+  m_LocalScale: {x: 1, y: 1.000041, z: 1.000041}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1771385454}
@@ -1188,10 +1105,10 @@ MonoBehaviour:
   FadeInEditor: 1
   topTint: {r: 0.71103996, g: 0.9150943, b: 0.15107687, a: 1}
   bottomTint: {r: 0.075328544, g: 0.5849056, b: 0, a: 1}
-  castShadow: 0
+  castShadow: 1
   interactors:
   - {fileID: 2137774450}
-  m_InstantiatedMaterial: {fileID: 1506018287}
+  m_InstantiatedMaterial: {fileID: 2081108773}
 --- !u!114 &2066908516
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31004,8 +30921,8 @@ MonoBehaviour:
   rangeG: 0
   rangeB: 0
   AdjustedColor: {r: 0.27548745, g: 0.4716981, b: 0.19357423, a: 0}
-  hitPosGizmo: {x: -4.830307, y: -0.26007938, z: 19.714191}
-  hitNormal: {x: -0.09324484, y: 0.994551, z: 0.04662242}
+  hitPosGizmo: {x: -6.52557, y: 1.0348048, z: 36.82318}
+  hitNormal: {x: 0.046826437, y: 0.9989031, z: 0}
 --- !u!33 &2066908517
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -31029,6 +30946,89 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &2081108773
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom_GrassComputeHLSL(Clone)
+  m_Shader: {fileID: 4800000, guid: 107ce86adcf296d4694e8ad2e66efc19, type: 3}
+  m_ValidKeywords:
+  - BLEND
+  - _ADDITIONAL_LIGHTS
+  - _ADDITIONAL_LIGHT_SHADOWS
+  - _MAIN_LIGHT_SHADOWS
+  - _MAIN_LIGHT_SHADOWS_CASCADE
+  - _SHADOWS_SOFT
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Albedo:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CalculateLightingRamp_abdf794e0d3c486896b9aa3403833f47_ToonRamp_255809187:
+        m_Texture: {fileID: 2800000, guid: ccda879d80f360b45a8d401d444c2e4e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Metallic:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _ADDITIONAL_LIGHTS: 1
+    - _ADDITIONAL_LIGHT_SHADOWS: 1
+    - _Ambience_Multiplier: 0
+    - _AmbientAdjustment: 0.92
+    - _BlendFloor: 1
+    - _EdgeDiffuse: 0
+    - _EdgeDistanceAttenuation: 0
+    - _EdgeRim: 0.1
+    - _EdgeRimAmount: 0.7
+    - _EdgeRimStrength: 0
+    - _EdgeShadowAttenuation: 0
+    - _EdgeSpecular: 0
+    - _Fade: 4.06
+    - _Is_Sand: 0
+    - _MAIN_LIGHT_SHADOWS: 1
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _Noise_Scale: 10
+    - _Offset: 0
+    - _QueueControl: 0
+    - _QueueOffset: 0
+    - _RimThreshold: 0
+    - _SHADOWS_SOFT: 1
+    - _Smoothness: 0
+    - _Tiling: 1
+    - _Use_Metallic_Textures: 0
+    m_Colors:
+    - _Ambient_Color: {r: 0.745283, g: 0.745283, b: 0.745283, a: 0}
+    - _Color_1: {r: 0.34460187, g: 1, b: 0.080188684, a: 0}
+    - _Color_2: {r: 0.7741848, g: 0.8113207, b: 0.21048418, a: 0}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
 --- !u!1 &2137774445 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4675762302754207537, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
@@ -31430,17 +31430,17 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   colorGradientTexture: {fileID: 0}
-  shallowColor: {r: 0.37241808, g: 0.5849056, b: 0.38859123, a: 1}
+  shallowColor: {r: 0.3724152, g: 0.5849056, b: 0.38858837, a: 1}
   deepColor: {r: 0, g: 0.511179, b: 0.8113207, a: 1}
   colorDepth: 9.6
   horizonColor: {r: 0, g: 0.88762283, b: 1, a: 1}
   horizonDistance: 54.82
   shoreFade: 0
-  shoreColor: {r: 0, g: 0.98039216, b: 0.30189833, a: 0}
+  shoreColor: {r: 0, g: 0.98039216, b: 0.30189547, a: 0}
   shoreStrength: 0
   shoreBlend: 0
   shoreDepth: 0
-  waveColor: {r: 0.08486801, g: 0.08486801, b: 0.08486801, a: 0}
+  waveColor: {r: 0.08486564, g: 0.08486564, b: 0.08486564, a: 0}
   underwaterColor: {r: 0.2038979, g: 0.3097789, b: 0.517647, a: 0}
   underwaterColorStrength: 0
   underwaterRefractionStrength: 0.099
