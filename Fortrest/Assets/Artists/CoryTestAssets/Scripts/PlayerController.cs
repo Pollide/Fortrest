@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private float playerVelocity;
     private float attackCooldown = 1.0f;
     private float nextAttack;
+    private float attackDamage = 0.5f;
 
     CharacterController playerCC;
     public Animator CharacterAnimator;
@@ -210,7 +211,7 @@ public class PlayerController : MonoBehaviour
                     playerisAttacking = true;
                     enemyList[i].GetComponent<EnemyController>().chasing = true;
                     GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
-                    enemyList[i].GetComponent<EnemyController>().Damaged();
+                    enemyList[i].GetComponent<EnemyController>().Damaged(attackDamage);
                     break;
                 }
             }
