@@ -45,6 +45,7 @@ public class LevelManager : MonoBehaviour
     public VisualEffect VFXSparks;
     public VisualEffect VFXPebble;
     public VisualEffect VFXSmokePuff;
+    public VisualEffect VFXWoodChip;
     private void Awake()
     {
         global = this;
@@ -62,6 +63,7 @@ public class LevelManager : MonoBehaviour
         VFXSparks.Stop();
         VFXPebble.Stop();
         VFXSmokePuff.Stop();
+        VFXWoodChip.Stop();
     }
 
 
@@ -119,12 +121,16 @@ public class LevelManager : MonoBehaviour
                     {
                         if (isStoneBool)
                         {
+                            VFXSparks.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
                             VFXSparks.Play();
+                            VFXPebble.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
                             VFXPebble.Play();
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
                         }
                         else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
                         {
+                            VFXWoodChip.transform.position = PlayerController.global.AxeGameObject.transform.position;
+                            VFXWoodChip.Play();
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
                         }
                         else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Food)
