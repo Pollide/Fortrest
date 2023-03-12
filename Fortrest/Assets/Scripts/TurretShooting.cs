@@ -16,16 +16,6 @@ public class TurretShooting : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            enemies.Add(other.gameObject);
-            other.GetComponent<EnemyController>().isInTurretRange = true;
-            other.GetComponent<EnemyController>().turrets.Add(gameObject);
-        }
-    }
-
     public void RemoveFromList()
     {
         for (int i = 0; i < enemies.Count; i++)
@@ -45,5 +35,15 @@ public class TurretShooting : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * turn_speed);
 
         animController.SetBool("isAttacking", true);
+    }
+
+    public void RunTrigger(Collider other)
+    { 
+        if (other.CompareTag("Enemy"))
+        {
+            enemies.Add(other.gameObject);
+            other.GetComponent<EnemyController>().isInTurretRange = true;
+            other.GetComponent<EnemyController>().turrets.Add(gameObject);
+        }
     }
 }

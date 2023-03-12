@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.VFX;
 
 public class LevelManager : MonoBehaviour
 {
@@ -31,10 +32,18 @@ public class LevelManager : MonoBehaviour
     public SkinnedMeshRenderer LanternSkinnedRenderer;
     public GameObject NightLightGameObject;
     public float DaylightTimer;
+    public int day = 0;
+    public int maxDay = 3;
     public float daySpeed = 2;
     public float GoblinTimer;
     float GoblinThreshold;
     public GameObject GoblinGameObject;
+    public List<Building> NaturalBuildingList = new List<Building>();
+    private float gatherCooldown = 0.75f;
+    private float nextGather;
+
+    public VisualEffect VFXSparks;
+    public VisualEffect VFXPebble;
 
     private void Awake()
     {
@@ -46,6 +55,12 @@ public class LevelManager : MonoBehaviour
             PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
+    }
+
+    private void Start()
+    {
+        VFXSparks.Stop();
+        VFXPebble.Stop();
     }
 
 
@@ -60,6 +75,7 @@ public class LevelManager : MonoBehaviour
         if (DaylightTimer > 360)
         {
             DaylightTimer = 0;
+            day++;
             //  Debug.Log("DAY COMPLETE");
         }
 
@@ -83,6 +99,52 @@ public class LevelManager : MonoBehaviour
 
         NightLightGameObject.SetActive(nightTimeBool);
         LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
+
+
+        for (int i = 0; i < NaturalBuildingList.Count; i++)
+        {
+            if (NaturalBuildingList[i])
+            {
+                float minDistanceFloat = 4;
+
+                float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, NaturalBuildingList[i].transform.position);
+                if (distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
+                {
+                    bool isStoneBool = NaturalBuildingList[i].resourceObject == Building.BuildingType.Stone;
+                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = !isStoneBool, PicaxeBool = isStoneBool });
+                    nextGather = Time.time + gatherCooldown;
+
+                    if (NaturalBuildingList[i].health > 1)
+                    {
+                        if (isStoneBool)
+                        {
+                            VFXSparks.Play();
+                            VFXPebble.Play();
+                            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
+                        }
+                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
+                        {
+                            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
+                        }
+                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Food)
+                        {
+                            GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
+                        }
+
+                        NaturalBuildingList[i].TakeDamage(1);
+                    }
+                    else
+                    {
+                        NaturalBuildingList[i].GiveResources();
+                        NaturalBuildingList[i].DestroyBuilding();
+                    }
+
+                    NaturalBuildingList[i].healthBarImage.fillAmount = Mathf.Clamp(NaturalBuildingList[i].health / NaturalBuildingList[i].maxHealth, 0, 1f);
+
+                    PlayerController.global.ApplyEnergyDamage(NaturalBuildingList[i].energyConsumptionPerClick);
+                }
+            }
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
