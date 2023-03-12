@@ -82,6 +82,7 @@ public class PlayerModeHandler : MonoBehaviour
         buildingMode.enabled = true;
         resourceMode.enabled = false;
         combatMode.enabled = false;
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
     }
 
     public void SwitchToGatherMode()
@@ -90,7 +91,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             turretBlueprint.SetActive(false);
         }
-
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
         playerModes = PlayerModes.ResourceMode;
 
         buildingMode.enabled = false;
@@ -104,7 +105,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             turretBlueprint.SetActive(false);
         }
-
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = true });
         playerModes = PlayerModes.CombatMode;
 
         buildingMode.enabled = false;
