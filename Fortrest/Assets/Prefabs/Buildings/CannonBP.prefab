@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1829088025094860082}
   - component: {fileID: 1829088025094860083}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: CannonBP
   m_TagString: BuildingBP
   m_Icon: {fileID: 0}
@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NaturalBool: 0
   resourceObject: 1
+  health: 0
   maxHealth: 5
   energyConsumptionPerClick: 2
   resourceAmount: 5
@@ -62,7 +63,7 @@ PrefabInstance:
     - target: {fileID: 691757190410652912, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -72,7 +73,7 @@ PrefabInstance:
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -192,7 +193,7 @@ PrefabInstance:
     - target: {fileID: 8026301831611583226, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}
@@ -295,6 +296,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Turret
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0b90229a482068b49b0d9c6423cf69b9,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b90229a482068b49b0d9c6423cf69b9, type: 3}

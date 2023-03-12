@@ -119,7 +119,7 @@ public class PlayerModeHandler : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
 
-            if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building"))
+            if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
             {
                 Vector3 worldPos = hitData.point;
 
@@ -137,7 +137,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 Debug.Log("Cannot Place Building Here");
             }
-            else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Building"))
+            else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Building") || hitData.transform.CompareTag("Resource"))
             {
                 Debug.Log("Building Here");
             }
@@ -154,7 +154,7 @@ public class PlayerModeHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitData;
 
-        if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !MouseOverUI())
+        if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource") && !MouseOverUI())
         {
             turretBlueprint.SetActive(true);
 

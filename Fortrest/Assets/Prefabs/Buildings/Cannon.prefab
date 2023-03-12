@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1251717566}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: SpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 1829088025094860083}
   - component: {fileID: 4544795028742860228}
   - component: {fileID: 224003699}
-  m_Layer: 3
+  m_Layer: 7
   m_Name: Cannon
   m_TagString: Building
   m_Icon: {fileID: 0}
@@ -82,6 +82,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NaturalBool: 1
   resourceObject: 0
+  health: 0
   maxHealth: 5
   energyConsumptionPerClick: 2
   resourceAmount: 5
@@ -121,6 +122,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1829088025094860082}
     m_Modifications:
+    - target: {fileID: -9038585923029775698, guid: b3732832d363ac54991ec703d918d460,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: b3732832d363ac54991ec703d918d460,
         type: 3}
       propertyPath: m_RootOrder
@@ -216,6 +222,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 125318030066836514, guid: b3732832d363ac54991ec703d918d460,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b3732832d363ac54991ec703d918d460,
         type: 3}
       propertyPath: m_Name
@@ -223,14 +234,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: b3732832d363ac54991ec703d918d460,
         type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b3732832d363ac54991ec703d918d460,
+        type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 951636146637939270, guid: b3732832d363ac54991ec703d918d460,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6107273551871773571, guid: b3732832d363ac54991ec703d918d460,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f643a457d0cd8284d96312b89007baad, type: 2}
+    - target: {fileID: 7099308057813573989, guid: b3732832d363ac54991ec703d918d460,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8820615133258533718, guid: b3732832d363ac54991ec703d918d460,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3732832d363ac54991ec703d918d460, type: 3}
 --- !u!1 &1230346378522290108 stripped
@@ -297,7 +328,7 @@ PrefabInstance:
     - target: {fileID: 691757190410652912, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -307,7 +338,7 @@ PrefabInstance:
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -427,7 +458,7 @@ PrefabInstance:
     - target: {fileID: 8026301831611583226, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 3
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}

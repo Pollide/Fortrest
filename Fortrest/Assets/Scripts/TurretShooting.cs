@@ -16,16 +16,6 @@ public class TurretShooting : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Enemy"))
-        {
-            enemies.Add(other.gameObject);
-            other.GetComponent<EnemyController>().isInTurretRange = true;
-            other.GetComponent<EnemyController>().turrets.Add(gameObject);
-        }
-    }
-
     public void RemoveFromList()
     {
         for (int i = 0; i < enemies.Count; i++)
@@ -47,5 +37,15 @@ public class TurretShooting : MonoBehaviour
         animController.SetBool("isAttacking", true);
 
         GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
+    }
+
+    public void RunTrigger(Collider other)
+    { 
+        if (other.CompareTag("Enemy"))
+        {
+            enemies.Add(other.gameObject);
+            other.GetComponent<EnemyController>().isInTurretRange = true;
+            other.GetComponent<EnemyController>().turrets.Add(gameObject);
+        }
     }
 }
