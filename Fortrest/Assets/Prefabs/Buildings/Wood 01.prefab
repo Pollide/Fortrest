@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8707849238438734742}
   - component: {fileID: 8707849238438734743}
   - component: {fileID: 8707849238438734740}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -107,9 +107,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8707849239115483156}
   - component: {fileID: 8707849239115483157}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wood 01
-  m_TagString: Untagged
+  m_TagString: Resource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -146,6 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NaturalBool: 1
   resourceObject: 4
+  health: 0
   maxHealth: 5
   energyConsumptionPerClick: 2
   resourceAmount: 5
@@ -157,10 +158,20 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8707849239115483156}
     m_Modifications:
+    - target: {fileID: 691757190410652912, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Name
       value: Health Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -267,6 +278,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.017
       objectReference: {fileID: 0}
+    - target: {fileID: 8026301831611583226, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}
 --- !u!114 &1280423068281564523 stripped
@@ -298,6 +314,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bush
+      objectReference: {fileID: 0}
+    - target: {fileID: 2378882495007964923, guid: ffafced004e98f3459d330a03148a6b1,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3046876097462953025, guid: ffafced004e98f3459d330a03148a6b1,
         type: 3}

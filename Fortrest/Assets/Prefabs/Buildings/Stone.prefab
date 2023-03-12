@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3333286310292844786}
   - component: {fileID: 7277416149756742857}
   - component: {fileID: 1059702658611391135}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: polySurface137
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -109,9 +109,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6935669614047997176}
   - component: {fileID: -4554220620364002257}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Stone
-  m_TagString: Untagged
+  m_TagString: Resource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,6 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NaturalBool: 1
   resourceObject: 3
+  health: 0
   maxHealth: 5
   energyConsumptionPerClick: 2
   resourceAmount: 5
@@ -158,10 +159,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6935669614047997176}
     m_Modifications:
+    - target: {fileID: 691757190410652912, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Name
       value: Health Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5210401813966692839, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -207,6 +223,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0.6129
+      objectReference: {fileID: 0}
+    - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -267,6 +293,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.017
+      objectReference: {fileID: 0}
+    - target: {fileID: 8026301831611583226, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}
