@@ -142,7 +142,7 @@ public class PlayerModeHandler : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                 Debug.Log("Cannot Place Building Here");
             }
-            else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Building") || hitData.transform.CompareTag("Resource"))
+            else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Building") || hitData.transform.CompareTag("Resource")))
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                 Debug.Log("Building Here");

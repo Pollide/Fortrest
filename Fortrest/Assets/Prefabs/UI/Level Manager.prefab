@@ -30,6 +30,7 @@ Transform:
   m_Children:
   - {fileID: 5478360910570642906}
   - {fileID: 1787281458015107097}
+  - {fileID: 3279542531632612243}
   m_Father: {fileID: 927623175018942828}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -856,8 +857,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15a1f0b36e2f48d43972fae321df2baa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  wood: 100
-  stone: 100
+  wood: 0
+  stone: 0
   woodAmount: {fileID: 2223620223743466341}
   stoneAmount: {fileID: 657739152}
 --- !u!114 &8459052350306267816
@@ -883,7 +884,7 @@ MonoBehaviour:
   distanceAwayFromPlayer: 5
   buildingLayer:
     serializedVersion: 2
-    m_Bits: 137
+    m_Bits: 1033
   buildingMode: {fileID: 1932158765757627270}
   resourceMode: {fileID: 1756843180104021296}
   combatMode: {fileID: 2369812168695741967}
@@ -1027,6 +1028,37 @@ MonoBehaviour:
   maxSmooth: 0.25
   minSmooth: 0.01
   max: 0
+--- !u!1 &1211187920363824722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3279542531632612243}
+  m_Layer: 0
+  m_Name: SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3279542531632612243
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1211187920363824722}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.55, z: -9}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 97223088}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1354247512816183170
 GameObject:
   m_ObjectHideFlags: 0
@@ -12972,6 +13004,11 @@ PrefabInstance:
       propertyPath: interactText2
       value: 
       objectReference: {fileID: 3621019080131303487}
+    - target: {fileID: 5569601162832024530, guid: 3dc4b1a60854b0a469b856b8b8590167,
+        type: 3}
+      propertyPath: houseSpawnPoint
+      value: 
+      objectReference: {fileID: 1211187920363824722}
     - target: {fileID: 5569601162832024530, guid: 3dc4b1a60854b0a469b856b8b8590167,
         type: 3}
       propertyPath: playerEnergyBarImage
