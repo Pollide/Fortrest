@@ -119,7 +119,7 @@ public class LevelManager : MonoBehaviour
                             VFXPebble.Play();
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
                         }
-                        else
+                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
                         {
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
                         }

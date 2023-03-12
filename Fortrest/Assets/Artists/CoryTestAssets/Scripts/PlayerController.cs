@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private float playerVelocity;
     private float attackCooldown = 1.0f;
     private float nextAttack;
+    private float attackDamage = 0.5f;
 
     CharacterController playerCC;
     public Animator CharacterAnimator;
@@ -49,10 +50,25 @@ public class PlayerController : MonoBehaviour
     public GameObject interactText1;
     public GameObject interactText2;
 
+    public VisualEffect VFXPebble;
     public VisualEffect VFXSlash;
     public VisualEffect VFXSleeping;
 
     private bool soundPlaying = false;
+
+    public GameObject AxeGameObject;
+    public GameObject HammerGameObject;
+    public GameObject PicaxeGameObject;
+    public GameObject SwordGameObject;
+
+    [System.Serializable]
+    public class ToolData
+    {
+        public bool AxeBool;
+        public bool HammerBool;
+        public bool PicaxeBool;
+        public bool SwordBool;
+    }
 
     // Start is called before the first frame update
     void Awake()
@@ -64,12 +80,18 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        VFXSlash.Stop();
-        VFXSleeping.Stop();
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         destroyedHouse = house.transform.Find("Destroyed House").gameObject;
         repairedHouse = house.transform.Find("Repaired House").gameObject;
+    }
+
+    public void ChangeTool(ToolData toolData)
+    {
+        AxeGameObject.SetActive(toolData.AxeBool);
+        HammerGameObject.SetActive(toolData.HammerBool);
+        PicaxeGameObject.SetActive(toolData.PicaxeBool);
+        SwordGameObject.SetActive(toolData.SwordBool);
     }
 
     // Update is called once per frame
@@ -92,7 +114,7 @@ public class PlayerController : MonoBehaviour
 
         if (sleeping)
         {
-            playerEnergy += Time.deltaTime;           
+            playerEnergy += Time.deltaTime;
         }
 
         if (playerEnergy >= maxPlayerEnergy)
@@ -117,7 +139,7 @@ public class PlayerController : MonoBehaviour
         {
             footstepTimer = 0;
         }
-        if (footstepTimer > 0.35f && sleeping == false)
+        if (footstepTimer > 0.35f)
         {
             footstepTimer = 0;
             AudioClip step = Random.Range(0, 2) == 0 ? GameManager.global.Footstep1Sound : GameManager.global.Footstep2Sound;
@@ -204,6 +226,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
+            ChangeTool(new ToolData() { SwordBool = true });
+
             VFXSlash.Play();
             ApplyEnergyDamage(5.0f);
 
@@ -217,7 +241,7 @@ public class PlayerController : MonoBehaviour
                     playerisAttacking = true;
                     enemyList[i].GetComponent<EnemyController>().chasing = true;
                     GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
-                    enemyList[i].GetComponent<EnemyController>().Damaged();
+                    enemyList[i].GetComponent<EnemyController>().Damaged(attackDamage);
                     break;
                 }
             }
@@ -260,28 +284,29 @@ public class PlayerController : MonoBehaviour
                 repairedHouse.SetActive(true);
                 interactText1.SetActive(false);
                 repaired = true;
+                ChangeTool(new ToolData() { HammerBool = true });
             }
             else
             {
+                ChangeTool(new ToolData());
                 if (!sleeping)
                 {
-                    VFXSleeping.Play();
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep1Sound);
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep2Sound);
                     bodyShape.SetActive(false);
                     Vector3 sleepingVector = house.transform.position;
                     sleepingVector.y = transform.position.y;
-                    transform.position = sleepingVector;                    
+                    transform.position = sleepingVector;
                     playerCanMove = false;
                     playerCC.enabled = false;
-                    soundPlaying = false;
                     sleeping = true;
                 }
                 else
                 {
-                    VFXSleeping.Stop();
                     transform.position = houseSpawnPoint.transform.position;
                     playerCanMove = true;
                     playerCC.enabled = true;
-                    bodyShape.SetActive(true);                   
+                    bodyShape.SetActive(true);
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                 }
