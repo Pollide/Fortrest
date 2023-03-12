@@ -115,6 +115,15 @@ public class Building : MonoBehaviour
 
     public void DestroyBuilding()
     {
+        if (enabled)
+        {
+            Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
+            enabled = false;
+        }
+    }
+
+    void NowDestroy()
+    {
         if (resourceObject == BuildingType.Cannon)
         {
             Destroy(gameObject.transform.parent.gameObject);
