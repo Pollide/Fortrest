@@ -148,7 +148,7 @@ public class PlayerModeHandler : MonoBehaviour
                 Debug.Log("Building Here");
             }
         }
-        else if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood < woodConstructionCostTurret || InventoryManager.global.stone < stoneConstructionCostTurret)
+        else if (Input.GetMouseButtonDown(0) && (InventoryManager.global.wood < woodConstructionCostTurret || InventoryManager.global.stone < stoneConstructionCostTurret))
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
             Debug.Log("Not Enough Resources");

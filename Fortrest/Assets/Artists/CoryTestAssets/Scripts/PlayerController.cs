@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour
     public GameObject interactText1;
     public GameObject interactText2;
 
-    public VisualEffect VFXPebble;
     public VisualEffect VFXSlash;
     public VisualEffect VFXSleeping;
 
@@ -65,6 +64,8 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        VFXSlash.Stop();
+        VFXSleeping.Stop();
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         destroyedHouse = house.transform.Find("Destroyed House").gameObject;
@@ -91,7 +92,7 @@ public class PlayerController : MonoBehaviour
 
         if (sleeping)
         {
-            playerEnergy += Time.deltaTime;
+            playerEnergy += Time.deltaTime;           
         }
 
         if (playerEnergy >= maxPlayerEnergy)
@@ -116,7 +117,7 @@ public class PlayerController : MonoBehaviour
         {
             footstepTimer = 0;
         }
-        if (footstepTimer > 0.35f)
+        if (footstepTimer > 0.35f && sleeping == false)
         {
             footstepTimer = 0;
             AudioClip step = Random.Range(0, 2) == 0 ? GameManager.global.Footstep1Sound : GameManager.global.Footstep2Sound;
@@ -264,22 +265,23 @@ public class PlayerController : MonoBehaviour
             {
                 if (!sleeping)
                 {
-                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep1Sound);
-                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep2Sound);
+                    VFXSleeping.Play();
                     bodyShape.SetActive(false);
                     Vector3 sleepingVector = house.transform.position;
                     sleepingVector.y = transform.position.y;
                     transform.position = sleepingVector;                    
                     playerCanMove = false;
                     playerCC.enabled = false;
+                    soundPlaying = false;
                     sleeping = true;
                 }
                 else
                 {
+                    VFXSleeping.Stop();
                     transform.position = houseSpawnPoint.transform.position;
                     playerCanMove = true;
                     playerCC.enabled = true;
-                    bodyShape.SetActive(true);                 
+                    bodyShape.SetActive(true);                   
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                 }
