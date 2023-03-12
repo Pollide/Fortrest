@@ -233,7 +233,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
             ChangeTool(new ToolData() { SwordBool = true });
-
+            VFXSlash.transform.position = SwordGameObject.transform.position;
             VFXSlash.Play();
             ApplyEnergyDamage(5.0f);
 
