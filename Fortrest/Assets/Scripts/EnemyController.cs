@@ -68,7 +68,7 @@ public class EnemyController : MonoBehaviour
                 }
             }
 
-            if (bestTarget != null)
+            if (bestTarget != null && agent.isOnNavMesh)
             {
                 agent.SetDestination(bestTarget.position); // Makes the AI move
 
@@ -88,7 +88,7 @@ public class EnemyController : MonoBehaviour
                 }
                 ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
             }
-           
+
 
         }
         else
@@ -177,10 +177,10 @@ public class EnemyController : MonoBehaviour
         LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
     }
 
-    public void Damaged()
+    public void Damaged(float amount)
     {
         Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
-        health -= 1;
+        health -= amount;
         if (HealthAnimationState != null && HealthAnimationState.enabled)
         {
             HealthAnimationState.time = 1;

@@ -5,6 +5,7 @@ using UnityEngine;
 public class BoltScript : MonoBehaviour
 {
     public float speed = 1f;
+    public float damage = 1f;
 
     // Update is called once per frame
     void Update()
@@ -28,7 +29,7 @@ public class BoltScript : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<EnemyController>().Damaged();
+            collision.gameObject.GetComponent<EnemyController>().Damaged(damage);
             Destroy(gameObject);
         }
     }

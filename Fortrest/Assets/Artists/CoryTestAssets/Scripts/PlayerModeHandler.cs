@@ -119,7 +119,7 @@ public class PlayerModeHandler : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
 
-            if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building"))
+            if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
             {
                 Vector3 worldPos = hitData.point;
 
@@ -132,17 +132,23 @@ public class PlayerModeHandler : MonoBehaviour
                     InventoryManager.global.stone -= stoneConstructionCostTurret;
                     // Debug.Log("working");
                 }
+                else
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                }
             }
             else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Player"))
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                 Debug.Log("Cannot Place Building Here");
             }
-            else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Building"))
+            else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Building") || hitData.transform.CompareTag("Resource")))
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                 Debug.Log("Building Here");
             }
         }
-        else if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood < woodConstructionCostTurret && InventoryManager.global.stone < stoneConstructionCostTurret)
+        else if (Input.GetMouseButtonDown(0) && (InventoryManager.global.wood < woodConstructionCostTurret || InventoryManager.global.stone < stoneConstructionCostTurret))
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
             Debug.Log("Not Enough Resources");
@@ -154,7 +160,7 @@ public class PlayerModeHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitData;
 
-        if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !MouseOverUI())
+        if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource") && !MouseOverUI())
         {
             turretBlueprint.SetActive(true);
 

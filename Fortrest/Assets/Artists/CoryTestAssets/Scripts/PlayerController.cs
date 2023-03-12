@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class PlayerController : MonoBehaviour
     private float playerVelocity;
     private float attackCooldown = 1.0f;
     private float nextAttack;
+    private float attackDamage = 0.5f;
 
     CharacterController playerCC;
     public Animator CharacterAnimator;
@@ -35,18 +37,38 @@ public class PlayerController : MonoBehaviour
 
     // Variable for movement direction
     private Vector3 moveDirection;
-    private Vector3 outsideHousePos;
 
     private float footstepTimer;
     private bool noEnergy;
     private bool repaired;
     private bool sleeping;
     public GameObject house;
+    public GameObject houseSpawnPoint;
     private GameObject destroyedHouse;
     private GameObject repairedHouse;
     public GameObject bodyShape;
+    public GameObject interactText1;
+    public GameObject interactText2;
+
+    public VisualEffect VFXPebble;
+    public VisualEffect VFXSlash;
+    public VisualEffect VFXSleeping;
 
     private bool soundPlaying = false;
+
+    public GameObject AxeGameObject;
+    public GameObject HammerGameObject;
+    public GameObject PicaxeGameObject;
+    public GameObject SwordGameObject;
+
+    [System.Serializable]
+    public class ToolData
+    {
+        public bool AxeBool;
+        public bool HammerBool;
+        public bool PicaxeBool;
+        public bool SwordBool;
+    }
 
     // Start is called before the first frame update
     void Awake()
@@ -58,11 +80,18 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        outsideHousePos = new Vector3(2, 1.5f, 16);
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         destroyedHouse = house.transform.Find("Destroyed House").gameObject;
         repairedHouse = house.transform.Find("Repaired House").gameObject;
+    }
+
+    public void ChangeTool(ToolData toolData)
+    {
+        AxeGameObject.SetActive(toolData.AxeBool);
+        HammerGameObject.SetActive(toolData.HammerBool);
+        PicaxeGameObject.SetActive(toolData.PicaxeBool);
+        SwordGameObject.SetActive(toolData.SwordBool);
     }
 
     // Update is called once per frame
@@ -82,6 +111,11 @@ public class PlayerController : MonoBehaviour
         }
 
         Sleep();
+
+        if (sleeping)
+        {
+            playerEnergy += Time.deltaTime;
+        }
 
         if (playerEnergy >= maxPlayerEnergy)
         {
@@ -192,6 +226,9 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
+            ChangeTool(new ToolData() { SwordBool = true });
+
+            VFXSlash.Play();
             ApplyEnergyDamage(5.0f);
 
             nextAttack = Time.time + attackCooldown;
@@ -204,10 +241,34 @@ public class PlayerController : MonoBehaviour
                     playerisAttacking = true;
                     enemyList[i].GetComponent<EnemyController>().chasing = true;
                     GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
-                    enemyList[i].GetComponent<EnemyController>().Damaged();
+                    enemyList[i].GetComponent<EnemyController>().Damaged(attackDamage);
                     break;
                 }
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject == destroyedHouse)
+        {
+            interactText1.SetActive(true);
+        }
+        else if (other.gameObject == repairedHouse)
+        {
+            interactText2.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == destroyedHouse)
+        {
+            interactText1.SetActive(false);
+        }
+        else if (other.gameObject == repairedHouse)
+        {
+            interactText2.SetActive(false);
         }
     }
 
@@ -221,32 +282,39 @@ public class PlayerController : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound, 0.3f);
                 destroyedHouse.SetActive(false);
                 repairedHouse.SetActive(true);
+                interactText1.SetActive(false);
                 repaired = true;
+                ChangeTool(new ToolData() { HammerBool = true });
             }
             else
             {
+                ChangeTool(new ToolData());
                 if (!sleeping)
                 {
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep1Sound);
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep2Sound);
+                    bodyShape.SetActive(false);
                     Vector3 sleepingVector = house.transform.position;
                     sleepingVector.y = transform.position.y;
                     transform.position = sleepingVector;
                     playerCanMove = false;
+                    playerCC.enabled = false;
                     sleeping = true;
                 }
                 else
                 {
+                    transform.position = houseSpawnPoint.transform.position;
                     playerCanMove = true;
-                    transform.position = outsideHousePos;
+                    playerCC.enabled = true;
+                    bodyShape.SetActive(true);
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.WhistlingSound);
                 }
             }
         }
 
         if (sleeping && soundPlaying == false)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.WhistlingSound, 0.2f, true, 0, true);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             soundPlaying = true;
         }
