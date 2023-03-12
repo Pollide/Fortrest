@@ -35,13 +35,13 @@ public class PlayerController : MonoBehaviour
 
     // Variable for movement direction
     private Vector3 moveDirection;
-    private Vector3 outsideHousePos;
 
     private float footstepTimer;
     private bool noEnergy;
     private bool repaired;
     private bool sleeping;
     public GameObject house;
+    public GameObject houseSpawnPoint;
     private GameObject destroyedHouse;
     private GameObject repairedHouse;
     public GameObject bodyShape;
@@ -60,7 +60,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        outsideHousePos = new Vector3(3, 2.0f, 16);
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         destroyedHouse = house.transform.Find("Destroyed House").gameObject;
@@ -271,10 +270,10 @@ public class PlayerController : MonoBehaviour
                 }
                 else
                 {
+                    transform.position = houseSpawnPoint.transform.position;
                     playerCanMove = true;
                     playerCC.enabled = true;
-                    bodyShape.SetActive(true);
-                    transform.position = outsideHousePos;                  
+                    bodyShape.SetActive(true);                 
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                 }
