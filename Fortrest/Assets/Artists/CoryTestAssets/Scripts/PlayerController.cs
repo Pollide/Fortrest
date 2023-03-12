@@ -299,6 +299,7 @@ public class PlayerController : MonoBehaviour
                     transform.position = sleepingVector;
                     playerCanMove = false;
                     playerCC.enabled = false;
+                    soundPlaying = false;
                     sleeping = true;
                 }
                 else
