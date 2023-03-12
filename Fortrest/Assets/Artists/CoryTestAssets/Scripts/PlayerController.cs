@@ -233,7 +233,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
             ChangeTool(new ToolData() { SwordBool = true });
-            VFXSlash.transform.position = SwordGameObject.transform.position;
+            VFXSlash.transform.position = transform.position;
             VFXSlash.transform.eulerAngles = transform.eulerAngles;
             VFXSlash.Play();
             ApplyEnergyDamage(5.0f);
@@ -281,7 +281,7 @@ public class PlayerController : MonoBehaviour
 
     private void Sleep()
     {
-        if (Input.GetKeyDown(KeyCode.E) && Vector3.Distance(transform.position, house.transform.position) <= 10.0f)
+        if (Input.GetKeyDown(KeyCode.E) && (interactText2 || interactText1.activeSelf))
         {
             if (!repaired)
             {
