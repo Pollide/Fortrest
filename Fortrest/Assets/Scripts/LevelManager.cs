@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using UnityEngine.VFX;
 
 public class LevelManager : MonoBehaviour
 {
@@ -41,6 +42,9 @@ public class LevelManager : MonoBehaviour
     private float gatherCooldown = 0.75f;
     private float nextGather;
 
+    public VisualEffect VFXSparks;
+    public VisualEffect VFXPebble;
+
     private void Awake()
     {
         global = this;
@@ -51,6 +55,12 @@ public class LevelManager : MonoBehaviour
             PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
+    }
+
+    private void Start()
+    {
+        VFXSparks.Stop();
+        VFXPebble.Stop();
     }
 
 
@@ -100,17 +110,25 @@ public class LevelManager : MonoBehaviour
                 float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, NaturalBuildingList[i].transform.position);
                 if (distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
                 {
+                    bool isStoneBool = NaturalBuildingList[i].resourceObject == Building.BuildingType.Stone;
+                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = !isStoneBool, PicaxeBool = isStoneBool });
                     nextGather = Time.time + gatherCooldown;
 
                     if (NaturalBuildingList[i].health > 1)
                     {
-                        if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Stone)
+                        if (isStoneBool)
                         {
+                            VFXSparks.Play();
+                            VFXPebble.Play();
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
                         }
                         else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
                         {
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
+                        }
+                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Food)
+                        {
+                            GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
                         }
 
                         NaturalBuildingList[i].TakeDamage(1);
