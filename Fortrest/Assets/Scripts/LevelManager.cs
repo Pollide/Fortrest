@@ -50,6 +50,7 @@ public class LevelManager : MonoBehaviour
 
     public TMP_Text DayTMP_Text;
     public TMP_Text RemaningTMP_Text;
+    public TMP_Text SurvivedTMP_Text;
     private void Awake()
     {
         global = this;
@@ -133,10 +134,10 @@ public class LevelManager : MonoBehaviour
 
         if (GoblinTimer >= GoblinThreshold && nightTimeBool)
         {
-            GoblinThreshold = Random.Range(15, 20) - (day * 2f);
-            if (GoblinThreshold < 1f)
+            GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
+            if (GoblinThreshold < 0.2f)
             {
-                GoblinThreshold = 1f;
+                GoblinThreshold = 0.2f;
             }
             GoblinTimer = 0;
 
