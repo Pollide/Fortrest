@@ -60,6 +60,11 @@ public class GameManager : MonoBehaviour
     public AudioClip SpeedButtonClickSound;
     public AudioClip BushSound;
     public AudioClip ModeChangeClickSound;
+    public AudioClip HouseBuiltNoiseSound;
+    public AudioClip HouseBuiltSound;
+    public AudioClip SnoringSound;
+    public AudioClip CantPlaceSound;
+    public AudioClip WhistlingSound;
 
     //runs on the frame it was awake on
     void Awake()

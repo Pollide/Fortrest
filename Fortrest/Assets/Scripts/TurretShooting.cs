@@ -45,5 +45,7 @@ public class TurretShooting : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * turn_speed);
 
         animController.SetBool("isAttacking", true);
+
+        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
     }
 }
