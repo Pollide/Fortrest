@@ -65,7 +65,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the mouse was clicked ontop of the button
     public void OnPointerDown(PointerEventData eventData)
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
         ChangeSizeVoid(0.9f);
     }
 
@@ -137,6 +136,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         {
             if (Input.GetMouseButtonDown(1))
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
                 OnPointerClick(null);
             }
         }
