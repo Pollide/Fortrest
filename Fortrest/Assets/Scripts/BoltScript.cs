@@ -6,10 +6,11 @@ public class BoltScript : MonoBehaviour
 {
     public float speed = 1f;
     public float damage = 1f;
-
+    float lifetime;
     // Update is called once per frame
     void Update()
     {
+        lifetime += Time.deltaTime;
         var step = speed * Time.deltaTime;
         List<GameObject> enemy = gameObject.GetComponentInParent<TurretShooting>().enemies;
 
@@ -20,6 +21,11 @@ public class BoltScript : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(enemy[0].transform.position.x, enemy[0].transform.position.y + 0.1f, enemy[0].transform.position.z), step);
         }
         else
+        {
+            Destroy(gameObject);
+        }
+
+        if (lifetime > 10)
         {
             Destroy(gameObject);
         }
