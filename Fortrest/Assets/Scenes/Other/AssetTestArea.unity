@@ -2412,8 +2412,11 @@ VisualEffect:
   m_PropertySheet:
     m_Float:
       m_Array:
-      - m_Value: 32
+      - m_Value: 64
         m_Name: NumberEmittedPerBurst
+        m_Overridden: 1
+      - m_Value: 1.2
+        m_Name: Lifetime
         m_Overridden: 1
     m_Vector2f:
       m_Array:
@@ -2621,8 +2624,11 @@ VisualEffect:
         m_Overridden: 1
     m_Vector3f:
       m_Array:
-      - m_Value: {x: 360, y: 360, z: 360}
+      - m_Value: {x: 10, y: 0, z: 10}
         m_Name: RandomAngleMax
+        m_Overridden: 1
+      - m_Value: {x: 0, y: -6, z: 0}
+        m_Name: Gravity
         m_Overridden: 1
     m_Vector4f:
       m_Array:
@@ -2862,13 +2868,22 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 0.15
+        m_Name: Lifetime
+        m_Overridden: 1
     m_Vector2f:
       m_Array: []
     m_Vector3f:
       m_Array: []
     m_Vector4f:
-      m_Array: []
+      m_Array:
+      - m_Value: {x: 0.76478827, y: 0.9137255, z: 0.864354, w: 0}
+        m_Name: Initial Colour
+        m_Overridden: 1
+      - m_Value: {x: 5.223247, y: 6.188681, z: 6.1531434, w: 0}
+        m_Name: Final Colour
+        m_Overridden: 1
     m_Uint:
       m_Array: []
     m_Int:
@@ -3556,11 +3571,23 @@ VisualEffect:
   m_ResourceVersion: 1
   m_PropertySheet:
     m_Float:
-      m_Array: []
+      m_Array:
+      - m_Value: 10
+        m_Name: DragCoefficient
+        m_Overridden: 1
+      - m_Value: 0.2
+        m_Name: DragActivationSpeed
+        m_Overridden: 1
+      - m_Value: 0.5
+        m_Name: TurbIntensity
+        m_Overridden: 1
     m_Vector2f:
       m_Array:
-      - m_Value: {x: 3, y: 5}
+      - m_Value: {x: 10, y: 12}
         m_Name: UpwardsForceRange
+        m_Overridden: 1
+      - m_Value: {x: -5, y: 5}
+        m_Name: SidewaysForceRange
         m_Overridden: 1
     m_Vector3f:
       m_Array: []

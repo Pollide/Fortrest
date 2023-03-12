@@ -123,14 +123,14 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 Vector3 worldPos = hitData.point;
 
-                if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && 
+                if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer &&
                     worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
                     Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
                     InventoryManager.global.wood -= woodConstructionCostTurret;
                     InventoryManager.global.stone -= stoneConstructionCostTurret;
-                    Debug.Log("working");
+                    // Debug.Log("working");
                 }
             }
             else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Player"))
@@ -162,8 +162,8 @@ public class PlayerModeHandler : MonoBehaviour
 
             turretBlueprint.transform.position = worldPos;
 
-            if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer && 
-                worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer && 
+            if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer &&
+                worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer &&
                 InventoryManager.global.wood >= woodConstructionCostTurret && InventoryManager.global.wood >= stoneConstructionCostTurret)
             {
                 foreach (Transform child in parts)
@@ -172,7 +172,7 @@ public class PlayerModeHandler : MonoBehaviour
                     {
                         child.GetComponent<MeshRenderer>().material = turretBlueprintBlue;
                     }
-                  
+
                 }
             }
             else
@@ -184,7 +184,7 @@ public class PlayerModeHandler : MonoBehaviour
                         child.GetComponent<MeshRenderer>().material = turretBlueprintRed;
                     }
                 }
-            } 
+            }
         }
         else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
         {

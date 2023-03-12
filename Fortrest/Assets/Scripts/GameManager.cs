@@ -114,10 +114,21 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
+
     private void Update()
     {
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+
+        if (PlayerModeHandler.global && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
 
