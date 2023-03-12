@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour
     private GameObject destroyedHouse;
     private GameObject repairedHouse;
     public GameObject bodyShape;
+    public GameObject interactText1;
+    public GameObject interactText2;
 
     private bool soundPlaying = false;
 
@@ -58,7 +60,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        outsideHousePos = new Vector3(2, 1.5f, 16);
+        outsideHousePos = new Vector3(3, 2.0f, 16);
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         destroyedHouse = house.transform.Find("Destroyed House").gameObject;
@@ -82,6 +84,11 @@ public class PlayerController : MonoBehaviour
         }
 
         Sleep();
+
+        if (sleeping)
+        {
+            playerEnergy += Time.deltaTime;
+        }
 
         if (playerEnergy >= maxPlayerEnergy)
         {
@@ -211,6 +218,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject == destroyedHouse)
+        {
+            interactText1.SetActive(true);
+        }
+        else if (other.gameObject == repairedHouse)
+        {
+            interactText2.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == destroyedHouse)
+        {
+            interactText1.SetActive(false);
+        }
+        else if (other.gameObject == repairedHouse)
+        {
+            interactText2.SetActive(false);
+        }
+    }
+
     private void Sleep()
     {
         if (Input.GetKeyDown(KeyCode.E) && Vector3.Distance(transform.position, house.transform.position) <= 10.0f)
@@ -221,32 +252,37 @@ public class PlayerController : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound, 0.3f);
                 destroyedHouse.SetActive(false);
                 repairedHouse.SetActive(true);
+                interactText1.SetActive(false);
                 repaired = true;
             }
             else
             {
                 if (!sleeping)
                 {
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep1Sound);
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep2Sound);
+                    bodyShape.SetActive(false);
                     Vector3 sleepingVector = house.transform.position;
                     sleepingVector.y = transform.position.y;
-                    transform.position = sleepingVector;
+                    transform.position = sleepingVector;                    
                     playerCanMove = false;
+                    playerCC.enabled = false;
                     sleeping = true;
                 }
                 else
                 {
                     playerCanMove = true;
-                    transform.position = outsideHousePos;
+                    playerCC.enabled = true;
+                    bodyShape.SetActive(true);
+                    transform.position = outsideHousePos;                  
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.WhistlingSound);
                 }
             }
         }
 
         if (sleeping && soundPlaying == false)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.WhistlingSound, 0.2f, true, 0, true);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             soundPlaying = true;
         }
