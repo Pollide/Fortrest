@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class PlayerController : MonoBehaviour
 {
@@ -47,6 +48,10 @@ public class PlayerController : MonoBehaviour
     public GameObject bodyShape;
     public GameObject interactText1;
     public GameObject interactText2;
+
+    public VisualEffect VFXPebble;
+    public VisualEffect VFXSlash;
+    public VisualEffect VFXSleeping;
 
     private bool soundPlaying = false;
 
@@ -199,6 +204,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
+            VFXSlash.Play();
             ApplyEnergyDamage(5.0f);
 
             nextAttack = Time.time + attackCooldown;
