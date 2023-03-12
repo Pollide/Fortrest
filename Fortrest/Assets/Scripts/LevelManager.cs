@@ -34,7 +34,7 @@ public class LevelManager : MonoBehaviour
     public GameObject NightLightGameObject;
     public float DaylightTimer;
     public int day = 0;
-    public int maxDay = 3;
+
     public float daySpeed = 2;
     public float GoblinTimer;
     float GoblinThreshold;
