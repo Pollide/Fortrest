@@ -128,9 +128,13 @@ public class PlayerModeHandler : MonoBehaviour
                     worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
-                    Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
+                    GameObject newTurret = Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
                     InventoryManager.global.wood -= woodConstructionCostTurret;
                     InventoryManager.global.stone -= stoneConstructionCostTurret;
+
+                    LevelManager.global.VFXSmokePuff.transform.position = newTurret.transform.position + new Vector3(0, .5f, 0);
+
+                    LevelManager.global.VFXSmokePuff.Play();
                     // Debug.Log("working");
                 }
                 else

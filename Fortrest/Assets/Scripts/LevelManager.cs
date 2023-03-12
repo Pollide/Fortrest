@@ -44,7 +44,7 @@ public class LevelManager : MonoBehaviour
 
     public VisualEffect VFXSparks;
     public VisualEffect VFXPebble;
-
+    public VisualEffect VFXSmokePuff;
     private void Awake()
     {
         global = this;
@@ -61,6 +61,7 @@ public class LevelManager : MonoBehaviour
     {
         VFXSparks.Stop();
         VFXPebble.Stop();
+        VFXSmokePuff.Stop();
     }
 
 

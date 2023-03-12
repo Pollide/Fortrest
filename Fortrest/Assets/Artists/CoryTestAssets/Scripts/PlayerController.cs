@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     public GameObject PicaxeGameObject;
     public GameObject SwordGameObject;
     public GameObject RadiusGameObject;
+    public GameObject RadiusCamGameObject;
     [System.Serializable]
     public class ToolData
     {
@@ -94,6 +95,9 @@ public class PlayerController : MonoBehaviour
         PicaxeGameObject.SetActive(toolData.PicaxeBool);
         SwordGameObject.SetActive(toolData.SwordBool);
         RadiusGameObject.SetActive(toolData.HammerBool);
+        RadiusCamGameObject.SetActive(toolData.HammerBool);
+
+
     }
 
     // Update is called once per frame
