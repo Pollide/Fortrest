@@ -21,5 +21,6 @@ public class AnimatEvents : MonoBehaviour
     public void SpawnBolt()
     {
         Instantiate(spawnedBolt, spawnedBoltPoint);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
     }
 }
