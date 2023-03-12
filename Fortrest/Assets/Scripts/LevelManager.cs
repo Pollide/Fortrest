@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.VFX;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -46,10 +47,15 @@ public class LevelManager : MonoBehaviour
     public VisualEffect VFXPebble;
     public VisualEffect VFXSmokePuff;
     public VisualEffect VFXWoodChip;
+
+    public TMP_Text DayTMP_Text;
+    public TMP_Text RemaningTMP_Text;
     private void Awake()
     {
         global = this;
         DaylightTimer = DirectionalLightTransform.eulerAngles.x;
+        GameManager.ChangeAnimationLayers(GetComponent<Animation>());
+
         if (!GameManager.global)
         {
 
@@ -79,14 +85,59 @@ public class LevelManager : MonoBehaviour
         {
             DaylightTimer = 0;
             day++;
-            //  Debug.Log("DAY COMPLETE");
+            GameManager.PlayAnimation(GetComponent<Animation>(), "New Day");
+
+            if (day == 1)
+            {
+                DayTMP_Text.text = "DAY TWO";
+                RemaningTMP_Text.text = "THREE DAYS LEFT";
+            }
+            if (day == 2)
+            {
+                DayTMP_Text.text = "DAY THREE";
+                RemaningTMP_Text.text = "TWO DAYS LEFT";
+            }
+            if (day == 3)
+            {
+                DayTMP_Text.text = "DAY FOUR";
+                RemaningTMP_Text.text = "ONE DAY LEFT";
+            }
+            if (day == 4)
+            {
+                DayTMP_Text.text = "DAY FIVE";
+                RemaningTMP_Text.text = "FINAL DAY";
+            }
+
+            if (day == 5)
+            {
+                DayTMP_Text.text = "YOU SURVIVED";
+                RemaningTMP_Text.text = "How much longer can you survive?";
+
+            }
+
+            if (day > 5)
+            {
+                DayTMP_Text.text = "DAY " + (day + 1).ToString();
+                RemaningTMP_Text.text = "Highscore: " + (PlayerPrefs.GetInt("Number of Days") + 1);
+
+                if (day > PlayerPrefs.GetInt("Number of Days"))
+                {
+                    RemaningTMP_Text.text = "Highscore Beaten!";
+                    PlayerPrefs.SetInt("Number of Days", day);
+                }
+            }
+
         }
 
         bool nightTimeBool = DaylightTimer > 180;
 
         if (GoblinTimer >= GoblinThreshold && nightTimeBool)
         {
-            GoblinThreshold = Random.Range(3, 8);
+            GoblinThreshold = Random.Range(15, 20) - (day * 2f);
+            if (GoblinThreshold < 1f)
+            {
+                GoblinThreshold = 1f;
+            }
             GoblinTimer = 0;
 
             Vector3 spawn = PlayerController.global.transform.position;

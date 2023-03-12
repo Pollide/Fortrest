@@ -70,9 +70,8 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         playerModes = PlayerModes.ResourceMode;
-        buildingMode.enabled = false;
-        resourceMode.enabled = true;
-        combatMode.enabled = false;
+        SwitchToGatherMode();
+
     }
 
     public void SwitchToBuildMode()

@@ -290,11 +290,9 @@ public class PlayerController : MonoBehaviour
                 repairedHouse.SetActive(true);
                 interactText1.SetActive(false);
                 repaired = true;
-                ChangeTool(new ToolData() { HammerBool = true });
             }
             else
             {
-                ChangeTool(new ToolData());
                 if (!sleeping)
                 {
                     VFXSleeping.Play();
