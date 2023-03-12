@@ -234,6 +234,7 @@ public class PlayerController : MonoBehaviour
         {
             ChangeTool(new ToolData() { SwordBool = true });
             VFXSlash.transform.position = SwordGameObject.transform.position;
+            VFXSlash.transform.eulerAngles = transform.eulerAngles;
             VFXSlash.Play();
             ApplyEnergyDamage(5.0f);
 
