@@ -68,7 +68,7 @@ public class EnemyController : MonoBehaviour
                 }
             }
 
-            if (bestTarget != null)
+            if (bestTarget != null && agent.isOnNavMesh)
             {
                 agent.SetDestination(bestTarget.position); // Makes the AI move
 
@@ -88,7 +88,7 @@ public class EnemyController : MonoBehaviour
                 }
                 ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
             }
-           
+
 
         }
         else

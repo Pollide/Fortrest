@@ -97,15 +97,17 @@ public class LevelManager : MonoBehaviour
                 float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, NaturalBuildingList[i].transform.position);
                 if (distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
                 {
+                    bool isStoneBool = NaturalBuildingList[i].resourceObject == Building.BuildingType.Stone;
+                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = !isStoneBool, PicaxeBool = isStoneBool });
                     nextGather = Time.time + gatherCooldown;
 
                     if (NaturalBuildingList[i].health > 1)
                     {
-                        if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Stone)
+                        if (isStoneBool)
                         {
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
                         }
-                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
+                        else
                         {
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
                         }
