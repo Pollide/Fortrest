@@ -111,10 +111,11 @@ public class PlayerModeHandler : MonoBehaviour
         resourceMode.enabled = false;
         combatMode.enabled = true;
     }
+    bool runOnce;
 
     private void SpawnBuilding()
     {
-        if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= woodConstructionCostTurret && InventoryManager.global.wood >= stoneConstructionCostTurret && !MouseOverUI())
+        if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= woodConstructionCostTurret && InventoryManager.global.stone >= stoneConstructionCostTurret && !MouseOverUI())
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
@@ -152,10 +153,24 @@ public class PlayerModeHandler : MonoBehaviour
                 Debug.Log("Building Here");
             }
         }
-        else if (Input.GetMouseButtonDown(0) && (InventoryManager.global.wood < woodConstructionCostTurret || InventoryManager.global.stone < stoneConstructionCostTurret))
+        else
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-            Debug.Log("Not Enough Resources");
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!runOnce)
+                {
+                    runOnce = true;
+                    if (InventoryManager.global.wood < woodConstructionCostTurret || InventoryManager.global.stone < stoneConstructionCostTurret)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                        Debug.Log("Not Enough Resources");
+                    }
+                }
+            }
+            if (!Input.GetMouseButton(0))
+            {
+                runOnce = false;
+            }
         }
     }
 
