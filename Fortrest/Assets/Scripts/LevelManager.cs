@@ -32,6 +32,8 @@ public class LevelManager : MonoBehaviour
     public SkinnedMeshRenderer LanternSkinnedRenderer;
     public GameObject NightLightGameObject;
     public float DaylightTimer;
+    public int day = 0;
+    public int maxDay = 3;
     public float daySpeed = 2;
     public float GoblinTimer;
     float GoblinThreshold;
@@ -73,6 +75,7 @@ public class LevelManager : MonoBehaviour
         if (DaylightTimer > 360)
         {
             DaylightTimer = 0;
+            day++;
             //  Debug.Log("DAY COMPLETE");
         }
 
