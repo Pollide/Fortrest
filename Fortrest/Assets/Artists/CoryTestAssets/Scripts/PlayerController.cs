@@ -56,6 +56,20 @@ public class PlayerController : MonoBehaviour
 
     private bool soundPlaying = false;
 
+    public GameObject AxeGameObject;
+    public GameObject HammerGameObject;
+    public GameObject PicaxeGameObject;
+    public GameObject SwordGameObject;
+
+    [System.Serializable]
+    public class ToolData
+    {
+        public bool AxeBool;
+        public bool HammerBool;
+        public bool PicaxeBool;
+        public bool SwordBool;
+    }
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -70,6 +84,14 @@ public class PlayerController : MonoBehaviour
         playerEnergyBarImage.fillAmount = 0.935f;
         destroyedHouse = house.transform.Find("Destroyed House").gameObject;
         repairedHouse = house.transform.Find("Repaired House").gameObject;
+    }
+
+    public void ChangeTool(ToolData toolData)
+    {
+        AxeGameObject.SetActive(toolData.AxeBool);
+        HammerGameObject.SetActive(toolData.HammerBool);
+        PicaxeGameObject.SetActive(toolData.PicaxeBool);
+        SwordGameObject.SetActive(toolData.SwordBool);
     }
 
     // Update is called once per frame
@@ -204,6 +226,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
+            ChangeTool(new ToolData() { SwordBool = true });
+
             VFXSlash.Play();
             ApplyEnergyDamage(5.0f);
 
@@ -260,9 +284,11 @@ public class PlayerController : MonoBehaviour
                 repairedHouse.SetActive(true);
                 interactText1.SetActive(false);
                 repaired = true;
+                ChangeTool(new ToolData() { HammerBool = true });
             }
             else
             {
+                ChangeTool(new ToolData());
                 if (!sleeping)
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep1Sound);
@@ -270,7 +296,7 @@ public class PlayerController : MonoBehaviour
                     bodyShape.SetActive(false);
                     Vector3 sleepingVector = house.transform.position;
                     sleepingVector.y = transform.position.y;
-                    transform.position = sleepingVector;                    
+                    transform.position = sleepingVector;
                     playerCanMove = false;
                     playerCC.enabled = false;
                     sleeping = true;
@@ -280,7 +306,7 @@ public class PlayerController : MonoBehaviour
                     transform.position = houseSpawnPoint.transform.position;
                     playerCanMove = true;
                     playerCC.enabled = true;
-                    bodyShape.SetActive(true);                 
+                    bodyShape.SetActive(true);
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                 }
