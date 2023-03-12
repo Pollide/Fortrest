@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
     private GameObject repairedHouse;
     public GameObject bodyShape;
 
+    private bool soundPlaying = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -215,6 +217,8 @@ public class PlayerController : MonoBehaviour
         {
             if (!repaired)
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound, 0.5f);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound, 0.3f);
                 destroyedHouse.SetActive(false);
                 repairedHouse.SetActive(true);
                 repaired = true;
@@ -234,8 +238,17 @@ public class PlayerController : MonoBehaviour
                     playerCanMove = true;
                     transform.position = outsideHousePos;
                     sleeping = false;
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.WhistlingSound);
                 }
             }
+        }
+
+        if (sleeping && soundPlaying == false)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.WhistlingSound, 0.2f, true, 0, true);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
+            soundPlaying = true;
         }
     }
 
