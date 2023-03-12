@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        outsideHousePos = new Vector3(2, 1.5f, 16);
+        outsideHousePos = new Vector3(3, 2.0f, 16);
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         destroyedHouse = house.transform.Find("Destroyed House").gameObject;
@@ -227,26 +227,30 @@ public class PlayerController : MonoBehaviour
             {
                 if (!sleeping)
                 {
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep1Sound);
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.Footstep2Sound);
+                    bodyShape.SetActive(false);
                     Vector3 sleepingVector = house.transform.position;
                     sleepingVector.y = transform.position.y;
-                    transform.position = sleepingVector;
+                    transform.position = sleepingVector;                    
                     playerCanMove = false;
+                    playerCC.enabled = false;
                     sleeping = true;
                 }
                 else
                 {
                     playerCanMove = true;
-                    transform.position = outsideHousePos;
+                    playerCC.enabled = true;
+                    bodyShape.SetActive(true);
+                    transform.position = outsideHousePos;                  
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.WhistlingSound);
                 }
             }
         }
 
         if (sleeping && soundPlaying == false)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.WhistlingSound, 0.2f, true, 0, true);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             soundPlaying = true;
         }
