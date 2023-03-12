@@ -45,6 +45,8 @@ public class PlayerController : MonoBehaviour
     private GameObject destroyedHouse;
     private GameObject repairedHouse;
     public GameObject bodyShape;
+    public GameObject interactText1;
+    public GameObject interactText2;
 
     private bool soundPlaying = false;
 
@@ -82,6 +84,11 @@ public class PlayerController : MonoBehaviour
         }
 
         Sleep();
+
+        if (sleeping)
+        {
+            playerEnergy += Time.deltaTime;
+        }
 
         if (playerEnergy >= maxPlayerEnergy)
         {
@@ -211,6 +218,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject == destroyedHouse)
+        {
+            interactText1.SetActive(true);
+        }
+        else if (other.gameObject == repairedHouse)
+        {
+            interactText2.SetActive(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject == destroyedHouse)
+        {
+            interactText1.SetActive(false);
+        }
+        else if (other.gameObject == repairedHouse)
+        {
+            interactText2.SetActive(false);
+        }
+    }
+
     private void Sleep()
     {
         if (Input.GetKeyDown(KeyCode.E) && Vector3.Distance(transform.position, house.transform.position) <= 10.0f)
@@ -221,6 +252,7 @@ public class PlayerController : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound, 0.3f);
                 destroyedHouse.SetActive(false);
                 repairedHouse.SetActive(true);
+                interactText1.SetActive(false);
                 repaired = true;
             }
             else
