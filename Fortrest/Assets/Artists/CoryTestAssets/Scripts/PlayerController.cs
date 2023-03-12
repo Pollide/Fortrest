@@ -126,11 +126,11 @@ public class PlayerController : MonoBehaviour
 
         playerEnergyBarImage.fillAmount = Mathf.Lerp(0.320f, 0.935f, playerEnergy / maxPlayerEnergy);
 
-        if (playerEnergy <= 0)
-        {
-            noEnergy = true;
-            playerCurrSpeed = 4.0f;
-        }
+        noEnergy = playerEnergy <= 0;
+        playerCurrSpeed = noEnergy ? playerSlowedSpeed : playerMaxSpeed;
+
+        if (noEnergy)
+            playerEnergy = 0;
 
         if (playerisMoving)
         {
