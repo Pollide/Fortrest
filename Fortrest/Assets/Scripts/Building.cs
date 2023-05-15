@@ -26,6 +26,7 @@ public class Building : MonoBehaviour
         Wood,
         Stone,
         Food,
+        House
     }
 
     public BuildingType resourceObject;
@@ -61,13 +62,10 @@ public class Building : MonoBehaviour
                 transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
         }
 
-        if (resourceObject == BuildingType.Cannon)
-        {
-            LevelManager.global.BuildingList.Add(transform);
-        }
-
         if (NaturalBool)
             LevelManager.global.NaturalBuildingList.Add(this);
+        else
+            LevelManager.global.BuildingList.Add(transform);
     }
 
     /*
@@ -115,6 +113,25 @@ public class Building : MonoBehaviour
 
     public void DestroyBuilding()
     {
+
+        if (enabled)
+        {
+            enabled = false;
+
+            if (resourceObject == BuildingType.House)
+            {
+                GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
+                Invoke("RestartGame", GameManager.PlayAnimation(LevelManager.global.GetComponent<Animation>(), "Gameover").length);
+                LevelManager.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
+                return;
+            }
+
+            Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
+        }
+    }
+
+    void NowDestroy()
+    {
         if (resourceObject == BuildingType.Cannon)
         {
             Destroy(gameObject.transform.parent.gameObject);
@@ -125,6 +142,11 @@ public class Building : MonoBehaviour
             Destroy(gameObject);
             LevelManager.global.NaturalBuildingList.Remove(this);
         }
+    }
+
+    public void RestartGame()
+    {
+        GameManager.global.NextScene(1);
     }
 
     private void HealthAnimation()

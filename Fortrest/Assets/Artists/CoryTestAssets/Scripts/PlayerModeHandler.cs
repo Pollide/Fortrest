@@ -70,9 +70,8 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         playerModes = PlayerModes.ResourceMode;
-        buildingMode.enabled = false;
-        resourceMode.enabled = true;
-        combatMode.enabled = false;
+        SwitchToGatherMode();
+
     }
 
     public void SwitchToBuildMode()
@@ -82,6 +81,7 @@ public class PlayerModeHandler : MonoBehaviour
         buildingMode.enabled = true;
         resourceMode.enabled = false;
         combatMode.enabled = false;
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
     }
 
     public void SwitchToGatherMode()
@@ -90,7 +90,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             turretBlueprint.SetActive(false);
         }
-
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
         playerModes = PlayerModes.ResourceMode;
 
         buildingMode.enabled = false;
@@ -104,17 +104,18 @@ public class PlayerModeHandler : MonoBehaviour
         {
             turretBlueprint.SetActive(false);
         }
-
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = true });
         playerModes = PlayerModes.CombatMode;
 
         buildingMode.enabled = false;
         resourceMode.enabled = false;
         combatMode.enabled = true;
     }
+    bool runOnce;
 
     private void SpawnBuilding()
     {
-        if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= woodConstructionCostTurret && InventoryManager.global.wood >= stoneConstructionCostTurret && !MouseOverUI())
+        if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= woodConstructionCostTurret && InventoryManager.global.stone >= stoneConstructionCostTurret && !MouseOverUI())
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
@@ -127,9 +128,13 @@ public class PlayerModeHandler : MonoBehaviour
                     worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
-                    Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
+                    GameObject newTurret = Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
                     InventoryManager.global.wood -= woodConstructionCostTurret;
                     InventoryManager.global.stone -= stoneConstructionCostTurret;
+
+                    LevelManager.global.VFXSmokePuff.transform.position = newTurret.transform.position + new Vector3(0, .5f, 0);
+
+                    LevelManager.global.VFXSmokePuff.Play();
                     // Debug.Log("working");
                 }
                 else
@@ -148,10 +153,24 @@ public class PlayerModeHandler : MonoBehaviour
                 Debug.Log("Building Here");
             }
         }
-        else if (Input.GetMouseButtonDown(0) && (InventoryManager.global.wood < woodConstructionCostTurret || InventoryManager.global.stone < stoneConstructionCostTurret))
+        else
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-            Debug.Log("Not Enough Resources");
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!runOnce)
+                {
+                    runOnce = true;
+                    if (InventoryManager.global.wood < woodConstructionCostTurret || InventoryManager.global.stone < stoneConstructionCostTurret)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                        Debug.Log("Not Enough Resources");
+                    }
+                }
+            }
+            if (!Input.GetMouseButton(0))
+            {
+                runOnce = false;
+            }
         }
     }
 

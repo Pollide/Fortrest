@@ -107,6 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8707849239115483156}
   - component: {fileID: 8707849239115483157}
+  - component: {fileID: -6799876280890107172}
   m_Layer: 9
   m_Name: Wood 02
   m_TagString: Resource
@@ -151,6 +152,22 @@ MonoBehaviour:
   energyConsumptionPerClick: 2
   resourceAmount: 5
   healthBarImage: {fileID: 1280423068281564523}
+--- !u!111 &-6799876280890107172
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8707849239115483162}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: f5efc2fc65b599b4eb7c3da1b117b24e, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: f5efc2fc65b599b4eb7c3da1b117b24e, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1001 &403687447353365103
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -158,6 +175,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8707849239115483156}
     m_Modifications:
+    - target: {fileID: 1467846266723204868, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467846266723204868, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 0.9083636
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467846266723204868, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Name

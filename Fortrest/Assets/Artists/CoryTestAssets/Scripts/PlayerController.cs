@@ -59,7 +59,8 @@ public class PlayerController : MonoBehaviour
     public GameObject HammerGameObject;
     public GameObject PicaxeGameObject;
     public GameObject SwordGameObject;
-
+    public GameObject RadiusGameObject;
+    public GameObject RadiusCamGameObject;
     [System.Serializable]
     public class ToolData
     {
@@ -93,6 +94,10 @@ public class PlayerController : MonoBehaviour
         HammerGameObject.SetActive(toolData.HammerBool);
         PicaxeGameObject.SetActive(toolData.PicaxeBool);
         SwordGameObject.SetActive(toolData.SwordBool);
+        RadiusGameObject.SetActive(toolData.HammerBool);
+        RadiusCamGameObject.SetActive(toolData.HammerBool);
+
+
     }
 
     // Update is called once per frame
@@ -126,11 +131,11 @@ public class PlayerController : MonoBehaviour
 
         playerEnergyBarImage.fillAmount = Mathf.Lerp(0.320f, 0.935f, playerEnergy / maxPlayerEnergy);
 
-        if (playerEnergy <= 0)
-        {
-            noEnergy = true;
-            playerCurrSpeed = 4.0f;
-        }
+        noEnergy = playerEnergy <= 0;
+        playerCurrSpeed = noEnergy ? playerSlowedSpeed : playerMaxSpeed;
+
+        if (noEnergy)
+            playerEnergy = 0;
 
         if (playerisMoving)
         {
@@ -228,7 +233,8 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
             ChangeTool(new ToolData() { SwordBool = true });
-
+            VFXSlash.transform.position = transform.position;
+            VFXSlash.transform.eulerAngles = transform.eulerAngles;
             VFXSlash.Play();
             ApplyEnergyDamage(5.0f);
 
@@ -275,7 +281,7 @@ public class PlayerController : MonoBehaviour
 
     private void Sleep()
     {
-        if (Input.GetKeyDown(KeyCode.E) && Vector3.Distance(transform.position, house.transform.position) <= 10.0f)
+        if (Input.GetKeyDown(KeyCode.E) && (interactText2 || interactText1.activeSelf))
         {
             if (!repaired)
             {
@@ -285,11 +291,9 @@ public class PlayerController : MonoBehaviour
                 repairedHouse.SetActive(true);
                 interactText1.SetActive(false);
                 repaired = true;
-                ChangeTool(new ToolData() { HammerBool = true });
             }
             else
             {
-                ChangeTool(new ToolData());
                 if (!sleeping)
                 {
                     VFXSleeping.Play();
@@ -299,6 +303,7 @@ public class PlayerController : MonoBehaviour
                     transform.position = sleepingVector;
                     playerCanMove = false;
                     playerCC.enabled = false;
+                    soundPlaying = false;
                     sleeping = true;
                 }
                 else

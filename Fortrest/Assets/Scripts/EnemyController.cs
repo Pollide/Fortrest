@@ -42,6 +42,13 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        if (!agent.isOnNavMesh)
+        {
+            PlayerController.global.enemyList.Remove(transform);
+            gameObject.SetActive(false);
+            return;
+        }
+
         float shortestDistance = 9999; // Assign huge default value
 
         MakeNoise();

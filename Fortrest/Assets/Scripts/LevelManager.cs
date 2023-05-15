@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.VFX;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -33,7 +34,7 @@ public class LevelManager : MonoBehaviour
     public GameObject NightLightGameObject;
     public float DaylightTimer;
     public int day = 0;
-    public int maxDay = 3;
+
     public float daySpeed = 2;
     public float GoblinTimer;
     float GoblinThreshold;
@@ -44,11 +45,18 @@ public class LevelManager : MonoBehaviour
 
     public VisualEffect VFXSparks;
     public VisualEffect VFXPebble;
+    public VisualEffect VFXSmokePuff;
+    public VisualEffect VFXWoodChip;
 
+    public TMP_Text DayTMP_Text;
+    public TMP_Text RemaningTMP_Text;
+    public TMP_Text SurvivedTMP_Text;
     private void Awake()
     {
         global = this;
         DaylightTimer = DirectionalLightTransform.eulerAngles.x;
+        GameManager.ChangeAnimationLayers(GetComponent<Animation>());
+
         if (!GameManager.global)
         {
 
@@ -61,6 +69,8 @@ public class LevelManager : MonoBehaviour
     {
         VFXSparks.Stop();
         VFXPebble.Stop();
+        VFXSmokePuff.Stop();
+        VFXWoodChip.Stop();
     }
 
 
@@ -76,14 +86,59 @@ public class LevelManager : MonoBehaviour
         {
             DaylightTimer = 0;
             day++;
-            //  Debug.Log("DAY COMPLETE");
+            GameManager.PlayAnimation(GetComponent<Animation>(), "New Day");
+
+            if (day == 1)
+            {
+                DayTMP_Text.text = "DAY TWO";
+                RemaningTMP_Text.text = "THREE DAYS LEFT";
+            }
+            if (day == 2)
+            {
+                DayTMP_Text.text = "DAY THREE";
+                RemaningTMP_Text.text = "TWO DAYS LEFT";
+            }
+            if (day == 3)
+            {
+                DayTMP_Text.text = "DAY FOUR";
+                RemaningTMP_Text.text = "ONE DAY LEFT";
+            }
+            if (day == 4)
+            {
+                DayTMP_Text.text = "DAY FIVE";
+                RemaningTMP_Text.text = "FINAL DAY";
+            }
+
+            if (day == 5)
+            {
+                DayTMP_Text.text = "YOU SURVIVED";
+                RemaningTMP_Text.text = "How much longer can you survive?";
+
+            }
+
+            if (day > 5)
+            {
+                DayTMP_Text.text = "DAY " + (day + 1).ToString();
+                RemaningTMP_Text.text = "Highscore: " + (PlayerPrefs.GetInt("Number of Days") + 1);
+
+                if (day > PlayerPrefs.GetInt("Number of Days"))
+                {
+                    RemaningTMP_Text.text = "Highscore Beaten!";
+                    PlayerPrefs.SetInt("Number of Days", day);
+                }
+            }
+
         }
 
         bool nightTimeBool = DaylightTimer > 180;
 
         if (GoblinTimer >= GoblinThreshold && nightTimeBool)
         {
-            GoblinThreshold = Random.Range(3, 8);
+            GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
+            if (GoblinThreshold < 0.2f)
+            {
+                GoblinThreshold = 0.2f;
+            }
             GoblinTimer = 0;
 
             Vector3 spawn = PlayerController.global.transform.position;
@@ -118,12 +173,16 @@ public class LevelManager : MonoBehaviour
                     {
                         if (isStoneBool)
                         {
+                            VFXSparks.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
                             VFXSparks.Play();
+                            VFXPebble.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
                             VFXPebble.Play();
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
                         }
                         else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
                         {
+                            VFXWoodChip.transform.position = PlayerController.global.AxeGameObject.transform.position;
+                            VFXWoodChip.Play();
                             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
                         }
                         else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Food)
