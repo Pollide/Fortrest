@@ -26,6 +26,8 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
         static string CustomPath = "Assets/ResourceGen/";
         static string SavedFile = "SaveData.txt";
         bool StartupRun;
+        private GenerateList GeneratedList;
+        private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
 
         private static bool RunOnStart;
         [SerializeField] private bool _RunOnStart;
@@ -58,6 +60,7 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
         {
             AnimatedValue = new AnimBool(false);
             AnimatedValue.valueChanged.AddListener(Repaint); //add a listener so it can detect when repait occurs and can fade properly
+            GeneratedList = new();
         }
 
         //set the global font for the window
@@ -66,7 +69,7 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
             //if font is null it will default to unity default arial
             GUI.skin.font = (name == null ? null : (Font)AssetDatabase.LoadAssetAtPath(CustomPath + name + ".otf", typeof(Font)));
         }
-
+ 
         //runs when the GUI is refreshed
         private void OnGUI()
         {
@@ -101,6 +104,24 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
 
             GUI.contentColor = Color.white; //sets the text to white
 
+            EditorGUILayout.LabelField("Resource Prefabs");
+            for (int i = 0; i < GeneratedList.resourcePrefabs.Count; i++)
+            {
+                GeneratedList.resourcePrefabs[i] = EditorGUILayout.ObjectField("Resource " + (i + 1), GeneratedList.resourcePrefabs[i], typeof(GameObject), false) as GameObject;
+            }
+
+            newResourcePrefab = EditorGUILayout.ObjectField("Add New Resource", newResourcePrefab, typeof(GameObject), false) as GameObject;
+            if (newResourcePrefab != null)
+            {
+                GeneratedList.resourcePrefabs.Add(newResourcePrefab);
+                newResourcePrefab = null;
+            }
+
+            GeneratedList.numberOfResources = EditorGUILayout.IntField("Number of Resources", GeneratedList.numberOfResources);
+
+            GeneratedList.rangeWidth = EditorGUILayout.FloatField("Spawn area X", GeneratedList.rangeWidth);
+
+            GeneratedList.rangeHeight = EditorGUILayout.FloatField("Spawn area Z", GeneratedList.rangeHeight);
 
             if (GUILayout.Button("Change Resources", ReturnGUIStyle(30, "button")))
             {
@@ -109,7 +130,10 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
                 InputString = ""; //cleatrs int the input text
             }
 
-            GUILayout.Button("Generate", ReturnGUIStyle(30, "button"));
+            if(GUILayout.Button("Generate", ReturnGUIStyle(30, "button")))
+            {
+                GeneratedList.GenerateResources();
+            }
             StartupRun = true;//first frame tick this as true, so then if you tick 'auto run' it wont run instantly after being toggled, it will instead run after next time the window is awakened
 
             SetFont(); //set the arial font as it is easier to read
