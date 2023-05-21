@@ -7,12 +7,13 @@ public class GenerateList : MonoBehaviour
 {
     public List<GameObject> resourcePrefabs = new(); // The prefab of the resource objects
     public int numberOfResources; // The number of resources to generate
-    public float rangeWidth = 100; 
-    public float rangeHeight = 100; 
+    public float rangeWidth = 100;
+    public float rangeHeight = 100;
     public List<GameObject> resourceList = new(); // The list to hold the generated resources
 
     public void GenerateResources()
     {
+#if UNITY_EDITOR
         // Clear the existing list
         ClearResourceList();
 
@@ -36,6 +37,7 @@ public class GenerateList : MonoBehaviour
                 resource.transform.rotation = rotation;
             }
         }
+#endif
     }
 
     void ClearResourceList()
