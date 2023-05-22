@@ -7,6 +7,7 @@ public class BoltScript : MonoBehaviour
     public float speed = 1f;
     public float damage = 1f;
     float lifetime;
+
     // Update is called once per frame
     void Update()
     {
@@ -25,7 +26,7 @@ public class BoltScript : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (lifetime > 10)
+        if (lifetime > 5)
         {
             Destroy(gameObject);
         }
@@ -36,6 +37,14 @@ public class BoltScript : MonoBehaviour
         if (collision.gameObject.CompareTag("Enemy"))
         {
             collision.gameObject.GetComponent<EnemyController>().Damaged(damage);
+            Destroy(gameObject);
+        }
+        else if (collision.gameObject.CompareTag("Resource"))
+        {
+            Destroy(gameObject);
+        }
+        else if (collision.gameObject.CompareTag("Building"))
+        {
             Destroy(gameObject);
         }
     }

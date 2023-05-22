@@ -1,24 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using TMPro;
 
 public class InventoryItem : MonoBehaviour
 {
-
-    public enum ItemType
-    {
-        Wood,
-        Stone,
-        Food
-    }
-
-    public ItemType type;
-
     bool soundPlayed;
-    [Header("Food Restore Amount")]
-    public float restoreAmount = 5f;
-    [Header("Resource Amount (Stone and Wood)")]
+
     public int resourceAmount = 1;
+    
+    // Whether the item is stackable or not
+    public bool stackable;
+    
+    // Name of the item
+    public new string name;
+
+    public GameObject dragableItem;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -27,29 +26,8 @@ public class InventoryItem : MonoBehaviour
             soundPlayed = false;
             Destroy(gameObject);
 
-            switch (type)
-            {
-                case ItemType.Food:
-                    
-                    if(PlayerController.global.playerEnergy < PlayerController.global.maxPlayerEnergy)
-                    {
-                        PlayerController.global.ApplyEnergyRestore(restoreAmount);
-                    }
-         
-                    break;
+            InventoryManager.global.AddItem(this, resourceAmount);
 
-                case ItemType.Wood:
-
-                    InventoryManager.global.AddWood(resourceAmount);
-
-                    break;
-
-                case ItemType.Stone:
-
-                    InventoryManager.global.AddStone(resourceAmount);
-
-                    break;
-            }
         }
 
         if (!soundPlayed)

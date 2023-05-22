@@ -19,6 +19,7 @@ public class EnemyController : MonoBehaviour
 
     public float attackTimer;
     public float attackTimerMax;
+    private float speed;
 
     public float health;
     private float maxHealth = 3.0f;
@@ -29,6 +30,7 @@ public class EnemyController : MonoBehaviour
     public float noiseTimerMax;
 
     public Animator ActiveAnimator;
+
     void Start()
     {
         noiseTimerMax = 250;
@@ -36,6 +38,7 @@ public class EnemyController : MonoBehaviour
         health = maxHealth;
         playerPosition = PlayerController.global.transform;
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
+        speed = agent.speed;
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
     }
@@ -226,5 +229,15 @@ public class EnemyController : MonoBehaviour
             noiseTimer = 0;
             noiseTimerMax = Random.Range(500, 1000);
         }
+    }
+
+    public void ApplySlow(float _slowPercent)
+    {
+        agent.speed *= _slowPercent;
+    }
+
+    public void RemoveSlow()
+    {
+        agent.speed = speed;
     }
 }
