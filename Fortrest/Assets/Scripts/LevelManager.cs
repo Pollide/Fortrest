@@ -52,7 +52,7 @@ public class LevelManager : MonoBehaviour
     public TMP_Text RemaningTMP_Text;
     public TMP_Text SurvivedTMP_Text;
 
-    public bool locked;
+    private bool locked = true;
 
     private void Awake()
     {
