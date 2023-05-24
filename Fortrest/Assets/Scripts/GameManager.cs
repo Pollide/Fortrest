@@ -124,6 +124,11 @@ public class GameManager : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
+        else if (PlayerModeHandler.global && PlayerModeHandler.global.playerModes == PlayerModes.Paused)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
         else
         {
             Cursor.visible = false;

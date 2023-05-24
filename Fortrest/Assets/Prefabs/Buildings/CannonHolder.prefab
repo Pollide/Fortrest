@@ -9,11 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7380161676424695968}
-  - component: {fileID: 3348897461843539799}
-  - component: {fileID: 8540246930342456969}
   m_Layer: 10
   m_Name: CannonHolder
-  m_TagString: Building
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35,31 +33,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &3348897461843539799
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27263479634249880}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 20
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8540246930342456969
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27263479634249880}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2a671d6248329545a4b0599a7a5521b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &284292462403560681
 GameObject:
   m_ObjectHideFlags: 0
@@ -147,7 +120,7 @@ GameObject:
   - component: {fileID: 3504377161961035649}
   m_Layer: 7
   m_Name: Bone002
-  m_TagString: Building
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -179,7 +152,7 @@ GameObject:
   - component: {fileID: 31435724037476040}
   m_Layer: 7
   m_Name: Bone001
-  m_TagString: Untagged
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -210,7 +183,7 @@ GameObject:
   - component: {fileID: 8033174882126033184}
   m_Layer: 7
   m_Name: Bone003
-  m_TagString: Building
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -242,7 +215,7 @@ GameObject:
   - component: {fileID: 6223588382898217728}
   m_Layer: 7
   m_Name: pCube9
-  m_TagString: Building
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -329,7 +302,7 @@ GameObject:
   - component: {fileID: 7897815270449268491}
   m_Layer: 7
   m_Name: Cannon
-  m_TagString: Building
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -382,9 +355,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3bf85e0fc37b649ba1cd25eaacd137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemies: []
   turn_speed: 3
   animController: {fileID: 8465037241563276446}
+  shootingRange: 20
 --- !u!1 &5494250452786029979
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,10 +368,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3403094761576245410}
   - component: {fileID: 1570348164251454558}
-  - component: {fileID: 3639712228269685458}
   m_Layer: 7
   m_Name: Turret
-  m_TagString: Building
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -473,19 +445,6 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.001430559, y: -0.007884115, z: 0.001637131}
     m_Extent: {x: 0.025766369, y: 0.123588085, z: 0.14177974}
   m_DirtyAABB: 0
---- !u!65 &3639712228269685458
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5494250452786029979}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.09776763, y: 0.04016689, z: 0.11155896}
-  m_Center: {x: 0.0030083277, y: 0.032644134, z: 0.0006630689}
 --- !u!1 &5605559267296590476
 GameObject:
   m_ObjectHideFlags: 0
@@ -499,7 +458,7 @@ GameObject:
   - component: {fileID: 5947275829654612191}
   m_Layer: 7
   m_Name: Turret aniamtion
-  m_TagString: Building
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -570,7 +529,7 @@ GameObject:
   - component: {fileID: 5947275829984533361}
   m_Layer: 7
   m_Name: SpawnPoint
-  m_TagString: Untagged
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

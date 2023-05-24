@@ -14,7 +14,7 @@ using UnityEngine.Experimental.Rendering;
 
 namespace StylizedWater
 {
-    [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter)), ExecuteAlways, AddComponentMenu("Effects/Stylized Water")]
+    [RequireComponent(typeof(MeshRenderer), typeof(MeshFilter)), AddComponentMenu("Effects/Stylized Water")]
     [HelpURL("https://alexander-ameye.gitbook.io/stylized-water/")]
     public class StylizedWaterURP : MonoBehaviour
     {
@@ -35,7 +35,7 @@ namespace StylizedWater
         [Range(0f, 1f)] public float reflectionStrength = 0f;
         [Range(0f, 7f)] public float reflectionFresnel = 1f;
         #endregion
-        
+
         #region Colors and Transparency
         public bool useColorGradient;
         [GradientUsage(true)] public Gradient colorGradient;
