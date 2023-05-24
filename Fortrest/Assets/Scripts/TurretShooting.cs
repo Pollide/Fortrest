@@ -4,46 +4,65 @@ using UnityEngine;
 
 public class TurretShooting : MonoBehaviour
 {
-    public List<GameObject> enemies = new();
     public float turn_speed;
     public Animator animController;
+    public float shootingRange = 10f;
+
+    private GameObject target;
 
     private void Update()
     {
-        if (enemies.Count > 0)
+        if (target == null || !target.activeSelf)
         {
-            Attack();
+            target = FindNearestEnemy();
         }
-    }
 
-    public void RemoveFromList()
-    {
-        for (int i = 0; i < enemies.Count; i++)
+        if (target != null)
         {
-            if (enemies[i].GetComponent<EnemyController>().isDead)
+            Vector3 targetPos = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
+
+            Vector3 direction = targetPos - transform.position;
+
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+
+            transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, turn_speed * Time.deltaTime);
+
+            if (Vector3.Distance(transform.position, target.transform.position) <= shootingRange)
             {
-                enemies.RemoveAt(i);
-                animController.SetBool("isAttacking", false);
+                Attack();
             }
         }
     }
 
     private void Attack()
     {
-        Quaternion _lookRotation = Quaternion.LookRotation((new Vector3(enemies[0].transform.position.x, transform.position.y, enemies[0].transform.position.z) - transform.position).normalized);
-
-        transform.rotation = Quaternion.Slerp(transform.rotation, _lookRotation, Time.deltaTime * turn_speed);
-
         animController.SetBool("isAttacking", true);
     }
 
-    public void RunTrigger(Collider other)
-    { 
-        if (other.CompareTag("Enemy"))
+    GameObject FindNearestEnemy()
+    {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject nearestEnemy = null;
+        float shortestDistance = Mathf.Infinity;
+
+        foreach (GameObject enemy in enemies)
         {
-            enemies.Add(other.gameObject);
-            other.GetComponent<EnemyController>().isInTurretRange = true;
-            other.GetComponent<EnemyController>().turrets.Add(gameObject);
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestEnemy = enemy;
+            }
         }
+
+        return nearestEnemy;
+    }
+
+
+    private void OnDrawGizmosSelected()
+    {
+        // Draw a wire sphere in the editor to visualize the tower's radius
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, shootingRange);
     }
 }

@@ -9,6 +9,7 @@ public enum PlayerModes
     BuildMode,
     ResourceMode,
     CombatMode,
+    Paused,
 }
 
 
@@ -115,7 +116,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void SpawnBuilding()
     {
-        if (Input.GetMouseButtonDown(0) && InventoryManager.global.wood >= woodConstructionCostTurret && InventoryManager.global.stone >= stoneConstructionCostTurret && !MouseOverUI())
+        if (Input.GetMouseButtonDown(0) && InventoryManager.global.GetItemQuantity("Wood") >= woodConstructionCostTurret && InventoryManager.global.GetItemQuantity("Stone") >= stoneConstructionCostTurret && !MouseOverUI())
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
@@ -129,8 +130,8 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
                     GameObject newTurret = Instantiate(turretPrefabPlaced, worldPos, Quaternion.identity);
-                    InventoryManager.global.wood -= woodConstructionCostTurret;
-                    InventoryManager.global.stone -= stoneConstructionCostTurret;
+                    InventoryManager.global.RemoveItem("Wood", woodConstructionCostTurret);
+                    InventoryManager.global.RemoveItem("Stone", stoneConstructionCostTurret);
 
                     LevelManager.global.VFXSmokePuff.transform.position = newTurret.transform.position + new Vector3(0, .5f, 0);
 
@@ -160,7 +161,7 @@ public class PlayerModeHandler : MonoBehaviour
                 if (!runOnce)
                 {
                     runOnce = true;
-                    if (InventoryManager.global.wood < woodConstructionCostTurret || InventoryManager.global.stone < stoneConstructionCostTurret)
+                    if (InventoryManager.global.GetItemQuantity("Wood") < woodConstructionCostTurret || InventoryManager.global.GetItemQuantity("Stone") < stoneConstructionCostTurret)
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                         Debug.Log("Not Enough Resources");
@@ -189,7 +190,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer &&
                 worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer &&
-                InventoryManager.global.wood >= woodConstructionCostTurret && InventoryManager.global.wood >= stoneConstructionCostTurret)
+                InventoryManager.global.GetItemQuantity("Wood") >= woodConstructionCostTurret && InventoryManager.global.GetItemQuantity("Stone") >= stoneConstructionCostTurret)
             {
                 foreach (Transform child in parts)
                 {
