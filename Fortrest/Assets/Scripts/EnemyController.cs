@@ -15,7 +15,6 @@ public class EnemyController : MonoBehaviour
     public bool isInTurretRange = false;
     public bool isDead = false;
     private Transform playerPosition;
-    public List<GameObject> turrets = new List<GameObject>();
 
     public float attackTimer;
     public float attackTimerMax;
@@ -115,6 +114,16 @@ public class EnemyController : MonoBehaviour
                         {
                             shortestDistance = compare; // New shortest distance is assigned
                             bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
+                            
+                            if (bestTarget.CompareTag("Turret"))
+                            {
+                                agent.stoppingDistance = 4.5f;
+                            }
+                            else
+                            {
+                                agent.stoppingDistance = 1f;
+                            }
+
                             ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
                         }
                     }
@@ -123,6 +132,7 @@ public class EnemyController : MonoBehaviour
 
             else
             {
+                
                 agent.SetDestination(bestTarget.position); // Sets the nav mesh agent destination
 
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
@@ -206,15 +216,6 @@ public class EnemyController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyDead1Sound : GameManager.global.EnemyDead2Sound, 1, true, 0, false, transform);
             PlayerController.global.enemyList.Remove(transform);
             agent.enabled = false;
-
-            if (isInTurretRange)
-            {
-                isDead = true;
-                for (int i = 0; i < turrets.Count; i++)
-                {
-                    turrets[i].GetComponent<TurretShooting>().RemoveFromList();
-                }
-            }
 
             Destroy(gameObject);
         }

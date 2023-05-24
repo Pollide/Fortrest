@@ -4,48 +4,43 @@ using UnityEngine;
 
 public class BoltScript : MonoBehaviour
 {
-    public float speed = 1f;
-    public float damage = 1f;
-    float lifetime;
+    public float speed = 10f;    // Speed at which the bullet moves
+    public float lifetime = 2f;  // Time in seconds before the bullet is destroyed
+    public int damage = 10;     // Amount of damage the bullet applies to enemies
+
+    private float timer;        // Timer to track the bullet's lifetime
+
+    private void Start()
+    {
+        timer = lifetime;       // Initialize the timer to the bullet's lifetime
+    }
 
     // Update is called once per frame
     void Update()
     {
-        lifetime += Time.deltaTime;
-        var step = speed * Time.deltaTime;
-        List<GameObject> enemy = gameObject.GetComponentInParent<TurretShooting>().enemies;
+        // Move the bullet forward along the Z-axis
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        timer -= Time.deltaTime; // Decrease the timer based on the elapsed time
 
-        if (enemy.Count > 0)
-        {
-            transform.LookAt(enemy[0].transform);
-
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(enemy[0].transform.position.x, enemy[0].transform.position.y + 0.1f, enemy[0].transform.position.z), step);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
-        if (lifetime > 5)
+        // Destroy the bullet if the timer reaches or goes below zero
+        if (timer <= 0f)
         {
             Destroy(gameObject);
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy"))
         {
-            collision.gameObject.GetComponent<EnemyController>().Damaged(damage);
-            Destroy(gameObject);
-        }
-        else if (collision.gameObject.CompareTag("Resource"))
-        {
-            Destroy(gameObject);
-        }
-        else if (collision.gameObject.CompareTag("Building"))
-        {
-            Destroy(gameObject);
+            // Retrieve the Enemy component from the collided object
+            EnemyController enemy = other.GetComponent<EnemyController>();
+            if (enemy != null)
+            {
+                enemy.Damaged(damage); // Apply damage to the enemy
+            }
+
+            Destroy(gameObject); // Destroy the bullet
         }
     }
 }
