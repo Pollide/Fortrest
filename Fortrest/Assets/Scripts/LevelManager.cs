@@ -51,6 +51,9 @@ public class LevelManager : MonoBehaviour
     public TMP_Text DayTMP_Text;
     public TMP_Text RemaningTMP_Text;
     public TMP_Text SurvivedTMP_Text;
+
+    private bool locked = true;
+
     private void Awake()
     {
         global = this;
@@ -76,6 +79,8 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
+        LockCursor();
+
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
@@ -235,6 +240,26 @@ public class LevelManager : MonoBehaviour
 
         //HandleMouse();
     }
+
+    void LockCursor()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            locked = !locked;
+        }
+
+        if (locked)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+    }
+
     void HandleMouse()
     {
         // On mouse down, capture it's position.
