@@ -26,16 +26,12 @@ public class GenerateList
             RaycastHit hit;
             if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Terrain")))
             {
-                Quaternion rotation = Quaternion.Euler(0f, Random.Range(0f, 360f), 0f);
                 Debug.Log(resourcePrefab);
                 GameObject resource = PrefabUtility.InstantiatePrefab(resourcePrefab) as GameObject;
 
                 resource.transform.position = hit.point;
-                resource.transform.rotation = rotation;
 
                 resource.transform.SetParent(resourceHolderTransform);
-
-
             }
         }
 #endif
