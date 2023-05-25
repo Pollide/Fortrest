@@ -20,13 +20,17 @@ public class GenerateList
 
         for (int i = 0; i < numberOfResources; i++)
         {
-            Vector3 randomPosition = new Vector3(Random.Range(0f, terrain.terrainData.size.x), 0f, Random.Range(0f, terrain.terrainData.size.z));
+            Vector3 randomPosition = terrain.transform.position + new Vector3(Random.Range(0f, terrain.terrainData.size.x), 0f, Random.Range(0f, terrain.terrainData.size.z));
             Vector3 raycastOrigin = new Vector3(randomPosition.x, terrain.terrainData.size.y, randomPosition.z);
 
-            RaycastHit hit;
-            if (Physics.Raycast(raycastOrigin, Vector3.down, out hit, Mathf.Infinity, LayerMask.GetMask("Terrain")))
+            if (Physics.Raycast(raycastOrigin, Vector3.down, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Terrain")))
             {
-                Debug.Log(resourcePrefab);
+                if (hit.point.y < 0)
+                {
+                    //prevents objects spawning in water
+                    i--;
+                    continue;
+                }
                 GameObject resource = PrefabUtility.InstantiatePrefab(resourcePrefab) as GameObject;
 
                 resource.transform.position = hit.point;
@@ -44,8 +48,8 @@ public class GenerateList
         // Destroy all game objects in the list
         foreach (GameObject resource in resources)
         {
-            Debug.Log(resource);
-            GameObject.DestroyImmediate(resource);
+            if (resource.name.Replace("(Clone)", "") == resourcePrefab.name)
+                GameObject.DestroyImmediate(resource);
         }
     }
 }
