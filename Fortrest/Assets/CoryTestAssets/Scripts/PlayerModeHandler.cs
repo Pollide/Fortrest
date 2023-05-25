@@ -79,6 +79,8 @@ public class PlayerModeHandler : MonoBehaviour
     {
         playerModes = PlayerModes.BuildMode;
 
+        SetMouseActive(true);
+
         buildingMode.enabled = true;
         resourceMode.enabled = false;
         combatMode.enabled = false;
@@ -93,7 +95,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
         playerModes = PlayerModes.ResourceMode;
-
+        SetMouseActive(false);
         buildingMode.enabled = false;
         resourceMode.enabled = true;
         combatMode.enabled = false;
@@ -107,7 +109,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = true });
         playerModes = PlayerModes.CombatMode;
-
+        SetMouseActive(false);
         buildingMode.enabled = false;
         resourceMode.enabled = false;
         combatMode.enabled = true;
@@ -215,6 +217,20 @@ public class PlayerModeHandler : MonoBehaviour
         else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
         {
             turretBlueprint.SetActive(false);
+        }
+    }
+
+    private void SetMouseActive(bool isActive)
+    {
+        if (isActive == true)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        else
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 }

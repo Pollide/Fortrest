@@ -20,8 +20,6 @@ public class GenerateList
 
         for (int i = 0; i < numberOfResources; i++)
         {
-
-
             Vector3 randomPosition = new Vector3(Random.Range(0f, terrain.terrainData.size.x), 0f, Random.Range(0f, terrain.terrainData.size.z));
             Vector3 raycastOrigin = new Vector3(randomPosition.x, terrain.terrainData.size.y, randomPosition.z);
 
