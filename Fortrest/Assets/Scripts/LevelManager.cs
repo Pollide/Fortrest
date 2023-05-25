@@ -249,11 +249,13 @@ public class LevelManager : MonoBehaviour
             {
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
+                locked = true;
             }
             else
             {
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
+                locked = true;
             }
         }
     }
