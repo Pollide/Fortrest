@@ -206,6 +206,7 @@ namespace StylizedWater
 
         public void ReadMaterialProperties()
         {
+            Debug.Log(1);
             if (meshRenderer) material = meshRenderer.sharedMaterial;
             if (!material) return;
             if (material.shader.name != shaderName && material.shader.name != mobileShaderName && material.shader.name != underwaterShaderName) return;

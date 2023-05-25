@@ -21,9 +21,21 @@ public class PlayerController : MonoBehaviour
 
     private float playerGrav = -9.81f;
     private float playerVelocity;
-    private float attackCooldown = 1.0f;
-    private float nextAttack;
+
+
+    //private float attackCooldown = 0.0f;
+    //private float nextAttack;
+    //private float lastClickedTime = 0;
+    //private float maxComboDelay = 1;
+
+    // Attacks
     private float attackDamage = 0.5f;
+    private float attackTimer = 0.0f;
+    private float resetAttack = 0.75f;
+    private float comboTimer = 0.0f;
+    private float resetCombo = 1.0f; 
+    public int attackCount = 0;
+    private bool attacking;
 
     CharacterController playerCC;
     public Animator CharacterAnimator;
@@ -151,6 +163,27 @@ public class PlayerController : MonoBehaviour
             AudioClip step = Random.Range(0, 2) == 0 ? GameManager.global.Footstep1Sound : GameManager.global.Footstep2Sound;
             GameManager.global.SoundManager.PlaySound(step, 0.1f);
         }
+
+        if (attacking)
+        {
+            attackTimer += Time.deltaTime;
+
+            if (attackTimer >= resetAttack)
+            {
+                attacking = false;
+            }
+        }
+
+        if (attackCount >= 1)
+        {
+            comboTimer += Time.deltaTime;
+
+            if (comboTimer >= resetCombo)
+            {
+                comboTimer = 0;
+                attackCount = 0;
+            }
+        }
     }
 
     // Player movement 
@@ -215,10 +248,13 @@ public class PlayerController : MonoBehaviour
         moveDirection.y = playerVelocity;
     }
 
-    public void ApplyEnergyDamage(float amount)
+    public void ApplyEnergyDamage(float amount, bool _attacking)
     {
-        CharacterAnimator.ResetTrigger("Swing");
-        CharacterAnimator.SetTrigger("Swing");
+        if (!_attacking)
+        {
+            CharacterAnimator.ResetTrigger("Swing");
+            CharacterAnimator.SetTrigger("Swing");
+        }
 
         playerEnergy -= amount;
     }
@@ -230,17 +266,37 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetMouseButton(0) && Time.time > nextAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
+        if (Input.GetMouseButtonDown(0) && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
-            ChangeTool(new ToolData() { SwordBool = true });
-            VFXSlash.transform.position = transform.position;
-            VFXSlash.transform.eulerAngles = transform.eulerAngles;
-            VFXSlash.Play();
-            ApplyEnergyDamage(5.0f);
+            attacking = true;
+            attackTimer = 0;
+            if (attackCount == 0)
+            {
+                CharacterAnimator.SetTrigger("Swing");
+                attackCount++;
+                ApplyEnergyDamage(2.0f, true);
+            }
+            else if (attackCount == 1)
+            {
+                comboTimer = 0;           
+                CharacterAnimator.SetTrigger("Swing2"); // Play different animation here
+                attackCount++;
+                ApplyEnergyDamage(3.0f, true);
+            }
+            else if (attackCount == 2)
+            {
+                comboTimer = 0;               
+                CharacterAnimator.SetTrigger("Swing3"); // Play different animation here
+                attackCount = 0;
+                ApplyEnergyDamage(5.0f, true);
+            }
 
-            nextAttack = Time.time + attackCooldown;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
+            VFXSlash.transform.position = transform.position;
+            VFXSlash.transform.eulerAngles = transform.eulerAngles;
+            VFXSlash.Play();            
+
             for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
             {
                 if (Vector3.Distance(transform.position, enemyList[i].transform.position) <= 3.0f && FacingEnemy(enemyList[i].transform.position)) // Distance from player to enemy
