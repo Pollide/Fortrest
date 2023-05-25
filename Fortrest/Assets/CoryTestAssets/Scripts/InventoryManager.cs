@@ -170,6 +170,8 @@ public class InventoryManager : MonoBehaviour
                 PlayerModeHandler.global.playerModes = currentPlayerModes;
                 Time.timeScale = 1;
                 inventoryPanel.SetActive(false);
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
             }
             else
             {
@@ -177,6 +179,8 @@ public class InventoryManager : MonoBehaviour
                 PlayerModeHandler.global.playerModes = PlayerModes.Paused;
                 Time.timeScale = 0;
                 inventoryPanel.SetActive(true);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
             }
         }
     }
