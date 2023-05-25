@@ -25,7 +25,7 @@ public class LevelManager : MonoBehaviour
 
     // public List<Transform> EnemyList = new List<Transform>();
     public List<Transform> BuildingList = new List<Transform>();
-
+    public Transform ResourceHolderTransform;
     public GameObject ActiveBuildingGameObject;
     public Transform DirectionalLightTransform;
     public Material LanternGlowingMaterial;

@@ -7,7 +7,7 @@ New Zealand
 File Name : ResourceGen.cs
 Description : This script manages the window and functions to create your debug log
 Author :  Allister Hamilton / Pol Idelon / Cory Marsh
-Mail : allister.hamilton @mds.ac.nz
+
 **************************************************************************/
 
 using UnityEngine;
@@ -17,7 +17,7 @@ using UnityEditor;
 using UnityEditor.AnimatedValues; //to play animations in the window
 using System.IO; //to access in and out filing
 
-namespace Allister.DebugTool //creating a namespace helps keep it apart when dealing with many other packages
+namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when dealing with many other packages
 {
     public class ResourceGen : EditorWindow //to access the editor features, change MonoBehaviour to this
     {
@@ -70,7 +70,7 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
         {
             AnimatedValue = new AnimBool(false);
             AnimatedValue.valueChanged.AddListener(Repaint); //add a listener so it can detect when repait occurs and can fade properly
-            GeneratedList = new();
+            GeneratedList = new GenerateList();
             skin = Resources.Load<GUISkin>("WindowSkins/ResourceGeneratorSkin");
         }
 
@@ -80,7 +80,7 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
             //if font is null it will default to unity default arial
             GUI.skin.font = (name == null ? null : (Font)AssetDatabase.LoadAssetAtPath(CustomPath + name + ".otf", typeof(Font)));
         }
- 
+
         //runs when the GUI is refreshed
         private void OnGUI()
         {
@@ -124,7 +124,7 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
             {
                 newResourcePrefab = Resources.Load<GameObject>("WindowPrefabs/Stone");
             }
-            
+
             buttonTexture = (Texture)Resources.Load("WindowImages/Tree");
             buttonContent = new GUIContent(buttonTexture);
             if (GUILayout.Button(buttonContent, GUILayout.Width(100), GUILayout.Height(100)))
@@ -155,11 +155,17 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
             //newResourcePrefab = EditorGUILayout.ObjectField("Add New Resource", newResourcePrefab, typeof(GameObject), false) as GameObject;
 
             if (newResourcePrefab != null)
-            {               
+            {
                 GeneratedList.resourcePrefab = newResourcePrefab;
                 newResourcePrefab = null;
             }
 
+            if (GeneratedList.resourcePrefab == null)
+            {
+                EditorGUILayout.TextArea("Select a resource to begin", ReturnGUIStyle(20));
+
+                EditorGUI.BeginDisabledGroup(true);
+            }
             GeneratedList.numberOfResources = EditorGUILayout.IntField("Number of Resources", GeneratedList.numberOfResources);
 
             GeneratedList.rangeWidth = EditorGUILayout.FloatField("Spawn area X", GeneratedList.rangeWidth);
@@ -173,10 +179,19 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
             //    InputString = ""; //cleatrs int the input text
             //}
 
-            if(GUILayout.Button("Generate", ReturnGUIStyle(30, "button")))
+
+
+            if (GUILayout.Button("Generate", ReturnGUIStyle(30, "button")))
             {
                 GeneratedList.GenerateResources();
             }
+
+            if (GUILayout.Button("Delete", ReturnGUIStyle(30, "button")))
+            {
+                GeneratedList.ClearResourceList();
+            }
+
+
             StartupRun = true;//first frame tick this as true, so then if you tick 'auto run' it wont run instantly after being toggled, it will instead run after next time the window is awakened
 
             SetFont(); //set the arial font as it is easier to read
