@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GenerateList : MonoBehaviour
 {
-    public List<GameObject> resourcePrefabs = new(); // The prefab of the resource objects
+    public GameObject resourcePrefab; // The prefab of the resource objects
     public int numberOfResources; // The number of resources to generate
     public float rangeWidth = 100;
     public float rangeHeight = 100;
@@ -21,9 +21,7 @@ public class GenerateList : MonoBehaviour
 
         for (int i = 0; i < numberOfResources; i++)
         {
-            GameObject resourcePrefab = resourcePrefabs[Random.Range(0, resourcePrefabs.Count)];
-
-            resourceList.Add(resourcePrefab);
+           
 
             Vector3 randomPosition = new Vector3(Random.Range(0f, terrain.terrainData.size.x), 0f, Random.Range(0f, terrain.terrainData.size.z));
             Vector3 raycastOrigin = new Vector3(randomPosition.x, terrain.terrainData.size.y, randomPosition.z);
@@ -35,6 +33,7 @@ public class GenerateList : MonoBehaviour
                 GameObject resource = PrefabUtility.InstantiatePrefab(resourcePrefab) as GameObject;
                 resource.transform.position = hit.point;
                 resource.transform.rotation = rotation;
+                resourceList.Add(resource);
             }
         }
 #endif

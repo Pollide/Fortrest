@@ -70,7 +70,7 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
         {
             AnimatedValue = new AnimBool(false);
             AnimatedValue.valueChanged.AddListener(Repaint); //add a listener so it can detect when repait occurs and can fade properly
-            GeneratedList = new();
+            GeneratedList = new()
             skin = Resources.Load<GUISkin>("WindowSkins/ResourceGeneratorSkin");
         }
 
@@ -122,7 +122,6 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
             buttonContent = new GUIContent(buttonTexture);
             if (GUILayout.Button(buttonContent, GUILayout.Width(100), GUILayout.Height(100)))
             {
-                GeneratedList.resourcePrefabs.Clear();
                 newResourcePrefab = Resources.Load<GameObject>("WindowPrefabs/Stone");
             }
             
@@ -130,7 +129,6 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
             buttonContent = new GUIContent(buttonTexture);
             if (GUILayout.Button(buttonContent, GUILayout.Width(100), GUILayout.Height(100)))
             {
-                GeneratedList.resourcePrefabs.Clear();
                 newResourcePrefab = Resources.Load<GameObject>("WindowPrefabs/Wood 02");
             }
 
@@ -138,7 +136,6 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
             buttonContent = new GUIContent(buttonTexture);
             if (GUILayout.Button(buttonContent, GUILayout.Width(100), GUILayout.Height(100)))
             {
-                GeneratedList.resourcePrefabs.Clear();
                 newResourcePrefab = Resources.Load<GameObject>("WindowPrefabs/Wood 01");
             }
 
@@ -159,7 +156,7 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
 
             if (newResourcePrefab != null)
             {               
-                GeneratedList.resourcePrefabs.Add(newResourcePrefab);
+                GeneratedList.resourcePrefab = newResourcePrefab;
                 newResourcePrefab = null;
             }
 
