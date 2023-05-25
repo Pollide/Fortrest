@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using UnityEditor.SceneManagement;
 
 public class GenerateList
 {
@@ -12,7 +14,7 @@ public class GenerateList
 
     public void GenerateResources()
     {
-#if UNITY_EDITOR
+
         // Clear the existing list
 
         Terrain terrain = GameObject.FindObjectOfType<Terrain>();
@@ -36,9 +38,12 @@ public class GenerateList
                 resource.transform.position = hit.point;
 
                 resource.transform.SetParent(resourceHolderTransform);
+
+                PrefabUtility.RecordPrefabInstancePropertyModifications(resource);
             }
         }
-#endif
+
+        EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
     }
 
     public void ClearResourceList()
@@ -52,4 +57,5 @@ public class GenerateList
                 GameObject.DestroyImmediate(resource);
         }
     }
+#endif
 }
