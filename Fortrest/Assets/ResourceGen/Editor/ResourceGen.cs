@@ -70,7 +70,7 @@ namespace Allister.DebugTool //creating a namespace helps keep it apart when dea
         {
             AnimatedValue = new AnimBool(false);
             AnimatedValue.valueChanged.AddListener(Repaint); //add a listener so it can detect when repait occurs and can fade properly
-            GeneratedList = new()
+            GeneratedList = new();
             skin = Resources.Load<GUISkin>("WindowSkins/ResourceGeneratorSkin");
         }
 
