@@ -141,7 +141,7 @@ public class Horse : MonoBehaviour
 
     void Ride()
     {
-        Lerping(0.2f, 0.4f, ref acceleration, 0.3f); // Acceleration
+        Lerping(0.2f, 0.4f, ref acceleration, 0.2667f); // Acceleration
         Lerping(0.5f, 2.0f, ref deceleration, 2); // Deceleration
         Lerping(75.0f, 90.0f, ref turnAnglePerSec, 20); // Turn
 
