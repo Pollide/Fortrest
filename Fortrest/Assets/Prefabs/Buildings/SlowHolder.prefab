@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 1094261360100896500}
   - component: {fileID: 1262156376681292614}
   - component: {fileID: 6921470864126184367}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -106,9 +106,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6440064812605483419}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SlowHolder
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -142,9 +142,9 @@ GameObject:
   - component: {fileID: 6348920309314105397}
   - component: {fileID: 1331275343037955585}
   - component: {fileID: 1687748617480127372}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SlowTower
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -192,7 +192,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 0
-  resourceObject: 0
+  resourceObject: 6
   health: 0
   maxHealth: 5
   energyConsumptionPerClick: 2
@@ -223,7 +223,7 @@ PrefabInstance:
     - target: {fileID: 691757190410652912, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -233,12 +233,12 @@ PrefabInstance:
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_TagString
-      value: Building
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 5210401813966692839, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -368,7 +368,7 @@ PrefabInstance:
     - target: {fileID: 8026301831611583226, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}

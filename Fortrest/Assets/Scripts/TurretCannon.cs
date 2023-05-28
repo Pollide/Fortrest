@@ -8,7 +8,6 @@ public class TurretCannon : MonoBehaviour
     public Transform cannonHead;
     public GameObject projectilePrefab;
     public Transform firePoint;
-    public float projectileSpeed = 20f;
     public float fireRate = 1f;
     public float shootingRange = 1f;
     public LayerMask targetLayer;
@@ -33,7 +32,7 @@ public class TurretCannon : MonoBehaviour
     private void FindNearestTarget()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, shootingRange, targetLayer);
-        float closestDistance = Mathf.Infinity;
+        float closestDistance = shootingRange;
         Transform closestTarget = null;
 
         foreach (Collider collider in colliders)
@@ -64,13 +63,8 @@ public class TurretCannon : MonoBehaviour
         // Set the cannon's rotation to aim at the target
         cannonHead.rotation = Quaternion.LookRotation(direction, Vector3.up);
 
-        // Spawn a projectile and set its velocity
-        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-        Rigidbody projectileRb = projectile.GetComponent<Rigidbody>();
-        if (projectileRb != null)
-        {
-            projectileRb.velocity = firePoint.forward * projectileSpeed;
-        }
+        // Spawn a projectile
+        Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
     }
 
     private void OnDrawGizmosSelected()

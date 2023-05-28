@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3691568561601696348}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: CannonHolder
-  m_TagString: Untagged
+  m_TagString: Building
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -68,7 +68,7 @@ PrefabInstance:
     - target: {fileID: 8901864397289843040, guid: da80be81459630244963fb6249469071,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.28
       objectReference: {fileID: 0}
     - target: {fileID: 8901864397289843040, guid: da80be81459630244963fb6249469071,
         type: 3}
@@ -115,6 +115,41 @@ PrefabInstance:
       propertyPath: m_Name
       value: ExplodeCannon
       objectReference: {fileID: 0}
+    - target: {fileID: 8901864397289843045, guid: da80be81459630244963fb6249469071,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8901864397289843045, guid: da80be81459630244963fb6249469071,
+        type: 3}
+      propertyPath: m_TagString
+      value: Turret
+      objectReference: {fileID: 0}
+    - target: {fileID: 8901864397793177242, guid: da80be81459630244963fb6249469071,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 8901864397793177243, guid: da80be81459630244963fb6249469071,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8901864397793177243, guid: da80be81459630244963fb6249469071,
+        type: 3}
+      propertyPath: m_TagString
+      value: Turret
+      objectReference: {fileID: 0}
+    - target: {fileID: 8901864397884832403, guid: da80be81459630244963fb6249469071,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8901864397884832403, guid: da80be81459630244963fb6249469071,
+        type: 3}
+      propertyPath: m_TagString
+      value: Turret
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da80be81459630244963fb6249469071, type: 3}
 --- !u!4 &8334847783303984531 stripped
@@ -133,7 +168,7 @@ PrefabInstance:
     - target: {fileID: 691757190410652912, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -143,7 +178,7 @@ PrefabInstance:
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1591918901296246013, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -213,7 +248,7 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.07
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -238,12 +273,12 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -0.06
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 2.403
+      value: 2.19
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -263,7 +298,7 @@ PrefabInstance:
     - target: {fileID: 8026301831611583226, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}

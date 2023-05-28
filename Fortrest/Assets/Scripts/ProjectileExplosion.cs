@@ -9,6 +9,30 @@ public class ProjectileExplosion : MonoBehaviour
     public float damage = 0.1f;
     public float pushForce = 5f;
     public GameObject explosionEffect;
+    public float speed = 10f;    // Speed at which the bullet moves
+    public float lifetime = 2f;  // Time in seconds before the bullet is destroyed
+    private float timer;        // Timer to track the bullet's lifetime
+
+
+    private void Start()
+    {
+        timer = lifetime;       // Initialize the timer to the bullet's lifetime
+    }
+
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Move the bullet forward along the Z-axis
+        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        timer -= Time.deltaTime; // Decrease the timer based on the elapsed time
+
+        // Destroy the bullet if the timer reaches or goes below zero
+        if (timer <= 0f)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     void OnCollisionEnter(Collision collision)
     {

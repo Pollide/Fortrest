@@ -22,5 +22,6 @@ public class AnimatEvents : MonoBehaviour
     {
         Instantiate(spawnedBolt, spawnedBoltPoint);
         GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
+        gameObject.GetComponentInParent<TurretShooting>().animController.SetBool("isAttacking", false);
     }
 }

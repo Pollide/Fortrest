@@ -26,7 +26,8 @@ public class Building : MonoBehaviour
         Wood,
         Stone,
         Food,
-        House
+        House,
+        SlowTower
     }
 
     public BuildingType resourceObject;
@@ -128,7 +129,15 @@ public class Building : MonoBehaviour
                 return;
             }
 
-            Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
+            if (resourceObject != BuildingType.Cannon)
+            {
+                Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
+            }
+            else
+            {
+                NowDestroy();
+            }
+            
         }
     }
 
