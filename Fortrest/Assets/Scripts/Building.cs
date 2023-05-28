@@ -26,7 +26,8 @@ public class Building : MonoBehaviour
         Wood,
         Stone,
         Food,
-        House
+        House,
+        SlowTower
     }
 
     public BuildingType resourceObject;
@@ -36,6 +37,8 @@ public class Building : MonoBehaviour
     public float maxHealth = 5;
     public float energyConsumptionPerClick = 2;
     public int resourceAmount = 5;
+    public int constructionCostWood = 5;
+    public int constructionCostStone = 5;
 
     public Image healthBarImage;
 
@@ -126,7 +129,15 @@ public class Building : MonoBehaviour
                 return;
             }
 
-            Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
+            if (resourceObject != BuildingType.Cannon)
+            {
+                Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
+            }
+            else
+            {
+                NowDestroy();
+            }
+            
         }
     }
 

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8901864397289843042}
   - component: {fileID: 8901864397289843043}
   - component: {fileID: 8901864397289843044}
+  - component: {fileID: 4772175861363788692}
   m_Layer: 0
   m_Name: ExplodeCannon
   m_TagString: Untagged
@@ -115,12 +116,32 @@ MonoBehaviour:
   projectilePrefab: {fileID: 4323165861798559352, guid: dfceddfeeb12b034982500f2856e062f,
     type: 3}
   firePoint: {fileID: 8901864397884832402}
-  projectileSpeed: 50
-  fireRate: 0.5
+  fireRate: 0.3
   shootingRange: 30
   targetLayer:
     serializedVersion: 2
     m_Bits: 8192
+--- !u!114 &4772175861363788692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8901864397289843045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2a0c58f038a6f40ac2dcb3006ea0fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  NaturalBool: 0
+  resourceObject: 0
+  health: 0
+  maxHealth: 5
+  energyConsumptionPerClick: 2
+  resourceAmount: 5
+  constructionCostWood: 20
+  constructionCostStone: 20
+  healthBarImage: {fileID: 0}
 --- !u!1 &8901864397793177243
 GameObject:
   m_ObjectHideFlags: 0

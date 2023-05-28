@@ -443,10 +443,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf60edac64948d54e93bc37e6565ba35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpeed: 0.75
   acceleration: 0.2
   deceleration: 0
-  forwardVelocity: 0
+  currentSpeed: 0
   turnAnglePerSec: 90
 --- !u!135 &5885949
 SphereCollider:
@@ -478,7 +477,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: -0.5, z: 0.5}
+  m_Center: {x: 0, y: -0.5, z: 1.5}
 --- !u!65 &5885951
 BoxCollider:
   m_ObjectHideFlags: 0
