@@ -70,14 +70,9 @@ public class PlayerController : MonoBehaviour
     public GameObject AxeGameObject;
     public GameObject HammerGameObject;
     public GameObject PicaxeGameObject;
-    //public GameObject SwordGameObject;
+    public GameObject SwordGameObject;
     public GameObject RadiusGameObject;
     public GameObject RadiusCamGameObject;
-
-    public Material invisibleMaterial;
-    public Material swordMaterial;
-    public SkinnedMeshRenderer characterMesh;
-
     [System.Serializable]
     public class ToolData
     {
@@ -110,10 +105,9 @@ public class PlayerController : MonoBehaviour
         AxeGameObject.SetActive(toolData.AxeBool);
         HammerGameObject.SetActive(toolData.HammerBool);
         PicaxeGameObject.SetActive(toolData.PicaxeBool);
-        //SwordGameObject.SetActive(toolData.SwordBool);
+        SwordGameObject.SetActive(toolData.SwordBool);
         RadiusGameObject.SetActive(toolData.HammerBool);
         RadiusCamGameObject.SetActive(toolData.HammerBool);
-        characterMesh.materials[3] = toolData.SwordBool ? swordMaterial : invisibleMaterial;
     }
 
     // Update is called once per frame

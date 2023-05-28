@@ -304,11 +304,9 @@ MonoBehaviour:
   AxeGameObject: {fileID: 6037211882498015957}
   HammerGameObject: {fileID: 6037211881225965111}
   PicaxeGameObject: {fileID: 6037211880718500078}
+  SwordGameObject: {fileID: 6037211880452408325}
   RadiusGameObject: {fileID: 889475038107434792}
   RadiusCamGameObject: {fileID: 0}
-  invisibleMaterial: {fileID: 2100000, guid: 568dfeabaf444574291967368ab4773a, type: 3}
-  swordMaterial: {fileID: 2100000, guid: d8a72c2f9e6c98746ad81857628315e4, type: 2}
-  characterMesh: {fileID: 9026697041326438242}
 --- !u!143 &5569601162832024542
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2944,67 +2942,67 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1466665163806674123}
+    m_TransformParent: {fileID: 449693625942932620}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.5
+      value: 0.53720665
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.5
+      value: 0.5372068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.5
+      value: 0.53720677
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 0.00031
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.00124
+      value: 0.00027
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.00124
+      value: 0.00053
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.92387956
+      value: 0.9879173
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.38268343
+      value: 0.09615246
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.011774524
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.1209772
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -45
+      value: 11.118
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
@@ -3014,7 +3012,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -13.963
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 076da3c8df70fca4b80217bcd905ac7d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
@@ -3033,6 +3036,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 076da3c8df70fca4b80217bcd905ac7d, type: 3}
+--- !u!1 &6037211880452408325 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 076da3c8df70fca4b80217bcd905ac7d,
+    type: 3}
+  m_PrefabInstance: {fileID: 6848028802693429588}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6848028802823732671
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3230,6 +3239,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Dwarf rig With sword
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 4aecb8c2f7ec16640a3332cdacc8b0f5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2981950649452915845, guid: 4aecb8c2f7ec16640a3332cdacc8b0f5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3243,10 +3257,16 @@ PrefabInstance:
     - target: {fileID: 4665253652078897335, guid: 4aecb8c2f7ec16640a3332cdacc8b0f5,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4aecb8c2f7ec16640a3332cdacc8b0f5, type: 3}
+--- !u!4 &449693625942932620 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8783220496804630682, guid: 4aecb8c2f7ec16640a3332cdacc8b0f5,
+    type: 3}
+  m_PrefabInstance: {fileID: 9212646824910629910}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5481438084955537125 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3731267048433505011, guid: 4aecb8c2f7ec16640a3332cdacc8b0f5,
@@ -3282,12 +3302,6 @@ Animator:
 --- !u!4 &8670374882037517309 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4aecb8c2f7ec16640a3332cdacc8b0f5,
-    type: 3}
-  m_PrefabInstance: {fileID: 9212646824910629910}
-  m_PrefabAsset: {fileID: 0}
---- !u!137 &9026697041326438242 stripped
-SkinnedMeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 188201600579885940, guid: 4aecb8c2f7ec16640a3332cdacc8b0f5,
     type: 3}
   m_PrefabInstance: {fileID: 9212646824910629910}
   m_PrefabAsset: {fileID: 0}
