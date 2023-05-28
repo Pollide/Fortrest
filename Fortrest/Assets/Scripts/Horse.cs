@@ -117,7 +117,7 @@ public class Horse : MonoBehaviour
         player.GetComponent<CharacterController>().enabled = false;       
         if (mounted)
         {           
-            player.transform.position = new Vector3(transform.position.x, transform.position.y + 1.0f, transform.position.z);
+            player.transform.position = new Vector3(transform.position.x, transform.position.y - 1.0f, transform.position.z);
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = false;
             player.GetComponent<BoxCollider>().enabled = false;
@@ -135,7 +135,7 @@ public class Horse : MonoBehaviour
 
     void PlayerStick()
     {
-        player.transform.position = new Vector3(transform.position.x, transform.position.y + 1.0f, transform.position.z);
+        player.transform.position = new Vector3(transform.position.x, transform.position.y - 1.0f, transform.position.z);
         player.transform.rotation = transform.rotation;
     }
 
