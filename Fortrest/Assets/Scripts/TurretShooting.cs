@@ -7,8 +7,11 @@ public class TurretShooting : MonoBehaviour
     public float turn_speed;
     public Animator animController;
     public float shootingRange = 10f;
+    public float fireRate = 1f;
 
     private GameObject target;
+    private float fireCountdown = 0f;
+
 
     private void Update()
     {
@@ -32,11 +35,22 @@ public class TurretShooting : MonoBehaviour
                 Attack();
             }
         }
+        else
+        {
+            animController.SetBool("isAttacking", false);
+        }
     }
 
     private void Attack()
     {
-        animController.SetBool("isAttacking", true);
+        // Check if it's time to fire
+        if (fireCountdown <= 0f)
+        {
+            animController.SetBool("isAttacking", true);
+            fireCountdown = 1f / fireRate;
+        }
+
+        fireCountdown -= Time.deltaTime;
     }
 
     GameObject FindNearestEnemy()
@@ -48,7 +62,7 @@ public class TurretShooting : MonoBehaviour
         foreach (GameObject enemy in enemies)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distance < shortestDistance)
+            if (distance < shootingRange)
             {
                 shortestDistance = distance;
                 nearestEnemy = enemy;
