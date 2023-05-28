@@ -33,7 +33,7 @@ public class InventoryManager : MonoBehaviour
 
         dragableItems = new List<DragableItem>(inventorySize);
 
-        inventoryPanel = GameObject.Find("InventoryPanel");
+        inventoryPanel = GameObject.Find("InventoryHolder");
 
         inventoryPanel.SetActive(false);
 
@@ -42,7 +42,7 @@ public class InventoryManager : MonoBehaviour
 
     private void Update()
     {
-        OpenInventory();
+        RunInventoryKey();
     }
 
     // Adds items to inventory list 
@@ -106,16 +106,21 @@ public class InventoryManager : MonoBehaviour
     public bool RemoveItem(string item, int quantity = 1)
     {
         InventorySlot slot = inventory.Find(s => s.item.name == item);
+        DragableItem dragableItem = dragableItems.Find(d => d.name == item);
         if (slot != null)
         {
             if (slot.quantity >= quantity)
             {
                 slot.quantity -= quantity;
                 Debug.Log("Item removed from inventory: " + item + " (Quantity: " + slot.quantity + ")");
-
+                
+                dragableItem.quantityText.text = slot.quantity.ToString();
+                
                 if (slot.quantity <= 0)
                 {
                     inventory.Remove(slot);
+                    dragableItems.Remove(dragableItem);
+                    Destroy(dragableItem.gameObject);
                 }
 
                 return true;
@@ -163,24 +168,54 @@ public class InventoryManager : MonoBehaviour
     // Open and show inventory items
     public void OpenInventory()
     {
+        currentPlayerModes = PlayerModeHandler.global.playerModes;
+        PlayerModeHandler.global.playerModes = PlayerModes.Paused;
+        Time.timeScale = 0;
+        inventoryPanel.SetActive(true);
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+    }
+
+    public void CloseInventory(bool _currmode = true, bool _mouseLocked = true)
+    {
+        if (_currmode)
+        {
+            PlayerModeHandler.global.playerModes = currentPlayerModes;
+        }
+        Time.timeScale = 1;
+        inventoryPanel.SetActive(false);
+        if (_mouseLocked)
+        {
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+        else
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+        
+    }
+
+    public void RunInventoryKey()
+    {
         if (Input.GetKeyDown(KeyCode.I))
         {
             if (inventoryPanel.activeInHierarchy)
             {
-                PlayerModeHandler.global.playerModes = currentPlayerModes;
-                Time.timeScale = 1;
-                inventoryPanel.SetActive(false);
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
+                if (currentPlayerModes != PlayerModes.BuildMode)
+                {
+                    CloseInventory();
+                }
+                else
+                {
+                    CloseInventory(true, false);
+                }
+                
             }
             else
             {
-                currentPlayerModes = PlayerModeHandler.global.playerModes;
-                PlayerModeHandler.global.playerModes = PlayerModes.Paused;
-                Time.timeScale = 0;
-                inventoryPanel.SetActive(true);
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
+                OpenInventory();
             }
         }
     }
