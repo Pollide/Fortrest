@@ -57,5 +57,6 @@ public class GenerateList
                 GameObject.DestroyImmediate(resource);
         }
     }
-#endif
 }
+
+#endif
