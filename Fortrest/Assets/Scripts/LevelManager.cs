@@ -25,7 +25,7 @@ public class LevelManager : MonoBehaviour
 
     // public List<Transform> EnemyList = new List<Transform>();
     public List<Transform> BuildingList = new List<Transform>();
-
+    public Transform ResourceHolderTransform;
     public GameObject ActiveBuildingGameObject;
     public Transform DirectionalLightTransform;
     public Material LanternGlowingMaterial;
@@ -51,6 +51,9 @@ public class LevelManager : MonoBehaviour
     public TMP_Text DayTMP_Text;
     public TMP_Text RemaningTMP_Text;
     public TMP_Text SurvivedTMP_Text;
+
+    private bool locked = true;
+
     private void Awake()
     {
         global = this;
@@ -76,6 +79,8 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
+        LockCursor();
+
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
@@ -200,7 +205,7 @@ public class LevelManager : MonoBehaviour
 
                     NaturalBuildingList[i].healthBarImage.fillAmount = Mathf.Clamp(NaturalBuildingList[i].health / NaturalBuildingList[i].maxHealth, 0, 1f);
 
-                    PlayerController.global.ApplyEnergyDamage(NaturalBuildingList[i].energyConsumptionPerClick);
+                    PlayerController.global.ApplyEnergyDamage(NaturalBuildingList[i].energyConsumptionPerClick, false);
                 }
             }
         }
@@ -235,6 +240,26 @@ public class LevelManager : MonoBehaviour
 
         //HandleMouse();
     }
+
+    void LockCursor()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftAlt))
+        {
+            if (Cursor.visible)
+            {
+                Cursor.visible = false;
+                Cursor.lockState = CursorLockMode.Locked;
+                locked = true;
+            }
+            else
+            {
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                locked = true;
+            }
+        }
+    }
+
     void HandleMouse()
     {
         // On mouse down, capture it's position.

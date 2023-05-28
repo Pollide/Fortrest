@@ -45,7 +45,7 @@ namespace StylizedWater
         #region Shore Color
         SerializedProperty shoreFade, shoreColor, shoreDepth, shoreBlend;
         #endregion
-        
+
         #region Intersection Effects
         SerializedProperty intersectionFoamBlend, intersectionWaterBlend, intersectionFoamColor, intersectionFoamDirection, intersectionFoamScale, intersectionFoamSpeed,
         intersectionFoamCutoff, intersectionFoamDistortion,
@@ -163,11 +163,13 @@ namespace StylizedWater
 
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
-            stylizedWater.ReadMaterialProperties();
-            EditorGUI.BeginChangeCheck();
-            DrawSections();
-            if (EditorGUI.EndChangeCheck()) ApplyChanges();
+            /*
+              serializedObject.Update();
+              stylizedWater.ReadMaterialProperties();
+              EditorGUI.BeginChangeCheck();
+              DrawSections();
+              if (EditorGUI.EndChangeCheck()) ApplyChanges();
+            */
         }
 
         void ApplyChanges()
@@ -227,7 +229,7 @@ namespace StylizedWater
             if (name == shaderName)
             {
                 DrawPropertiesInspector(CoreEditorUtils.DrawHeaderToggle(EditorGUIUtility.TrTextContent("Foam Shadows"), foamShadowsExpanded, enableFoamShadows, null), DrawFoamShadowSettings);
-                
+
                 planarReflectionSettings = CoreEditorUtils.DrawHeaderFoldout("Planar Reflections", planarReflectionSettings, false, (Func<bool>)null, null);
                 DrawPropertiesInspector(planarReflectionSettings, DrawPlanarReflectionSettings);
 
@@ -288,7 +290,7 @@ namespace StylizedWater
             EditorGUILayout.Space();
 
             EditorGUILayout.LabelField("Depth", EditorStyles.helpBox);
-            if(stylizedWater.meshRenderer.sharedMaterial.shader.name != mobileShaderName) EditorGUILayout.PropertyField(useColorGradient, EditorGUIUtility.TrTextContent("Use Gradient"));
+            if (stylizedWater.meshRenderer.sharedMaterial.shader.name != mobileShaderName) EditorGUILayout.PropertyField(useColorGradient, EditorGUIUtility.TrTextContent("Use Gradient"));
 
             if (!usesColorGradient)
             {

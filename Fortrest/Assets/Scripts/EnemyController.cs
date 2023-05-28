@@ -15,10 +15,10 @@ public class EnemyController : MonoBehaviour
     public bool isInTurretRange = false;
     public bool isDead = false;
     private Transform playerPosition;
-    public List<GameObject> turrets = new List<GameObject>();
 
     public float attackTimer;
     public float attackTimerMax;
+    private float speed;
 
     public float health;
     private float maxHealth = 3.0f;
@@ -29,6 +29,7 @@ public class EnemyController : MonoBehaviour
     public float noiseTimerMax;
 
     public Animator ActiveAnimator;
+
     void Start()
     {
         noiseTimerMax = 250;
@@ -36,6 +37,7 @@ public class EnemyController : MonoBehaviour
         health = maxHealth;
         playerPosition = PlayerController.global.transform;
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
+        speed = agent.speed;
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
     }
@@ -112,6 +114,16 @@ public class EnemyController : MonoBehaviour
                         {
                             shortestDistance = compare; // New shortest distance is assigned
                             bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
+                            
+                            if (bestTarget.CompareTag("Turret"))
+                            {
+                                agent.stoppingDistance = 4.5f;
+                            }
+                            else
+                            {
+                                agent.stoppingDistance = 1f;
+                            }
+
                             ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
                         }
                     }
@@ -120,6 +132,7 @@ public class EnemyController : MonoBehaviour
 
             else
             {
+                
                 agent.SetDestination(bestTarget.position); // Sets the nav mesh agent destination
 
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
@@ -204,15 +217,6 @@ public class EnemyController : MonoBehaviour
             PlayerController.global.enemyList.Remove(transform);
             agent.enabled = false;
 
-            if (isInTurretRange)
-            {
-                isDead = true;
-                for (int i = 0; i < turrets.Count; i++)
-                {
-                    turrets[i].GetComponent<TurretShooting>().RemoveFromList();
-                }
-            }
-
             Destroy(gameObject);
         }
     }
@@ -226,5 +230,15 @@ public class EnemyController : MonoBehaviour
             noiseTimer = 0;
             noiseTimerMax = Random.Range(500, 1000);
         }
+    }
+
+    public void ApplySlow(float _slowPercent)
+    {
+        agent.speed *= _slowPercent;
+    }
+
+    public void RemoveSlow()
+    {
+        agent.speed = speed;
     }
 }

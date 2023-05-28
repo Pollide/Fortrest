@@ -115,23 +115,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-
-    private void Update()
-    {
-
-        if (PlayerModeHandler.global && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
-        {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
-        else
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-    }
-
-
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
     {
