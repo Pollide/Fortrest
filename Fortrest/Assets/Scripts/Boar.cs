@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Horse : MonoBehaviour
+public class Boar : MonoBehaviour
 {
     private GameObject player;
     private GameObject text;
@@ -117,7 +117,8 @@ public class Horse : MonoBehaviour
         player.GetComponent<CharacterController>().enabled = false;       
         if (mounted)
         {           
-            player.transform.position = new Vector3(transform.position.x, transform.position.y - 1.0f, transform.position.z);
+            player.transform.position = new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z);
+            player.transform.position += transform.forward;
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = false;
             player.GetComponent<BoxCollider>().enabled = false;
@@ -135,7 +136,8 @@ public class Horse : MonoBehaviour
 
     void PlayerStick()
     {
-        player.transform.position = new Vector3(transform.position.x, transform.position.y - 1.0f, transform.position.z);
+        player.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        player.transform.position += transform.forward;
         player.transform.rotation = transform.rotation;
     }
 
