@@ -8,17 +8,22 @@ using UnityEditor.SceneManagement;
 public class GenerateList
 {
     public GameObject resourcePrefab; // The prefab of the resource objects
-    public int numberOfResources; // The number of resources to generate
+    public int numberOfResources = 10; // The number of resources to generate
     public float rangeWidth = 100;
     public float rangeHeight = 100;
+    public float minY = 0;
+    public float maxY = 20;
 
-    public void GenerateResources()
+
+    public bool GenerateResources()
     {
 
         // Clear the existing list
 
         Terrain terrain = GameObject.FindObjectOfType<Terrain>();
         Transform resourceHolderTransform = GameObject.FindGameObjectWithTag("SceneObjects").transform;
+
+        int stackOverflow = 100;
 
         for (int i = 0; i < numberOfResources; i++)
         {
@@ -27,9 +32,14 @@ public class GenerateList
 
             if (Physics.Raycast(raycastOrigin, Vector3.down, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Terrain")))
             {
-                if (hit.point.y < 0)
+                if (hit.point.y < minY || hit.point.y > maxY)
                 {
-                    //prevents objects spawning in water
+                    stackOverflow--;
+                    if (stackOverflow <= 0)
+                    {
+                        // Debug.LogWarning("No terrain with parameters was found");
+                        return false;
+                    }
                     i--;
                     continue;
                 }
@@ -44,6 +54,7 @@ public class GenerateList
         }
 
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+        return true;
     }
 
     public void ClearResourceList()
