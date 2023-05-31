@@ -21,28 +21,23 @@ namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when
 {
     public class ResourceGen : EditorWindow //to access the editor features, change MonoBehaviour to this
     {
-        AnimBool AnimatedValue;
         string InputString = "";
         static string CustomPath = "Assets/ResourceGen/";
         static string SavedFile = "SaveData.txt";
-        bool StartupRun;
-        private GenerateList GeneratedList;
-        private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
 
-        // Image buttons
-        private Texture buttonTexture;
-        private GUIContent buttonContent;
 
         GUISkin skin;
-
+        AnimBool AnimatedValue;
+        private GenerateList GeneratedList;
+        private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
         Texture2D backgroundTexture; // Background color
         Rect background; // Background size
 
+        bool generationSucessful = true;
         private static bool RunOnStart;
         [SerializeField] private bool _RunOnStart;
 
         [MenuItem("Tools/Resource Generator")] //makes it appear in the top unity menu dropdown
-
         public static void ShowWindow()
         {
             ResourceGen window = (ResourceGen)GetWindow(typeof(ResourceGen), true, "Resource Generator"); //sets the title of the window
@@ -72,6 +67,7 @@ namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when
             AnimatedValue.valueChanged.AddListener(Repaint); //add a listener so it can detect when repait occurs and can fade properly
             GeneratedList = new GenerateList();
             skin = Resources.Load<GUISkin>("WindowSkins/ResourceGeneratorSkin");
+
         }
 
         //set the global font for the window
@@ -81,6 +77,40 @@ namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when
             GUI.skin.font = (name == null ? null : (Font)AssetDatabase.LoadAssetAtPath(CustomPath + name + ".otf", typeof(Font)));
         }
 
+        private Texture2D MakeTexture(int width, int height, Color color)
+        {
+            Color[] pixels = new Color[width * height];
+            for (int i = 0; i < pixels.Length; i++)
+            {
+                pixels[i] = color;
+            }
+
+            Texture2D texture = new Texture2D(width, height);
+            texture.SetPixels(pixels);
+            texture.Apply();
+
+            return texture;
+        }
+        public void CreateButton(string prefabNameString)
+        {
+            GUIContent buttonContent = new GUIContent((Texture)Resources.Load("WindowImages/" + prefabNameString));
+
+            GameObject chosenPrefab = Resources.Load<GameObject>("WindowPrefabs/" + prefabNameString);
+
+            GUIStyle customButtonStyle = new GUIStyle(GUI.skin.button);
+
+            customButtonStyle.normal.background = MakeTexture(100, 100, chosenPrefab == newResourcePrefab ? Color.red : Color.grey);
+            customButtonStyle.fixedWidth = 100;
+            customButtonStyle.fixedHeight = 100;
+
+
+            // Debug.Log(newResourcePrefab + "== " + chosenPrefab);
+
+            if (GUILayout.Button(buttonContent, customButtonStyle))
+            {
+                newResourcePrefab = chosenPrefab;
+            }
+        }
         //runs when the GUI is refreshed
         private void OnGUI()
         {
@@ -88,7 +118,7 @@ namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when
 
             // COLORS
             backgroundTexture = new Texture2D(1, 1);
-            backgroundTexture.SetPixel(0, 0, new Color(0.7f, 0.1f, 0.2f, 1));
+            backgroundTexture.SetPixel(0, 0, new Color(0.1f, 0.7f, 0.2f, 1));
             backgroundTexture.Apply();
             background.x = 0;
             background.y = 0;
@@ -99,7 +129,7 @@ namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when
 
             // SAVING DATA
             bool previous = RunOnStart;
-            RunOnStart = EditorGUILayout.ToggleLeft("Terrain Auto Generate", RunOnStart);
+            RunOnStart = EditorGUILayout.ToggleLeft("Spawn resources accross whole terrain", RunOnStart);
             if (RunOnStart != previous) //only run if the toggle has been pressed
             {
                 Repaint(); //updates the window
@@ -110,40 +140,26 @@ namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when
                 AssetDatabase.Refresh(); //so the file is visible
             }
 
+            GUI.contentColor = Color.white; //sets the text to white
             // DRAWING TITLE
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("RESOURCE GENERATOR", skin.GetStyle("Sexy"));
+
+            GUIStyle customLabelStyle = new GUIStyle(skin.GetStyle("Sexy"));
+            customLabelStyle.normal.textColor = Color.white; // Set the desired text color
+
+            GUILayout.Label("RESOURCE GENERATOR", customLabelStyle);
             EditorGUILayout.EndHorizontal();
 
             // IMAGE BUTTONS
             EditorGUILayout.BeginHorizontal(); // Side by side layout
 
-            buttonTexture = (Texture)Resources.Load("WindowImages/Boulder");
-            buttonContent = new GUIContent(buttonTexture);
-            if (GUILayout.Button(buttonContent, GUILayout.Width(100), GUILayout.Height(100)))
-            {
-                newResourcePrefab = Resources.Load<GameObject>("WindowPrefabs/Stone");
-            }
-
-            buttonTexture = (Texture)Resources.Load("WindowImages/Tree");
-            buttonContent = new GUIContent(buttonTexture);
-            if (GUILayout.Button(buttonContent, GUILayout.Width(100), GUILayout.Height(100)))
-            {
-                newResourcePrefab = Resources.Load<GameObject>("WindowPrefabs/Wood 02");
-            }
-
-            buttonTexture = (Texture)Resources.Load("WindowImages/Bush");
-            buttonContent = new GUIContent(buttonTexture);
-            if (GUILayout.Button(buttonContent, GUILayout.Width(100), GUILayout.Height(100)))
-            {
-                newResourcePrefab = Resources.Load<GameObject>("WindowPrefabs/Wood 01");
-            }
+            CreateButton("Boulder");
+            CreateButton("Bush");
+            CreateButton("Tree");
 
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.BeginVertical("box");
-
-            GUI.contentColor = Color.white; //sets the text to white
 
             //EditorGUILayout.LabelField("Resource Prefabs");
 
@@ -153,12 +169,7 @@ namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when
             //}
 
             //newResourcePrefab = EditorGUILayout.ObjectField("Add New Resource", newResourcePrefab, typeof(GameObject), false) as GameObject;
-
-            if (newResourcePrefab != null)
-            {
-                GeneratedList.resourcePrefab = newResourcePrefab;
-                newResourcePrefab = null;
-            }
+            GeneratedList.resourcePrefab = newResourcePrefab;
 
             if (GeneratedList.resourcePrefab == null)
             {
@@ -172,6 +183,15 @@ namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when
 
             GeneratedList.rangeHeight = EditorGUILayout.FloatField("Spawn area Z", GeneratedList.rangeHeight);
 
+            GeneratedList.minY = EditorGUILayout.FloatField("Lowest spawn height", GeneratedList.minY);
+
+            if (GeneratedList.minY < 0)
+            {
+                EditorGUILayout.TextArea("Below zero is sea level!", ReturnGUIStyle(15));
+            }
+
+            GeneratedList.maxY = EditorGUILayout.FloatField("Highest spawn height", GeneratedList.maxY);
+
             //if (GUILayout.Button("Change Resources", ReturnGUIStyle(30, "button")))
             //{
             //    GUIUtility.systemCopyBuffer = "if (System.DateTime.Now.Second + 10 > Time.realtimeSinceStartup)"; //example
@@ -183,16 +203,18 @@ namespace ThirdClass.ResourceGen //creating a namespace helps keep it apart when
 
             if (GUILayout.Button("Generate", ReturnGUIStyle(30, "button")))
             {
-                GeneratedList.GenerateResources();
+                generationSucessful = GeneratedList.GenerateResources();
+            }
+
+            if (!generationSucessful)
+            {
+                EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15));
             }
 
             if (GUILayout.Button("Delete", ReturnGUIStyle(30, "button")))
             {
                 GeneratedList.ClearResourceList();
             }
-
-
-            StartupRun = true;//first frame tick this as true, so then if you tick 'auto run' it wont run instantly after being toggled, it will instead run after next time the window is awakened
 
             SetFont(); //set the arial font as it is easier to read
             EditorGUI.EndDisabledGroup(); //stop the inspector being greyed out

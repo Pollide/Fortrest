@@ -150,8 +150,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 Vector3 worldPos = hitData.point;
 
-                if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer &&
-                    worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer)
+                if (IsInRange(worldPos))
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
                     GameObject newTurret = Instantiate(_prefab, worldPos, Quaternion.identity);
@@ -213,9 +212,9 @@ public class PlayerModeHandler : MonoBehaviour
 
             turretBlueprint.transform.position = worldPos;
 
-            if (worldPos.x <= PlayerController.global.transform.position.x + distanceAwayFromPlayer && worldPos.x >= PlayerController.global.transform.position.x - distanceAwayFromPlayer &&
-                worldPos.z <= PlayerController.global.transform.position.z + distanceAwayFromPlayer && worldPos.z >= PlayerController.global.transform.position.z - distanceAwayFromPlayer &&
-                InventoryManager.global.GetItemQuantity("Wood") >= _constructionCostWood && InventoryManager.global.GetItemQuantity("Stone") >= _constructionCostStone)
+            if (IsInRange(worldPos) &&
+                InventoryManager.global.GetItemQuantity("Wood") >= _constructionCostWood && 
+                InventoryManager.global.GetItemQuantity("Stone") >= _constructionCostStone)
             {
                 foreach (Transform child in parts)
                 {
@@ -241,6 +240,13 @@ public class PlayerModeHandler : MonoBehaviour
             turretBlueprint.SetActive(false);
         }
     }
+    public bool IsInRange(Vector2 currentTarget)
+    {
+        PlayerController player = PlayerController.global;
+        Vector2 playerPos = new Vector2(player.transform.position.x, player.transform.position.y);
+        return distanceAwayFromPlayer >= Vector2.Distance(playerPos, currentTarget);
+    }
+
 
     private void SetMouseActive(bool isActive)
     {
@@ -270,4 +276,5 @@ public class PlayerModeHandler : MonoBehaviour
     {
         buildType = BuildType.Turret;
     }
+
 }
