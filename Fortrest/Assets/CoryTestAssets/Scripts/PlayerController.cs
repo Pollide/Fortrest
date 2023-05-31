@@ -29,13 +29,12 @@ public class PlayerController : MonoBehaviour
     //private float maxComboDelay = 1;
 
     // Attacks
-    private float attackDamage = 0.5f;
+    public float attackDamage = 0.5f;
     private float attackTimer = 0.0f;
     private float resetAttack = 0.75f;
-    private float comboTimer = 0.0f;
+    public float comboTimer = 0.0f;
     private float resetCombo = 1.0f; 
-    public int attackCount = 0;
-    private bool attacking;
+    public int attackCount = 0;   
 
     CharacterController playerCC;
     public Animator CharacterAnimator;
@@ -43,7 +42,7 @@ public class PlayerController : MonoBehaviour
     [Header("Player States")]
     public bool playerCanMove = true;
     public bool playerisMoving = false;
-    public bool playerisAttacking = false;
+    public bool attacking = false;
 
     public List<Transform> enemyList = new List<Transform>();
 
@@ -268,9 +267,13 @@ public class PlayerController : MonoBehaviour
         {
             attacking = true;
             attackTimer = 0;
+            CharacterAnimator.ResetTrigger("Swing");
+            CharacterAnimator.ResetTrigger("Swing2");
+            CharacterAnimator.ResetTrigger("Swing3");
             if (attackCount == 0)
-            {
+            {             
                 CharacterAnimator.SetTrigger("Swing");
+                Debug.Log("Attack 1");
                 attackCount++;
                 ApplyEnergyDamage(2.0f, true);
             }
@@ -278,6 +281,7 @@ public class PlayerController : MonoBehaviour
             {
                 comboTimer = 0;           
                 CharacterAnimator.SetTrigger("Swing2"); // Play different animation here
+                Debug.Log("Attack 2");
                 attackCount++;
                 ApplyEnergyDamage(3.0f, true);
             }
@@ -285,6 +289,7 @@ public class PlayerController : MonoBehaviour
             {
                 comboTimer = 0;               
                 CharacterAnimator.SetTrigger("Swing3"); // Play different animation here
+                Debug.Log("Attack 3");
                 attackCount = 0;
                 ApplyEnergyDamage(5.0f, true);
             }
@@ -293,20 +298,28 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
             VFXSlash.transform.position = transform.position;
             VFXSlash.transform.eulerAngles = transform.eulerAngles;
-            VFXSlash.Play();            
+            VFXSlash.Play();
 
-            for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
-            {
-                if (Vector3.Distance(transform.position, enemyList[i].transform.position) <= 3.0f && FacingEnemy(enemyList[i].transform.position)) // Distance from player to enemy
-                {
-                    playerisAttacking = true;
-                    enemyList[i].GetComponent<EnemyController>().chasing = true;
-                    GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
-                    enemyList[i].GetComponent<EnemyController>().Damaged(attackDamage);
-                    break;
-                }
-            }
+            //for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
+            //{
+            //
+            //    if (Vector3.Distance(transform.position, enemyList[i].transform.position) <= 3.0f && FacingEnemy(enemyList[i].transform.position)) // Distance from player to enemy
+            //    {
+            //        playerisAttacking = true;
+            //        enemyList[i].GetComponent<EnemyController>().chasing = true;
+            //        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
+            //        enemyList[i].GetComponent<EnemyController>().Damaged(attackDamage);
+            //        break;
+            //    }
+            //}
         }
+    }
+
+    public IEnumerator FreezeTime()
+    {
+        Time.timeScale = 0.1f;
+        yield return new WaitForSeconds(0.05f);
+        Time.timeScale = 1;
     }
 
     private void OnTriggerEnter(Collider other)
