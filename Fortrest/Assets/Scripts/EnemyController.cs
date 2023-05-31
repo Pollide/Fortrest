@@ -213,10 +213,10 @@ public class EnemyController : MonoBehaviour
         healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
         if (health <= 0)
         {
+            Time.timeScale = 1;
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyDead1Sound : GameManager.global.EnemyDead2Sound, 1, true, 0, false, transform);
             PlayerController.global.enemyList.Remove(transform);
-            agent.enabled = false;
-
+            agent.enabled = false;           
             Destroy(gameObject);
         }
     }
@@ -241,4 +241,20 @@ public class EnemyController : MonoBehaviour
     {
         agent.speed = speed;
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject == PlayerController.global.SwordGameObject)
+        {
+            if (PlayerController.global.attacking == true)
+            {
+                //PlayerController.global.attacking = false;
+                StopAllCoroutines();
+                chasing = true;
+                Damaged(PlayerController.global.attackDamage);
+                GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
+                PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
+            }
+        }
+    }    
 }
