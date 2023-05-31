@@ -108,8 +108,6 @@ public class PlayerController : MonoBehaviour
         SwordGameObject.SetActive(toolData.SwordBool);
         RadiusGameObject.SetActive(toolData.HammerBool);
         RadiusCamGameObject.SetActive(toolData.HammerBool);
-
-
     }
 
     // Update is called once per frame

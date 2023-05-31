@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
@@ -52,9 +54,9 @@ public class GenerateList
         foreach (GameObject resource in resources)
         {
             if (resource.name.Replace("(Clone)", "") == resourcePrefab.name)
-                Object.DestroyImmediate(resource);
+                GameObject.DestroyImmediate(resource);
         }
     }
-
 }
+
 #endif
