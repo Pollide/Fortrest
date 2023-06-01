@@ -60,6 +60,9 @@ public class GenerateList
                 GameObject resource = PrefabUtility.InstantiatePrefab(resourcePrefab) as GameObject;
 
                 resource.transform.position = hit.point;
+                Vector3 eulerVector = hit.normal;
+                eulerVector.y += Random.Range(0f, 360f);
+                resource.transform.rotation = Quaternion.Euler(eulerVector);
 
                 resource.transform.SetParent(resourceHolderTransform);
 
