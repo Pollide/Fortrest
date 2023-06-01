@@ -25,7 +25,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     // Resource generation variables
     private GenerateList GeneratedList; // Resource list object
     private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
-    private GameObject editorBox; // Temporary variable to store the newly added resource prefab
+    private GameObject editorBox;
     private bool generationSucessful = true; // Confirmation bool
     private bool biomeWide = false;
 
@@ -173,6 +173,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         GeneratedList.rangeHeight = EditorGUILayout.FloatField("Spawn area Z", GeneratedList.rangeHeight);
 
         GeneratedList.positionOnTerrain = EditorGUILayout.Vector2Field("Position on terrain", GeneratedList.positionOnTerrain);
+
+        GeneratedList.minDistance = EditorGUILayout.FloatField("Distance between objects", GeneratedList.minDistance);
 
         GeneratedList.minY = EditorGUILayout.FloatField("Lowest spawn height", GeneratedList.minY);
 

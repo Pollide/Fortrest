@@ -13,6 +13,7 @@ public class GenerateList
     public float rangeHeight = 100;
     public float minY = 0;
     public float maxY = 20;
+    public float minDistance = 0;
     public Vector2 positionOnTerrain;
 
     public Vector3 CalculatePosition()
@@ -32,12 +33,14 @@ public class GenerateList
     {
         Terrain terrain = GameObject.FindObjectOfType<Terrain>();
         Transform resourceHolderTransform = GameObject.FindGameObjectWithTag("SceneObjects").transform;
+        int stackOverflow = 1000;
 
-        int stackOverflow = 100;
+        float halfWidth = resourcePrefab.GetComponent<SphereCollider>().radius * resourcePrefab.transform.localScale.x;
+        Debug.Log(halfWidth);
 
         for (int i = 0; i < numberOfResources; i++)
         {
-            Vector3 randomRange = new Vector3(Random.Range(-rangeWidth / 2, rangeWidth / 2), 0f, Random.Range(-rangeHeight / 2, rangeHeight / 2));
+            Vector3 randomRange = new Vector3(Random.Range((-rangeWidth / 2) + halfWidth , (rangeWidth / 2) - halfWidth), 0f, Random.Range((-rangeHeight / 2) + halfWidth, (rangeHeight / 2) - halfWidth));
             Vector3 randomPosition = CalculatePosition() + randomRange;
 
             Vector3 raycastOrigin = new Vector3(randomPosition.x, terrain.terrainData.size.y, randomPosition.z);
@@ -97,52 +100,14 @@ public class GenerateList
         }
     }
 
-     //unity uses bit shifting to properly detect what layers should be masked, if the array is null, it will only see the "Default" layer.
-    public static int ReturnBitShift(string[] layerNameArray = null)
-    {
-        //array
-        if (layerNameArray == null)
-        {
-            layerNameArray = new string[] { "Default" };
-        }
-
-        int layerMaskInt = 0;
-
-        for (int i = 0; i < layerNameArray.Length; i++)
-        {
-            //bit shifting layers
-            layerMaskInt = layerMaskInt | 1 << LayerMask.NameToLayer(layerNameArray[i]);
-        }
-
-        return layerMaskInt;
-    }
-
-    private bool CheckCollision(Vector3 position)
-    {
-        Collider[] colliders = Physics.OverlapSphere(position, resourcePrefab.GetComponent<Collider>().bounds.size.magnitude);
-
-        foreach (Collider collider in colliders)
-        {
-            // Check if the collider belongs to the desired resource(s)
-            if (collider.CompareTag("Resource") || collider.gameObject.layer == LayerMask.NameToLayer("Resource"))
-            {
-                Debug.Log("Hit");
-                return true; // Collision detected with a resource
-            }
-        }
-
-        return false; // No collision with resources detected
-    }
-
     private bool CheckMinDistance(Vector3 position)
     {
-        GameObject[] spawnedObjects = GameObject.FindGameObjectsWithTag("Resource"); // Change the tag if necessary
+        GameObject[] spawnedObjects = GameObject.FindGameObjectsWithTag("Resource");
 
         foreach (GameObject spawnedObject in spawnedObjects)
         {
             float distance = Vector3.Distance(position, spawnedObject.transform.position);
-
-            if (distance < spawnedObject.GetComponent<SphereCollider>().bounds.size.magnitude / 2)
+            if (distance < (spawnedObject.GetComponent<SphereCollider>().radius * resourcePrefab.transform.localScale.x) * 1.9 + minDistance)
             {
                 return false; // Distance is too close to an existing object
             }
@@ -151,5 +116,4 @@ public class GenerateList
         return true; // Minimum distance check passed
     }
 }
-
 #endif
