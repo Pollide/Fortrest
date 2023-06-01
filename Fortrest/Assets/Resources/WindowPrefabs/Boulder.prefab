@@ -110,6 +110,7 @@ GameObject:
   - component: {fileID: 6935669614047997176}
   - component: {fileID: -4554220620364002257}
   - component: {fileID: 8555596593215373963}
+  - component: {fileID: 806272934008997170}
   m_Layer: 9
   m_Name: Boulder
   m_TagString: Resource
@@ -152,6 +153,8 @@ MonoBehaviour:
   maxHealth: 5
   energyConsumptionPerClick: 2
   resourceAmount: 5
+  constructionCostWood: 5
+  constructionCostStone: 5
   healthBarImage: {fileID: 6627474213955040157}
 --- !u!111 &8555596593215373963
 Animation:
@@ -169,6 +172,19 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!135 &806272934008997170
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7713437358430713410}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.1992982
+  m_Center: {x: -0.012979899, y: 0.039453212, z: 0.053134944}
 --- !u!1001 &5739647269459889305
 PrefabInstance:
   m_ObjectHideFlags: 0
