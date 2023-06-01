@@ -31,6 +31,8 @@ public class EnemyController : MonoBehaviour
     public Animator ActiveAnimator;
     public bool canBeDamaged = true;
 
+    KnockBack knockBackScript;
+
     void Start()
     {
         noiseTimerMax = 250;
@@ -41,10 +43,16 @@ public class EnemyController : MonoBehaviour
         speed = agent.speed;
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
+        knockBackScript = GetComponent<KnockBack>();
     }
 
     void Update()
     {
+        if (!knockBackScript)
+        {
+            return;
+        }          
+
         if (!agent.isOnNavMesh)
         {
             PlayerController.global.enemyList.Remove(transform);
@@ -82,7 +90,7 @@ public class EnemyController : MonoBehaviour
             {
                 agent.SetDestination(bestTarget.position); // Makes the AI move
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.75f) // Checks if enemy reached target
                 {
                     FaceTarget();
                     attackTimer++;
@@ -249,6 +257,7 @@ public class EnemyController : MonoBehaviour
         {
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
             {
+                knockBackScript.knock = true;               
                 canBeDamaged = false;
                 StopAllCoroutines();
                 ScreenShake.global.shake = true;
