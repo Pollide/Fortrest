@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
     // Attacks
     public float attackDamage = 0.5f;
-    private float attackTimer = 0.0f;
+    public float attackTimer = 0.0f;
     private float resetAttack = 0.75f;
     public float comboTimer = 0.0f;
     private float resetCombo = 1.0f; 
@@ -265,15 +265,19 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
+            for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
+            {
+                enemyList[i].GetComponent<EnemyController>().canBeDamaged = true;
+            }
+
             attacking = true;
             attackTimer = 0;
             CharacterAnimator.ResetTrigger("Swing");
             CharacterAnimator.ResetTrigger("Swing2");
             CharacterAnimator.ResetTrigger("Swing3");
             if (attackCount == 0)
-            {             
+            {
                 CharacterAnimator.SetTrigger("Swing");
-                Debug.Log("Attack 1");
                 attackCount++;
                 ApplyEnergyDamage(2.0f, true);
             }
@@ -281,7 +285,6 @@ public class PlayerController : MonoBehaviour
             {
                 comboTimer = 0;           
                 CharacterAnimator.SetTrigger("Swing2"); // Play different animation here
-                Debug.Log("Attack 2");
                 attackCount++;
                 ApplyEnergyDamage(3.0f, true);
             }
@@ -289,7 +292,6 @@ public class PlayerController : MonoBehaviour
             {
                 comboTimer = 0;               
                 CharacterAnimator.SetTrigger("Swing3"); // Play different animation here
-                Debug.Log("Attack 3");
                 attackCount = 0;
                 ApplyEnergyDamage(5.0f, true);
             }
@@ -318,7 +320,7 @@ public class PlayerController : MonoBehaviour
     public IEnumerator FreezeTime()
     {
         Time.timeScale = 0.1f;
-        yield return new WaitForSeconds(0.05f);
+        yield return new WaitForSeconds(0.025f);
         Time.timeScale = 1;
     }
 
