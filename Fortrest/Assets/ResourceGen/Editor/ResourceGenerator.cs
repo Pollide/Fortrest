@@ -20,15 +20,13 @@ using System.IO; // To access in and out filing
 public class ResourceGenerator : EditorWindow // To access the editor features, change MonoBehaviour to this
 {
     // String variables for file paths and error display
-    string InputString = "";
     static string CustomPath = "Assets/ResourceGen/";
-    static string SavedFile = "SaveData.txt";
 
     // Resource generation variables
     private GenerateList GeneratedList; // Resource list object
     private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
     private bool generationSucessful = true; // Confirmation bool
-    private bool biomeWide = false;                                         
+    private bool biomeWide = false;
 
     // Visual variables
     GUISkin skin; // Skin variable
@@ -76,14 +74,14 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         DrawTitles();
         //SetFont();
         PlaceButtons();
-        ParametersAndGeneration();           
+        ParametersAndGeneration();
     }
 
     ///<summary>
     ///Sets all of the elements' colors
     ///</summary>
     void SetColors()
-    {                     
+    {
         // Setting colors
         GUI.backgroundColor = Color.green;
         GUI.contentColor = Color.white;
@@ -94,7 +92,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         background.y = 0;
         background.width = Screen.width;
         background.height = Screen.height;
-        GUI.DrawTexture(background, backgroundTexture);          
+        GUI.DrawTexture(background, backgroundTexture);
     }
 
     ///<summary>
@@ -181,7 +179,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         }
 
         EditorGUI.EndDisabledGroup();
-        
+
         EditorGUILayout.EndVertical();
 
         //Repaint(); // Redraws the window    
@@ -202,6 +200,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         texture.SetPixels(pixels);
         texture.Apply();
 
+
         return texture;
     }
 
@@ -210,7 +209,9 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     public void CreateButton(string prefabNameString)
     {
-        GUIContent buttonContent = new GUIContent((Texture)Resources.Load("WindowImages/" + prefabNameString));
+        Texture texture = (Texture)Resources.Load("WindowImages/" + prefabNameString);
+        GUIContent buttonContent = new GUIContent(texture);
+        buttonContent.text = prefabNameString;
 
         GameObject chosenPrefab = Resources.Load<GameObject>("WindowPrefabs/" + prefabNameString);
 
@@ -219,6 +220,9 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         customButtonStyle.normal.background = MakeTexture(100, 100, chosenPrefab == newResourcePrefab ? Color.red : Color.grey);
         customButtonStyle.fixedWidth = 100;
         customButtonStyle.fixedHeight = 100;
+        customButtonStyle.alignment = TextAnchor.MiddleCenter;
+
+
 
         if (GUILayout.Button(buttonContent, customButtonStyle))
         {
