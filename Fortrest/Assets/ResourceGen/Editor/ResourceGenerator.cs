@@ -27,6 +27,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     // Resource generation variables
     private GenerateList GeneratedList; // Resource list object
     private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
+    private GameObject editorBox; // Temporary variable to store the newly added resource prefab
     private bool generationSucessful = true; // Confirmation bool
     private bool biomeWide = false;                                         
 
@@ -67,6 +68,16 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         //AnimatedValue.valueChanged.AddListener(Repaint); // Adding listener for fading animation
         GeneratedList = new GenerateList();
         skin = Resources.Load<GUISkin>("WindowSkins/ResourceGeneratorSkin");
+        editorBox = Resources.Load<GameObject>("ResourceGenDisplayBox");
+        GameObject editBox = PrefabUtility.InstantiatePrefab(editorBox) as GameObject;
+        editorBox = editBox;
+        editorBox.transform.position = GeneratedList.CalculatePosition();
+        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, 5f, GeneratedList.rangeHeight);
+    }
+
+    private void OnFocus()
+    {
+        editorBox.transform.position = GeneratedList.CalculatePosition();
     }
 
     // Window editing
@@ -76,7 +87,9 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         DrawTitles();
         //SetFont();
         PlaceButtons();
-        ParametersAndGeneration();           
+        ParametersAndGeneration();
+        editorBox.transform.position = GeneratedList.CalculatePosition();
+        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, 5f, GeneratedList.rangeHeight);
     }
 
     ///<summary>
@@ -109,6 +122,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Select a resource to begin", skin.GetStyle("Sexy2"));
         EditorGUILayout.EndHorizontal();
+    }
+
+    private void OnDisable()
+    {
+        DestroyImmediate(editorBox);
     }
 
     ///<summary>
@@ -155,6 +173,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         GeneratedList.rangeWidth = EditorGUILayout.FloatField("Spawn area X", GeneratedList.rangeWidth);
 
         GeneratedList.rangeHeight = EditorGUILayout.FloatField("Spawn area Z", GeneratedList.rangeHeight);
+
+        GeneratedList.positionOnTerrain = EditorGUILayout.Vector2Field("Position on terrain", GeneratedList.positionOnTerrain);
 
         GeneratedList.minY = EditorGUILayout.FloatField("Lowest spawn height", GeneratedList.minY);
 
