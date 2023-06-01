@@ -29,6 +29,7 @@ public class EnemyController : MonoBehaviour
     public float noiseTimerMax;
 
     public Animator ActiveAnimator;
+    public bool canBeDamaged = true;
 
     void Start()
     {
@@ -246,10 +247,11 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
-            if (PlayerController.global.attacking == true)
+            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
             {
-                //PlayerController.global.attacking = false;
+                canBeDamaged = false;
                 StopAllCoroutines();
+                ScreenShake.global.shake = true;
                 chasing = true;
                 Damaged(PlayerController.global.attackDamage);
                 GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
