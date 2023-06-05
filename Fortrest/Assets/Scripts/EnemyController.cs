@@ -69,13 +69,25 @@ public class EnemyController : MonoBehaviour
             chasing = true;
         }
 
+        if (bestTarget != null)
+        {
+            if (bestTarget.CompareTag("Turret"))
+            {
+                agent.stoppingDistance = 4.5f;
+            }
+            else
+            {
+                agent.stoppingDistance = 2f;
+            }
+        }
+
         if (chasing)
         {
             bestTarget = playerPosition;
 
             if (LevelManager.global.BuildingList.Count != 0) // If there are still targets other than the player
             {
-                Invoke("ChasePlayerTimer", 5.0f); // Enemy stops chasing the player after 5s
+                Invoke("ChasePlayerTimer", 10.0f); // Enemy stops chasing the player after 5s
 
                 float chaseDistance = Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position); // TEMPORARY EASY CODE
 
@@ -90,7 +102,7 @@ public class EnemyController : MonoBehaviour
             {
                 agent.SetDestination(bestTarget.position); // Makes the AI move
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.75f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.25f) // Checks if enemy reached target
                 {
                     FaceTarget();
                     attackTimer++;
@@ -104,10 +116,8 @@ public class EnemyController : MonoBehaviour
                         }
                     }
                 }
-                ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
+                ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.25f);
             }
-
-
         }
         else
         {
@@ -122,29 +132,19 @@ public class EnemyController : MonoBehaviour
                         if (compare < shortestDistance) // Only true if a new shorter distance is found
                         {
                             shortestDistance = compare; // New shortest distance is assigned
-                            bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
-                            
-                            if (bestTarget.CompareTag("Turret"))
-                            {
-                                agent.stoppingDistance = 4.5f;
-                            }
-                            else
-                            {
-                                agent.stoppingDistance = 1f;
-                            }
+                            bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list                                                     
 
-                            ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
+                            ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.25f);
                         }
                     }
                 }
             }
 
             else
-            {
-                
+            {            
                 agent.SetDestination(bestTarget.position); // Sets the nav mesh agent destination
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.25f) // Checks if enemy reached target
                 {
                     attackTimer++;
                     Building building = bestTarget.GetComponent<Building>();
@@ -165,7 +165,7 @@ public class EnemyController : MonoBehaviour
                     }
                 }
             }
-        }
+        }       
     }
 
     void Attack()
