@@ -121,7 +121,6 @@ public class Boar : MonoBehaviour
             player.transform.position += transform.forward;
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = false;
-            player.GetComponent<BoxCollider>().enabled = false;
             player.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("Moving", false);
         }
         else
@@ -129,7 +128,6 @@ public class Boar : MonoBehaviour
             player.transform.position += transform.right;
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = true;
-            player.GetComponent<BoxCollider>().enabled = true;
         }
         player.GetComponent<CharacterController>().enabled = true;        
     }
