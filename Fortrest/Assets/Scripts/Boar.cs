@@ -32,6 +32,7 @@ public class Boar : MonoBehaviour
         text = transform.GetChild(0).gameObject;
         player = PlayerController.global.gameObject;
         cc = GetComponent<CharacterController>();
+        Indicator.global.AddIndicator(transform);
     }
 
     void Update()
@@ -44,7 +45,7 @@ public class Boar : MonoBehaviour
         if (mounted)
         {
             PlayerStick();
-        }   
+        }
     }
 
     private void FixedUpdate()
@@ -96,7 +97,7 @@ public class Boar : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject == player)
+        if (other.gameObject == player)
         {
             inRange = true;
         }
@@ -111,12 +112,12 @@ public class Boar : MonoBehaviour
     }
 
     void Mount()
-    {      
+    {
         mounted = !mounted;
 
-        player.GetComponent<CharacterController>().enabled = false;       
+        player.GetComponent<CharacterController>().enabled = false;
         if (mounted)
-        {           
+        {
             player.transform.position = new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z);
             player.transform.position += transform.forward;
             player.transform.rotation = transform.rotation;
@@ -124,12 +125,12 @@ public class Boar : MonoBehaviour
             player.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("Moving", false);
         }
         else
-        {            
+        {
             player.transform.position += transform.right;
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = true;
         }
-        player.GetComponent<CharacterController>().enabled = true;        
+        player.GetComponent<CharacterController>().enabled = true;
     }
 
     void PlayerStick()
@@ -146,18 +147,18 @@ public class Boar : MonoBehaviour
         Lerping(75.0f, 90.0f, ref turnAnglePerSec, 20); // Turn
 
         if (Input.GetKey(KeyCode.W))
-        {          
+        {
             currentSpeed += acceleration * Time.fixedDeltaTime;
             currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
         }
         else
-        {          
+        {
             currentSpeed -= deceleration * Time.fixedDeltaTime;
             currentSpeed = Mathf.Max(currentSpeed, 0.0f);
         }
-        
+
         if (Input.GetKey(KeyCode.A))
-        {          
+        {
             currentTurn = -turnAnglePerSec * Time.fixedDeltaTime;
         }
         if (Input.GetKey(KeyCode.D))
@@ -175,13 +176,13 @@ public class Boar : MonoBehaviour
         else
         {
             verticalVelocity += gravity * Time.fixedDeltaTime;
-        }      
+        }
     }
 
     void Lerping(float min, float max, ref float value, float dividerCoefficient)
     {
         float divider = max - min;
         float i = currentSpeed / (divider / dividerCoefficient);
-        value = Mathf.Lerp(min, max, i);       
+        value = Mathf.Lerp(min, max, i);
     }
 }
