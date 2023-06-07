@@ -42,6 +42,7 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
         speed = agent.speed;
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
+        Indicator.global.AddIndicator(transform);
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
         knockBackScript = GetComponent<KnockBack>();
     }
@@ -51,7 +52,7 @@ public class EnemyController : MonoBehaviour
         if (!knockBackScript)
         {
             return;
-        }          
+        }
 
         if (!agent.isOnNavMesh)
         {
@@ -141,7 +142,7 @@ public class EnemyController : MonoBehaviour
             }
 
             else
-            {            
+            {
                 agent.SetDestination(bestTarget.position); // Sets the nav mesh agent destination
 
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.25f) // Checks if enemy reached target
@@ -165,7 +166,7 @@ public class EnemyController : MonoBehaviour
                     }
                 }
             }
-        }       
+        }
     }
 
     void Attack()
@@ -258,7 +259,7 @@ public class EnemyController : MonoBehaviour
         {
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
             {
-                knockBackScript.knock = true;               
+                knockBackScript.knock = true;
                 canBeDamaged = false;
                 StopAllCoroutines();
                 ScreenShake.global.shake = true;
@@ -268,5 +269,5 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-    }    
+    }
 }

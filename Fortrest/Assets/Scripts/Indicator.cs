@@ -1,67 +1,96 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Indicator : MonoBehaviour
 {
+    public static Indicator global;
+
     public GameObject arrowPrefab;
-    public GameObject enemy;
+
+
+    public List<IndicatorData> IndicatorList = new List<IndicatorData>();
+
+    public Vector3 offsets = Vector3.one;
+
+    [System.Serializable]
+    public class IndicatorData
+    {
+        public RectTransform ImageRect;
+
+        public Transform target;
+
+        public void Refresh()
+        {
+            Vector2 pointVector = LevelManager.global.SceneCamera.WorldToScreenPoint(target.position);
+            //   pointVector.x *= global.offsets.x;
+            //   pointVector.y *= global.offsets.y;
+
+            RectTransform canvasRect = ImageRect.parent as RectTransform;
+
+            //RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, worldToScreenPointVector, LevelManager.global.SceneCamera, out Vector2 pointVector);
+
+
+            //    ImageRect.gameObject.SetActive(worldToScreenPointVector.z > 0);
+
+            Vector2 velocity = pointVector - ImageRect.anchoredPosition;
+            Vector2 canvasSize = canvasRect.sizeDelta;
+            Vector2 imagePosition = ImageRect.anchoredPosition;
+            // Calculate the boundaries of the canvas
+            float leftBoundary = -canvasSize.x / 2;
+            float rightBoundary = canvasSize.x / 2;
+            float bottomBoundary = -canvasSize.y / 2;
+            float topBoundary = canvasSize.y / 2;
+
+            bool leftBool = imagePosition.x < leftBoundary;
+            bool rightBool = imagePosition.x > rightBoundary;
+            bool topBool = imagePosition.y > topBoundary;
+            bool bottomBool = imagePosition.y > topBoundary;
+
+            // Check if the image is outside the canvas boundaries
+            bool isOutsideCanvas = leftBool || rightBool || bottomBool || topBool;
+
+            // Clamp the image's position within the canvas boundaries
+            float clampedX = Mathf.Clamp(pointVector.x, leftBoundary, rightBoundary);
+            float clampedY = Mathf.Clamp(pointVector.y, bottomBoundary, topBoundary);
+
+            ImageRect.localEulerAngles = Vector3.zero;
+
+            if (rightBool)
+                ImageRect.localEulerAngles = new Vector3(0, 0, 90);
+
+            if (leftBool)
+                ImageRect.localEulerAngles = new Vector3(0, 0, -90);
+
+            if (topBool)
+                ImageRect.localEulerAngles = new Vector3(0, 0, 180);
+
+            ImageRect.anchoredPosition = Vector2.SmoothDamp(ImageRect.anchoredPosition, new Vector2(clampedX, clampedY), ref velocity, 3 * Time.fixedDeltaTime);
+        }
+    }
+
+    void Awake()
+    {
+        global = this;
+    }
 
     private void LateUpdate()
     {
-        Draw();
+        for (int i = 0; i < IndicatorList.Count; i++)
+        {
+            IndicatorList[i].Refresh();
+        }
     }
 
-    private void Draw()
+    public void AddIndicator(Transform target)
     {
-        //for (int i = 0; i < LevelManager.global.enemyList.Count; i++)
-        //{
-            //Vector3 screenpos = Camera.main.WorldToScreenPoint(LevelManager.global.enemyList[i].transform.position);
-        Vector3 screenpos = Camera.main.WorldToScreenPoint(enemy.transform.position);
+        IndicatorData indicatorData = new IndicatorData();
 
-        if (screenpos.z < 0)
-            {
-                screenpos *= -1;
-            }
+        indicatorData.target = target;
 
-            Vector3 screenCenter = new Vector3(Screen.width, Screen.height, 0) / 2;
+        indicatorData.ImageRect = Instantiate(arrowPrefab, transform).GetComponent<RectTransform>();
 
-            screenpos -= screenCenter;
-
-            float angle = Mathf.Atan2(screenpos.y, screenpos.x);
-            angle -= 90 * Mathf.Deg2Rad;
-
-            float cos = Mathf.Cos(angle);
-            float sin = -Mathf.Sin(angle);
-
-            screenpos = screenCenter + new Vector3(sin * 150, cos * 150, 0);
-
-            float m = cos / sin;
-
-            Vector3 screenBounds = screenCenter * 0.9f;
-
-            if (cos > 0)
-            {
-                screenpos = new Vector3(screenBounds.y / m, screenBounds.y, 0);
-            }
-            else
-            {
-                screenpos = new Vector3(-screenBounds.y / m, -screenBounds.y, 0);
-            }
-
-            if (screenpos.x > screenBounds.x)
-            {
-                screenpos = new Vector3(screenBounds.x, screenBounds.x * m, 0);
-            }
-            else if (screenpos.x < -screenBounds.x)
-            {
-                screenpos = new Vector3(-screenBounds.x, -screenBounds.x * m, 0);
-            }
-
-            screenpos += screenCenter;
-
-            arrowPrefab.transform.localPosition = screenpos;
-            arrowPrefab.transform.localRotation = Quaternion.Euler(0, 0, angle * Mathf.Rad2Deg);
-        //}
+        IndicatorList.Add(indicatorData);
     }
 }
