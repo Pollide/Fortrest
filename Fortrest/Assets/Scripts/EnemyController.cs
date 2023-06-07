@@ -225,7 +225,8 @@ public class EnemyController : MonoBehaviour
             Time.timeScale = 1;
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyDead1Sound : GameManager.global.EnemyDead2Sound, 1, true, 0, false, transform);
             PlayerController.global.enemyList.Remove(transform);
-            agent.enabled = false;           
+            agent.enabled = false;
+            LevelManager.global.enemyList.Remove(gameObject);
             Destroy(gameObject);
         }
     }
