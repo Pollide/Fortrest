@@ -28,6 +28,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     private GameObject editorBox;
     private bool generationSucessful = true; // Confirmation bool
     private bool biomeWide = false;
+    bool AutoAddAllTerrainTextures = true;
     public List<Texture> SelectTexturesList = new List<Texture>();
     // Visual variables
     GUISkin skin; // Skin variable
@@ -145,12 +146,17 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     void PlaceButtons()
     {
+        GUIStyle customButtonStyle = new GUIStyle();
+        customButtonStyle.alignment = TextAnchor.MiddleCenter;
+
         EditorGUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
 
         CreateButton("Boulder");
         CreateButton("Bush");
         CreateButton("Tree");
 
+        GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
@@ -158,13 +164,14 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         EditorGUILayout.EndHorizontal();
 
         EditorGUILayout.BeginHorizontal();
-
+        GUILayout.FlexibleSpace();
         // CreateButton("Sand");
         // CreateButton("Grass");
         //CreateButton("Dirt");
 
         SetTerrainTextures();
-
+        AutoAddAllTerrainTextures = false; //on the first frame, the terrain buttons should all be selected on default
+        GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
     }
 
@@ -211,6 +218,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             EditorGUILayout.TextArea("Below zero is sea level!", ReturnGUIStyle(15));
         }
 
+
         GeneratedList.maxY = EditorGUILayout.FloatField("Highest spawn height", GeneratedList.maxY);
 
         if (GUILayout.Button("Generate", ReturnGUIStyle(30, "button")))
@@ -220,7 +228,12 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         if (!generationSucessful)
         {
-            EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15));
+            EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15, color: Color.red));
+        }
+
+        if (SelectTexturesList.Count == 0)
+        {
+            EditorGUILayout.TextArea("Nothing will generate as you haven't selected a terrain texture!", ReturnGUIStyle(15, color: Color.red));
         }
 
         if (GUILayout.Button("Delete", ReturnGUIStyle(30, "button")))
@@ -258,13 +271,16 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     public void CreateButton(string prefabNameString, Texture texture = null)
     {
+
         bool terrainBool = texture != null;
 
         if (!terrainBool)
             texture = (Texture)Resources.Load("WindowImages/" + prefabNameString);
 
+
         GUIContent buttonContent = new GUIContent(texture);
         buttonContent.text = prefabNameString;
+        buttonContent.tooltip = prefabNameString;
 
         GameObject chosenPrefab = Resources.Load<GameObject>("WindowPrefabs/" + prefabNameString);
 
@@ -274,6 +290,10 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         if (terrainBool)
         {
+            if (AutoAddAllTerrainTextures)
+            {
+                SelectTexturesList.Add(texture);
+            }
             selectedBool = SelectTexturesList.Contains(texture);
         }
         else
@@ -281,11 +301,13 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             selectedBool = chosenPrefab == newResourcePrefab;
         }
 
-        customButtonStyle.normal.background = MakeTexture(100, 100, selectedBool ? Color.red : Color.grey);
+        customButtonStyle.normal.background = MakeTexture(100, 100, selectedBool ? (new Color(0, 0.2f, 0)) : Color.grey);
         customButtonStyle.fixedWidth = 100;
         customButtonStyle.fixedHeight = 100;
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
-
+        customButtonStyle.imagePosition = ImagePosition.ImageAbove;
+        customButtonStyle.padding = new RectOffset(2, 2, 10, 2);
+        // EditorGUILayout.BeginVertical();
         if (GUILayout.Button(buttonContent, customButtonStyle))
         {
             if (terrainBool)
@@ -304,16 +326,18 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
                 newResourcePrefab = chosenPrefab;
             }
         }
+
+        //  EditorGUILayout.EndVertical();
     }
 
     ///<summary>
     ///Changes the text style more easily
     ///</summary>
-    GUIStyle ReturnGUIStyle(int fontSize = 30, string type = "")
+    GUIStyle ReturnGUIStyle(int fontSize = 30, string type = "", Color color = default)
     {
         GUIStyle headStyle = type == "" ? new GUIStyle() : new GUIStyle(type); //only input a type if it has a value, else skip and just return the default GUIStyle()
         headStyle.fontSize = fontSize;
-        headStyle.normal.textColor = Color.white;
+        headStyle.normal.textColor = color == default ? Color.white : color;
 
         return headStyle;
     }
