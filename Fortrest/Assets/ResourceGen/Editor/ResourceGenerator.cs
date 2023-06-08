@@ -69,16 +69,16 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         editorBox = Resources.Load<GameObject>("ResourceGenDisplayBox");
         GameObject editBox = PrefabUtility.InstantiatePrefab(editorBox) as GameObject;
         editorBox = editBox;
-        editorBox.transform.position = GeneratedList.CalculatePosition();
-        editorBox.transform.position = new Vector3 (editorBox.transform.position.x, GeneratedList.maxY - GeneratedList.minY, editorBox.transform.position.z);
-        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
+        //editorBox.transform.position = GeneratedList.CalculatePosition();
+        //editorBox.transform.position = new Vector3 (editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
+        //editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
     private void OnFocus()
     {
-        editorBox.transform.position = GeneratedList.CalculatePosition();
-        editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.maxY - GeneratedList.minY, editorBox.transform.position.z);
-        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
+        //editorBox.transform.position = GeneratedList.CalculatePosition();
+        //editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
+        //editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
     // Window editing
@@ -90,7 +90,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         PlaceButtons();
         ParametersAndGeneration();
         editorBox.transform.position = GeneratedList.CalculatePosition();
-        editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.maxY - GeneratedList.minY, editorBox.transform.position.z);
+        editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
         editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
