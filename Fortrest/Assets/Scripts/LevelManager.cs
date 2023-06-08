@@ -272,7 +272,7 @@ public class LevelManager : MonoBehaviour
         float fraction = 0.0f;
         while (fraction < 1.0f)
         {
-            Debug.Log(fraction);
+            //   Debug.Log(fraction);
             fraction = DaylightTimer / 180.0f;
             enemyNumberText.color = textGradient.Evaluate(fraction);
             enemyNumberText2.color = textGradient.Evaluate(fraction);
@@ -280,7 +280,7 @@ public class LevelManager : MonoBehaviour
         }
     }
 
-        void LockCursor()
+    void LockCursor()
     {
         if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
