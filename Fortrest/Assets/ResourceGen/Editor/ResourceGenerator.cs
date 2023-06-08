@@ -150,6 +150,15 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         EditorGUILayout.EndHorizontal();
     }
 
+    void SetTerrainTextures()
+    {
+        Terrain terrain = Terrain.activeTerrain;
+        for (int i = 0; i < terrain.terrainData.terrainLayers.Length; i++)
+        {
+            Debug.Log("i: " + terrain.terrainData.terrainLayers[i]);
+        }
+    }
+
     ///<summary>
     ///Creates the input fields, checks validity of input, generates resources
     ///</summary>
