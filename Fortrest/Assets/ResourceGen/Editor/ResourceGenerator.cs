@@ -16,7 +16,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.AnimatedValues; // To play animations in the window
 using System.IO; // To access in and out filing
-
+using System.Collections.Generic;
 public class ResourceGenerator : EditorWindow // To access the editor features, change MonoBehaviour to this
 {
     // String variables for file paths and error display
@@ -28,7 +28,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     private GameObject editorBox;
     private bool generationSucessful = true; // Confirmation bool
     private bool biomeWide = false;
-
+    public List<Texture> SelectTexturesList = new List<Texture>();
     // Visual variables
     GUISkin skin; // Skin variable
     //AnimBool AnimatedValue; // Animation variable     
@@ -70,7 +70,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         GameObject editBox = PrefabUtility.InstantiatePrefab(editorBox) as GameObject;
         editorBox = editBox;
         editorBox.transform.position = GeneratedList.CalculatePosition();
-        editorBox.transform.position = new Vector3 (editorBox.transform.position.x, GeneratedList.maxY - GeneratedList.minY, editorBox.transform.position.z);
+        editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.maxY - GeneratedList.minY, editorBox.transform.position.z);
         editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
@@ -159,9 +159,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         EditorGUILayout.BeginHorizontal();
 
-        CreateButton("Sand");
-        CreateButton("Grass");
-        CreateButton("Dirt");
+        // CreateButton("Sand");
+        // CreateButton("Grass");
+        //CreateButton("Dirt");
+
+        SetTerrainTextures();
 
         EditorGUILayout.EndHorizontal();
     }
@@ -171,7 +173,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         Terrain terrain = Terrain.activeTerrain;
         for (int i = 0; i < terrain.terrainData.terrainLayers.Length; i++)
         {
-            Debug.Log("i: " + terrain.terrainData.terrainLayers[i]);
+            // Debug.Log("i: " + terrain.terrainData.terrainLayers[i]);
+            CreateButton(terrain.terrainData.terrainLayers[i].diffuseTexture.name, terrain.terrainData.terrainLayers[i].diffuseTexture);
         }
     }
 
@@ -253,9 +256,13 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///<summary>
     ///Creates buttons with textures and a background behind them that changes color when selected
     ///</summary>
-    public void CreateButton(string prefabNameString)
+    public void CreateButton(string prefabNameString, Texture texture = null)
     {
-        Texture texture = (Texture)Resources.Load("WindowImages/" + prefabNameString);
+        bool terrainBool = texture != null;
+
+        if (!terrainBool)
+            texture = (Texture)Resources.Load("WindowImages/" + prefabNameString);
+
         GUIContent buttonContent = new GUIContent(texture);
         buttonContent.text = prefabNameString;
 
@@ -263,14 +270,39 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         GUIStyle customButtonStyle = new GUIStyle(GUI.skin.button);
 
-        customButtonStyle.normal.background = MakeTexture(100, 100, chosenPrefab == newResourcePrefab ? Color.red : Color.grey);
+        bool selectedBool;
+
+        if (terrainBool)
+        {
+            selectedBool = SelectTexturesList.Contains(texture);
+        }
+        else
+        {
+            selectedBool = chosenPrefab == newResourcePrefab;
+        }
+
+        customButtonStyle.normal.background = MakeTexture(100, 100, selectedBool ? Color.red : Color.grey);
         customButtonStyle.fixedWidth = 100;
         customButtonStyle.fixedHeight = 100;
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
 
         if (GUILayout.Button(buttonContent, customButtonStyle))
         {
-            newResourcePrefab = chosenPrefab;
+            if (terrainBool)
+            {
+                if (selectedBool)
+                {
+                    SelectTexturesList.Remove(texture);
+                }
+                else
+                {
+                    SelectTexturesList.Add(texture);
+                }
+            }
+            else
+            {
+                newResourcePrefab = chosenPrefab;
+            }
         }
     }
 
