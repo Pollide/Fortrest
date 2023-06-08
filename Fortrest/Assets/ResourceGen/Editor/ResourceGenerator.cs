@@ -48,7 +48,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     {
         ResourceGenerator window = (ResourceGenerator)GetWindow(typeof(ResourceGenerator)); // Sets the title of the window
         window.minSize = new Vector2(minX, minY); // Minimal window size
-        window.maxSize = new Vector2(minX * 1.2f, minY * 1.2f); // Maximal window size
+        window.maxSize = new Vector2(minX * 1.5f, minY * 1.5f); // Maximal window size
 
         //if (File.Exists(CustomPath + SavedFile)) // Checks if the file exists to prevent error
         //{
@@ -70,12 +70,15 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         GameObject editBox = PrefabUtility.InstantiatePrefab(editorBox) as GameObject;
         editorBox = editBox;
         editorBox.transform.position = GeneratedList.CalculatePosition();
-        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, 5f, GeneratedList.rangeHeight);
+        editorBox.transform.position = new Vector3 (editorBox.transform.position.x, GeneratedList.maxY - GeneratedList.minY, editorBox.transform.position.z);
+        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
     private void OnFocus()
     {
         editorBox.transform.position = GeneratedList.CalculatePosition();
+        editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.maxY - GeneratedList.minY, editorBox.transform.position.z);
+        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
     // Window editing
@@ -87,7 +90,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         PlaceButtons();
         ParametersAndGeneration();
         editorBox.transform.position = GeneratedList.CalculatePosition();
-        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, 5f, GeneratedList.rangeHeight);
+        editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.maxY - GeneratedList.minY, editorBox.transform.position.z);
+        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
     ///<summary>
@@ -146,6 +150,18 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         CreateButton("Boulder");
         CreateButton("Bush");
         CreateButton("Tree");
+
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Select a terrain type", skin.GetStyle("Sexy2"));
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+
+        CreateButton("Sand");
+        CreateButton("Grass");
+        CreateButton("Dirt");
 
         EditorGUILayout.EndHorizontal();
     }
@@ -222,7 +238,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         texture.SetPixels(pixels);
         texture.Apply();
 
-
         return texture;
     }
 
@@ -243,8 +258,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         customButtonStyle.fixedWidth = 100;
         customButtonStyle.fixedHeight = 100;
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
-
-
 
         if (GUILayout.Button(buttonContent, customButtonStyle))
         {
