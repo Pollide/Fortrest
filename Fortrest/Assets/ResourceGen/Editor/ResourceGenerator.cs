@@ -215,7 +215,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         if (GeneratedList.minY < 0)
         {
-            EditorGUILayout.TextArea("Below zero is sea level!", ReturnGUIStyle(15));
+            EditorGUILayout.TextArea("Below zero is sea level!", ReturnGUIStyle(15, color: Color.red));
         }
 
 
