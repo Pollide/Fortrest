@@ -37,7 +37,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     Rect background; // Background size
     private static float minX = 530.0f;
     private static float minY = 400.0f;
-
+    List<Object> assets = new List<Object>();
     // UNSURE
     // private static bool RunOnStart; // UNSURE
     // [SerializeField] private bool _RunOnStart; // UNSURE
@@ -59,6 +59,51 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         //window.Show(); // Displays the window
     }
 
+    public static int TryGetUnityObjectsOfTypeFromPath<T>(string path, List<T> assetsFound) where T : UnityEngine.Object
+    {
+        string[] filePaths = System.IO.Directory.GetFiles(path);
+
+        int countFound = 0;
+
+        if (filePaths != null && filePaths.Length > 0)
+        {
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                UnityEngine.Object obj = UnityEditor.AssetDatabase.LoadAssetAtPath(filePaths[i], typeof(T));
+                if (obj is T asset)
+                {
+                    countFound++;
+                    if (!assetsFound.Contains(asset))
+                    {
+                        assetsFound.Add(asset);
+                    }
+                }
+            }
+        }
+
+        return countFound;
+    }
+
+    void CreateFolders()
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(ReturnDirectPath());
+
+        if (!directoryInfo.Exists)
+        {
+            directoryInfo.Create();
+            AssetDatabase.Refresh();
+        }
+
+
+        directoryInfo = new DirectoryInfo(ReturnIconPath());
+
+        if (!directoryInfo.Exists)
+        {
+            directoryInfo.Create();
+            AssetDatabase.Refresh();
+        }
+    }
+
     // Function called when the editor window first opens
     private void OnEnable()
     {
@@ -66,8 +111,12 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         //AnimatedValue = new AnimBool(false);
         //AnimatedValue.valueChanged.AddListener(Repaint); // Adding listener for fading animation
         GeneratedList = new GenerateList();
-        skin = Resources.Load<GUISkin>("WindowSkins/ResourceGeneratorSkin");
-        editorBox = Resources.Load<GameObject>("ResourceGenDisplayBox");
+        CreateFolders();
+
+        TryGetUnityObjectsOfTypeFromPath(ReturnDirectPath(), assets);
+
+        skin = Resources.Load<GUISkin>("Generator/ResourceGeneratorSkin");
+        editorBox = Resources.Load<GameObject>("Generator/ResourceGenDisplayBox");
         GameObject editBox = PrefabUtility.InstantiatePrefab(editorBox) as GameObject;
         editorBox = editBox;
         //editorBox.transform.position = GeneratedList.CalculatePosition();
@@ -88,6 +137,13 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         SetColors();
         DrawTitles();
         //SetFont();
+
+        if (!Terrain.activeTerrain)
+        {
+            GUILayout.Label("You need a terrain to begin!", ReturnGUIStyle(30, "", Color.red));
+            return;
+        }
+
         PlaceButtons();
         ParametersAndGeneration();
         editorBox.transform.position = GeneratedList.CalculatePosition();
@@ -152,9 +208,12 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         EditorGUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
 
-        CreateButton("Boulder");
-        CreateButton("Bush");
-        CreateButton("Tree");
+
+        foreach (var asset in assets)
+        {
+            CreateButton(asset.name);
+
+        }
 
         GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
@@ -269,20 +328,36 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///<summary>
     ///Creates buttons with textures and a background behind them that changes color when selected
     ///</summary>
+    ///
+
+    public static string ReturnPathPath()
+    {
+        return UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().name + "/";
+    }
+    public static string ReturnDirectPath()
+    {
+        return "Assets/Resources/" + ReturnPathPath();
+    }
+
+    public static string ReturnIconPath()
+    {
+        return ReturnPathPath() + "Icons/";
+    }
     public void CreateButton(string prefabNameString, Texture texture = null)
     {
 
         bool terrainBool = texture != null;
 
         if (!terrainBool)
-            texture = (Texture)Resources.Load("WindowImages/" + prefabNameString);
-
+        {
+            texture = (Texture)Resources.Load(ReturnIconPath() + prefabNameString);
+        }
 
         GUIContent buttonContent = new GUIContent(texture);
         buttonContent.text = prefabNameString;
         buttonContent.tooltip = prefabNameString;
 
-        GameObject chosenPrefab = Resources.Load<GameObject>("WindowPrefabs/" + prefabNameString);
+        GameObject chosenPrefab = Resources.Load<GameObject>(ReturnPathPath() + prefabNameString);
 
         GUIStyle customButtonStyle = new GUIStyle(GUI.skin.button);
 
