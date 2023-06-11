@@ -18,7 +18,7 @@ public class GenerateList
 
     public Vector3 CalculatePosition()
     {
-        Terrain terrain = GameObject.FindObjectOfType<Terrain>();
+        Terrain terrain = Terrain.activeTerrain;
         Vector3 modifiedTerrainDetails = new Vector3((terrain.GetPosition().x + (terrain.terrainData.size.x / 2)) + positionOnTerrain.x, terrain.GetPosition().y, (terrain.GetPosition().z + (terrain.terrainData.size.z / 2)) + positionOnTerrain.y);
         Vector3 raycastOrigin = new Vector3(modifiedTerrainDetails.x, terrain.terrainData.size.y, modifiedTerrainDetails.z);
         if (Physics.Raycast(raycastOrigin, Vector3.down, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Terrain")))
@@ -31,16 +31,22 @@ public class GenerateList
 
     public bool GenerateResources()
     {
-        Terrain terrain = GameObject.FindObjectOfType<Terrain>();
+        Terrain terrain = Terrain.activeTerrain;
         Transform resourceHolderTransform = GameObject.FindGameObjectWithTag("SceneObjects").transform;
         int stackOverflow = 1000;
 
         float halfWidth = resourcePrefab.GetComponent<SphereCollider>().radius * resourcePrefab.transform.localScale.x;
-        Debug.Log(halfWidth);
+
+        /*
+        for (int i = 0; i < terrain.terrainData.terrainLayers.Length; i++)
+        {
+            Debug.Log("i: " + terrain.terrainData.terrainLayers[i]);
+        }
+        */
 
         for (int i = 0; i < numberOfResources; i++)
         {
-            Vector3 randomRange = new Vector3(Random.Range((-rangeWidth / 2) + halfWidth , (rangeWidth / 2) - halfWidth), 0f, Random.Range((-rangeHeight / 2) + halfWidth, (rangeHeight / 2) - halfWidth));
+            Vector3 randomRange = new Vector3(Random.Range((-rangeWidth / 2) + halfWidth, (rangeWidth / 2) - halfWidth), 0f, Random.Range((-rangeHeight / 2) + halfWidth, (rangeHeight / 2) - halfWidth));
             Vector3 randomPosition = CalculatePosition() + randomRange;
 
             Vector3 raycastOrigin = new Vector3(randomPosition.x, terrain.terrainData.size.y, randomPosition.z);
@@ -81,12 +87,70 @@ public class GenerateList
                 resource.transform.SetParent(resourceHolderTransform);
 
                 PrefabUtility.RecordPrefabInstancePropertyModifications(resource);
+
+                TerrainVoid(hit);
             }
         }
 
         EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
         return true;
     }
+
+    public void TerrainVoid(RaycastHit hit)
+    {
+        Terrain terrain = hit.transform.GetComponent<Terrain>();
+
+        if (terrain)
+        {
+            //   Vector3 terrainPosition = hit.point - terrain.transform.position;
+            //Vector3 mapPosition = new Vector3
+            //  (terrainPosition.x / terrain.terrainData.size.x, 0,
+            //  terrainPosition.z / terrain.terrainData.size.z);
+            //float xCoord = mapPosition.x * terrain.terrainData.alphamapWidth;
+            //float zCoord = mapPosition.z * terrain.terrainData.alphamapHeight;
+
+            string materialNameString = ReturnTerrainTexture(terrain, hit.point).name;
+        }
+    }
+
+
+    static Vector3 ConvertToSplatMapCoordinate(Vector3 hitPositionVector)
+    {
+        Vector3 vecRet = new Vector3();
+        Terrain ter = Terrain.activeTerrain;
+        Vector3 terPosition = ter.transform.position;
+        vecRet.x = ((hitPositionVector.x - terPosition.x) / ter.terrainData.size.x) * ter.terrainData.alphamapWidth;
+        vecRet.z = ((hitPositionVector.z - terPosition.z) / ter.terrainData.size.z) * ter.terrainData.alphamapHeight;
+        return vecRet;
+    }
+
+    public float[,,] CachedSplatmapData;
+    Texture2D ReturnTerrainTexture(Terrain terrain, Vector3 hitPositionVector)
+    {
+        TerrainData mTerrainData = terrain.terrainData;
+
+        if (CachedSplatmapData == default)
+        {
+            //GetAlphamaps is very high on performance so cache it
+            CachedSplatmapData = mTerrainData.GetAlphamaps(0, 0, mTerrainData.alphamapWidth, mTerrainData.alphamapHeight);
+        }
+
+        int mNumTextures = CachedSplatmapData.Length / (mTerrainData.alphamapWidth * mTerrainData.alphamapHeight);
+
+        Vector3 TerrainCord = ConvertToSplatMapCoordinate(hitPositionVector);
+        int ret = 0;
+        float comp = 0f;
+        for (int i = 0; i < mNumTextures; i++)
+        {
+            if (comp < CachedSplatmapData[(int)TerrainCord.z, (int)TerrainCord.x, i])
+            {
+                ret = i;
+            }
+        }
+
+        return mTerrainData.terrainLayers[ret].diffuseTexture;
+    }
+
 
     public void ClearResourceList()
     {

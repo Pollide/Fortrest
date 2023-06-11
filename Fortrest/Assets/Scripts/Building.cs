@@ -90,7 +90,7 @@ public class Building : MonoBehaviour
         // Debug.Log(resourceObject.ToString() + " Drop" + " ");
         for (int i = 0; i < resourceAmount; i++)
         {
-            Instantiate(Resources.Load(resourceObject.ToString() + " Drop"), new Vector3(transform.position.x + Random.Range(-1, 1), transform.position.y + Random.Range(0, 2), transform.position.z + Random.Range(-1, 1)), transform.rotation);
+            Instantiate(Resources.Load("Drops/" + resourceObject.ToString() + " Drop"), new Vector3(transform.position.x + Random.Range(-1, 1), transform.position.y + Random.Range(0, 2), transform.position.z + Random.Range(-1, 1)), transform.rotation);
         }
     }
 
@@ -127,7 +127,6 @@ public class Building : MonoBehaviour
                 LevelManager.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
             }
-
             Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);   
         }
     }

@@ -34,6 +34,7 @@ public class LevelManager : MonoBehaviour
     public GameObject NightLightGameObject;
     public float DaylightTimer;
     public int day = 0;
+    public List<GameObject> enemyList = new List<GameObject>();
 
     public float daySpeed = 2;
     public float GoblinTimer;
@@ -51,8 +52,13 @@ public class LevelManager : MonoBehaviour
     public TMP_Text DayTMP_Text;
     public TMP_Text RemaningTMP_Text;
     public TMP_Text SurvivedTMP_Text;
+    public TMP_Text enemyNumberText;
+    public TMP_Text enemyNumberText2;
 
     private bool locked = true;
+    private bool newDay = false;
+
+    public Gradient textGradient;
 
     private void Awake()
     {
@@ -74,6 +80,7 @@ public class LevelManager : MonoBehaviour
         VFXPebble.Stop();
         VFXSmokePuff.Stop();
         VFXWoodChip.Stop();
+        newDay = true;
     }
 
 
@@ -81,11 +88,11 @@ public class LevelManager : MonoBehaviour
     {
         LockCursor();
 
+        EnemiesTextControl();
+
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
-
-
 
         if (DaylightTimer > 360)
         {
@@ -95,27 +102,32 @@ public class LevelManager : MonoBehaviour
 
             if (day == 1)
             {
+                newDay = true;
                 DayTMP_Text.text = "DAY TWO";
                 RemaningTMP_Text.text = "THREE DAYS LEFT";
             }
             if (day == 2)
             {
+                newDay = true;
                 DayTMP_Text.text = "DAY THREE";
                 RemaningTMP_Text.text = "TWO DAYS LEFT";
             }
             if (day == 3)
             {
+                newDay = true;
                 DayTMP_Text.text = "DAY FOUR";
                 RemaningTMP_Text.text = "ONE DAY LEFT";
             }
             if (day == 4)
             {
+                newDay = true;
                 DayTMP_Text.text = "DAY FIVE";
                 RemaningTMP_Text.text = "FINAL DAY";
             }
 
             if (day == 5)
             {
+                newDay = true;
                 DayTMP_Text.text = "YOU SURVIVED";
                 RemaningTMP_Text.text = "How much longer can you survive?";
 
@@ -123,6 +135,7 @@ public class LevelManager : MonoBehaviour
 
             if (day > 5)
             {
+                newDay = true;
                 DayTMP_Text.text = "DAY " + (day + 1).ToString();
                 RemaningTMP_Text.text = "Highscore: " + (PlayerPrefs.GetInt("Number of Days") + 1);
 
@@ -155,6 +168,7 @@ public class LevelManager : MonoBehaviour
 
             GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
 
+            enemyList.Add(goblin);
         }
 
         NightLightGameObject.SetActive(nightTimeBool);
@@ -239,6 +253,31 @@ public class LevelManager : MonoBehaviour
             return;
 
         //HandleMouse();
+    }
+
+    void EnemiesTextControl()
+    {
+        //if (enemyList.Count > 0)
+        enemyNumberText.text = enemyList.Count.ToString();
+
+        if (newDay)
+        {
+            newDay = false;
+            StartCoroutine(TextAppearing());
+        }
+    }
+
+    private IEnumerator TextAppearing()
+    {
+        float fraction = 0.0f;
+        while (fraction < 1.0f)
+        {
+            //   Debug.Log(fraction);
+            fraction = DaylightTimer / 180.0f;
+            enemyNumberText.color = textGradient.Evaluate(fraction);
+            enemyNumberText2.color = textGradient.Evaluate(fraction);
+            yield return null;
+        }
     }
 
     void LockCursor()

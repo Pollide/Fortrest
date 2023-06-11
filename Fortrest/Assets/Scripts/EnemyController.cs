@@ -42,6 +42,7 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
         speed = agent.speed;
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
+        Indicator.global.AddIndicator(transform);
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
         knockBackScript = GetComponent<KnockBack>();
     }
@@ -51,7 +52,7 @@ public class EnemyController : MonoBehaviour
         if (!knockBackScript)
         {
             return;
-        }          
+        }
 
         if (!agent.isOnNavMesh)
         {
@@ -69,13 +70,25 @@ public class EnemyController : MonoBehaviour
             chasing = true;
         }
 
+        if (bestTarget != null)
+        {
+            if (bestTarget.CompareTag("Turret"))
+            {
+                agent.stoppingDistance = 4.5f;
+            }
+            else
+            {
+                agent.stoppingDistance = 2f;
+            }
+        }
+
         if (chasing)
         {
             bestTarget = playerPosition;
 
             if (LevelManager.global.BuildingList.Count != 0) // If there are still targets other than the player
             {
-                Invoke("ChasePlayerTimer", 5.0f); // Enemy stops chasing the player after 5s
+                Invoke("ChasePlayerTimer", 10.0f); // Enemy stops chasing the player after 5s
 
                 float chaseDistance = Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position); // TEMPORARY EASY CODE
 
@@ -90,7 +103,7 @@ public class EnemyController : MonoBehaviour
             {
                 agent.SetDestination(bestTarget.position); // Makes the AI move
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.75f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.25f) // Checks if enemy reached target
                 {
                     FaceTarget();
                     attackTimer++;
@@ -104,10 +117,8 @@ public class EnemyController : MonoBehaviour
                         }
                     }
                 }
-                ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
+                ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.25f);
             }
-
-
         }
         else
         {
@@ -122,18 +133,9 @@ public class EnemyController : MonoBehaviour
                         if (compare < shortestDistance) // Only true if a new shorter distance is found
                         {
                             shortestDistance = compare; // New shortest distance is assigned
-                            bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
-                            
-                            if (bestTarget.CompareTag("Turret"))
-                            {
-                                agent.stoppingDistance = 4.5f;
-                            }
-                            else
-                            {
-                                agent.stoppingDistance = 1f;
-                            }
+                            bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list                                                     
 
-                            ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.6f);
+                            ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.25f);
                         }
                     }
                 }
@@ -141,10 +143,9 @@ public class EnemyController : MonoBehaviour
 
             else
             {
-                
                 agent.SetDestination(bestTarget.position); // Sets the nav mesh agent destination
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.6f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.25f) // Checks if enemy reached target
                 {
                     attackTimer++;
                     Building building = bestTarget.GetComponent<Building>();
@@ -225,7 +226,8 @@ public class EnemyController : MonoBehaviour
             Time.timeScale = 1;
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyDead1Sound : GameManager.global.EnemyDead2Sound, 1, true, 0, false, transform);
             PlayerController.global.enemyList.Remove(transform);
-            agent.enabled = false;           
+            agent.enabled = false;
+            LevelManager.global.enemyList.Remove(gameObject);
             Destroy(gameObject);
         }
     }
@@ -257,7 +259,7 @@ public class EnemyController : MonoBehaviour
         {
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
             {
-                knockBackScript.knock = true;               
+                knockBackScript.knock = true;
                 canBeDamaged = false;
                 StopAllCoroutines();
                 ScreenShake.global.shake = true;
@@ -267,5 +269,5 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-    }    
+    }
 }

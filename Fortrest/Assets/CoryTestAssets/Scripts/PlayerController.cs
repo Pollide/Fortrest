@@ -33,8 +33,8 @@ public class PlayerController : MonoBehaviour
     public float attackTimer = 0.0f;
     private float resetAttack = 0.75f;
     public float comboTimer = 0.0f;
-    private float resetCombo = 1.0f; 
-    public int attackCount = 0;   
+    private float resetCombo = 1.0f;
+    public int attackCount = 0;
 
     CharacterController playerCC;
     public Animator CharacterAnimator;
@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
     public GameObject bodyShape;
     public GameObject interactText1;
     public GameObject interactText2;
+    public GameObject interactText3;
 
     public VisualEffect VFXSlash;
     public VisualEffect VFXSleeping;
@@ -283,14 +284,14 @@ public class PlayerController : MonoBehaviour
             }
             else if (attackCount == 1)
             {
-                comboTimer = 0;           
+                comboTimer = 0;
                 CharacterAnimator.SetTrigger("Swing2"); // Play different animation here
                 attackCount++;
                 ApplyEnergyDamage(3.0f, true);
             }
             else if (attackCount == 2)
             {
-                comboTimer = 0;               
+                comboTimer = 0;
                 CharacterAnimator.SetTrigger("Swing3"); // Play different animation here
                 attackCount = 0;
                 ApplyEnergyDamage(5.0f, true);
@@ -350,7 +351,7 @@ public class PlayerController : MonoBehaviour
 
     private void Sleep()
     {
-        if (Input.GetKeyDown(KeyCode.E) && (interactText2 || interactText1.activeSelf))
+        if (Input.GetKeyDown(KeyCode.E) && (interactText2.activeSelf || interactText1.activeSelf || interactText3.activeSelf))
         {
             if (!repaired)
             {
@@ -374,6 +375,8 @@ public class PlayerController : MonoBehaviour
                     playerCC.enabled = false;
                     soundPlaying = false;
                     sleeping = true;
+                    interactText2.SetActive(false);
+                    interactText3.SetActive(true);
                 }
                 else
                 {
@@ -384,6 +387,8 @@ public class PlayerController : MonoBehaviour
                     bodyShape.SetActive(true);
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
+                    interactText2.SetActive(true);
+                    interactText3.SetActive(false);
                 }
             }
         }

@@ -16,7 +16,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.AnimatedValues; // To play animations in the window
 using System.IO; // To access in and out filing
-
+using System.Collections.Generic;
 public class ResourceGenerator : EditorWindow // To access the editor features, change MonoBehaviour to this
 {
     // String variables for file paths and error display
@@ -28,7 +28,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     private GameObject editorBox;
     private bool generationSucessful = true; // Confirmation bool
     private bool biomeWide = false;
-
+    bool AutoAddAllTerrainTextures = true;
+    public List<Texture> SelectTexturesList = new List<Texture>();
     // Visual variables
     GUISkin skin; // Skin variable
     //AnimBool AnimatedValue; // Animation variable     
@@ -36,7 +37,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     Rect background; // Background size
     private static float minX = 530.0f;
     private static float minY = 400.0f;
-
+    List<Object> assets = new List<Object>();
     // UNSURE
     // private static bool RunOnStart; // UNSURE
     // [SerializeField] private bool _RunOnStart; // UNSURE
@@ -48,7 +49,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     {
         ResourceGenerator window = (ResourceGenerator)GetWindow(typeof(ResourceGenerator)); // Sets the title of the window
         window.minSize = new Vector2(minX, minY); // Minimal window size
-        window.maxSize = new Vector2(minX * 1.2f, minY * 1.2f); // Maximal window size
+        window.maxSize = new Vector2(minX * 1.5f, minY * 1.5f); // Maximal window size
 
         //if (File.Exists(CustomPath + SavedFile)) // Checks if the file exists to prevent error
         //{
@@ -58,6 +59,51 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         //window.Show(); // Displays the window
     }
 
+    public static int TryGetUnityObjectsOfTypeFromPath<T>(string path, List<T> assetsFound) where T : UnityEngine.Object
+    {
+        string[] filePaths = System.IO.Directory.GetFiles(path);
+
+        int countFound = 0;
+
+        if (filePaths != null && filePaths.Length > 0)
+        {
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                UnityEngine.Object obj = UnityEditor.AssetDatabase.LoadAssetAtPath(filePaths[i], typeof(T));
+                if (obj is T asset)
+                {
+                    countFound++;
+                    if (!assetsFound.Contains(asset))
+                    {
+                        assetsFound.Add(asset);
+                    }
+                }
+            }
+        }
+
+        return countFound;
+    }
+
+    void CreateFolders()
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(ReturnDirectPath());
+
+        if (!directoryInfo.Exists)
+        {
+            directoryInfo.Create();
+            AssetDatabase.Refresh();
+        }
+
+
+        directoryInfo = new DirectoryInfo(ReturnIconPath());
+
+        if (!directoryInfo.Exists)
+        {
+            directoryInfo.Create();
+            AssetDatabase.Refresh();
+        }
+    }
+
     // Function called when the editor window first opens
     private void OnEnable()
     {
@@ -65,17 +111,24 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         //AnimatedValue = new AnimBool(false);
         //AnimatedValue.valueChanged.AddListener(Repaint); // Adding listener for fading animation
         GeneratedList = new GenerateList();
-        skin = Resources.Load<GUISkin>("WindowSkins/ResourceGeneratorSkin");
-        editorBox = Resources.Load<GameObject>("ResourceGenDisplayBox");
+        CreateFolders();
+
+        TryGetUnityObjectsOfTypeFromPath(ReturnDirectPath(), assets);
+
+        skin = Resources.Load<GUISkin>("Generator/ResourceGeneratorSkin");
+        editorBox = Resources.Load<GameObject>("Generator/ResourceGenDisplayBox");
         GameObject editBox = PrefabUtility.InstantiatePrefab(editorBox) as GameObject;
         editorBox = editBox;
-        editorBox.transform.position = GeneratedList.CalculatePosition();
-        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, 5f, GeneratedList.rangeHeight);
+        //editorBox.transform.position = GeneratedList.CalculatePosition();
+        //editorBox.transform.position = new Vector3 (editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
+        //editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
     private void OnFocus()
     {
-        editorBox.transform.position = GeneratedList.CalculatePosition();
+        //editorBox.transform.position = GeneratedList.CalculatePosition();
+        //editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
+        //editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
     // Window editing
@@ -84,10 +137,20 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         SetColors();
         DrawTitles();
         //SetFont();
+
+        if (!Terrain.activeTerrain)
+        {
+            GUILayout.Label("You need a terrain to begin!", ReturnGUIStyle(30, "", Color.red));
+            return;
+        }
+
+        Terrain.activeTerrain.gameObject.layer = LayerMask.NameToLayer("Terrain");
+
         PlaceButtons();
         ParametersAndGeneration();
         editorBox.transform.position = GeneratedList.CalculatePosition();
-        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, 5f, GeneratedList.rangeHeight);
+        editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
+        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
     }
 
     ///<summary>
@@ -141,13 +204,46 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     void PlaceButtons()
     {
+        GUIStyle customButtonStyle = new GUIStyle();
+        customButtonStyle.alignment = TextAnchor.MiddleCenter;
+
         EditorGUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
 
-        CreateButton("Boulder");
-        CreateButton("Bush");
-        CreateButton("Tree");
 
+        foreach (var asset in assets)
+        {
+            CreateButton(asset.name);
+
+        }
+
+        GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Label("Select a terrain type", skin.GetStyle("Sexy2"));
+        EditorGUILayout.EndHorizontal();
+
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        // CreateButton("Sand");
+        // CreateButton("Grass");
+        //CreateButton("Dirt");
+
+        SetTerrainTextures();
+        AutoAddAllTerrainTextures = false; //on the first frame, the terrain buttons should all be selected on default
+        GUILayout.FlexibleSpace();
+        EditorGUILayout.EndHorizontal();
+    }
+
+    void SetTerrainTextures()
+    {
+        Terrain terrain = Terrain.activeTerrain;
+        for (int i = 0; i < terrain.terrainData.terrainLayers.Length; i++)
+        {
+            // Debug.Log("i: " + terrain.terrainData.terrainLayers[i]);
+            CreateButton(terrain.terrainData.terrainLayers[i].diffuseTexture.name, terrain.terrainData.terrainLayers[i].diffuseTexture);
+        }
     }
 
     ///<summary>
@@ -180,8 +276,9 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         if (GeneratedList.minY < 0)
         {
-            EditorGUILayout.TextArea("Below zero is sea level!", ReturnGUIStyle(15));
+            EditorGUILayout.TextArea("Below zero is sea level!", ReturnGUIStyle(15, color: Color.red));
         }
+
 
         GeneratedList.maxY = EditorGUILayout.FloatField("Highest spawn height", GeneratedList.maxY);
 
@@ -192,7 +289,12 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         if (!generationSucessful)
         {
-            EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15));
+            EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15, color: Color.red));
+        }
+
+        if (SelectTexturesList.Count == 0 && Terrain.activeTerrain.terrainData.terrainLayers.Length > 0)
+        {
+            EditorGUILayout.TextArea("Nothing will generate as you haven't selected a terrain texture!", ReturnGUIStyle(15, color: Color.red));
         }
 
         if (GUILayout.Button("Delete", ReturnGUIStyle(30, "button")))
@@ -222,44 +324,97 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         texture.SetPixels(pixels);
         texture.Apply();
 
-
         return texture;
     }
 
     ///<summary>
     ///Creates buttons with textures and a background behind them that changes color when selected
     ///</summary>
-    public void CreateButton(string prefabNameString)
+    ///
+
+    public static string ReturnPathPath()
     {
-        Texture texture = (Texture)Resources.Load("WindowImages/" + prefabNameString);
+        return UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().name + "/";
+    }
+    public static string ReturnDirectPath()
+    {
+        return "Assets/Resources/" + ReturnPathPath();
+    }
+
+    public static string ReturnIconPath()
+    {
+        return ReturnPathPath() + "Icons/";
+    }
+    public void CreateButton(string prefabNameString, Texture texture = null)
+    {
+
+        bool terrainBool = texture != null;
+
+        if (!terrainBool)
+        {
+            texture = (Texture)Resources.Load(ReturnIconPath() + prefabNameString);
+        }
+
         GUIContent buttonContent = new GUIContent(texture);
         buttonContent.text = prefabNameString;
+        buttonContent.tooltip = prefabNameString;
 
-        GameObject chosenPrefab = Resources.Load<GameObject>("WindowPrefabs/" + prefabNameString);
+        GameObject chosenPrefab = Resources.Load<GameObject>(ReturnPathPath() + prefabNameString);
 
         GUIStyle customButtonStyle = new GUIStyle(GUI.skin.button);
 
-        customButtonStyle.normal.background = MakeTexture(100, 100, chosenPrefab == newResourcePrefab ? Color.red : Color.grey);
+        bool selectedBool;
+
+        if (terrainBool)
+        {
+            if (AutoAddAllTerrainTextures)
+            {
+                SelectTexturesList.Add(texture);
+            }
+            selectedBool = SelectTexturesList.Contains(texture);
+        }
+        else
+        {
+            selectedBool = chosenPrefab == newResourcePrefab;
+        }
+
+        customButtonStyle.normal.background = MakeTexture(100, 100, selectedBool ? (new Color(0, 0.2f, 0)) : Color.grey);
         customButtonStyle.fixedWidth = 100;
         customButtonStyle.fixedHeight = 100;
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
-
-
-
+        customButtonStyle.imagePosition = ImagePosition.ImageAbove;
+        customButtonStyle.padding = new RectOffset(2, 2, 10, 2);
+        // EditorGUILayout.BeginVertical();
         if (GUILayout.Button(buttonContent, customButtonStyle))
         {
-            newResourcePrefab = chosenPrefab;
+            if (terrainBool)
+            {
+                if (selectedBool)
+                {
+                    SelectTexturesList.Remove(texture);
+                }
+                else
+                {
+                    SelectTexturesList.Add(texture);
+                }
+            }
+            else
+            {
+                newResourcePrefab = chosenPrefab;
+            }
         }
+
+        //  EditorGUILayout.EndVertical();
     }
 
     ///<summary>
     ///Changes the text style more easily
     ///</summary>
-    GUIStyle ReturnGUIStyle(int fontSize = 30, string type = "")
+    GUIStyle ReturnGUIStyle(int fontSize = 30, string type = "", Color color = default)
     {
         GUIStyle headStyle = type == "" ? new GUIStyle() : new GUIStyle(type); //only input a type if it has a value, else skip and just return the default GUIStyle()
         headStyle.fontSize = fontSize;
-        headStyle.normal.textColor = Color.white;
+        headStyle.normal.textColor = color == default ? Color.white : color;
 
         return headStyle;
     }
