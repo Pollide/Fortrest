@@ -1,28 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TurretShooting : MonoBehaviour
 {
-    public float turn_speed;
     public Animator animController;
+    public float turn_speed;
     public float shootingRange = 10f;
     public float fireRate = 1f;
+    public float damage = 10;
+    public LayerMask targetLayer;
 
-    private GameObject target;
+    private Transform target;
     private float fireCountdown = 0f;
-
 
     private void Update()
     {
-        if (target == null || !target.activeSelf)
-        {
-            target = FindNearestEnemy();
-        }
+        FindTarget();
 
         if (target != null)
         {
-            Vector3 targetPos = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
+            Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
 
             Vector3 direction = targetPos - transform.position;
 
@@ -53,23 +49,24 @@ public class TurretShooting : MonoBehaviour
         fireCountdown -= Time.deltaTime;
     }
 
-    GameObject FindNearestEnemy()
+    private void FindTarget()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        GameObject nearestEnemy = null;
-        float shortestDistance = Mathf.Infinity;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, shootingRange, targetLayer);
+        float closestDistance = shootingRange;
+        Transform closestTarget = null;
 
-        foreach (GameObject enemy in enemies)
+        foreach (Collider collider in colliders)
         {
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
-            if (distance < shootingRange)
+            Transform target = collider.transform;
+            float distance = Vector3.Distance(transform.position, target.position);
+            if (distance < closestDistance)
             {
-                shortestDistance = distance;
-                nearestEnemy = enemy;
+                closestDistance = distance;
+                closestTarget = target;
             }
         }
 
-        return nearestEnemy;
+        target = closestTarget;
     }
 
 

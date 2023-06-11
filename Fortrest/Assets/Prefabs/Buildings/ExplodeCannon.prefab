@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 8901864397289843043}
   - component: {fileID: 8901864397289843044}
   - component: {fileID: 4772175861363788692}
+  - component: {fileID: 5002399849237893562}
+  - component: {fileID: 8860938454786121619}
   m_Layer: 0
   m_Name: ExplodeCannon
   m_TagString: Untagged
@@ -117,7 +119,7 @@ MonoBehaviour:
     type: 3}
   firePoint: {fileID: 8901864397884832402}
   fireRate: 0.3
-  shootingRange: 30
+  shootingRange: 10
   targetLayer:
     serializedVersion: 2
     m_Bits: 8192
@@ -142,6 +144,67 @@ MonoBehaviour:
   constructionCostWood: 20
   constructionCostStone: 20
   healthBarImage: {fileID: 0}
+--- !u!111 &5002399849237893562
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8901864397289843045}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: f5efc2fc65b599b4eb7c3da1b117b24e, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: f5efc2fc65b599b4eb7c3da1b117b24e, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &8860938454786121619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8901864397289843045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 29a019fc2bee72043b589714c7417c16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackSpeedButtons:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  damageButtons:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  rangeButtons:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  buyUpgradeButton: {fileID: 0}
+  upgradeMenu: {fileID: 0}
+  addKnockBackButton: {fileID: 0}
+  addChanceToKillButton: {fileID: 0}
+  addChanceToMultiShotButton: {fileID: 0}
+  upgradeTextObject: {fileID: 0}
+  uiText: {fileID: 0}
+  detectionRange: 10
+  upgradeASPercent: 5
+  upgradeRangePercent: 5
+  upgradeDamagePercent: 5
+  instantKillPercent: 5
+  knockBackPercentage: 5
+  multiShotPercentage: 5
+  upgradeRankScaleRange: 1
+  upgradeRankScaleDMG: 1
+  upgradeRankScaleAS: 1
+  isInstantKillPercent: 0
+  isKnockBackActive: 0
+  isMultiShotActive: 0
+  specialActive: 0
 --- !u!1 &8901864397793177243
 GameObject:
   m_ObjectHideFlags: 0

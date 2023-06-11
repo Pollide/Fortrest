@@ -35,8 +35,11 @@ public class InventoryManager : MonoBehaviour
 
         inventoryPanel = GameObject.Find("InventoryHolder");
 
-        inventoryPanel.SetActive(false);
-
+        if (inventoryPanel != null)
+        {
+            inventoryPanel.SetActive(false);
+        }
+        
         currentPlayerModes = PlayerModeHandler.global.playerModes;
     }
 
