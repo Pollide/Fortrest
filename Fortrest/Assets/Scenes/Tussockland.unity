@@ -220,7 +220,7 @@ Terrain:
   m_TreeCrossFadeLength: 5
   m_TreeMaximumFullLODCount: 50
   m_DetailObjectDistance: 80
-  m_DetailObjectDensity: 1
+  m_DetailObjectDensity: 0.112
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
   m_HeightmapMaximumLOD: 0
@@ -292,7 +292,7 @@ GameObject:
   - component: {fileID: 1452523094}
   - component: {fileID: 1452523093}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: OceanPlane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -913,6 +913,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_text
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1912844876244651686, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 255
       objectReference: {fileID: 0}
     - target: {fileID: 1963466282386360441, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
