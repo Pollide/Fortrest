@@ -144,6 +144,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             return;
         }
 
+        Terrain.activeTerrain.gameObject.layer = LayerMask.NameToLayer("Terrain");
+
         PlaceButtons();
         ParametersAndGeneration();
         editorBox.transform.position = GeneratedList.CalculatePosition();
@@ -290,7 +292,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15, color: Color.red));
         }
 
-        if (SelectTexturesList.Count == 0)
+        if (SelectTexturesList.Count == 0 && Terrain.activeTerrain.terrainData.terrainLayers.Length > 0)
         {
             EditorGUILayout.TextArea("Nothing will generate as you haven't selected a terrain texture!", ReturnGUIStyle(15, color: Color.red));
         }
