@@ -114,18 +114,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            NextScene(SceneManager.GetActiveScene().buildIndex - 1);
-        }
 
-        if (Input.GetKeyDown(KeyCode.RightShift))
-        {
-            NextScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
-    }
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
     {
@@ -290,7 +279,11 @@ public class GameManager : MonoBehaviour
     //makes a smooth scene transition
     public void NextScene(int index, bool first = false)
     {
-        index = (int)ReturnThresholds(index, SceneManager.sceneCountInBuildSettings - 1);
+        if (index >= SceneManager.sceneCountInBuildSettings)
+        {
+            index = 0;
+        }
+
         //run a coroutine by calling it in GameManager ensures that if the object wont be destroyed and break the coroutine
         StartCoroutine(ChangeSceneIEnumerator(index, first));
 

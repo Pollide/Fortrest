@@ -85,14 +85,12 @@ public class Indicator : MonoBehaviour
 
     public void AddIndicator(Transform target)
     {
-        /*
-          IndicatorData indicatorData = new IndicatorData();
+        IndicatorData indicatorData = new IndicatorData();
 
-          indicatorData.target = target;
+        indicatorData.target = target;
 
-          indicatorData.ImageRect = Instantiate(arrowPrefab, transform).GetComponent<RectTransform>();
+        indicatorData.ImageRect = Instantiate(arrowPrefab, transform).GetComponent<RectTransform>();
 
-          IndicatorList.Add(indicatorData);
-        */
+        IndicatorList.Add(indicatorData);
     }
 }
