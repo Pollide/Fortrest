@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_Pohutakawa
+  m_Name: Mat_CabbageTree
   m_Shader: {fileID: -6465566751694194690, guid: 6d1e564e810b5b04a9227282c1e3218e,
     type: 3}
   m_ValidKeywords:
@@ -21,7 +21,7 @@ Material:
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap:
     RenderType: Transparent
@@ -30,11 +30,11 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: c32a88a95369a3b4db643df067a18cbe, type: 3}
+        m_Texture: {fileID: 2800000, guid: 6914dc0001bd4f3429d80efbb0ae1a0f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Alpha:
-        m_Texture: {fileID: 2800000, guid: 0d79ec731e1879a4b95d76e31f9dfd8c, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1ce5740b11a70dd489db4a4948b59f9f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -70,7 +70,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Metallic:
-        m_Texture: {fileID: 2800000, guid: 143779967f1cb8340abbc9bffab27b0b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 61b59933f9d2a0043a6dff156e0d8423, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -129,7 +129,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Is_Foliage: 0
+    - _Is_Foliage: 1
     - _MAIN_LIGHT_SHADOWS: 1
     - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metallic: 0
@@ -141,34 +141,36 @@ Material:
     - _ReceiveShadows: 1
     - _RimThreshold: 0
     - _SHADOWS_SOFT: 1
-    - _SamplerScale: 1.15
-    - _SamplerTileSpeed: 1.5
+    - _SamplerScale: 0
+    - _SamplerTileSpeed: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 5
     - _Surface: 1
+    - _Testmultiplier: 1
     - _Tiling: 1
     - _Use_Metallic_Textures: 1
     - _Use_Vertex: 1
     - _Use_Vertex_Colours: 0
-    - _WindEffectScale: 0.075
-    - _WindSpeed: 0.69
-    - _Wind_Strength: 0.5
+    - _WindEffectScale: 0
+    - _WindSpeed: 0
+    - _Wind_Strength: 0
     - _WorkflowMode: 1
+    - _WorldPositionInfluenceModifier: 0
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 1
     m_Colors:
     - _Ambient_Color: {r: 0.745283, g: 0.745283, b: 0.745283, a: 0}
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.9245283, g: 0.62934536, b: 0.36196154, a: 1}
+    - _Color: {r: 0.9245283, g: 0.6293453, b: 0.3619615, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _Wind_Movement: {r: 2, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &6142514821783117901
+--- !u!114 &4984530461780079074
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
