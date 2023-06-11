@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class ProjectileExplosion : MonoBehaviour
 {
-    public float explosionRadius = 5f;
+    public float explosionRadius = 3f;
     public float damage = 0.1f;
     public float pushForce = 5f;
     public GameObject explosionEffect;
@@ -24,7 +22,7 @@ public class ProjectileExplosion : MonoBehaviour
     void Update()
     {
         // Move the bullet forward along the Z-axis
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(speed * Time.deltaTime * Vector3.forward);
         timer -= Time.deltaTime; // Decrease the timer based on the elapsed time
 
         // Destroy the bullet if the timer reaches or goes below zero
@@ -46,13 +44,29 @@ public class ProjectileExplosion : MonoBehaviour
 
     void Explode()
     {
+        U_Cannon uCannon = GetComponentInParent<U_Cannon>();
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
         foreach (Collider collider in colliders)
         {
             if (collider.GetComponent<EnemyController>())
             {
-                collider.GetComponent<EnemyController>().Damaged(damage);
+                if (uCannon.isInstantKillPercent)
+                {
+                    float randomRange = Random.Range(0f, 100f);
+                    if (randomRange <= uCannon.instantKillPercent)
+                    {
+                        collider.GetComponent<EnemyController>().Damaged(5000);
+                    }
+                    else
+                    {
+                        collider.GetComponent<EnemyController>().Damaged(damage);
+                    }
+                }
+                else
+                {
+                    collider.GetComponent<EnemyController>().Damaged(damage);
+                }
             }
             
             Rigidbody enemyRigidbody = collider.GetComponent<Rigidbody>();
@@ -77,5 +91,12 @@ public class ProjectileExplosion : MonoBehaviour
         {
             Instantiate(explosionEffect, transform.position, Quaternion.identity);
         }
+
+    }
+    private void OnDrawGizmosSelected()
+    {
+        // Draw a wire sphere in the editor to visualize the tower's radius
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }

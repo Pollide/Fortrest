@@ -10,6 +10,7 @@ public enum PlayerModes
     ResourceMode,
     CombatMode,
     Paused,
+    UpgradeMenu,
 }
 
 public enum BuildType
@@ -248,7 +249,7 @@ public class PlayerModeHandler : MonoBehaviour
     }
 
 
-    private void SetMouseActive(bool isActive)
+    public void SetMouseActive(bool isActive)
     {
         if (isActive == true)
         {

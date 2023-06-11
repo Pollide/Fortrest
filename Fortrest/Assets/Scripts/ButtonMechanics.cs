@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using TMPro;
 using UnityEngine.SceneManagement;
 
 public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
@@ -134,7 +133,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     {
         if (SpeedBool)
         {
-            if (Input.GetMouseButtonDown(1))
+            if (Input.GetMouseButtonDown(1) && PlayerModeHandler.global.playerModes != PlayerModes.Paused && PlayerModeHandler.global.playerModes != PlayerModes.UpgradeMenu)
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
                 OnPointerClick(null);

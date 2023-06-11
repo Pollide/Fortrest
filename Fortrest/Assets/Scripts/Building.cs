@@ -27,7 +27,6 @@ public class Building : MonoBehaviour
         Stone,
         Food,
         House,
-        SlowTower
     }
 
     public BuildingType resourceObject;
@@ -128,16 +127,7 @@ public class Building : MonoBehaviour
                 LevelManager.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
             }
-
-            if (resourceObject != BuildingType.Cannon)
-            {
-                Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
-            }
-            else
-            {
-                NowDestroy();
-            }
-
+            Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);   
         }
     }
 
