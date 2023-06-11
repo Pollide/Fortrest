@@ -109,8 +109,6 @@ public class GenerateList
             //float zCoord = mapPosition.z * terrain.terrainData.alphamapHeight;
 
             string materialNameString = ReturnTerrainTexture(terrain, hit.point).name;
-
-            Debug.Log(materialNameString);
         }
     }
 
