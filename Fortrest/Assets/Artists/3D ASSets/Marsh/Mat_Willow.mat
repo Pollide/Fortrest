@@ -11,12 +11,7 @@ Material:
   m_Shader: {fileID: -6465566751694194690, guid: 6d1e564e810b5b04a9227282c1e3218e,
     type: 3}
   m_ValidKeywords:
-  - _ADDITIONAL_LIGHTS
-  - _ADDITIONAL_LIGHT_SHADOWS
   - _ALPHATEST_ON
-  - _MAIN_LIGHT_SHADOWS
-  - _MAIN_LIGHT_SHADOWS_CASCADE
-  - _SHADOWS_SOFT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -102,8 +97,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ADDITIONAL_LIGHTS: 1
-    - _ADDITIONAL_LIGHT_SHADOWS: 1
+    - _ADDITIONAL_LIGHTS: 0
+    - _ADDITIONAL_LIGHT_SHADOWS: 0
     - _AlphaClip: 1
     - _Ambience_Multiplier: 0
     - _Blend: 0
@@ -128,8 +123,8 @@ Material:
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _Is_Foliage: 0
-    - _MAIN_LIGHT_SHADOWS: 1
-    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
+    - _MAIN_LIGHT_SHADOWS: 0
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 0
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Offset: 0
@@ -138,7 +133,7 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _RimThreshold: 0
-    - _SHADOWS_SOFT: 1
+    - _SHADOWS_SOFT: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
