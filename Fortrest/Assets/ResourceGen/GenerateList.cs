@@ -37,11 +37,12 @@ public class GenerateList
 
         float halfWidth = resourcePrefab.GetComponent<SphereCollider>().radius * resourcePrefab.transform.localScale.x;
 
-
+        /*
         for (int i = 0; i < terrain.terrainData.terrainLayers.Length; i++)
         {
             Debug.Log("i: " + terrain.terrainData.terrainLayers[i]);
         }
+        */
 
         for (int i = 0; i < numberOfResources; i++)
         {

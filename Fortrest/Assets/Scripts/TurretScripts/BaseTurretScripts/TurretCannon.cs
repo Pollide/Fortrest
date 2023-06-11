@@ -11,7 +11,8 @@ public class TurretCannon : MonoBehaviour
     public float fireRate = 1f;
     public float shootingRange = 1f;
     public LayerMask targetLayer;
-
+    public float explosionRadius = 5f;
+    public float damage = 0.1f;
     private Transform target;
     private float fireCountdown = 0f;
 
@@ -56,7 +57,7 @@ public class TurretCannon : MonoBehaviour
             return;
 
         // Calculate the direction to the target
-        Vector3 targetPos = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
+        Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
 
         Vector3 direction = targetPos - transform.position;
 
@@ -64,7 +65,9 @@ public class TurretCannon : MonoBehaviour
         cannonHead.rotation = Quaternion.LookRotation(direction, Vector3.up);
 
         // Spawn a projectile
-        Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        ProjectileExplosion projectile = Instantiate(projectilePrefab, firePoint).GetComponent<ProjectileExplosion>();
+        projectile.explosionRadius = explosionRadius;
+        projectile.damage = damage;
     }
 
     private void OnDrawGizmosSelected()
