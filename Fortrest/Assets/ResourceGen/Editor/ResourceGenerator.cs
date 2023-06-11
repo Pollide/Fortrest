@@ -143,7 +143,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             GUILayout.Label("You need a terrain to begin!", ReturnGUIStyle(30, "", Color.red));
             return;
         }
-
+        if (!GameObject.FindGameObjectWithTag("SceneObjects"))
+        {
+            GUILayout.Label("You need a Level Manager!", ReturnGUIStyle(30, "", Color.red));
+            return;
+        }
         Terrain.activeTerrain.gameObject.layer = LayerMask.NameToLayer("Terrain");
 
         PlaceButtons();
