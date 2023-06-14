@@ -169,7 +169,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     {
         if (clickSound != null)
         {
-            Debug.Log("Loaded");
+            // Debug.Log("Loaded");
         }
         SetColors();
         DrawTitles();
@@ -590,7 +590,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             null
         );
 
-        Debug.Log(method);
+        // Debug.Log(method);
         method.Invoke(
             null,
             new object[] { clip, startSample, loop }
