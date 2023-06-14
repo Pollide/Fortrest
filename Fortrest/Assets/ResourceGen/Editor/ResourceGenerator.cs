@@ -359,7 +359,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         buttonContent.text = prefabNameString;
         buttonContent.tooltip = prefabNameString;
 
-        GameObject chosenPrefab = Resources.Load<GameObject>(ReturnPathPath() + prefabNameString);
 
         GUIStyle customButtonStyle = new GUIStyle(GUI.skin.button);
 
@@ -375,7 +374,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         }
         else
         {
-            selectedBool = chosenPrefab == newResourcePrefab;
+            selectedBool = newResourcePrefab && newResourcePrefab.name.Contains(prefabNameString);
         }
 
         customButtonStyle.normal.background = MakeTexture(100, 100, selectedBool ? (new Color(0, 0.2f, 0)) : Color.grey);
@@ -400,7 +399,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             }
             else
             {
-                newResourcePrefab = chosenPrefab;
+                newResourcePrefab = Resources.Load<GameObject>(ReturnPathPath() + prefabNameString);
             }
         }
 
