@@ -24,13 +24,13 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 {
     // String variables for file paths and error display
     static string CustomPath = "Assets/ResourceGen/";
-
+    public static ResourceGenerator global;
     // Resource generation variables
     private GenerateList GeneratedList; // Resource list object
     private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
     private GameObject editorBox;
     private bool generationSucessful = true; // Confirmation bool
-    public List<Texture> SelectTexturesList = new List<Texture>();
+
     bool resourceSelected = false;
     bool terrainSelected = false;
     bool terrainToggleSelected = false;
@@ -144,7 +144,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         AnimatedValue2.valueChanged.AddListener(Repaint);
         GeneratedList = new GenerateList();
         CreateFolders();
-
+        global = this;
         TryGetUnityObjectsOfTypeFromPath(ReturnDirectPath(), assets);
 
         skin = Resources.Load<GUISkin>("Generator/ResourceGeneratorSkin");
@@ -404,7 +404,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         if (terrainBool)
         {
-            selectedBool = SelectTexturesList.Contains(texture);
+            selectedBool = GeneratedList.SelectTexturesList.Contains(texture);
         }
         else
         {
@@ -424,13 +424,13 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             {
                 if (selectedBool)
                 {
-                    SelectTexturesList.Remove(texture);
+                    GeneratedList.SelectTexturesList.Remove(texture);
                     StopAllClips();
                     PlayClip(click2Sound);
                 }
                 else
                 {
-                    SelectTexturesList.Add(texture);
+                    GeneratedList.SelectTexturesList.Add(texture);
                     StopAllClips();
                     PlayClip(click2Sound);
                 }
@@ -484,7 +484,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         }
 
         // If at least one texture button is selected then this boolean is true
-        if (SelectTexturesList.Count > 0)
+        if (GeneratedList.SelectTexturesList.Count > 0)
         {
             terrainSelected = true;
         }
@@ -509,11 +509,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         {
             AnimatedValue.target = resourceSelected; // Displays if resourceSelected is true
 
-            if (SelectTexturesList.Count > 0) // If a texture was selected when the tickbox was untoggled
+            if (GeneratedList.SelectTexturesList.Count > 0) // If a texture was selected when the tickbox was untoggled
             {
-                for (int i = 0; i < SelectTexturesList.Count; i++) // Unselect all textures
+                for (int i = 0; i < GeneratedList.SelectTexturesList.Count; i++) // Unselect all textures
                 {
-                    SelectTexturesList.Remove(SelectTexturesList[i]);
+                    GeneratedList.SelectTexturesList.Remove(GeneratedList.SelectTexturesList[i]);
                 }
             }
         }
