@@ -87,7 +87,9 @@ public class GenerateList
     public bool ReturnOnTexture(RaycastHit hit)
     {
         Texture2D texture = ReturnTerrainTexture(Terrain.activeTerrain, hit.point);
-        Debug.Log(texture + " -> " + SelectTexturesList.Contains(texture));
+
+        if (SelectTexturesList.Count > 0)
+            Debug.Log(texture + " -> " + SelectTexturesList.Contains(texture));
 
         return SelectTexturesList.Count == 0 || SelectTexturesList.Contains(texture);
     }
