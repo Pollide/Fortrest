@@ -17,6 +17,9 @@ using UnityEditor;
 using UnityEditor.AnimatedValues; // To play animations in the window
 using System.IO; // To access in and out filing
 using System.Collections.Generic;
+using System.Reflection;
+using System;
+
 public class ResourceGenerator : EditorWindow // To access the editor features, change MonoBehaviour to this
 {
     // String variables for file paths and error display
@@ -27,20 +30,47 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
     private GameObject editorBox;
     private bool generationSucessful = true; // Confirmation bool
-    private bool biomeWide = false;
-    bool AutoAddAllTerrainTextures = true;
     public List<Texture> SelectTexturesList = new List<Texture>();
+    bool resourceSelected = false;
+    bool terrainSelected = false;
+    bool terrainToggleSelected = false;
+
     // Visual variables
     GUISkin skin; // Skin variable
-    //AnimBool AnimatedValue; // Animation variable     
+    AnimBool AnimatedValue; // Animation variable
+    AnimBool AnimatedValue2; // Animation variable                        
     Texture2D backgroundTexture; // Background color
     Rect background; // Background size
-    private static float minX = 530.0f;
-    private static float minY = 400.0f;
-    List<Object> assets = new List<Object>();
-    // UNSURE
-    // private static bool RunOnStart; // UNSURE
-    // [SerializeField] private bool _RunOnStart; // UNSURE
+    static float minX = 530.0f;
+    static float minY = 210.0f;
+    float windowXsize;
+    float windowYsize;
+
+    // Not currently used
+    float currentHeight = 0.0f;
+    bool valueStored = false;
+
+    // Sound variables;
+    public AudioClip clickSound;
+    public AudioClip click2Sound;
+    public AudioClip introSound;
+    public AudioClip createSound;
+    public AudioClip destroySound;
+    public AudioClip closeSound;
+    public bool boolChanged = false;
+    public bool boolChanged2 = false;
+    public bool boolChanged3 = false;
+
+    enum WindowSizeEnum
+    {
+        Tiny,
+        Small,
+        Medium,
+        Large
+    };
+    WindowSizeEnum currentWindowSize;
+
+    List<UnityEngine.Object> assets = new List<UnityEngine.Object>();
 
     [MenuItem("Tools/Resource Generator")] // Adds access to the window through the toolbar
 
@@ -49,7 +79,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     {
         ResourceGenerator window = (ResourceGenerator)GetWindow(typeof(ResourceGenerator)); // Sets the title of the window
         window.minSize = new Vector2(minX, minY); // Minimal window size
-        window.maxSize = new Vector2(minX * 1.5f, minY * 1.5f); // Maximal window size
+        window.maxSize = new Vector2(minX, minY);
 
         //if (File.Exists(CustomPath + SavedFile)) // Checks if the file exists to prevent error
         //{
@@ -108,8 +138,10 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     private void OnEnable()
     {
         // Initialising variables
-        //AnimatedValue = new AnimBool(false);
-        //AnimatedValue.valueChanged.AddListener(Repaint); // Adding listener for fading animation
+        AnimatedValue = new AnimBool(false);
+        AnimatedValue.valueChanged.AddListener(Repaint);
+        AnimatedValue2 = new AnimBool(false);
+        AnimatedValue2.valueChanged.AddListener(Repaint);
         GeneratedList = new GenerateList();
         CreateFolders();
 
@@ -119,34 +151,41 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         editorBox = Resources.Load<GameObject>("Generator/ResourceGenDisplayBox");
         GameObject editBox = PrefabUtility.InstantiatePrefab(editorBox) as GameObject;
         editorBox = editBox;
-        //editorBox.transform.position = GeneratedList.CalculatePosition();
-        //editorBox.transform.position = new Vector3 (editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
-        //editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
-    }
+        clickSound = Resources.Load<AudioClip>("Generator/Sound/Click");
+        click2Sound = Resources.Load<AudioClip>("Generator/Sound/Click2");
+        introSound = Resources.Load<AudioClip>("Generator/Sound/Intro");
+        createSound = Resources.Load<AudioClip>("Generator/Sound/Create");
+        destroySound = Resources.Load<AudioClip>("Generator/Sound/Destroy");
+        closeSound = Resources.Load<AudioClip>("Generator/Sound/Close");
 
-    private void OnFocus()
-    {
-        //editorBox.transform.position = GeneratedList.CalculatePosition();
-        //editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
-        //editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
+        windowXsize = minX;
+        windowYsize = minY;
+
+        PlayClip(introSound);
     }
 
     // Window editing
     private void OnGUI()
     {
+        if (clickSound != null)
+        {
+            Debug.Log("Loaded");
+        }
         SetColors();
         DrawTitles();
-        //SetFont();
 
         if (!Terrain.activeTerrain)
         {
             GUILayout.Label("You need a terrain to begin!", ReturnGUIStyle(30, "", Color.red));
             return;
         }
-
         Terrain.activeTerrain.gameObject.layer = LayerMask.NameToLayer("Terrain");
 
         PlaceButtons();
+        CheckSelected();
+        ChangeWindowSize();
+        PlaySounds();
+
         ParametersAndGeneration();
         editorBox.transform.position = GeneratedList.CalculatePosition();
         editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
@@ -188,6 +227,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     private void OnDisable()
     {
         DestroyImmediate(editorBox);
+        PlayClip(closeSound);
     }
 
     ///<summary>
@@ -214,26 +254,27 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         foreach (var asset in assets)
         {
             CreateButton(asset.name);
-
         }
 
         GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
 
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Select a terrain type", skin.GetStyle("Sexy2"));
-        EditorGUILayout.EndHorizontal();
+        AnimatedValue2.target = EditorGUILayout.ToggleLeft("Terrain?", AnimatedValue2.target, skin.GetStyle("Sexy3"));
 
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.FlexibleSpace();
-        // CreateButton("Sand");
-        // CreateButton("Grass");
-        //CreateButton("Dirt");
+        if (EditorGUILayout.BeginFadeGroup(AnimatedValue2.faded))
+        {
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Select a terrain type", skin.GetStyle("Sexy2"));
+            EditorGUILayout.EndHorizontal();
 
-        SetTerrainTextures();
-        AutoAddAllTerrainTextures = false; //on the first frame, the terrain buttons should all be selected on default
-        GUILayout.FlexibleSpace();
-        EditorGUILayout.EndHorizontal();
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+
+            SetTerrainTextures();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+        }
+        EditorGUILayout.EndFadeGroup();
     }
 
     void SetTerrainTextures()
@@ -241,7 +282,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         Terrain terrain = Terrain.activeTerrain;
         for (int i = 0; i < terrain.terrainData.terrainLayers.Length; i++)
         {
-            // Debug.Log("i: " + terrain.terrainData.terrainLayers[i]);
             CreateButton(terrain.terrainData.terrainLayers[i].diffuseTexture.name, terrain.terrainData.terrainLayers[i].diffuseTexture);
         }
     }
@@ -251,60 +291,58 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     void ParametersAndGeneration()
     {
-        EditorGUILayout.BeginVertical("box");
-
-        GeneratedList.resourcePrefab = newResourcePrefab;
-
-        if (GeneratedList.resourcePrefab == null)
+        if (EditorGUILayout.BeginFadeGroup(AnimatedValue.faded))
         {
-            EditorGUI.BeginDisabledGroup(true);
+            EditorGUILayout.BeginVertical("box");
+
+            GeneratedList.resourcePrefab = newResourcePrefab;
+
+            GeneratedList.numberOfResources = EditorGUILayout.IntField("Number of Resources", GeneratedList.numberOfResources);
+
+            GeneratedList.rangeWidth = EditorGUILayout.FloatField("Spawn area X", GeneratedList.rangeWidth);
+
+            GeneratedList.rangeHeight = EditorGUILayout.FloatField("Spawn area Z", GeneratedList.rangeHeight);
+
+            GeneratedList.positionOnTerrain = EditorGUILayout.Vector2Field("Position on terrain", GeneratedList.positionOnTerrain);
+
+            GeneratedList.minDistance = EditorGUILayout.FloatField("Distance between objects", GeneratedList.minDistance);
+
+            GeneratedList.minY = EditorGUILayout.FloatField("Lowest spawn height", GeneratedList.minY);
+
+            if (GeneratedList.minY < 0)
+            {
+                EditorGUILayout.TextArea("Below zero is sea level!", ReturnGUIStyle(15, color: Color.red));
+            }
+
+
+            GeneratedList.maxY = EditorGUILayout.FloatField("Highest spawn height", GeneratedList.maxY);
+
+            if (GUILayout.Button("Generate", ReturnGUIStyle(30, "button")))
+            {
+                generationSucessful = GeneratedList.GenerateResources();
+                PlayClip(createSound);
+            }
+
+            if (!generationSucessful)
+            {
+                EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15, color: Color.red));
+            }
+
+            //if (SelectTexturesList.Count == 0 && Terrain.activeTerrain.terrainData.terrainLayers.Length > 0)
+            //{
+            //    EditorGUILayout.TextArea("Nothing will generate as you haven't selected a terrain texture!", ReturnGUIStyle(15, color: Color.red));
+            //}
+
+            if (GUILayout.Button("Delete", ReturnGUIStyle(30, "button")))
+            {
+                GeneratedList.ClearResourceList();
+                PlayClip(destroySound);
+            }
         }
-
-        biomeWide = EditorGUILayout.ToggleLeft("Spawn resources accross whole biome", biomeWide);
-
-        GeneratedList.numberOfResources = EditorGUILayout.IntField("Number of Resources", GeneratedList.numberOfResources);
-
-        GeneratedList.rangeWidth = EditorGUILayout.FloatField("Spawn area X", GeneratedList.rangeWidth);
-
-        GeneratedList.rangeHeight = EditorGUILayout.FloatField("Spawn area Z", GeneratedList.rangeHeight);
-
-        GeneratedList.positionOnTerrain = EditorGUILayout.Vector2Field("Position on terrain", GeneratedList.positionOnTerrain);
-
-        GeneratedList.minDistance = EditorGUILayout.FloatField("Distance between objects", GeneratedList.minDistance);
-
-        GeneratedList.minY = EditorGUILayout.FloatField("Lowest spawn height", GeneratedList.minY);
-
-        if (GeneratedList.minY < 0)
-        {
-            EditorGUILayout.TextArea("Below zero is sea level!", ReturnGUIStyle(15, color: Color.red));
-        }
-
-
-        GeneratedList.maxY = EditorGUILayout.FloatField("Highest spawn height", GeneratedList.maxY);
-
-        if (GUILayout.Button("Generate", ReturnGUIStyle(30, "button")))
-        {
-            generationSucessful = GeneratedList.GenerateResources();
-        }
-
-        if (!generationSucessful)
-        {
-            EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15, color: Color.red));
-        }
-
-        if (SelectTexturesList.Count == 0 && Terrain.activeTerrain.terrainData.terrainLayers.Length > 0)
-        {
-            EditorGUILayout.TextArea("Nothing will generate as you haven't selected a terrain texture!", ReturnGUIStyle(15, color: Color.red));
-        }
-
-        if (GUILayout.Button("Delete", ReturnGUIStyle(30, "button")))
-        {
-            GeneratedList.ClearResourceList();
-        }
-
-        EditorGUI.EndDisabledGroup();
 
         EditorGUILayout.EndVertical();
+
+        EditorGUILayout.EndFadeGroup();
 
         //Repaint(); // Redraws the window    
     }
@@ -366,10 +404,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         if (terrainBool)
         {
-            if (AutoAddAllTerrainTextures)
-            {
-                SelectTexturesList.Add(texture);
-            }
             selectedBool = SelectTexturesList.Contains(texture);
         }
         else
@@ -391,15 +425,34 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
                 if (selectedBool)
                 {
                     SelectTexturesList.Remove(texture);
+                    StopAllClips();
+                    PlayClip(click2Sound);
                 }
                 else
                 {
                     SelectTexturesList.Add(texture);
+                    StopAllClips();
+                    PlayClip(click2Sound);
                 }
             }
             else
             {
-                newResourcePrefab = Resources.Load<GameObject>(ReturnPathPath() + prefabNameString);
+                if (selectedBool)
+                {
+                    newResourcePrefab = null;
+                    resourceSelected = false;
+                    StopAllClips();
+                    PlayClip(click2Sound);
+                }
+                else
+                {
+                    newResourcePrefab = Resources.Load<GameObject>(ReturnPathPath() + prefabNameString);
+                    resourceSelected = true;
+                    StopAllClips();
+                    PlayClip(click2Sound);
+                }
+
+
             }
         }
 
@@ -418,6 +471,161 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         return headStyle;
     }
 
+    void CheckSelected()
+    {
+        // Checking if the tickbox is toggled. Could bypass this step but decided to use a more readable boolean
+        if (AnimatedValue2.target == true)
+        {
+            terrainToggleSelected = true;
+        }
+        else
+        {
+            terrainToggleSelected = false;
+        }
+
+        // If at least one texture button is selected then this boolean is true
+        if (SelectTexturesList.Count > 0)
+        {
+            terrainSelected = true;
+        }
+        else
+        {
+            terrainSelected = false;
+        }
+
+        // If the tickbox is toggled, it requires a texture to be also selected to display the parameters
+        if (terrainToggleSelected)
+        {
+            if (terrainSelected) // If texture is selected
+            {
+                AnimatedValue.target = resourceSelected;
+            }
+            else
+            {
+                AnimatedValue.target = false;
+            }
+        }
+        else // If the tickbox is not toggled or untoggled, display the parameters if a resource is toggled
+        {
+            AnimatedValue.target = resourceSelected; // Displays if resourceSelected is true
+
+            if (SelectTexturesList.Count > 0) // If a texture was selected when the tickbox was untoggled
+            {
+                for (int i = 0; i < SelectTexturesList.Count; i++) // Unselect all textures
+                {
+                    SelectTexturesList.Remove(SelectTexturesList[i]);
+                }
+            }
+        }
+    }
+
+    void ChangeWindowSize()
+    {
+        if (AnimatedValue.target == false && terrainToggleSelected == false)
+        {
+            currentWindowSize = WindowSizeEnum.Tiny;
+        }
+        else if (AnimatedValue.target == false && terrainToggleSelected == true)
+        {
+            currentWindowSize = WindowSizeEnum.Small;
+        }
+        else if (AnimatedValue.target == true && terrainToggleSelected == false)
+        {
+            currentWindowSize = WindowSizeEnum.Medium;
+        }
+        else if (AnimatedValue.target == true && terrainToggleSelected == true)
+        {
+            currentWindowSize = WindowSizeEnum.Large;
+        }
+
+        if (currentWindowSize == WindowSizeEnum.Tiny)
+        {
+            windowYsize = 210.0f;
+        }
+        else if (currentWindowSize == WindowSizeEnum.Small)
+        {
+            windowYsize = 355.0f;
+        }
+        else if (currentWindowSize == WindowSizeEnum.Medium)
+        {
+            windowYsize = 465.0f;
+        }
+        else if (currentWindowSize == WindowSizeEnum.Large)
+        {
+            windowYsize = 600.0f;
+        }
+
+        if (Screen.height - 27.0f != windowYsize)
+        {
+            minSize = new Vector2(windowXsize, windowYsize);
+            maxSize = new Vector2(windowXsize, windowYsize);
+        }
+
+        //if (Screen.height - 27.0f != windowYsize)
+        //{
+        //    if (valueStored == false)
+        //    {
+        //        currentHeight = Screen.height - 27.0f;
+        //        valueStored = true;
+        //    }
+        //    minSize = new Vector2(windowXsize, Mathf.Lerp(currentHeight, windowYsize, Time.deltaTime));
+        //    maxSize = new Vector2(windowXsize, windowYsize);
+        //}
+        //if (currentHeight == windowYsize)
+        //{
+        //    valueStored = false;
+        //}
+    }
+
+    public static void PlayClip(AudioClip clip, int startSample = 0, bool loop = false)
+    {
+        Assembly unityEditorAssembly = typeof(AudioImporter).Assembly;
+
+        Type audioUtilClass = unityEditorAssembly.GetType("UnityEditor.AudioUtil");
+        MethodInfo method = audioUtilClass.GetMethod(
+            "PlayPreviewClip",
+            BindingFlags.Static | BindingFlags.Public,
+            null,
+            new Type[] { typeof(AudioClip), typeof(int), typeof(bool) },
+            null
+        );
+
+        Debug.Log(method);
+        method.Invoke(
+            null,
+            new object[] { clip, startSample, loop }
+        );
+    }
+
+    public static void StopAllClips()
+    {
+        Assembly unityEditorAssembly = typeof(AudioImporter).Assembly;
+
+        Type audioUtilClass = unityEditorAssembly.GetType("UnityEditor.AudioUtil");
+        MethodInfo method = audioUtilClass.GetMethod(
+            "StopAllPreviewClips",
+            BindingFlags.Static | BindingFlags.Public,
+            null,
+            new Type[] { },
+            null
+        );
+
+        Debug.Log(method);
+        method.Invoke(
+            null,
+            new object[] { }
+        );
+    }
+
+    void PlaySounds()
+    {
+        if (boolChanged != terrainToggleSelected)
+        {
+            StopAllClips();
+            PlayClip(clickSound);
+            boolChanged = terrainToggleSelected;
+        }
+    }
     //// SAVING DATA
     //bool previous = RunOnStart;
     //RunOnStart = EditorGUILayout.ToggleLeft("Spawn resources accross whole biome", RunOnStart);
