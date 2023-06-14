@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 
 public class GenerateList
 {
+
     public GameObject resourcePrefab; // The prefab of the resource objects
     public int numberOfResources = 10; // The number of resources to generate
     public float rangeWidth = 100;
@@ -15,6 +16,7 @@ public class GenerateList
     public float maxY = 20;
     public float minDistance = 0;
     public Vector2 positionOnTerrain;
+    public List<Texture> SelectTexturesList = new List<Texture>();
 
     public Vector3 CalculatePosition()
     {
@@ -53,19 +55,7 @@ public class GenerateList
 
             if (Physics.Raycast(raycastOrigin, Vector3.down, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("Terrain")))
             {
-                if (hit.point.y < minY || hit.point.y > maxY)
-                {
-                    stackOverflow--;
-                    if (stackOverflow <= 0)
-                    {
-                        // Debug.LogWarning("No terrain with parameters was found");
-                        return false;
-                    }
-                    i--;
-                    continue;
-                }
-
-                if (!CheckMinDistance(randomPosition))
+                if (hit.point.y < minY || hit.point.y > maxY || !CheckMinDistance(randomPosition) || !ReturnOnTexture(hit))
                 {
                     stackOverflow--;
                     if (stackOverflow <= 0)
@@ -87,8 +77,6 @@ public class GenerateList
                 resource.transform.SetParent(resourceHolderTransform);
 
                 PrefabUtility.RecordPrefabInstancePropertyModifications(resource);
-
-                TerrainVoid(hit);
             }
         }
 
@@ -96,21 +84,12 @@ public class GenerateList
         return true;
     }
 
-    public void TerrainVoid(RaycastHit hit)
+    public bool ReturnOnTexture(RaycastHit hit)
     {
-        Terrain terrain = hit.transform.GetComponent<Terrain>();
+        Texture2D texture = ReturnTerrainTexture(Terrain.activeTerrain, hit.point);
+        Debug.Log(texture + " -> " + SelectTexturesList.Contains(texture));
 
-        if (terrain)
-        {
-            //   Vector3 terrainPosition = hit.point - terrain.transform.position;
-            //Vector3 mapPosition = new Vector3
-            //  (terrainPosition.x / terrain.terrainData.size.x, 0,
-            //  terrainPosition.z / terrain.terrainData.size.z);
-            //float xCoord = mapPosition.x * terrain.terrainData.alphamapWidth;
-            //float zCoord = mapPosition.z * terrain.terrainData.alphamapHeight;
-
-            string materialNameString = ReturnTerrainTexture(terrain, hit.point).name;
-        }
+        return SelectTexturesList.Count == 0 || SelectTexturesList.Contains(texture);
     }
 
 
