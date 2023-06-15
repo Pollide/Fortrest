@@ -19,6 +19,7 @@ using System.IO; // To access in and out filing
 using System.Collections.Generic;
 using System.Reflection;
 using System;
+using System.Linq;
 
 public class ResourceGenerator : EditorWindow // To access the editor features, change MonoBehaviour to this
 {
@@ -47,10 +48,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     static float minY = 210.0f;
     float windowXsize;
     float windowYsize;
-
-    // Not currently used
-    float currentHeight = 0.0f;
-    bool valueStored = false;
 
     // Sound variables;
     public AudioClip clickSound;
@@ -256,12 +253,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             GUILayout.Label("Select a terrain type", skin.GetStyle("Sexy2"));
             EditorGUILayout.EndHorizontal();
 
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
 
             SetTerrainTextures();
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(10);
         }
@@ -273,12 +266,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         if (EditorGUILayout.BeginFadeGroup(AnimatedValue3.faded))
         {  // Define the list of options for the dropdown
 
-            List<string> options = new List<string>();
-
-            for (int i = 0; i < Terrain.activeTerrain.terrainData.terrainLayers.Length; i++)
-            {
-                options.Add(Terrain.activeTerrain.terrainData.terrainLayers[i].name);
-            }
 
             if (GeneratedList.TerrainTextureDenial == -1)
             {
@@ -287,7 +274,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
             // Create the dropdown using GUILayout
             GUILayout.Label("Texture to generate below your resource", ReturnGUIStyle(20));
-            GeneratedList.TerrainTextureDenial = GUILayout.SelectionGrid(GeneratedList.TerrainTextureDenial, options.ToArray(), 1);
+            //GeneratedList.TerrainTextureDenial = GUILayout.SelectionGrid(GeneratedList.TerrainTextureDenial, options.ToArray(), 1);
+            SetTerrainTextures(true);
             GUILayout.Space(10);
             GUILayout.Label("Radius", ReturnGUIStyle(20));
             GeneratedList.AreaOfDenialRadius = GUILayout.HorizontalSlider(GeneratedList.AreaOfDenialRadius, 1f, 5.0f);
@@ -302,13 +290,19 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         GUILayout.Space(20);
     }
 
-    void SetTerrainTextures()
+    void SetTerrainTextures(bool denialBool = false)
     {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+
         Terrain terrain = Terrain.activeTerrain;
         for (int i = 0; i < terrain.terrainData.terrainLayers.Length; i++)
         {
-            CreateButton(terrain.terrainData.terrainLayers[i].diffuseTexture.name, terrain.terrainData.terrainLayers[i].diffuseTexture);
+            CreateButton(terrain.terrainData.terrainLayers[i].diffuseTexture.name, terrain.terrainData.terrainLayers[i].diffuseTexture, denialBool);
         }
+
+        GUILayout.FlexibleSpace();
+        EditorGUILayout.EndHorizontal();
     }
 
     ///<summary>
@@ -358,11 +352,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
                 GeneratedList.ClearResourceList();
                 PlayClip(destroySound);
             }
+            EditorGUILayout.EndVertical();
         }
 
-        EditorGUILayout.EndVertical();
-
         EditorGUILayout.EndFadeGroup();
+
 
         GUIStyle customButtonStyle = new GUIStyle();
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
@@ -473,7 +467,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     {
         return ReturnPathPath() + "Icons/";
     }
-    public void CreateButton(string prefabNameString, Texture texture = null)
+    public void CreateButton(string prefabNameString, Texture texture = null, bool denialBool = false)
     {
 
         bool terrainBool = texture != null;
@@ -493,11 +487,27 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         GUIStyle customButtonStyle = new GUIStyle(GUI.skin.button);
 
-        bool selectedBool;
+        bool selectedBool = false;
+        int denialselected = 0;
 
         if (terrainBool)
         {
-            selectedBool = GeneratedList.SelectTexturesList.Contains(texture);
+            if (denialBool)
+            {
+                for (int i = 0; i < Terrain.activeTerrain.terrainData.terrainLayers.Length; i++)
+                {
+                    if (Terrain.activeTerrain.terrainData.terrainLayers[i].diffuseTexture == texture)
+                    {
+                        denialselected = i;
+                        selectedBool = GeneratedList.TerrainTextureDenial == i;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                selectedBool = GeneratedList.SelectTexturesList.Contains(texture);
+            }
         }
         else
         {
@@ -515,17 +525,24 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         {
             if (terrainBool)
             {
-                if (selectedBool)
+                if (denialBool)
                 {
-                    GeneratedList.SelectTexturesList.Remove(texture);
-                    StopAllClips();
-                    PlayClip(click2Sound);
+                    GeneratedList.TerrainTextureDenial = denialselected;
                 }
                 else
                 {
-                    GeneratedList.SelectTexturesList.Add(texture);
-                    StopAllClips();
-                    PlayClip(click2Sound);
+                    if (selectedBool)
+                    {
+                        GeneratedList.SelectTexturesList.Remove(texture);
+                        StopAllClips();
+                        PlayClip(click2Sound);
+                    }
+                    else
+                    {
+                        GeneratedList.SelectTexturesList.Add(texture);
+                        StopAllClips();
+                        PlayClip(click2Sound);
+                    }
                 }
             }
             else
