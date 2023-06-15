@@ -285,38 +285,41 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(10);
-
-            AnimatedValue3.target = EditorGUILayout.ToggleLeft("Area of denial?", AnimatedValue3.target, skin.GetStyle("Sexy3"));
-
-
-            if (EditorGUILayout.BeginFadeGroup(AnimatedValue3.faded))
-            {  // Define the list of options for the dropdown
-
-                List<string> options = new List<string>();
-
-                for (int i = 0; i < Terrain.activeTerrain.terrainData.terrainLayers.Length; i++)
-                {
-                    options.Add(Terrain.activeTerrain.terrainData.terrainLayers[i].name);
-                }
-
-                if (GeneratedList.TerrainTextureDenial == -1)
-                {
-                    GeneratedList.TerrainTextureDenial = 0;
-                }
-
-                // Create the dropdown using GUILayout
-                GUILayout.Label("Texture to generate below your resource", ReturnGUIStyle(20));
-                GeneratedList.TerrainTextureDenial = GUILayout.SelectionGrid(GeneratedList.TerrainTextureDenial, options.ToArray(), 1);
-                GUILayout.Space(10);
-                GUILayout.Label("Radius", ReturnGUIStyle(20));
-                GeneratedList.AreaOfDenialRadius = GUILayout.HorizontalSlider(GeneratedList.AreaOfDenialRadius, 1f, 5.0f);
-            }
-            else
-            {
-                GeneratedList.TerrainTextureDenial = -1;
-            }
         }
         EditorGUILayout.EndFadeGroup();
+
+        AnimatedValue3.target = EditorGUILayout.ToggleLeft("Area of denial?", AnimatedValue3.target, skin.GetStyle("Sexy3"));
+
+
+        if (EditorGUILayout.BeginFadeGroup(AnimatedValue3.faded))
+        {  // Define the list of options for the dropdown
+
+            List<string> options = new List<string>();
+
+            for (int i = 0; i < Terrain.activeTerrain.terrainData.terrainLayers.Length; i++)
+            {
+                options.Add(Terrain.activeTerrain.terrainData.terrainLayers[i].name);
+            }
+
+            if (GeneratedList.TerrainTextureDenial == -1)
+            {
+                GeneratedList.TerrainTextureDenial = 0;
+            }
+
+            // Create the dropdown using GUILayout
+            GUILayout.Label("Texture to generate below your resource", ReturnGUIStyle(20));
+            GeneratedList.TerrainTextureDenial = GUILayout.SelectionGrid(GeneratedList.TerrainTextureDenial, options.ToArray(), 1);
+            GUILayout.Space(10);
+            GUILayout.Label("Radius", ReturnGUIStyle(20));
+            GeneratedList.AreaOfDenialRadius = GUILayout.HorizontalSlider(GeneratedList.AreaOfDenialRadius, 1f, 5.0f);
+        }
+        else
+        {
+            GeneratedList.TerrainTextureDenial = -1;
+        }
+
+        EditorGUILayout.EndFadeGroup();
+
         GUILayout.Space(20);
     }
 
@@ -716,7 +719,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             null
         );
 
-        Debug.Log(method);
+        //Debug.Log(method);
         method.Invoke(
             null,
             new object[] { }
