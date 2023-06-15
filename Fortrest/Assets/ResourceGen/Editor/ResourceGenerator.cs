@@ -25,9 +25,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     // Making the script global
     public static ResourceGenerator global;
 
-    // String variables for file paths and error display
-    static string customPath = "Assets/ResourceGen/";  
-
     // Resource generation variables
     private GenerateList generatedList; // Resource list object
     private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
@@ -96,7 +93,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///Function called when the editor window first opens
     ///</summary>
     private void OnEnable()
-    {             
+    {
         // Initialising variables
         animatedValue = new AnimBool(false);
         animatedValue.valueChanged.AddListener(Repaint);
@@ -107,7 +104,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         generatedList = new GenerateList();
         global = this;
 
-        CreateFolders();       
+        CreateFolders();
         TryGetUnityObjectsOfTypeFromPath(ReturnDirectPath(), assets);
 
         // Initialising variables
@@ -229,7 +226,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             SetTerrainTextures(true);
 
             GUILayout.Space(15);
-      
+
             generatedList.AreaOfDenialRadius = EditorGUILayout.Slider("Area of denial radius", generatedList.AreaOfDenialRadius, 1f, 5.0f);
         }
         else
@@ -277,7 +274,15 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
             generatedList.rangeHeight = EditorGUILayout.FloatField("Spawn area Z", generatedList.rangeHeight);
 
-            generatedList.positionOnTerrain = EditorGUILayout.Vector2Field("Position on terrain", generatedList.positionOnTerrain);
+
+
+            //    GUILayout.Label("Position on terrain", ReturnGUIStyle(20));
+            EditorGUILayout.BeginHorizontal();
+            generatedList.positionOnTerrain.x = EditorGUILayout.FloatField("Spawn area X position", generatedList.positionOnTerrain.x);
+            EditorGUI.indentLevel += 1;
+            generatedList.positionOnTerrain.y = EditorGUILayout.FloatField("Spawn area Z position", generatedList.positionOnTerrain.y);
+            EditorGUILayout.EndHorizontal();
+            EditorGUI.indentLevel -= 1;
 
             generatedList.minDistance = EditorGUILayout.FloatField("Distance between objects", generatedList.minDistance);
 
@@ -479,7 +484,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
                 {
                     generatedList.TerrainTextureDenial = selectedBool ? -1 : denialselected;
                     areaSelected = !selectedBool;
-                    
+
                     StopAllClips();
                     PlayClip(click2Sound);
                 }
