@@ -38,7 +38,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     // Visual variables
     GUISkin skin; // Skin variable
     AnimBool AnimatedValue; // Animation variable
-    AnimBool AnimatedValue2; // Animation variable                        
+    AnimBool AnimatedValue2; // Animation variable for terrain
+    AnimBool AnimatedValue3;  //for area of denial
     Texture2D backgroundTexture; // Background color
     Rect background; // Background size
     static float minX = 530.0f;
@@ -142,6 +143,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         AnimatedValue.valueChanged.AddListener(Repaint);
         AnimatedValue2 = new AnimBool(false);
         AnimatedValue2.valueChanged.AddListener(Repaint);
+        AnimatedValue3 = new AnimBool(false);
+        AnimatedValue3.valueChanged.AddListener(Repaint);
         GeneratedList = new GenerateList();
         CreateFolders();
         global = this;
@@ -247,9 +250,16 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         GUIStyle customButtonStyle = new GUIStyle();
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
 
+        if (GUILayout.Button("Regenerate Terrain Textures (20s)", ReturnGUIStyle(30, "button")))
+        {
+            GenerateTerrainTextures();
+        }
+
+        GUILayout.Space(10);
+
+
         EditorGUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-
 
         foreach (var asset in assets)
         {
@@ -273,8 +283,41 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             SetTerrainTextures();
             GUILayout.FlexibleSpace();
             EditorGUILayout.EndHorizontal();
+
+            GUILayout.Space(10);
+
+            AnimatedValue3.target = EditorGUILayout.ToggleLeft("Area of denial?", AnimatedValue3.target, skin.GetStyle("Sexy3"));
+
+
+            if (EditorGUILayout.BeginFadeGroup(AnimatedValue3.faded))
+            {  // Define the list of options for the dropdown
+
+                List<string> options = new List<string>();
+
+                for (int i = 0; i < Terrain.activeTerrain.terrainData.terrainLayers.Length; i++)
+                {
+                    options.Add(Terrain.activeTerrain.terrainData.terrainLayers[i].name);
+                }
+
+                if (GeneratedList.TerrainTextureDenial == -1)
+                {
+                    GeneratedList.TerrainTextureDenial = 0;
+                }
+
+                // Create the dropdown using GUILayout
+                GUILayout.Label("Texture to generate below your resource", ReturnGUIStyle(20));
+                GeneratedList.TerrainTextureDenial = GUILayout.SelectionGrid(GeneratedList.TerrainTextureDenial, options.ToArray(), 1);
+                GUILayout.Space(10);
+                GUILayout.Label("Radius", ReturnGUIStyle(20));
+                GeneratedList.AreaOfDenialRadius = GUILayout.HorizontalSlider(GeneratedList.AreaOfDenialRadius, 1f, 5.0f);
+            }
+            else
+            {
+                GeneratedList.TerrainTextureDenial = -1;
+            }
         }
         EditorGUILayout.EndFadeGroup();
+        GUILayout.Space(20);
     }
 
     void SetTerrainTextures()
@@ -345,6 +388,65 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         EditorGUILayout.EndFadeGroup();
 
         //Repaint(); // Redraws the window    
+    }
+
+    private float GetTerrainHeight(Vector3 position)
+    {
+        float height = Terrain.activeTerrain.SampleHeight(position);
+
+        // Adjust height based on terrain position and size
+        height = height * Terrain.activeTerrain.terrainData.size.y / Terrain.activeTerrain.terrainData.heightmapResolution;
+
+        return height;
+    }
+
+    void GenerateTerrainTextures()
+    {
+        int callsInt = 0;
+
+        GeneratedList.AreaOfDenialRadius = 10;
+
+        for (int x = 0; x < Terrain.activeTerrain.terrainData.size.x; x += (int)GeneratedList.AreaOfDenialRadius)
+        {
+            for (int z = 0; z < Terrain.activeTerrain.terrainData.size.z; z += (int)GeneratedList.AreaOfDenialRadius)
+            {
+                Vector3 position = new Vector3(x, 0, z);
+                Vector3 worldPosition = Terrain.activeTerrain.GetPosition() + position;
+
+                //  Debug.Log(callsInt + "Sampled position: " + worldPosition + " " + GetTerrainHeight(worldPosition));
+                callsInt++;
+
+                if (callsInt > 1000) //prevent stack overflow
+                {
+                    {
+                        return;
+                    }
+                }
+
+                GeneratedList.TerrainTextureDenial = 0;
+
+                if (GetTerrainHeight(worldPosition) > 5)
+                {
+                    GeneratedList.TerrainTextureDenial = 1;
+
+                }
+                if (GetTerrainHeight(worldPosition) > 20)
+                {
+                    GeneratedList.TerrainTextureDenial = 2;
+                }
+
+                if (GetTerrainHeight(worldPosition) > 30) //snow
+                {
+                    GeneratedList.TerrainTextureDenial = 3;
+                }
+
+                GeneratedList.ChangeTerrainTexture(worldPosition);
+
+            }
+        }
+
+        GeneratedList.AreaOfDenialRadius = 2;
+        GeneratedList.TerrainTextureDenial = -1;
     }
 
     ///<summary>
@@ -554,6 +656,10 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         {
             windowYsize = 600.0f;
         }
+
+        //POL I ADDED THIS FOR TESTING
+        //  windowYsize = 700;
+        //   currentWindowSize = WindowSizeEnum.Large;
 
         if (Screen.height - 27.0f != windowYsize)
         {
