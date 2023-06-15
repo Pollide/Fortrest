@@ -622,11 +622,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
     void ChangeWindowSize()
     {
-        if (AnimatedValue.target == false && terrainToggleSelected == false)
+        if (AnimatedValue.target == false && terrainToggleSelected == false && areaToggleSelected == false)
         {
             currentWindowSize = WindowSizeEnum.Tiny;
         }
-        else if (AnimatedValue.target == false && terrainToggleSelected == true)
+        else if (AnimatedValue.target == false && (terrainToggleSelected == true || areaToggleSelected == true))
         {
             currentWindowSize = WindowSizeEnum.Small;
         }
@@ -641,11 +641,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         if (currentWindowSize == WindowSizeEnum.Tiny)
         {
-            windowYsize = 210.0f;
+            windowYsize = 230.0f;
         }
         else if (currentWindowSize == WindowSizeEnum.Small)
         {
-            windowYsize = 355.0f;
+            windowYsize = 350.0f;
         }
         else if (currentWindowSize == WindowSizeEnum.Medium)
         {
