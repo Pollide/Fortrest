@@ -34,6 +34,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
     bool resourceSelected = false;
     bool terrainSelected = false;
+    bool areaSelected = false;
     bool terrainToggleSelected = false;
     bool areaToggleSelected = false;
 
@@ -64,6 +65,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         Tiny,
         Small,
         Medium,
+        Imposant,
         Large,
         Huge
     };
@@ -250,9 +252,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         if (EditorGUILayout.BeginFadeGroup(AnimatedValue2.faded))
         {
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Select a terrain type", skin.GetStyle("Sexy2"));
+            GUILayout.Label("Select terrains", skin.GetStyle("Sexy2"));
             EditorGUILayout.EndHorizontal();
-
 
             SetTerrainTextures();
 
@@ -262,23 +263,18 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         AnimatedValue3.target = EditorGUILayout.ToggleLeft("Area of denial?", AnimatedValue3.target, skin.GetStyle("Sexy3"));
 
-
         if (EditorGUILayout.BeginFadeGroup(AnimatedValue3.faded))
         {  // Define the list of options for the dropdown
 
-
-            if (GeneratedList.TerrainTextureDenial == -1)
-            {
-                GeneratedList.TerrainTextureDenial = 0;
-            }
-
-            // Create the dropdown using GUILayout
-            GUILayout.Label("Texture to generate below your resource", ReturnGUIStyle(20));
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Select a texture", skin.GetStyle("Sexy2"));
+            EditorGUILayout.EndHorizontal();
             //GeneratedList.TerrainTextureDenial = GUILayout.SelectionGrid(GeneratedList.TerrainTextureDenial, options.ToArray(), 1);
             SetTerrainTextures(true);
-            GUILayout.Space(10);
-            GUILayout.Label("Radius", ReturnGUIStyle(20));
-            GeneratedList.AreaOfDenialRadius = GUILayout.HorizontalSlider(GeneratedList.AreaOfDenialRadius, 1f, 5.0f);
+
+            GUILayout.Space(15);
+      
+            GeneratedList.AreaOfDenialRadius = EditorGUILayout.Slider("Area of denial radius", GeneratedList.AreaOfDenialRadius, 1f, 5.0f);
         }
         else
         {
@@ -287,7 +283,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         EditorGUILayout.EndFadeGroup();
 
-        GUILayout.Space(20);
+        GUILayout.Space(10);
     }
 
     void SetTerrainTextures(bool denialBool = false)
@@ -361,7 +357,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         GUIStyle customButtonStyle = new GUIStyle();
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
 
-        if (GUILayout.Button("Regenerate Terrain Textures (20s)", ReturnGUIStyle(30, "button")))
+        if (GUILayout.Button("Generate Height Based Textures", ReturnGUIStyle(30, "button")))
         {
             GenerateTerrainTextures();
         }
@@ -431,17 +427,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     private Texture2D MakeTexture(int width, int height, Color color)
     {
-        /*
-        Color[] pixels = new Color[width * height];
-        for (int i = 0; i < pixels.Length; i++)
-        {
-            pixels[i] = color;
-        }
-
-        Texture2D texture = new Texture2D(width, height);
-        texture.SetPixels(pixels);
-        texture.Apply();
-        */
         Texture2D texture = new Texture2D(1, 1);
         texture.SetPixel(0, 0, color);
         texture.Apply();
@@ -527,7 +512,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             {
                 if (denialBool)
                 {
-                    GeneratedList.TerrainTextureDenial = denialselected;
+                    GeneratedList.TerrainTextureDenial = selectedBool ? -1 : denialselected;
+                    areaSelected = !selectedBool;
+                    
+                    StopAllClips();
+                    PlayClip(click2Sound);
                 }
                 else
                 {
@@ -612,21 +601,48 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         }
 
         // If the tickbox is toggled, it requires a texture to be also selected to display the parameters
-        if (terrainToggleSelected)
+        if (terrainToggleSelected || areaToggleSelected)
         {
-            if (terrainSelected) // If texture is selected
+            if (terrainToggleSelected && areaToggleSelected)
             {
-                AnimatedValue.target = resourceSelected;
+                if (terrainSelected && areaSelected) // If texture is selected
+                {
+                    AnimatedValue.target = resourceSelected;
+                }
+                else
+                {
+                    AnimatedValue.target = false;
+                }
             }
-            else
+            else if (terrainToggleSelected)
             {
-                AnimatedValue.target = false;
+                if (terrainSelected) // If texture is selected
+                {
+                    AnimatedValue.target = resourceSelected;
+                }
+                else
+                {
+                    AnimatedValue.target = false;
+                }
+            }
+            else if (areaToggleSelected)
+            {
+                if (areaSelected) // If texture is selected
+                {
+                    AnimatedValue.target = resourceSelected;
+                }
+                else
+                {
+                    AnimatedValue.target = false;
+                }
             }
         }
         else // If the tickbox is not toggled or untoggled, display the parameters if a resource is toggled
         {
             AnimatedValue.target = resourceSelected; // Displays if resourceSelected is true
-
+        }
+        if (!terrainToggleSelected)
+        {
             if (GeneratedList.SelectTexturesList.Count > 0) // If a texture was selected when the tickbox was untoggled
             {
                 for (int i = 0; i < GeneratedList.SelectTexturesList.Count; i++) // Unselect all textures
@@ -643,34 +659,64 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         {
             currentWindowSize = WindowSizeEnum.Tiny;
         }
-        else if (AnimatedValue.target == false && (terrainToggleSelected == true || areaToggleSelected == true))
+        else if (AnimatedValue.target == false && (terrainToggleSelected == true || areaToggleSelected == true) && !(terrainToggleSelected == true && areaToggleSelected == true))
         {
             currentWindowSize = WindowSizeEnum.Small;
         }
-        else if (AnimatedValue.target == true && terrainToggleSelected == false)
+        else if (AnimatedValue.target == true && terrainToggleSelected == false && areaToggleSelected == false)
         {
             currentWindowSize = WindowSizeEnum.Medium;
         }
-        else if (AnimatedValue.target == true && terrainToggleSelected == true)
+        else if (AnimatedValue.target == false && terrainToggleSelected == true && areaToggleSelected == true)
+        {
+            currentWindowSize = WindowSizeEnum.Imposant;
+        }
+        else if (AnimatedValue.target == true && (terrainToggleSelected == true || areaToggleSelected == true) && !(terrainToggleSelected == true && areaToggleSelected == true))
         {
             currentWindowSize = WindowSizeEnum.Large;
+        }
+        else if (AnimatedValue.target == true && terrainToggleSelected == true && areaToggleSelected == true)
+        {
+            currentWindowSize = WindowSizeEnum.Huge;
         }
 
         if (currentWindowSize == WindowSizeEnum.Tiny)
         {
-            windowYsize = 230.0f;
+            windowYsize = 281.0f;
         }
         else if (currentWindowSize == WindowSizeEnum.Small)
         {
-            windowYsize = 350.0f;
+            if (areaToggleSelected == true)
+            {
+                windowYsize = 450.0f;
+            }
+            else if (terrainToggleSelected == true)
+            {
+                windowYsize = 425.0f;
+            }
         }
         else if (currentWindowSize == WindowSizeEnum.Medium)
         {
-            windowYsize = 465.0f;
+            windowYsize = 535.0f;
+        }
+        else if (currentWindowSize == WindowSizeEnum.Imposant)
+        {
+            windowYsize = 594.0f;
         }
         else if (currentWindowSize == WindowSizeEnum.Large)
         {
-            windowYsize = 600.0f;
+            if (areaToggleSelected == true)
+            {
+                windowYsize = 705.0f;
+            }
+            else if (terrainToggleSelected == true)
+            {
+                windowYsize = 680.0f;
+            }
+        }
+        else if (currentWindowSize == WindowSizeEnum.Huge)
+        {
+            windowYsize = 848.0f;
         }
 
         if (Screen.height - 27.0f != windowYsize)
