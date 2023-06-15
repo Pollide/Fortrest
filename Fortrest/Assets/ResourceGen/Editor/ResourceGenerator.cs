@@ -437,6 +437,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     private Texture2D MakeTexture(int width, int height, Color color)
     {
+        /*
         Color[] pixels = new Color[width * height];
         for (int i = 0; i < pixels.Length; i++)
         {
@@ -445,6 +446,10 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         Texture2D texture = new Texture2D(width, height);
         texture.SetPixels(pixels);
+        texture.Apply();
+        */
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, color);
         texture.Apply();
 
         return texture;
