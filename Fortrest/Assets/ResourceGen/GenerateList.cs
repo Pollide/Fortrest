@@ -17,6 +17,10 @@ public class GenerateList
     public float minDistance = 0;
     public Vector2 positionOnTerrain;
     public List<Texture> SelectTexturesList = new List<Texture>();
+    public float AreaOfDenialRadius = 2;
+    public int TerrainTextureDenial = 1;
+
+    public float[,,] CachedSplatmapData;
 
     public Vector3 CalculatePosition()
     {
@@ -34,7 +38,7 @@ public class GenerateList
     public bool GenerateResources()
     {
         Terrain terrain = Terrain.activeTerrain;
-        Transform resourceHolderTransform = GameObject.FindGameObjectWithTag("SceneObjects").transform;
+
         int stackOverflow = 1000;
 
         float halfWidth = resourcePrefab.GetComponent<SphereCollider>().radius * resourcePrefab.transform.localScale.x;
@@ -74,7 +78,10 @@ public class GenerateList
                 eulerVector.y += Random.Range(0f, 360f);
                 resource.transform.rotation = Quaternion.Euler(eulerVector);
 
-                resource.transform.SetParent(resourceHolderTransform);
+                resource.transform.SetParent(terrain.transform);
+
+                if (TerrainTextureDenial != -1)
+                    ChangeTerrainTexture(resource.transform.position);
 
                 PrefabUtility.RecordPrefabInstancePropertyModifications(resource);
             }
@@ -94,7 +101,46 @@ public class GenerateList
         return SelectTexturesList.Count == 0 || SelectTexturesList.Contains(texture);
     }
 
+    public void ChangeTerrainTexture(Vector3 position)
+    {
+        TerrainData terrainData = Terrain.activeTerrain.terrainData;
+        Vector3 terrainLocalPos = position - Terrain.activeTerrain.transform.position;
+        Vector2 normalizedPos = new Vector2(terrainLocalPos.x / terrainData.size.x, terrainLocalPos.z / terrainData.size.z);
+        float[,,] alphamaps = terrainData.GetAlphamaps(0, 0, terrainData.alphamapWidth, terrainData.alphamapHeight);
 
+        int startSampleX = Mathf.FloorToInt((normalizedPos.x - AreaOfDenialRadius / terrainData.size.x) * terrainData.alphamapWidth);
+        int startSampleY = Mathf.FloorToInt((normalizedPos.y - AreaOfDenialRadius / terrainData.size.z) * terrainData.alphamapHeight);
+        int endSampleX = Mathf.CeilToInt((normalizedPos.x + AreaOfDenialRadius / terrainData.size.x) * terrainData.alphamapWidth);
+        int endSampleY = Mathf.CeilToInt((normalizedPos.y + AreaOfDenialRadius / terrainData.size.z) * terrainData.alphamapHeight);
+
+        startSampleX = Mathf.Clamp(startSampleX, 0, terrainData.alphamapWidth - 1);
+        startSampleY = Mathf.Clamp(startSampleY, 0, terrainData.alphamapHeight - 1);
+        endSampleX = Mathf.Clamp(endSampleX, 0, terrainData.alphamapWidth - 1);
+        endSampleY = Mathf.Clamp(endSampleY, 0, terrainData.alphamapHeight - 1);
+
+        // Set the weight of the texture to 1 within the specified radius
+        for (int y = startSampleY; y <= endSampleY; y++)
+        {
+            for (int x = startSampleX; x <= endSampleX; x++)
+            {
+                float samplePosX = (float)x / terrainData.alphamapWidth;
+                float samplePosY = (float)y / terrainData.alphamapHeight;
+                Vector2 samplePosNormalized = new Vector2(samplePosX, samplePosY);
+                float distance = Vector2.Distance(normalizedPos, samplePosNormalized);
+
+                if (distance <= AreaOfDenialRadius / terrainData.size.x)
+                {
+                    for (int i = 0; i < terrainData.terrainLayers.Length; i++)
+                    {
+                        alphamaps[y, x, i] = (i == TerrainTextureDenial) ? 1f : 0f;
+                    }
+                }
+            }
+        }
+
+        // Apply the changes to the terrain
+        terrainData.SetAlphamaps(0, 0, alphamaps);
+    }
     static Vector3 ConvertToSplatMapCoordinate(Vector3 hitPositionVector)
     {
         Vector3 vecRet = new Vector3();
@@ -105,13 +151,13 @@ public class GenerateList
         return vecRet;
     }
 
-    public float[,,] CachedSplatmapData;
     Texture2D ReturnTerrainTexture(Terrain terrain, Vector3 hitPositionVector)
     {
         TerrainData mTerrainData = terrain.terrainData;
 
         if (CachedSplatmapData == default)
         {
+           // Debug.Log(1);
             //GetAlphamaps is very high on performance so cache it
             CachedSplatmapData = mTerrainData.GetAlphamaps(0, 0, mTerrainData.alphamapWidth, mTerrainData.alphamapHeight);
         }
