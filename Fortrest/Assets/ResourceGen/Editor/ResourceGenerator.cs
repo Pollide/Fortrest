@@ -524,7 +524,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         customButtonStyle.fixedHeight = 100;
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
         customButtonStyle.imagePosition = ImagePosition.ImageAbove;
-        customButtonStyle.padding = new RectOffset(2, 2, 2, 2);
+        customButtonStyle.padding = new RectOffset(5, 5, 8, 5);
         // EditorGUILayout.BeginVertical();
         if (GUILayout.Button(buttonContent, customButtonStyle))
         {
