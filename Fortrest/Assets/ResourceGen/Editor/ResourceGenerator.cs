@@ -34,6 +34,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     bool resourceSelected = false;
     bool terrainSelected = false;
     bool terrainToggleSelected = false;
+    bool areaToggleSelected = false;
 
     // Visual variables
     GUISkin skin; // Skin variable
@@ -60,14 +61,14 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     public AudioClip closeSound;
     public bool boolChanged = false;
     public bool boolChanged2 = false;
-    public bool boolChanged3 = false;
 
     enum WindowSizeEnum
     {
         Tiny,
         Small,
         Medium,
-        Large
+        Large,
+        Huge
     };
     WindowSizeEnum currentWindowSize;
 
@@ -81,13 +82,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         ResourceGenerator window = (ResourceGenerator)GetWindow(typeof(ResourceGenerator)); // Sets the title of the window
         window.minSize = new Vector2(minX, minY); // Minimal window size
         window.maxSize = new Vector2(minX, minY);
-
-        //if (File.Exists(CustomPath + SavedFile)) // Checks if the file exists to prevent error
-        //{
-        //    JsonUtility.FromJsonOverwrite(File.ReadAllText(CustomPath + SavedFile), window);
-        //    // RunOnStart = window._RunOnStart; // Loads the value
-        //}
-        //window.Show(); // Displays the window
     }
 
     public static int TryGetUnityObjectsOfTypeFromPath<T>(string path, List<T> assetsFound) where T : UnityEngine.Object
@@ -170,10 +164,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     // Window editing
     private void OnGUI()
     {
-        if (clickSound != null)
-        {
-            // Debug.Log("Loaded");
-        }
         SetColors();
         DrawTitles();
 
@@ -247,17 +237,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     void PlaceButtons()
     {
-        GUIStyle customButtonStyle = new GUIStyle();
-        customButtonStyle.alignment = TextAnchor.MiddleCenter;
-
-        if (GUILayout.Button("Regenerate Terrain Textures (20s)", ReturnGUIStyle(30, "button")))
-        {
-            GenerateTerrainTextures();
-        }
-
-        GUILayout.Space(10);
-
-
         EditorGUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
 
@@ -374,11 +353,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
                 EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15, color: Color.red));
             }
 
-            //if (SelectTexturesList.Count == 0 && Terrain.activeTerrain.terrainData.terrainLayers.Length > 0)
-            //{
-            //    EditorGUILayout.TextArea("Nothing will generate as you haven't selected a terrain texture!", ReturnGUIStyle(15, color: Color.red));
-            //}
-
             if (GUILayout.Button("Delete", ReturnGUIStyle(30, "button")))
             {
                 GeneratedList.ClearResourceList();
@@ -390,7 +364,14 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         EditorGUILayout.EndFadeGroup();
 
-        //Repaint(); // Redraws the window    
+        GUIStyle customButtonStyle = new GUIStyle();
+        customButtonStyle.alignment = TextAnchor.MiddleCenter;
+
+        if (GUILayout.Button("Regenerate Terrain Textures (20s)", ReturnGUIStyle(30, "button")))
+        {
+            GenerateTerrainTextures();
+        }
+
     }
 
     private float GetTerrainHeight(Vector3 position)
@@ -416,7 +397,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
                 Vector3 position = new Vector3(x, 0, z);
                 Vector3 worldPosition = Terrain.activeTerrain.GetPosition() + position;
 
-                //  Debug.Log(callsInt + "Sampled position: " + worldPosition + " " + GetTerrainHeight(worldPosition));
                 callsInt++;
 
                 if (callsInt > 1000) //prevent stack overflow
@@ -530,7 +510,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
         customButtonStyle.imagePosition = ImagePosition.ImageAbove;
         customButtonStyle.padding = new RectOffset(5, 5, 8, 5);
-        // EditorGUILayout.BeginVertical();
+
         if (GUILayout.Button(buttonContent, customButtonStyle))
         {
             if (terrainBool)
@@ -568,8 +548,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
             }
         }
-
-        //  EditorGUILayout.EndVertical();
     }
 
     ///<summary>
@@ -594,6 +572,16 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         else
         {
             terrainToggleSelected = false;
+        }
+
+        // Checking if the tickbox is toggled.
+        if (AnimatedValue3.target == true)
+        {
+            areaToggleSelected = true;
+        }
+        else
+        {
+            areaToggleSelected = false;
         }
 
         // If at least one texture button is selected then this boolean is true
@@ -634,11 +622,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
     void ChangeWindowSize()
     {
-        if (AnimatedValue.target == false && terrainToggleSelected == false)
+        if (AnimatedValue.target == false && terrainToggleSelected == false && areaToggleSelected == false)
         {
             currentWindowSize = WindowSizeEnum.Tiny;
         }
-        else if (AnimatedValue.target == false && terrainToggleSelected == true)
+        else if (AnimatedValue.target == false && (terrainToggleSelected == true || areaToggleSelected == true))
         {
             currentWindowSize = WindowSizeEnum.Small;
         }
@@ -653,11 +641,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
         if (currentWindowSize == WindowSizeEnum.Tiny)
         {
-            windowYsize = 210.0f;
+            windowYsize = 230.0f;
         }
         else if (currentWindowSize == WindowSizeEnum.Small)
         {
-            windowYsize = 355.0f;
+            windowYsize = 350.0f;
         }
         else if (currentWindowSize == WindowSizeEnum.Medium)
         {
@@ -668,30 +656,11 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             windowYsize = 600.0f;
         }
 
-        //POL I ADDED THIS FOR TESTING
-        //  windowYsize = 700;
-        //   currentWindowSize = WindowSizeEnum.Large;
-
         if (Screen.height - 27.0f != windowYsize)
         {
             minSize = new Vector2(windowXsize, windowYsize);
             maxSize = new Vector2(windowXsize, windowYsize);
         }
-
-        //if (Screen.height - 27.0f != windowYsize)
-        //{
-        //    if (valueStored == false)
-        //    {
-        //        currentHeight = Screen.height - 27.0f;
-        //        valueStored = true;
-        //    }
-        //    minSize = new Vector2(windowXsize, Mathf.Lerp(currentHeight, windowYsize, Time.deltaTime));
-        //    maxSize = new Vector2(windowXsize, windowYsize);
-        //}
-        //if (currentHeight == windowYsize)
-        //{
-        //    valueStored = false;
-        //}
     }
 
     public static void PlayClip(AudioClip clip, int startSample = 0, bool loop = false)
@@ -707,7 +676,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             null
         );
 
-        // Debug.Log(method);
         method.Invoke(
             null,
             new object[] { clip, startSample, loop }
@@ -727,7 +695,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             null
         );
 
-        //Debug.Log(method);
         method.Invoke(
             null,
             new object[] { }
@@ -742,26 +709,13 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             PlayClip(clickSound);
             boolChanged = terrainToggleSelected;
         }
-    }
-    //// SAVING DATA
-    //bool previous = RunOnStart;
-    //RunOnStart = EditorGUILayout.ToggleLeft("Spawn resources accross whole biome", RunOnStart);
-    //if (RunOnStart != previous) //only run if the toggle has been pressed
-    //{
-    //    Repaint(); //updates the window
-    //    EditorUtility.SetDirty(this); //tells unity this has been changed
-    //    _RunOnStart = RunOnStart; //set so it can serialise
-    //    var json = JsonUtility.ToJson(this);
-    //    File.WriteAllText(CustomPath + SavedFile, json);
-    //    AssetDatabase.Refresh(); //so the file is visible
-    //}
 
-    //AnimatedValue.target = InputString != ""; //animate the input to appear
-    //if (AnimatedValue.target)
-    //{
-    //    EditorGUILayout.BeginFadeGroup(AnimatedValue.faded); //run the animation
-    //    EditorGUILayout.TextArea("Inputed: " + InputString, ReturnGUIStyle(20));
-    //    EditorGUILayout.EndFadeGroup(); //stop the animation
-    //}
+        if (boolChanged2 != areaToggleSelected)
+        {
+            StopAllClips();
+            PlayClip(clickSound);
+            boolChanged2 = areaToggleSelected;
+        }
+    }
 }
 #endif // The end of the unity editor checker
