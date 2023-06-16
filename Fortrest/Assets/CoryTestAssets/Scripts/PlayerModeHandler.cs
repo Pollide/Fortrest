@@ -28,6 +28,7 @@ public class PlayerModeHandler : MonoBehaviour
     public BuildType buildType;
     public GameObject[] turretPrefabs;
     public GameObject turretBlueprint;
+    public Transform playerMeshPos;
     Transform[] parts;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
@@ -244,8 +245,8 @@ public class PlayerModeHandler : MonoBehaviour
     public bool IsInRange(Vector2 currentTarget)
     {
         PlayerController player = PlayerController.global;
-        Vector2 playerPos = new Vector2(player.transform.position.x, player.transform.position.y);
-        return distanceAwayFromPlayer >= Vector2.Distance(playerPos, currentTarget);
+
+        return distanceAwayFromPlayer >= Vector3.Distance(player.transform.position, currentTarget);
     }
 
 
