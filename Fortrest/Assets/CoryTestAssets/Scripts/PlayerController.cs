@@ -86,9 +86,16 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        // Get Character controller that is attached to the player
-        playerCC = GetComponent<CharacterController>();
-        global = this;
+        if (!global)
+        {
+            // Get Character controller that is attached to the player
+            playerCC = GetComponent<CharacterController>();
+            global = this;
+        }
+        else
+        {
+            Destroy(global.transform.parent.gameObject);
+        }
     }
 
     private void Start()
@@ -99,7 +106,7 @@ public class PlayerController : MonoBehaviour
 
         VFXSlash.Stop();
         VFXSleeping.Stop();
-        
+
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
 
@@ -111,7 +118,7 @@ public class PlayerController : MonoBehaviour
         if (GameObject.Find("House"))
         {
             house = GameObject.Find("House");
-            
+
             houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
             destroyedHouse = house.transform.Find("Destroyed House").gameObject;
             repairedHouse = house.transform.Find("Repaired House").gameObject;
@@ -155,7 +162,7 @@ public class PlayerController : MonoBehaviour
         {
             Sleep();
         }
-        
+
         if (sleeping)
         {
             playerEnergy += Time.deltaTime;

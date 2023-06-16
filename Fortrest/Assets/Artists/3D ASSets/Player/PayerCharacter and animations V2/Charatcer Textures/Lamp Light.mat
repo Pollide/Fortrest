@@ -117,7 +117,8 @@ Material:
     - _ADDITIONAL_LIGHTS: 1
     - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _AlphaClip: 0
-    - _Ambience_Multiplier: 100
+    - _AlphaClipThreshold: 0.5
+    - _Ambience_Multiplier: 1500
     - _Blend: 0
     - _BumpScale: 1
     - _CastShadows: 1
@@ -157,6 +158,7 @@ Material:
     - _SrcBlend: 1
     - _Surface: 0
     - _Tiling: 1
+    - _Use_Colour: 0
     - _Use_Metallic_Textures: 1
     - _Use_Vertex: 1
     - _Wind_Strength: 0.5
@@ -165,9 +167,10 @@ Material:
     - _ZWrite: 1
     - _ZWriteControl: 1
     m_Colors:
-    - _Ambient_Color: {r: 1, g: 0.9168956, b: 0.15566039, a: 0}
+    - _Ambient_Color: {r: 0.07058811, g: 1, b: 0, a: 1}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorAlbedo: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
