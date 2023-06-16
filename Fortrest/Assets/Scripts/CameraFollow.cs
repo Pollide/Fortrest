@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform playerPosition;
+    private Transform playerPosition;
     private Vector3 offset;
     private Vector3 currentVelocity = Vector3.zero;
     [SerializeField] private float cameraDistance;
@@ -18,6 +18,7 @@ public class CameraFollow : MonoBehaviour
     private void Awake()
     {
         lockCamera = true;
+        playerPosition = PlayerController.global.transform;
         offset = transform.position - playerPosition.position;
         max = maxSmooth - minSmooth;
     }
