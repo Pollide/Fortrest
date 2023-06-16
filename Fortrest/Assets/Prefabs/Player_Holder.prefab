@@ -138,7 +138,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879261342564991142}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
@@ -180,7 +180,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 247
+    m_Bits: 64
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
@@ -384,6 +384,7 @@ MonoBehaviour:
   - {fileID: 4568575667695550563, guid: 4ee2a935cd89d8b4b8e6f970f670173c, type: 3}
   - {fileID: 6178621800414324515, guid: 7892c0f71ff7e2f44b2637b765950f3e, type: 3}
   turretBlueprint: {fileID: 5600273059042266266}
+  playerMeshPos: {fileID: 0}
   turretBlueprintRed: {fileID: 2100000, guid: 8d763678d7123e347b760cbd1313f174, type: 2}
   turretBlueprintBlue: {fileID: 2100000, guid: 1d0c9c39a2f4f764081420e60614ab27, type: 2}
   distanceAwayFromPlayer: 30
@@ -419,7 +420,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6808903877018371815}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.44, y: 1.08, z: 4.16}
+  m_LocalPosition: {x: 0, y: 0, z: 1.88}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -438,7 +439,7 @@ Light:
   m_Type: 2
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
@@ -475,7 +476,7 @@ Light:
   m_RenderMode: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 247
+    m_Bits: 64
   m_RenderingLayerMask: 1
   m_Lightmapping: 4
   m_LightShadowCasterMode: 0
@@ -1395,6 +1396,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5569601164179657949}
     m_Modifications:
+    - target: {fileID: 2208439742637513718, guid: cd0bc9715f16c5347a569bae16ef1c71,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 118.3999
+      objectReference: {fileID: 0}
     - target: {fileID: 3363332162941358673, guid: cd0bc9715f16c5347a569bae16ef1c71,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -1424,6 +1430,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3817776119356884058, guid: cd0bc9715f16c5347a569bae16ef1c71,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 4045608486613722564, guid: cd0bc9715f16c5347a569bae16ef1c71,
         type: 3}

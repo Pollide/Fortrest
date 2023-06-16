@@ -162,29 +162,37 @@ public class LevelManager : MonoBehaviour
 
         bool nightTimeBool = DaylightTimer > 180;
 
-        if (GoblinTimer >= GoblinThreshold && nightTimeBool)
+        Light light = DirectionalLightTransform.GetComponent<Light>();
+
+        light.intensity = Mathf.Lerp(light.intensity, nightTimeBool ? 0 : 0.4f, Time.deltaTime);
+
+        if (nightTimeBool)
         {
-            GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
-            if (GoblinThreshold < 0.2f)
+
+            if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = 0.2f;
+                GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
+                if (GoblinThreshold < 0.2f)
+                {
+                    GoblinThreshold = 0.2f;
+                }
+                GoblinTimer = 0;
+
+                Vector3 spawn = PlayerController.global.transform.position;
+
+
+                spawn.x += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+
+                spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+
+                GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
+
+                enemyList.Add(goblin);
             }
-            GoblinTimer = 0;
-
-            Vector3 spawn = PlayerController.global.transform.position;
-
-
-            spawn.x += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
-
-            spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
-
-            GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
-
-            enemyList.Add(goblin);
         }
 
         NightLightGameObject.SetActive(nightTimeBool);
-        LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
+        LanternSkinnedRenderer.materials[2] = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
 
 
         for (int i = 0; i < NaturalBuildingList.Count; i++)
