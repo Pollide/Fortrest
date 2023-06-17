@@ -22,36 +22,35 @@ using System;
 
 public class ResourceGenerator : EditorWindow // To access the editor features, change MonoBehaviour to this
 {
-    // String variables for file paths and error display
-    static string CustomPath = "Assets/ResourceGen/";
+    // Making the script global
     public static ResourceGenerator global;
+
     // Resource generation variables
-    private GenerateList GeneratedList; // Resource list object
+    private GenerateList generatedList; // Resource list object
     private GameObject newResourcePrefab; // Temporary variable to store the newly added resource prefab
-    private GameObject editorBox;
+    private GameObject editorBox; // Object to display spawn area
     private bool generationSucessful = true; // Confirmation bool
 
+    // Booleans to confirm every step, to display parameters and resize window accordingly 
     bool resourceSelected = false;
     bool terrainSelected = false;
+    bool areaSelected = false;
     bool terrainToggleSelected = false;
+    bool areaToggleSelected = false;
 
     // Visual variables
     GUISkin skin; // Skin variable
-    AnimBool AnimatedValue; // Animation variable
-    AnimBool AnimatedValue2; // Animation variable for terrain
-    AnimBool AnimatedValue3;  //for area of denial
+    AnimBool animatedValue; // Animation variable for parameters
+    AnimBool animatedValue2; // Animation variable for terrain
+    AnimBool animatedValue3;  // Animation variable for area of denial
     Texture2D backgroundTexture; // Background color
     Rect background; // Background size
-    static float minX = 530.0f;
-    static float minY = 210.0f;
-    float windowXsize;
-    float windowYsize;
+    static float minX = 530.0f; // Window width
+    static float minY = 281.0f; // Window height
+    float windowXsize; // Modulable window width
+    float windowYsize; // Modulable window height
 
-    // Not currently used
-    float currentHeight = 0.0f;
-    bool valueStored = false;
-
-    // Sound variables;
+    // Sound variables
     public AudioClip clickSound;
     public AudioClip click2Sound;
     public AudioClip introSound;
@@ -60,96 +59,55 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     public AudioClip closeSound;
     public bool boolChanged = false;
     public bool boolChanged2 = false;
-    public bool boolChanged3 = false;
 
+    // Enum for window sizes
     enum WindowSizeEnum
     {
         Tiny,
         Small,
         Medium,
-        Large
+        Imposant,
+        Large,
+        Huge
     };
+    // Current window size enum selected
     WindowSizeEnum currentWindowSize;
 
+    // List of asset objects
     List<UnityEngine.Object> assets = new List<UnityEngine.Object>();
 
-    [MenuItem("Tools/Resource Generator")] // Adds access to the window through the toolbar
+    // Adds access to the window through the toolbar
+    [MenuItem("Tools/Resource Generator")]
 
-    // Function being called when opening the window
+    ///<summary>
+    ///Function being called when opening the window
+    ///</summary>
     public static void ShowWindow()
     {
         ResourceGenerator window = (ResourceGenerator)GetWindow(typeof(ResourceGenerator)); // Sets the title of the window
         window.minSize = new Vector2(minX, minY); // Minimal window size
-        window.maxSize = new Vector2(minX, minY);
-
-        //if (File.Exists(CustomPath + SavedFile)) // Checks if the file exists to prevent error
-        //{
-        //    JsonUtility.FromJsonOverwrite(File.ReadAllText(CustomPath + SavedFile), window);
-        //    // RunOnStart = window._RunOnStart; // Loads the value
-        //}
-        //window.Show(); // Displays the window
+        window.maxSize = new Vector2(minX, minY); // Maximal window size
     }
 
-    public static int TryGetUnityObjectsOfTypeFromPath<T>(string path, List<T> assetsFound) where T : UnityEngine.Object
-    {
-        string[] filePaths = System.IO.Directory.GetFiles(path);
-
-        int countFound = 0;
-
-        if (filePaths != null && filePaths.Length > 0)
-        {
-            for (int i = 0; i < filePaths.Length; i++)
-            {
-                UnityEngine.Object obj = UnityEditor.AssetDatabase.LoadAssetAtPath(filePaths[i], typeof(T));
-                if (obj is T asset)
-                {
-                    countFound++;
-                    if (!assetsFound.Contains(asset))
-                    {
-                        assetsFound.Add(asset);
-                    }
-                }
-            }
-        }
-
-        return countFound;
-    }
-
-    void CreateFolders()
-    {
-        DirectoryInfo directoryInfo = new DirectoryInfo(ReturnDirectPath());
-
-        if (!directoryInfo.Exists)
-        {
-            directoryInfo.Create();
-            AssetDatabase.Refresh();
-        }
-
-
-        directoryInfo = new DirectoryInfo(ReturnIconPath());
-
-        if (!directoryInfo.Exists)
-        {
-            directoryInfo.Create();
-            AssetDatabase.Refresh();
-        }
-    }
-
-    // Function called when the editor window first opens
+    ///<summary>
+    ///Function called when the editor window first opens
+    ///</summary>
     private void OnEnable()
     {
         // Initialising variables
-        AnimatedValue = new AnimBool(false);
-        AnimatedValue.valueChanged.AddListener(Repaint);
-        AnimatedValue2 = new AnimBool(false);
-        AnimatedValue2.valueChanged.AddListener(Repaint);
-        AnimatedValue3 = new AnimBool(false);
-        AnimatedValue3.valueChanged.AddListener(Repaint);
-        GeneratedList = new GenerateList();
-        CreateFolders();
+        animatedValue = new AnimBool(false);
+        animatedValue.valueChanged.AddListener(Repaint);
+        animatedValue2 = new AnimBool(false);
+        animatedValue2.valueChanged.AddListener(Repaint);
+        animatedValue3 = new AnimBool(false);
+        animatedValue3.valueChanged.AddListener(Repaint);
+        generatedList = new GenerateList();
         global = this;
+
+        CreateFolders();
         TryGetUnityObjectsOfTypeFromPath(ReturnDirectPath(), assets);
 
+        // Initialising variables
         skin = Resources.Load<GUISkin>("Generator/ResourceGeneratorSkin");
         editorBox = Resources.Load<GameObject>("Generator/ResourceGenDisplayBox");
         GameObject editBox = PrefabUtility.InstantiatePrefab(editorBox) as GameObject;
@@ -160,39 +118,27 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         createSound = Resources.Load<AudioClip>("Generator/Sound/Create");
         destroySound = Resources.Load<AudioClip>("Generator/Sound/Destroy");
         closeSound = Resources.Load<AudioClip>("Generator/Sound/Close");
-
         windowXsize = minX;
         windowYsize = minY;
 
+        // Plays opening sound
         PlayClip(introSound);
     }
 
-    // Window editing
+    ///<summary>
+    ///Window Editing
+    ///</summary>
     private void OnGUI()
     {
-        if (clickSound != null)
-        {
-            // Debug.Log("Loaded");
-        }
         SetColors();
         DrawTitles();
-
-        if (!Terrain.activeTerrain)
-        {
-            GUILayout.Label("You need a terrain to begin!", ReturnGUIStyle(30, "", Color.red));
-            return;
-        }
-        Terrain.activeTerrain.gameObject.layer = LayerMask.NameToLayer("Terrain");
-
+        TerrainRaycast();
         PlaceButtons();
         CheckSelected();
         ChangeWindowSize();
         PlaySounds();
-
         ParametersAndGeneration();
-        editorBox.transform.position = GeneratedList.CalculatePosition();
-        editorBox.transform.position = new Vector3(editorBox.transform.position.x, GeneratedList.minY + ((GeneratedList.maxY - GeneratedList.minY) / 2), editorBox.transform.position.z);
-        editorBox.transform.localScale = new Vector3(GeneratedList.rangeWidth, GeneratedList.maxY - GeneratedList.minY, GeneratedList.rangeHeight);
+        BoxReshaping();
     }
 
     ///<summary>
@@ -227,19 +173,13 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         EditorGUILayout.EndHorizontal();
     }
 
+    ///<summary>
+    ///When the window is closed
+    ///</summary>
     private void OnDisable()
     {
-        DestroyImmediate(editorBox);
-        PlayClip(closeSound);
-    }
-
-    ///<summary>
-    ///Sets the font for the text
-    ///</summary>
-    void SetFont(string name = null)
-    {
-        // If font is null it will default to unity default arial
-        GUI.skin.font = (name == null ? null : (Font)AssetDatabase.LoadAssetAtPath(CustomPath + name + ".otf", typeof(Font)));
+        DestroyImmediate(editorBox); // Removes the spawn area
+        PlayClip(closeSound); // Plays closing sound
     }
 
     ///<summary>
@@ -247,20 +187,10 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     void PlaceButtons()
     {
-        GUIStyle customButtonStyle = new GUIStyle();
-        customButtonStyle.alignment = TextAnchor.MiddleCenter;
-
-        if (GUILayout.Button("Regenerate Terrain Textures (20s)", ReturnGUIStyle(30, "button")))
-        {
-            GenerateTerrainTextures();
-        }
-
-        GUILayout.Space(10);
-
-
         EditorGUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
 
+        // Creates a button for each resource
         foreach (var asset in assets)
         {
             CreateButton(asset.name);
@@ -269,67 +199,62 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         GUILayout.FlexibleSpace();
         EditorGUILayout.EndHorizontal();
 
-        AnimatedValue2.target = EditorGUILayout.ToggleLeft("Terrain?", AnimatedValue2.target, skin.GetStyle("Sexy3"));
+        // Toggle box for terrain parameters
+        animatedValue2.target = EditorGUILayout.ToggleLeft("Terrain?", animatedValue2.target, skin.GetStyle("Sexy3"));
 
-        if (EditorGUILayout.BeginFadeGroup(AnimatedValue2.faded))
+        // Terrain parameters appear if the toggle is on
+        if (EditorGUILayout.BeginFadeGroup(animatedValue2.faded))
         {
             EditorGUILayout.BeginHorizontal();
-            GUILayout.Label("Select a terrain type", skin.GetStyle("Sexy2"));
+            GUILayout.Label("Select terrains", skin.GetStyle("Sexy2"));
             EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
 
             SetTerrainTextures();
-            GUILayout.FlexibleSpace();
-            EditorGUILayout.EndHorizontal();
 
             GUILayout.Space(10);
         }
         EditorGUILayout.EndFadeGroup();
 
-        AnimatedValue3.target = EditorGUILayout.ToggleLeft("Area of denial?", AnimatedValue3.target, skin.GetStyle("Sexy3"));
+        animatedValue3.target = EditorGUILayout.ToggleLeft("Area of denial?", animatedValue3.target, skin.GetStyle("Sexy3"));
 
-
-        if (EditorGUILayout.BeginFadeGroup(AnimatedValue3.faded))
+        if (EditorGUILayout.BeginFadeGroup(animatedValue3.faded))
         {  // Define the list of options for the dropdown
 
-            List<string> options = new List<string>();
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.Label("Select a texture", skin.GetStyle("Sexy2"));
+            EditorGUILayout.EndHorizontal();
+            SetTerrainTextures(true);
 
-            for (int i = 0; i < Terrain.activeTerrain.terrainData.terrainLayers.Length; i++)
-            {
-                options.Add(Terrain.activeTerrain.terrainData.terrainLayers[i].name);
-            }
+            GUILayout.Space(15);
 
-            if (GeneratedList.TerrainTextureDenial == -1)
-            {
-                GeneratedList.TerrainTextureDenial = 0;
-            }
-
-            // Create the dropdown using GUILayout
-            GUILayout.Label("Texture to generate below your resource", ReturnGUIStyle(20));
-            GeneratedList.TerrainTextureDenial = GUILayout.SelectionGrid(GeneratedList.TerrainTextureDenial, options.ToArray(), 1);
-            GUILayout.Space(10);
-            GUILayout.Label("Radius", ReturnGUIStyle(20));
-            GeneratedList.AreaOfDenialRadius = GUILayout.HorizontalSlider(GeneratedList.AreaOfDenialRadius, 1f, 5.0f);
+            generatedList.AreaOfDenialRadius = EditorGUILayout.Slider("Area of denial radius", generatedList.AreaOfDenialRadius, 1f, 5.0f);
         }
         else
         {
-            GeneratedList.TerrainTextureDenial = -1;
+            generatedList.TerrainTextureDenial = -1;
         }
 
         EditorGUILayout.EndFadeGroup();
 
-        GUILayout.Space(20);
+        GUILayout.Space(10);
     }
 
-    void SetTerrainTextures()
+    ///<summary>
+    ///Creates buttons for the different terrain texture
+    ///</summary>
+    void SetTerrainTextures(bool denialBool = false)
     {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+
         Terrain terrain = Terrain.activeTerrain;
         for (int i = 0; i < terrain.terrainData.terrainLayers.Length; i++)
         {
-            CreateButton(terrain.terrainData.terrainLayers[i].diffuseTexture.name, terrain.terrainData.terrainLayers[i].diffuseTexture);
+            CreateButton(terrain.terrainData.terrainLayers[i].diffuseTexture.name, terrain.terrainData.terrainLayers[i].diffuseTexture, denialBool);
         }
+
+        GUILayout.FlexibleSpace();
+        EditorGUILayout.EndHorizontal();
     }
 
     ///<summary>
@@ -337,35 +262,43 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     void ParametersAndGeneration()
     {
-        if (EditorGUILayout.BeginFadeGroup(AnimatedValue.faded))
+        if (EditorGUILayout.BeginFadeGroup(animatedValue.faded))
         {
             EditorGUILayout.BeginVertical("box");
 
-            GeneratedList.resourcePrefab = newResourcePrefab;
+            generatedList.resourcePrefab = newResourcePrefab;
 
-            GeneratedList.numberOfResources = EditorGUILayout.IntField("Number of Resources", GeneratedList.numberOfResources);
+            generatedList.numberOfResources = EditorGUILayout.IntField("Number of Resources", generatedList.numberOfResources);
 
-            GeneratedList.rangeWidth = EditorGUILayout.FloatField("Spawn area X", GeneratedList.rangeWidth);
+            generatedList.rangeWidth = EditorGUILayout.FloatField("Spawn area X", generatedList.rangeWidth);
 
-            GeneratedList.rangeHeight = EditorGUILayout.FloatField("Spawn area Z", GeneratedList.rangeHeight);
+            generatedList.rangeHeight = EditorGUILayout.FloatField("Spawn area Z", generatedList.rangeHeight);
 
-            GeneratedList.positionOnTerrain = EditorGUILayout.Vector2Field("Position on terrain", GeneratedList.positionOnTerrain);
 
-            GeneratedList.minDistance = EditorGUILayout.FloatField("Distance between objects", GeneratedList.minDistance);
 
-            GeneratedList.minY = EditorGUILayout.FloatField("Lowest spawn height", GeneratedList.minY);
+            //    GUILayout.Label("Position on terrain", ReturnGUIStyle(20));
+            EditorGUILayout.BeginHorizontal();
+            generatedList.positionOnTerrain.x = EditorGUILayout.FloatField("Spawn area X position", generatedList.positionOnTerrain.x);
+            EditorGUI.indentLevel += 1;
+            generatedList.positionOnTerrain.y = EditorGUILayout.FloatField("Spawn area Z position", generatedList.positionOnTerrain.y);
+            EditorGUILayout.EndHorizontal();
+            EditorGUI.indentLevel -= 1;
 
-            if (GeneratedList.minY < 0)
+            generatedList.minDistance = EditorGUILayout.FloatField("Distance between objects", generatedList.minDistance);
+
+            generatedList.minY = EditorGUILayout.FloatField("Lowest spawn height", generatedList.minY);
+
+            if (generatedList.minY < 0)
             {
                 EditorGUILayout.TextArea("Below zero is sea level!", ReturnGUIStyle(15, color: Color.red));
             }
 
 
-            GeneratedList.maxY = EditorGUILayout.FloatField("Highest spawn height", GeneratedList.maxY);
+            generatedList.maxY = EditorGUILayout.FloatField("Highest spawn height", generatedList.maxY);
 
             if (GUILayout.Button("Generate", ReturnGUIStyle(30, "button")))
             {
-                generationSucessful = GeneratedList.GenerateResources();
+                generationSucessful = generatedList.GenerateResources();
                 PlayClip(createSound);
             }
 
@@ -374,25 +307,30 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
                 EditorGUILayout.TextArea("No suitable area to generate with the values you have given!", ReturnGUIStyle(15, color: Color.red));
             }
 
-            //if (SelectTexturesList.Count == 0 && Terrain.activeTerrain.terrainData.terrainLayers.Length > 0)
-            //{
-            //    EditorGUILayout.TextArea("Nothing will generate as you haven't selected a terrain texture!", ReturnGUIStyle(15, color: Color.red));
-            //}
-
             if (GUILayout.Button("Delete", ReturnGUIStyle(30, "button")))
             {
-                GeneratedList.ClearResourceList();
+                generatedList.ClearResourceList();
                 PlayClip(destroySound);
             }
+            EditorGUILayout.EndVertical();
         }
-
-        EditorGUILayout.EndVertical();
 
         EditorGUILayout.EndFadeGroup();
 
-        //Repaint(); // Redraws the window    
+
+        GUIStyle customButtonStyle = new GUIStyle();
+        customButtonStyle.alignment = TextAnchor.MiddleCenter;
+
+        if (GUILayout.Button("Generate Height Based Textures", ReturnGUIStyle(30, "button")))
+        {
+            GenerateTerrainTextures();
+        }
+
     }
 
+    ///<summary>
+    ///Returns the height of the terrain at position
+    ///</summary>
     private float GetTerrainHeight(Vector3 position)
     {
         float height = Terrain.activeTerrain.SampleHeight(position);
@@ -403,20 +341,22 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         return height;
     }
 
+    ///<summary>
+    ///Generates the terrain texture based on its height
+    ///</summary>
     void GenerateTerrainTextures()
     {
         int callsInt = 0;
 
-        GeneratedList.AreaOfDenialRadius = 10;
+        generatedList.AreaOfDenialRadius = 10;
 
-        for (int x = 0; x < Terrain.activeTerrain.terrainData.size.x; x += (int)GeneratedList.AreaOfDenialRadius)
+        for (int x = 0; x < Terrain.activeTerrain.terrainData.size.x; x += (int)generatedList.AreaOfDenialRadius)
         {
-            for (int z = 0; z < Terrain.activeTerrain.terrainData.size.z; z += (int)GeneratedList.AreaOfDenialRadius)
+            for (int z = 0; z < Terrain.activeTerrain.terrainData.size.z; z += (int)generatedList.AreaOfDenialRadius)
             {
                 Vector3 position = new Vector3(x, 0, z);
                 Vector3 worldPosition = Terrain.activeTerrain.GetPosition() + position;
 
-                //  Debug.Log(callsInt + "Sampled position: " + worldPosition + " " + GetTerrainHeight(worldPosition));
                 callsInt++;
 
                 if (callsInt > 1000) //prevent stack overflow
@@ -426,30 +366,30 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
                     }
                 }
 
-                GeneratedList.TerrainTextureDenial = 0;
+                generatedList.TerrainTextureDenial = 0;
 
                 if (GetTerrainHeight(worldPosition) > 5)
                 {
-                    GeneratedList.TerrainTextureDenial = 1;
+                    generatedList.TerrainTextureDenial = 1;
 
                 }
                 if (GetTerrainHeight(worldPosition) > 20)
                 {
-                    GeneratedList.TerrainTextureDenial = 2;
+                    generatedList.TerrainTextureDenial = 2;
                 }
 
                 if (GetTerrainHeight(worldPosition) > 30) //snow
                 {
-                    GeneratedList.TerrainTextureDenial = 3;
+                    generatedList.TerrainTextureDenial = 3;
                 }
 
-                GeneratedList.ChangeTerrainTexture(worldPosition);
+                generatedList.ChangeTerrainTexture(worldPosition);
 
             }
         }
 
-        GeneratedList.AreaOfDenialRadius = 2;
-        GeneratedList.TerrainTextureDenial = -1;
+        generatedList.AreaOfDenialRadius = 2;
+        generatedList.TerrainTextureDenial = -1;
     }
 
     ///<summary>
@@ -457,14 +397,8 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     ///</summary>
     private Texture2D MakeTexture(int width, int height, Color color)
     {
-        Color[] pixels = new Color[width * height];
-        for (int i = 0; i < pixels.Length; i++)
-        {
-            pixels[i] = color;
-        }
-
-        Texture2D texture = new Texture2D(width, height);
-        texture.SetPixels(pixels);
+        Texture2D texture = new Texture2D(1, 1);
+        texture.SetPixel(0, 0, color);
         texture.Apply();
 
         return texture;
@@ -488,7 +422,7 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
     {
         return ReturnPathPath() + "Icons/";
     }
-    public void CreateButton(string prefabNameString, Texture texture = null)
+    public void CreateButton(string prefabNameString, Texture texture = null, bool denialBool = false)
     {
 
         bool terrainBool = texture != null;
@@ -499,17 +433,36 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         }
 
         GUIContent buttonContent = new GUIContent(texture);
-        buttonContent.text = prefabNameString;
+
+        if (!terrainBool && !texture)
+            buttonContent.text = prefabNameString;
+
         buttonContent.tooltip = prefabNameString;
 
 
         GUIStyle customButtonStyle = new GUIStyle(GUI.skin.button);
 
-        bool selectedBool;
+        bool selectedBool = false;
+        int denialselected = 0;
 
         if (terrainBool)
         {
-            selectedBool = GeneratedList.SelectTexturesList.Contains(texture);
+            if (denialBool)
+            {
+                for (int i = 0; i < Terrain.activeTerrain.terrainData.terrainLayers.Length; i++)
+                {
+                    if (Terrain.activeTerrain.terrainData.terrainLayers[i].diffuseTexture == texture)
+                    {
+                        denialselected = i;
+                        selectedBool = generatedList.TerrainTextureDenial == i;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                selectedBool = generatedList.SelectTexturesList.Contains(texture);
+            }
         }
         else
         {
@@ -521,23 +474,34 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         customButtonStyle.fixedHeight = 100;
         customButtonStyle.alignment = TextAnchor.MiddleCenter;
         customButtonStyle.imagePosition = ImagePosition.ImageAbove;
-        customButtonStyle.padding = new RectOffset(2, 2, 10, 2);
-        // EditorGUILayout.BeginVertical();
+        customButtonStyle.padding = new RectOffset(5, 5, 8, 5);
+
         if (GUILayout.Button(buttonContent, customButtonStyle))
         {
             if (terrainBool)
             {
-                if (selectedBool)
+                if (denialBool)
                 {
-                    GeneratedList.SelectTexturesList.Remove(texture);
+                    generatedList.TerrainTextureDenial = selectedBool ? -1 : denialselected;
+                    areaSelected = !selectedBool;
+
                     StopAllClips();
                     PlayClip(click2Sound);
                 }
                 else
                 {
-                    GeneratedList.SelectTexturesList.Add(texture);
-                    StopAllClips();
-                    PlayClip(click2Sound);
+                    if (selectedBool)
+                    {
+                        generatedList.SelectTexturesList.Remove(texture);
+                        StopAllClips();
+                        PlayClip(click2Sound);
+                    }
+                    else
+                    {
+                        generatedList.SelectTexturesList.Add(texture);
+                        StopAllClips();
+                        PlayClip(click2Sound);
+                    }
                 }
             }
             else
@@ -560,8 +524,6 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
 
             }
         }
-
-        //  EditorGUILayout.EndVertical();
     }
 
     ///<summary>
@@ -576,10 +538,13 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         return headStyle;
     }
 
+    ///<summary>
+    ///Checks which steps have been completed and what parameters should be displayed
+    ///</summary>
     void CheckSelected()
     {
         // Checking if the tickbox is toggled. Could bypass this step but decided to use a more readable boolean
-        if (AnimatedValue2.target == true)
+        if (animatedValue2.target == true)
         {
             terrainToggleSelected = true;
         }
@@ -588,8 +553,18 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             terrainToggleSelected = false;
         }
 
+        // Checking if the tickbox is toggled.
+        if (animatedValue3.target == true)
+        {
+            areaToggleSelected = true;
+        }
+        else
+        {
+            areaToggleSelected = false;
+        }
+
         // If at least one texture button is selected then this boolean is true
-        if (GeneratedList.SelectTexturesList.Count > 0)
+        if (generatedList.SelectTexturesList.Count > 0)
         {
             terrainSelected = true;
         }
@@ -599,93 +574,137 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
         }
 
         // If the tickbox is toggled, it requires a texture to be also selected to display the parameters
-        if (terrainToggleSelected)
+        if (terrainToggleSelected || areaToggleSelected)
         {
-            if (terrainSelected) // If texture is selected
+            if (terrainToggleSelected && areaToggleSelected)
             {
-                AnimatedValue.target = resourceSelected;
+                if (terrainSelected && areaSelected) // If texture is selected
+                {
+                    animatedValue.target = resourceSelected;
+                }
+                else
+                {
+                    animatedValue.target = false;
+                }
             }
-            else
+            else if (terrainToggleSelected)
             {
-                AnimatedValue.target = false;
+                if (terrainSelected) // If texture is selected
+                {
+                    animatedValue.target = resourceSelected;
+                }
+                else
+                {
+                    animatedValue.target = false;
+                }
+            }
+            else if (areaToggleSelected)
+            {
+                if (areaSelected) // If texture is selected
+                {
+                    animatedValue.target = resourceSelected;
+                }
+                else
+                {
+                    animatedValue.target = false;
+                }
             }
         }
         else // If the tickbox is not toggled or untoggled, display the parameters if a resource is toggled
         {
-            AnimatedValue.target = resourceSelected; // Displays if resourceSelected is true
-
-            if (GeneratedList.SelectTexturesList.Count > 0) // If a texture was selected when the tickbox was untoggled
+            animatedValue.target = resourceSelected; // Displays if resourceSelected is true
+        }
+        if (!terrainToggleSelected)
+        {
+            if (generatedList.SelectTexturesList.Count > 0) // If a texture was selected when the tickbox was untoggled
             {
-                for (int i = 0; i < GeneratedList.SelectTexturesList.Count; i++) // Unselect all textures
+                for (int i = 0; i < generatedList.SelectTexturesList.Count; i++) // Unselect all textures
                 {
-                    GeneratedList.SelectTexturesList.Remove(GeneratedList.SelectTexturesList[i]);
+                    generatedList.SelectTexturesList.Remove(generatedList.SelectTexturesList[i]);
                 }
             }
         }
     }
 
+    ///<summary>
+    ///Resizes the window based on what parameters are displayed
+    ///</summary>
     void ChangeWindowSize()
     {
-        if (AnimatedValue.target == false && terrainToggleSelected == false)
+        if (animatedValue.target == false && terrainToggleSelected == false && areaToggleSelected == false)
         {
             currentWindowSize = WindowSizeEnum.Tiny;
         }
-        else if (AnimatedValue.target == false && terrainToggleSelected == true)
+        else if (animatedValue.target == false && (terrainToggleSelected == true || areaToggleSelected == true) && !(terrainToggleSelected == true && areaToggleSelected == true))
         {
             currentWindowSize = WindowSizeEnum.Small;
         }
-        else if (AnimatedValue.target == true && terrainToggleSelected == false)
+        else if (animatedValue.target == true && terrainToggleSelected == false && areaToggleSelected == false)
         {
             currentWindowSize = WindowSizeEnum.Medium;
         }
-        else if (AnimatedValue.target == true && terrainToggleSelected == true)
+        else if (animatedValue.target == false && terrainToggleSelected == true && areaToggleSelected == true)
+        {
+            currentWindowSize = WindowSizeEnum.Imposant;
+        }
+        else if (animatedValue.target == true && (terrainToggleSelected == true || areaToggleSelected == true) && !(terrainToggleSelected == true && areaToggleSelected == true))
         {
             currentWindowSize = WindowSizeEnum.Large;
+        }
+        else if (animatedValue.target == true && terrainToggleSelected == true && areaToggleSelected == true)
+        {
+            currentWindowSize = WindowSizeEnum.Huge;
         }
 
         if (currentWindowSize == WindowSizeEnum.Tiny)
         {
-            windowYsize = 210.0f;
+            windowYsize = 281.0f;
         }
         else if (currentWindowSize == WindowSizeEnum.Small)
         {
-            windowYsize = 355.0f;
+            if (areaToggleSelected == true)
+            {
+                windowYsize = 450.0f;
+            }
+            else if (terrainToggleSelected == true)
+            {
+                windowYsize = 425.0f;
+            }
         }
         else if (currentWindowSize == WindowSizeEnum.Medium)
         {
-            windowYsize = 465.0f;
+            windowYsize = 535.0f;
+        }
+        else if (currentWindowSize == WindowSizeEnum.Imposant)
+        {
+            windowYsize = 594.0f;
         }
         else if (currentWindowSize == WindowSizeEnum.Large)
         {
-            windowYsize = 600.0f;
+            if (areaToggleSelected == true)
+            {
+                windowYsize = 705.0f;
+            }
+            else if (terrainToggleSelected == true)
+            {
+                windowYsize = 680.0f;
+            }
         }
-
-        //POL I ADDED THIS FOR TESTING
-        //  windowYsize = 700;
-        //   currentWindowSize = WindowSizeEnum.Large;
+        else if (currentWindowSize == WindowSizeEnum.Huge)
+        {
+            windowYsize = 848.0f;
+        }
 
         if (Screen.height - 27.0f != windowYsize)
         {
             minSize = new Vector2(windowXsize, windowYsize);
             maxSize = new Vector2(windowXsize, windowYsize);
         }
-
-        //if (Screen.height - 27.0f != windowYsize)
-        //{
-        //    if (valueStored == false)
-        //    {
-        //        currentHeight = Screen.height - 27.0f;
-        //        valueStored = true;
-        //    }
-        //    minSize = new Vector2(windowXsize, Mathf.Lerp(currentHeight, windowYsize, Time.deltaTime));
-        //    maxSize = new Vector2(windowXsize, windowYsize);
-        //}
-        //if (currentHeight == windowYsize)
-        //{
-        //    valueStored = false;
-        //}
     }
 
+    ///<summary>
+    ///Allows to play sound in the editor
+    ///</summary>
     public static void PlayClip(AudioClip clip, int startSample = 0, bool loop = false)
     {
         Assembly unityEditorAssembly = typeof(AudioImporter).Assembly;
@@ -699,13 +718,15 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             null
         );
 
-        // Debug.Log(method);
         method.Invoke(
             null,
             new object[] { clip, startSample, loop }
         );
     }
 
+    ///<summary>
+    ///Stops all sounds from playing
+    ///</summary>
     public static void StopAllClips()
     {
         Assembly unityEditorAssembly = typeof(AudioImporter).Assembly;
@@ -719,13 +740,15 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             null
         );
 
-        //Debug.Log(method);
         method.Invoke(
             null,
             new object[] { }
         );
     }
 
+    ///<summary>
+    ///Plays sound when the tickboxes are toggled
+    ///</summary>
     void PlaySounds()
     {
         if (boolChanged != terrainToggleSelected)
@@ -734,26 +757,87 @@ public class ResourceGenerator : EditorWindow // To access the editor features, 
             PlayClip(clickSound);
             boolChanged = terrainToggleSelected;
         }
-    }
-    //// SAVING DATA
-    //bool previous = RunOnStart;
-    //RunOnStart = EditorGUILayout.ToggleLeft("Spawn resources accross whole biome", RunOnStart);
-    //if (RunOnStart != previous) //only run if the toggle has been pressed
-    //{
-    //    Repaint(); //updates the window
-    //    EditorUtility.SetDirty(this); //tells unity this has been changed
-    //    _RunOnStart = RunOnStart; //set so it can serialise
-    //    var json = JsonUtility.ToJson(this);
-    //    File.WriteAllText(CustomPath + SavedFile, json);
-    //    AssetDatabase.Refresh(); //so the file is visible
-    //}
 
-    //AnimatedValue.target = InputString != ""; //animate the input to appear
-    //if (AnimatedValue.target)
-    //{
-    //    EditorGUILayout.BeginFadeGroup(AnimatedValue.faded); //run the animation
-    //    EditorGUILayout.TextArea("Inputed: " + InputString, ReturnGUIStyle(20));
-    //    EditorGUILayout.EndFadeGroup(); //stop the animation
-    //}
+        if (boolChanged2 != areaToggleSelected)
+        {
+            StopAllClips();
+            PlayClip(clickSound);
+            boolChanged2 = areaToggleSelected;
+        }
+    }
+
+    ///<summary>
+    ///Gets the spawn area box from the resource folder and makes it appear into the scene 
+    ///</summary>   
+    public static int TryGetUnityObjectsOfTypeFromPath<T>(string path, List<T> assetsFound) where T : UnityEngine.Object
+    {
+        string[] filePaths = System.IO.Directory.GetFiles(path);
+
+        int countFound = 0;
+
+        if (filePaths != null && filePaths.Length > 0)
+        {
+            for (int i = 0; i < filePaths.Length; i++)
+            {
+                UnityEngine.Object obj = UnityEditor.AssetDatabase.LoadAssetAtPath(filePaths[i], typeof(T));
+                if (obj is T asset)
+                {
+                    countFound++;
+                    if (!assetsFound.Contains(asset))
+                    {
+                        assetsFound.Add(asset);
+                    }
+                }
+            }
+        }
+
+        return countFound;
+    }
+
+    ///<summary>
+    ///Returns an array of all the resource prefabs from the scene folder in Resources
+    ///</summary>
+    void CreateFolders()
+    {
+        DirectoryInfo directoryInfo = new DirectoryInfo(ReturnDirectPath());
+
+        if (!directoryInfo.Exists)
+        {
+            directoryInfo.Create();
+            AssetDatabase.Refresh();
+        }
+
+
+        directoryInfo = new DirectoryInfo(ReturnIconPath());
+
+        if (!directoryInfo.Exists)
+        {
+            directoryInfo.Create();
+            AssetDatabase.Refresh();
+        }
+    }
+
+    ///<summary>
+    ///Makes sure there is a terrain
+    ///</summary>
+    void TerrainRaycast()
+    {
+        if (!Terrain.activeTerrain)
+        {
+            GUILayout.Label("You need a terrain to begin!", ReturnGUIStyle(30, "", Color.red));
+            return;
+        }
+        Terrain.activeTerrain.gameObject.layer = LayerMask.NameToLayer("Terrain");
+    }
+
+    ///<summary>
+    ///Changes the spawn area visually based on input
+    ///</summary>
+    void BoxReshaping()
+    {
+        editorBox.transform.position = generatedList.CalculatePosition();
+        editorBox.transform.position = new Vector3(editorBox.transform.position.x, generatedList.minY + ((generatedList.maxY - generatedList.minY) / 2), editorBox.transform.position.z);
+        editorBox.transform.localScale = new Vector3(generatedList.rangeWidth, generatedList.maxY - generatedList.minY, generatedList.rangeHeight);
+    }
 }
 #endif // The end of the unity editor checker

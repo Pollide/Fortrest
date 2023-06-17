@@ -30,8 +30,8 @@ public class LevelManager : MonoBehaviour
     public Transform DirectionalLightTransform;
     public Material LanternGlowingMaterial;
     public Material LanternOffMaterial;
-    public SkinnedMeshRenderer LanternSkinnedRenderer;
-    public GameObject NightLightGameObject;
+    private SkinnedMeshRenderer LanternSkinnedRenderer;
+    private GameObject NightLightGameObject;
     public float DaylightTimer;
     public int day = 0;
     public List<GameObject> enemyList = new List<GameObject>();
@@ -49,11 +49,11 @@ public class LevelManager : MonoBehaviour
     public VisualEffect VFXSmokePuff;
     public VisualEffect VFXWoodChip;
 
-    public TMP_Text DayTMP_Text;
-    public TMP_Text RemaningTMP_Text;
-    public TMP_Text SurvivedTMP_Text;
-    public TMP_Text enemyNumberText;
-    public TMP_Text enemyNumberText2;
+    private TMP_Text DayTMP_Text;
+    private TMP_Text RemaningTMP_Text;
+    [HideInInspector] public TMP_Text SurvivedTMP_Text;
+    private TMP_Text enemyNumberText;
+    private TMP_Text enemyNumberText2;
 
     private bool locked = true;
     private bool newDay = false;
@@ -81,6 +81,18 @@ public class LevelManager : MonoBehaviour
         VFXSmokePuff.Stop();
         VFXWoodChip.Stop();
         newDay = true;
+
+        PlayerController playerController = PlayerController.global;
+
+        LanternSkinnedRenderer = playerController.transform.Find("Dwarf rig With sword").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
+        NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
+
+        DayTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("New Day").Find("Day Text").GetComponent<TMP_Text>();
+        RemaningTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("New Day").Find("Remaining Text").GetComponent<TMP_Text>();
+        SurvivedTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("Game Over").Find("Remaining Text").GetComponent<TMP_Text>();
+        enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
+        enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
+
     }
 
 
@@ -150,29 +162,37 @@ public class LevelManager : MonoBehaviour
 
         bool nightTimeBool = DaylightTimer > 180;
 
-        if (GoblinTimer >= GoblinThreshold && nightTimeBool)
+        Light light = DirectionalLightTransform.GetComponent<Light>();
+
+        light.intensity = Mathf.Lerp(light.intensity, nightTimeBool ? 0 : 0.4f, Time.deltaTime);
+
+        if (nightTimeBool)
         {
-            GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
-            if (GoblinThreshold < 0.2f)
+
+            if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = 0.2f;
+                GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
+                if (GoblinThreshold < 0.2f)
+                {
+                    GoblinThreshold = 0.2f;
+                }
+                GoblinTimer = 0;
+
+                Vector3 spawn = PlayerController.global.transform.position;
+
+
+                spawn.x += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+
+                spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+
+                GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
+
+                enemyList.Add(goblin);
             }
-            GoblinTimer = 0;
-
-            Vector3 spawn = PlayerController.global.transform.position;
-
-
-            spawn.x += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
-
-            spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
-
-            GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
-
-            enemyList.Add(goblin);
         }
 
         NightLightGameObject.SetActive(nightTimeBool);
-        LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
+        LanternSkinnedRenderer.materials[2] = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
 
 
         for (int i = 0; i < NaturalBuildingList.Count; i++)
