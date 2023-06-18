@@ -68,8 +68,8 @@ public class LevelManager : MonoBehaviour
 
         if (!GameManager.global)
         {
-
-            PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
+            // if()
+            // PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
     }
@@ -283,12 +283,15 @@ public class LevelManager : MonoBehaviour
     void EnemiesTextControl()
     {
         //if (enemyList.Count > 0)
-        enemyNumberText.text = enemyList.Count.ToString();
-
-        if (newDay)
+        if (enemyNumberText)
         {
-            newDay = false;
-            StartCoroutine(TextAppearing());
+            enemyNumberText.text = enemyList.Count.ToString();
+
+            if (newDay)
+            {
+                newDay = false;
+                StartCoroutine(TextAppearing());
+            }
         }
     }
 
