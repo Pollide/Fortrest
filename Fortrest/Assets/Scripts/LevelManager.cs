@@ -9,7 +9,7 @@ using TMPro;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager global;
-
+    public Transform SpawnPosition;
     public Camera SceneCamera;
 
     public float PanSpeed = 20f;
@@ -83,6 +83,11 @@ public class LevelManager : MonoBehaviour
         newDay = true;
 
         PlayerController playerController = PlayerController.global;
+
+        if (SpawnPosition)
+        {
+            playerController.transform.position = SpawnPosition.position;
+        }
 
         LanternSkinnedRenderer = playerController.transform.Find("Dwarf rig With sword").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;

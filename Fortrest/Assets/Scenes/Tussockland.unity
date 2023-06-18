@@ -10913,25 +10913,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e4049125d95a3145aead8a4e7b18a22, type: 3}
---- !u!1 &1113628606 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8723033376982290, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
-    type: 3}
-  m_PrefabInstance: {fileID: 1857625425}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1113628608
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1113628606}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.02, y: 0.075, z: 0.02}
-  m_Center: {x: 0, y: 0.03, z: 0.0000000015773121}
 --- !u!1001 &1122706134
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12491,12 +12472,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e4049125d95a3145aead8a4e7b18a22, type: 3}
---- !u!1 &1322678019 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8723033314312697, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
-    type: 3}
-  m_PrefabInstance: {fileID: 1857625425}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1328147846
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15136,12 +15111,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e4049125d95a3145aead8a4e7b18a22, type: 3}
---- !u!1 &1568986451 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8723031398613954, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
-    type: 3}
-  m_PrefabInstance: {fileID: 1857625425}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1589449512
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15369,6 +15338,37 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e4049125d95a3145aead8a4e7b18a22, type: 3}
+--- !u!1 &1602559961
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1602559962}
+  m_Layer: 0
+  m_Name: Spawn Position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1602559962
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1602559961}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 60, y: 12.59, z: 45}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1615588046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16158,12 +16158,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e4049125d95a3145aead8a4e7b18a22, type: 3}
---- !u!1 &1754506224 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8723032806985504, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
-    type: 3}
-  m_PrefabInstance: {fileID: 1857625425}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1757086880
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17317,6 +17311,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SpawnPosition
+      value: 
+      objectReference: {fileID: 1602559962}
     - target: {fileID: 927623175018942830, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: m_Name
@@ -17641,17 +17640,17 @@ PrefabInstance:
         type: 3}
       propertyPath: AxeGameObject
       value: 
-      objectReference: {fileID: 1568986451}
+      objectReference: {fileID: 0}
     - target: {fileID: 2206116251684197061, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: HammerGameObject
       value: 
-      objectReference: {fileID: 1754506224}
+      objectReference: {fileID: 0}
     - target: {fileID: 2206116251684197061, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: PicaxeGameObject
       value: 
-      objectReference: {fileID: 1322678019}
+      objectReference: {fileID: 0}
     - target: {fileID: 2206116251684197066, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: m_Size.x
