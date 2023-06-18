@@ -53,17 +53,17 @@ public class PlayerController : MonoBehaviour
     private bool noEnergy;
     private bool repaired;
     private bool sleeping;
-    public GameObject house;
-    public GameObject houseSpawnPoint;
+    private GameObject house;
+    private GameObject houseSpawnPoint;
     private GameObject destroyedHouse;
     private GameObject repairedHouse;
     public GameObject bodyShape;
-    public GameObject interactText1;
-    public GameObject interactText2;
-    public GameObject interactText3;
+    private GameObject interactText1;
+    private GameObject interactText2;
+    private GameObject interactText3;
 
-    public VisualEffect VFXSlash;
-    public VisualEffect VFXSleeping;
+    private VisualEffect VFXSlash;
+    private VisualEffect VFXSleeping;
 
     private bool soundPlaying = false;
 
@@ -72,7 +72,8 @@ public class PlayerController : MonoBehaviour
     public GameObject PicaxeGameObject;
     public GameObject SwordGameObject;
     public GameObject RadiusGameObject;
-    public GameObject RadiusCamGameObject;
+    private GameObject RadiusCamGameObject;
+
     [System.Serializable]
     public class ToolData
     {
@@ -85,19 +86,47 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        // Get Character controller that is attached to the player
-        playerCC = GetComponent<CharacterController>();
-        global = this;
+        if (!global)
+        {
+            // Get Character controller that is attached to the player
+            playerCC = GetComponent<CharacterController>();
+            global = this;
+        }
+        else
+        {
+            Destroy(global.transform.parent.gameObject);
+        }
     }
 
     private void Start()
     {
+        LevelManager manager = LevelManager.global;
+        VFXSlash = manager.transform.Find("VFX").Find("VFX_Slash").GetComponent<VisualEffect>();
+        VFXSleeping = manager.transform.Find("VFX").Find("VFX_Sleeping").GetComponent<VisualEffect>();
+
         VFXSlash.Stop();
         VFXSleeping.Stop();
+
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
-        destroyedHouse = house.transform.Find("Destroyed House").gameObject;
-        repairedHouse = house.transform.Find("Repaired House").gameObject;
+
+        if (GameObject.Find("Radius Camera"))
+        {
+            RadiusCamGameObject = GameObject.Find("Radius Camera");
+        }
+
+        if (GameObject.Find("House"))
+        {
+            house = GameObject.Find("House");
+
+            houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
+            destroyedHouse = house.transform.Find("Destroyed House").gameObject;
+            repairedHouse = house.transform.Find("Repaired House").gameObject;
+
+            interactText1 = house.transform.Find("Floating Text 1").gameObject;
+            interactText2 = house.transform.Find("Floating Text 2").gameObject;
+            interactText3 = house.transform.Find("Floating Text 3").gameObject;
+        }
     }
 
     public void ChangeTool(ToolData toolData)
@@ -107,7 +136,10 @@ public class PlayerController : MonoBehaviour
         PicaxeGameObject.SetActive(toolData.PicaxeBool);
         SwordGameObject.SetActive(toolData.SwordBool);
         RadiusGameObject.SetActive(toolData.HammerBool);
-        RadiusCamGameObject.SetActive(toolData.HammerBool);
+        if (RadiusCamGameObject != null)
+        {
+            RadiusCamGameObject.SetActive(toolData.HammerBool);
+        }
     }
 
     // Update is called once per frame
@@ -126,7 +158,10 @@ public class PlayerController : MonoBehaviour
             Attack();
         }
 
-        Sleep();
+        if (house != null)
+        {
+            Sleep();
+        }
 
         if (sleeping)
         {
