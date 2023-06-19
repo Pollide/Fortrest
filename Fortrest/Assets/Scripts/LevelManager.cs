@@ -9,7 +9,7 @@ using TMPro;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager global;
-
+    public Transform SpawnPosition;
     public Camera SceneCamera;
 
     public float PanSpeed = 20f;
@@ -68,8 +68,8 @@ public class LevelManager : MonoBehaviour
 
         if (!GameManager.global)
         {
-
-            PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
+            // if()
+            // PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
     }
@@ -83,6 +83,11 @@ public class LevelManager : MonoBehaviour
         newDay = true;
 
         PlayerController playerController = PlayerController.global;
+
+        if (SpawnPosition)
+        {
+            playerController.transform.position = SpawnPosition.position;
+        }
 
         LanternSkinnedRenderer = playerController.transform.Find("Dwarf rig With sword").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
@@ -278,12 +283,15 @@ public class LevelManager : MonoBehaviour
     void EnemiesTextControl()
     {
         //if (enemyList.Count > 0)
-        enemyNumberText.text = enemyList.Count.ToString();
-
-        if (newDay)
+        if (enemyNumberText)
         {
-            newDay = false;
-            StartCoroutine(TextAppearing());
+            enemyNumberText.text = enemyList.Count.ToString();
+
+            if (newDay)
+            {
+                newDay = false;
+                StartCoroutine(TextAppearing());
+            }
         }
     }
 
