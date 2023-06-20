@@ -9,6 +9,7 @@ public class SignTrigger : MonoBehaviour
     [SerializeField] private bool inRange = false;
     [SerializeField] private bool hasRun = false;
     [SerializeField] private BridgeBuilder bridgeBuilder;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
