@@ -9,7 +9,7 @@ using TMPro;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager global;
-
+    public Transform SpawnPosition;
     public Camera SceneCamera;
 
     public float PanSpeed = 20f;
@@ -68,8 +68,8 @@ public class LevelManager : MonoBehaviour
 
         if (!GameManager.global)
         {
-
-            PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
+            // if()
+            // PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
     }
@@ -83,6 +83,11 @@ public class LevelManager : MonoBehaviour
         newDay = true;
 
         PlayerController playerController = PlayerController.global;
+
+        if (SpawnPosition)
+        {
+            playerController.transform.position = SpawnPosition.position;
+        }
 
         LanternSkinnedRenderer = playerController.transform.Find("Dwarf rig With sword").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
@@ -161,25 +166,33 @@ public class LevelManager : MonoBehaviour
 
         bool nightTimeBool = DaylightTimer > 180;
 
-        if (GoblinTimer >= GoblinThreshold && nightTimeBool)
+        Light light = DirectionalLightTransform.GetComponent<Light>();
+
+        light.intensity = Mathf.Lerp(light.intensity, nightTimeBool ? 0 : 0.4f, Time.deltaTime);
+
+        if (nightTimeBool)
         {
-            GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
-            if (GoblinThreshold < 0.2f)
+
+            if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = 0.2f;
+                GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
+                if (GoblinThreshold < 0.2f)
+                {
+                    GoblinThreshold = 0.2f;
+                }
+                GoblinTimer = 0;
+
+                Vector3 spawn = PlayerController.global.transform.position;
+
+
+                spawn.x += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+
+                spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+
+                GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
+
+                enemyList.Add(goblin);
             }
-            GoblinTimer = 0;
-
-            Vector3 spawn = PlayerController.global.transform.position;
-
-
-            spawn.x += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
-
-            spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
-
-            GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
-
-            enemyList.Add(goblin);
         }
 
         if (NightLightGameObject != null)
@@ -273,12 +286,15 @@ public class LevelManager : MonoBehaviour
     void EnemiesTextControl()
     {
         //if (enemyList.Count > 0)
-        enemyNumberText.text = enemyList.Count.ToString();
-
-        if (newDay)
+        if (enemyNumberText)
         {
-            newDay = false;
-            StartCoroutine(TextAppearing());
+            enemyNumberText.text = enemyList.Count.ToString();
+
+            if (newDay)
+            {
+                newDay = false;
+                StartCoroutine(TextAppearing());
+            }
         }
     }
 

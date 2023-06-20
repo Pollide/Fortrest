@@ -295,11 +295,12 @@ public class GrassComputeScript : MonoBehaviour
     {
         // If in edit mode, we need to update the shaders each Update to make sure settings changes are applied
         // Don't worry, in edit mode, Update isn't called each frame
-
+#if UNITY_EDITOR
         if (ResourceGenerator.global)
         {
             return;
         }
+#endif
 
         if (Application.isPlaying == false)
         {

@@ -78,7 +78,14 @@ public class Indicator : MonoBehaviour
     {
         for (int i = 0; i < IndicatorList.Count; i++)
         {
-            IndicatorList[i].Refresh();
+            if (IndicatorList[i].target)
+            {
+                IndicatorList[i].Refresh();
+            }
+            else
+            {
+                IndicatorList.RemoveAt(i);
+            }
         }
     }
 

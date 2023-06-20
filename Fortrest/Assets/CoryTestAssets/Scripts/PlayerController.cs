@@ -108,7 +108,7 @@ public class PlayerController : MonoBehaviour
 
         VFXSlash.Stop();
         VFXSleeping.Stop();
-        
+
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
 
@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviour
         if (GameObject.Find("House"))
         {
             house = GameObject.Find("House");
-            
+
             houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
             destroyedHouse = house.transform.Find("Destroyed House").gameObject;
             repairedHouse = house.transform.Find("Repaired House").gameObject;
@@ -166,7 +166,7 @@ public class PlayerController : MonoBehaviour
         {
             Sleep();
         }
-        
+
         if (sleeping)
         {
             playerEnergy += Time.deltaTime;

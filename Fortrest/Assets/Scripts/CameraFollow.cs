@@ -13,7 +13,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float maxSmooth = 0.25f;
     [SerializeField] private float minSmooth = 0.01f;
     [SerializeField] private float max;
-    
+
     private void Start()
     {
         lockCamera = true;
@@ -27,6 +27,7 @@ public class CameraFollow : MonoBehaviour
     private void Update()
     {
         Vector3 targetPosition = playerPosition.position + new Vector3(0.0f, offset.y, 0.0f);
+
         cameraDistance = Vector3.Distance(targetPosition, transform.position);
         float i = cameraDistance / (max * 50);
         smoothTime = Mathf.Lerp(minSmooth, maxSmooth, i);
@@ -42,7 +43,7 @@ public class CameraFollow : MonoBehaviour
         {
             if (cameraDistance > 0.1f)
             {
-                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);               
+                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
             }
             else
             {
