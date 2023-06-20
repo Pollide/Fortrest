@@ -5,7 +5,6 @@ using UnityEngine.AI;
 
 public class TurretCannon : MonoBehaviour
 {
-    public Transform cannonHead;
     public GameObject projectilePrefab;
     public Transform firePoint;
     public float fireRate = 1f;
@@ -57,15 +56,16 @@ public class TurretCannon : MonoBehaviour
             return;
 
         // Calculate the direction to the target
-        Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
+        Vector3 targetPos = new(target.transform.position.x, target.transform.position.y, target.transform.position.z);
 
         Vector3 direction = targetPos - transform.position;
 
         // Set the cannon's rotation to aim at the target
-        cannonHead.rotation = Quaternion.LookRotation(direction, Vector3.up);
+        transform.rotation = Quaternion.LookRotation(direction);
 
         // Spawn a projectile
         ProjectileExplosion projectile = Instantiate(projectilePrefab, firePoint).GetComponent<ProjectileExplosion>();
+        projectile.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
         projectile.explosionRadius = explosionRadius;
         projectile.damage = damage;
     }

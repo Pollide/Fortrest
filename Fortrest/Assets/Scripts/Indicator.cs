@@ -9,7 +9,6 @@ public class Indicator : MonoBehaviour
 
     public GameObject arrowPrefab;
 
-
     public List<IndicatorData> IndicatorList = new List<IndicatorData>();
 
     public Vector3 offsets = Vector3.one;
@@ -92,6 +91,7 @@ public class Indicator : MonoBehaviour
 
     public void AddIndicator(Transform target)
     {
+        return;
         IndicatorData indicatorData = new IndicatorData();
 
         indicatorData.target = target;

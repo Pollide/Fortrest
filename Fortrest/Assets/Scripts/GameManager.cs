@@ -66,6 +66,9 @@ public class GameManager : MonoBehaviour
     public AudioClip CantPlaceSound;
     public AudioClip WhistlingSound;
 
+    public bool unlockTussock = false;
+    public bool unlockMarsh = false;
+
     //runs on the frame it was awake on
     void Awake()
     {
@@ -112,7 +115,9 @@ public class GameManager : MonoBehaviour
 
             NextScene(quickLoadInt, quickLoadInt == 0); //go to that next scene
         }
+
     }
+
 
     private void Update()
     {

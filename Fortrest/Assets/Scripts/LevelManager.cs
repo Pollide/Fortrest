@@ -151,8 +151,12 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        NightLightGameObject.SetActive(nightTimeBool);
-        LanternSkinnedRenderer.materials[2] = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
+        if (NightLightGameObject != null)
+        {
+            NightLightGameObject.SetActive(nightTimeBool);
+        }
+
+        LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
 
 
         for (int i = 0; i < NaturalBuildingList.Count; i++)
