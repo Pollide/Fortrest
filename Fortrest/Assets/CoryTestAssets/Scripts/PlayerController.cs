@@ -88,7 +88,16 @@ public class PlayerController : MonoBehaviour
     {
         // Get Character controller that is attached to the player
         playerCC = GetComponent<CharacterController>();
-        global = this;
+        if (global)
+        {
+            //destroys the duplicate
+            Destroy(gameObject);
+        }
+        else
+        {
+            //itself doesnt exist so set it
+            global = this;
+        }
     }
 
     private void Start()
@@ -120,6 +129,8 @@ public class PlayerController : MonoBehaviour
             interactText2 = house.transform.Find("Floating Text 2").gameObject;
             interactText3 = house.transform.Find("Floating Text 3").gameObject;
         }
+
+        RadiusGameObject.transform.localScale = new Vector3(PlayerModeHandler.global.distanceAwayFromPlayer * 2, 0.1f, PlayerModeHandler.global.distanceAwayFromPlayer * 2);
     }
 
     public void ChangeTool(ToolData toolData)

@@ -28,7 +28,6 @@ public class PlayerModeHandler : MonoBehaviour
     public BuildType buildType;
     public GameObject[] turretPrefabs;
     public GameObject turretBlueprint;
-    public Transform playerMeshPos;
     Transform[] parts;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
@@ -40,7 +39,18 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void Awake()
     {
-        global = this;
+        if (global)
+        {
+             
+            //destroys the duplicate
+            Destroy(gameObject);
+            GrassComputeScript.global.interactors.Remove(GetComponentInChildren<ShaderInteractor>());
+        }
+        else
+        {
+            //itself doesnt exist so set it
+            global = this;
+        }
         parts = turretBlueprint.GetComponentsInChildren<Transform>();
     }
 
@@ -242,7 +252,7 @@ public class PlayerModeHandler : MonoBehaviour
             turretBlueprint.SetActive(false);
         }
     }
-    public bool IsInRange(Vector2 currentTarget)
+    public bool IsInRange(Vector3 currentTarget)
     {
         PlayerController player = PlayerController.global;
 

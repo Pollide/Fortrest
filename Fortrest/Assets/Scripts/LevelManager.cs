@@ -92,7 +92,6 @@ public class LevelManager : MonoBehaviour
         SurvivedTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("Game Over").Find("Remaining Text").GetComponent<TMP_Text>();
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
-
     }
 
 
@@ -183,7 +182,11 @@ public class LevelManager : MonoBehaviour
             enemyList.Add(goblin);
         }
 
-        NightLightGameObject.SetActive(nightTimeBool);
+        if (NightLightGameObject != null)
+        {
+            NightLightGameObject.SetActive(nightTimeBool);
+        }
+
         LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
 
 
