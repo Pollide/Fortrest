@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.VFX;
+using TMPro;
+
 
 public class PlayerController : MonoBehaviour
 {
@@ -74,6 +76,13 @@ public class PlayerController : MonoBehaviour
     public GameObject RadiusGameObject;
     private GameObject RadiusCamGameObject;
 
+
+    public TMP_Text DayTMP_Text;
+    public TMP_Text RemaningTMP_Text;
+    public TMP_Text SurvivedTMP_Text;
+    public TMP_Text enemyNumberText;
+    public TMP_Text enemyNumberText2;
+
     [System.Serializable]
     public class ToolData
     {
@@ -94,7 +103,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            Destroy(global.transform.parent.gameObject);
+            Destroy(transform.parent.gameObject); //remove existing
         }
     }
 
@@ -359,6 +368,84 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(0.025f);
         Time.timeScale = 1;
     }
+
+    public void NewDay()
+    {
+        if (LevelManager.global.day == 1)
+        {
+            LevelManager.global.newDay = true;
+            DayTMP_Text.text = "DAY TWO";
+            RemaningTMP_Text.text = "THREE DAYS LEFT";
+        }
+        if (LevelManager.global.day == 2)
+        {
+            LevelManager.global.newDay = true;
+            DayTMP_Text.text = "DAY THREE";
+            RemaningTMP_Text.text = "TWO DAYS LEFT";
+        }
+        if (LevelManager.global.day == 3)
+        {
+            LevelManager.global.newDay = true;
+            DayTMP_Text.text = "DAY FOUR";
+            RemaningTMP_Text.text = "ONE DAY LEFT";
+        }
+        if (LevelManager.global.day == 4)
+        {
+            LevelManager.global.newDay = true;
+            DayTMP_Text.text = "DAY FIVE";
+            RemaningTMP_Text.text = "FINAL DAY";
+        }
+
+        if (LevelManager.global.day == 5)
+        {
+            LevelManager.global.newDay = true;
+            DayTMP_Text.text = "YOU SURVIVED";
+            RemaningTMP_Text.text = "How much longer can you survive?";
+
+        }
+
+        if (LevelManager.global.day > 5)
+        {
+            LevelManager.global.newDay = true;
+            DayTMP_Text.text = "DAY " + (LevelManager.global.day + 1).ToString();
+            RemaningTMP_Text.text = "Highscore: " + (PlayerPrefs.GetInt("Number of Days") + 1);
+
+            if (LevelManager.global.day > PlayerPrefs.GetInt("Number of Days"))
+            {
+                RemaningTMP_Text.text = "Highscore Beaten!";
+                PlayerPrefs.SetInt("Number of Days", LevelManager.global.day);
+            }
+        }
+    }
+
+    public void EnemiesTextControl()
+    {
+        //if (enemyList.Count > 0)
+        if (enemyNumberText)
+        {
+            enemyNumberText.text = enemyList.Count.ToString();
+
+            if (LevelManager.global.newDay)
+            {
+                LevelManager.global.newDay = false;
+                StartCoroutine(TextAppearing());
+            }
+        }
+    }
+
+    private IEnumerator TextAppearing()
+    {
+        float fraction = 0.0f;
+        while (fraction < 1.0f)
+        {
+            //   Debug.Log(fraction);
+            fraction = LevelManager.global.DaylightTimer / 180.0f;
+            enemyNumberText.color = LevelManager.global.textGradient.Evaluate(fraction);
+            enemyNumberText2.color = LevelManager.global.textGradient.Evaluate(fraction);
+            yield return null;
+        }
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {

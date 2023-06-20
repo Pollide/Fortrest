@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private Transform playerPosition;
-    private Vector3 offset;
+    // private Vector3 offset;
     private Vector3 currentVelocity = Vector3.zero;
     [SerializeField] private float cameraDistance;
     [SerializeField] private bool lockCamera;
@@ -18,15 +17,13 @@ public class CameraFollow : MonoBehaviour
     private void Start()
     {
         lockCamera = true;
-        playerPosition = PlayerController.global.transform;
-        offset = transform.position - playerPosition.position;
         max = maxSmooth - minSmooth;
     }
 
     private void Update()
     {
-        Vector3 targetPosition = playerPosition.position + offset;
-        cameraDistance = Vector3.Distance(targetPosition, transform.position);
+        Vector3 targetPosition = PlayerController.global.transform.position;
+        cameraDistance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
         float i = cameraDistance / (max * 50);
         smoothTime = Mathf.Lerp(minSmooth, maxSmooth, i);
 
