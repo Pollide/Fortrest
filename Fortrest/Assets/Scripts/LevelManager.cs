@@ -11,7 +11,7 @@ public class LevelManager : MonoBehaviour
     public static LevelManager global;
     public Transform SpawnPosition;
     public Camera SceneCamera;
-
+    public GameObject PlayerPrefab;
     public float PanSpeed = 20f;
     public float ZoomSpeedTouch = 0.1f;
     public float ZoomSpeedMouse = 0.5f;
@@ -49,14 +49,8 @@ public class LevelManager : MonoBehaviour
     public VisualEffect VFXSmokePuff;
     public VisualEffect VFXWoodChip;
 
-    private TMP_Text DayTMP_Text;
-    private TMP_Text RemaningTMP_Text;
-    [HideInInspector] public TMP_Text SurvivedTMP_Text;
-    private TMP_Text enemyNumberText;
-    private TMP_Text enemyNumberText2;
-
-    private bool locked = true;
-    private bool newDay = false;
+    [HideInInspector]
+    public bool newDay = false;
 
     public Gradient textGradient;
 
@@ -69,8 +63,12 @@ public class LevelManager : MonoBehaviour
         if (!GameManager.global)
         {
             // if()
-            // PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
+            PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
+        }
+        else if (!PlayerController.global && SceneManager.GetActiveScene().buildIndex != 1)
+        {
+            Instantiate(PlayerPrefab, SpawnPosition);
         }
     }
 
@@ -92,11 +90,13 @@ public class LevelManager : MonoBehaviour
         LanternSkinnedRenderer = playerController.transform.Find("Dwarf rig With sword").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
 
-        DayTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("New Day").Find("Day Text").GetComponent<TMP_Text>();
+        /*
+        DayTMP_Text = PlayerController.global..GetComponent<TMP_Text>();
         RemaningTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("New Day").Find("Remaining Text").GetComponent<TMP_Text>();
         SurvivedTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("Game Over").Find("Remaining Text").GetComponent<TMP_Text>();
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
+        */
     }
 
 
@@ -104,7 +104,8 @@ public class LevelManager : MonoBehaviour
     {
         LockCursor();
 
-        EnemiesTextControl();
+        PlayerController.global.EnemiesTextControl();
+
 
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DaylightTimer += daySpeed * Time.deltaTime;
@@ -116,52 +117,7 @@ public class LevelManager : MonoBehaviour
             day++;
             GameManager.PlayAnimation(GetComponent<Animation>(), "New Day");
 
-            if (day == 1)
-            {
-                newDay = true;
-                DayTMP_Text.text = "DAY TWO";
-                RemaningTMP_Text.text = "THREE DAYS LEFT";
-            }
-            if (day == 2)
-            {
-                newDay = true;
-                DayTMP_Text.text = "DAY THREE";
-                RemaningTMP_Text.text = "TWO DAYS LEFT";
-            }
-            if (day == 3)
-            {
-                newDay = true;
-                DayTMP_Text.text = "DAY FOUR";
-                RemaningTMP_Text.text = "ONE DAY LEFT";
-            }
-            if (day == 4)
-            {
-                newDay = true;
-                DayTMP_Text.text = "DAY FIVE";
-                RemaningTMP_Text.text = "FINAL DAY";
-            }
-
-            if (day == 5)
-            {
-                newDay = true;
-                DayTMP_Text.text = "YOU SURVIVED";
-                RemaningTMP_Text.text = "How much longer can you survive?";
-
-            }
-
-            if (day > 5)
-            {
-                newDay = true;
-                DayTMP_Text.text = "DAY " + (day + 1).ToString();
-                RemaningTMP_Text.text = "Highscore: " + (PlayerPrefs.GetInt("Number of Days") + 1);
-
-                if (day > PlayerPrefs.GetInt("Number of Days"))
-                {
-                    RemaningTMP_Text.text = "Highscore Beaten!";
-                    PlayerPrefs.SetInt("Number of Days", day);
-                }
-            }
-
+            PlayerController.global.NewDay();
         }
 
         bool nightTimeBool = DaylightTimer > 180;
@@ -283,34 +239,6 @@ public class LevelManager : MonoBehaviour
         //HandleMouse();
     }
 
-    void EnemiesTextControl()
-    {
-        //if (enemyList.Count > 0)
-        if (enemyNumberText)
-        {
-            enemyNumberText.text = enemyList.Count.ToString();
-
-            if (newDay)
-            {
-                newDay = false;
-                StartCoroutine(TextAppearing());
-            }
-        }
-    }
-
-    private IEnumerator TextAppearing()
-    {
-        float fraction = 0.0f;
-        while (fraction < 1.0f)
-        {
-            //   Debug.Log(fraction);
-            fraction = DaylightTimer / 180.0f;
-            enemyNumberText.color = textGradient.Evaluate(fraction);
-            enemyNumberText2.color = textGradient.Evaluate(fraction);
-            yield return null;
-        }
-    }
-
     void LockCursor()
     {
         if (Input.GetKeyDown(KeyCode.LeftAlt))
@@ -319,13 +247,13 @@ public class LevelManager : MonoBehaviour
             {
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
-                locked = true;
+                // locked = true;
             }
             else
             {
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
-                locked = true;
+                //   locked = true;
             }
         }
     }

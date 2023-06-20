@@ -124,10 +124,10 @@ public class Building : MonoBehaviour
             {
                 GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
                 Invoke("RestartGame", GameManager.PlayAnimation(LevelManager.global.GetComponent<Animation>(), "Gameover").length);
-                LevelManager.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
+                PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
             }
-            Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);   
+            Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
         }
     }
 
