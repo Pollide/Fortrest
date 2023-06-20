@@ -269,7 +269,6 @@ public class SFXManager : MonoBehaviour
 
         if (RequestedMusic)
         {
-
             DynamicVolumeChange(-1);
 
             for (int i = 0; i < SFXList.Count; i++)

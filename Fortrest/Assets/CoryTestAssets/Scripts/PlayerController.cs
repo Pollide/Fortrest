@@ -86,15 +86,17 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (!global)
+        // Get Character controller that is attached to the player
+        playerCC = GetComponent<CharacterController>();
+        if (global)
         {
-            // Get Character controller that is attached to the player
-            playerCC = GetComponent<CharacterController>();
-            global = this;
+            //destroys the duplicate
+            Destroy(gameObject);
         }
         else
         {
-            Destroy(global.transform.parent.gameObject);
+            //itself doesnt exist so set it
+            global = this;
         }
     }
 
@@ -127,6 +129,8 @@ public class PlayerController : MonoBehaviour
             interactText2 = house.transform.Find("Floating Text 2").gameObject;
             interactText3 = house.transform.Find("Floating Text 3").gameObject;
         }
+
+        RadiusGameObject.transform.localScale = new Vector3(PlayerModeHandler.global.distanceAwayFromPlayer * 2, 0.1f, PlayerModeHandler.global.distanceAwayFromPlayer * 2);
     }
 
     public void ChangeTool(ToolData toolData)

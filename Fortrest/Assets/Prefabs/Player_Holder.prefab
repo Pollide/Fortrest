@@ -27,8 +27,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889475038107434792}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 11, y: 0.1, z: 11}
+  m_LocalPosition: {x: 0, y: -1.37, z: 0}
+  m_LocalScale: {x: 1, y: 0.1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5569601162832024531}
@@ -41,7 +41,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889475038107434792}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &1851528661063397619
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -303,7 +303,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 2.5, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6808903876429888644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,7 +387,7 @@ MonoBehaviour:
   playerMeshPos: {fileID: 0}
   turretBlueprintRed: {fileID: 2100000, guid: 8d763678d7123e347b760cbd1313f174, type: 2}
   turretBlueprintBlue: {fileID: 2100000, guid: 1d0c9c39a2f4f764081420e60614ab27, type: 2}
-  distanceAwayFromPlayer: 30
+  distanceAwayFromPlayer: 10
   buildingLayer:
     serializedVersion: 2
     m_Bits: 128

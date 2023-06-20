@@ -97,7 +97,6 @@ public class LevelManager : MonoBehaviour
         SurvivedTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("Game Over").Find("Remaining Text").GetComponent<TMP_Text>();
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
-
     }
 
 
@@ -196,8 +195,12 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        NightLightGameObject.SetActive(nightTimeBool);
-        LanternSkinnedRenderer.materials[2] = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
+        if (NightLightGameObject != null)
+        {
+            NightLightGameObject.SetActive(nightTimeBool);
+        }
+
+        LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
 
 
         for (int i = 0; i < NaturalBuildingList.Count; i++)
