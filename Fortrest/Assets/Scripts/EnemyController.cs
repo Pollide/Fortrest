@@ -6,14 +6,9 @@ using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
-    // public float lookRadius = 10.0f; // Distance that the enemy will start chasing you
-
     NavMeshAgent agent; // Nav mesh agent component
     [SerializeField] Transform bestTarget; // Target that the enemy will go towards
-    public bool chasing; // Enemy chases the player mode
-    public bool attacked;
-    public bool isInTurretRange = false;
-    public bool isDead = false;
+    public bool chasing;
     private Transform playerPosition;
 
     public float attackTimer;
@@ -35,8 +30,8 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        noiseTimerMax = 250;
-        attackTimer = 200;
+        noiseTimerMax = 250.0f;
+        attackTimer = 200.0f;
         health = maxHealth;
         playerPosition = PlayerController.global.transform;
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
@@ -49,27 +44,14 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
-        if (!knockBackScript)
-        {
-            return;
-        }
-
-        if (!agent.isOnNavMesh)
-        {
-            PlayerController.global.enemyList.Remove(transform);
-            gameObject.SetActive(false);
-            return;
-        }
-
-        float shortestDistance = 9999; // Assign huge default value
-
+        Checks();
         MakeNoise();
+        Process();     
+    }
 
-        if (LevelManager.global.BuildingList.Count == 0) // Enemies will chase the player if no structure is left around
-        {
-            chasing = true;
-        }
-
+    void Process()
+    {
+        // Stopping distance depending on player or turret
         if (bestTarget != null)
         {
             if (bestTarget.CompareTag("Turret"))
@@ -78,46 +60,52 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                agent.stoppingDistance = 2f;
+                agent.stoppingDistance = 2.25f;
             }
+        }
+
+        // Default value
+        float shortestDistance = 9999; 
+
+        // Distance between enemy and player
+        float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
+
+        // If the distance is less than 10, the enemy will chase the player
+        if (distance < 10.0f)
+        {
+            chasing = true;
         }
 
         if (chasing)
         {
             bestTarget = playerPosition;
 
-            if (LevelManager.global.BuildingList.Count != 0) // If there are still targets other than the player
+            Invoke("ChasePlayerTimer", 10.0f); // Enemy stops chasing the player after 10s
+
+            if (distance >= 10.0f) // Enemy stops chasing when the player gets too far
             {
-                Invoke("ChasePlayerTimer", 10.0f); // Enemy stops chasing the player after 5s
-
-                float chaseDistance = Vector3.Distance(GameObject.FindGameObjectWithTag("Player").transform.position, transform.position); // TEMPORARY EASY CODE
-
-                if (chaseDistance >= 10.0f) // Enemy stops chasing when the player gets too far
-                {
-                    bestTarget = null;
-                    chasing = false;
-                }
+                bestTarget = null;
+                chasing = false;
             }
 
+            // Once the enemy has targeted the player
             if (bestTarget != null && agent.isOnNavMesh)
             {
                 agent.SetDestination(bestTarget.position); // Makes the AI move
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.25f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance) // Checks if enemy reached target
                 {
-                    FaceTarget();
+                    FaceTarget(); // Makes the enemy face the player
                     attackTimer++;
-                    if (bestTarget == playerPosition)
+
+                    if (attackTimer >= attackTimerMax)
                     {
-                        if (attackTimer >= attackTimerMax)
-                        {
-                            Attack();
-                            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
-                            playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
-                        }
+                        Attack();
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
+                        playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
                     }
                 }
-                ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.25f);
+                ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance);
             }
         }
         else
@@ -135,7 +123,7 @@ public class EnemyController : MonoBehaviour
                             shortestDistance = compare; // New shortest distance is assigned
                             bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list                                                     
 
-                            ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + 0.25f);
+                            ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance);
                         }
                     }
                 }
@@ -145,7 +133,7 @@ public class EnemyController : MonoBehaviour
             {
                 agent.SetDestination(bestTarget.position); // Sets the nav mesh agent destination
 
-                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + 0.25f) // Checks if enemy reached target
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance) // Checks if enemy reached target
                 {
                     attackTimer++;
                     Building building = bestTarget.GetComponent<Building>();
@@ -169,6 +157,21 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    void Checks()
+    {
+        if (!knockBackScript)
+        {
+            return;
+        }
+
+        if (!agent.isOnNavMesh)
+        {
+            PlayerController.global.enemyList.Remove(transform);
+            gameObject.SetActive(false);
+            return;
+        }
+    }
+
     void Attack()
     {
         ActiveAnimator.ResetTrigger("Swing");
@@ -176,18 +179,6 @@ public class EnemyController : MonoBehaviour
         attackTimer = 0;
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyAttack1Sound : GameManager.global.EnemyAttack2Sound, 1, true, 0, false, transform);
     }
-
-    //private void OnDestroy()
-    //{
-    //    if (isInTurretRange)
-    //    {
-    //        isDead = true;
-    //        for (int i = 0; i < turrets.Count; i++)
-    //        {
-    //            turrets[i].GetComponent<TurretShooting>().RemoveFromList();
-    //        }
-    //    }
-    //}
 
     private void FaceTarget() // Making sure the enemy always faces what it is attacking
     {
