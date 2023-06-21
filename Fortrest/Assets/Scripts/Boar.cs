@@ -118,7 +118,7 @@ public class Boar : MonoBehaviour
         player.GetComponent<CharacterController>().enabled = false;
         if (mounted)
         {
-            player.transform.position = new Vector3(transform.position.x - 0.5f, transform.position.y, transform.position.z);
+            player.transform.position = new Vector3(transform.position.x, transform.position.y + 2.75f, transform.position.z);
             player.transform.position += transform.forward;
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = false;
@@ -126,18 +126,20 @@ public class Boar : MonoBehaviour
         }
         else
         {
-            player.transform.position += transform.right;
+            player.transform.position += transform.right * 2;
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = true;
+            PlayerController.global.CharacterAnimator.SetBool("Sitting", false);
         }
         player.GetComponent<CharacterController>().enabled = true;
     }
 
     void PlayerStick()
     {
-        player.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        player.transform.position = new Vector3(transform.position.x, transform.position.y + 2.75f, transform.position.z);
         player.transform.position += transform.forward;
         player.transform.rotation = transform.rotation;
+        PlayerController.global.CharacterAnimator.SetBool("Sitting", true);
     }
 
     void Ride()

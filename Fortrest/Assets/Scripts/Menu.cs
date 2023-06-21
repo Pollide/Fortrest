@@ -92,7 +92,7 @@ public class Menu : MonoBehaviour
             if (SettingsSelectedBool)
             {
                 SignAnimationVoid(SettingsSignAnimation, true, true);
-                SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().text = "Nah\nscrew you";
+                SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().text = "\n"; //nah screw you
 
                 yield return new WaitUntil(() => InputCheck());
             }

@@ -57,7 +57,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public void OnPointerEnter(PointerEventData eventData)
     {
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
-        ChangeSizeVoid(1.1f);
+        ChangeSizeVoid(1);
         //ChangeColourVoid(Color.white);
     }
 
@@ -79,7 +79,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (PlayGameBool)
         {
-            GameManager.global.NextScene(1);
+            PlayerController.global.PauseVoid(false);
         }
 
         if (SpeedBool)
@@ -97,7 +97,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         if (RestartBool)
         {
             Time.timeScale = 1f;
-            GameManager.global.NextScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+            PlayerController.global.transform.SetParent(LevelManager.global.transform); //so it can properly reset and clear old player
+            GameManager.global.NextScene(1);
         }
 
         if (BackBool)

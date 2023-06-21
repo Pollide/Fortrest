@@ -27,15 +27,6 @@ public class GameManager : MonoBehaviour
     public AudioClip PauseMusic;  //the music that plays when paused
 
     public AudioClip CollectSound; //the sfx that plays when the mouse presses a button
-    public AudioClip EnemyAttack1Sound;
-    public AudioClip EnemyAttack2Sound;
-    public AudioClip EnemyDead1Sound;
-    public AudioClip EnemyDead2Sound;
-    public AudioClip EnemyHit1Sound;
-    public AudioClip EnemyHit2Sound;
-    public AudioClip Enemy1Sound;
-    public AudioClip Enemy2Sound;
-    public AudioClip Enemy3Sound;
     public AudioClip MenuClick1Sound;
     public AudioClip MenuClick2Sound;
     public AudioClip Pickaxe1Sound;
@@ -66,13 +57,16 @@ public class GameManager : MonoBehaviour
     public AudioClip CantPlaceSound;
     public AudioClip WhistlingSound;
 
-    public bool unlockTussock = false;
-    public bool unlockMarsh = false;
-
     //runs on the frame it was awake on
     void Awake()
     {
         //checks if itself exists, as they can only be one
+
+        if (PlayerController.global)
+        {
+            Destroy(PlayerController.global.transform.parent.gameObject); //no players in main menu
+        }
+
         if (global)
         {
             //destroys the duplicate
@@ -283,6 +277,44 @@ public class GameManager : MonoBehaviour
         Debug.LogWarning("Could not find animation component");
         return new AnimationState(); //something default, will likely return error that needs to be corrected anyways
     }
+
+    public static AnimatorStateInfo PlayAnimator(Animator animator, string clipNameString = "", bool forwardBool = true, bool instantBool = false)
+    {
+        if (animator)
+        {
+            foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+            {
+                if (clipNameString == "" || clip.name == clipNameString)
+                {
+                    if (forwardBool)
+                    {
+                        animator.StopPlayback();
+                        animator.StartRecording(0);
+                    }
+                    else
+                    {
+                        animator.StopRecording();
+                        animator.StartPlayback();
+                    }
+
+                    animator.speed = forwardBool ? 1 : -1;
+
+                    animator.Play(clip.name, 0, forwardBool ? 0 : 1);
+
+                    if (instantBool)
+                    {
+                        animator.Update(0);
+                    }
+
+                    return animator.GetCurrentAnimatorStateInfo(0);
+                }
+            }
+        }
+
+        Debug.LogWarning("No animator found");
+        return new AnimatorStateInfo();
+    }
+
 
     //changes all layers of an animation so multiple can play at the same time
     public static void ChangeAnimationLayers(Animation animation, bool playBool = false)

@@ -75,13 +75,15 @@ public class PlayerController : MonoBehaviour
     public GameObject SwordGameObject;
     public GameObject RadiusGameObject;
     private GameObject RadiusCamGameObject;
-
-
+    public GameObject PauseCanvasGameObject;
+    bool PausedBool;
     public TMP_Text DayTMP_Text;
     public TMP_Text RemaningTMP_Text;
     public TMP_Text SurvivedTMP_Text;
     public TMP_Text enemyNumberText;
     public TMP_Text enemyNumberText2;
+
+    public Animation UIAnimation;
 
     [System.Serializable]
     public class ToolData
@@ -159,6 +161,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Only take input if movement isn't inhibited
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseVoid(!PausedBool);
+        }
+
         if (playerCanMove)
         {
             // Local veriables for input keys
@@ -232,6 +240,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
+    public void PauseVoid(bool pauseBool)
+    {
+        PauseCanvasGameObject.SetActive(pauseBool);
+        PausedBool = pauseBool;
+        GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pauseBool);
+        Time.timeScale = pauseBool ? 0 : 1;
+    }
     // Player movement 
     private void ApplyMovement(float _horizontalMove, float _verticalMove)
     {
@@ -350,19 +367,6 @@ public class PlayerController : MonoBehaviour
             VFXSlash.transform.position = transform.position;
             VFXSlash.transform.eulerAngles = transform.eulerAngles;
             VFXSlash.Play();
-
-            //for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
-            //{
-            //
-            //    if (Vector3.Distance(transform.position, enemyList[i].transform.position) <= 3.0f && FacingEnemy(enemyList[i].transform.position)) // Distance from player to enemy
-            //    {
-            //        playerisAttacking = true;
-            //        enemyList[i].GetComponent<EnemyController>().chasing = true;
-            //        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
-            //        enemyList[i].GetComponent<EnemyController>().Damaged(attackDamage);
-            //        break;
-            //    }
-            //}
         }
     }
 

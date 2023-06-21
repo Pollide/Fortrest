@@ -54,6 +54,9 @@ public class LevelManager : MonoBehaviour
 
     public Gradient textGradient;
 
+    public List<Transform> TerrainList = new List<Transform>();
+
+
     private void Awake()
     {
         global = this;
@@ -99,10 +102,16 @@ public class LevelManager : MonoBehaviour
         */
     }
 
-
     private void Update()
     {
         LockCursor();
+
+        for (int i = 0; i < TerrainList.Count; i++)
+        {
+            bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 400;
+
+            TerrainList[i].gameObject.SetActive(enableBool);
+        }
 
         PlayerController.global.EnemiesTextControl();
 
@@ -115,7 +124,7 @@ public class LevelManager : MonoBehaviour
         {
             DaylightTimer = 0;
             day++;
-            GameManager.PlayAnimation(GetComponent<Animation>(), "New Day");
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
 
             PlayerController.global.NewDay();
         }
@@ -208,13 +217,6 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            GameManager.global.NextScene(0);
-            enabled = false;
-            return;
-        }
-
         if (PlayerController.global.transform.position.y < -3)
         {
             GameManager.global.NextScene(1);
@@ -238,6 +240,7 @@ public class LevelManager : MonoBehaviour
 
         //HandleMouse();
     }
+
 
     void LockCursor()
     {
