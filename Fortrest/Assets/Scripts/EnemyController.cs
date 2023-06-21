@@ -129,7 +129,7 @@ public class EnemyController : MonoBehaviour
                         }
                         else
                         {
-                            RemoveTarget();
+                            LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
                             building.DestroyBuilding();
                         }
                     }
@@ -173,11 +173,6 @@ public class EnemyController : MonoBehaviour
     {
         bestTarget = null;
         chasing = false;
-    }
-
-    public void RemoveTarget()
-    {
-        LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
     }
 
     public void Damaged(float amount)
@@ -232,9 +227,9 @@ public class EnemyController : MonoBehaviour
         {
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
             {
-                knockBackScript.knock = true;
-                canBeDamaged = false;
                 StopAllCoroutines();
+                knockBackScript.knock = true;
+                canBeDamaged = false;               
                 ScreenShake.global.shake = true;
                 chasing = true;
                 Damaged(PlayerController.global.attackDamage);
