@@ -57,7 +57,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public void OnPointerEnter(PointerEventData eventData)
     {
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
-        ChangeSizeVoid(1.1f);
+        ChangeSizeVoid(1);
         //ChangeColourVoid(Color.white);
     }
 
