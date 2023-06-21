@@ -79,7 +79,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (PlayGameBool)
         {
-            GameManager.global.NextScene(1);
+            PlayerController.global.PauseVoid(false);
         }
 
         if (SpeedBool)
