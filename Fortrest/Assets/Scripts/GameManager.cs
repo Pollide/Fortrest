@@ -134,11 +134,22 @@ public class GameManager : MonoBehaviour
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
     {
+
         if (minValue == maxValue)
             return valueInt;
         //will run this once or if i = -1
+
+        int stackOverflow = 0;
+
         for (int i = 0; i < 1; i++)
         {
+            stackOverflow++;
+
+            if (stackOverflow > 100)
+            {
+                Debug.LogWarning("stack overflow");
+                return valueInt;
+            }
             if (valueInt < minValue)
             {
                 if (wrap)

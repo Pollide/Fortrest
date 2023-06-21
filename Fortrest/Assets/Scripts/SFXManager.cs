@@ -41,6 +41,18 @@ public class SFXManager : MonoBehaviour
 
     public void Awake()
     {
+        if (AudioName == "Sound" && GameManager.global.SoundManager != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        if (AudioName == "Music" && GameManager.global.MusicManager != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         name = AudioName + " Holder";
 
         DontDestroyOnLoad(gameObject);
@@ -64,8 +76,9 @@ public class SFXManager : MonoBehaviour
         }
 
         RefreshAudioVolumes();
-    }
 
+
+    }
     private void Update()
     {
         if (SkipToNearEnd)
