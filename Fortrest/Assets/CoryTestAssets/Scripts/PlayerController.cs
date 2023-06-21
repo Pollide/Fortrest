@@ -352,19 +352,6 @@ public class PlayerController : MonoBehaviour
             VFXSlash.transform.position = transform.position;
             VFXSlash.transform.eulerAngles = transform.eulerAngles;
             VFXSlash.Play();
-
-            //for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
-            //{
-            //
-            //    if (Vector3.Distance(transform.position, enemyList[i].transform.position) <= 3.0f && FacingEnemy(enemyList[i].transform.position)) // Distance from player to enemy
-            //    {
-            //        playerisAttacking = true;
-            //        enemyList[i].GetComponent<EnemyController>().chasing = true;
-            //        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyHit1Sound : GameManager.global.EnemyHit2Sound);
-            //        enemyList[i].GetComponent<EnemyController>().Damaged(attackDamage);
-            //        break;
-            //    }
-            //}
         }
     }
 

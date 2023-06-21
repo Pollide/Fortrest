@@ -27,15 +27,6 @@ public class GameManager : MonoBehaviour
     public AudioClip PauseMusic;  //the music that plays when paused
 
     public AudioClip CollectSound; //the sfx that plays when the mouse presses a button
-    public AudioClip EnemyAttack1Sound;
-    public AudioClip EnemyAttack2Sound;
-    public AudioClip EnemyDead1Sound;
-    public AudioClip EnemyDead2Sound;
-    public AudioClip EnemyHit1Sound;
-    public AudioClip EnemyHit2Sound;
-    public AudioClip Enemy1Sound;
-    public AudioClip Enemy2Sound;
-    public AudioClip Enemy3Sound;
     public AudioClip MenuClick1Sound;
     public AudioClip MenuClick2Sound;
     public AudioClip Pickaxe1Sound;
