@@ -126,7 +126,7 @@ public class LevelManager : MonoBehaviour
         {
             DaylightTimer = 0;
             day++;
-            GameManager.PlayAnimation(GetComponent<Animation>(), "New Day");
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
 
             PlayerController.global.NewDay();
         }

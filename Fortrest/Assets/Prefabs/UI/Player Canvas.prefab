@@ -192,7 +192,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 118.4, y: 115.5}
+  m_AnchoredPosition: {x: 118.3999, y: 115.5}
   m_SizeDelta: {x: 350, y: 350}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3189619252152759869
@@ -802,7 +802,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -5.000061}
+  m_AnchoredPosition: {x: 0, y: -5}
   m_SizeDelta: {x: -10, y: 674.171}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3817776119356884056
@@ -1041,6 +1041,7 @@ GameObject:
   - component: {fileID: 4045608486613722567}
   - component: {fileID: 3659010027324514971}
   - component: {fileID: 1804327524070826166}
+  - component: {fileID: 2138085821383203920}
   m_Layer: 5
   m_Name: Player Canvas
   m_TagString: Untagged
@@ -1174,6 +1175,22 @@ MonoBehaviour:
   - {fileID: 5444195626885213669}
   - {fileID: 5444195626657083203}
   - {fileID: 5444195626734029847}
+--- !u!111 &2138085821383203920
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4045608486613722564}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 22e8b1b0d653ee845a3b0cfe246ff299, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 22e8b1b0d653ee845a3b0cfe246ff299, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &4249287421050657049
 GameObject:
   m_ObjectHideFlags: 0
