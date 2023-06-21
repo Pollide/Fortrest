@@ -75,8 +75,8 @@ public class PlayerController : MonoBehaviour
     public GameObject SwordGameObject;
     public GameObject RadiusGameObject;
     private GameObject RadiusCamGameObject;
-
-
+    public GameObject PauseCanvasGameObject;
+    bool PausedBool;
     public TMP_Text DayTMP_Text;
     public TMP_Text RemaningTMP_Text;
     public TMP_Text SurvivedTMP_Text;
@@ -161,6 +161,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // Only take input if movement isn't inhibited
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseVoid(!PausedBool);
+        }
+
         if (playerCanMove)
         {
             // Local veriables for input keys
@@ -234,6 +240,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
+    public void PauseVoid(bool pauseBool)
+    {
+        PauseCanvasGameObject.SetActive(pauseBool);
+        PausedBool = pauseBool;
+        GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pauseBool);
+        Time.timeScale = pauseBool ? 0 : 1;
+    }
     // Player movement 
     private void ApplyMovement(float _horizontalMove, float _verticalMove)
     {

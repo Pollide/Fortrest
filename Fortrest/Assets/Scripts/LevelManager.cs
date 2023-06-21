@@ -102,15 +102,13 @@ public class LevelManager : MonoBehaviour
         */
     }
 
-    public float ReloadDistanceFloat = 400;
-
     private void Update()
     {
         LockCursor();
 
         for (int i = 0; i < TerrainList.Count; i++)
         {
-            bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < ReloadDistanceFloat;
+            bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 400;
 
             TerrainList[i].gameObject.SetActive(enableBool);
         }
@@ -219,13 +217,6 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            GameManager.global.NextScene(0);
-            enabled = false;
-            return;
-        }
-
         if (PlayerController.global.transform.position.y < -3)
         {
             GameManager.global.NextScene(1);
@@ -249,6 +240,7 @@ public class LevelManager : MonoBehaviour
 
         //HandleMouse();
     }
+
 
     void LockCursor()
     {
