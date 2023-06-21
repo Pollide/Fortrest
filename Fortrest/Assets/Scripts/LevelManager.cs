@@ -102,15 +102,13 @@ public class LevelManager : MonoBehaviour
         */
     }
 
-    public float ReloadDistanceFloat = 400;
-
     private void Update()
     {
         LockCursor();
 
         for (int i = 0; i < TerrainList.Count; i++)
         {
-            bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < ReloadDistanceFloat;
+            bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 400;
 
             TerrainList[i].gameObject.SetActive(enableBool);
         }
