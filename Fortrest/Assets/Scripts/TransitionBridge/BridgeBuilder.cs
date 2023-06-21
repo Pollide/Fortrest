@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class BridgeBuilder : MonoBehaviour
 {
-    [SerializeField] private Material BPMat;
-    private Material originalMat;
+    //   [SerializeField] private Material BPMat;
+    //   private Material originalMat;
     public bool isBuilt = false;
 
     [SerializeField] private bool hasRun = false;
