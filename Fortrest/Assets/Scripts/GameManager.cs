@@ -290,6 +290,44 @@ public class GameManager : MonoBehaviour
         return new AnimationState(); //something default, will likely return error that needs to be corrected anyways
     }
 
+    public static AnimatorStateInfo PlayAnimator(Animator animator, string clipNameString = "", bool forwardBool = true, bool instantBool = false)
+    {
+        if (animator)
+        {
+            foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+            {
+                if (clipNameString == "" || clip.name == clipNameString)
+                {
+                    if (forwardBool)
+                    {
+                        animator.StopPlayback();
+                        animator.StartRecording(0);
+                    }
+                    else
+                    {
+                        animator.StopRecording();
+                        animator.StartPlayback();
+                    }
+
+                    animator.speed = forwardBool ? 1 : -1;
+
+                    animator.Play(clip.name, 0, forwardBool ? 0 : 1);
+
+                    if (instantBool)
+                    {
+                        animator.Update(0);
+                    }
+
+                    return animator.GetCurrentAnimatorStateInfo(0);
+                }
+            }
+        }
+
+        Debug.LogWarning("No animator found");
+        return new AnimatorStateInfo();
+    }
+
+
     //changes all layers of an animation so multiple can play at the same time
     public static void ChangeAnimationLayers(Animation animation, bool playBool = false)
     {

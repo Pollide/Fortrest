@@ -219,13 +219,6 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            GameManager.global.NextScene(0);
-            enabled = false;
-            return;
-        }
-
         if (PlayerController.global.transform.position.y < -3)
         {
             GameManager.global.NextScene(1);
@@ -249,6 +242,7 @@ public class LevelManager : MonoBehaviour
 
         //HandleMouse();
     }
+
 
     void LockCursor()
     {
