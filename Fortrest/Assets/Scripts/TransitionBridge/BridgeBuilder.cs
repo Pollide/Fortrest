@@ -19,8 +19,6 @@ public class BridgeBuilder : MonoBehaviour
     {
         if (isBuilt && !hasRun)
         {
-            GetComponent<MeshRenderer>().material = originalMat;
-
             InventoryManager inventory = InventoryManager.global;
             for (int i = 0; i < resourceCostList.Count; i++)
             {
