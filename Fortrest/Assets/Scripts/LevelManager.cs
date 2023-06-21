@@ -102,6 +102,7 @@ public class LevelManager : MonoBehaviour
         */
     }
 
+    public float ReloadDistanceFloat = 400;
 
     private void Update()
     {
@@ -109,7 +110,7 @@ public class LevelManager : MonoBehaviour
 
         for (int i = 0; i < TerrainList.Count; i++)
         {
-            bool enableBool = 400 < Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position);
+            bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < ReloadDistanceFloat;
 
             TerrainList[i].gameObject.SetActive(enableBool);
         }
