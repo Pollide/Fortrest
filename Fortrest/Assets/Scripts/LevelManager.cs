@@ -54,6 +54,9 @@ public class LevelManager : MonoBehaviour
 
     public Gradient textGradient;
 
+    public List<Transform> TerrainList = new List<Transform>();
+
+
     private void Awake()
     {
         global = this;
@@ -103,6 +106,13 @@ public class LevelManager : MonoBehaviour
     private void Update()
     {
         LockCursor();
+
+        for (int i = 0; i < TerrainList.Count; i++)
+        {
+            bool enableBool = 400 < Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position);
+
+            TerrainList[i].gameObject.SetActive(enableBool);
+        }
 
         PlayerController.global.EnemiesTextControl();
 
