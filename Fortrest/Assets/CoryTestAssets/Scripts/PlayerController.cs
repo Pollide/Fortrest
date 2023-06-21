@@ -83,6 +83,8 @@ public class PlayerController : MonoBehaviour
     public TMP_Text enemyNumberText;
     public TMP_Text enemyNumberText2;
 
+    public Animation UIAnimation;
+
     [System.Serializable]
     public class ToolData
     {
