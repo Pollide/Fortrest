@@ -73,6 +73,12 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         //checks if itself exists, as they can only be one
+
+        if (PlayerController.global)
+        {
+            Destroy(PlayerController.global.transform.parent.gameObject); //no players in main menu
+        }
+
         if (global)
         {
             //destroys the duplicate
