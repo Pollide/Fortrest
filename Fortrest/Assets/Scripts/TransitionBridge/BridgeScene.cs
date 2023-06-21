@@ -5,23 +5,15 @@ using UnityEngine.SceneManagement;
 
 public class BridgeScene : MonoBehaviour
 {
+    [SerializeField] private GameObject unloadTerrain;
+    [SerializeField] private GameObject loadTerrain;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            if (GetComponentInParent<BridgeBuilder>().sceneToSpawn == "Tussockland")
-            {
-                GameManager.global.NextScene(2);
-            }
-            if (GetComponentInParent<BridgeBuilder>().sceneToSpawn == "Game")
-            {
-                GameManager.global.NextScene(1);
-            }
-            if (GetComponentInParent<BridgeBuilder>().sceneToSpawn == "Marsh")
-            {
-                GameManager.global.NextScene(3);
-            }
-
+            unloadTerrain.SetActive(false);
+            loadTerrain.SetActive(true);
         }
     }
 }
