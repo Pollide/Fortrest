@@ -7,32 +7,37 @@ using UnityEngine.UI;
 public class EnemyController : MonoBehaviour
 {
     NavMeshAgent agent; // Nav mesh agent component
-    [SerializeField] Transform bestTarget; // Target that the enemy will go towards
+    private Transform bestTarget; // Target that the enemy will go towards
     public bool chasing;
     private Transform playerPosition;
 
-    public float attackTimer;
-    public float attackTimerMax;
+    private float attackTimer;
+    private float attackTimerMax;
     private float speed;
 
-    public float health;
+    private float health;
     private float maxHealth = 3.0f;
     public Image healthBarImage;
     AnimationState HealthAnimationState;
 
-    public float noiseTimer;
-    public float noiseTimerMax;
+    private float noiseTimer;
+    private float noiseTimerMax;
+    private float chaseTimer = 0.0f;
+    private float chaseTimerMax;
 
     public Animator ActiveAnimator;
     public bool canBeDamaged = true;
 
     KnockBack knockBackScript;
-    private float offset = 0.25f;
+    private float offset = 0.3f;
+
+    public bool firstAttack = true;
 
     void Start()
     {
-        noiseTimerMax = 250.0f;
-        attackTimer = 200.0f;
+        noiseTimerMax = 2.5f;
+        attackTimerMax = 1.75f;
+        chaseTimerMax = 10.0f;
         health = maxHealth;
         playerPosition = PlayerController.global.transform;
         agent = GetComponent<NavMeshAgent>(); // Finds the component by itself on the object the script is attached to
@@ -53,23 +58,25 @@ public class EnemyController : MonoBehaviour
     void Process()
     {
         // Default value
-        float shortestDistance = 9999;
-
-        // Distance between enemy and player
-        float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
+        float shortestDistance = 9999;            
 
         // If enemy is chasing the player, they become its target
         if (chasing)
         {
             bestTarget = playerPosition; // Player set as target
 
-            Invoke("ChasePlayerTimer", 10.0f); // Enemy stops chasing the player after 10s
+            // Distance between enemy and player
+            float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
 
-            if (distance >= 10.0f) // Enemy stops chasing when the player gets too far
+            chaseTimer += Time.deltaTime; // Enemy stops chasing the player after 10s or when the player gets too far
+
+            if (chaseTimer >= chaseTimerMax || distance >= 10.0f)
             {
                 bestTarget = null;
                 chasing = false;
-            }
+                firstAttack = true;
+                chaseTimer = 0;
+            } 
         }
         else // Player is not the target, finds different target
         {
@@ -84,7 +91,7 @@ public class EnemyController : MonoBehaviour
                         if (compare < shortestDistance) // Only true if a new shorter distance is found
                         {
                             shortestDistance = compare; // New shortest distance is assigned
-                            bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list                                                     
+                            bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list                                                          
                         }
                     }
                 }
@@ -110,33 +117,25 @@ public class EnemyController : MonoBehaviour
             if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + offset) // Checks if enemy reached target
             {
                 FaceTarget(); // Makes the enemy face the player
-                attackTimer++;
+                if (firstAttack)
+                {
+                    attackTimer += 1.5f;
+                    firstAttack = false;
+                }
+                attackTimer += Time.deltaTime;
+
                 if (attackTimer >= attackTimerMax)
                 {
-                    Attack();
-                    if (bestTarget == playerPosition)
-                    {
-                        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
-                        playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
-                    }
-                    else
-                    {
-                        Building building = bestTarget.GetComponent<Building>();
-                        if (building.GetHealth() > 0)
-                        {
-                            building.healthBarImage.fillAmount = Mathf.Clamp(building.GetHealth() / building.maxHealth, 0, 1f);
-                            building.TakeDamage(1f);
-                        }
-                        else
-                        {
-                            LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
-                            building.DestroyBuilding();
-                        }
-                    }
+                    Attack();                   
                 }
             }
             ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + offset);
-        }
+
+            if (Vector3.Distance(transform.position, bestTarget.position) >= 5.0f)
+            {
+                firstAttack = true;
+            }
+        }        
     }
 
     void Checks()
@@ -160,6 +159,26 @@ public class EnemyController : MonoBehaviour
         ActiveAnimator.SetTrigger("Swing");
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.EnemyAttack1Sound : GameManager.global.EnemyAttack2Sound, 1, true, 0, false, transform);
         attackTimer = 0;
+
+        if (bestTarget == playerPosition)
+        {            
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
+            playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
+        }
+        else
+        {
+            Building building = bestTarget.GetComponent<Building>();
+            if (building.GetHealth() > 0)
+            {
+                building.healthBarImage.fillAmount = Mathf.Clamp(building.GetHealth() / building.maxHealth, 0, 1f);
+                building.TakeDamage(1f);
+            }
+            else
+            {
+                LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
+                building.DestroyBuilding();
+            }
+        }
     }
 
     private void FaceTarget() // Making sure the enemy always faces what it is attacking
@@ -167,12 +186,6 @@ public class EnemyController : MonoBehaviour
         Vector3 direction = (bestTarget.position - transform.position).normalized; // Gets a direction using a normalized vector
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z)); // Obtaining a rotation angle
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 5.0f); // Smoothly rotating towards target
-    }
-
-    private void ChasePlayerTimer()
-    {
-        bestTarget = null;
-        chasing = false;
     }
 
     public void Damaged(float amount)
@@ -202,12 +215,13 @@ public class EnemyController : MonoBehaviour
 
     private void MakeNoise()
     {
-        noiseTimer++;
+        noiseTimer += Time.deltaTime;
+
         if (noiseTimer >= noiseTimerMax)
         {
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Enemy1Sound : GameManager.global.Enemy2Sound, 1, true, 0, false, transform);
             noiseTimer = 0;
-            noiseTimerMax = Random.Range(500, 1000);
+            noiseTimerMax = Random.Range(5.0f, 10.0f);
         }
     }
 
