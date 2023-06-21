@@ -108,7 +108,7 @@ public class LevelManager : MonoBehaviour
 
         for (int i = 0; i < TerrainList.Count; i++)
         {
-            bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 400;
+            bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 450;
 
             TerrainList[i].gameObject.SetActive(enableBool);
         }
