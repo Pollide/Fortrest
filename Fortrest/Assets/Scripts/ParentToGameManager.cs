@@ -9,7 +9,7 @@ public class ParentToGameManager : MonoBehaviour
     {
         if (GameManager.global)
         {
-            transform.SetParent(GameManager.global.transform);
-        } 
+            transform.SetParent(GameManager.global.transform); //DONT LET PLAYER PARENT ANYMORE AS WE DONT HAVE MULTI SCENES
+        }
     }
 }
