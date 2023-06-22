@@ -56,7 +56,6 @@ public class LevelManager : MonoBehaviour
 
     public List<Transform> TerrainList = new List<Transform>();
 
-
     private void Awake()
     {
         global = this;

@@ -68,6 +68,11 @@ public class Building : MonoBehaviour
             LevelManager.global.NaturalBuildingList.Add(this);
         else
             LevelManager.global.BuildingList.Add(transform);
+
+        if (resourceObject == BuildingType.House)
+        {
+            Indicator.global.AddIndicator(transform, Color.yellow, "Home");
+        }
     }
 
     /*
