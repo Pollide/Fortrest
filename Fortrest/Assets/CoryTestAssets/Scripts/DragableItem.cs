@@ -17,23 +17,22 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
         parentAfterDrag = transform.parent;
-        transform.SetParent(transform.parent.parent);
+        transform.SetParent(transform.parent.parent, false);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
         GetComponent<Animator>().enabled = true;
-        image.enabled = false; //hide for a frame so the instant position is not visible
+
+        transform.position = Input.mousePosition;
     }
 
 
     public void OnDrag(PointerEventData eventData)
     {
-        image.enabled = true; //unhide
         transform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        image.enabled = true; //unhide
         GetComponent<Animator>().enabled = false;
         transform.localScale = Vector3.one;
         transform.SetParent(parentAfterDrag);

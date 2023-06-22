@@ -14,6 +14,22 @@ public class BridgeBuilder : MonoBehaviour
     public GameObject DamagedGameObject;
     public GameObject RepairedGameObject;
 
+    public bool MarshBridge;
+    public bool TussocksBridge;
+
+    private void Start()
+    {
+        if (MarshBridge)
+        {
+            Indicator.global.AddIndicator(transform, Color.magenta, "Marsh");
+        }
+
+        if (TussocksBridge)
+        {
+            Indicator.global.AddIndicator(transform, Color.red * Color.yellow, "Tussocks");
+        }
+    }
+
 
     private void Update()
     {

@@ -30,6 +30,10 @@ public class Indicator : MonoBehaviour
 
         public Vector3 WorldPosition;
 
+        public bool Unlocked;
+
+        public string ActiveString;
+
         public void Refresh()
         {
             if (ActiveTarget)
@@ -90,8 +94,24 @@ public class Indicator : MonoBehaviour
                 holder.localPosition -= Vector3.up;
             }
 
+            if ((bottomBool || topBool) && (leftBool || rightBool))
+            {
+                //  Debug.Log(1);
+                rectTransform.localEulerAngles += new Vector3(0, 0, 45 * (rightBool ? -1 : 1));
+            }
+
+            if (!Unlocked)
+            {
+                if (!isOutsideCanvas)
+                    Unlocked = true;
+            }
+            else
+            {
+                ActiveText.text = ActiveString;
+            }
+
             ActiveText.transform.localEulerAngles = -rectTransform.localEulerAngles; //so text is always readable
-            
+
             rectTransform.anchoredPosition = clamp;
         }
     }
@@ -142,8 +162,8 @@ public class Indicator : MonoBehaviour
         indicatorData.ActiveImage.color = color;
 
         indicatorData.ActiveText = indicatorData.holder.GetChild(1).GetComponent<Text>();
-
-        indicatorData.ActiveText.text = name;
+        indicatorData.ActiveString = name;
+        indicatorData.ActiveText.text = "?";
         IndicatorList.Add(indicatorData);
     }
 }
