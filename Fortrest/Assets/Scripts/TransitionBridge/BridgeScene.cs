@@ -5,12 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class BridgeScene : MonoBehaviour
 {
+    [SerializeField] private GameObject unloadTerrain;
+    [SerializeField] private GameObject loadTerrain;
+
     public AudioClip BiomeMusic;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
+            unloadTerrain.SetActive(false);
+            loadTerrain.SetActive(true);
             GameManager.global.MusicManager.PlayMusic(BiomeMusic);
             /*
             if (GetComponentInParent<BridgeBuilder>().sceneToSpawn == "Tussockland")
