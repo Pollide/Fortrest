@@ -4,13 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine.Events;
 
-public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler
 {
     public Image image;
     // Name of the item
     public new string name;
     public TMP_Text quantityText;
+
+    public UnityEvent middleClick;
+    public UnityEvent rightClick;
 
     [HideInInspector] public Transform parentAfterDrag;
 
@@ -37,5 +41,13 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         transform.localScale = Vector3.one;
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (eventData.button == PointerEventData.InputButton.Right && rightClick != null)
+            rightClick.Invoke();
+        else if (eventData.button == PointerEventData.InputButton.Middle && middleClick != null)
+            middleClick.Invoke();
     }
 }

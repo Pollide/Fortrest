@@ -33,6 +33,10 @@ public class U_Turret : MonoBehaviour
     // The range to start
     public float detectionRange = 10f;
 
+    [Header("Upgrade cost")]
+    public int upgradeCostWood = 1;
+    public int upgradeCostStone = 1;
+
     [Header("Initial Upgrade percentage")]
     public float upgradeASPercent = 5f;
     public float upgradeRangePercent = 5f;
@@ -144,6 +148,12 @@ public class U_Turret : MonoBehaviour
     {
         currentButton.GetComponent<Button>().interactable = false;
 
+        InventoryManager.global.RemoveItem("Wood", upgradeCostWood);
+        InventoryManager.global.RemoveItem("Stone", upgradeCostStone);
+
+        upgradeCostWood += upgradeCostWood * 2;
+        upgradeCostStone += upgradeCostStone * 2;
+
         if (attackSpeedButtons.Find(button => button.name == currentButton.name))
         {
             AddAttackSpeed();
@@ -227,27 +237,27 @@ public class U_Turret : MonoBehaviour
         {
             if (attackSpeedButtons.Find(button => button.name == currentButton.name))
             {
-                uiText.text = _text + upgradeASPercent + "%";
+                uiText.text = _text + upgradeASPercent + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
             }
             else if (rangeButtons.Find(button => button.name == currentButton.name))
             {
-                uiText.text = _text + upgradeRangePercent + "%";
+                uiText.text = _text + upgradeRangePercent + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
             }
             else if (damageButtons.Find(button => button.name == currentButton.name))
             {
-                uiText.text = _text + upgradeDamagePercent + "%";
+                uiText.text = _text + upgradeDamagePercent + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
             }
             else if (addKnockBackButton == currentButton)
             {
-                uiText.text = _text + knockBackPercentage + "%";
+                uiText.text = _text + knockBackPercentage + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
             }
             else if (addChanceToKillButton == currentButton)
             {
-                uiText.text = _text + instantKillPercent + "%";
+                uiText.text = _text + instantKillPercent + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
             }
             else if (addChanceToMultiShotButton == currentButton)
             {
-                uiText.text = _text + multiShotPercentage + "%";
+                uiText.text = _text + multiShotPercentage + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
             }
         }
 
@@ -266,7 +276,10 @@ public class U_Turret : MonoBehaviour
         {
             buttonImage.color = Color.green;
             currentButton = _button;
-            buyUpgradeButton.GetComponent<Button>().interactable = true;
+            if (upgradeCostStone <= InventoryManager.global.GetItemQuantity("Stone") && upgradeCostWood <= InventoryManager.global.GetItemQuantity("Wood"))
+            {
+                buyUpgradeButton.GetComponent<Button>().interactable = true;
+            }
         }
         else
         {

@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 8108218794651406576}
   - component: {fileID: 7406403577887660719}
   - component: {fileID: 748967672319596592}
+  - component: {fileID: 9051112419759284113}
   m_Layer: 5
   m_Name: StoneDragable
   m_TagString: Untagged
@@ -229,6 +230,24 @@ MonoBehaviour:
   image: {fileID: 8108218794651406576}
   name: Stone
   quantityText: {fileID: 1084382995511199818}
+  middleClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9051112419759284113}
+        m_TargetAssemblyTypeName: DragableEvents, Assembly-CSharp
+        m_MethodName: DeleteItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  rightClick:
+    m_PersistentCalls:
+      m_Calls: []
   parentAfterDrag: {fileID: 0}
 --- !u!95 &748967672319596592
 Animator:
@@ -250,3 +269,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &9051112419759284113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108218794651406590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e9d02721e646c43aea0393afba253a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 2
+  m_text: 5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -148,6 +148,7 @@ GameObject:
   - component: {fileID: 8108218794651406576}
   - component: {fileID: 7406403577887660719}
   - component: {fileID: 6231403926155338106}
+  - component: {fileID: -1323282262527641327}
   m_Layer: 5
   m_Name: FoodDragable
   m_TagString: Untagged
@@ -229,6 +230,36 @@ MonoBehaviour:
   image: {fileID: 8108218794651406576}
   name: Apple
   quantityText: {fileID: 1084382995511199818}
+  middleClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -1323282262527641327}
+        m_TargetAssemblyTypeName: DragableEvents, Assembly-CSharp
+        m_MethodName: DeleteItem
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  rightClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: -1323282262527641327}
+        m_TargetAssemblyTypeName: DragableEvents, Assembly-CSharp
+        m_MethodName: EatFood
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   parentAfterDrag: {fileID: 0}
 --- !u!95 &6231403926155338106
 Animator:
@@ -250,3 +281,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-1323282262527641327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8108218794651406590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26e9d02721e646c43aea0393afba253a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
