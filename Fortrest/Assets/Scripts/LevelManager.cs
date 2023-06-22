@@ -105,11 +105,17 @@ public class LevelManager : MonoBehaviour
     {
         LockCursor();
 
-        for (int i = 0; i < TerrainList.Count; i++)
+        if (TerrainList != null)
         {
-            bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 450;
+            for (int i = 0; i < TerrainList.Count; i++)
+            {
+                if (TerrainList[i])
+                {
+                    bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 450;
 
-            TerrainList[i].gameObject.SetActive(enableBool);
+                    TerrainList[i].gameObject.SetActive(enableBool);
+                }
+            }
         }
 
         PlayerController.global.EnemiesTextControl();
