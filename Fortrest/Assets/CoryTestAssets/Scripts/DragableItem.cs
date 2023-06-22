@@ -20,15 +20,22 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         transform.SetParent(transform.parent.parent);
         transform.SetAsLastSibling();
         image.raycastTarget = false;
+        GetComponent<Animator>().enabled = true;
+        image.enabled = false; //hide for a frame so the instant position is not visible
     }
+
 
     public void OnDrag(PointerEventData eventData)
     {
+        image.enabled = true; //unhide
         transform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        image.enabled = true; //unhide
+        GetComponent<Animator>().enabled = false;
+        transform.localScale = Vector3.one;
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
     }
