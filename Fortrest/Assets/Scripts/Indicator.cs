@@ -90,8 +90,14 @@ public class Indicator : MonoBehaviour
                 holder.localPosition -= Vector3.up;
             }
 
+            if ((bottomBool || topBool) && (leftBool || rightBool))
+            {
+                //  Debug.Log(1);
+                rectTransform.localEulerAngles += new Vector3(0, 0, 45 * (rightBool ? -1 : 1));
+            }
+
             ActiveText.transform.localEulerAngles = -rectTransform.localEulerAngles; //so text is always readable
-            
+
             rectTransform.anchoredPosition = clamp;
         }
     }
