@@ -24,12 +24,6 @@ public class PlayerController : MonoBehaviour
     private float playerGrav = -9.81f;
     private float playerVelocity;
 
-
-    //private float attackCooldown = 0.0f;
-    //private float nextAttack;
-    //private float lastClickedTime = 0;
-    //private float maxComboDelay = 1;
-
     // Attacks
     public float attackDamage = 0.5f;
     public float attackTimer = 0.0f;
@@ -203,23 +197,6 @@ public class PlayerController : MonoBehaviour
         {
             playerEnergy = 0;
 
-        if (playerisMoving)
-        {
-            footstepTimer += Time.deltaTime * (noEnergy ? 0.5f : 1.0f);
-        }
-        else
-        {
-            footstepTimer = 0;
-        }
-        if (footstepTimer > 0.35f && sleeping == false)
-        {
-            footstepTimer = 0;
-            AudioClip step = Random.Range(0, 2) == 0 ? GameManager.global.Footstep1Sound : GameManager.global.Footstep2Sound;
-            if (Boar.global && Boar.global.mounted == false)
-            {
-                GameManager.global.SoundManager.PlaySound(step, 0.1f);
-            }
-        }
             if (CharacterAnimator.GetBool("Moving") == true)
             {
                 CharacterAnimator.speed = 0.75f;

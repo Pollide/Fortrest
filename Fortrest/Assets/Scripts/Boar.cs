@@ -87,7 +87,6 @@ public class Boar : MonoBehaviour
     {
         if (inRange)
         {
-            Debug.Log("yo");
             if (mounted)
             {
                 text.SetActive(false);

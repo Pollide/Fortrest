@@ -45,7 +45,8 @@ public class EnemyController : MonoBehaviour
     {
         goblin = 1,
         spider,
-        wolf
+        wolf,
+        ogre
     };
 
     // Audio
@@ -251,7 +252,32 @@ public class EnemyController : MonoBehaviour
             {
                 StopAllCoroutines();
                 chaseTimer = 0;
-                knockBackScript.knock = true;
+                if (currentEnemyType != ENEMYTYPE.ogre)
+                {
+                    knockBackScript.knock = true;
+                }                
+                canBeDamaged = false;
+                ScreenShake.global.shake = true;
+                chasing = true;
+                Damaged(PlayerController.global.attackDamage);
+                PickSound(hitSound, hitSound2, 1.0f);
+                PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == PlayerController.global.SwordGameObject)
+        {
+            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
+            {
+                StopAllCoroutines();
+                chaseTimer = 0;
+                if (currentEnemyType != ENEMYTYPE.ogre)
+                {
+                    knockBackScript.knock = true;
+                }
                 canBeDamaged = false;
                 ScreenShake.global.shake = true;
                 chasing = true;
@@ -291,6 +317,16 @@ public class EnemyController : MonoBehaviour
             agent.angularSpeed = 100.0f;
             maxHealth = 4.0f;
             attackTimerMax = 2.5f;
+            agent.stoppingDistance = 6.5f;
+            offset = 0.1f;
+        }
+        else if (currentEnemyType == ENEMYTYPE.ogre)
+        {
+            agent.speed = 2.0f;
+            agent.acceleration = 20.0f;
+            agent.angularSpeed = 80.0f;
+            maxHealth = 10.0f;
+            attackTimerMax = 4.0f;
             agent.stoppingDistance = 6.5f;
             offset = 0.1f;
         }
