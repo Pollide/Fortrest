@@ -102,8 +102,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.75, z: 1}
-  m_Center: {x: 0, y: 0.75, z: 0}
+  m_Size: {x: 1.5, y: 2.5, z: 1.5}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &1402647301061185263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +117,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthBarImage: {fileID: 3210049245178552100}
+  healthAnimation: {fileID: 5530168006769234655}
   chasing: 0
   canBeDamaged: 1
   ActiveAnimator: {fileID: 8403680569878307525}
@@ -274,6 +275,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!111 &5530168006769234655 stripped
+Animation:
+  m_CorrespondingSourceObject: {fileID: 8389553135424533247, guid: 412f881170d2477458b73d3eddd5ab20,
+    type: 3}
+  m_PrefabInstance: {fileID: 4094533614724423712}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &6785591901521794939 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,

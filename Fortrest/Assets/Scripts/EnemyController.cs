@@ -14,6 +14,7 @@ public class EnemyController : MonoBehaviour
     // Parameters
     private float offset;
     private float speed;
+    private float stoppingDist;
 
     // Timers
     private float attackTimer;
@@ -28,11 +29,13 @@ public class EnemyController : MonoBehaviour
     private float maxHealth;
     public Image healthBarImage;
     AnimationState HealthAnimationState;
+    public Animation healthAnimation;
 
     // Booleans
     public bool chasing = false;
     public bool canBeDamaged = true;
-    private bool firstAttack = true;
+    private bool distanceAdjusted = false;
+    private bool attacking = false;
 
     // Others
     public Animator ActiveAnimator; 
@@ -77,7 +80,7 @@ public class EnemyController : MonoBehaviour
         Checks();
         MakeNoise();
         Process();
-
+        ResetAttack();
         chasing = true;
     }
 
@@ -100,7 +103,6 @@ public class EnemyController : MonoBehaviour
             {
                 bestTarget = null;
                 chasing = false;
-                firstAttack = true;
                 chaseTimer = 0;
             } 
         }
@@ -129,11 +131,16 @@ public class EnemyController : MonoBehaviour
         {
             if (bestTarget == playerPosition)
             {
-                agent.stoppingDistance = 2.0f;
+                agent.stoppingDistance = stoppingDist;
+                distanceAdjusted = false;
             }
             else
-            {
-                agent.stoppingDistance = 4.5f;
+            {           
+                if (distanceAdjusted == false)
+                {
+                    agent.stoppingDistance = stoppingDist + 2.5f;
+                    distanceAdjusted = true;
+                }              
             }
             if (agent.isOnNavMesh)
             {
@@ -143,24 +150,12 @@ public class EnemyController : MonoBehaviour
             if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + offset) // Checks if enemy reached target
             {
                 FaceTarget(); // Makes the enemy face the player
-                if (firstAttack)
+                if (!attacking)
                 {
-                    attackTimer = attackTimerMax - (attackTimerMax / 10.0f);
-                    firstAttack = false;
-                }
-                attackTimer += Time.deltaTime;
-
-                if (attackTimer >= attackTimerMax)
-                {
-                    Attack();                   
+                    Attack();
                 }
             }
             ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + offset);
-
-            if (Vector3.Distance(transform.position, bestTarget.position) >= 2.5f)
-            {
-                firstAttack = true;
-            }
         }        
     }
 
@@ -181,11 +176,12 @@ public class EnemyController : MonoBehaviour
 
     void Attack()
     {
+        attacking = true;
+        attackTimer = 0;
         ActiveAnimator.ResetTrigger("Attack");
         ActiveAnimator.SetTrigger("Attack");
         if (currentEnemyType == ENEMYTYPE.goblin) // Temporary
             PickSound(attackSound, attackSound2);
-        attackTimer = 0;
 
         if (bestTarget == playerPosition)
         {            
@@ -217,16 +213,15 @@ public class EnemyController : MonoBehaviour
 
     public void Damaged(float amount)
     {
-        Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
         health -= amount;
         if (HealthAnimationState != null && HealthAnimationState.enabled)
         {
             HealthAnimationState.time = 1;
-            GameManager.PlayAnimation(animation, "Health Hit");
+            GameManager.PlayAnimation(healthAnimation, "Health Hit");
         }
         else
         {
-            HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
+            HealthAnimationState = GameManager.PlayAnimation(healthAnimation, "Health Appear");
         }
         healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
         if (health <= 0)
@@ -274,6 +269,7 @@ public class EnemyController : MonoBehaviour
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
             {
                 StopAllCoroutines();
+                chaseTimer = 0;
                 knockBackScript.knock = true;
                 canBeDamaged = false;               
                 ScreenShake.global.shake = true;
@@ -295,7 +291,8 @@ public class EnemyController : MonoBehaviour
             agent.angularSpeed = 120.0f;
             maxHealth = 3.0f;
             attackTimerMax = 1.75f;
-            offset = 0.3f;
+            agent.stoppingDistance = 2.0f;
+            offset = 0.225f;
         }
         else if (currentEnemyType == ENEMYTYPE.spider)
         {
@@ -304,23 +301,39 @@ public class EnemyController : MonoBehaviour
             agent.angularSpeed = 200.0f;
             maxHealth = 2.0f;
             attackTimerMax = 2.5f;
-            offset = 0.5f;
+            agent.stoppingDistance = 2.5f;
+            offset = 0.25f;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
-            agent.speed = 5.0f;
+            agent.speed = 4.75f;
             agent.acceleration = 40.0f;
             agent.angularSpeed = 100.0f;
             maxHealth = 4.0f;
             attackTimerMax = 2.5f;
-            offset = 0.75f;
+            agent.stoppingDistance = 6.5f;
+            offset = 0.1f;
         }
         health = maxHealth;
         speed = agent.speed;
+        stoppingDist = agent.stoppingDistance;
     }
 
     private void PickSound(AudioClip name1, AudioClip name2)
     {
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? name1 : name2, 1, true, 0, false, transform);
+    }
+
+    private void ResetAttack()
+    {
+        if (attacking)
+        {
+            attackTimer += Time.deltaTime;
+
+            if (attackTimer >= attackTimerMax)
+            {
+                attacking = false;
+            }
+        }
     }
 }

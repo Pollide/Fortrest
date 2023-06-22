@@ -5,7 +5,7 @@ using UnityEngine;
 public class KnockBack : MonoBehaviour
 {
     [SerializeField]
-    private float strength = 20.0f;
+    private float strength;
     public bool knock = false;
 
     private void Update()
