@@ -179,29 +179,7 @@ public class EnemyController : MonoBehaviour
         attacking = true;
         attackTimer = 0;
         ActiveAnimator.ResetTrigger("Attack");
-        ActiveAnimator.SetTrigger("Attack");
-        if (currentEnemyType == ENEMYTYPE.goblin) // Temporary
-            PickSound(attackSound, attackSound2);
-
-        if (bestTarget == playerPosition)
-        {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
-            playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
-        }
-        else
-        {
-            Building building = bestTarget.GetComponent<Building>();
-            if (building.GetHealth() > 0)
-            {
-                building.healthBarImage.fillAmount = Mathf.Clamp(building.GetHealth() / building.maxHealth, 0, 1f);
-                building.TakeDamage(1f);
-            }
-            else
-            {
-                LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
-                building.DestroyBuilding();
-            }
-        }
+        ActiveAnimator.SetTrigger("Attack");       
     }
 
     private void FaceTarget() // Making sure the enemy always faces what it is attacking
@@ -292,7 +270,7 @@ public class EnemyController : MonoBehaviour
             maxHealth = 3.0f;
             attackTimerMax = 1.75f;
             agent.stoppingDistance = 2.0f;
-            offset = 0.225f;
+            offset = 0.25f;
         }
         else if (currentEnemyType == ENEMYTYPE.spider)
         {
@@ -302,7 +280,7 @@ public class EnemyController : MonoBehaviour
             maxHealth = 2.0f;
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 2.5f;
-            offset = 0.25f;
+            offset = 0.3f;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
@@ -333,6 +311,34 @@ public class EnemyController : MonoBehaviour
             if (attackTimer >= attackTimerMax)
             {
                 attacking = false;
+            }
+        }
+    }
+
+    public void AnimationAttack()
+    {
+        if (currentEnemyType == ENEMYTYPE.goblin)
+        {
+            PickSound(attackSound, attackSound2);
+        }
+
+        if (bestTarget == playerPosition)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
+            playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
+        }
+        else
+        {
+            Building building = bestTarget.GetComponent<Building>();
+            if (building.GetHealth() > 0)
+            {
+                building.healthBarImage.fillAmount = Mathf.Clamp(building.GetHealth() / building.maxHealth, 0, 1f);
+                building.TakeDamage(1f);
+            }
+            else
+            {
+                LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
+                building.DestroyBuilding();
             }
         }
     }
