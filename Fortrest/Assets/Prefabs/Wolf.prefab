@@ -1918,8 +1918,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 4, y: 5, z: 10}
-  m_Center: {x: 0, y: 2, z: 4}
+  m_Size: {x: 5, y: 5, z: 15}
+  m_Center: {x: 0, y: 2, z: 5}
 --- !u!95 &2456781144617800690
 Animator:
   serializedVersion: 4
@@ -1957,14 +1957,16 @@ MonoBehaviour:
   chasing: 0
   canBeDamaged: 1
   ActiveAnimator: {fileID: 2456781144617800690}
-  hitSound: {fileID: 0}
-  hitSound2: {fileID: 0}
-  attackSound: {fileID: 0}
-  attackSound2: {fileID: 0}
-  deathSound: {fileID: 0}
-  deathSound2: {fileID: 0}
-  noiseSound: {fileID: 0}
-  noiseSound2: {fileID: 0}
+  hitSound: {fileID: 8300000, guid: 3639cbc7a0447a24fac0adf36732d24c, type: 3}
+  hitSound2: {fileID: 8300000, guid: 9add04da7a98a0844a624cea467de095, type: 3}
+  attackSound: {fileID: 8300000, guid: bc4fdfb2db579dd44aec5f6feaa5e4ed, type: 3}
+  attackSound2: {fileID: 8300000, guid: 3665425b3ebdc9a409f0e984b62f21c0, type: 3}
+  deathSound: {fileID: 8300000, guid: 0c07aad12d7a2f14a8345748db0e8272, type: 3}
+  deathSound2: {fileID: 8300000, guid: 0c07aad12d7a2f14a8345748db0e8272, type: 3}
+  noiseSound: {fileID: 8300000, guid: 711ac91a58364954d8e763265d7d9198, type: 3}
+  noiseSound2: {fileID: 8300000, guid: 711ac91a58364954d8e763265d7d9198, type: 3}
+  stepSound: {fileID: 8300000, guid: 2836dec72f2c25f4388b86afe630e40f, type: 3}
+  stepSound2: {fileID: 8300000, guid: a8ca952a74eeb534295bf660b7e61f37, type: 3}
   currentEnemyType: 3
 --- !u!114 &6763374028765096810
 MonoBehaviour:
