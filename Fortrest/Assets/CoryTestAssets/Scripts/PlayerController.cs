@@ -215,10 +215,10 @@ public class PlayerController : MonoBehaviour
         {
             footstepTimer = 0;
             AudioClip step = Random.Range(0, 2) == 0 ? GameManager.global.Footstep1Sound : GameManager.global.Footstep2Sound;
-            if (Boar.global.mounted == false)
+            if (Boar.global && Boar.global.mounted == false)
             {
                 GameManager.global.SoundManager.PlaySound(step, 0.1f);
-            }           
+            }
         }
 
         if (attacking)
