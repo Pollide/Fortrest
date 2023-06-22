@@ -4,24 +4,30 @@ using UnityEngine;
 
 public class Boar : MonoBehaviour
 {
+    public static Boar global;
+
     private GameObject player;
     private GameObject text;
-    private bool mounted = false;
+    public bool mounted = false;
     private bool inRange = false;
 
     private float maxSpeed = 0.75f;
-    public float acceleration = 0.2f;
-    public float deceleration = 0.0f;
-    public float currentSpeed;
+    private float acceleration = 0.2f;
+    private float deceleration = 0.0f;
+    private float currentSpeed;
     private float currentTurn;
-    public float turnAnglePerSec = 90.0f;
+    private float turnAnglePerSec = 90.0f;
     private float verticalVelocity;
     private float gravity = -20.0f;
+
+    private bool isMoving;
+    public Animator animator;
 
     CharacterController cc;
 
     private void Awake()
     {
+        global = this;
         currentSpeed = 0.0f;
         currentTurn = 0.0f;
         verticalVelocity = 0.0f;
@@ -45,6 +51,7 @@ public class Boar : MonoBehaviour
         if (mounted)
         {
             PlayerStick();
+            PlayAnimations();
         }
     }
 
@@ -80,6 +87,7 @@ public class Boar : MonoBehaviour
     {
         if (inRange)
         {
+            Debug.Log("yo");
             if (mounted)
             {
                 text.SetActive(false);
@@ -118,8 +126,7 @@ public class Boar : MonoBehaviour
         player.GetComponent<CharacterController>().enabled = false;
         if (mounted)
         {
-            player.transform.position = new Vector3(transform.position.x, transform.position.y + 2.75f, transform.position.z);
-            player.transform.position += transform.forward;
+            player.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = false;
             player.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("Moving", false);
@@ -136,8 +143,7 @@ public class Boar : MonoBehaviour
 
     void PlayerStick()
     {
-        player.transform.position = new Vector3(transform.position.x, transform.position.y + 2.75f, transform.position.z);
-        player.transform.position += transform.forward;
+        player.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
         player.transform.rotation = transform.rotation;
         PlayerController.global.CharacterAnimator.SetBool("Sitting", true);
     }
@@ -186,5 +192,11 @@ public class Boar : MonoBehaviour
         float divider = max - min;
         float i = currentSpeed / (divider / dividerCoefficient);
         value = Mathf.Lerp(min, max, i);
+    }
+
+    private void PlayAnimations()
+    {
+        isMoving = (Input.GetKey(KeyCode.W)) || (currentSpeed >= 0.4f && !Input.GetKey(KeyCode.W));
+        animator.SetBool("Moving", isMoving);
     }
 }
