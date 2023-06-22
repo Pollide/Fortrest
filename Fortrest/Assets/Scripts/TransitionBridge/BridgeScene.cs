@@ -6,8 +6,7 @@ using UnityEngine.SceneManagement;
 public class BridgeScene : MonoBehaviour
 {
     public AudioClip BiomeMusic;
-
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

@@ -167,7 +167,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: AS2
+  m_text: AS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -449,7 +449,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RANGE2
+  m_text: Range
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -585,7 +585,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: DMG3
+  m_text: DMG
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -957,7 +957,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RANGE1
+  m_text: RANGE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -1365,7 +1365,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: RANGE2
+  m_text: RANGE
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -1784,7 +1784,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: AS3
+  m_text: AS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -2684,7 +2684,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: AS1
+  m_text: AS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -2820,7 +2820,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: DMG1
+  m_text: DMG
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -3812,7 +3812,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: DMG3
+  m_text: DMG
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -3952,8 +3952,8 @@ MonoBehaviour:
   maxHealth: 5
   energyConsumptionPerClick: 2
   resourceAmount: 5
-  constructionCostWood: 1
-  constructionCostStone: 1
+  constructionCostWood: 15
+  constructionCostStone: 10
   healthBarImage: {fileID: 6847102100746607949}
 --- !u!135 &1687748617480127372
 SphereCollider:
@@ -4018,6 +4018,8 @@ MonoBehaviour:
   upgradeTextObject: {fileID: 9047684056028897333}
   uiText: {fileID: 4644728828873119426}
   detectionRange: 10
+  upgradeCostWood: 1
+  upgradeCostStone: 1
   upgradeASPercent: 5
   upgradeRangePercent: 5
   upgradeDamagePercent: 5

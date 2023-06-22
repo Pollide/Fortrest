@@ -34,6 +34,10 @@ public class U_Cannon : MonoBehaviour
     // The range to start
     public float detectionRange = 10f;
 
+    [Header("Upgrade cost")]
+    public int upgradeCostWood = 1;
+    public int upgradeCostStone = 1;
+
     [Header("Initial Upgrade percentage")]
     public float upgradeExplosionRadiusPercentage = 5f;
     public float upgradeRangePercent = 5f;
@@ -145,6 +149,12 @@ public class U_Cannon : MonoBehaviour
     {
         currentButton.GetComponent<Button>().interactable = false;
 
+        InventoryManager.global.RemoveItem("CoarseWood", upgradeCostWood);
+        InventoryManager.global.RemoveItem("Slate", upgradeCostStone);
+
+        upgradeCostWood += upgradeCostWood * 2;
+        upgradeCostStone += upgradeCostStone * 2;
+
         if (explosianRadiusButtons.Find(button => button.name == currentButton.name))
         {
             AddExplosionRadius();
@@ -230,27 +240,27 @@ public class U_Cannon : MonoBehaviour
         {
             if (explosianRadiusButtons.Find(button => button.name == currentButton.name))
             {
-                uiText.text = _text + upgradeExplosionRadiusPercentage + "%";
+                uiText.text = _text + upgradeExplosionRadiusPercentage + "%  Coarse Wood:" + upgradeCostWood + "Slate:" + upgradeCostStone;
             }
             else if (rangeButtons.Find(button => button.name == currentButton.name))
             {
-                uiText.text = _text + upgradeRangePercent + "%";
+                uiText.text = _text + upgradeRangePercent + "%  Coarse Wood:" + upgradeCostWood + "Slate:" + upgradeCostStone;
             }
             else if (damageButtons.Find(button => button.name == currentButton.name))
             {
-                uiText.text = _text + upgradeDamagePercent + "%";
+                uiText.text = _text + upgradeDamagePercent + "% Coarse Wood:" + upgradeCostWood + "Slate:" + upgradeCostStone;
             }
             else if(addHPButton == currentButton)
             {
-                uiText.text = _text + increasedHPPercentage + "%";
+                uiText.text = _text + increasedHPPercentage + "% Coarse Wood:" + upgradeCostWood + "Slate:" + upgradeCostStone;
             }
             else if (addChanceToKillButton == currentButton)
             {
-                uiText.text = _text + instantKillPercent + "%";
+                uiText.text = _text + instantKillPercent + "% Coarse Wood:" + upgradeCostWood + "Slate:" + upgradeCostStone;
             }
             else if (addChanceToMultiShotButton == currentButton)
             {
-                uiText.text = _text + multiShotPercentage + "%";
+                uiText.text = _text + multiShotPercentage + "% Coarse Wood:" + upgradeCostWood + "Slate:" + upgradeCostStone;
             }
         }
 
@@ -269,7 +279,11 @@ public class U_Cannon : MonoBehaviour
         {
             buttonImage.color = Color.green;
             currentButton = _button;
-            buyUpgradeButton.GetComponent<Button>().interactable = true;
+
+            if (upgradeCostStone <= InventoryManager.global.GetItemQuantity("Slate") && upgradeCostWood <= InventoryManager.global.GetItemQuantity("CoarseWood"))
+            {
+                buyUpgradeButton.GetComponent<Button>().interactable = true;
+            }
         }
         else
         {

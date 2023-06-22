@@ -61,21 +61,21 @@ public class PlayerModeHandler : MonoBehaviour
             if (buildType == BuildType.Turret)
             {
                 Building building = turretPrefabs[0].GetComponentInChildren<Building>();
-                DragBuildingBlueprint(building.constructionCostWood, building.constructionCostStone);
-                SpawnBuilding(turretPrefabs[0], building.constructionCostWood, building.constructionCostStone);
+                DragBuildingBlueprint("Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
+                SpawnBuilding(turretPrefabs[0], "Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
                 
             }
             else if (buildType == BuildType.Slow)
             {
                 Building building = turretPrefabs[1].GetComponentInChildren<Building>();
-                DragBuildingBlueprint(building.constructionCostWood, building.constructionCostStone);
-                SpawnBuilding(turretPrefabs[1], building.constructionCostWood, building.constructionCostStone);
+                DragBuildingBlueprint("HardWood", "MossyStone", building.constructionCostWood, building.constructionCostStone);
+                SpawnBuilding(turretPrefabs[1], "HardWood", "MossyStone", building.constructionCostWood, building.constructionCostStone);
             }
             else if (buildType == BuildType.Cannon)
             {
                 Building building = turretPrefabs[2].GetComponentInChildren<Building>();
-                DragBuildingBlueprint(building.constructionCostWood, building.constructionCostStone);
-                SpawnBuilding(turretPrefabs[2], building.constructionCostWood, building.constructionCostStone);
+                DragBuildingBlueprint("CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
+                SpawnBuilding(turretPrefabs[2], "CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
             }
         }
 
@@ -151,9 +151,9 @@ public class PlayerModeHandler : MonoBehaviour
     }
     bool runOnce;
 
-    private void SpawnBuilding(GameObject _prefab, int _constructionCostWood, int _constructionCostStone)
+    private void SpawnBuilding(GameObject _prefab, string _resource1, string _resource2, int _resource1Cost, int _resource2Cost)
     {
-        if (Input.GetMouseButtonDown(0) && InventoryManager.global.GetItemQuantity("Wood") >= _constructionCostWood && InventoryManager.global.GetItemQuantity("Stone") >= _constructionCostStone && !MouseOverUI())
+        if (Input.GetMouseButtonDown(0) && InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost && InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost && !MouseOverUI())
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitData;
@@ -166,8 +166,8 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
                     GameObject newTurret = Instantiate(_prefab, worldPos, Quaternion.identity);
-                    InventoryManager.global.RemoveItem("Wood", _constructionCostWood);
-                    InventoryManager.global.RemoveItem("Stone", _constructionCostStone);
+                    InventoryManager.global.RemoveItem(_resource1, _resource1Cost);
+                    InventoryManager.global.RemoveItem(_resource2, _resource2Cost);
 
                     LevelManager.global.VFXSmokePuff.transform.position = newTurret.transform.position + new Vector3(0, .5f, 0);
 
@@ -197,7 +197,7 @@ public class PlayerModeHandler : MonoBehaviour
                 if (!runOnce)
                 {
                     runOnce = true;
-                    if (InventoryManager.global.GetItemQuantity("Wood") < _constructionCostWood || InventoryManager.global.GetItemQuantity("Stone") < _constructionCostStone)
+                    if (InventoryManager.global.GetItemQuantity("Wood") < _resource1Cost || InventoryManager.global.GetItemQuantity("Stone") < _resource2Cost)
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                         Debug.Log("Not Enough Resources");
@@ -211,7 +211,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    private void DragBuildingBlueprint(int _constructionCostWood, int _constructionCostStone)
+    private void DragBuildingBlueprint(string _resource1, string _resource2, int _resource1Cost, int _resource2Cost)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitData;
@@ -225,8 +225,8 @@ public class PlayerModeHandler : MonoBehaviour
             turretBlueprint.transform.position = worldPos;
 
             if (IsInRange(worldPos) &&
-                InventoryManager.global.GetItemQuantity("Wood") >= _constructionCostWood && 
-                InventoryManager.global.GetItemQuantity("Stone") >= _constructionCostStone)
+                InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost && 
+                InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost)
             {
                 foreach (Transform child in parts)
                 {
