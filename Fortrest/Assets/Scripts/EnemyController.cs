@@ -383,16 +383,16 @@ public class EnemyController : MonoBehaviour
         if (currentEnemyType == ENEMYTYPE.spider)
         {
             AudioClip step = Random.Range(0, 2) == 0 ? stepSound : stepSound2;
-            GameManager.global.SoundManager.PlaySound(step, 0.2f);
+            GameManager.global.SoundManager.PlaySound(step, 0.8f, true, 0, false, transform);
         }
         else
         {
-            GameManager.global.SoundManager.PlaySound(stepSound, 0.1f);
+            GameManager.global.SoundManager.PlaySound(stepSound, 0.4f, true, 0, false, transform);
         }
     }
 
     public void SecondStep()
     {
-        GameManager.global.SoundManager.PlaySound(stepSound2, 0.1f);
+        GameManager.global.SoundManager.PlaySound(stepSound2, 0.4f, true, 0, false, transform);
     }
 }

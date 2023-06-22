@@ -41,18 +41,6 @@ public class SFXManager : MonoBehaviour
 
     public void Awake()
     {
-        if (AudioName == "Sound" && GameManager.global.SoundManager != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        if (AudioName == "Music" && GameManager.global.MusicManager != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         name = AudioName + " Holder";
 
         DontDestroyOnLoad(gameObject);
@@ -69,16 +57,15 @@ public class SFXManager : MonoBehaviour
 
             //audioCreated.SetCustomCurve(AudioSourceCurveType.CustomRolloff, SetupManager.singleton.animationCurve);
 
-            audioCreated.maxDistance = 30;
+            audioCreated.maxDistance = 20;
             audioCreated.dopplerLevel = 0;
             SFXList.Add(new SFXData());
             SFXList[SFXList.Count - 1].Audio = audioCreated;
         }
 
         RefreshAudioVolumes();
-
-
     }
+
     private void Update()
     {
         if (SkipToNearEnd)
@@ -253,7 +240,11 @@ public class SFXManager : MonoBehaviour
 
             if (SpatialTransform) //default is Vector3.zero
             {
-                SFXList[PoolPosition].Audio.spatialBlend = 0.5f;
+                if (Vector3.Distance(SpatialTransform.position, PlayerController.global.transform.position) > 20)
+                {
+                    return 0;//too far away
+                }
+                SFXList[PoolPosition].Audio.spatialBlend = 0.9f;
                 SFXList[PoolPosition].Audio.transform.position = SpatialTransform.position; //stops the high pitch sound
             }
             else
@@ -282,6 +273,7 @@ public class SFXManager : MonoBehaviour
 
         if (RequestedMusic)
         {
+
             DynamicVolumeChange(-1);
 
             for (int i = 0; i < SFXList.Count; i++)
@@ -291,7 +283,7 @@ public class SFXManager : MonoBehaviour
                     //just continues playing that music
                     PoolPosition = i;
                     DynamicVolumeChange(0.5f, PoolPosition);
-                    Debug.Log("RETURN");
+
                     return;
                 }
             }
