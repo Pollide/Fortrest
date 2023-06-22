@@ -10,4 +10,14 @@ public class GoblinAttackEvent : MonoBehaviour
     {
         script.AnimationAttack();
     }
+
+    void StepOne()
+    {
+        script.FirstStep();
+    }
+
+    void StepTwo()
+    {
+        script.SecondStep();
+    }
 }
