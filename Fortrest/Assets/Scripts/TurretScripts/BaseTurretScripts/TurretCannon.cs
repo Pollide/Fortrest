@@ -26,6 +26,17 @@ public class TurretCannon : MonoBehaviour
             fireCountdown = 1f / fireRate;
         }
 
+        if (target)
+        {
+            // Calculate the direction to the target
+            Vector3 targetPos = new(target.transform.position.x, target.transform.position.y, target.transform.position.z);
+
+            Vector3 direction = targetPos - transform.position;
+
+            // Set the cannon's rotation to aim at the target
+            transform.rotation = Quaternion.LookRotation(direction);
+        }
+
         fireCountdown -= Time.deltaTime;
     }
 
@@ -55,14 +66,7 @@ public class TurretCannon : MonoBehaviour
         if (target == null)
             return;
 
-        // Calculate the direction to the target
-        Vector3 targetPos = new(target.transform.position.x, target.transform.position.y, target.transform.position.z);
-
-        Vector3 direction = targetPos - transform.position;
-
-        // Set the cannon's rotation to aim at the target
-        transform.rotation = Quaternion.LookRotation(direction);
-
+        GameManager.PlayAnimation(GetComponent<Animation>(), "Turret Shoot");
         // Spawn a projectile
         ProjectileExplosion projectile = Instantiate(projectilePrefab, firePoint).GetComponent<ProjectileExplosion>();
         projectile.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);

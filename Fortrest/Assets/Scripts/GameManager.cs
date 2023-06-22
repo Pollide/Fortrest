@@ -112,9 +112,11 @@ public class GameManager : MonoBehaviour
 
     }
 
-
+    /*
     private void Update()
     {
+
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             NextScene(SceneManager.GetActiveScene().buildIndex - 1);
@@ -124,7 +126,10 @@ public class GameManager : MonoBehaviour
         {
             NextScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
+#endif
     }
+    */
+
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
     {
