@@ -14,7 +14,7 @@ public class Boar : MonoBehaviour
     private float maxSpeed = 0.75f;
     private float acceleration = 0.2f;
     private float deceleration = 0.0f;
-    private float currentSpeed;
+    public float currentSpeed;
     private float currentTurn;
     private float turnAnglePerSec = 90.0f;
     private float verticalVelocity;
@@ -196,7 +196,8 @@ public class Boar : MonoBehaviour
 
     private void PlayAnimations()
     {
-        isMoving = (Input.GetKey(KeyCode.W)) || (currentSpeed >= 0.4f && !Input.GetKey(KeyCode.W));
+        isMoving = (Input.GetKey(KeyCode.W)) || (currentSpeed >= 0.5f && !Input.GetKey(KeyCode.W));       
+        animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f); 
         animator.SetBool("Moving", isMoving);
     }
 }
