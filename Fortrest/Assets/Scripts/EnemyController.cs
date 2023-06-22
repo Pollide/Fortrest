@@ -57,6 +57,8 @@ public class EnemyController : MonoBehaviour
     public AudioClip deathSound2;
     public AudioClip noiseSound;
     public AudioClip noiseSound2;
+    public AudioClip stepSound;
+    public AudioClip stepSound2;
 
     [SerializeField] ENEMYTYPE currentEnemyType;
 
@@ -204,8 +206,7 @@ public class EnemyController : MonoBehaviour
         healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
         if (health <= 0)
         {
-            if (currentEnemyType == ENEMYTYPE.goblin) // Temporary
-                PickSound(deathSound, deathSound);
+            PickSound(deathSound, deathSound, 1.0f);
 
             Time.timeScale = 1;
 
@@ -222,8 +223,7 @@ public class EnemyController : MonoBehaviour
 
         if (noiseTimer >= noiseTimerMax)
         {
-            if (currentEnemyType == ENEMYTYPE.goblin) // Temporary
-                PickSound(noiseSound, noiseSound2);
+            PickSound(noiseSound, noiseSound2, 1.0f);
 
             noiseTimer = 0;
             noiseTimerMax = Random.Range(5.0f, 10.0f);
@@ -253,8 +253,7 @@ public class EnemyController : MonoBehaviour
                 ScreenShake.global.shake = true;
                 chasing = true;
                 Damaged(PlayerController.global.attackDamage);
-                if (currentEnemyType == ENEMYTYPE.goblin) // Temporary
-                    PickSound(hitSound, hitSound2);
+                PickSound(hitSound, hitSound2, 1.0f);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
@@ -297,9 +296,9 @@ public class EnemyController : MonoBehaviour
         stoppingDist = agent.stoppingDistance;
     }
 
-    private void PickSound(AudioClip name1, AudioClip name2)
+    private void PickSound(AudioClip name1, AudioClip name2, float volume)
     {
-        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? name1 : name2, 1, true, 0, false, transform);
+        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? name1 : name2, volume, true, 0, false, transform);
     }
 
     private void ResetAttack()
@@ -317,14 +316,11 @@ public class EnemyController : MonoBehaviour
 
     public void AnimationAttack()
     {
-        if (currentEnemyType == ENEMYTYPE.goblin)
-        {
-            PickSound(attackSound, attackSound2);
-        }
+        PickSound(attackSound, attackSound2, 1.0f);
 
         if (bestTarget == playerPosition)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
             playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
         }
         else
@@ -341,5 +337,23 @@ public class EnemyController : MonoBehaviour
                 building.DestroyBuilding();
             }
         }
+    }
+
+    public void FirstStep()
+    {
+        if (currentEnemyType == ENEMYTYPE.spider)
+        {
+            AudioClip step = Random.Range(0, 2) == 0 ? stepSound : stepSound2;
+            GameManager.global.SoundManager.PlaySound(step, 0.2f);
+        }
+        else
+        {
+            GameManager.global.SoundManager.PlaySound(stepSound, 0.1f);
+        }
+    }
+
+    public void SecondStep()
+    {
+        GameManager.global.SoundManager.PlaySound(stepSound2, 0.1f);
     }
 }

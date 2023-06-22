@@ -51,7 +51,6 @@ public class PlayerController : MonoBehaviour
     // Variable for movement direction
     private Vector3 moveDirection;
 
-    private float footstepTimer;
     private bool noEnergy;
     private bool repaired;
     private bool sleeping;
@@ -201,25 +200,17 @@ public class PlayerController : MonoBehaviour
         playerCurrSpeed = noEnergy ? playerSlowedSpeed : playerMaxSpeed;
 
         if (noEnergy)
+        {
             playerEnergy = 0;
-
-        if (playerisMoving)
-        {
-            footstepTimer += Time.deltaTime * (noEnergy ? 0.5f : 1.0f);
-        }
-        else
-        {
-            footstepTimer = 0;
-        }
-        if (footstepTimer > 0.35f && sleeping == false)
-        {
-            footstepTimer = 0;
-            AudioClip step = Random.Range(0, 2) == 0 ? GameManager.global.Footstep1Sound : GameManager.global.Footstep2Sound;
-            if (Boar.global.mounted == false)
+            if (CharacterAnimator.GetBool("Moving") == true)
             {
-                GameManager.global.SoundManager.PlaySound(step, 0.1f);
-            }           
-        }
+                CharacterAnimator.speed = 0.75f;
+            }
+            else
+            {
+                CharacterAnimator.speed = 1.0f;
+            }
+        }               
 
         if (attacking)
         {
@@ -545,5 +536,15 @@ public class PlayerController : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public void FirstStep()
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.Footstep1Sound, 0.05f);
+    }
+
+    public void SecondStep()
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.Footstep2Sound, 0.05f);
     }
 }
