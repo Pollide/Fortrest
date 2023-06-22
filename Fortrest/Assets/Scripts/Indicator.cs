@@ -91,7 +91,7 @@ public class Indicator : MonoBehaviour
             }
 
             ActiveText.transform.localEulerAngles = -rectTransform.localEulerAngles; //so text is always readable
-
+            
             rectTransform.anchoredPosition = clamp;
         }
     }
