@@ -14,8 +14,12 @@ public class BridgeScene : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            unloadTerrain.SetActive(false);
-            loadTerrain.SetActive(true);
+            if (unloadTerrain != null && loadTerrain != null)
+            {
+                unloadTerrain.SetActive(false);
+                loadTerrain.SetActive(true);
+            }
+           
             GameManager.global.MusicManager.PlayMusic(BiomeMusic);
             /*
             if (GetComponentInParent<BridgeBuilder>().sceneToSpawn == "Tussockland")

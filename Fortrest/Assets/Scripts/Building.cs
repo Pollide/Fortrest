@@ -27,6 +27,10 @@ public class Building : MonoBehaviour
         Stone,
         Food,
         House,
+        HardWood,
+        CoarseWood,
+        Slate,
+        MossyStone,
     }
 
     public BuildingType resourceObject;
