@@ -70,7 +70,7 @@ public class EnemyController : MonoBehaviour
 
         playerPosition = PlayerController.global.transform;
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
-        Indicator.global.AddIndicator(transform, Color.red, "Goblin");
+        Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
         knockBackScript = GetComponent<KnockBack>();
     }

@@ -13,20 +13,29 @@ public class Indicator : MonoBehaviour
 
     public Vector3 offsets = Vector3.zero;
 
+    public Sprite RemovedSprite;
+
     [System.Serializable]
     public class IndicatorData
     {
         public RectTransform rectTransform;
         public Text ActiveText;
+        public Image ActiveImage;
 
-        public Transform target;
+        public Transform ActiveTarget;
 
         public Transform holder;
 
+        public float DestroyedTimerFloat = -1;
+
+        public Vector3 WorldPosition;
 
         public void Refresh()
         {
-            Vector3 worldToScreenPointVector = LevelManager.global.SceneCamera.WorldToScreenPoint(target.position);
+            if (ActiveTarget)
+                WorldPosition = ActiveTarget.position;
+
+            Vector3 worldToScreenPointVector = LevelManager.global.SceneCamera.WorldToScreenPoint(WorldPosition);
 
             RectTransform canvasRect = rectTransform.transform.parent as RectTransform;
 
@@ -96,29 +105,43 @@ public class Indicator : MonoBehaviour
     {
         for (int i = 0; i < IndicatorList.Count; i++)
         {
-            if (IndicatorList[i].target)
+            if (!IndicatorList[i].ActiveTarget)
             {
-                IndicatorList[i].Refresh();
+                if (IndicatorList[i].DestroyedTimerFloat == -1)
+                {
+                    IndicatorList[i].ActiveImage.sprite = RemovedSprite;
+                    IndicatorList[i].DestroyedTimerFloat = 10;
+                    GameManager.PlayAnimation(IndicatorList[i].rectTransform.GetComponent<Animation>(), "Arrow Appear", false);
+                }
+
+                IndicatorList[i].DestroyedTimerFloat -= Time.fixedDeltaTime;
+
+                if (IndicatorList[i].DestroyedTimerFloat <= 0)
+                {
+                    IndicatorList.RemoveAt(i);
+
+                    continue;
+                }
             }
-            else
-            {
-                IndicatorList.RemoveAt(i);
-            }
+
+            IndicatorList[i].Refresh();
         }
     }
 
-    public void AddIndicator(Transform target, Color color, string name)
+    public void AddIndicator(Transform activeTarget, Color color, string name)
     {
         IndicatorData indicatorData = new IndicatorData();
 
-        indicatorData.target = target;
+        indicatorData.ActiveTarget = activeTarget;
 
         indicatorData.rectTransform = Instantiate(arrowPrefab, transform).GetComponent<RectTransform>();
 
         indicatorData.holder = indicatorData.rectTransform.transform.GetChild(0);
 
+        indicatorData.ActiveImage = indicatorData.holder.GetChild(0).GetComponent<Image>();
+        indicatorData.ActiveImage.color = color;
+
         indicatorData.ActiveText = indicatorData.holder.GetChild(1).GetComponent<Text>();
-        indicatorData.holder.GetChild(0).GetComponent<Image>().color = color;
 
         indicatorData.ActiveText.text = name;
         IndicatorList.Add(indicatorData);
