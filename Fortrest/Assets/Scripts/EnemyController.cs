@@ -70,7 +70,10 @@ public class EnemyController : MonoBehaviour
 
         playerPosition = PlayerController.global.transform;
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
-        Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
+        if (agent.isOnNavMesh)
+        {
+            Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
+        }
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
         knockBackScript = GetComponent<KnockBack>();
     }
@@ -169,7 +172,7 @@ public class EnemyController : MonoBehaviour
         if (!agent.isOnNavMesh)
         {
             PlayerController.global.enemyList.Remove(transform);
-            gameObject.SetActive(false);
+            Destroy(gameObject);
             return;
         }
     }
@@ -179,7 +182,7 @@ public class EnemyController : MonoBehaviour
         attacking = true;
         attackTimer = 0;
         ActiveAnimator.ResetTrigger("Attack");
-        ActiveAnimator.SetTrigger("Attack");       
+        ActiveAnimator.SetTrigger("Attack");
     }
 
     private void FaceTarget() // Making sure the enemy always faces what it is attacking
