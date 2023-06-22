@@ -11,41 +11,45 @@ public class Indicator : MonoBehaviour
 
     public List<IndicatorData> IndicatorList = new List<IndicatorData>();
 
-    public Vector3 offsets = Vector3.one;
+    public Vector3 offsets = Vector3.zero;
 
     [System.Serializable]
     public class IndicatorData
     {
-        public RectTransform ImageRect;
+        public RectTransform rectTransform;
+        public Text ActiveText;
 
         public Transform target;
 
+        public Transform holder;
+
+
         public void Refresh()
         {
-            Vector2 pointVector = LevelManager.global.SceneCamera.WorldToScreenPoint(target.position);
-            //   pointVector.x *= global.offsets.x;
-            //   pointVector.y *= global.offsets.y;
+            Vector3 worldToScreenPointVector = LevelManager.global.SceneCamera.WorldToScreenPoint(target.position);
 
-            RectTransform canvasRect = ImageRect.parent as RectTransform;
+            RectTransform canvasRect = rectTransform.transform.parent as RectTransform;
 
-            //RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, worldToScreenPointVector, LevelManager.global.SceneCamera, out Vector2 pointVector);
+            //this only works if the canvas is attached as a child of the camera. Took me a long time to figure that out
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, worldToScreenPointVector, LevelManager.global.SceneCamera, out Vector2 pointVector);
 
+            //  rectTransform.gameObject.SetActive(worldToScreenPointVector.z > 0);
 
-            //    ImageRect.gameObject.SetActive(worldToScreenPointVector.z > 0);
-
-            Vector2 velocity = pointVector - ImageRect.anchoredPosition;
+            //  Vector2 velocity = pointVector - rectTransform.anchoredPosition;
             Vector2 canvasSize = canvasRect.sizeDelta;
-            Vector2 imagePosition = ImageRect.anchoredPosition;
+            Vector2 imagePosition = rectTransform.anchoredPosition;
             // Calculate the boundaries of the canvas
             float leftBoundary = -canvasSize.x / 2;
             float rightBoundary = canvasSize.x / 2;
             float bottomBoundary = -canvasSize.y / 2;
             float topBoundary = canvasSize.y / 2;
 
-            bool leftBool = imagePosition.x < leftBoundary;
-            bool rightBool = imagePosition.x > rightBoundary;
-            bool topBool = imagePosition.y > topBoundary;
-            bool bottomBool = imagePosition.y > topBoundary;
+            float closeFloat = 0.1f;
+
+            bool leftBool = imagePosition.x <= leftBoundary + closeFloat;
+            bool rightBool = imagePosition.x >= rightBoundary - closeFloat;
+            bool topBool = imagePosition.y >= topBoundary - closeFloat;
+            bool bottomBool = imagePosition.y <= bottomBoundary + closeFloat;
 
             // Check if the image is outside the canvas boundaries
             bool isOutsideCanvas = leftBool || rightBool || bottomBool || topBool;
@@ -54,18 +58,32 @@ public class Indicator : MonoBehaviour
             float clampedX = Mathf.Clamp(pointVector.x, leftBoundary, rightBoundary);
             float clampedY = Mathf.Clamp(pointVector.y, bottomBoundary, topBoundary);
 
-            ImageRect.localEulerAngles = Vector3.zero;
+            Vector2 clamp = new Vector2(clampedX, clampedY);
+
+            rectTransform.localEulerAngles = Vector3.zero;
+            holder.localPosition = Vector2.zero;
 
             if (rightBool)
-                ImageRect.localEulerAngles = new Vector3(0, 0, 90);
+            {
+                rectTransform.localEulerAngles = new Vector3(0, 0, 90);
+                holder.localPosition -= Vector3.right;
+            }
 
             if (leftBool)
-                ImageRect.localEulerAngles = new Vector3(0, 0, -90);
+            {
+                rectTransform.localEulerAngles = new Vector3(0, 0, -90);
+                holder.localPosition += Vector3.right;
+            }
 
             if (topBool)
-                ImageRect.localEulerAngles = new Vector3(0, 0, 180);
+            {
+                rectTransform.localEulerAngles = new Vector3(0, 0, 180);
+                holder.localPosition -= Vector3.up;
+            }
 
-            ImageRect.anchoredPosition = Vector2.SmoothDamp(ImageRect.anchoredPosition, new Vector2(clampedX, clampedY), ref velocity, 3 * Time.fixedDeltaTime);
+            ActiveText.transform.localEulerAngles = -rectTransform.localEulerAngles; //so text is always readable
+
+            rectTransform.anchoredPosition = clamp;
         }
     }
 
@@ -74,7 +92,7 @@ public class Indicator : MonoBehaviour
         global = this;
     }
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
         for (int i = 0; i < IndicatorList.Count; i++)
         {
@@ -89,15 +107,20 @@ public class Indicator : MonoBehaviour
         }
     }
 
-    public void AddIndicator(Transform target)
+    public void AddIndicator(Transform target, Color color, string name)
     {
-        return;
         IndicatorData indicatorData = new IndicatorData();
 
         indicatorData.target = target;
 
-        indicatorData.ImageRect = Instantiate(arrowPrefab, transform).GetComponent<RectTransform>();
+        indicatorData.rectTransform = Instantiate(arrowPrefab, transform).GetComponent<RectTransform>();
 
+        indicatorData.holder = indicatorData.rectTransform.transform.GetChild(0);
+
+        indicatorData.ActiveText = indicatorData.holder.GetChild(1).GetComponent<Text>();
+        indicatorData.holder.GetChild(0).GetComponent<Image>().color = color;
+
+        indicatorData.ActiveText.text = name;
         IndicatorList.Add(indicatorData);
     }
 }

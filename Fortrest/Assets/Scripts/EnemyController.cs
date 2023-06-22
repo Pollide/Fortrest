@@ -38,7 +38,7 @@ public class EnemyController : MonoBehaviour
     private bool attacking = false;
 
     // Others
-    public Animator ActiveAnimator; 
+    public Animator ActiveAnimator;
     KnockBack knockBackScript;
 
     private enum ENEMYTYPE
@@ -65,14 +65,14 @@ public class EnemyController : MonoBehaviour
         noiseTimerMax = 2.5f;
         chaseTimerMax = 10.0f;
 
-        agent = GetComponent<NavMeshAgent>(); 
+        agent = GetComponent<NavMeshAgent>();
         SetEnemyParameters();
-        
+
         playerPosition = PlayerController.global.transform;
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
-        Indicator.global.AddIndicator(transform);
+        Indicator.global.AddIndicator(transform, Color.red, "Goblin");
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
-        knockBackScript = GetComponent<KnockBack>();        
+        knockBackScript = GetComponent<KnockBack>();
     }
 
     void Update()
@@ -87,7 +87,7 @@ public class EnemyController : MonoBehaviour
     void Process()
     {
         // Default value
-        float shortestDistance = 9999;            
+        float shortestDistance = 9999;
 
         // If enemy is chasing the player, they become its target
         if (chasing)
@@ -104,7 +104,7 @@ public class EnemyController : MonoBehaviour
                 bestTarget = null;
                 chasing = false;
                 chaseTimer = 0;
-            } 
+            }
         }
         else // Player is not the target, finds different target
         {
@@ -135,12 +135,12 @@ public class EnemyController : MonoBehaviour
                 distanceAdjusted = false;
             }
             else
-            {           
+            {
                 if (distanceAdjusted == false)
                 {
                     agent.stoppingDistance = stoppingDist + 2.5f;
                     distanceAdjusted = true;
-                }              
+                }
             }
             if (agent.isOnNavMesh)
             {
@@ -156,7 +156,7 @@ public class EnemyController : MonoBehaviour
                 }
             }
             ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + offset);
-        }        
+        }
     }
 
     void Checks()
@@ -184,7 +184,7 @@ public class EnemyController : MonoBehaviour
             PickSound(attackSound, attackSound2);
 
         if (bestTarget == playerPosition)
-        {            
+        {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.5f, true, 0, false, playerPosition);
             playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
         }
@@ -230,7 +230,7 @@ public class EnemyController : MonoBehaviour
                 PickSound(deathSound, deathSound);
 
             Time.timeScale = 1;
-            
+
             PlayerController.global.enemyList.Remove(transform);
             agent.enabled = false;
             LevelManager.global.enemyList.Remove(gameObject);
@@ -246,7 +246,7 @@ public class EnemyController : MonoBehaviour
         {
             if (currentEnemyType == ENEMYTYPE.goblin) // Temporary
                 PickSound(noiseSound, noiseSound2);
-   
+
             noiseTimer = 0;
             noiseTimerMax = Random.Range(5.0f, 10.0f);
         }
@@ -271,7 +271,7 @@ public class EnemyController : MonoBehaviour
                 StopAllCoroutines();
                 chaseTimer = 0;
                 knockBackScript.knock = true;
-                canBeDamaged = false;               
+                canBeDamaged = false;
                 ScreenShake.global.shake = true;
                 chasing = true;
                 Damaged(PlayerController.global.attackDamage);
