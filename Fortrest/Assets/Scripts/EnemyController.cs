@@ -37,6 +37,7 @@ public class EnemyController : MonoBehaviour
     public bool chasing = false;
     public bool canBeDamaged = true;
     private bool distanceAdjusted = false;
+    private bool distanceAdjusted2 = false;
     private bool attacking = false;
 
     // Others
@@ -156,7 +157,8 @@ public class EnemyController : MonoBehaviour
                             if (compare < shortestDistance) // Only true if a new shorter distance is found
                             {
                                 shortestDistance = compare; // New shortest distance is assigned
-                                bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list                                                          
+                                bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
+                                
                             }
                         }
                     }
@@ -175,6 +177,7 @@ public class EnemyController : MonoBehaviour
                 }
                 agent.stoppingDistance = stoppingDist;
                 distanceAdjusted = false;
+                distanceAdjusted2 = false;
             }
             if (bestTarget == Boar.global.transform)
             {
@@ -184,18 +187,26 @@ public class EnemyController : MonoBehaviour
                     bestTarget = playerPosition;
                 }
             }
-            if (bestTarget != playerPosition && bestTarget != Boar.global.transform && bestTarget != house.transform && bestTarget != repairedHouse.transform)
+            if (bestTarget != playerPosition && bestTarget != Boar.global.transform && bestTarget != house.transform)
             {
                 if (distanceAdjusted == false)
                 {
                     agent.stoppingDistance = stoppingDist + 2.5f;
                     distanceAdjusted = true;
                 }
+                distanceAdjusted2 = false;
             }
-
-            if (agent.isOnNavMesh)
+            if (bestTarget == house.transform)
             {
-                agent.SetDestination(bestTarget.position); // Makes the enemy move
+                if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider)
+                {
+                    if (distanceAdjusted2 == false)
+                    {
+                        agent.stoppingDistance = stoppingDist + 10.0f;
+                        distanceAdjusted2 = true;
+                    }
+                    distanceAdjusted = false;
+                }
             }
 
             if (bestTarget != house.transform)
@@ -212,7 +223,11 @@ public class EnemyController : MonoBehaviour
                     }
                 }
             }
-            
+
+            if (agent.isOnNavMesh)
+            {
+                agent.SetDestination(bestTarget.position); // Makes the enemy move
+            }
             ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + offset);
         }
     }
@@ -329,13 +344,13 @@ public class EnemyController : MonoBehaviour
         }
         else if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider)
         {
-            if (other.gameObject == repairedHouse)
+            if (other.gameObject == repairedHouse && !chasing)
             {
                 if (!attacking)
                 {
                     Attack();
                 }
-                agent.stoppingDistance = Vector3.Distance(transform.position, repairedHouse.transform.position);
+                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
             }
         }
     }

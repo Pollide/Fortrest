@@ -110,7 +110,7 @@ NavMeshSettings:
     agentRadius: 1
     agentHeight: 2
     agentSlope: 45
-    agentClimb: 0.4
+    agentClimb: 0.55
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
     minRegionArea: 0
@@ -170,6 +170,10 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2107776696, guid: b05c4957b7656f94992f61085552d85b, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2107776696, guid: b05c4957b7656f94992f61085552d85b, type: 3}
+      propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7699820106381733132, guid: b05c4957b7656f94992f61085552d85b,
@@ -463,6 +467,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1402647301061185261, guid: 051132bc636477a4894f685c1348af03,
+        type: 3}
+      propertyPath: m_Acceleration
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
         type: 3}
       propertyPath: m_RootOrder
@@ -481,7 +490,7 @@ PrefabInstance:
     - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.86
+      value: 23.46
       objectReference: {fileID: 0}
     - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
         type: 3}
