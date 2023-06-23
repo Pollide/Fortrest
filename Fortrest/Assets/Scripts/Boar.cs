@@ -26,6 +26,11 @@ public class Boar : MonoBehaviour
 
     CharacterController cc;
 
+    public AudioClip mountSound;
+    public AudioClip dismountSound;
+    public AudioClip stepSound;
+    public AudioClip stepSound2;
+
     private void Awake()
     {
         global = this;
@@ -138,6 +143,7 @@ public class Boar : MonoBehaviour
         player.GetComponent<CharacterController>().enabled = false;
         if (mounted)
         {
+            GameManager.global.SoundManager.PlaySound(mountSound, 1.0f);
             player.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = false;
@@ -146,6 +152,7 @@ public class Boar : MonoBehaviour
         }
         else
         {
+            GameManager.global.SoundManager.PlaySound(dismountSound, 1.0f);
             player.transform.position += transform.right * 2;
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = true;
@@ -216,5 +223,15 @@ public class Boar : MonoBehaviour
         isMoving = (Input.GetKey(KeyCode.W)) || (currentSpeed >= 0.5f && !Input.GetKey(KeyCode.W));
         animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
         animator.SetBool("Moving", isMoving);
+    }
+
+    private void StepOne()
+    {
+        GameManager.global.SoundManager.PlaySound(stepSound, 0.25f);
+    }
+
+    private void StepTwo()
+    {
+        GameManager.global.SoundManager.PlaySound(stepSound2, 0.25f);
     }
 }
