@@ -11,6 +11,7 @@ public class EnemyController : MonoBehaviour
     public Transform bestTarget; // Target that the enemy will go towards
     private Transform playerPosition;
     public GameObject house;
+    public GameObject repairedHouse;
 
     // Parameters
     public float offset;
@@ -94,116 +95,124 @@ public class EnemyController : MonoBehaviour
     {
         // Default value
         float shortestDistance = 9999;
-    
+
         if (currentEnemyType == ENEMYTYPE.ogre)
         {
             if (bestTarget == null)
             {
                 bestTarget = house.transform;
-            }           
+            }
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
-            if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 20.0f)
+            if (bestTarget == null)
             {
-                bestTarget = playerPosition;
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 20.0f)
+                {
+                    bestTarget = playerPosition;
+                }
             }
         }
         else if (currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.goblin)
         {
-
-        }
-
-        // If enemy is chasing the player, they become its target
-        if (chasing && ((PlayerController.global.playerEnergy > 0 && PlayerController.global.sleeping == false && Boar.global.mounted == false) || currentEnemyType == ENEMYTYPE.wolf))
-        {
-            bestTarget = playerPosition; // Player set as target           
-
-            if (currentEnemyType == ENEMYTYPE.goblin)
+            if (PlayerController.global.playerEnergy <= 0 || PlayerController.global.sleeping == true || Boar.global.mounted == true)
             {
-                // Distance between enemy and player
-                float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
+                chasing = false;
+            }
+            else if (currentEnemyType == ENEMYTYPE.spider)
+            {
+                chasing = true;
+            }
 
-                chaseTimer += Time.deltaTime; // Enemy stops chasing the player after 10s or when the player gets too far
+            if (chasing)
+            {
+                bestTarget = playerPosition; // Player set as target           
 
-                if (chaseTimer >= chaseTimerMax || distance >= 10.0f)
+                if (currentEnemyType == ENEMYTYPE.goblin)
                 {
-                    bestTarget = null;
-                    chasing = false;
-                    chaseTimer = 0;
+                    // Distance between enemy and player
+                    float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
+
+                    chaseTimer += Time.deltaTime; // Enemy stops chasing the player after 10s or when the player gets too far
+
+                    if (chaseTimer >= chaseTimerMax || distance >= 10.0f)
+                    {
+                        bestTarget = null;
+                        chasing = false;
+                        chaseTimer = 0;
+                    }
                 }
             }
-        }
-        else // Player is not the target, finds different target
-        {
-            if ((!bestTarget || (bestTarget && currentEnemyType == ENEMYTYPE.spider)) && currentEnemyType != ENEMYTYPE.wolf) // If the enemy does not have a current target
+            else
             {
-                for (int i = 0; i < LevelManager.global.BuildingList.Count; i++) // Goes through the list of targets
+                if (!bestTarget || bestTarget == playerPosition || bestTarget == Boar.global.transform) // If the enemy does not have a current target
                 {
-                    if (LevelManager.global.BuildingList[i] != null)
+                    for (int i = 0; i < LevelManager.global.BuildingList.Count; i++) // Goes through the list of targets
                     {
-                        float compare = Vector3.Distance(transform.position, LevelManager.global.BuildingList[i].transform.position); // Distance from enemy to each target
-
-                        if (compare < shortestDistance) // Only true if a new shorter distance is found
+                        if (LevelManager.global.BuildingList[i] != null)
                         {
-                            shortestDistance = compare; // New shortest distance is assigned
-                            bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list                                                          
+                            float compare = Vector3.Distance(transform.position, LevelManager.global.BuildingList[i].transform.position); // Distance from enemy to each target
+
+                            if (compare < shortestDistance) // Only true if a new shorter distance is found
+                            {
+                                shortestDistance = compare; // New shortest distance is assigned
+                                bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list                                                          
+                            }
                         }
                     }
                 }
             }
         }
-
+        
         // Once a target is set, adjust stopping distance, check distance, attack when reaching target
         if (bestTarget)
         {
-            if (currentEnemyType != ENEMYTYPE.ogre)
+            if (bestTarget == playerPosition)
             {
-                if (bestTarget == playerPosition)
+                if (Boar.global.mounted == true && currentEnemyType == ENEMYTYPE.wolf)
                 {
-                    if (Boar.global.mounted == true && currentEnemyType == ENEMYTYPE.wolf)
-                    {
-                        bestTarget = Boar.global.transform;                      
-                    }
-                    else
-                    {
-                        agent.stoppingDistance = stoppingDist;
-                    }                   
-                    distanceAdjusted = false;
+                    bestTarget = Boar.global.transform;                   
                 }
-                if (bestTarget == Boar.global.transform)
+                agent.stoppingDistance = stoppingDist;
+                distanceAdjusted = false;
+            }
+            if (bestTarget == Boar.global.transform)
+            {
+                agent.stoppingDistance = stoppingDist + 1.0f;
+                if (Boar.global.mounted == false)
                 {
-                    agent.stoppingDistance = stoppingDist + 1.0f;
-                    if (Boar.global.mounted == false)
-                    {
-                        bestTarget = playerPosition;
-                    }
-                }
-                if (bestTarget != playerPosition && bestTarget != Boar.global.transform)
-                {
-                    if (distanceAdjusted == false)
-                    {
-                        agent.stoppingDistance = stoppingDist + 2.5f;
-                        distanceAdjusted = true;
-                    }
+                    bestTarget = playerPosition;
                 }
             }
+            if (bestTarget != playerPosition && bestTarget != Boar.global.transform && bestTarget != house.transform && bestTarget != repairedHouse.transform)
+            {
+                if (distanceAdjusted == false)
+                {
+                    agent.stoppingDistance = stoppingDist + 2.5f;
+                    distanceAdjusted = true;
+                }
+            }
+
             if (agent.isOnNavMesh)
             {
                 agent.SetDestination(bestTarget.position); // Makes the enemy move
             }
 
-            if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + offset) // Checks if enemy reached target
+            if (bestTarget != house.transform)
             {
-                FaceTarget(); // Makes the enemy face the player
-                if (!attacking)
+                if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + offset) // Checks if enemy reached target
                 {
-                    if (currentEnemyType != ENEMYTYPE.ogre)
+                    FaceTarget(); // Makes the enemy face the player
+                    if (!attacking)
                     {
-                        Attack();
+                        if (currentEnemyType != ENEMYTYPE.ogre)
+                        {
+                            Attack();
+                        }
                     }
                 }
             }
+            
             ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + offset);
         }
     }
@@ -315,8 +324,19 @@ public class EnemyController : MonoBehaviour
                 {
                     Attack();
                 }
-                agent.stoppingDistance = Vector3.Distance(transform.position, bestTarget.position);
+                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
             }           
+        }
+        else if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider)
+        {
+            if (other.gameObject == repairedHouse)
+            {
+                if (!attacking)
+                {
+                    Attack();
+                }
+                agent.stoppingDistance = Vector3.Distance(transform.position, repairedHouse.transform.position);
+            }
         }
     }
 
@@ -353,6 +373,16 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
+        else if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider)
+        {
+            if (other.gameObject == repairedHouse)
+            {
+                if (!attacking)
+                {
+                    Attack();
+                }
+            }
+        }
     }
 
     private void SetEnemyParameters()
@@ -376,7 +406,6 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 2.5f;
             offset = 0.3f;
-            chasing = true;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
