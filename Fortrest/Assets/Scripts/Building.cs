@@ -124,7 +124,7 @@ public class Building : MonoBehaviour
     public void DestroyBuilding()
     {
 
-        if (enabled)
+        if (enabled && GetComponent<Animation>())
         {
             enabled = false;
 

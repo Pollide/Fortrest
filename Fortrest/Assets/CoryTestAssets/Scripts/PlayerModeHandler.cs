@@ -249,7 +249,8 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
         {
-            turretBlueprint.SetActive(!MouseOverUI());
+            //Cory FYI I disabled this because there is an issue where it will stay disabled for some reason and its kind of game breaking so lets just leave it active
+            //  turretBlueprint.SetActive(!MouseOverUI());
         }
     }
     public bool IsInRange(Vector3 currentTarget)

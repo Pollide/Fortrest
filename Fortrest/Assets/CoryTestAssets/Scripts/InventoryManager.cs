@@ -39,7 +39,7 @@ public class InventoryManager : MonoBehaviour
         {
             inventoryPanel.SetActive(false);
         }
-        
+
         currentPlayerModes = PlayerModeHandler.global.playerModes;
     }
 
@@ -64,7 +64,7 @@ public class InventoryManager : MonoBehaviour
             {
                 slot.quantity += quantity;
                 Debug.Log("Item added to inventory: " + item.name + " (Quantity: " + slot.quantity + ")");
-                
+
                 slot.item.dragableItem.GetComponent<DragableItem>().quantityText.text = slot.quantity.ToString();
 
                 dragableItem.quantityText.text = slot.quantity.ToString();
@@ -116,9 +116,9 @@ public class InventoryManager : MonoBehaviour
             {
                 slot.quantity -= quantity;
                 Debug.Log("Item removed from inventory: " + item + " (Quantity: " + slot.quantity + ")");
-                
+
                 dragableItem.quantityText.text = slot.quantity.ToString();
-                
+
                 if (slot.quantity <= 0)
                 {
                     inventory.Remove(slot);
@@ -160,7 +160,7 @@ public class InventoryManager : MonoBehaviour
         public InventoryItem item;
         // The quantity of the item
         public int quantity;
-        
+
         public InventorySlot(InventoryItem item, int quantity)
         {
             this.item = item;
@@ -176,7 +176,7 @@ public class InventoryManager : MonoBehaviour
         Time.timeScale = 0;
         inventoryPanel.SetActive(true);
         PlayerController.global.DarkenGameObject.SetActive(true);
-     Cursor.visible = true;
+        Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
 
@@ -199,7 +199,7 @@ public class InventoryManager : MonoBehaviour
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
         }
-        
+
     }
 
     public void RunInventoryKey()
@@ -216,7 +216,7 @@ public class InventoryManager : MonoBehaviour
                 {
                     CloseInventory(true, false);
                 }
-                
+
             }
             else
             {
