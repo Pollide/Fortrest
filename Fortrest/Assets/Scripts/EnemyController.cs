@@ -77,7 +77,7 @@ public class EnemyController : MonoBehaviour
         {
             Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
         }
-        GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
+
         knockBackScript = GetComponent<KnockBack>();
     }
 
@@ -255,7 +255,7 @@ public class EnemyController : MonoBehaviour
                 if (currentEnemyType != ENEMYTYPE.ogre)
                 {
                     knockBackScript.knock = true;
-                }                
+                }
                 canBeDamaged = false;
                 ScreenShake.global.shake = true;
                 chasing = true;

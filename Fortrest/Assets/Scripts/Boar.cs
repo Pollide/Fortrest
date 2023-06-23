@@ -8,6 +8,7 @@ public class Boar : MonoBehaviour
 
     private GameObject player;
     private GameObject text;
+    bool textactive;
     public bool mounted = false;
     private bool inRange = false;
 
@@ -89,16 +90,28 @@ public class Boar : MonoBehaviour
         {
             if (mounted)
             {
-                text.SetActive(false);
+                if (textactive)
+                {
+                    textactive = false;
+                    LevelManager.FloatingTextChange(text, false);
+                }
             }
             else
             {
-                text.SetActive(true);
+                if (!textactive)
+                {
+                    textactive = true;
+                    LevelManager.FloatingTextChange(text, true);
+                }
             }
         }
         else
         {
-            text.SetActive(false);
+            if (textactive)
+            {
+                textactive = false;
+                LevelManager.FloatingTextChange(text, false);
+            }
         }
     }
 
@@ -195,8 +208,8 @@ public class Boar : MonoBehaviour
 
     private void PlayAnimations()
     {
-        isMoving = (Input.GetKey(KeyCode.W)) || (currentSpeed >= 0.5f && !Input.GetKey(KeyCode.W));       
-        animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f); 
+        isMoving = (Input.GetKey(KeyCode.W)) || (currentSpeed >= 0.5f && !Input.GetKey(KeyCode.W));
+        animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
         animator.SetBool("Moving", isMoving);
     }
 }

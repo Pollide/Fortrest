@@ -3221,6 +3221,7 @@ GameObject:
   - component: {fileID: 7897815270449268491}
   - component: {fileID: 3594177150287177424}
   - component: {fileID: 3257720973569648380}
+  - component: {fileID: 7486124317148373661}
   m_Layer: 7
   m_Name: Cannon
   m_TagString: Turret
@@ -3351,6 +3352,22 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!208 &7486124317148373661
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5470411218790778867}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2, y: 2, z: 2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &5494250452786029979
 GameObject:
   m_ObjectHideFlags: 0

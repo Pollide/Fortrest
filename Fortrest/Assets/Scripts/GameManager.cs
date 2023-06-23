@@ -246,6 +246,8 @@ public class GameManager : MonoBehaviour
     {
         if (anim) //checks exists
         {
+            GameManager.ChangeAnimationLayers(anim);
+
             if (anim.GetClip(nameClip) || anim.clip) //exists?
             {
                 if (!anim.GetClip(nameClip) && anim.clip) //exists?
