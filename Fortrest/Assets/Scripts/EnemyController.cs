@@ -296,7 +296,7 @@ public class EnemyController : MonoBehaviour
             {
                 GameManager.global.SoundManager.PlaySound(deathSound, 1.0f);
             }
-            
+
             Time.timeScale = 1;
 
             PlayerController.global.enemyList.Remove(transform);
@@ -349,7 +349,7 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget == house)
+        if (bestTarget == house.transform)
         {
             if (other.gameObject == house)
             {
@@ -385,7 +385,7 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget == house)
+        if (bestTarget == house.transform)
         {
             if (other.gameObject == house)
             {
@@ -467,7 +467,7 @@ public class EnemyController : MonoBehaviour
         if (currentEnemyType != ENEMYTYPE.ogre)
         {
             PickSound(attackSound, attackSound2, 1.0f);
-        }      
+        }
 
         if (bestTarget == playerPosition || bestTarget == Boar.global.transform)
         {
