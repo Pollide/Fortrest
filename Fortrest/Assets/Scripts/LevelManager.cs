@@ -54,7 +54,7 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector]
     public bool newDay = false;
-
+    bool NightTimeMusic;
     public Gradient textGradient;
 
     public List<Transform> TerrainList = new List<Transform>();
@@ -76,8 +76,11 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    public AudioClip ActiveBiomeMusic;
+
     private void Start()
     {
+        ActiveBiomeMusic = GameManager.global.GameMusic;
         VFXSparks.Stop();
         VFXPebble.Stop();
         VFXSmokePuff.Stop();
@@ -136,6 +139,18 @@ public class LevelManager : MonoBehaviour
         */
 
         PlayerController.global.EnemiesTextControl();
+
+        if (!NightTimeMusic && ReturnNight())
+        {
+            NightTimeMusic = true;
+            GameManager.global.MusicManager.PlayMusic(GameManager.global.NightMusic);
+        }
+
+        if (NightTimeMusic && !ReturnNight())
+        {
+            NightTimeMusic = false;
+            GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
+        }
 
         daySpeed = ReturnNight() ? 2 : 1;
 
