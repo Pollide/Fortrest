@@ -33,18 +33,22 @@ public class SignTrigger : MonoBehaviour
         {
             if (bridgeBuilder.resourceCostList.Keys.Count < bridgeBuilder.resourceCostList.Values.Count)
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                 Debug.Log("Not enough resources to match values");
             }
             else if (bridgeBuilder.resourceCostList.Keys.Count > bridgeBuilder.resourceCostList.Values.Count)
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                 Debug.Log("Not enough values to match resources");
             }
             else if (bridgeBuilder.resourceCostList.Keys.Count > 0 && bridgeBuilder.resourceCostList.Values.Count > 0 && bridgeBuilder.resourceCostList.Keys.Count == bridgeBuilder.resourceCostList.Values.Count && HasAllResources() == false)
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                 Debug.Log("Not enough resources");
             }
             else if (bridgeBuilder.resourceCostList.Keys.Count > 0 && bridgeBuilder.resourceCostList.Values.Count > 0 && bridgeBuilder.resourceCostList.Keys.Count == bridgeBuilder.resourceCostList.Values.Count && HasAllResources() == true)
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound);
                 GetComponentInParent<BridgeBuilder>().isBuilt = true;
                 hasRun = true;
             }
