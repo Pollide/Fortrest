@@ -139,7 +139,7 @@ public class Building : MonoBehaviour
             if (resourceObject == BuildingType.House)
             {
                 GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
-                Invoke("RestartGame", GameManager.PlayAnimation(PlayerController.global.GetComponent<Animation>(), "Gameover").length);
+                Invoke("RestartGame", GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Gameover").length);
                 PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
             }

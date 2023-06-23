@@ -159,10 +159,10 @@ public class LevelManager : MonoBehaviour
 
             if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
-                if (GoblinThreshold < 0.2f)
+                GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
+                if (GoblinThreshold < 0.5f)
                 {
-                    GoblinThreshold = 0.2f;
+                    GoblinThreshold = 0.5f;
                 }
                 GoblinTimer = 0;
 
@@ -176,12 +176,12 @@ public class LevelManager : MonoBehaviour
 
                 GameObject prefab = GoblinGameObject;
 
-                if (day > 2 && Random.Range(0, 3) == 0)
+                if (day > 1 && Random.Range(0, 3) == 0)
                 {
                     prefab = SpiderGameObject;
                 }
 
-                if (day > 4 && Random.Range(0, 5) == 0)
+                if (day > 3 && Random.Range(0, 7) == 0)
                 {
                     prefab = OgreGameObject;
                 }
