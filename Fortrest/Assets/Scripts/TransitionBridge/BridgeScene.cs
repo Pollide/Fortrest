@@ -6,12 +6,15 @@ using UnityEngine.SceneManagement;
 public class BridgeScene : MonoBehaviour
 {
     public AudioClip BiomeMusic;
-    
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.global.MusicManager.PlayMusic(BiomeMusic);
+            LevelManager.global.ActiveBiomeMusic = BiomeMusic;
+
+            if (!LevelManager.global.ReturnNight())
+                GameManager.global.MusicManager.PlayMusic(BiomeMusic);
             /*
             if (GetComponentInParent<BridgeBuilder>().sceneToSpawn == "Tussockland")
             {

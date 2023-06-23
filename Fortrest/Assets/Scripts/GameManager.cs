@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public AudioClip MenuMusic; //the music that plays in the menu scene
     public AudioClip GameMusic;  //the music that plays in the game scene
     public AudioClip PauseMusic;  //the music that plays when paused
+    public AudioClip NightMusic;
 
     public AudioClip CollectSound; //the sfx that plays when the mouse presses a button
     public AudioClip MenuClick1Sound;

@@ -242,6 +242,7 @@ public class PlayerController : MonoBehaviour
         PauseCanvasGameObject.SetActive(pauseBool);
         PausedBool = pauseBool;
         GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pauseBool);
+        GameManager.global.MusicManager.PlayMusic(pauseBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
         Time.timeScale = pauseBool ? 0 : 1;
     }
     // Player movement 
