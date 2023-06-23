@@ -43,7 +43,7 @@ public class EnemyController : MonoBehaviour
     public Animator ActiveAnimator;
     KnockBack knockBackScript;
 
-    private enum ENEMYTYPE
+    public enum ENEMYTYPE
     {
         goblin = 1,
         spider,
@@ -65,7 +65,7 @@ public class EnemyController : MonoBehaviour
     public AudioClip ogreSpawnSound;
     public AudioClip ogreAttackSound;
 
-    [SerializeField] ENEMYTYPE currentEnemyType;
+    public ENEMYTYPE currentEnemyType;
 
     void Start()
     {

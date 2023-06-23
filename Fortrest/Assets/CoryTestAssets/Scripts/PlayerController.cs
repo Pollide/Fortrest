@@ -426,7 +426,17 @@ public class PlayerController : MonoBehaviour
         //if (enemyList.Count > 0)
         if (enemyNumberText)
         {
-            enemyNumberText.text = enemyList.Count.ToString();
+            int goblinsInt = 0;
+
+            for (int i = 0; i < enemyList.Count; i++)
+            {
+                if(enemyList[i] && enemyList[i].GetComponent<EnemyController>() &&  enemyList[i].GetComponent<EnemyController>().currentEnemyType != EnemyController.ENEMYTYPE.wolf)
+                {
+                    goblinsInt++;
+                }
+            }
+
+            enemyNumberText.text = goblinsInt.ToString();
 
             if (LevelManager.global.newDay)
             {

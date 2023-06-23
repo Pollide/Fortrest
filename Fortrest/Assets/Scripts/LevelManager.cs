@@ -39,7 +39,10 @@ public class LevelManager : MonoBehaviour
     public float daySpeed = 1;
     public float GoblinTimer;
     float GoblinThreshold;
+
     public GameObject GoblinGameObject;
+    public GameObject OgreGameObject;
+    public GameObject SpiderGameObject;
     public List<Building> NaturalBuildingList = new List<Building>();
     private float gatherCooldown = 0.75f;
     private float nextGather;
@@ -118,8 +121,8 @@ public class LevelManager : MonoBehaviour
             {
                 if (TerrainList[i])
                 {
-                    bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 450;
-
+                    bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 250;
+                    // Debug.Log(TerrainList[i] + " + " + Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) + "  < " + 450);
                     TerrainList[i].gameObject.SetActive(enableBool);
                 }
             }
@@ -168,9 +171,22 @@ public class LevelManager : MonoBehaviour
 
                 spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
 
-                GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
 
-                enemyList.Add(goblin);
+                GameObject prefab = GoblinGameObject;
+
+                if (day > 2 && Random.Range(0, 3) == 0)
+                {
+                    prefab = SpiderGameObject;
+                }
+
+                if (day > 4 && Random.Range(0, 5) == 0)
+                {
+                    prefab = OgreGameObject;
+                }
+
+                GameObject enemy = Instantiate(prefab, spawn, Quaternion.identity);
+
+                enemyList.Add(enemy);
             }
         }
 
