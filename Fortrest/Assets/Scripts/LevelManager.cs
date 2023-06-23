@@ -165,7 +165,7 @@ public class LevelManager : MonoBehaviour
             DaylightTimer = 0;
             day++;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
-
+            GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
             PlayerController.global.NewDay();
         }
 
@@ -276,6 +276,7 @@ public class LevelManager : MonoBehaviour
 
         if (PlayerController.global.transform.position.y < -3)
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
             GameManager.global.NextScene(1);
             enabled = false;
             return;

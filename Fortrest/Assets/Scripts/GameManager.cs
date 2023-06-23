@@ -58,6 +58,14 @@ public class GameManager : MonoBehaviour
     public AudioClip CantPlaceSound;
     public AudioClip WhistlingSound;
 
+    public AudioClip CannonSound;
+    public AudioClip EatingSound;
+    public AudioClip HouseDestroySound;
+    public AudioClip InventoryClickSound;
+    public AudioClip NewDaySound;
+    public AudioClip SlowSound;
+    public AudioClip WaterSound;
+
     //runs on the frame it was awake on
     void Awake()
     {

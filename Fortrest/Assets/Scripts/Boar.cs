@@ -49,6 +49,9 @@ public class Boar : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0)
+            return;
+
         DisplayText();
         if (Input.GetKeyDown(KeyCode.M) && inRange)
         {
@@ -63,6 +66,9 @@ public class Boar : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (Time.timeScale == 0)
+            return;
+
         ApplyGravity();
         if (mounted)
         {

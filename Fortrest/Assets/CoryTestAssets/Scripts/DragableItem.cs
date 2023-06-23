@@ -25,7 +25,7 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         transform.SetAsLastSibling();
         image.raycastTarget = false;
         GetComponent<Animator>().enabled = true;
-
+        // GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
         transform.position = Input.mousePosition;
     }
 
@@ -41,10 +41,13 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         transform.localScale = Vector3.one;
         transform.SetParent(parentAfterDrag);
         image.raycastTarget = true;
+        //  GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
+
         if (eventData.button == PointerEventData.InputButton.Right && rightClick != null)
             rightClick.Invoke();
         else if (eventData.button == PointerEventData.InputButton.Middle && middleClick != null)
