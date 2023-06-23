@@ -18,8 +18,10 @@ public class TowerSlow : MonoBehaviour
     {
         // Check if the collider belongs to an enemy (you might want to change this based on your game)
         EnemyController enemy = other.GetComponent<EnemyController>();
+
         if (enemy != null)
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SlowSound);
             enemy.ApplySlow(enemySpeedPercentage);
         }
     }

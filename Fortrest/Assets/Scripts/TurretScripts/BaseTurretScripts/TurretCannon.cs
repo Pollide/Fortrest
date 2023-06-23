@@ -65,7 +65,7 @@ public class TurretCannon : MonoBehaviour
         // Check if there's a target
         if (target == null)
             return;
-
+        GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSound);
         GameManager.PlayAnimation(GetComponent<Animation>(), "Turret Shoot");
         // Spawn a projectile
         ProjectileExplosion projectile = Instantiate(projectilePrefab, firePoint).GetComponent<ProjectileExplosion>();
