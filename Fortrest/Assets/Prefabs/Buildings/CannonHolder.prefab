@@ -4200,6 +4200,7 @@ GameObject:
   - component: {fileID: 5339221653159745383}
   - component: {fileID: 5570545162862169417}
   - component: {fileID: 8276197696751092576}
+  - component: {fileID: 3362815438475800194}
   m_Layer: 10
   m_Name: ExplodeCannon
   m_TagString: Turret
@@ -4318,6 +4319,8 @@ MonoBehaviour:
   upgradeTextObject: {fileID: 3304056942743014450}
   uiText: {fileID: 5949320135862497512}
   detectionRange: 3
+  upgradeCostWood: 1
+  upgradeCostStone: 1
   upgradeExplosionRadiusPercentage: 5
   upgradeRangePercent: 5
   upgradeDamagePercent: 5
@@ -4331,6 +4334,22 @@ MonoBehaviour:
   isHPActive: 0
   isMultiShotActive: 0
   specialActive: 0
+--- !u!208 &3362815438475800194
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8334847783303984534}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2, y: 2, z: 2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &8747370881571937275
 GameObject:
   m_ObjectHideFlags: 0

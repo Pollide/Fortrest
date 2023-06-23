@@ -14,7 +14,7 @@ public enum PlayerModes
 }
 
 public enum BuildType
-{ 
+{
     Turret,
     Cannon,
     Slow,
@@ -41,7 +41,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (global)
         {
-             
+
             //destroys the duplicate
             Destroy(gameObject);
             GrassComputeScript.global.interactors.Remove(GetComponentInChildren<ShaderInteractor>());
@@ -63,7 +63,7 @@ public class PlayerModeHandler : MonoBehaviour
                 Building building = turretPrefabs[0].GetComponentInChildren<Building>();
                 DragBuildingBlueprint("Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
                 SpawnBuilding(turretPrefabs[0], "Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
-                
+
             }
             else if (buildType == BuildType.Slow)
             {
@@ -225,7 +225,7 @@ public class PlayerModeHandler : MonoBehaviour
             turretBlueprint.transform.position = worldPos;
 
             if (IsInRange(worldPos) &&
-                InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost && 
+                InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost &&
                 InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost)
             {
                 foreach (Transform child in parts)
@@ -249,7 +249,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
         {
-            turretBlueprint.SetActive(false);
+            turretBlueprint.SetActive(!MouseOverUI());
         }
     }
     public bool IsInRange(Vector3 currentTarget)
