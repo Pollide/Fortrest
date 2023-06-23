@@ -349,7 +349,7 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget == house.transform)
+        if (house && bestTarget == house.transform)
         {
             if (other.gameObject == house)
             {
@@ -385,7 +385,7 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget == house.transform)
+        if (house && bestTarget == house.transform)
         {
             if (other.gameObject == house)
             {
