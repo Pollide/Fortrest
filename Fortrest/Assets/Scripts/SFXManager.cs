@@ -244,7 +244,7 @@ public class SFXManager : MonoBehaviour
                 {
                     return 0;//too far away
                 }
-                SFXList[PoolPosition].Audio.spatialBlend = 0.9f;
+                SFXList[PoolPosition].Audio.spatialBlend = 0.8f;
                 SFXList[PoolPosition].Audio.transform.position = SpatialTransform.position; //stops the high pitch sound
             }
             else

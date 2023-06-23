@@ -29,7 +29,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public bool BackBool;
     public bool MenuBool;
     [Space(10)] //creates a gap in the inspector
-    public bool SpeedBool;
     public bool NextScene;
     public Sprite play;
     public Sprite fastForward;
@@ -82,13 +81,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             PlayerController.global.PauseVoid(false);
         }
 
-        if (SpeedBool)
-        {
-            Time.timeScale = Time.timeScale == 2 ? 1 : 2;
-            GetComponent<Image>().color = Time.timeScale == 2 ? Color.red : Color.white;
-            transform.GetComponent<Image>().sprite = Time.timeScale == 2 ? play : fastForward;
-        }
-
         if (OptionsBool)
         {
             Menu.global.OptionsCanvas.SetActive(true);
@@ -134,13 +126,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
     void Update()
     {
-        if (SpeedBool)
-        {
-            if (Input.GetMouseButtonDown(1) && PlayerModeHandler.global.playerModes != PlayerModes.Paused && PlayerModeHandler.global.playerModes != PlayerModes.UpgradeMenu)
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
-                OnPointerClick(null);
-            }
-        }
+
     }
 }

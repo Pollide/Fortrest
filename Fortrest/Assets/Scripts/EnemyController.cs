@@ -14,7 +14,7 @@ public class EnemyController : MonoBehaviour
     public GameObject repairedHouse;
 
     // Parameters
-    public float offset;
+    private float offset;
     private float speed;
     private float stoppingDist;
 
@@ -63,6 +63,8 @@ public class EnemyController : MonoBehaviour
     public AudioClip noiseSound2;
     public AudioClip stepSound;
     public AudioClip stepSound2;
+    public AudioClip ogreSpawnSound;
+    public AudioClip ogreAttackSound;
 
     [SerializeField] ENEMYTYPE currentEnemyType;
 
@@ -82,6 +84,11 @@ public class EnemyController : MonoBehaviour
         }
 
         knockBackScript = GetComponent<KnockBack>();
+
+        if (currentEnemyType == ENEMYTYPE.ogre)
+        {
+            GameManager.global.SoundManager.PlaySound(ogreSpawnSound, 1.0f);
+        }
     }
 
     void Update()
@@ -277,8 +284,15 @@ public class EnemyController : MonoBehaviour
         healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
         if (health <= 0)
         {
-            PickSound(deathSound, deathSound, 1.0f);
-
+            if (currentEnemyType != ENEMYTYPE.ogre)
+            {
+                PickSound(deathSound, deathSound2, 1.0f);
+            }
+            else
+            {
+                GameManager.global.SoundManager.PlaySound(deathSound, 1.0f);
+            }
+            
             Time.timeScale = 1;
 
             PlayerController.global.enemyList.Remove(transform);
@@ -467,7 +481,10 @@ public class EnemyController : MonoBehaviour
 
     public void AnimationAttack()
     {
-        PickSound(attackSound, attackSound2, 1.0f);
+        if (currentEnemyType != ENEMYTYPE.ogre)
+        {
+            PickSound(attackSound, attackSound2, 1.0f);
+        }      
 
         if (bestTarget == playerPosition || bestTarget == Boar.global.transform)
         {
@@ -476,6 +493,10 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
+            if (currentEnemyType == ENEMYTYPE.ogre)
+            {
+                GameManager.global.SoundManager.PlaySound(ogreAttackSound, 1.0f);
+            }
             Building building = bestTarget.GetComponent<Building>();
             if (building.GetHealth() > 0)
             {
@@ -506,5 +527,21 @@ public class EnemyController : MonoBehaviour
     public void SecondStep()
     {
         GameManager.global.SoundManager.PlaySound(stepSound2, 0.4f, true, 0, false, transform);
+    }
+
+    public void OgreAttackSound()
+    {
+        AudioClip attack = Random.Range(0, 2) == 0 ? attackSound : attackSound2;
+        GameManager.global.SoundManager.PlaySound(attack, 1.0f);
+    }
+
+    private void OgreStepOne()
+    {
+        GameManager.global.SoundManager.PlaySound(stepSound, 0.8f);
+    }
+
+    private void OgreStepTwo()
+    {
+        GameManager.global.SoundManager.PlaySound(stepSound2, 0.8f);
     }
 }
