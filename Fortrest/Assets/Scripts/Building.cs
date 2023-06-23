@@ -31,6 +31,7 @@ public class Building : MonoBehaviour
         CoarseWood,
         Slate,
         MossyStone,
+        HouseNode,
     }
 
     public BuildingType resourceObject;
@@ -52,6 +53,8 @@ public class Building : MonoBehaviour
     {
         health = maxHealth;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
+
+
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.isKinematic = true; //prevents any forces acting upon it
         rigidbody.useGravity = false; //prevents the object from being affected by gravity
@@ -67,14 +70,19 @@ public class Building : MonoBehaviour
                 transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
         }
 
-        if (NaturalBool)
-            LevelManager.global.NaturalBuildingList.Add(this);
-        else
-            LevelManager.global.BuildingList.Add(transform);
-
         if (resourceObject == BuildingType.House)
         {
             Indicator.global.AddIndicator(transform, Color.yellow, "Home");
+        }
+        else //the house itself is not part of the buildings list
+        {
+
+
+
+            if (NaturalBool)
+                LevelManager.global.NaturalBuildingList.Add(this);
+            else
+                LevelManager.global.BuildingList.Add(transform);
         }
     }
 
@@ -124,7 +132,7 @@ public class Building : MonoBehaviour
     public void DestroyBuilding()
     {
 
-        if (enabled)
+        if (enabled && GetComponent<Animation>())
         {
             enabled = false;
 
