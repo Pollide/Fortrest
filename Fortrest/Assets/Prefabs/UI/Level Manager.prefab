@@ -402,7 +402,6 @@ Transform:
   m_Children:
   - {fileID: 1647551921593233883}
   - {fileID: 271575803838025548}
-  - {fileID: 7299421362998190378}
   m_Father: {fileID: 6694460402543658492}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 35, y: 45, z: 0}
@@ -735,7 +734,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7299421362998190378}
   m_Father: {fileID: 6116323809566016540}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 35, y: 45, z: 0}
@@ -828,7 +828,7 @@ GameObject:
   - component: {fileID: 8811428454062156780}
   - component: {fileID: 6321188584648623248}
   - component: {fileID: 7752460923439328055}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -847,8 +847,8 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 6116323809566016540}
-  m_RootOrder: 2
+  m_Father: {fileID: 1647551921593233883}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -865,7 +865,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 2501624831455937127}
+  m_Camera: {fileID: 5250873861041330196}
   m_PlaneDistance: -20
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
