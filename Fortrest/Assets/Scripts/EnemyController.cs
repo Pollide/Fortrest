@@ -43,7 +43,7 @@ public class EnemyController : MonoBehaviour
     public Animator ActiveAnimator;
     KnockBack knockBackScript;
 
-    private enum ENEMYTYPE
+    public enum ENEMYTYPE
     {
         goblin = 1,
         spider,
@@ -65,7 +65,7 @@ public class EnemyController : MonoBehaviour
     public AudioClip ogreSpawnSound;
     public AudioClip ogreAttackSound;
 
-    [SerializeField] ENEMYTYPE currentEnemyType;
+    public ENEMYTYPE currentEnemyType;
 
     void Start()
     {
@@ -79,7 +79,10 @@ public class EnemyController : MonoBehaviour
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
         if (agent.isOnNavMesh)
         {
-            Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
+            if (currentEnemyType != ENEMYTYPE.wolf) //wolves wild
+            {
+                Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
+            }
         }
 
         knockBackScript = GetComponent<KnockBack>();

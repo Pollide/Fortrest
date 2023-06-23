@@ -39,7 +39,7 @@ public class Boar : MonoBehaviour
         text = transform.GetChild(0).gameObject;
         player = PlayerController.global.gameObject;
         cc = GetComponent<CharacterController>();
-        Indicator.global.AddIndicator(transform, Color.green, "Mount");
+        Indicator.global.AddIndicator(transform, Color.green, "Mount", false);
     }
 
     void Update()
@@ -191,6 +191,8 @@ public class Boar : MonoBehaviour
 
     private void ApplyGravity()
     {
+        // if (Physics.Raycast(transform.position, Vector3.down, Mathf.Infinity)) //only apply gravity if there is a ground
+        // {
         if (cc.isGrounded && verticalVelocity < 0.0f)
         {
             verticalVelocity = -1.0f;
@@ -199,6 +201,7 @@ public class Boar : MonoBehaviour
         {
             verticalVelocity += gravity * Time.fixedDeltaTime;
         }
+        //}
     }
 
     void Lerping(float min, float max, ref float value, float dividerCoefficient)

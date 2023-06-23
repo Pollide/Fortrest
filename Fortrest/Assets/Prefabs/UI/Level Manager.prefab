@@ -244,7 +244,6 @@ GameObject:
   m_Component:
   - component: {fileID: 927623175018942828}
   - component: {fileID: 927623175018942829}
-  - component: {fileID: 1189538729}
   m_Layer: 0
   m_Name: Level Manager
   m_TagString: LevelManager
@@ -311,6 +310,10 @@ MonoBehaviour:
   GoblinTimer: 0
   GoblinGameObject: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
     type: 3}
+  OgreGameObject: {fileID: 5633042026967272240, guid: 06cff7f448c42c24bb9eed44021c8b05,
+    type: 3}
+  SpiderGameObject: {fileID: 5936932421964932193, guid: 7aa9da11c0a47014693eeed85fca301e,
+    type: 3}
   NaturalBuildingList: []
   VFXSparks: {fileID: 2659559115660825906}
   VFXPebble: {fileID: 976456803407514109}
@@ -350,23 +353,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
---- !u!111 &1189538729
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 927623175018942830}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations:
-  - {fileID: 7400000, guid: 22e8b1b0d653ee845a3b0cfe246ff299, type: 2}
-  - {fileID: 7400000, guid: de3236772e27752458f81c23198f02f2, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!1 &975559097986637665
 GameObject:
   m_ObjectHideFlags: 0

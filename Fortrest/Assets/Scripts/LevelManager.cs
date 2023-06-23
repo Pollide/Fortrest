@@ -36,10 +36,13 @@ public class LevelManager : MonoBehaviour
     public int day = 0;
     public List<GameObject> enemyList = new List<GameObject>();
 
-    public float daySpeed = 2;
+    public float daySpeed = 1;
     public float GoblinTimer;
     float GoblinThreshold;
+
     public GameObject GoblinGameObject;
+    public GameObject OgreGameObject;
+    public GameObject SpiderGameObject;
     public List<Building> NaturalBuildingList = new List<Building>();
     private float gatherCooldown = 0.75f;
     private float nextGather;
@@ -112,23 +115,29 @@ public class LevelManager : MonoBehaviour
     {
         LockCursor();
 
+        /*
         if (TerrainList != null)
         {
             for (int i = 0; i < TerrainList.Count; i++)
             {
                 if (TerrainList[i])
                 {
-                    bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 450;
-
+                    bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 250;
+                    // Debug.Log(TerrainList[i] + " + " + Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) + "  < " + 450);
                     TerrainList[i].gameObject.SetActive(enableBool);
                 }
             }
         }
+        */
 
         PlayerController.global.EnemiesTextControl();
 
+        bool nightTimeBool = DaylightTimer > 180;
+        daySpeed = nightTimeBool ? 2 : 1;
 
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
+
+
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
 
@@ -140,8 +149,6 @@ public class LevelManager : MonoBehaviour
 
             PlayerController.global.NewDay();
         }
-
-        bool nightTimeBool = DaylightTimer > 180;
 
         Light light = DirectionalLightTransform.GetComponent<Light>();
 
@@ -166,9 +173,22 @@ public class LevelManager : MonoBehaviour
 
                 spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
 
-                GameObject goblin = Instantiate(GoblinGameObject, spawn, Quaternion.identity);
 
-                enemyList.Add(goblin);
+                GameObject prefab = GoblinGameObject;
+
+                if (day > 2 && Random.Range(0, 3) == 0)
+                {
+                    prefab = SpiderGameObject;
+                }
+
+                if (day > 4 && Random.Range(0, 5) == 0)
+                {
+                    prefab = OgreGameObject;
+                }
+
+                GameObject enemy = Instantiate(prefab, spawn, Quaternion.identity);
+
+                enemyList.Add(enemy);
             }
         }
 
