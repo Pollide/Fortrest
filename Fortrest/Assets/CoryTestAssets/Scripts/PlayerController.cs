@@ -516,6 +516,7 @@ public class PlayerController : MonoBehaviour
                     playerCC.enabled = false;
                     soundPlaying = false;
                     sleeping = true;
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
                     LevelManager.FloatingTextChange(interactText2, false);
                     text2Active = false;
                     LevelManager.FloatingTextChange(interactText3, true);
@@ -524,6 +525,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     VFXSleeping.Stop();
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
                     transform.position = houseSpawnPoint.transform.position;
                     playerCanMove = true;
                     playerCC.enabled = true;
