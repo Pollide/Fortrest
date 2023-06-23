@@ -213,7 +213,7 @@ public class EnemyController : MonoBehaviour
                     bestTarget = playerPosition;
                 }
             }
-            if (bestTarget != playerPosition && bestTarget != Boar.global.transform && bestTarget != house.transform)
+            if (bestTarget != playerPosition && bestTarget != Boar.global.transform)
             {
                 if (distanceAdjusted == false)
                 {
@@ -349,7 +349,7 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget == house)
+        if (bestTarget == house.transform)
         {
             if (other.gameObject == house)
             {
@@ -385,7 +385,7 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget == house)
+        if (bestTarget == house.transform)
         {
             if (other.gameObject == house)
             {
