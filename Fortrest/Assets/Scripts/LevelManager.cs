@@ -115,6 +115,7 @@ public class LevelManager : MonoBehaviour
     {
         LockCursor();
 
+        /*
         if (TerrainList != null)
         {
             for (int i = 0; i < TerrainList.Count; i++)
@@ -127,6 +128,7 @@ public class LevelManager : MonoBehaviour
                 }
             }
         }
+        */
 
         PlayerController.global.EnemiesTextControl();
 
