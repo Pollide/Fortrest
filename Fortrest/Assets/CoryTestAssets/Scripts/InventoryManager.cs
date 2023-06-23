@@ -175,7 +175,8 @@ public class InventoryManager : MonoBehaviour
         PlayerModeHandler.global.playerModes = PlayerModes.Paused;
         Time.timeScale = 0;
         inventoryPanel.SetActive(true);
-        Cursor.visible = true;
+        PlayerController.global.DarkenGameObject.SetActive(true);
+     Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
     }
 
@@ -187,6 +188,7 @@ public class InventoryManager : MonoBehaviour
         }
         Time.timeScale = 1;
         inventoryPanel.SetActive(false);
+        PlayerController.global.DarkenGameObject.SetActive(false);
         if (_mouseLocked)
         {
             Cursor.visible = false;

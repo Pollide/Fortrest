@@ -58,7 +58,6 @@ public class Building : MonoBehaviour
 
         //grabs all children transforms including itself by finding the component it matches, as I put transform there, it will just grab all of them
         List<Transform> transformList = GameManager.FindComponent<Transform>(transform);
-        GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
 
         //create a for loop from the list
         for (int i = 0; i < transformList.Count; i++)

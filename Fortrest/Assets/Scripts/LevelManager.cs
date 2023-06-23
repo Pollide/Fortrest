@@ -60,7 +60,6 @@ public class LevelManager : MonoBehaviour
     {
         global = this;
         DaylightTimer = DirectionalLightTransform.eulerAngles.x;
-        GameManager.ChangeAnimationLayers(GetComponent<Animation>());
 
         if (!GameManager.global)
         {
@@ -99,6 +98,14 @@ public class LevelManager : MonoBehaviour
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
         */
+    }
+
+
+    public static void FloatingTextChange(GameObject floatingText, bool enable)
+    {
+        floatingText.gameObject.SetActive(true);
+
+        GameManager.PlayAnimation(floatingText.GetComponent<Animation>(), "BobbingText Appear", enable);
     }
 
     private void Update()

@@ -36,12 +36,6 @@ public class Menu : MonoBehaviour
     private void Awake()
     {
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
-        GameManager.ChangeAnimationLayers(CameraAnimation);
-
-        GameManager.ChangeAnimationLayers(WelcomeSignAnimation);
-        GameManager.ChangeAnimationLayers(ExitSignAnimation);
-        GameManager.ChangeAnimationLayers(SettingsSignAnimation);
-        GameManager.ChangeAnimationLayers(LevelsSignAnimation);
 
         GameManager.PlayAnimation(CameraAnimation, "Initial Menu");
         TextColor = SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().color;

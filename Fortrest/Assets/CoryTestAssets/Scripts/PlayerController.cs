@@ -57,6 +57,10 @@ public class PlayerController : MonoBehaviour
     private GameObject interactText2;
     private GameObject interactText3;
 
+    bool text1Active;
+    bool text2Active;
+    bool text3Active;
+
     private VisualEffect VFXSlash;
     private VisualEffect VFXSleeping;
 
@@ -75,6 +79,8 @@ public class PlayerController : MonoBehaviour
     public TMP_Text SurvivedTMP_Text;
     public TMP_Text enemyNumberText;
     public TMP_Text enemyNumberText2;
+
+    public GameObject DarkenGameObject;
 
     public Animation UIAnimation;
 
@@ -205,7 +211,7 @@ public class PlayerController : MonoBehaviour
             {
                 CharacterAnimator.speed = 1.0f;
             }
-        }               
+        }
 
         if (attacking)
         {
@@ -448,11 +454,13 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject == destroyedHouse)
         {
-            interactText1.SetActive(true);
+            LevelManager.FloatingTextChange(interactText1, true);
+            text1Active = true;
         }
         else if (other.gameObject == repairedHouse)
         {
-            interactText2.SetActive(true);
+            LevelManager.FloatingTextChange(interactText2, true);
+            text2Active = true;
         }
     }
 
@@ -460,17 +468,19 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject == destroyedHouse)
         {
-            interactText1.SetActive(false);
+            LevelManager.FloatingTextChange(interactText1, false);
+            text1Active = false;
         }
         else if (other.gameObject == repairedHouse)
         {
-            interactText2.SetActive(false);
+            LevelManager.FloatingTextChange(interactText2, false);
+            text2Active = false;
         }
     }
 
     private void Sleep()
     {
-        if (Input.GetKeyDown(KeyCode.E) && (interactText2.activeSelf || interactText1.activeSelf || interactText3.activeSelf))
+        if (Input.GetKeyDown(KeyCode.E) && (text1Active || text2Active || text3Active))
         {
             if (!repaired)
             {
@@ -478,7 +488,8 @@ public class PlayerController : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound, 0.3f);
                 destroyedHouse.SetActive(false);
                 repairedHouse.SetActive(true);
-                interactText1.SetActive(false);
+                LevelManager.FloatingTextChange(interactText1, false);
+                text1Active = false;
                 repaired = true;
             }
             else
@@ -494,8 +505,10 @@ public class PlayerController : MonoBehaviour
                     playerCC.enabled = false;
                     soundPlaying = false;
                     sleeping = true;
-                    interactText2.SetActive(false);
-                    interactText3.SetActive(true);
+                    LevelManager.FloatingTextChange(interactText2, false);
+                    text2Active = false;
+                    LevelManager.FloatingTextChange(interactText3, true);
+                    text3Active = true;
                 }
                 else
                 {
@@ -506,8 +519,11 @@ public class PlayerController : MonoBehaviour
                     bodyShape.SetActive(true);
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                    interactText2.SetActive(true);
-                    interactText3.SetActive(false);
+
+                    LevelManager.FloatingTextChange(interactText2, true);
+                    text2Active = true;
+                    LevelManager.FloatingTextChange(interactText3, false);
+                    text3Active = false;
                 }
             }
         }
