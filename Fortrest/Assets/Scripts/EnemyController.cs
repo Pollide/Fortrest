@@ -222,18 +222,6 @@ public class EnemyController : MonoBehaviour
                 }
                 distanceAdjusted2 = false;
             }
-            if (bestTarget == house.transform)
-            {
-                if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider)
-                {
-                    if (distanceAdjusted2 == false)
-                    {
-                        agent.stoppingDistance = stoppingDist;
-                        distanceAdjusted2 = true;
-                    }
-                    distanceAdjusted = false;
-                }
-            }
 
             if (bestTarget != house.transform)
             {
@@ -242,10 +230,7 @@ public class EnemyController : MonoBehaviour
                     FaceTarget(); // Makes the enemy face the player
                     if (!attacking)
                     {
-                        if (currentEnemyType != ENEMYTYPE.ogre)
-                        {
-                            Attack();
-                        }
+                        Attack();
                     }
                 }
             }
@@ -364,20 +349,9 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (currentEnemyType == ENEMYTYPE.ogre)
+        if (bestTarget == house)
         {
             if (other.gameObject == house)
-            {
-                if (!attacking)
-                {
-                    Attack();
-                }
-                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
-            }
-        }
-        else if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider)
-        {
-            if (other.gameObject == house && !chasing)
             {
                 if (!attacking)
                 {
@@ -411,17 +385,7 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (currentEnemyType == ENEMYTYPE.ogre)
-        {
-            if (other.gameObject == house)
-            {
-                if (!attacking)
-                {
-                    Attack();
-                }
-            }
-        }
-        else if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider)
+        if (bestTarget == house)
         {
             if (other.gameObject == house)
             {
@@ -471,8 +435,8 @@ public class EnemyController : MonoBehaviour
             agent.acceleration = 20.0f;
             agent.angularSpeed = 80.0f;
             maxHealth = 10.0f;
-            attackTimerMax = 4.0f;
-            agent.stoppingDistance = 6.5f;
+            attackTimerMax = 6.0f;
+            agent.stoppingDistance = 4.5f;
             offset = 0.2f;
         }
         health = maxHealth;
