@@ -80,7 +80,6 @@ public class EnemyController : MonoBehaviour
         }
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
         knockBackScript = GetComponent<KnockBack>();
-        OgreTargetHouse();
     }
 
     void Update()
@@ -88,16 +87,32 @@ public class EnemyController : MonoBehaviour
         Checks();
         MakeNoise();
         Process();
-        WolfTargetPlayer();
         ResetAttack();
-        
-        //chasing = true;
     }
 
     void Process()
     {
         // Default value
         float shortestDistance = 9999;
+    
+        if (currentEnemyType == ENEMYTYPE.ogre)
+        {
+            if (bestTarget == null)
+            {
+                bestTarget = house.transform;
+            }           
+        }
+        else if (currentEnemyType == ENEMYTYPE.wolf)
+        {
+            if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 20.0f)
+            {
+                bestTarget = playerPosition;
+            }
+        }
+        else if (currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.goblin)
+        {
+
+        }
 
         // If enemy is chasing the player, they become its target
         if (chasing && ((PlayerController.global.playerEnergy > 0 && PlayerController.global.sleeping == false && Boar.global.mounted == false) || currentEnemyType == ENEMYTYPE.wolf))
@@ -447,24 +462,5 @@ public class EnemyController : MonoBehaviour
     public void SecondStep()
     {
         GameManager.global.SoundManager.PlaySound(stepSound2, 0.4f, true, 0, false, transform);
-    }
-
-    private void OgreTargetHouse()
-    {
-        if (currentEnemyType == ENEMYTYPE.ogre)
-        {
-            bestTarget = house.transform;
-        }
-    }
-
-    private void WolfTargetPlayer()
-    {
-        if (currentEnemyType == ENEMYTYPE.wolf)
-        {
-            if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 20.0f)
-            {
-                chasing = true;
-            }
-        }       
     }
 }
