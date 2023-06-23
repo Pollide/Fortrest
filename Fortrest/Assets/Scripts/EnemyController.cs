@@ -349,15 +349,18 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget == house.transform)
+        if (bestTarget)
         {
-            if (other.gameObject == house)
+            if (bestTarget == house.transform)
             {
-                if (!attacking)
+                if (other.gameObject == house)
                 {
-                    Attack();
+                    if (!attacking)
+                    {
+                        Attack();
+                    }
+                    agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
                 }
-                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
             }
         }
     }
@@ -385,16 +388,19 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget == house.transform)
+        if (bestTarget)
         {
-            if (other.gameObject == house)
+            if (bestTarget == house.transform)
             {
-                if (!attacking)
+                if (other.gameObject == house)
                 {
-                    Attack();
+                    if (!attacking)
+                    {
+                        Attack();
+                    }
                 }
             }
-        }
+        }     
     }
 
     private void SetEnemyParameters()
