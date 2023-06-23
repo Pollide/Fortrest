@@ -18,6 +18,6 @@ public class DragableEvents : MonoBehaviour
     {
         InventoryManager.global.RemoveItem("Apple");
 
-        PlayerController.global.ApplyEnergyRestore(2);
+        PlayerController.global.ApplyEnergyRestore(5);
     }
 }

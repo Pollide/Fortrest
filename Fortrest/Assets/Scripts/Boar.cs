@@ -39,7 +39,7 @@ public class Boar : MonoBehaviour
         text = transform.GetChild(0).gameObject;
         player = PlayerController.global.gameObject;
         cc = GetComponent<CharacterController>();
-        Indicator.global.AddIndicator(transform, Color.green, "Mount");
+        Indicator.global.AddIndicator(transform, Color.green, "Mount", false);
     }
 
     void Update()

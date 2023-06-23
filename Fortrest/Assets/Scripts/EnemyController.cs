@@ -79,7 +79,10 @@ public class EnemyController : MonoBehaviour
         PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
         if (agent.isOnNavMesh)
         {
-            Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
+            if (currentEnemyType != ENEMYTYPE.wolf) //wolves wild
+            {
+                Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
+            }
         }
 
         knockBackScript = GetComponent<KnockBack>();

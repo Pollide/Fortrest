@@ -36,7 +36,7 @@ public class LevelManager : MonoBehaviour
     public int day = 0;
     public List<GameObject> enemyList = new List<GameObject>();
 
-    public float daySpeed = 2;
+    public float daySpeed = 1;
     public float GoblinTimer;
     float GoblinThreshold;
     public GameObject GoblinGameObject;
@@ -127,8 +127,12 @@ public class LevelManager : MonoBehaviour
 
         PlayerController.global.EnemiesTextControl();
 
+        bool nightTimeBool = DaylightTimer > 180;
+        daySpeed = nightTimeBool ? 2 : 1;
 
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
+
+
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
 
@@ -140,8 +144,6 @@ public class LevelManager : MonoBehaviour
 
             PlayerController.global.NewDay();
         }
-
-        bool nightTimeBool = DaylightTimer > 180;
 
         Light light = DirectionalLightTransform.GetComponent<Light>();
 
