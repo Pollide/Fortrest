@@ -213,7 +213,7 @@ public class EnemyController : MonoBehaviour
                     bestTarget = playerPosition;
                 }
             }
-            if (bestTarget != playerPosition && bestTarget != Boar.global.transform)
+            if (bestTarget != playerPosition && bestTarget != Boar.global.transform && bestTarget != house.transform)
             {
                 if (distanceAdjusted == false)
                 {
@@ -349,18 +349,15 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget)
+        if (house && bestTarget == house.transform)
         {
-            if (bestTarget == house.transform)
+            if (other.gameObject == house)
             {
-                if (other.gameObject == house)
+                if (!attacking)
                 {
-                    if (!attacking)
-                    {
-                        Attack();
-                    }
-                    agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
+                    Attack();
                 }
+                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
             }
         }
     }
@@ -388,19 +385,16 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (bestTarget)
+        if (house && bestTarget == house.transform)
         {
-            if (bestTarget == house.transform)
+            if (other.gameObject == house)
             {
-                if (other.gameObject == house)
+                if (!attacking)
                 {
-                    if (!attacking)
-                    {
-                        Attack();
-                    }
+                    Attack();
                 }
             }
-        }     
+        }
     }
 
     private void SetEnemyParameters()
