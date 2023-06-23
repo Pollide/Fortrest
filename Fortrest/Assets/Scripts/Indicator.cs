@@ -102,7 +102,7 @@ public class Indicator : MonoBehaviour
 
             if (!Unlocked)
             {
-                if (!isOutsideCanvas)
+                if (Vector3.Distance(PlayerController.global.transform.position, ActiveTarget.position) < 20)
                     Unlocked = true;
             }
             else
@@ -148,7 +148,7 @@ public class Indicator : MonoBehaviour
         }
     }
 
-    public void AddIndicator(Transform activeTarget, Color color, string name)
+    public void AddIndicator(Transform activeTarget, Color color, string name, bool unlocked = true)
     {
         IndicatorData indicatorData = new IndicatorData();
 
@@ -163,6 +163,7 @@ public class Indicator : MonoBehaviour
 
         indicatorData.ActiveText = indicatorData.holder.GetChild(1).GetComponent<Text>();
         indicatorData.ActiveString = name;
+        indicatorData.Unlocked = unlocked;
         indicatorData.ActiveText.text = "?";
         IndicatorList.Add(indicatorData);
     }

@@ -21,12 +21,12 @@ public class BridgeBuilder : MonoBehaviour
     {
         if (MarshBridge)
         {
-            Indicator.global.AddIndicator(transform, Color.magenta, "Marsh");
+            Indicator.global.AddIndicator(transform, Color.magenta, "Marsh", false);
         }
 
         if (TussocksBridge)
         {
-            Indicator.global.AddIndicator(transform, Color.red * Color.yellow, "Tussocks");
+            Indicator.global.AddIndicator(transform, Color.red * Color.yellow, "Tussocks", false);
         }
     }
 

@@ -216,8 +216,9 @@ public class PlayerModeHandler : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitData;
 
-        if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource") && !MouseOverUI())
+        if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer))
         {
+            // && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource") && !MouseOverUI()
             turretBlueprint.SetActive(true);
 
             Vector3 worldPos = hitData.point;
@@ -226,7 +227,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (IsInRange(worldPos) &&
                 InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost &&
-                InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost)
+                InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
             {
                 foreach (Transform child in parts)
                 {
