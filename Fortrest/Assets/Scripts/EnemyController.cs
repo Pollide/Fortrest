@@ -10,8 +10,7 @@ public class EnemyController : MonoBehaviour
     private NavMeshAgent agent; // Nav mesh agent component
     public Transform bestTarget; // Target that the enemy will go towards
     private Transform playerPosition;
-    public GameObject house;
-    public GameObject repairedHouse;
+    GameObject house;
 
     // Parameters
     public float offset;
@@ -86,10 +85,30 @@ public class EnemyController : MonoBehaviour
 
     void Update()
     {
+        CheckHouse();
         Checks();
         MakeNoise();
         Process();
         ResetAttack();
+    }
+
+    void CheckHouse()
+    {
+        float closest = 9999;
+
+        for (int i = 0; i < LevelManager.global.BuildingList.Count; i++)
+        {
+            if (LevelManager.global.BuildingList[i].GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+            {
+                float distance = Vector3.Distance(transform.position, LevelManager.global.BuildingList[i].position);
+
+                if (distance < closest)
+                {
+                    closest = distance;
+                    house = LevelManager.global.BuildingList[i].gameObject;
+                }
+            }
+        }
     }
 
     void Process()
@@ -158,14 +177,14 @@ public class EnemyController : MonoBehaviour
                             {
                                 shortestDistance = compare; // New shortest distance is assigned
                                 bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
-                                
+
                             }
                         }
                     }
                 }
             }
         }
-        
+
         // Once a target is set, adjust stopping distance, check distance, attack when reaching target
         if (bestTarget)
         {
@@ -173,7 +192,7 @@ public class EnemyController : MonoBehaviour
             {
                 if (Boar.global.mounted == true && currentEnemyType == ENEMYTYPE.wolf)
                 {
-                    bestTarget = Boar.global.transform;                   
+                    bestTarget = Boar.global.transform;
                 }
                 agent.stoppingDistance = stoppingDist;
                 distanceAdjusted = false;
@@ -202,7 +221,7 @@ public class EnemyController : MonoBehaviour
                 {
                     if (distanceAdjusted2 == false)
                     {
-                        agent.stoppingDistance = stoppingDist + 10.0f;
+                        agent.stoppingDistance = stoppingDist;
                         distanceAdjusted2 = true;
                     }
                     distanceAdjusted = false;
@@ -340,11 +359,11 @@ public class EnemyController : MonoBehaviour
                     Attack();
                 }
                 agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
-            }           
+            }
         }
         else if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider)
         {
-            if (other.gameObject == repairedHouse && !chasing)
+            if (other.gameObject == house && !chasing)
             {
                 if (!attacking)
                 {
@@ -365,14 +384,14 @@ public class EnemyController : MonoBehaviour
                 chaseTimer = 0;
                 if (currentEnemyType != ENEMYTYPE.ogre)
                 {
-                    knockBackScript.knock = true;                   
+                    knockBackScript.knock = true;
                 }
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chasing = true;
                 }
                 canBeDamaged = false;
-                ScreenShake.global.shake = true;                
+                ScreenShake.global.shake = true;
                 Damaged(PlayerController.global.attackDamage);
                 PickSound(hitSound, hitSound2, 1.0f);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
@@ -390,7 +409,7 @@ public class EnemyController : MonoBehaviour
         }
         else if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider)
         {
-            if (other.gameObject == repairedHouse)
+            if (other.gameObject == house)
             {
                 if (!attacking)
                 {
@@ -477,6 +496,12 @@ public class EnemyController : MonoBehaviour
         else
         {
             Building building = bestTarget.GetComponent<Building>();
+
+            if (building && building.resourceObject == Building.BuildingType.HouseNode)
+            {
+                building = building.transform.parent.GetComponent<Building>();
+            }
+
             if (building.GetHealth() > 0)
             {
                 building.healthBarImage.fillAmount = Mathf.Clamp(building.GetHealth() / building.maxHealth, 0, 1f);
