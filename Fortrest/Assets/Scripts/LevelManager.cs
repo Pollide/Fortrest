@@ -30,7 +30,7 @@ public class LevelManager : MonoBehaviour
     public Transform DirectionalLightTransform;
     public Material LanternGlowingMaterial;
     public Material LanternOffMaterial;
-    private SkinnedMeshRenderer LanternSkinnedRenderer;
+    SkinnedMeshRenderer LanternSkinnedRenderer;
     private GameObject NightLightGameObject;
     public float DaylightTimer;
     public int day = 0;
@@ -111,6 +111,11 @@ public class LevelManager : MonoBehaviour
         GameManager.PlayAnimation(floatingText.GetComponent<Animation>(), "BobbingText Appear", enable);
     }
 
+    public bool ReturnNight()
+    {
+        return DaylightTimer > 180;
+    }
+
     private void Update()
     {
         LockCursor();
@@ -132,8 +137,7 @@ public class LevelManager : MonoBehaviour
 
         PlayerController.global.EnemiesTextControl();
 
-        bool nightTimeBool = DaylightTimer > 180;
-        daySpeed = nightTimeBool ? 2 : 1;
+        daySpeed = ReturnNight() ? 2 : 1;
 
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
 
@@ -150,38 +154,37 @@ public class LevelManager : MonoBehaviour
             PlayerController.global.NewDay();
         }
 
-        Light light = DirectionalLightTransform.GetComponent<Light>();
+        //  Light light = DirectionalLightTransform.GetComponent<Light>();
 
-        light.intensity = Mathf.Lerp(light.intensity, nightTimeBool ? 0 : 0.4f, Time.deltaTime);
+        //   light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0 : 0.4f, Time.deltaTime);
 
-        if (nightTimeBool)
+        if (ReturnNight())
         {
-
             if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = Random.Range(15, 20) - (day * 3.5f);
-                if (GoblinThreshold < 0.2f)
+                GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
+                if (GoblinThreshold < 0.5f)
                 {
-                    GoblinThreshold = 0.2f;
+                    GoblinThreshold = 0.5f;
                 }
                 GoblinTimer = 0;
 
                 Vector3 spawn = PlayerController.global.transform.position;
 
 
-                spawn.x += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+                spawn.x += Random.Range(20, 30) * (Random.Range(0, 2) == 0 ? -1 : 1);
 
-                spawn.z += Random.Range(10, 20) * (Random.Range(0, 2) == 0 ? -1 : 1);
+                spawn.z += Random.Range(20, 30) * (Random.Range(0, 2) == 0 ? -1 : 1);
 
 
                 GameObject prefab = GoblinGameObject;
 
-                if (day > 2 && Random.Range(0, 3) == 0)
+                if (day > 1 && Random.Range(0, 3) == 0)
                 {
                     prefab = SpiderGameObject;
                 }
 
-                if (day > 4 && Random.Range(0, 5) == 0)
+                if (day > 3 && Random.Range(0, 7) == 0)
                 {
                     prefab = OgreGameObject;
                 }
@@ -194,11 +197,18 @@ public class LevelManager : MonoBehaviour
 
         if (NightLightGameObject != null)
         {
-            NightLightGameObject.SetActive(nightTimeBool);
+            NightLightGameObject.SetActive(ReturnNight());
         }
 
-        LanternSkinnedRenderer.material = nightTimeBool ? LanternGlowingMaterial : LanternOffMaterial;
 
+
+        //   Debug.Log(LanternSkinnedRenderer.materials[2] + " " + (LanternSkinnedRenderer.materials[2] == (ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial)));
+
+        Material[] mats = LanternSkinnedRenderer.materials;
+
+        mats[2] = ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial;
+
+        LanternSkinnedRenderer.materials = mats;
 
         for (int i = 0; i < NaturalBuildingList.Count; i++)
         {

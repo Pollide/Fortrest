@@ -430,7 +430,7 @@ public class PlayerController : MonoBehaviour
 
             for (int i = 0; i < enemyList.Count; i++)
             {
-                if(enemyList[i] && enemyList[i].GetComponent<EnemyController>() &&  enemyList[i].GetComponent<EnemyController>().currentEnemyType != EnemyController.ENEMYTYPE.wolf)
+                if (enemyList[i] && enemyList[i].GetComponent<EnemyController>() && enemyList[i].GetComponent<EnemyController>().currentEnemyType != EnemyController.ENEMYTYPE.wolf)
                 {
                     goblinsInt++;
                 }
@@ -529,7 +529,7 @@ public class PlayerController : MonoBehaviour
                     bodyShape.SetActive(true);
                     sleeping = false;
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-
+                    Time.timeScale = 1;
                     LevelManager.FloatingTextChange(interactText2, true);
                     text2Active = true;
                     LevelManager.FloatingTextChange(interactText3, false);
@@ -540,6 +540,8 @@ public class PlayerController : MonoBehaviour
 
         if (sleeping && soundPlaying == false)
         {
+            Time.timeScale = LevelManager.global.ReturnNight() ? 2 : 1;
+
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             soundPlaying = true;
         }
