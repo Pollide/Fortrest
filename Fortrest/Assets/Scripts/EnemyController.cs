@@ -8,11 +8,12 @@ public class EnemyController : MonoBehaviour
 {
     // Agent components
     private NavMeshAgent agent; // Nav mesh agent component
-    private Transform bestTarget; // Target that the enemy will go towards
+    public Transform bestTarget; // Target that the enemy will go towards
     private Transform playerPosition;
+    public GameObject house;
 
     // Parameters
-    private float offset;
+    public float offset;
     private float speed;
     private float stoppingDist;
 
@@ -79,6 +80,7 @@ public class EnemyController : MonoBehaviour
         }
         GameManager.ChangeAnimationLayers(healthBarImage.transform.parent.parent.GetComponent<Animation>());
         knockBackScript = GetComponent<KnockBack>();
+        OgreTargetHouse();
     }
 
     void Update()
@@ -86,8 +88,10 @@ public class EnemyController : MonoBehaviour
         Checks();
         MakeNoise();
         Process();
+        WolfTargetPlayer();
         ResetAttack();
-        chasing = true;
+        
+        //chasing = true;
     }
 
     void Process()
@@ -96,25 +100,28 @@ public class EnemyController : MonoBehaviour
         float shortestDistance = 9999;
 
         // If enemy is chasing the player, they become its target
-        if (chasing)
+        if (chasing && ((PlayerController.global.playerEnergy > 0 && PlayerController.global.sleeping == false && Boar.global.mounted == false) || currentEnemyType == ENEMYTYPE.wolf))
         {
-            bestTarget = playerPosition; // Player set as target
+            bestTarget = playerPosition; // Player set as target           
 
-            // Distance between enemy and player
-            float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
-
-            chaseTimer += Time.deltaTime; // Enemy stops chasing the player after 10s or when the player gets too far
-
-            if (chaseTimer >= chaseTimerMax || distance >= 10.0f)
+            if (currentEnemyType == ENEMYTYPE.goblin)
             {
-                bestTarget = null;
-                chasing = false;
-                chaseTimer = 0;
+                // Distance between enemy and player
+                float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
+
+                chaseTimer += Time.deltaTime; // Enemy stops chasing the player after 10s or when the player gets too far
+
+                if (chaseTimer >= chaseTimerMax || distance >= 10.0f)
+                {
+                    bestTarget = null;
+                    chasing = false;
+                    chaseTimer = 0;
+                }
             }
         }
         else // Player is not the target, finds different target
         {
-            if (!bestTarget) // If the enemy does not have a current target
+            if ((!bestTarget || (bestTarget && currentEnemyType == ENEMYTYPE.spider)) && currentEnemyType != ENEMYTYPE.wolf) // If the enemy does not have a current target
             {
                 for (int i = 0; i < LevelManager.global.BuildingList.Count; i++) // Goes through the list of targets
                 {
@@ -135,17 +142,35 @@ public class EnemyController : MonoBehaviour
         // Once a target is set, adjust stopping distance, check distance, attack when reaching target
         if (bestTarget)
         {
-            if (bestTarget == playerPosition)
+            if (currentEnemyType != ENEMYTYPE.ogre)
             {
-                agent.stoppingDistance = stoppingDist;
-                distanceAdjusted = false;
-            }
-            else
-            {
-                if (distanceAdjusted == false)
+                if (bestTarget == playerPosition)
                 {
-                    agent.stoppingDistance = stoppingDist + 2.5f;
-                    distanceAdjusted = true;
+                    if (Boar.global.mounted == true && currentEnemyType == ENEMYTYPE.wolf)
+                    {
+                        bestTarget = Boar.global.transform;                      
+                    }
+                    else
+                    {
+                        agent.stoppingDistance = stoppingDist;
+                    }                   
+                    distanceAdjusted = false;
+                }
+                if (bestTarget == Boar.global.transform)
+                {
+                    agent.stoppingDistance = stoppingDist + 1.0f;
+                    if (Boar.global.mounted == false)
+                    {
+                        bestTarget = playerPosition;
+                    }
+                }
+                if (bestTarget != playerPosition && bestTarget != Boar.global.transform)
+                {
+                    if (distanceAdjusted == false)
+                    {
+                        agent.stoppingDistance = stoppingDist + 2.5f;
+                        distanceAdjusted = true;
+                    }
                 }
             }
             if (agent.isOnNavMesh)
@@ -158,7 +183,10 @@ public class EnemyController : MonoBehaviour
                 FaceTarget(); // Makes the enemy face the player
                 if (!attacking)
                 {
-                    Attack();
+                    if (currentEnemyType != ENEMYTYPE.ogre)
+                    {
+                        Attack();
+                    }
                 }
             }
             ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + offset);
@@ -264,6 +292,17 @@ public class EnemyController : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
+        if (currentEnemyType == ENEMYTYPE.ogre)
+        {
+            if (other.gameObject == house)
+            {
+                if (!attacking)
+                {
+                    Attack();
+                }
+                agent.stoppingDistance = Vector3.Distance(transform.position, bestTarget.position);
+            }           
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -276,14 +315,27 @@ public class EnemyController : MonoBehaviour
                 chaseTimer = 0;
                 if (currentEnemyType != ENEMYTYPE.ogre)
                 {
-                    knockBackScript.knock = true;
+                    knockBackScript.knock = true;                   
+                }
+                if (currentEnemyType == ENEMYTYPE.goblin)
+                {
+                    chasing = true;
                 }
                 canBeDamaged = false;
-                ScreenShake.global.shake = true;
-                chasing = true;
+                ScreenShake.global.shake = true;                
                 Damaged(PlayerController.global.attackDamage);
                 PickSound(hitSound, hitSound2, 1.0f);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
+            }
+        }
+        if (currentEnemyType == ENEMYTYPE.ogre)
+        {
+            if (other.gameObject == house)
+            {
+                if (!attacking)
+                {
+                    Attack();
+                }
             }
         }
     }
@@ -309,6 +361,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 2.5f;
             offset = 0.3f;
+            chasing = true;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
@@ -318,7 +371,7 @@ public class EnemyController : MonoBehaviour
             maxHealth = 4.0f;
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 6.5f;
-            offset = 0.1f;
+            offset = 0.2f;
         }
         else if (currentEnemyType == ENEMYTYPE.ogre)
         {
@@ -328,7 +381,7 @@ public class EnemyController : MonoBehaviour
             maxHealth = 10.0f;
             attackTimerMax = 4.0f;
             agent.stoppingDistance = 6.5f;
-            offset = 0.1f;
+            offset = 0.2f;
         }
         health = maxHealth;
         speed = agent.speed;
@@ -357,7 +410,7 @@ public class EnemyController : MonoBehaviour
     {
         PickSound(attackSound, attackSound2, 1.0f);
 
-        if (bestTarget == playerPosition)
+        if (bestTarget == playerPosition || bestTarget == Boar.global.transform)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
             playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
@@ -394,5 +447,24 @@ public class EnemyController : MonoBehaviour
     public void SecondStep()
     {
         GameManager.global.SoundManager.PlaySound(stepSound2, 0.4f, true, 0, false, transform);
+    }
+
+    private void OgreTargetHouse()
+    {
+        if (currentEnemyType == ENEMYTYPE.ogre)
+        {
+            bestTarget = house.transform;
+        }
+    }
+
+    private void WolfTargetPlayer()
+    {
+        if (currentEnemyType == ENEMYTYPE.wolf)
+        {
+            if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 20.0f)
+            {
+                chasing = true;
+            }
+        }       
     }
 }
