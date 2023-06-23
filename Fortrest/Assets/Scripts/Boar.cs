@@ -142,6 +142,7 @@ public class Boar : MonoBehaviour
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = false;
             player.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("Moving", false);
+            PlayerController.global.SwordGameObject.GetComponent<BoxCollider>().enabled = false;
         }
         else
         {
@@ -149,6 +150,7 @@ public class Boar : MonoBehaviour
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = true;
             PlayerController.global.CharacterAnimator.SetBool("Sitting", false);
+            PlayerController.global.SwordGameObject.GetComponent<BoxCollider>().enabled = true;
         }
         player.GetComponent<CharacterController>().enabled = true;
     }
