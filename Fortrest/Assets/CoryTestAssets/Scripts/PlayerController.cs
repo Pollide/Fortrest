@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
 
     private bool noEnergy;
     private bool repaired;
-    private bool sleeping;
+    public bool sleeping;
     private GameObject house;
     private GameObject houseSpawnPoint;
     private GameObject destroyedHouse;
