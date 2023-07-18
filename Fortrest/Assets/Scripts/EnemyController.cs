@@ -137,9 +137,16 @@ public class EnemyController : MonoBehaviour
         {
             if (bestTarget == null)
             {
-                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 20.0f)
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 17.5f)
                 {
                     bestTarget = playerPosition;
+                }
+            }
+            else
+            {
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 30.0f)
+                {
+                    bestTarget = null;
                 }
             }
         }
@@ -243,6 +250,14 @@ public class EnemyController : MonoBehaviour
                 agent.SetDestination(bestTarget.position); // Makes the enemy move
             }
             ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + offset);
+        }
+        else
+        {
+            if (currentEnemyType == ENEMYTYPE.wolf)
+            {
+                agent.SetDestination(transform.position);
+                ActiveAnimator.SetBool("Moving", false);
+            }
         }
     }
 
