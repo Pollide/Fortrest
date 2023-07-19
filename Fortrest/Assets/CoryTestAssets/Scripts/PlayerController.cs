@@ -46,23 +46,14 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection;
 
     private bool noEnergy;
-    private bool repaired;
-    public bool sleeping;
     private GameObject house;
     private GameObject houseSpawnPoint;
-    private GameObject destroyedHouse;
-    private GameObject repairedHouse;
+    //private GameObject repairedHouse;
     public GameObject bodyShape;
-    private GameObject interactText1;
-    private GameObject interactText2;
-    private GameObject interactText3;
-
-    public bool houseInteract;
+    private GameObject interactText;
 
     private VisualEffect VFXSlash;
     private VisualEffect VFXSleeping;
-
-    private bool soundPlaying = false;
 
     public GameObject AxeGameObject;
     public GameObject HammerGameObject;
@@ -90,6 +81,11 @@ public class PlayerController : MonoBehaviour
         public bool PicaxeBool;
         public bool SwordBool;
     }
+
+    private bool deathEffects = false;
+    private bool playerDead = false;
+    public float health = 100.0f;
+    private float respawnTimer = 0.0f;
 
     // Start is called before the first frame update
     void Awake()
@@ -128,14 +124,9 @@ public class PlayerController : MonoBehaviour
         if (GameObject.Find("House"))
         {
             house = GameObject.Find("House");
-
             houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
-            destroyedHouse = house.transform.Find("Destroyed House").gameObject;
-            repairedHouse = house.transform.Find("Repaired House").gameObject;
-
-            interactText1 = house.transform.Find("Floating Text 1").gameObject;
-            interactText2 = house.transform.Find("Floating Text 2").gameObject;
-            interactText3 = house.transform.Find("Floating Text 3").gameObject;
+            //repairedHouse = house.transform.Find("Repaired House").gameObject;
+            interactText = house.transform.Find("Floating Text").gameObject;
         }
 
         RadiusGameObject.transform.localScale = new Vector3(PlayerModeHandler.global.distanceAwayFromPlayer * 2, 0.1f, PlayerModeHandler.global.distanceAwayFromPlayer * 2);
@@ -174,16 +165,6 @@ public class PlayerController : MonoBehaviour
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
             Attack();
-        }
-
-        if (house != null)
-        {
-            Sleep();
-        }
-
-        if (sleeping)
-        {
-            playerEnergy += Time.deltaTime;
         }
 
         if (playerEnergy >= maxPlayerEnergy)
@@ -231,6 +212,11 @@ public class PlayerController : MonoBehaviour
                 attackCount = 0;
             }
         }
+
+        if (health <= 0)
+        {
+            Death();
+        }       
     }
 
 
@@ -458,89 +444,43 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    private void OnTriggerStay(Collider other)
+    private void Death()
     {
-        if (other.gameObject == destroyedHouse && !houseInteract)
+        if (!deathEffects)
         {
-            LevelManager.FloatingTextChange(interactText1, true);
-            houseInteract = true;
+            // lose inventory
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
+            VFXSleeping.Play();
+            Vector3 sleepingVector = house.transform.position;
+            sleepingVector.y = transform.position.y;
+            transform.position = sleepingVector;
+            playerCanMove = false;
+            playerCC.enabled = false;
+            bodyShape.SetActive(false);
+            playerDead = true;
+            deathEffects = true;
         }
-        else if (other.gameObject == repairedHouse && !houseInteract)
+        if (playerDead)
         {
-            LevelManager.FloatingTextChange(interactText2, true);
-            houseInteract = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject == destroyedHouse)
-        {
-            LevelManager.FloatingTextChange(interactText1, false);
-            houseInteract = false;
-        }
-        else if (other.gameObject == repairedHouse)
-        {
-            LevelManager.FloatingTextChange(interactText2, false);
-            houseInteract = false;
-        }
-    }
-
-    private void Sleep()
-    {
-        if (Input.GetKeyDown(KeyCode.E) && houseInteract)
-        {
-            if (!repaired)
+            respawnTimer += Time.deltaTime;
+            if (respawnTimer >= 15.0f)
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound, 0.5f);
-                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound, 0.3f);
-                destroyedHouse.SetActive(false);
-                repairedHouse.SetActive(true);
-                LevelManager.FloatingTextChange(interactText1, false);
-                repaired = true;
-                houseInteract = false;
-            }
-            else
-            {
-                if (!sleeping)
+                LevelManager.FloatingTextChange(interactText, true);
+                if (Input.GetKeyDown(KeyCode.E))
                 {
-                    VFXSleeping.Play();
-                    bodyShape.SetActive(false);
-                    Vector3 sleepingVector = house.transform.position;
-                    sleepingVector.y = transform.position.y;
-                    transform.position = sleepingVector;
-                    playerCanMove = false;
-                    playerCC.enabled = false;
-                    soundPlaying = false;
-                    sleeping = true;
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
-                    LevelManager.FloatingTextChange(interactText2, false);
-                    LevelManager.FloatingTextChange(interactText3, true);
-                }
-                else
-                {
-                    VFXSleeping.Stop();
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
+                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
+                    VFXSleeping.Stop();                   
                     transform.position = houseSpawnPoint.transform.position;
                     playerCanMove = true;
                     playerCC.enabled = true;
-                    bodyShape.SetActive(true);
-                    sleeping = false;
-                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                    Time.timeScale = 1;
-                    LevelManager.FloatingTextChange(interactText3, false);
-                    houseInteract = false;
+                    bodyShape.SetActive(true);                   
+                    playerDead = false;
+                    deathEffects = false;
+                    respawnTimer = 0.0f;
+                    LevelManager.FloatingTextChange(interactText, false);
+                    health = 100.0f;
                 }
-            }
-        }
-
-        if (sleeping && soundPlaying == false)
-        {
-            Time.timeScale = LevelManager.global.ReturnNight() ? 2 : 1;
-
-            GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
-            soundPlaying = true;
+            }           
         }
     }
 

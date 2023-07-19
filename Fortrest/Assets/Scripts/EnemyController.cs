@@ -36,7 +36,6 @@ public class EnemyController : MonoBehaviour
     public bool chasing = false;
     public bool canBeDamaged = true;
     private bool distanceAdjusted = false;
-    private bool distanceAdjusted2 = false;
     private bool attacking = false;
 
     // Others
@@ -152,7 +151,7 @@ public class EnemyController : MonoBehaviour
         }
         else if (currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.goblin)
         {
-            if (PlayerController.global.playerEnergy <= 0 || PlayerController.global.sleeping == true || Boar.global.mounted == true)
+            if (PlayerController.global.playerEnergy <= 0 || Boar.global.mounted == true)
             {
                 chasing = false;
             }
@@ -213,7 +212,6 @@ public class EnemyController : MonoBehaviour
                 }
                 agent.stoppingDistance = stoppingDist;
                 distanceAdjusted = false;
-                distanceAdjusted2 = false;
             }
             if (bestTarget == Boar.global.transform)
             {
@@ -230,7 +228,6 @@ public class EnemyController : MonoBehaviour
                     agent.stoppingDistance = stoppingDist + 2.5f;
                     distanceAdjusted = true;
                 }
-                distanceAdjusted2 = false;
             }
 
             if (bestTarget != house.transform)
