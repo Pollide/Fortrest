@@ -59,6 +59,20 @@ public class LevelManager : MonoBehaviour
 
     public List<Transform> TerrainList = new List<Transform>();
 
+    private enum SPAWNDIRECTION
+    {
+        North = 1,
+        South,
+        West,
+        East
+    };
+
+    private SPAWNDIRECTION spawnDir;
+    private float direction;
+    private bool directionEstablished = false;
+    private Transform houseTransform;
+    private Vector3 enemySpawnPosition;
+
     private void Awake()
     {
         global = this;
@@ -104,8 +118,25 @@ public class LevelManager : MonoBehaviour
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
         */
+
+        GetHousePosition();
     }
 
+    private void GetHousePosition()
+    {
+        bool positionAcquired = false;
+        if (!positionAcquired)
+        {
+            for (int i = 0; i < BuildingList.Count; i++)
+            {
+                if (BuildingList[i].GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+                {
+                    houseTransform = BuildingList[i].transform.parent.transform;
+                    positionAcquired = true;
+                }
+            }
+        }
+    }
 
     public static void FloatingTextChange(GameObject floatingText, bool enable)
     {
@@ -122,7 +153,6 @@ public class LevelManager : MonoBehaviour
     private void Update()
     {
         LockCursor();
-
         /*
         if (TerrainList != null)
         {
@@ -152,7 +182,8 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = ReturnNight() ? 2 : 1;
+        daySpeed = 8.0f; // FOR TESTING
+        //daySpeed = ReturnNight() ? 2 : 1;       
 
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
 
@@ -162,6 +193,7 @@ public class LevelManager : MonoBehaviour
 
         if (DaylightTimer > 360)
         {
+            directionEstablished = false;
             DaylightTimer = 0;
             day++;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
@@ -174,23 +206,74 @@ public class LevelManager : MonoBehaviour
         //   light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0 : 0.4f, Time.deltaTime);
 
         if (ReturnNight())
-        {
+        {          
+            if (!directionEstablished)
+            {
+                direction = 4;
+                switch (direction)
+                {
+                    case 1:
+                        spawnDir = SPAWNDIRECTION.North;
+                        break;
+                    case 2:
+                        spawnDir = SPAWNDIRECTION.South;
+                        break;
+                    case 3:
+                        spawnDir = SPAWNDIRECTION.West;
+                        break;
+                    case 4:
+                        spawnDir = SPAWNDIRECTION.East;
+                        break;
+                    default:
+                        break;
+                }               
+
+                enemySpawnPosition = houseTransform.position;
+
+                switch (spawnDir)
+                {
+                    case SPAWNDIRECTION.North:
+                        enemySpawnPosition += new Vector3(40.0f, 0.0f, 40.0f);
+                        break;
+                    case SPAWNDIRECTION.South:
+                        enemySpawnPosition += new Vector3(-20.0f, 0.0f, -40.0f);
+                        break;
+                    case SPAWNDIRECTION.West:
+                        enemySpawnPosition += new Vector3(-20.0f, 0.0f, 20.0f);
+                        break;
+                    case SPAWNDIRECTION.East:
+                        enemySpawnPosition += new Vector3(40.0f, 0.0f, -40.0f);
+                        break;
+                    default:
+                        break;
+                }
+
+                directionEstablished = true;
+            }
+            
             if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
+                GoblinThreshold = 1.0f; // FOR TESTING
+                //GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
                 if (GoblinThreshold < 0.5f)
                 {
                     GoblinThreshold = 0.5f;
                 }
                 GoblinTimer = 0;
 
-                Vector3 spawn = PlayerController.global.transform.position;
+                if (spawnDir != SPAWNDIRECTION.South)
+                {
+                    enemySpawnPosition.x += Random.Range(-5, 5);
 
+                    enemySpawnPosition.z += Random.Range(-5, 5);
+                }
+                else
+                {
+                    enemySpawnPosition.x += Random.Range(0, 5);
 
-                spawn.x += Random.Range(20, 30) * (Random.Range(0, 2) == 0 ? -1 : 1);
-
-                spawn.z += Random.Range(20, 30) * (Random.Range(0, 2) == 0 ? -1 : 1);
-
+                    enemySpawnPosition.z += Random.Range(0, 5);
+                }
+                
 
                 GameObject prefab = GoblinGameObject;
 
@@ -204,7 +287,7 @@ public class LevelManager : MonoBehaviour
                     prefab = OgreGameObject;
                 }
 
-                GameObject enemy = Instantiate(prefab, spawn, Quaternion.identity);
+                GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
 
                 enemyList.Add(enemy);
             }
