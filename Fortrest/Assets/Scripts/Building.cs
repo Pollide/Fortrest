@@ -39,7 +39,6 @@ public class Building : MonoBehaviour
     [HideInInspector]
     public float health;
     public float maxHealth = 5;
-    public float energyConsumptionPerClick = 2;
     public int resourceAmount = 5;
     public int constructionCostWood = 5;
     public int constructionCostStone = 5;
@@ -47,6 +46,11 @@ public class Building : MonoBehaviour
     public Image healthBarImage;
 
     AnimationState HealthAnimationState;
+
+    private float lastHealth;
+
+    private bool underAttack;
+    private float timerText = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -73,6 +77,7 @@ public class Building : MonoBehaviour
         if (resourceObject == BuildingType.House)
         {
             Indicator.global.AddIndicator(transform, Color.yellow, "Home");
+            lastHealth = health;
         }
         else //the house itself is not part of the buildings list
         {
@@ -128,7 +133,6 @@ public class Building : MonoBehaviour
 
     public void DestroyBuilding()
     {
-
         if (enabled && GetComponent<Animation>())
         {
             enabled = false;
@@ -179,6 +183,36 @@ public class Building : MonoBehaviour
         {
             //Debug.Log(1);
             HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
+        }
+    }
+
+    private void Update()
+    {        
+        if (resourceObject == BuildingType.House)
+        {
+            if (health != lastHealth)
+            {
+                lastHealth = health;
+                timerText = 0.0f;
+                if (!underAttack)
+                {
+                    underAttack = true;
+                    GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttacked");                                       
+                }              
+            }
+            else
+            {
+                if (underAttack)
+                {
+                    timerText += Time.deltaTime;
+                    if (timerText > 5.0f)
+                    {
+                        underAttack = false;
+                        timerText = 0.0f;
+                        GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttackedDisappear");                    
+                    }
+                }              
+            }
         }
     }
 }
