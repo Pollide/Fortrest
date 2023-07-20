@@ -76,9 +76,6 @@ public class Building : MonoBehaviour
         }
         else //the house itself is not part of the buildings list
         {
-
-
-
             if (NaturalBool)
                 LevelManager.global.NaturalBuildingList.Add(this);
             else
