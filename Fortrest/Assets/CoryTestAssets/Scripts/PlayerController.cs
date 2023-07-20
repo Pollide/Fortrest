@@ -333,6 +333,7 @@ public class PlayerController : MonoBehaviour
     public void HealthRestore(float amount)
     {
         playerHealth += amount;
+        healthBar.SetHealth(playerHealth);
     }
 
     private void Attack()
