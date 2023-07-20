@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour
     private bool noEnergy;
     private GameObject house;
     private GameObject houseSpawnPoint;
-    //private GameObject repairedHouse;
     public GameObject bodyShape;
     private GameObject interactText;
 
@@ -66,8 +65,10 @@ public class PlayerController : MonoBehaviour
     public TMP_Text DayTMP_Text;
     public TMP_Text RemaningTMP_Text;
     public TMP_Text SurvivedTMP_Text;
-    public TMP_Text enemyNumberText;
-    public TMP_Text enemyNumberText2;
+    public TMP_Text enemyText;
+    public TMP_Text enemyAmountText;   
+    public TMP_Text houseUnderAttackText;
+    public TMP_Text enemyDirectionText;
 
     public GameObject DarkenGameObject;
 
@@ -86,6 +87,7 @@ public class PlayerController : MonoBehaviour
     private bool playerDead = false;
     public float health = 100.0f;
     private float respawnTimer = 0.0f;
+    private int lastAmount = 0;
 
     // Start is called before the first frame update
     void Awake()
@@ -125,7 +127,6 @@ public class PlayerController : MonoBehaviour
         {
             house = GameObject.Find("House");
             houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
-            //repairedHouse = house.transform.Find("Repaired House").gameObject;
             interactText = house.transform.Find("Floating Text").gameObject;
         }
 
@@ -406,10 +407,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void DisplayEnemiesDirection(LevelManager.SPAWNDIRECTION direction)
+    {
+        enemyDirectionText.text = "The enemies are coming from the " + direction.ToString();
+        GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
+    }
+
     public void EnemiesTextControl()
     {
-        //if (enemyList.Count > 0)
-        if (enemyNumberText)
+        if (enemyAmountText)
         {
             int goblinsInt = 0;
 
@@ -419,9 +425,15 @@ public class PlayerController : MonoBehaviour
                 {
                     goblinsInt++;
                 }
+            }           
+
+            if (lastAmount != goblinsInt)
+            {
+                GameManager.PlayAnimation(enemyAmountText.GetComponent<Animation>(), "EnemyAmount");
+                lastAmount = goblinsInt;
             }
 
-            enemyNumberText.text = goblinsInt.ToString();
+            enemyAmountText.text = goblinsInt.ToString();
 
             if (LevelManager.global.newDay)
             {
@@ -438,8 +450,8 @@ public class PlayerController : MonoBehaviour
         {
             //   Debug.Log(fraction);
             fraction = LevelManager.global.DaylightTimer / 180.0f;
-            enemyNumberText.color = LevelManager.global.textGradient.Evaluate(fraction);
-            enemyNumberText2.color = LevelManager.global.textGradient.Evaluate(fraction);
+            enemyText.color = LevelManager.global.textGradient.Evaluate(fraction);
+            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(fraction);
             yield return null;
         }
     }
