@@ -9,20 +9,37 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController global;
-    // Player Variables
-    [Header("Player Variables")]
-    public float playerCurrSpeed = 5f;
-    public float playerMaxSpeed = 5f;
-    public float playerSlowedSpeed = 5f;
+
+    // Components
+    CharacterController playerCC;
+    public Animator CharacterAnimator;
+
+    // Speed
+    public float playerCurrentSpeed = 0f;
+    private float playerWalkSpeed = 5.0f;
+    private float playerSprintSpeed = 8.0f;
+    public bool running = false;
+    private float runTimer = 0.0f;
+    private bool canRun = true;
+
+    // Gravity
     public float playerGravMultiplier = 3f;
-    public float playerJumpHeight = 10f;
-    public float playerEnergy = 100f;
-    public float maxPlayerEnergy = 100f;
-
-    public Image playerEnergyBarImage;
-
     private float playerGrav = -9.81f;
-    private float playerVelocity;
+    private float playerVelocity;   
+
+    // Energy
+    private float playerEnergy = 0f;
+    private float maxPlayerEnergy = 100f;
+    public Image playerEnergyBarImage;
+    private float energySpeed = 12.5f;
+
+    // Health
+    private bool deathEffects = false;
+    private bool playerDead = false;
+    public float health = 0.0f;
+    private float maxHealth = 100.0f;
+
+    //public float playerJumpHeight = 10f;
 
     // Attacks
     public float attackDamage = 0.5f;
@@ -31,29 +48,26 @@ public class PlayerController : MonoBehaviour
     public float comboTimer = 0.0f;
     private float resetCombo = 1.0f;
     public int attackCount = 0;
+    public List<Transform> enemyList = new List<Transform>();
 
-    CharacterController playerCC;
-    public Animator CharacterAnimator;
-
+    // States
     [Header("Player States")]
     public bool playerCanMove = true;
     public bool playerisMoving = false;
     public bool attacking = false;
 
-    public List<Transform> enemyList = new List<Transform>();
-
-    // Variable for movement direction
+    // Movement
     private Vector3 moveDirection;
 
-    private bool noEnergy;
     private GameObject house;
     private GameObject houseSpawnPoint;
-    //private GameObject repairedHouse;
     public GameObject bodyShape;
     private GameObject interactText;
 
+    // VFXs
     private VisualEffect VFXSlash;
     private VisualEffect VFXSleeping;
+
 
     public GameObject AxeGameObject;
     public GameObject HammerGameObject;
@@ -62,12 +76,16 @@ public class PlayerController : MonoBehaviour
     public GameObject RadiusGameObject;
     private GameObject RadiusCamGameObject;
     public GameObject PauseCanvasGameObject;
+
     bool PausedBool;
+
     public TMP_Text DayTMP_Text;
     public TMP_Text RemaningTMP_Text;
     public TMP_Text SurvivedTMP_Text;
-    public TMP_Text enemyNumberText;
-    public TMP_Text enemyNumberText2;
+    public TMP_Text enemyText;
+    public TMP_Text enemyAmountText;   
+    public TMP_Text houseUnderAttackText;
+    public TMP_Text enemyDirectionText;
 
     public GameObject DarkenGameObject;
 
@@ -82,10 +100,8 @@ public class PlayerController : MonoBehaviour
         public bool SwordBool;
     }
 
-    private bool deathEffects = false;
-    private bool playerDead = false;
-    public float health = 100.0f;
     private float respawnTimer = 0.0f;
+    private int lastAmount = 0;
 
     // Start is called before the first frame update
     void Awake()
@@ -111,10 +127,7 @@ public class PlayerController : MonoBehaviour
         VFXSleeping = manager.transform.Find("VFX").Find("VFX_Sleeping").GetComponent<VisualEffect>();
 
         VFXSlash.Stop();
-        VFXSleeping.Stop();
-
-        playerEnergy = maxPlayerEnergy;
-        playerEnergyBarImage.fillAmount = 0.935f;
+        VFXSleeping.Stop();       
 
         if (GameObject.Find("Radius Camera"))
         {
@@ -125,11 +138,15 @@ public class PlayerController : MonoBehaviour
         {
             house = GameObject.Find("House");
             houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
-            //repairedHouse = house.transform.Find("Repaired House").gameObject;
             interactText = house.transform.Find("Floating Text").gameObject;
         }
 
         RadiusGameObject.transform.localScale = new Vector3(PlayerModeHandler.global.distanceAwayFromPlayer * 2, 0.1f, PlayerModeHandler.global.distanceAwayFromPlayer * 2);
+
+        playerCurrentSpeed = playerWalkSpeed;
+        playerEnergy = maxPlayerEnergy;
+        playerEnergyBarImage.fillAmount = 0.935f;
+        health = maxHealth;
     }
 
     public void ChangeTool(ToolData toolData)
@@ -145,52 +162,83 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void HandleSpeed()
     {
-        // Only take input if movement isn't inhibited
-
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.LeftShift) && canRun && CharacterAnimator.GetBool("Moving") == true)
         {
-            PauseVoid(!PausedBool);
+            running = true;
+        }
+        else
+        {
+            running = false;
+        }
+       
+        if (running)
+        {
+            playerCurrentSpeed = playerSprintSpeed;
+            CharacterAnimator.speed = 1.6f;
+        }
+        else
+        {
+            playerCurrentSpeed = playerWalkSpeed;
+            CharacterAnimator.speed = 1.0f;
         }
 
-        if (playerCanMove)
+        if (!canRun)
         {
-            // Local veriables for input keys
-            float horizontalMovement = Input.GetAxis("Horizontal");
-            float verticalMovement = Input.GetAxis("Vertical");
-
-            Jump();
-            ApplyGravity();
-            ApplyMovement(horizontalMovement, verticalMovement);
-            Attack();
+            runTimer += Time.deltaTime;
+            if (runTimer > 2.5f)
+            {
+                canRun = true;
+                runTimer = 0;
+            }
         }
+    }
+
+    private void HandleEnergy()
+    {
+        if (running)
+        {
+            playerEnergy -= energySpeed * Time.deltaTime;
+        }
+        else
+        {
+            playerEnergy += energySpeed * Time.deltaTime;
+        }
+
+        playerEnergyBarImage.fillAmount = Mathf.Lerp(0.320f, 0.935f, playerEnergy / maxPlayerEnergy);
 
         if (playerEnergy >= maxPlayerEnergy)
         {
             playerEnergy = maxPlayerEnergy;
             playerEnergyBarImage.fillAmount = 0.935f;
         }
-
-        playerEnergyBarImage.fillAmount = Mathf.Lerp(0.320f, 0.935f, playerEnergy / maxPlayerEnergy);
-
-        noEnergy = playerEnergy <= 0;
-        playerCurrSpeed = noEnergy ? playerSlowedSpeed : playerMaxSpeed;
-
-        if (noEnergy)
+        else if (playerEnergy <= 0)
         {
             playerEnergy = 0;
-
-            if (CharacterAnimator.GetBool("Moving") == true)
-            {
-                CharacterAnimator.speed = 0.75f;
-            }
-            else
-            {
-                CharacterAnimator.speed = 1.0f;
-            }
+            canRun = false;            
         }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseVoid(!PausedBool);
+        }        
+
+        if (playerCanMove)
+        {
+            float horizontalMovement = Input.GetAxis("Horizontal");
+            float verticalMovement = Input.GetAxis("Vertical");
+
+            HandleSpeed();
+            HandleEnergy();
+            ApplyGravity();
+            ApplyMovement(horizontalMovement, verticalMovement);
+            Attack();
+        }   
 
         if (attacking)
         {
@@ -219,8 +267,6 @@ public class PlayerController : MonoBehaviour
         }       
     }
 
-
-
     public void PauseVoid(bool pauseBool)
     {
         PauseCanvasGameObject.SetActive(pauseBool);
@@ -245,7 +291,7 @@ public class PlayerController : MonoBehaviour
                 moveDirection.Normalize();
             }
 
-            moveDirection *= playerCurrSpeed;
+            moveDirection *= playerCurrentSpeed;
 
             moveDirection = Quaternion.AngleAxis(45, Vector3.up) * moveDirection;
 
@@ -265,17 +311,6 @@ public class PlayerController : MonoBehaviour
         playerCC.Move(moveDirection * Time.deltaTime);
     }
 
-    private void Jump()
-    {
-        if (!playerCC.isGrounded) return;
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            playerVelocity += playerJumpHeight;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerJumpSound);
-        }
-    }
-
     private void ApplyGravity()
     {
         // Run gravity
@@ -291,20 +326,9 @@ public class PlayerController : MonoBehaviour
         moveDirection.y = playerVelocity;
     }
 
-    public void ApplyEnergyDamage(float amount, bool _attacking)
+    public void HealthRestore(float amount)
     {
-        if (!_attacking)
-        {
-            CharacterAnimator.ResetTrigger("Swing");
-            CharacterAnimator.SetTrigger("Swing");
-        }
-
-        playerEnergy -= amount;
-    }
-
-    public void ApplyEnergyRestore(float amount)
-    {
-        playerEnergy += amount;
+        health += amount;
     }
 
     private void Attack()
@@ -325,21 +349,18 @@ public class PlayerController : MonoBehaviour
             {
                 CharacterAnimator.SetTrigger("Swing");
                 attackCount++;
-                ApplyEnergyDamage(2.0f, true);
             }
             else if (attackCount == 1)
             {
                 comboTimer = 0;
                 CharacterAnimator.SetTrigger("Swing2"); // Play different animation here
                 attackCount++;
-                ApplyEnergyDamage(3.0f, true);
             }
             else if (attackCount == 2)
             {
                 comboTimer = 0;
                 CharacterAnimator.SetTrigger("Swing3"); // Play different animation here
                 attackCount = 0;
-                ApplyEnergyDamage(5.0f, true);
             }
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
@@ -406,10 +427,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void DisplayEnemiesDirection(LevelManager.SPAWNDIRECTION direction)
+    {
+        enemyDirectionText.text = "The enemies are coming from the " + direction.ToString();
+        GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
+    }
+
     public void EnemiesTextControl()
     {
-        //if (enemyList.Count > 0)
-        if (enemyNumberText)
+        if (enemyAmountText)
         {
             int goblinsInt = 0;
 
@@ -419,9 +445,15 @@ public class PlayerController : MonoBehaviour
                 {
                     goblinsInt++;
                 }
+            }           
+
+            if (lastAmount != goblinsInt)
+            {
+                GameManager.PlayAnimation(enemyAmountText.GetComponent<Animation>(), "EnemyAmount");
+                lastAmount = goblinsInt;
             }
 
-            enemyNumberText.text = goblinsInt.ToString();
+            enemyAmountText.text = goblinsInt.ToString();
 
             if (LevelManager.global.newDay)
             {
@@ -438,8 +470,8 @@ public class PlayerController : MonoBehaviour
         {
             //   Debug.Log(fraction);
             fraction = LevelManager.global.DaylightTimer / 180.0f;
-            enemyNumberText.color = LevelManager.global.textGradient.Evaluate(fraction);
-            enemyNumberText2.color = LevelManager.global.textGradient.Evaluate(fraction);
+            enemyText.color = LevelManager.global.textGradient.Evaluate(fraction);
+            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(fraction);
             yield return null;
         }
     }
