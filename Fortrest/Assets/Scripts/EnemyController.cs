@@ -151,7 +151,7 @@ public class EnemyController : MonoBehaviour
         }
         else if (currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.goblin)
         {
-            if (Boar.global.mounted == true)
+            if (PlayerController.global.playerEnergy <= 0 || Boar.global.mounted == true)
             {
                 chasing = false;
             }
@@ -487,7 +487,7 @@ public class EnemyController : MonoBehaviour
         if (bestTarget == playerPosition || bestTarget == Boar.global.transform)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
-            playerPosition.GetComponent<PlayerController>().health -= 5;
+            playerPosition.GetComponent<PlayerController>().playerEnergy -= 5;
         }
         else
         {

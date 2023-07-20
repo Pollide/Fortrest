@@ -18,6 +18,6 @@ public class DragableEvents : MonoBehaviour
     {
         InventoryManager.global.RemoveItem("Apple");
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.PlayerEatSound : GameManager.global.EatingSound);
-        PlayerController.global.HealthRestore(5);
+        PlayerController.global.ApplyEnergyRestore(5);
     }
 }

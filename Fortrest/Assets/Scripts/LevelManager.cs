@@ -59,7 +59,7 @@ public class LevelManager : MonoBehaviour
 
     public List<Transform> TerrainList = new List<Transform>();
 
-    public enum SPAWNDIRECTION
+    private enum SPAWNDIRECTION
     {
         North = 1,
         South,
@@ -67,10 +67,9 @@ public class LevelManager : MonoBehaviour
         East
     };
 
-    public SPAWNDIRECTION spawnDir;
-
+    private SPAWNDIRECTION spawnDir;
     private float direction;
-    public bool directionEstablished = false;
+    private bool directionEstablished = false;
     private Transform houseTransform;
     private Vector3 enemySpawnPosition;
     bool housePosObtained = false;
@@ -83,6 +82,7 @@ public class LevelManager : MonoBehaviour
 
         if (!GameManager.global)
         {
+            // if()
             PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
@@ -184,7 +184,7 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = 10.0f; // FOR TESTING
+        daySpeed = 15.0f; // FOR TESTING
         //daySpeed = ReturnNight() ? 2 : 1;       
 
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
@@ -211,7 +211,8 @@ public class LevelManager : MonoBehaviour
         {          
             if (!directionEstablished)
             {
-                direction = Random.Range(1, 4);
+                //direction = Random.Range(1, 4);
+                direction = 4;
                 switch (direction)
                 {
                     case 1:
@@ -250,13 +251,12 @@ public class LevelManager : MonoBehaviour
                         break;
                 }
 
-                PlayerController.global.DisplayEnemiesDirection(spawnDir);
                 directionEstablished = true;
             }
             
             if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = 10.0f; // FOR TESTING
+                GoblinThreshold = 1.0f; // FOR TESTING
                 //GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
                 if (GoblinThreshold < 0.5f)
                 {
@@ -346,8 +346,7 @@ public class LevelManager : MonoBehaviour
 
                     NaturalBuildingList[i].healthBarImage.fillAmount = Mathf.Clamp(NaturalBuildingList[i].health / NaturalBuildingList[i].maxHealth, 0, 1f);
 
-                    PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
-                    PlayerController.global.CharacterAnimator.SetTrigger("Swing");
+                    PlayerController.global.ApplyEnergyDamage(NaturalBuildingList[i].energyConsumptionPerClick, false);
                 }
             }
         }
