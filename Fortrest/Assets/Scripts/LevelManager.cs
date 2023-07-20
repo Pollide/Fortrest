@@ -72,6 +72,8 @@ public class LevelManager : MonoBehaviour
     private bool directionEstablished = false;
     private Transform houseTransform;
     private Vector3 enemySpawnPosition;
+    bool housePosObtained = false;
+    private float spawnDistance = 39.0f;
 
     private void Awake()
     {
@@ -117,23 +119,18 @@ public class LevelManager : MonoBehaviour
         SurvivedTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("Game Over").Find("Remaining Text").GetComponent<TMP_Text>();
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
-        */
-
-        GetHousePosition();
+        */       
     }
 
     private void GetHousePosition()
     {
-        bool positionAcquired = false;
-        if (!positionAcquired)
+        for (int i = 0; i < BuildingList.Count; i++)
         {
-            for (int i = 0; i < BuildingList.Count; i++)
+            if (BuildingList[i].GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
             {
-                if (BuildingList[i].GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
-                {
-                    houseTransform = BuildingList[i].transform.parent.transform;
-                    positionAcquired = true;
-                }
+                houseTransform = BuildingList[i].transform.parent.transform;
+                housePosObtained = true;
+                break;
             }
         }
     }
@@ -152,6 +149,11 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
+        if (!housePosObtained)
+        {
+            GetHousePosition();
+        }
+        
         LockCursor();
         /*
         if (TerrainList != null)
@@ -182,7 +184,7 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = 8.0f; // FOR TESTING
+        daySpeed = 15.0f; // FOR TESTING
         //daySpeed = ReturnNight() ? 2 : 1;       
 
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
@@ -209,6 +211,7 @@ public class LevelManager : MonoBehaviour
         {          
             if (!directionEstablished)
             {
+                //direction = Random.Range(1, 4);
                 direction = 4;
                 switch (direction)
                 {
@@ -233,16 +236,16 @@ public class LevelManager : MonoBehaviour
                 switch (spawnDir)
                 {
                     case SPAWNDIRECTION.North:
-                        enemySpawnPosition += new Vector3(40.0f, 0.0f, 40.0f);
+                        enemySpawnPosition += new Vector3(spawnDistance, 0.0f, spawnDistance);
                         break;
                     case SPAWNDIRECTION.South:
-                        enemySpawnPosition += new Vector3(-20.0f, 0.0f, -40.0f);
+                        enemySpawnPosition += new Vector3(-spawnDistance, 0.0f, -spawnDistance);
                         break;
                     case SPAWNDIRECTION.West:
-                        enemySpawnPosition += new Vector3(-20.0f, 0.0f, 20.0f);
+                        enemySpawnPosition += new Vector3(-spawnDistance, 0.0f, spawnDistance);
                         break;
                     case SPAWNDIRECTION.East:
-                        enemySpawnPosition += new Vector3(40.0f, 0.0f, -40.0f);
+                        enemySpawnPosition += new Vector3(spawnDistance, 0.0f, -spawnDistance);
                         break;
                     default:
                         break;
@@ -261,21 +264,14 @@ public class LevelManager : MonoBehaviour
                 }
                 GoblinTimer = 0;
 
-                if (spawnDir != SPAWNDIRECTION.South)
-                {
-                    enemySpawnPosition.x += Random.Range(-5, 5);
-
-                    enemySpawnPosition.z += Random.Range(-5, 5);
-                }
-                else
-                {
-                    enemySpawnPosition.x += Random.Range(0, 5);
-
-                    enemySpawnPosition.z += Random.Range(0, 5);
-                }
-                
+                enemySpawnPosition.x += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);
+                enemySpawnPosition.z += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);                
 
                 GameObject prefab = GoblinGameObject;
+
+                enemySpawnPosition.y = 0.0f;
+
+                enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition) - 16.0f; // 16 is the magic number for this to work          
 
                 if (day > 1 && Random.Range(0, 3) == 0)
                 {
@@ -297,8 +293,6 @@ public class LevelManager : MonoBehaviour
         {
             NightLightGameObject.SetActive(ReturnNight());
         }
-
-
 
         //   Debug.Log(LanternSkinnedRenderer.materials[2] + " " + (LanternSkinnedRenderer.materials[2] == (ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial)));
 
