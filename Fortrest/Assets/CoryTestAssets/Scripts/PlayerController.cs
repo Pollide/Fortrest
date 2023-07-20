@@ -353,27 +353,40 @@ public class PlayerController : MonoBehaviour
             if (attackCount == 0)
             {
                 CharacterAnimator.SetTrigger("Swing");
-                attackCount++;
+                //attackCount++;
             }
             else if (attackCount == 1)
             {
                 comboTimer = 0;
                 CharacterAnimator.SetTrigger("Swing2"); // Play different animation here
-                attackCount++;
+                //attackCount++;
             }
             else if (attackCount == 2)
             {
                 comboTimer = 0;
                 CharacterAnimator.SetTrigger("Swing3"); // Play different animation here
-                attackCount = 0;
-            }
-
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
-            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
-            VFXSlash.transform.position = transform.position;
-            VFXSlash.transform.eulerAngles = transform.eulerAngles;
-            VFXSlash.Play();
+                //attackCount = 0;
+            }                              
         }
+    }
+
+    public void PlaySlashVFX()
+    {
+        VFXSlash.transform.position = transform.position;
+        VFXSlash.transform.eulerAngles = transform.eulerAngles;
+        if (attackCount == 0 || attackCount == 2)
+        {
+            VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y - 15.0f, transform.eulerAngles.z + 180.0f);
+        }
+        else if (attackCount == 1)
+        {
+            VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
+        }
+        
+        VFXSlash.Play();
+        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
+        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
+        attackCount++;
     }
 
     public IEnumerator FreezeTime()

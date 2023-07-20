@@ -6,7 +6,7 @@ public class PlayerSteps : MonoBehaviour
 {
     void Attack()
     {
-        
+        PlayerController.global.PlaySlashVFX();
     }
 
     void StepOne()
