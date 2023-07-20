@@ -6,7 +6,11 @@ public class PlayerSteps : MonoBehaviour
 {
     void Attack()
     {
-        PlayerController.global.PlaySlashVFX();
+        PlayerController.global.AttackEffects();
+    }
+    void Gather()
+    {
+        PlayerController.global.GatheringEffects();
     }
 
     void StepOne()

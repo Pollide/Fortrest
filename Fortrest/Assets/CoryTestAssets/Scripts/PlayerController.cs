@@ -370,7 +370,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void PlaySlashVFX()
+    public void AttackEffects()
     {
         VFXSlash.transform.position = transform.position;
         VFXSlash.transform.eulerAngles = transform.eulerAngles;
@@ -384,9 +384,24 @@ public class PlayerController : MonoBehaviour
         }
         
         VFXSlash.Play();
-        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
-        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
+        if (SwordGameObject.activeSelf)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
+            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
+        }      
         attackCount++;
+    }
+
+    public void GatheringEffects()
+    {
+        if (AxeGameObject.activeSelf)
+        {
+            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
+        }
+        else if (PicaxeGameObject.activeSelf)
+        {
+            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
+        }
     }
 
     public IEnumerator FreezeTime()

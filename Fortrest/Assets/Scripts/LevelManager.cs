@@ -322,14 +322,12 @@ public class LevelManager : MonoBehaviour
                             VFXSparks.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
                             VFXSparks.Play();
                             VFXPebble.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
-                            VFXPebble.Play();
-                            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
+                            VFXPebble.Play();                           
                         }
                         else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
                         {
                             VFXWoodChip.transform.position = PlayerController.global.AxeGameObject.transform.position;
-                            VFXWoodChip.Play();
-                            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
+                            VFXWoodChip.Play();                           
                         }
                         else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Food)
                         {
