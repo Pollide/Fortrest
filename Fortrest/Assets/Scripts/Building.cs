@@ -39,7 +39,6 @@ public class Building : MonoBehaviour
     [HideInInspector]
     public float health;
     public float maxHealth = 5;
-    public float energyConsumptionPerClick = 2;
     public int resourceAmount = 5;
     public int constructionCostWood = 5;
     public int constructionCostStone = 5;
