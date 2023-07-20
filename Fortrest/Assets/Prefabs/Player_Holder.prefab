@@ -1616,7 +1616,7 @@ MonoBehaviour:
   running: 0
   playerGravMultiplier: 2
   playerEnergyBarImage: {fileID: 7658975014858843245}
-  health: 100
+  playerHealth: 0
   attackDamage: 0.5
   attackTimer: 0
   comboTimer: 0
@@ -1641,6 +1641,7 @@ MonoBehaviour:
   enemyDirectionText: {fileID: 5011658340423722203}
   DarkenGameObject: {fileID: 2127865250632510180}
   UIAnimation: {fileID: 8602729549476735322}
+  healthBar: {fileID: 6507117353665589282}
 --- !u!143 &5569601162832024542
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2961,6 +2962,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1816175240677911538, guid: cd0bc9715f16c5347a569bae16ef1c71,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1816175240677911538, guid: cd0bc9715f16c5347a569bae16ef1c71,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3363332162941358673, guid: cd0bc9715f16c5347a569bae16ef1c71,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -3519,6 +3530,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6507117353665589282 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1183273785879369154, guid: cd0bc9715f16c5347a569bae16ef1c71,
+    type: 3}
+  m_PrefabInstance: {fileID: 5343021766280963552}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &6790879887408077513 stripped

@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     // Health
     private bool deathEffects = false;
     private bool playerDead = false;
-    public float health = 0.0f;
+    public float playerHealth = 0.0f;
     private float maxHealth = 100.0f;
 
     //public float playerJumpHeight = 10f;
@@ -103,6 +103,8 @@ public class PlayerController : MonoBehaviour
     private float respawnTimer = 0.0f;
     private int lastAmount = 0;
 
+    public HealthBar healthBar;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -146,7 +148,9 @@ public class PlayerController : MonoBehaviour
         playerCurrentSpeed = playerWalkSpeed;
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
-        health = maxHealth;
+        playerHealth = maxHealth;
+
+        healthBar.SetMaxHealth(maxHealth);
     }
 
     public void ChangeTool(ToolData toolData)
@@ -261,7 +265,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (health <= 0)
+        if (playerHealth <= 0)
         {
             Death();
         }       
@@ -328,7 +332,7 @@ public class PlayerController : MonoBehaviour
 
     public void HealthRestore(float amount)
     {
-        health += amount;
+        playerHealth += amount;
     }
 
     private void Attack()
@@ -510,7 +514,8 @@ public class PlayerController : MonoBehaviour
                     deathEffects = false;
                     respawnTimer = 0.0f;
                     LevelManager.FloatingTextChange(interactText, false);
-                    health = 100.0f;
+                    playerHealth = 100.0f;
+                    healthBar.SetHealth(playerHealth);
                 }
             }           
         }
@@ -538,5 +543,11 @@ public class PlayerController : MonoBehaviour
     public void SecondStep()
     {
         GameManager.global.SoundManager.PlaySound(GameManager.global.Footstep2Sound, 0.05f);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        playerHealth -= damage;
+        healthBar.SetHealth(playerHealth);
     }
 }

@@ -184,7 +184,7 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = 1.0f; // FOR TESTING
+        daySpeed = 15.0f; // FOR TESTING
         //daySpeed = ReturnNight() ? 2 : 1;       
 
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
@@ -256,7 +256,7 @@ public class LevelManager : MonoBehaviour
             
             if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = 100.0f; // FOR TESTING
+                GoblinThreshold = 10.0f; // FOR TESTING
                 //GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
                 if (GoblinThreshold < 0.5f)
                 {

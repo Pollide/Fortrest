@@ -42,6 +42,8 @@ public class EnemyController : MonoBehaviour
     public Animator ActiveAnimator;
     KnockBack knockBackScript;
 
+    private float enemyDamage;
+
     public enum ENEMYTYPE
     {
         goblin = 1,
@@ -423,6 +425,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 1.75f;
             agent.stoppingDistance = 2.0f;
             offset = 0.25f;
+            enemyDamage = 3.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.spider)
         {
@@ -433,6 +436,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 2.5f;
             offset = 0.3f;
+            enemyDamage = 4.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
@@ -443,6 +447,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
+            enemyDamage = 7.5f;
         }
         else if (currentEnemyType == ENEMYTYPE.ogre)
         {
@@ -453,6 +458,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 6.0f;
             agent.stoppingDistance = 4.5f;
             offset = 0.2f;
+            enemyDamage = 10.0f;
         }
         health = maxHealth;
         speed = agent.speed;
@@ -487,7 +493,7 @@ public class EnemyController : MonoBehaviour
         if (bestTarget == playerPosition || bestTarget == Boar.global.transform)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
-            playerPosition.GetComponent<PlayerController>().health -= 5;
+            PlayerController.global.TakeDamage(enemyDamage);
         }
         else
         {
