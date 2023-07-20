@@ -184,7 +184,7 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = 15.0f; // FOR TESTING
+        daySpeed = 10.0f; // FOR TESTING
         //daySpeed = ReturnNight() ? 2 : 1;       
 
         DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
