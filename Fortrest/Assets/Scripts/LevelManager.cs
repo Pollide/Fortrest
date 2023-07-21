@@ -43,14 +43,8 @@ public class LevelManager : MonoBehaviour
     public GameObject GoblinGameObject;
     public GameObject OgreGameObject;
     public GameObject SpiderGameObject;
-    public List<Building> NaturalBuildingList = new List<Building>();
-    private float gatherCooldown = 0.75f;
-    private float nextGather;
 
-    public VisualEffect VFXSparks;
-    public VisualEffect VFXPebble;
     public VisualEffect VFXSmokePuff;
-    public VisualEffect VFXWoodChip;
 
     [HideInInspector]
     public bool newDay = false;
@@ -97,10 +91,6 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         ActiveBiomeMusic = GameManager.global.GameMusic;
-        VFXSparks.Stop();
-        VFXPebble.Stop();
-        VFXSmokePuff.Stop();
-        VFXWoodChip.Stop();
         newDay = true;
 
         PlayerController playerController = PlayerController.global;
@@ -113,13 +103,14 @@ public class LevelManager : MonoBehaviour
         LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
 
+        VFXSmokePuff.Stop();
         /*
         DayTMP_Text = PlayerController.global..GetComponent<TMP_Text>();
         RemaningTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("New Day").Find("Remaining Text").GetComponent<TMP_Text>();
         SurvivedTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("Game Over").Find("Remaining Text").GetComponent<TMP_Text>();
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
-        */       
+        */
     }
 
     private void GetHousePosition()
@@ -301,54 +292,6 @@ public class LevelManager : MonoBehaviour
         mats[2] = ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial;
 
         LanternSkinnedRenderer.materials = mats;
-
-        for (int i = 0; i < NaturalBuildingList.Count; i++)
-        {
-            if (NaturalBuildingList[i])
-            {
-                float minDistanceFloat = 4;
-
-                float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, NaturalBuildingList[i].transform.position);
-                if (distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
-                {
-                    bool isStoneBool = NaturalBuildingList[i].resourceObject == Building.BuildingType.Stone;
-                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = !isStoneBool, PicaxeBool = isStoneBool });
-                    nextGather = Time.time + gatherCooldown;
-
-                    if (NaturalBuildingList[i].health > 1)
-                    {
-                        if (isStoneBool)
-                        {
-                            VFXSparks.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
-                            VFXSparks.Play();
-                            VFXPebble.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
-                            VFXPebble.Play();                           
-                        }
-                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
-                        {
-                            VFXWoodChip.transform.position = PlayerController.global.AxeGameObject.transform.position;
-                            VFXWoodChip.Play();                           
-                        }
-                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Food)
-                        {
-                            GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
-                        }
-
-                        NaturalBuildingList[i].TakeDamage(1);
-                    }
-                    else
-                    {
-                        NaturalBuildingList[i].GiveResources();
-                        NaturalBuildingList[i].DestroyBuilding();
-                    }
-
-                    NaturalBuildingList[i].healthBarImage.fillAmount = Mathf.Clamp(NaturalBuildingList[i].health / NaturalBuildingList[i].maxHealth, 0, 1f);
-
-                    PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
-                    PlayerController.global.CharacterAnimator.SetTrigger("Swing");
-                }
-            }
-        }
 
         if (PlayerController.global.transform.position.y < -3)
         {

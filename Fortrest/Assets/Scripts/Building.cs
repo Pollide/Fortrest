@@ -25,7 +25,7 @@ public class Building : MonoBehaviour
         CannonBP,
         Wood,
         Stone,
-        Food,
+        Bush,
         House,
         HardWood,
         CoarseWood,
@@ -82,7 +82,7 @@ public class Building : MonoBehaviour
         else //the house itself is not part of the buildings list
         {
             if (NaturalBool)
-                LevelManager.global.NaturalBuildingList.Add(this);
+                PlayerController.global.resourcesList.Add(this);
             else
                 LevelManager.global.BuildingList.Add(transform);
         }
@@ -148,6 +148,7 @@ public class Building : MonoBehaviour
             }
             Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
         }
+        PlayerController.global.currentResource = null;
     }
 
     void NowDestroy()
@@ -160,7 +161,7 @@ public class Building : MonoBehaviour
         else
         {
             Destroy(gameObject);
-            LevelManager.global.NaturalBuildingList.Remove(this);
+            PlayerController.global.resourcesList.Remove(this);
         }
     }
 

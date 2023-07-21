@@ -49,6 +49,10 @@ public class PlayerController : MonoBehaviour
     private float resetCombo = 1.0f;
     public int attackCount = 0;
     public List<Transform> enemyList = new List<Transform>();
+    public List<Building> resourcesList = new List<Building>();
+    public Building currentResource;
+    private float gatherTimer = 0.0f;
+    private float resetGather = 0.75f;
 
     // States
     [Header("Player States")]
@@ -67,6 +71,9 @@ public class PlayerController : MonoBehaviour
     // VFXs
     private VisualEffect VFXSlash;
     private VisualEffect VFXSleeping;
+    private VisualEffect VFXSparks;
+    private VisualEffect VFXPebble;
+    private VisualEffect VFXWoodChip;
 
 
     public GameObject AxeGameObject;
@@ -127,29 +134,31 @@ public class PlayerController : MonoBehaviour
         LevelManager manager = LevelManager.global;
         VFXSlash = manager.transform.Find("VFX").Find("VFX_Slash").GetComponent<VisualEffect>();
         VFXSleeping = manager.transform.Find("VFX").Find("VFX_Sleeping").GetComponent<VisualEffect>();
-
+        VFXSparks = manager.transform.Find("VFX").Find("VFX_Sparks").GetComponent<VisualEffect>();
+        VFXPebble = manager.transform.Find("VFX").Find("VFX_Pebble").GetComponent<VisualEffect>();
+        VFXWoodChip = manager.transform.Find("VFX").Find("VFX_Woodchips").GetComponent<VisualEffect>();
         VFXSlash.Stop();
-        VFXSleeping.Stop();       
+        VFXSleeping.Stop();
+        VFXSparks.Stop();
+        VFXPebble.Stop();
+        VFXWoodChip.Stop();
 
         if (GameObject.Find("Radius Camera"))
         {
             RadiusCamGameObject = GameObject.Find("Radius Camera");
         }
-
         if (GameObject.Find("House"))
         {
             house = GameObject.Find("House");
             houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
             interactText = house.transform.Find("Floating Text").gameObject;
         }
-
         RadiusGameObject.transform.localScale = new Vector3(PlayerModeHandler.global.distanceAwayFromPlayer * 2, 0.1f, PlayerModeHandler.global.distanceAwayFromPlayer * 2);
 
         playerCurrentSpeed = playerWalkSpeed;
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         playerHealth = maxHealth;
-
         healthBar.SetMaxHealth(maxHealth);
     }
 
@@ -242,6 +251,7 @@ public class PlayerController : MonoBehaviour
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
             Attack();
+            Gathering();
         }   
 
         if (attacking)
@@ -279,7 +289,7 @@ public class PlayerController : MonoBehaviour
         GameManager.global.MusicManager.PlayMusic(pauseBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
         Time.timeScale = pauseBool ? 0 : 1;
     }
-    // Player movement 
+
     private void ApplyMovement(float _horizontalMove, float _verticalMove)
     {
         playerisMoving = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
@@ -370,6 +380,44 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Gathering()
+    {
+        for (int i = 0; i < resourcesList.Count; i++)
+        {
+            if (resourcesList[i])
+            {
+                float minDistanceFloat = 4;
+                float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, resourcesList[i].transform.position);
+
+                if (distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > gatherTimer)
+                {
+                    gatherTimer = Time.time + resetGather;
+
+                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = resourcesList[i].resourceObject != Building.BuildingType.Stone, PicaxeBool = resourcesList[i].resourceObject == Building.BuildingType.Stone });                    
+
+                    if (resourcesList[i].health > 0)
+                    {
+                        if (resourcesList[i].resourceObject == Building.BuildingType.Stone)
+                        {
+                            VFXSparks.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
+                            VFXSparks.Play();
+                            VFXPebble.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
+                            VFXPebble.Play();
+                        }
+                        else if (resourcesList[i].resourceObject == Building.BuildingType.Wood)
+                        {
+                            VFXWoodChip.transform.position = PlayerController.global.AxeGameObject.transform.position;
+                            VFXWoodChip.Play();
+                        }
+                        currentResource = resourcesList[i];
+                        PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
+                        PlayerController.global.CharacterAnimator.SetTrigger("Swing");
+                    }                               
+                }
+            }
+        }
+    }
+
     public void AttackEffects()
     {
         VFXSlash.transform.position = transform.position;
@@ -402,6 +450,20 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
         }
+        else if (currentResource.resourceObject == Building.BuildingType.Bush)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
+        }
+        if (currentResource != null)
+        {
+            currentResource.TakeDamage(1);
+            currentResource.healthBarImage.fillAmount = Mathf.Clamp(currentResource.health / currentResource.maxHealth, 0, 1f);
+            if (currentResource.health == 0)
+            {
+                currentResource.GiveResources();
+                currentResource.DestroyBuilding();
+            }
+        }             
     }
 
     public IEnumerator FreezeTime()
