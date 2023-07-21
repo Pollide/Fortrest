@@ -24,7 +24,8 @@ public class LevelManager : MonoBehaviour
     bool OnceDetection;
 
     // public List<Transform> EnemyList = new List<Transform>();
-    public List<Transform> BuildingList = new List<Transform>();
+    private List<Transform> BuildingList = new List<Transform>(); //This list is private as now you use ProcessBuildingList((building) => . Do not reference this list any other way. dm to ask how to use
+
     public Transform ResourceHolderTransform;
     public GameObject ActiveBuildingGameObject;
     public Transform DirectionalLightTransform;
@@ -111,17 +112,47 @@ public class LevelManager : MonoBehaviour
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
         */
+
+        if (PlayerPrefs.GetInt("Game File") == 1)
+            GameManager.global.DataSetVoid(true);
     }
 
     private void GetHousePosition()
     {
-        for (int i = 0; i < BuildingList.Count; i++)
+        ProcessBuildingList((building) =>
         {
-            if (BuildingList[i].GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
             {
-                houseTransform = BuildingList[i].transform.parent.transform;
+                houseTransform = building.parent.transform;
                 housePosObtained = true;
-                break;
+                return;
+            }
+        });
+    }
+
+    public void AddBuildingVoid(Transform addTransform)
+    {
+        BuildingList.Add(addTransform);
+    }
+
+    public static void ProcessBuildingList(System.Action<Transform> processAction)
+    {
+        for (int i = 0; i < LevelManager.global.BuildingList.Count; i++)
+        {
+            if (LevelManager.global.BuildingList[i])
+            {
+                if (LevelManager.global.BuildingList[i].GetComponent<Building>())
+                {
+                    processAction(LevelManager.global.BuildingList[i]);
+                }
+                else
+                {
+                    Debug.LogWarning("No building script found!");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("CANNOT BE NULL. Dont destory buildings because then cant be saved!");
             }
         }
     }
@@ -144,7 +175,7 @@ public class LevelManager : MonoBehaviour
         {
             GetHousePosition();
         }
-        
+
         LockCursor();
         /*
         if (TerrainList != null)
@@ -175,11 +206,11 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = 10.0f; // FOR TESTING
-        //daySpeed = ReturnNight() ? 2 : 1;       
+        //daySpeed = 10.0f; // FOR TESTING
+        daySpeed = ReturnNight() ? 2 : 1;
 
-        DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
-
+        //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
+        DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
 
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
@@ -192,6 +223,7 @@ public class LevelManager : MonoBehaviour
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
             GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
             PlayerController.global.NewDay();
+            GameManager.global.DataSetVoid(false);
         }
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
@@ -199,7 +231,7 @@ public class LevelManager : MonoBehaviour
         //   light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0 : 0.4f, Time.deltaTime);
 
         if (ReturnNight())
-        {          
+        {
             if (!directionEstablished)
             {
                 direction = Random.Range(1, 4);
@@ -219,7 +251,7 @@ public class LevelManager : MonoBehaviour
                         break;
                     default:
                         break;
-                }               
+                }
 
                 enemySpawnPosition = houseTransform.position;
 
@@ -244,7 +276,7 @@ public class LevelManager : MonoBehaviour
                 PlayerController.global.DisplayEnemiesDirection(spawnDir);
                 directionEstablished = true;
             }
-            
+
             if (GoblinTimer >= GoblinThreshold)
             {
                 GoblinThreshold = 10.0f; // FOR TESTING
@@ -256,7 +288,7 @@ public class LevelManager : MonoBehaviour
                 GoblinTimer = 0;
 
                 enemySpawnPosition.x += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);
-                enemySpawnPosition.z += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);                
+                enemySpawnPosition.z += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);
 
                 GameObject prefab = GoblinGameObject;
 

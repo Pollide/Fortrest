@@ -66,6 +66,23 @@ public class GameManager : MonoBehaviour
     public AudioClip SlowSound;
     public AudioClip WaterSound;
 
+    public bool DebugSaveBool;
+    public bool DebugLoadBool;
+
+    private void Update()
+    {
+        if (DebugSaveBool)
+        {
+            DebugSaveBool = false;
+            DataSetVoid(false);
+        }
+
+        if (DebugLoadBool)
+        {
+            DebugLoadBool = false;
+            DataSetVoid(true);
+        }
+    }
     //runs on the frame it was awake on
     void Awake()
     {
@@ -385,5 +402,58 @@ public class GameManager : MonoBehaviour
 
         //play the outro loading animation
         state = PlayAnimation(GetComponent<Animation>(), "Load Out");
+    }
+
+
+    public void DataSetVoid(bool load)
+    {
+        if (!load)
+            PlayerPrefs.SetInt("Game File", 1);
+
+        DataPositionVoid("Player", PlayerController.global.transform, load);
+
+        Debug.Log("LOAD: " + load);
+
+        LevelManager.global.DaylightTimer = Pref("Daylight", LevelManager.global.DaylightTimer, load);
+        LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
+
+        LevelManager.ProcessBuildingList((building) =>
+        {
+            DataBuildingVoid(building, load);
+        });
+    }
+
+    float Pref(string pref, float value, bool load)
+    {
+        if (load)
+        {
+            value = PlayerPrefs.GetFloat(pref);
+        }
+        else
+        {
+            PlayerPrefs.SetFloat(pref, value);
+        }
+
+        return value;
+    }
+
+    public void DataBuildingVoid(Transform value, bool load)
+    {
+        Building building = value.GetComponent<Building>();
+        building.health = (int)Pref("Health" + value.GetSiblingIndex(), building.health, load);
+
+        float active = Pref("active" + value.GetSiblingIndex(), building.DestroyedBool ? 1 : 0, load);
+
+        if (load && active == 1)
+            building.DisableInvoke();
+
+    }
+    void DataPositionVoid(string pref, Transform value, bool load)
+    {
+        float x = Pref(pref + "x", value.position.x, load);
+        float y = Pref(pref + "y", value.position.y, load);
+        float z = Pref(pref + "z", value.position.z, load);
+
+        value.position = new Vector3(x, y, z);
     }
 }

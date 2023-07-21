@@ -18,6 +18,7 @@ using UnityEngine.UI;
 public class Building : MonoBehaviour
 {
     public bool NaturalBool;
+    public bool DestroyedBool;
 
     public enum BuildingType
     {
@@ -84,7 +85,7 @@ public class Building : MonoBehaviour
             if (NaturalBool)
                 PlayerController.global.resourcesList.Add(this);
             else
-                LevelManager.global.BuildingList.Add(transform);
+                LevelManager.global.AddBuildingVoid(transform);
         }
     }
 
@@ -136,7 +137,7 @@ public class Building : MonoBehaviour
         if (enabled && GetComponent<Animation>())
         {
             enabled = false;
-
+            DestroyedBool = true;
             if (resourceObject == BuildingType.House)
             {
                 GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
@@ -146,21 +147,21 @@ public class Building : MonoBehaviour
                 PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
             }
-            Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
+            Invoke("DisableInvoke", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
         }
         PlayerController.global.currentResource = null;
     }
 
-    void NowDestroy()
+    public void DisableInvoke()
     {
+        DestroyedBool = true; //also calls in DestroyBuilding
         if (resourceObject == BuildingType.Cannon)
         {
-            Destroy(gameObject.transform.parent.gameObject);
-            LevelManager.global.BuildingList.Remove(transform);
+            transform.parent.gameObject.SetActive(false);
         }
         else
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             PlayerController.global.resourcesList.Remove(this);
         }
     }
@@ -188,7 +189,7 @@ public class Building : MonoBehaviour
     }
 
     private void Update()
-    {        
+    {
         if (resourceObject == BuildingType.House)
         {
             if (health != lastHealth)
@@ -198,8 +199,8 @@ public class Building : MonoBehaviour
                 if (!underAttack)
                 {
                     underAttack = true;
-                    GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttacked");                                       
-                }              
+                    GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttacked");
+                }
             }
             else
             {
@@ -210,9 +211,9 @@ public class Building : MonoBehaviour
                     {
                         underAttack = false;
                         timerText = 0.0f;
-                        GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttackedDisappear");                    
+                        GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttackedDisappear");
                     }
-                }              
+                }
             }
         }
     }
