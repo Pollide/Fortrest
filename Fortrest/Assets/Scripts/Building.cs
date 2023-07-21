@@ -44,6 +44,7 @@ public class Building : MonoBehaviour
     public int constructionCostStone = 5;
 
     public Image healthBarImage;
+    public HealthBar HUDHealthBar;
 
     AnimationState HealthAnimationState;
 
@@ -78,6 +79,7 @@ public class Building : MonoBehaviour
         {
             Indicator.global.AddIndicator(transform, Color.yellow, "Home");
             lastHealth = health;
+            HUDHealthBar.SetMaxHealth(maxHealth);
         }
         else //the house itself is not part of the buildings list
         {
@@ -115,6 +117,10 @@ public class Building : MonoBehaviour
     public void TakeDamage(float amount)
     {
         health -= amount;
+        if (resourceObject == BuildingType.House)
+        {
+            HUDHealthBar.SetHealth(health);
+        }
 
         HealthAnimation();
     }

@@ -111,6 +111,7 @@ public class PlayerController : MonoBehaviour
     private int lastAmount = 0;
 
     public HealthBar healthBar;
+    private bool textAnimated = false;
 
     // Start is called before the first frame update
     void Awake()
@@ -236,6 +237,13 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // FOR TESTING
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            playerHealth = 0.0f;
+            healthBar.SetHealth(playerHealth);
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             PauseVoid(!PausedBool);
@@ -275,7 +283,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (playerHealth <= 0)
+        if (playerHealth <= 0 || playerDead)
         {
             Death();
         }       
@@ -449,13 +457,13 @@ public class PlayerController : MonoBehaviour
         else if (PicaxeGameObject.activeSelf)
         {
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
-        }
-        else if (currentResource.resourceObject == Building.BuildingType.Bush)
-        {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
-        }
+        }       
         if (currentResource != null)
         {
+            if (currentResource.resourceObject == Building.BuildingType.Bush)
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
+            }
             currentResource.TakeDamage(1);
             currentResource.healthBarImage.fillAmount = Mathf.Clamp(currentResource.health / currentResource.maxHealth, 0, 1f);
             if (currentResource.health == 0)
@@ -590,9 +598,15 @@ public class PlayerController : MonoBehaviour
         if (playerDead)
         {
             respawnTimer += Time.deltaTime;
+            playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
+            healthBar.SetHealth(playerHealth);
             if (respawnTimer >= 15.0f)
             {
-                LevelManager.FloatingTextChange(interactText, true);
+                if (!textAnimated)
+                {
+                    LevelManager.FloatingTextChange(interactText, true);
+                    textAnimated = true;
+                }                
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
@@ -605,24 +619,9 @@ public class PlayerController : MonoBehaviour
                     deathEffects = false;
                     respawnTimer = 0.0f;
                     LevelManager.FloatingTextChange(interactText, false);
-                    playerHealth = 100.0f;
-                    healthBar.SetHealth(playerHealth);
+                    textAnimated = false;
                 }
             }           
-        }
-    }
-
-    private bool FacingEnemy(Vector3 enemyPosition) // Making sure the enemy always faces what it is attacking
-    {
-        Vector3 enemyDirection = (enemyPosition - transform.position).normalized; // Gets a direction using a normalized vector
-        float angle = Vector3.Angle(transform.forward, enemyDirection);
-        if (angle > -75.0f && angle < 75.0f)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 
@@ -641,4 +640,18 @@ public class PlayerController : MonoBehaviour
         playerHealth -= damage;
         healthBar.SetHealth(playerHealth);
     }
+
+    //private bool FacingEnemy(Vector3 enemyPosition) // Making sure the enemy always faces what it is attacking
+    //{
+    //    Vector3 enemyDirection = (enemyPosition - transform.position).normalized; // Gets a direction using a normalized vector
+    //    float angle = Vector3.Angle(transform.forward, enemyDirection);
+    //    if (angle > -75.0f && angle < 75.0f)
+    //    {
+    //        return true;
+    //    }
+    //    else
+    //    {
+    //        return false;
+    //    }
+    //}
 }
