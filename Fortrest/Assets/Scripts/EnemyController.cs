@@ -107,19 +107,19 @@ public class EnemyController : MonoBehaviour
     {
         float closest = 9999;
 
-        for (int i = 0; i < LevelManager.global.BuildingList.Count; i++)
-        {
-            if (LevelManager.global.BuildingList[i].GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
-            {
-                float distance = Vector3.Distance(transform.position, LevelManager.global.BuildingList[i].position);
+        LevelManager.ProcessBuildingList((building) =>
+         {
+             if (building.GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+             {
+                 float distance = Vector3.Distance(transform.position, building.position);
 
-                if (distance < closest)
-                {
-                    closest = distance;
-                    house = LevelManager.global.BuildingList[i].gameObject;
-                }
-            }
-        }
+                 if (distance < closest)
+                 {
+                     closest = distance;
+                     house = building.gameObject;
+                 }
+             }
+         });
     }
 
     void Process()
@@ -185,20 +185,19 @@ public class EnemyController : MonoBehaviour
             {
                 if (!bestTarget || bestTarget == playerPosition || bestTarget == Boar.global.transform) // If the enemy does not have a current target
                 {
-                    for (int i = 0; i < LevelManager.global.BuildingList.Count; i++) // Goes through the list of targets
+                    LevelManager.ProcessBuildingList((building) =>
                     {
-                        if (LevelManager.global.BuildingList[i] != null)
+
+                        float compare = Vector3.Distance(transform.position, building.position); // Distance from enemy to each target
+
+                        if (compare < shortestDistance) // Only true if a new shorter distance is found
                         {
-                            float compare = Vector3.Distance(transform.position, LevelManager.global.BuildingList[i].transform.position); // Distance from enemy to each target
+                            shortestDistance = compare; // New shortest distance is assigned
+                            bestTarget = building; // Enemy's target is now the closest item in the list
 
-                            if (compare < shortestDistance) // Only true if a new shorter distance is found
-                            {
-                                shortestDistance = compare; // New shortest distance is assigned
-                                bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
-
-                            }
                         }
-                    }
+
+                    });
                 }
             }
         }
@@ -515,7 +514,6 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
                 building.DestroyBuilding();
             }
         }

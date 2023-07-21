@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     // Gravity
     public float playerGravMultiplier = 3f;
     private float playerGrav = -9.81f;
-    private float playerVelocity;   
+    private float playerVelocity;
 
     // Energy
     private float playerEnergy = 0f;
@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
     public TMP_Text RemaningTMP_Text;
     public TMP_Text SurvivedTMP_Text;
     public TMP_Text enemyText;
-    public TMP_Text enemyAmountText;   
+    public TMP_Text enemyAmountText;
     public TMP_Text houseUnderAttackText;
     public TMP_Text enemyDirectionText;
 
@@ -185,7 +185,7 @@ public class PlayerController : MonoBehaviour
         {
             running = false;
         }
-       
+
         if (running)
         {
             playerCurrentSpeed = playerSprintSpeed;
@@ -229,7 +229,7 @@ public class PlayerController : MonoBehaviour
         else if (playerEnergy <= 0)
         {
             playerEnergy = 0;
-            canRun = false;            
+            canRun = false;
         }
     }
 
@@ -239,7 +239,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             PauseVoid(!PausedBool);
-        }        
+        }
 
         if (playerCanMove)
         {
@@ -252,7 +252,7 @@ public class PlayerController : MonoBehaviour
             ApplyMovement(horizontalMovement, verticalMovement);
             Attack();
             Gathering();
-        }   
+        }
 
         if (attacking)
         {
@@ -278,7 +278,7 @@ public class PlayerController : MonoBehaviour
         if (playerHealth <= 0)
         {
             Death();
-        }       
+        }
     }
 
     public void PauseVoid(bool pauseBool)
@@ -376,7 +376,7 @@ public class PlayerController : MonoBehaviour
                 comboTimer = 0;
                 CharacterAnimator.SetTrigger("Swing3"); // Play different animation here
                 //attackCount = 0;
-            }                              
+            }
         }
     }
 
@@ -393,7 +393,7 @@ public class PlayerController : MonoBehaviour
                 {
                     gatherTimer = Time.time + resetGather;
 
-                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = resourcesList[i].resourceObject != Building.BuildingType.Stone, PicaxeBool = resourcesList[i].resourceObject == Building.BuildingType.Stone });                    
+                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = resourcesList[i].resourceObject != Building.BuildingType.Stone, PicaxeBool = resourcesList[i].resourceObject == Building.BuildingType.Stone });
 
                     if (resourcesList[i].health > 0)
                     {
@@ -412,7 +412,7 @@ public class PlayerController : MonoBehaviour
                         currentResource = resourcesList[i];
                         PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
                         PlayerController.global.CharacterAnimator.SetTrigger("Swing");
-                    }                               
+                    }
                 }
             }
         }
@@ -430,13 +430,13 @@ public class PlayerController : MonoBehaviour
         {
             VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
         }
-        
+
         VFXSlash.Play();
         if (SwordGameObject.activeSelf)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
-        }      
+        }
         attackCount++;
     }
 
@@ -448,7 +448,16 @@ public class PlayerController : MonoBehaviour
         }
         else if (PicaxeGameObject.activeSelf)
         {
-            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
+            int randomInt = Random.Range(0, 3);
+
+            if (randomInt == 0)
+                GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe1Sound);
+
+            if (randomInt == 1)
+                GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe2Sound);
+
+            if (randomInt == 2)
+                GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe3Sound);
         }
         else if (currentResource.resourceObject == Building.BuildingType.Bush)
         {
@@ -463,7 +472,7 @@ public class PlayerController : MonoBehaviour
                 currentResource.GiveResources();
                 currentResource.DestroyBuilding();
             }
-        }             
+        }
     }
 
     public IEnumerator FreezeTime()
@@ -540,7 +549,7 @@ public class PlayerController : MonoBehaviour
                 {
                     goblinsInt++;
                 }
-            }           
+            }
 
             if (lastAmount != goblinsInt)
             {
@@ -596,11 +605,11 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                    VFXSleeping.Stop();                   
+                    VFXSleeping.Stop();
                     transform.position = houseSpawnPoint.transform.position;
                     playerCanMove = true;
                     playerCC.enabled = true;
-                    bodyShape.SetActive(true);                   
+                    bodyShape.SetActive(true);
                     playerDead = false;
                     deathEffects = false;
                     respawnTimer = 0.0f;
@@ -608,7 +617,7 @@ public class PlayerController : MonoBehaviour
                     playerHealth = 100.0f;
                     healthBar.SetHealth(playerHealth);
                 }
-            }           
+            }
         }
     }
 
