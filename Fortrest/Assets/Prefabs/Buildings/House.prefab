@@ -59,7 +59,6 @@ MonoBehaviour:
   resourceObject: 5
   health: 0
   maxHealth: 20
-  energyConsumptionPerClick: 2
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
@@ -570,6 +569,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 691757190410652912, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1467846266723204868, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Color.b
@@ -703,12 +707,12 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 1.5999999
+      value: -5.5
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 10
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
