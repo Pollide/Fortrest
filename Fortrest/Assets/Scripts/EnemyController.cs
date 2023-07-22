@@ -97,10 +97,18 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         CheckHouse();
-        Checks();
-        MakeNoise();
-        Process();
-        ResetAttack();
+        if (house.transform.parent.GetComponent<Building>().DestroyedBool)
+        {
+            bestTarget = null;
+            agent.SetDestination(transform.position);
+        }
+        else
+        {          
+            Checks();
+            MakeNoise();
+            Process();
+            ResetAttack();
+        }         
     }
 
     void CheckHouse()
