@@ -402,6 +402,13 @@ public class GameManager : MonoBehaviour
 
         //play the outro loading animation
         state = PlayAnimation(GetComponent<Animation>(), "Load Out");
+
+        if (index == 1)
+        {
+            yield return 0; //gives a second for everything on Start to run
+            if (PlayerPrefs.GetInt("Game File") == 1)
+                GameManager.global.DataSetVoid(true);
+        }
     }
 
 
@@ -412,15 +419,28 @@ public class GameManager : MonoBehaviour
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
 
-        Debug.Log("LOAD: " + load);
+        //Debug.Log("LOAD: " + load);
 
         LevelManager.global.DaylightTimer = Pref("Daylight", LevelManager.global.DaylightTimer, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
+        /*
+       int inventorySize = (int)Pref("Inventory Size", InventoryManager.global.inventory.Count, load);
 
+       for (int i = 0; i < inventorySize; i++)
+       {
+           if(load)
+               InventoryManager.global.inventory.Add( new InventoryManager.InventorySlot());
+       }
+       */
         LevelManager.ProcessBuildingList((building) =>
         {
             DataBuildingVoid(building, load);
         });
+
+        LevelManager.ProcessBuildingList((building) =>
+        {
+            DataBuildingVoid(building, load);
+        }, true);
     }
 
     float Pref(string pref, float value, bool load)
@@ -440,8 +460,7 @@ public class GameManager : MonoBehaviour
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
-        building.health = (int)Pref("Health" + value.GetSiblingIndex(), building.health, load);
-        value.name = building.health + "hp";
+        building.health = (int)Pref("Health" + LevelManager.global.ReturnIndex(value), building.health, load);
 
         if (load && building.health <= 0)
         {

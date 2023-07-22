@@ -9,7 +9,7 @@ public class InventoryManager : MonoBehaviour
     // Set as global so that we can access it from anywhere in scene
     public static InventoryManager global;
     // List to store the inventory slots
-    private List<InventorySlot> inventory;
+    public List<InventorySlot> inventory;
     private List<DragableItem> dragableItems;
 
     // Maximum number of items that can be held in the inventory

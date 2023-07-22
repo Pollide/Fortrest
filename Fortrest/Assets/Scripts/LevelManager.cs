@@ -112,10 +112,9 @@ public class LevelManager : MonoBehaviour
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
         */
-
-        if (PlayerPrefs.GetInt("Game File") == 1)
-            GameManager.global.DataSetVoid(true);
     }
+
+
 
     private void GetHousePosition()
     {
@@ -133,6 +132,11 @@ public class LevelManager : MonoBehaviour
     public void AddBuildingVoid(Transform addTransform)
     {
         BuildingList.Add(addTransform);
+    }
+
+    public int ReturnIndex(Transform requestedTransform)
+    {
+        return BuildingList.IndexOf(requestedTransform);
     }
 
     public static void ProcessBuildingList(System.Action<Transform> processAction, bool naturalBool = false)
