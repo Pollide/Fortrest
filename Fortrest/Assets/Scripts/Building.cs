@@ -54,12 +54,14 @@ public class Building : MonoBehaviour
     private bool underAttack;
     private float timerText = 0.0f;
 
+    private GameObject normalHouse;
+    private GameObject destroyedHouse;
+
     // Start is called before the first frame update
     void Start()
     {
         health = maxHealth;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
-
 
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.isKinematic = true; //prevents any forces acting upon it
@@ -81,6 +83,8 @@ public class Building : MonoBehaviour
             Indicator.global.AddIndicator(transform, Color.yellow, "Home");
             lastHealth = health;
             HUDHealthBar.SetMaxHealth(maxHealth);
+            normalHouse = gameObject.transform.GetChild(0).gameObject;
+            destroyedHouse = gameObject.transform.GetChild(1).gameObject;           
         }
         else //the house itself is not part of the buildings list
         {
@@ -172,7 +176,10 @@ public class Building : MonoBehaviour
             {
                 GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseDestroySound);
-                GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
+                normalHouse.SetActive(false);
+                destroyedHouse.SetActive(true);
+                PlayerController.global.playerCanMove = false;
+                //GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
                 Invoke("RestartGame", GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Gameover").length);
                 PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
