@@ -144,6 +144,7 @@ public class Building : MonoBehaviour
             HUDHealthBar.SetHealth(health);
         }
 
+        if(amount != 0)
         HealthAnimation();
     }
 

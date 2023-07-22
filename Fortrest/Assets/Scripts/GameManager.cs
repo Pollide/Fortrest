@@ -406,6 +406,7 @@ public class GameManager : MonoBehaviour
         if (index == 1)
         {
             yield return 0; //gives a second for everything on Start to run
+
             if (PlayerPrefs.GetInt("Game File") == 1)
                 GameManager.global.DataSetVoid(true);
         }
@@ -459,6 +460,8 @@ public class GameManager : MonoBehaviour
             {
 
             }
+
+            PlayerController.global.HealthRestore(0); //refresh
         }
 
         LevelManager.ProcessBuildingList((building) =>
@@ -504,11 +507,20 @@ public class GameManager : MonoBehaviour
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
+
+        if (building.resourceObject == Building.BuildingType.HouseNode)
+        {
+            building = building.transform.parent.GetComponent<Building>();
+        }
+
         building.health = (int)Pref("Health" + LevelManager.global.ReturnIndex(value), building.health, load);
 
-        if (load && building.health <= 0)
+        if (load)
         {
-            building.DisableInvoke();
+            building.TakeDamage(0); //refreshes the bar
+
+            if (building.health <= 0)
+                building.DisableInvoke();
         }
 
     }
