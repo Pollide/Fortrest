@@ -28,7 +28,8 @@ public class PlayerController : MonoBehaviour
     private float playerVelocity;
 
     // Energy
-    private float playerEnergy = 0f;
+    [HideInInspector]
+    public float playerEnergy = 0f;
     private float maxPlayerEnergy = 100f;
     public Image playerEnergyBarImage;
     private float energySpeed = 12.5f;

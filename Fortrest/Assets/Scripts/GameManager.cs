@@ -425,17 +425,18 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Game File", 1);
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
-
-        //Debug.Log("LOAD: " + load);
+        PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
+        PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
 
         LevelManager.global.DaylightTimer = Pref("Daylight", LevelManager.global.DaylightTimer, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
+        LevelManager.global.GoblinTimer = (int)Pref("Goblin Timer", LevelManager.global.GoblinTimer, load);
 
+        LevelManager.global.GoblinThreshold = (int)Pref("Goblin Threshold", LevelManager.global.GoblinThreshold, load);
         int itemSize = (int)Pref("Item Size", LevelManager.global.InventoryItemList.Count, load);
 
         for (int i = 0; i < itemSize; i++)
         {
-
             string original = load ? "" : LevelManager.global.InventoryItemList[i].GetComponent<InventoryItem>().resourceObject.ToString();
             string resourceObject = PrefString("Item Resource" + i, original, load);
 
@@ -448,6 +449,16 @@ public class GameManager : MonoBehaviour
 
             DataPositionVoid("Item Position" + i, resource, load);
             DataEulerVoid("Item Euler" + i, resource, load);
+        }
+
+        if (load)
+        {
+            int turrets = (int)Pref("Turret Size", 0, load);
+
+            for (int i = 0; i < turrets; i++)
+            {
+
+            }
         }
 
         LevelManager.ProcessBuildingList((building) =>

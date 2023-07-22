@@ -39,7 +39,9 @@ public class LevelManager : MonoBehaviour
     public List<GameObject> InventoryItemList = new List<GameObject>();
     public float daySpeed = 1;
     public float GoblinTimer;
-    float GoblinThreshold;
+
+    [HideInInspector]
+    public float GoblinThreshold;
 
     public GameObject GoblinGameObject;
     public GameObject OgreGameObject;

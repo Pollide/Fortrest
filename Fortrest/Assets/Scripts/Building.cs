@@ -82,7 +82,7 @@ public class Building : MonoBehaviour
             lastHealth = health;
             HUDHealthBar.SetMaxHealth(maxHealth);
         }
-        else //the house itself is not part of the buildings list
+        else if (resourceObject != BuildingType.CannonBP) //the house itself is not part of the buildings list
         {
             LevelManager.global.AddBuildingVoid(transform);
         }
