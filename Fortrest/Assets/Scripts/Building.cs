@@ -105,10 +105,30 @@ public class Building : MonoBehaviour
     */
     public void GiveResources()
     {
-        // Debug.Log(resourceObject.ToString() + " Drop" + " ");
+        float posX = 0.0f;
+        float posZ = 0.0f;
         for (int i = 0; i < resourceAmount; i++)
         {
-            Instantiate(Resources.Load("Drops/" + resourceObject.ToString() + " Drop"), new Vector3(transform.position.x + Random.Range(-1, 1), transform.position.y + Random.Range(0, 2), transform.position.z + Random.Range(-1, 1)), transform.rotation);
+            if (i < 2)
+            {
+                posX += i;
+                posZ += i;
+            }
+            else if (i == 2)
+            {
+                posX -= i;
+                posZ -= i;
+            }
+            else if (i == 3)
+            {
+                posX *= -1;
+            }
+            else if (i == 4)
+            {
+                posZ = posX;
+                posX *= -1;
+            }
+            Instantiate(Resources.Load("Drops/" + resourceObject.ToString() + " Drop"), new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resourceObject.ToString() == "Wood" ? 0 : Random.Range(1, 360), Random.Range(1, 360), Random.Range(1, 360)));
         }
     }
 
