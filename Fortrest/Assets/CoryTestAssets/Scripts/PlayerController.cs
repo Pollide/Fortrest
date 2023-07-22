@@ -446,18 +446,10 @@ public class PlayerController : MonoBehaviour
     {
         if (PicaxeGameObject.activeSelf)
         {
-            int randomInt = Random.Range(0, 3);
-            if (randomInt == 0)
-                GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe1Sound);
-            if (randomInt == 1)
-                GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe2Sound);
-            if (randomInt == 2)
-                GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe3Sound);
+            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
 
-            //VFXSparks.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
             VFXSparks.transform.position = currentResource.transform.position;
             VFXSparks.Play();
-            //VFXPebble.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
             VFXPebble.transform.position = currentResource.transform.position;
             VFXPebble.Play();
         }
@@ -467,7 +459,6 @@ public class PlayerController : MonoBehaviour
             {
                 GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
 
-                //VFXWoodChip.transform.position = PlayerController.global.AxeGameObject.transform.position;
                 VFXWoodChip.transform.position = currentResource.transform.position;
                 VFXWoodChip.Play();
             }
