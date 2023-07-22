@@ -454,14 +454,21 @@ public class GameManager : MonoBehaviour
 
         if (load)
         {
-            int turrets = (int)Pref("Turret Size", 0, load);
+            int turretSize = (int)Pref("Turret Size", 0, true);
 
-            for (int i = 0; i < turrets; i++)
+            for (int i = 0; i < turretSize; i++)
             {
+                GameObject turret = Instantiate(PlayerModeHandler.global.turretPrefabs[(int)Pref("Turret Type" + i, 0, true)]);
 
+                DataPositionVoid("Item Position" + i, turret.transform, load);
+                DataEulerVoid("Item Euler" + i, turret.transform, load);
             }
 
             PlayerController.global.HealthRestore(0); //refresh
+        }
+        else
+        {
+            Pref("Turret Size", 0, false); //reset
         }
 
         LevelManager.ProcessBuildingList((building) =>
@@ -521,6 +528,24 @@ public class GameManager : MonoBehaviour
 
             if (building.health <= 0)
                 building.DisableInvoke();
+        }
+        else if (building.resourceObject == Building.BuildingType.Cannon)
+        {
+            int turretSize = (int)Pref("Turret Size", 0, true);
+
+            for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
+            {
+                if (PlayerModeHandler.global.turretPrefabs[i].name.Contains(building.name))
+                {
+                    Pref("Turret Type" + turretSize, i, false);
+                    break;
+                }
+            }
+
+            DataPositionVoid("Item Position" + turretSize, building.transform, false);
+            DataEulerVoid("Item Euler" + turretSize, building.transform, false);
+
+            Pref("Turret Size", turretSize + 1, false);
         }
 
     }

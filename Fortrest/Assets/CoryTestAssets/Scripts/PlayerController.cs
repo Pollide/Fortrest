@@ -686,7 +686,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameManager.PlayAnimation(redBorders.gameObject.GetComponent<Animation>(), "HealthWarning");
                 animationPlayed = true;
-            }           
+            }
         }
         else
         {
@@ -698,7 +698,7 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < redSlashes.Length; i++)
         {
             redSlashes[i].color = SlashDisapear(redSlashes[i].color);
-        }     
+        }
     }
 
     private void Timers()
@@ -709,12 +709,12 @@ public class PlayerController : MonoBehaviour
     private Color SlashDisapear(Color color)
     {
         timer += Time.deltaTime;
-        Debug.Log(timer);
+
         if (color.a > 0.0f)
         {
             color.a = Mathf.Lerp(1.0f, 0.0f, timer / 50.0f);
         }
-        
+
         //Debug.Log(color.a);
         //image.color = new Color(image.color.r, image.color.g, image.color.b, 255.0f);
         return color;
