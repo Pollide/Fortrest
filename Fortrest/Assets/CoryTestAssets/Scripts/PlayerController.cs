@@ -115,6 +115,12 @@ public class PlayerController : MonoBehaviour
     public float gatherTimer = 0.0f;
     private float resetGather = 1.25f;
 
+    public Image[] redSlashes;
+    public Image redBorders;
+    private bool displaySlash;
+    private bool animationPlayed = false;
+    private float timer = 0.0f;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -242,7 +248,12 @@ public class PlayerController : MonoBehaviour
         // FOR TESTING
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            playerHealth = 0.0f;
+            playerHealth -= 30.0f;
+            healthBar.SetHealth(playerHealth);
+        }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            playerHealth += 30.0f;
             healthBar.SetHealth(playerHealth);
         }
 
@@ -294,6 +305,8 @@ public class PlayerController : MonoBehaviour
                 gathering = false;
             }
         }
+
+        ScreenDamage();
 
         if (playerHealth <= 0 || playerDead)
         {
@@ -643,6 +656,7 @@ public class PlayerController : MonoBehaviour
     {
         playerHealth -= damage;
         healthBar.SetHealth(playerHealth);
+        displaySlash = true;
     }
 
     private bool FacingResource(Vector3 enemyPosition) // Making sure the enemy always faces what it is attacking
@@ -657,5 +671,54 @@ public class PlayerController : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private void ScreenDamage()
+    {
+        if (displaySlash)
+        {
+            int randomSlash = Random.Range(0, 4);
+            redSlashes[randomSlash].color = new Color(redSlashes[randomSlash].color.r, redSlashes[randomSlash].color.g, redSlashes[randomSlash].color.b, 1.0f);
+            displaySlash = false;
+        }
+        if (playerHealth <= 20.0f)
+        {
+            redBorders.gameObject.SetActive(true);
+            if (!animationPlayed)
+            {
+                GameManager.PlayAnimation(redBorders.gameObject.GetComponent<Animation>(), "HealthWarning");
+                animationPlayed = true;
+            }           
+        }
+        else
+        {
+            redBorders.gameObject.SetActive(false);
+            animationPlayed = false;
+            GameManager.PlayAnimation(redBorders.gameObject.GetComponent<Animation>(), "HealthWarning", true, true);
+        }
+
+        for (int i = 0; i < redSlashes.Length; i++)
+        {
+            redSlashes[i].color = SlashDisapear(redSlashes[i].color);
+        }     
+    }
+
+    private void Timers()
+    {
+
+    }
+
+    private Color SlashDisapear(Color color)
+    {
+        timer += Time.deltaTime;
+        Debug.Log(timer);
+        if (color.a > 0.0f)
+        {
+            color.a = Mathf.Lerp(1.0f, 0.0f, timer / 50.0f);
+        }
+        
+        //Debug.Log(color.a);
+        //image.color = new Color(image.color.r, image.color.g, image.color.b, 255.0f);
+        return color;
     }
 }
