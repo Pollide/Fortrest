@@ -36,10 +36,12 @@ public class LevelManager : MonoBehaviour
     public float DaylightTimer;
     public int day = 0;
     public List<GameObject> enemyList = new List<GameObject>();
-
+    public List<GameObject> InventoryItemList = new List<GameObject>();
     public float daySpeed = 1;
     public float GoblinTimer;
-    float GoblinThreshold;
+
+    [HideInInspector]
+    public float GoblinThreshold;
 
     public GameObject GoblinGameObject;
     public GameObject OgreGameObject;
@@ -112,10 +114,9 @@ public class LevelManager : MonoBehaviour
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
         */
-
-        if (PlayerPrefs.GetInt("Game File") == 1)
-            GameManager.global.DataSetVoid(true);
     }
+
+
 
     private void GetHousePosition()
     {
@@ -135,15 +136,23 @@ public class LevelManager : MonoBehaviour
         BuildingList.Add(addTransform);
     }
 
-    public static void ProcessBuildingList(System.Action<Transform> processAction)
+    public int ReturnIndex(Transform requestedTransform)
+    {
+        return BuildingList.IndexOf(requestedTransform);
+    }
+
+    public static void ProcessBuildingList(System.Action<Transform> processAction, bool naturalBool = false)
     {
         for (int i = 0; i < LevelManager.global.BuildingList.Count; i++)
         {
             if (LevelManager.global.BuildingList[i])
             {
-                if (LevelManager.global.BuildingList[i].GetComponent<Building>())
+                Building building = global.BuildingList[i].GetComponent<Building>();
+
+                if (building)
                 {
-                    processAction(LevelManager.global.BuildingList[i]);
+                    if (building.NaturalBool == naturalBool)
+                        processAction(LevelManager.global.BuildingList[i]);
                 }
                 else
                 {
@@ -279,8 +288,8 @@ public class LevelManager : MonoBehaviour
 
             if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = 10.0f; // FOR TESTING
-                //GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
+                GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
+
                 if (GoblinThreshold < 0.5f)
                 {
                     GoblinThreshold = 0.5f;

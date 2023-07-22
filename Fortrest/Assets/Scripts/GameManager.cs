@@ -402,8 +402,22 @@ public class GameManager : MonoBehaviour
 
         //play the outro loading animation
         state = PlayAnimation(GetComponent<Animation>(), "Load Out");
+
+        if (index == 1)
+        {
+            yield return 0; //gives a second for everything on Start to run
+            if (PlayerPrefs.GetInt("Game File") == 1)
+                GameManager.global.DataSetVoid(true);
+        }
     }
 
+    public static GameObject ReturnResource(string resourceObject, Vector3 position, Quaternion rotation)
+    {
+        GameObject item = Instantiate(Resources.Load("Drops/" + resourceObject + " Drop"), position, rotation) as GameObject;
+        item.GetComponent<InventoryItem>().resourceObject = resourceObject;
+
+        return item;
+    }
 
     public void DataSetVoid(bool load)
     {
@@ -411,16 +425,51 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetInt("Game File", 1);
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
-
-        Debug.Log("LOAD: " + load);
+        PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
+        PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
 
         LevelManager.global.DaylightTimer = Pref("Daylight", LevelManager.global.DaylightTimer, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
+        LevelManager.global.GoblinTimer = (int)Pref("Goblin Timer", LevelManager.global.GoblinTimer, load);
+
+        LevelManager.global.GoblinThreshold = (int)Pref("Goblin Threshold", LevelManager.global.GoblinThreshold, load);
+        int itemSize = (int)Pref("Item Size", LevelManager.global.InventoryItemList.Count, load);
+
+        for (int i = 0; i < itemSize; i++)
+        {
+            string original = load ? "" : LevelManager.global.InventoryItemList[i].GetComponent<InventoryItem>().resourceObject.ToString();
+            string resourceObject = PrefString("Item Resource" + i, original, load);
+
+            Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.InventoryItemList[i].transform;
+
+            int collected = (int)Pref("Item Collected" + i, resource.gameObject.activeSelf ? 0 : 1, load);
+
+            if (load && collected == 1)
+                resource.GetComponent<InventoryItem>().CollectVoid();
+
+            DataPositionVoid("Item Position" + i, resource, load);
+            DataEulerVoid("Item Euler" + i, resource, load);
+        }
+
+        if (load)
+        {
+            int turrets = (int)Pref("Turret Size", 0, load);
+
+            for (int i = 0; i < turrets; i++)
+            {
+
+            }
+        }
 
         LevelManager.ProcessBuildingList((building) =>
         {
             DataBuildingVoid(building, load);
         });
+
+        LevelManager.ProcessBuildingList((building) =>
+        {
+            DataBuildingVoid(building, load);
+        }, true);
     }
 
     float Pref(string pref, float value, bool load)
@@ -437,15 +486,30 @@ public class GameManager : MonoBehaviour
         return value;
     }
 
+    string PrefString(string pref, string value, bool load)
+    {
+        if (load)
+        {
+            value = PlayerPrefs.GetString(pref);
+        }
+        else
+        {
+            PlayerPrefs.SetString(pref, value);
+        }
+
+        return value;
+    }
+
+
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
-        building.health = (int)Pref("Health" + value.GetSiblingIndex(), building.health, load);
+        building.health = (int)Pref("Health" + LevelManager.global.ReturnIndex(value), building.health, load);
 
-        float active = Pref("active" + value.GetSiblingIndex(), building.DestroyedBool ? 1 : 0, load);
-
-        if (load && active == 1)
+        if (load && building.health <= 0)
+        {
             building.DisableInvoke();
+        }
 
     }
     void DataPositionVoid(string pref, Transform value, bool load)
@@ -455,5 +519,14 @@ public class GameManager : MonoBehaviour
         float z = Pref(pref + "z", value.position.z, load);
 
         value.position = new Vector3(x, y, z);
+    }
+
+    void DataEulerVoid(string pref, Transform value, bool load)
+    {
+        float x = Pref(pref + "x", value.eulerAngles.x, load);
+        float y = Pref(pref + "y", value.eulerAngles.y, load);
+        float z = Pref(pref + "z", value.eulerAngles.z, load);
+
+        value.eulerAngles = new Vector3(x, y, z);
     }
 }

@@ -28,7 +28,8 @@ public class PlayerController : MonoBehaviour
     private float playerVelocity;
 
     // Energy
-    private float playerEnergy = 0f;
+    [HideInInspector]
+    public float playerEnergy = 0f;
     private float maxPlayerEnergy = 100f;
     public Image playerEnergyBarImage;
     private float energySpeed = 12.5f;
@@ -49,7 +50,6 @@ public class PlayerController : MonoBehaviour
     private float resetCombo = 1.0f;
     public int attackCount = 0;
     public List<Transform> enemyList = new List<Transform>();
-    public List<Building> resourcesList = new List<Building>();
     public Building currentResource;
 
     // States
@@ -298,7 +298,7 @@ public class PlayerController : MonoBehaviour
         if (playerHealth <= 0 || playerDead)
         {
             Death();
-        }     
+        }
     }
 
     public void PauseVoid(bool pauseBool)
@@ -402,24 +402,22 @@ public class PlayerController : MonoBehaviour
 
     private void Gathering()
     {
-        for (int i = 0; i < resourcesList.Count; i++)
+        LevelManager.ProcessBuildingList((building) =>
         {
-            if (resourcesList[i])
-            {
-                float minDistanceFloat = 4;
-                float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, resourcesList[i].transform.position);               
+            float minDistanceFloat = 4;
+            float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, building.position);
 
-                if (FacingResource(resourcesList[i].transform.position) && !gathering && resourcesList[i].health > 0 && distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
-                {                  
-                    gathering = true;
-                    gatherTimer = 0;
-                    currentResource = resourcesList[i];
-                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = resourcesList[i].resourceObject == Building.BuildingType.Wood, PicaxeBool = resourcesList[i].resourceObject == Building.BuildingType.Stone, HandBool = resourcesList[i].resourceObject == Building.BuildingType.Bush });
-                    PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
-                    PlayerController.global.CharacterAnimator.SetTrigger("Swing");                                          
-                }
+            if (FacingResource(building.position) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+            {
+                gathering = true;
+                gatherTimer = 0;
+                currentResource = building.GetComponent<Building>();
+                PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PicaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+                PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
+                PlayerController.global.CharacterAnimator.SetTrigger("Swing");
             }
-        }
+
+        }, true); //true means natural
     }
 
     public void AttackEffects()
@@ -454,7 +452,7 @@ public class PlayerController : MonoBehaviour
             VFXSparks.Play();
             VFXPebble.transform.position = currentResource.transform.position;
             VFXPebble.Play();
-        }       
+        }
         if (currentResource != null)
         {
             if (AxeGameObject.activeSelf && currentResource.resourceObject != Building.BuildingType.Bush)
@@ -474,7 +472,7 @@ public class PlayerController : MonoBehaviour
             {
                 currentResource.GiveResources();
                 currentResource.DestroyBuilding();
-            }           
+            }
         }
     }
 
@@ -610,7 +608,7 @@ public class PlayerController : MonoBehaviour
                 {
                     LevelManager.FloatingTextChange(interactText, true);
                     textAnimated = true;
-                }                
+                }
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);

@@ -86,16 +86,9 @@ public class Building : MonoBehaviour
             normalHouse = gameObject.transform.GetChild(0).gameObject;
             destroyedHouse = gameObject.transform.GetChild(1).gameObject;           
         }
-        else //the house itself is not part of the buildings list
+        else if (resourceObject != BuildingType.CannonBP) //the house itself is not part of the buildings list
         {
-            if (NaturalBool)
-            {
-                PlayerController.global.resourcesList.Add(this);
-            }           
-            else
-            {
-                LevelManager.global.AddBuildingVoid(transform);
-            }               
+            LevelManager.global.AddBuildingVoid(transform);
         }
     }
 
@@ -139,7 +132,7 @@ public class Building : MonoBehaviour
                 posZ = posX;
                 posX *= -1;
             }
-            Instantiate(Resources.Load("Drops/" + resourceObject.ToString() + " Drop"), new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resourceObject.ToString() == "Wood" ? 0 : Random.Range(1, 360), Random.Range(1, 360), Random.Range(1, 360)));
+            GameManager.ReturnResource(resourceObject.ToString(), new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resourceObject.ToString() == "Wood" ? 0 : Random.Range(1, 360), Random.Range(1, 360), Random.Range(1, 360)));
         }
     }
 
@@ -199,7 +192,6 @@ public class Building : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
-            PlayerController.global.resourcesList.Remove(this);
         }
     }
 
