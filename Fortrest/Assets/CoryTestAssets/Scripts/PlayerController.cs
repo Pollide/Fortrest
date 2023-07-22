@@ -51,8 +51,6 @@ public class PlayerController : MonoBehaviour
     public List<Transform> enemyList = new List<Transform>();
     public List<Building> resourcesList = new List<Building>();
     public Building currentResource;
-    private float gatherTimer = 0.0f;
-    private float resetGather = 0.75f;
 
     // States
     [Header("Player States")]
@@ -105,6 +103,7 @@ public class PlayerController : MonoBehaviour
         public bool HammerBool;
         public bool PicaxeBool;
         public bool SwordBool;
+        public bool HandBool;
     }
 
     private float respawnTimer = 0.0f;
@@ -112,6 +111,9 @@ public class PlayerController : MonoBehaviour
 
     public HealthBar healthBar;
     private bool textAnimated = false;
+    public bool gathering = false;
+    public float gatherTimer = 0.0f;
+    private float resetGather = 1.25f;
 
     // Start is called before the first frame update
     void Awake()
@@ -283,10 +285,20 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (gathering)
+        {
+            gatherTimer += Time.deltaTime;
+
+            if (gatherTimer >= resetGather)
+            {
+                gathering = false;
+            }
+        }
+
         if (playerHealth <= 0 || playerDead)
         {
             Death();
-        }
+        }     
     }
 
     public void PauseVoid(bool pauseBool)
@@ -395,32 +407,16 @@ public class PlayerController : MonoBehaviour
             if (resourcesList[i])
             {
                 float minDistanceFloat = 4;
-                float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, resourcesList[i].transform.position);
+                float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, resourcesList[i].transform.position);               
 
-                if (distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > gatherTimer)
-                {
-                    gatherTimer = Time.time + resetGather;
-
-                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = resourcesList[i].resourceObject != Building.BuildingType.Stone, PicaxeBool = resourcesList[i].resourceObject == Building.BuildingType.Stone });
-
-                    if (resourcesList[i].health > 0)
-                    {
-                        if (resourcesList[i].resourceObject == Building.BuildingType.Stone)
-                        {
-                            VFXSparks.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
-                            VFXSparks.Play();
-                            VFXPebble.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
-                            VFXPebble.Play();
-                        }
-                        else if (resourcesList[i].resourceObject == Building.BuildingType.Wood)
-                        {
-                            VFXWoodChip.transform.position = PlayerController.global.AxeGameObject.transform.position;
-                            VFXWoodChip.Play();
-                        }
-                        currentResource = resourcesList[i];
-                        PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
-                        PlayerController.global.CharacterAnimator.SetTrigger("Swing");
-                    }
+                if (FacingResource(resourcesList[i].transform.position) && !gathering && resourcesList[i].health > 0 && distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+                {                  
+                    gathering = true;
+                    gatherTimer = 0;
+                    currentResource = resourcesList[i];
+                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = resourcesList[i].resourceObject == Building.BuildingType.Wood, PicaxeBool = resourcesList[i].resourceObject == Building.BuildingType.Stone, HandBool = resourcesList[i].resourceObject == Building.BuildingType.Bush });
+                    PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
+                    PlayerController.global.CharacterAnimator.SetTrigger("Swing");                                          
                 }
             }
         }
@@ -450,26 +446,34 @@ public class PlayerController : MonoBehaviour
 
     public void GatheringEffects()
     {
-        if (AxeGameObject.activeSelf)
+        if (PicaxeGameObject.activeSelf)
         {
-            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
-        }
-        else if (PicaxeGameObject.activeSelf)
-        {
-         int randomInt = Random.Range(0, 3);
-
+            int randomInt = Random.Range(0, 3);
             if (randomInt == 0)
                 GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe1Sound);
-
             if (randomInt == 1)
                 GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe2Sound);
-
             if (randomInt == 2)
                 GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe3Sound);
+
+            //VFXSparks.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
+            VFXSparks.transform.position = currentResource.transform.position;
+            VFXSparks.Play();
+            //VFXPebble.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
+            VFXPebble.transform.position = currentResource.transform.position;
+            VFXPebble.Play();
         }       
         if (currentResource != null)
         {
-            if (currentResource.resourceObject == Building.BuildingType.Bush)
+            if (AxeGameObject.activeSelf && currentResource.resourceObject != Building.BuildingType.Bush)
+            {
+                GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
+
+                //VFXWoodChip.transform.position = PlayerController.global.AxeGameObject.transform.position;
+                VFXWoodChip.transform.position = currentResource.transform.position;
+                VFXWoodChip.Play();
+            }
+            else if (currentResource.resourceObject == Building.BuildingType.Bush)
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
             }
@@ -479,7 +483,7 @@ public class PlayerController : MonoBehaviour
             {
                 currentResource.GiveResources();
                 currentResource.DestroyBuilding();
-            }
+            }           
         }
     }
 
@@ -650,17 +654,17 @@ public class PlayerController : MonoBehaviour
         healthBar.SetHealth(playerHealth);
     }
 
-    //private bool FacingEnemy(Vector3 enemyPosition) // Making sure the enemy always faces what it is attacking
-    //{
-    //    Vector3 enemyDirection = (enemyPosition - transform.position).normalized; // Gets a direction using a normalized vector
-    //    float angle = Vector3.Angle(transform.forward, enemyDirection);
-    //    if (angle > -75.0f && angle < 75.0f)
-    //    {
-    //        return true;
-    //    }
-    //    else
-    //    {
-    //        return false;
-    //    }
-    //}
+    private bool FacingResource(Vector3 enemyPosition) // Making sure the enemy always faces what it is attacking
+    {
+        Vector3 enemyDirection = (enemyPosition - transform.position).normalized; // Gets a direction using a normalized vector
+        float angle = Vector3.Angle(transform.forward, enemyDirection);
+        if (angle > -75.0f && angle < 75.0f)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 }
