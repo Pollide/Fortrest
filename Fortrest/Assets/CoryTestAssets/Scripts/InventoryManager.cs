@@ -154,6 +154,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    [System.Serializable]
     public class InventorySlot
     {
         // The item in the slot

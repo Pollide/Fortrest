@@ -36,7 +36,7 @@ public class LevelManager : MonoBehaviour
     public float DaylightTimer;
     public int day = 0;
     public List<GameObject> enemyList = new List<GameObject>();
-
+    public List<GameObject> InventoryItemList = new List<GameObject>();
     public float daySpeed = 1;
     public float GoblinTimer;
     float GoblinThreshold;

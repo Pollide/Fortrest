@@ -411,6 +411,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public static GameObject ReturnResource(string resourceObject, Vector3 position, Quaternion rotation)
+    {
+        GameObject item = Instantiate(Resources.Load("Drops/" + resourceObject + " Drop"), position, rotation) as GameObject;
+        item.GetComponent<InventoryItem>().resourceObject = resourceObject;
+
+        return item;
+    }
 
     public void DataSetVoid(bool load)
     {
@@ -423,15 +430,26 @@ public class GameManager : MonoBehaviour
 
         LevelManager.global.DaylightTimer = Pref("Daylight", LevelManager.global.DaylightTimer, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
-        /*
-       int inventorySize = (int)Pref("Inventory Size", InventoryManager.global.inventory.Count, load);
 
-       for (int i = 0; i < inventorySize; i++)
-       {
-           if(load)
-               InventoryManager.global.inventory.Add( new InventoryManager.InventorySlot());
-       }
-       */
+        int itemSize = (int)Pref("Item Size", LevelManager.global.InventoryItemList.Count, load);
+
+        for (int i = 0; i < itemSize; i++)
+        {
+
+            string original = load ? "" : LevelManager.global.InventoryItemList[i].GetComponent<InventoryItem>().resourceObject.ToString();
+            string resourceObject = PrefString("Item Resource" + i, original, load);
+
+            Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.InventoryItemList[i].transform;
+
+            int collected = (int)Pref("Item Collected" + i, resource.gameObject.activeSelf ? 0 : 1, load);
+
+            if (load && collected == 1)
+                resource.GetComponent<InventoryItem>().CollectVoid();
+
+            DataPositionVoid("Item Position" + i, resource, load);
+            DataEulerVoid("Item Euler" + i, resource, load);
+        }
+
         LevelManager.ProcessBuildingList((building) =>
         {
             DataBuildingVoid(building, load);
@@ -457,6 +475,21 @@ public class GameManager : MonoBehaviour
         return value;
     }
 
+    string PrefString(string pref, string value, bool load)
+    {
+        if (load)
+        {
+            value = PlayerPrefs.GetString(pref);
+        }
+        else
+        {
+            PlayerPrefs.SetString(pref, value);
+        }
+
+        return value;
+    }
+
+
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
@@ -475,5 +508,14 @@ public class GameManager : MonoBehaviour
         float z = Pref(pref + "z", value.position.z, load);
 
         value.position = new Vector3(x, y, z);
+    }
+
+    void DataEulerVoid(string pref, Transform value, bool load)
+    {
+        float x = Pref(pref + "x", value.eulerAngles.x, load);
+        float y = Pref(pref + "y", value.eulerAngles.y, load);
+        float z = Pref(pref + "z", value.eulerAngles.z, load);
+
+        value.eulerAngles = new Vector3(x, y, z);
     }
 }
