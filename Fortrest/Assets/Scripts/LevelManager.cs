@@ -243,7 +243,7 @@ public class LevelManager : MonoBehaviour
         {
             if (!directionEstablished)
             {
-                direction = Random.Range(1, 4);
+                direction = Random.Range(1, 5);
                 switch (direction)
                 {
                     case 1:

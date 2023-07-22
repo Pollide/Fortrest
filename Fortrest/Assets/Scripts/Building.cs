@@ -132,7 +132,7 @@ public class Building : MonoBehaviour
                 posZ = posX;
                 posX *= -1;
             }
-            GameManager.ReturnResource(resourceObject.ToString(), new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resourceObject.ToString() == "Wood" ? 0 : Random.Range(1, 360), Random.Range(1, 360), Random.Range(1, 360)));
+            GameManager.ReturnResource(resourceObject.ToString(), new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resourceObject.ToString() == "Wood" ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
         }
     }
 
@@ -144,6 +144,7 @@ public class Building : MonoBehaviour
             HUDHealthBar.SetHealth(health);
         }
 
+        if(amount != 0)
         HealthAnimation();
     }
 
