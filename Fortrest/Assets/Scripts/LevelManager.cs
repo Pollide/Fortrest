@@ -135,15 +135,18 @@ public class LevelManager : MonoBehaviour
         BuildingList.Add(addTransform);
     }
 
-    public static void ProcessBuildingList(System.Action<Transform> processAction)
+    public static void ProcessBuildingList(System.Action<Transform> processAction, bool naturalBool = false)
     {
         for (int i = 0; i < LevelManager.global.BuildingList.Count; i++)
         {
             if (LevelManager.global.BuildingList[i])
             {
-                if (LevelManager.global.BuildingList[i].GetComponent<Building>())
+                Building building = global.BuildingList[i].GetComponent<Building>();
+
+                if (building)
                 {
-                    processAction(LevelManager.global.BuildingList[i]);
+                    if (building.NaturalBool == naturalBool)
+                        processAction(LevelManager.global.BuildingList[i]);
                 }
                 else
                 {
@@ -279,8 +282,8 @@ public class LevelManager : MonoBehaviour
 
             if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = 10.0f; // FOR TESTING
-                //GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
+                GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
+
                 if (GoblinThreshold < 0.5f)
                 {
                     GoblinThreshold = 0.5f;

@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour
     private float resetCombo = 1.0f;
     public int attackCount = 0;
     public List<Transform> enemyList = new List<Transform>();
-    public List<Building> resourcesList = new List<Building>();
     public Building currentResource;
     private float gatherTimer = 0.0f;
     private float resetGather = 0.75f;
@@ -456,7 +455,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (PicaxeGameObject.activeSelf)
         {
-         int randomInt = Random.Range(0, 3);
+            int randomInt = Random.Range(0, 3);
 
             if (randomInt == 0)
                 GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe1Sound);
@@ -466,7 +465,7 @@ public class PlayerController : MonoBehaviour
 
             if (randomInt == 2)
                 GameManager.global.SoundManager.PlaySound(GameManager.global.Pickaxe3Sound);
-        }       
+        }
         if (currentResource != null)
         {
             if (currentResource.resourceObject == Building.BuildingType.Bush)
@@ -615,7 +614,7 @@ public class PlayerController : MonoBehaviour
                 {
                     LevelManager.FloatingTextChange(interactText, true);
                     textAnimated = true;
-                }                
+                }
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);

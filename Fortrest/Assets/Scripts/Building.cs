@@ -84,10 +84,7 @@ public class Building : MonoBehaviour
         }
         else //the house itself is not part of the buildings list
         {
-            if (NaturalBool)
-                PlayerController.global.resourcesList.Add(this);
-            else
-                LevelManager.global.AddBuildingVoid(transform);
+            LevelManager.global.AddBuildingVoid(transform);
         }
     }
 
@@ -168,7 +165,6 @@ public class Building : MonoBehaviour
         else
         {
             gameObject.SetActive(false);
-            PlayerController.global.resourcesList.Remove(this);
         }
     }
 

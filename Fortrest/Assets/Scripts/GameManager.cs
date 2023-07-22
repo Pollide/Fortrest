@@ -441,11 +441,12 @@ public class GameManager : MonoBehaviour
     {
         Building building = value.GetComponent<Building>();
         building.health = (int)Pref("Health" + value.GetSiblingIndex(), building.health, load);
+        value.name = building.health + "hp";
 
-        float active = Pref("active" + value.GetSiblingIndex(), building.DestroyedBool ? 1 : 0, load);
-
-        if (load && active == 1)
+        if (load && building.health <= 0)
+        {
             building.DisableInvoke();
+        }
 
     }
     void DataPositionVoid(string pref, Transform value, bool load)
