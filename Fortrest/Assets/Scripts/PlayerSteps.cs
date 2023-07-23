@@ -8,6 +8,7 @@ public class PlayerSteps : MonoBehaviour
     {
         PlayerController.global.AttackEffects();
     }
+
     void Gather()
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
