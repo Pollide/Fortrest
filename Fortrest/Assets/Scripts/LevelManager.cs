@@ -88,6 +88,8 @@ public class LevelManager : MonoBehaviour
         {
             Instantiate(PlayerPrefab, SpawnPosition);
         }
+
+
     }
 
     public AudioClip ActiveBiomeMusic;
