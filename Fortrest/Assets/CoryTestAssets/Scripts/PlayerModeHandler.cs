@@ -36,7 +36,8 @@ public class PlayerModeHandler : MonoBehaviour
     public Image buildingMode;
     public Image resourceMode;
     public Image combatMode;
-
+    public Grid buildGrid;
+ 
     private void Awake()
     {
         if (global)
@@ -52,6 +53,8 @@ public class PlayerModeHandler : MonoBehaviour
             global = this;
         }
         parts = turretBlueprint.GetComponentsInChildren<Transform>();
+
+        buildGrid = GameObject.Find("BuildingGrid").GetComponent<Grid>();
     }
 
     private void Update()
@@ -162,6 +165,10 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 Vector3 worldPos = hitData.point;
 
+                Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
+
+                worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
+
                 if (IsInRange(worldPos))
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
@@ -214,14 +221,16 @@ public class PlayerModeHandler : MonoBehaviour
     private void DragBuildingBlueprint(string _resource1, string _resource2, int _resource1Cost, int _resource2Cost)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hitData;
 
-        if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer))
+        if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer))
         {
             // && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource") && !MouseOverUI()
             turretBlueprint.SetActive(true);
 
             Vector3 worldPos = hitData.point;
+            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
+
+            worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
 
             turretBlueprint.transform.position = worldPos;
 
@@ -250,7 +259,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
         {
-            //Cory FYI I disabled this because there is an issue where it will stay disabled for some reason and its kind of game breaking so lets just leave it active
+            //  Cory FYI I disabled this because there is an issue where it will stay disabled for some reason and its kind of game breaking so lets just leave it active
             //  turretBlueprint.SetActive(!MouseOverUI());
         }
     }
