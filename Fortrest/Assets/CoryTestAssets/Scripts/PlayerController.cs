@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     public float attackTimer = 0.0f;
     private float resetAttack = 0.95f;
     public float comboTimer = 0.0f;
-    private float resetCombo = 1.25f;
+    private float resetCombo = 1.20f;
     public int attackCount = 0;
     public Building currentResource;
 
@@ -406,25 +406,24 @@ public class PlayerController : MonoBehaviour
             if (attackCount == 0)
             {
                 resetAttack = 0.95f;
-                resetCombo = 1.25f;
+                resetCombo = 1.2f;
                 attackDamage = 1.0f;
                 CharacterAnimator.SetTrigger("Swing");
             }
             else if (attackCount == 1)
             {
                 resetAttack = 0.9f;
-                resetCombo = 1.2f;
+                resetCombo = 1.15f;
                 attackDamage = 1.0f;
                 CharacterAnimator.SetTrigger("Swing2");
             }
             else if (attackCount == 2)
             {
                 resetAttack = 0.95f;
-                resetCombo = 1.25f;
+                resetCombo = 1.2f;
                 attackDamage = 1.5f;
                 CharacterAnimator.SetTrigger("Swing3");
             }
-            Debug.Log(attackCount);
         }
     }
 
