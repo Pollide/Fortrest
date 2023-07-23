@@ -49,7 +49,6 @@ public class PlayerController : MonoBehaviour
     public float comboTimer = 0.0f;
     private float resetCombo = 1.0f;
     public int attackCount = 0;
-    public List<Transform> enemyList = new List<Transform>();
     public Building currentResource;
 
     // States
@@ -383,10 +382,10 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
-            for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
+            LevelManager.ProcessEnemyList((enemy) =>
             {
-                enemyList[i].GetComponent<EnemyController>().canBeDamaged = true;
-            }
+                enemy.canBeDamaged = true;
+            });
 
             attacking = true;
             attackTimer = 0;
@@ -557,13 +556,13 @@ public class PlayerController : MonoBehaviour
         {
             int goblinsInt = 0;
 
-            for (int i = 0; i < enemyList.Count; i++)
+            LevelManager.ProcessEnemyList((enemy) =>
             {
-                if (enemyList[i] && enemyList[i].GetComponent<EnemyController>() && enemyList[i].GetComponent<EnemyController>().currentEnemyType != EnemyController.ENEMYTYPE.wolf)
+                if (enemy.currentEnemyType != EnemyController.ENEMYTYPE.wolf)
                 {
                     goblinsInt++;
                 }
-            }
+            });
 
             if (lastAmount != goblinsInt)
             {
