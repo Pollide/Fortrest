@@ -16,6 +16,11 @@ public class PlayerSteps : MonoBehaviour
         }        
     }
 
+    void DamageEnemy()
+    {       
+        PlayerController.global.damageEnemy = true;
+    }
+
     void StepOne()
     {
         PlayerController.global.FirstStep();
