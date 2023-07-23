@@ -45,11 +45,10 @@ public class PlayerController : MonoBehaviour
     // Attacks
     public float attackDamage = 0.5f;
     public float attackTimer = 0.0f;
-    private float resetAttack = 0.75f;
+    private float resetAttack = 0.8f;
     public float comboTimer = 0.0f;
-    private float resetCombo = 1.0f;
+    private float resetCombo = 1.10f;
     public int attackCount = 0;
-    public List<Transform> enemyList = new List<Transform>();
     public Building currentResource;
 
     // States
@@ -119,7 +118,10 @@ public class PlayerController : MonoBehaviour
     public Image redBorders;
     private bool displaySlash;
     private bool animationPlayed = false;
-    private float timer = 0.0f;
+    private float timer1, timer2, timer3, timer4 = 0.0f;
+    private float[] timers = new float[4];
+
+    public bool damageEnemy = true;
 
     // Start is called before the first frame update
     void Awake()
@@ -139,7 +141,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Start()
-    {
+    {               
         LevelManager manager = LevelManager.global;
         VFXSlash = manager.transform.Find("VFX").Find("VFX_Slash").GetComponent<VisualEffect>();
         VFXSleeping = manager.transform.Find("VFX").Find("VFX_Sleeping").GetComponent<VisualEffect>();
@@ -169,6 +171,11 @@ public class PlayerController : MonoBehaviour
         playerEnergyBarImage.fillAmount = 0.935f;
         playerHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
+
+        timers[0] = timer1;
+        timers[1] = timer2;
+        timers[2] = timer3;
+        timers[3] = timer4;
     }
 
     public void ChangeTool(ToolData toolData)
@@ -282,6 +289,7 @@ public class PlayerController : MonoBehaviour
             if (attackTimer >= resetAttack)
             {
                 attacking = false;
+                damageEnemy = false;
             }
         }
 
@@ -383,32 +391,31 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
-            for (int i = 0; i < enemyList.Count; i++) // Goes through the list of targets
+            Debug.Log(attackCount);
+            LevelManager.ProcessEnemyList((enemy) =>
             {
-                enemyList[i].GetComponent<EnemyController>().canBeDamaged = true;
-            }
-
+                enemy.canBeDamaged = true;
+            });
+                       
             attacking = true;
             attackTimer = 0;
             CharacterAnimator.ResetTrigger("Swing");
             CharacterAnimator.ResetTrigger("Swing2");
             CharacterAnimator.ResetTrigger("Swing3");
+            comboTimer = 0;
             if (attackCount == 0)
             {
                 CharacterAnimator.SetTrigger("Swing");
-                //attackCount++;
             }
             else if (attackCount == 1)
             {
-                comboTimer = 0;
-                CharacterAnimator.SetTrigger("Swing2"); // Play different animation here
-                //attackCount++;
+                //comboTimer = 0;
+                CharacterAnimator.SetTrigger("Swing2");
             }
             else if (attackCount == 2)
             {
-                comboTimer = 0;
-                CharacterAnimator.SetTrigger("Swing3"); // Play different animation here
-                //attackCount = 0;
+                //comboTimer = 0;
+                CharacterAnimator.SetTrigger("Swing3");
             }
         }
     }
@@ -445,14 +452,24 @@ public class PlayerController : MonoBehaviour
         {
             VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
         }
-
         VFXSlash.Play();
+
         if (SwordGameObject.activeSelf)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
-        }
-        attackCount++;
+
+            if (PlayerController.global.attackCount == 2)
+            {
+                PlayerController.global.attackDamage = 1.5f;
+                PlayerController.global.attackCount = 0;
+            }
+            else
+            {
+                PlayerController.global.attackDamage = 1.0f;
+                PlayerController.global.attackCount++;
+            }
+        }         
     }
 
     public void GatheringEffects()
@@ -557,13 +574,13 @@ public class PlayerController : MonoBehaviour
         {
             int goblinsInt = 0;
 
-            for (int i = 0; i < enemyList.Count; i++)
+            LevelManager.ProcessEnemyList((enemy) =>
             {
-                if (enemyList[i] && enemyList[i].GetComponent<EnemyController>() && enemyList[i].GetComponent<EnemyController>().currentEnemyType != EnemyController.ENEMYTYPE.wolf)
+                if (enemy.currentEnemyType != EnemyController.ENEMYTYPE.wolf)
                 {
                     goblinsInt++;
                 }
-            }
+            });
 
             if (lastAmount != goblinsInt)
             {
@@ -677,6 +694,7 @@ public class PlayerController : MonoBehaviour
         {
             int randomSlash = Random.Range(0, 4);
             redSlashes[randomSlash].color = new Color(redSlashes[randomSlash].color.r, redSlashes[randomSlash].color.g, redSlashes[randomSlash].color.b, 1.0f);
+            timers[randomSlash] = 0.0f;
             displaySlash = false;
         }
         if (playerHealth <= 20.0f)
@@ -697,26 +715,17 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i < redSlashes.Length; i++)
         {
-            redSlashes[i].color = SlashDisapear(redSlashes[i].color);
+            timers[i] += Time.deltaTime;
+            redSlashes[i].color = SlashDisapear(redSlashes[i].color, timers[i]);
         }
     }
 
-    private void Timers()
+    private Color SlashDisapear(Color color, float timer)
     {
-
-    }
-
-    private Color SlashDisapear(Color color)
-    {
-        timer += Time.deltaTime;
-
         if (color.a > 0.0f)
         {
-            color.a = Mathf.Lerp(1.0f, 0.0f, timer / 50.0f);
+            color.a = Mathf.Lerp(1.0f, 0.0f, timer / 5.0f);
         }
-
-        //Debug.Log(color.a);
-        //image.color = new Color(image.color.r, image.color.g, image.color.b, 255.0f);
         return color;
     }
 }

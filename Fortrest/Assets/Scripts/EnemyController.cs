@@ -26,7 +26,8 @@ public class EnemyController : MonoBehaviour
     private float chaseTimerMax;
 
     // Health
-    private float health;
+    [HideInInspector]
+    public float health;
     private float maxHealth;
     public Image healthBarImage;
     AnimationState HealthAnimationState;
@@ -77,7 +78,7 @@ public class EnemyController : MonoBehaviour
         SetEnemyParameters();
 
         playerPosition = PlayerController.global.transform;
-        PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
+        LevelManager.global.EnemyList.Add(this); // Adding each object transform with this script attached to the enemy list
         if (agent.isOnNavMesh)
         {
             if (currentEnemyType != ENEMYTYPE.wolf) //wolves wild
@@ -103,12 +104,12 @@ public class EnemyController : MonoBehaviour
             agent.SetDestination(transform.position);
         }
         else
-        {          
+        {
             Checks();
             MakeNoise();
             Process();
             ResetAttack();
-        }         
+        }
     }
 
     void CheckHouse()
@@ -276,8 +277,7 @@ public class EnemyController : MonoBehaviour
 
         if (!agent.isOnNavMesh)
         {
-            PlayerController.global.enemyList.Remove(transform);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             return;
         }
     }
@@ -322,11 +322,18 @@ public class EnemyController : MonoBehaviour
             }
 
             Time.timeScale = 1;
-
-            PlayerController.global.enemyList.Remove(transform);
             agent.enabled = false;
-            LevelManager.global.enemyList.Remove(gameObject);
-            Destroy(gameObject);
+
+            if (currentEnemyType != ENEMYTYPE.wolf)
+            {
+                LevelManager.global.EnemyList.Remove(this);
+                Destroy(gameObject);
+            }
+            else
+            {
+                gameObject.SetActive(false); //wolves spawn in the scene on start so they need to stay in memory
+            }
+
         }
     }
 
@@ -357,40 +364,7 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
-            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
-            {
-                StopAllCoroutines();
-                chaseTimer = 0;
-                if (currentEnemyType != ENEMYTYPE.ogre)
-                {
-                    knockBackScript.knock = true;
-                }
-                canBeDamaged = false;
-                ScreenShake.global.shake = true;
-                chasing = true;
-                Damaged(PlayerController.global.attackDamage);
-                PickSound(hitSound, hitSound2, 1.0f);
-                PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
-            }
-        }
-        if (house && bestTarget == house.transform)
-        {
-            if (other.gameObject == house)
-            {
-                if (!attacking)
-                {
-                    Attack();
-                }
-                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
-            }
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject == PlayerController.global.SwordGameObject)
-        {
-            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
+            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 StopAllCoroutines();
                 chaseTimer = 0;
@@ -417,6 +391,43 @@ public class EnemyController : MonoBehaviour
                 {
                     Attack();
                 }
+                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == PlayerController.global.SwordGameObject)
+        {
+            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
+            {
+                StopAllCoroutines();
+                chaseTimer = 0;
+                if (currentEnemyType != ENEMYTYPE.ogre)
+                {
+                    knockBackScript.knock = true;
+                }
+                if (currentEnemyType == ENEMYTYPE.goblin)
+                {
+                    chasing = true;
+                }
+                canBeDamaged = false;
+                ScreenShake.global.shake = true;
+                Damaged(PlayerController.global.attackDamage);
+                PickSound(hitSound, hitSound2, 1.0f);
+                PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
+            }
+        }
+        if (house && bestTarget == house.transform)
+        {
+            if (other.gameObject == house)
+            {
+                if (!attacking)
+                {
+                    Attack();
+                }
+                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
             }
         }
     }

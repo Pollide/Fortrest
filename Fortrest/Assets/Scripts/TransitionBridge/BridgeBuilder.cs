@@ -28,6 +28,8 @@ public class BridgeBuilder : MonoBehaviour
         {
             Indicator.global.AddIndicator(transform, Color.red * Color.yellow, "Tussocks", false);
         }
+
+        LevelManager.global.BridgeList.Add(this);
     }
 
 
