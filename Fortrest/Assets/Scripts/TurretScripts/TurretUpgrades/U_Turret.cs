@@ -93,6 +93,7 @@ public class U_Turret : MonoBehaviour
         addKnockBackButton.GetComponent<Button>().interactable = false;
         addChanceToKillButton.GetComponent<Button>().interactable = false;
         addChanceToMultiShotButton.GetComponent<Button>().interactable = false;
+        buyUpgradeButton.GetComponent<Button>().interactable = false;
     }
 
     private void Update()
@@ -237,27 +238,27 @@ public class U_Turret : MonoBehaviour
         {
             if (attackSpeedButtons.Find(button => button.name == currentButton.name))
             {
-                uiText.text = _text + upgradeASPercent + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
+                uiText.text = _text + upgradeASPercent + "% \nWood: " + upgradeCostWood + "  Stone: " + upgradeCostStone;
             }
             else if (rangeButtons.Find(button => button.name == currentButton.name))
             {
-                uiText.text = _text + upgradeRangePercent + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
+                uiText.text = _text + upgradeRangePercent + "% \nWood: " + upgradeCostWood + "  Stone: " + upgradeCostStone;
             }
             else if (damageButtons.Find(button => button.name == currentButton.name))
             {
-                uiText.text = _text + upgradeDamagePercent + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
+                uiText.text = _text + upgradeDamagePercent + "% \nWood: " + upgradeCostWood + "  Stone: " + upgradeCostStone;
             }
             else if (addKnockBackButton == currentButton)
             {
-                uiText.text = _text + knockBackPercentage + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
+                uiText.text = _text + knockBackPercentage + "% \nWood: " + upgradeCostWood + "  Stone: " + upgradeCostStone;
             }
             else if (addChanceToKillButton == currentButton)
             {
-                uiText.text = _text + instantKillPercent + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
+                uiText.text = _text + instantKillPercent + "% \nWood: " + upgradeCostWood + "  Stone: " + upgradeCostStone;
             }
             else if (addChanceToMultiShotButton == currentButton)
             {
-                uiText.text = _text + multiShotPercentage + "% Wood:" + upgradeCostWood + " Stone:" + upgradeCostStone;
+                uiText.text = _text + multiShotPercentage + "% \nWood: " + upgradeCostWood + "  Stone: " + upgradeCostStone;
             }
         }
 
