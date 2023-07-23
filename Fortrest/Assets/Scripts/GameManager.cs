@@ -465,6 +465,7 @@ public class GameManager : MonoBehaviour
             {
                 enemy.gameObject.SetActive(false);
             }
+
         });
 
         if (load)

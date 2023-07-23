@@ -141,7 +141,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Start()
-    {               
+    {
         LevelManager manager = LevelManager.global;
         VFXSlash = manager.transform.Find("VFX").Find("VFX_Slash").GetComponent<VisualEffect>();
         VFXSleeping = manager.transform.Find("VFX").Find("VFX_Sleeping").GetComponent<VisualEffect>();
@@ -253,6 +253,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // FOR TESTING
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.Space))
         {
             playerHealth -= 30.0f;
@@ -263,6 +264,7 @@ public class PlayerController : MonoBehaviour
             playerHealth += 30.0f;
             healthBar.SetHealth(playerHealth);
         }
+#endif
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -397,8 +399,8 @@ public class PlayerController : MonoBehaviour
             LevelManager.ProcessEnemyList((enemy) =>
             {
                 enemy.canBeDamaged = true;
-            });                            
-            
+            });
+
             CharacterAnimator.ResetTrigger("Swing");
             CharacterAnimator.ResetTrigger("Swing2");
             CharacterAnimator.ResetTrigger("Swing3");
@@ -471,7 +473,7 @@ public class PlayerController : MonoBehaviour
             {
                 attackCount = 0;
             }
-        }         
+        }
     }
 
     public void GatheringEffects()
