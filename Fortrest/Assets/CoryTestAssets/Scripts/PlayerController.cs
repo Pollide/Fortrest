@@ -118,7 +118,8 @@ public class PlayerController : MonoBehaviour
     public Image redBorders;
     private bool displaySlash;
     private bool animationPlayed = false;
-    private float timer = 0.0f;
+    private float timer1, timer2, timer3, timer4 = 0.0f;
+    private float[] timers = new float[4];
 
     // Start is called before the first frame update
     void Awake()
@@ -138,7 +139,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void Start()
-    {
+    {               
         LevelManager manager = LevelManager.global;
         VFXSlash = manager.transform.Find("VFX").Find("VFX_Slash").GetComponent<VisualEffect>();
         VFXSleeping = manager.transform.Find("VFX").Find("VFX_Sleeping").GetComponent<VisualEffect>();
@@ -168,6 +169,11 @@ public class PlayerController : MonoBehaviour
         playerEnergyBarImage.fillAmount = 0.935f;
         playerHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
+
+        timers[0] = timer1;
+        timers[1] = timer2;
+        timers[2] = timer3;
+        timers[3] = timer4;
     }
 
     public void ChangeTool(ToolData toolData)
@@ -676,6 +682,7 @@ public class PlayerController : MonoBehaviour
         {
             int randomSlash = Random.Range(0, 4);
             redSlashes[randomSlash].color = new Color(redSlashes[randomSlash].color.r, redSlashes[randomSlash].color.g, redSlashes[randomSlash].color.b, 1.0f);
+            timers[randomSlash] = 0.0f;
             displaySlash = false;
         }
         if (playerHealth <= 20.0f)
@@ -696,26 +703,17 @@ public class PlayerController : MonoBehaviour
 
         for (int i = 0; i < redSlashes.Length; i++)
         {
-            redSlashes[i].color = SlashDisapear(redSlashes[i].color);
+            timers[i] += Time.deltaTime;
+            redSlashes[i].color = SlashDisapear(redSlashes[i].color, timers[i]);
         }
     }
 
-    private void Timers()
+    private Color SlashDisapear(Color color, float timer)
     {
-
-    }
-
-    private Color SlashDisapear(Color color)
-    {
-        timer += Time.deltaTime;
-
         if (color.a > 0.0f)
         {
-            color.a = Mathf.Lerp(1.0f, 0.0f, timer / 50.0f);
+            color.a = Mathf.Lerp(1.0f, 0.0f, timer / 5.0f);
         }
-
-        //Debug.Log(color.a);
-        //image.color = new Color(image.color.r, image.color.g, image.color.b, 255.0f);
         return color;
     }
 }
