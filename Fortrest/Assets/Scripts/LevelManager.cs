@@ -24,7 +24,8 @@ public class LevelManager : MonoBehaviour
     bool OnceDetection;
 
     // public List<Transform> EnemyList = new List<Transform>();
-    public List<Transform> BuildingList = new List<Transform>();
+    private List<Transform> BuildingList = new List<Transform>(); //This list is private as now you use ProcessBuildingList((building) => . Do not reference this list any other way. dm to ask how to use
+
     public Transform ResourceHolderTransform;
     public GameObject ActiveBuildingGameObject;
     public Transform DirectionalLightTransform;
@@ -34,23 +35,20 @@ public class LevelManager : MonoBehaviour
     private GameObject NightLightGameObject;
     public float DaylightTimer;
     public int day = 0;
-    public List<GameObject> enemyList = new List<GameObject>();
-
+    public List<EnemyController> EnemyList = new List<EnemyController>();
+    public List<GameObject> InventoryItemList = new List<GameObject>();
+    public List<BridgeBuilder> BridgeList = new List<BridgeBuilder>();
     public float daySpeed = 1;
     public float GoblinTimer;
-    float GoblinThreshold;
+
+    [HideInInspector]
+    public float GoblinThreshold;
 
     public GameObject GoblinGameObject;
     public GameObject OgreGameObject;
     public GameObject SpiderGameObject;
-    public List<Building> NaturalBuildingList = new List<Building>();
-    private float gatherCooldown = 0.75f;
-    private float nextGather;
 
-    public VisualEffect VFXSparks;
-    public VisualEffect VFXPebble;
     public VisualEffect VFXSmokePuff;
-    public VisualEffect VFXWoodChip;
 
     [HideInInspector]
     public bool newDay = false;
@@ -99,10 +97,6 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         ActiveBiomeMusic = GameManager.global.GameMusic;
-        VFXSparks.Stop();
-        VFXPebble.Stop();
-        VFXSmokePuff.Stop();
-        VFXWoodChip.Stop();
         newDay = true;
 
         PlayerController playerController = PlayerController.global;
@@ -115,24 +109,73 @@ public class LevelManager : MonoBehaviour
         LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
 
+        VFXSmokePuff.Stop();
         /*
         DayTMP_Text = PlayerController.global..GetComponent<TMP_Text>();
         RemaningTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("New Day").Find("Remaining Text").GetComponent<TMP_Text>();
         SurvivedTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("Game Over").Find("Remaining Text").GetComponent<TMP_Text>();
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
-        */       
+        */
     }
+
+
 
     private void GetHousePosition()
     {
-        for (int i = 0; i < BuildingList.Count; i++)
+        ProcessBuildingList((building) =>
         {
-            if (BuildingList[i].GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
             {
-                houseTransform = BuildingList[i].transform.parent.transform;
+                houseTransform = building.parent.transform;
                 housePosObtained = true;
-                break;
+                return;
+            }
+        });
+    }
+
+    public void AddBuildingVoid(Transform addTransform)
+    {
+        BuildingList.Add(addTransform);
+    }
+
+    public int ReturnIndex(Transform requestedTransform)
+    {
+        return BuildingList.IndexOf(requestedTransform);
+    }
+
+    public static void ProcessEnemyList(System.Action<EnemyController> processAction)
+    {
+        for (int i = 0; i < LevelManager.global.EnemyList.Count; i++)
+        {
+            if (LevelManager.global.EnemyList[i])
+            {
+                processAction(LevelManager.global.EnemyList[i]);
+            }
+        }
+    }
+
+    public static void ProcessBuildingList(System.Action<Transform> processAction, bool naturalBool = false)
+    {
+        for (int i = 0; i < LevelManager.global.BuildingList.Count; i++)
+        {
+            if (LevelManager.global.BuildingList[i])
+            {
+                Building building = global.BuildingList[i].GetComponent<Building>();
+
+                if (building)
+                {
+                    if (building.NaturalBool == naturalBool)
+                        processAction(LevelManager.global.BuildingList[i]);
+                }
+                else
+                {
+                    Debug.LogWarning("No building script found!");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("CANNOT BE NULL. Dont destory buildings because then cant be saved!");
             }
         }
     }
@@ -155,7 +198,7 @@ public class LevelManager : MonoBehaviour
         {
             GetHousePosition();
         }
-        
+
         LockCursor();
         /*
         if (TerrainList != null)
@@ -186,11 +229,11 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = 1.0f; // FOR TESTING
-        //daySpeed = ReturnNight() ? 2 : 1;       
+        //daySpeed = 10.0f; // FOR TESTING
+        daySpeed = ReturnNight() ? 2 : 1;
 
-        DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
-
+        //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
+        DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
 
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
@@ -203,6 +246,7 @@ public class LevelManager : MonoBehaviour
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
             GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
             PlayerController.global.NewDay();
+            GameManager.global.DataSetVoid(false);
         }
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
@@ -210,10 +254,10 @@ public class LevelManager : MonoBehaviour
         //   light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0 : 0.4f, Time.deltaTime);
 
         if (ReturnNight())
-        {          
+        {
             if (!directionEstablished)
             {
-                direction = Random.Range(1, 4);
+                direction = Random.Range(1, 5);
                 switch (direction)
                 {
                     case 1:
@@ -230,7 +274,7 @@ public class LevelManager : MonoBehaviour
                         break;
                     default:
                         break;
-                }               
+                }
 
                 enemySpawnPosition = houseTransform.position;
 
@@ -255,11 +299,11 @@ public class LevelManager : MonoBehaviour
                 PlayerController.global.DisplayEnemiesDirection(spawnDir);
                 directionEstablished = true;
             }
-            
+
             if (GoblinTimer >= GoblinThreshold)
             {
-                GoblinThreshold = 100.0f; // FOR TESTING
-                //GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
+                GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
+
                 if (GoblinThreshold < 0.5f)
                 {
                     GoblinThreshold = 0.5f;
@@ -267,7 +311,7 @@ public class LevelManager : MonoBehaviour
                 GoblinTimer = 0;
 
                 enemySpawnPosition.x += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);
-                enemySpawnPosition.z += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);                
+                enemySpawnPosition.z += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);
 
                 GameObject prefab = GoblinGameObject;
 
@@ -286,8 +330,6 @@ public class LevelManager : MonoBehaviour
                 }
 
                 GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
-
-                enemyList.Add(enemy);
             }
         }
 
@@ -303,56 +345,6 @@ public class LevelManager : MonoBehaviour
         mats[2] = ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial;
 
         LanternSkinnedRenderer.materials = mats;
-
-        for (int i = 0; i < NaturalBuildingList.Count; i++)
-        {
-            if (NaturalBuildingList[i])
-            {
-                float minDistanceFloat = 4;
-
-                float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, NaturalBuildingList[i].transform.position);
-                if (distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && Time.time > nextGather)
-                {
-                    bool isStoneBool = NaturalBuildingList[i].resourceObject == Building.BuildingType.Stone;
-                    PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = !isStoneBool, PicaxeBool = isStoneBool });
-                    nextGather = Time.time + gatherCooldown;
-
-                    if (NaturalBuildingList[i].health > 1)
-                    {
-                        if (isStoneBool)
-                        {
-                            VFXSparks.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
-                            VFXSparks.Play();
-                            VFXPebble.transform.position = PlayerController.global.PicaxeGameObject.transform.position;
-                            VFXPebble.Play();
-                            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
-                        }
-                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Wood)
-                        {
-                            VFXWoodChip.transform.position = PlayerController.global.AxeGameObject.transform.position;
-                            VFXWoodChip.Play();
-                            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
-                        }
-                        else if (NaturalBuildingList[i].resourceObject == Building.BuildingType.Food)
-                        {
-                            GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
-                        }
-
-                        NaturalBuildingList[i].TakeDamage(1);
-                    }
-                    else
-                    {
-                        NaturalBuildingList[i].GiveResources();
-                        NaturalBuildingList[i].DestroyBuilding();
-                    }
-
-                    NaturalBuildingList[i].healthBarImage.fillAmount = Mathf.Clamp(NaturalBuildingList[i].health / NaturalBuildingList[i].maxHealth, 0, 1f);
-
-                    PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
-                    PlayerController.global.CharacterAnimator.SetTrigger("Swing");
-                }
-            }
-        }
 
         if (PlayerController.global.transform.position.y < -3)
         {

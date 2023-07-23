@@ -226,7 +226,7 @@ Transform:
   m_GameObject: {fileID: 7713437358430713410}
   m_LocalRotation: {x: -0, y: 0.9732909, z: -0, w: 0.22957541}
   m_LocalPosition: {x: 186.47318, y: 16.297392, z: 208.2663}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1057400666602239870}
@@ -248,14 +248,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 1
+  DestroyedBool: 0
   resourceObject: 3
   health: 0
   maxHealth: 5
-  energyConsumptionPerClick: 2
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
   healthBarImage: {fileID: 6627474213955040157}
+  HUDHealthBar: {fileID: 0}
 --- !u!111 &8555596593215373963
 Animation:
   m_ObjectHideFlags: 0

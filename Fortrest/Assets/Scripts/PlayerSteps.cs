@@ -6,7 +6,14 @@ public class PlayerSteps : MonoBehaviour
 {
     void Attack()
     {
-        
+        PlayerController.global.AttackEffects();
+    }
+    void Gather()
+    {
+        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+        {
+            PlayerController.global.GatheringEffects();
+        }        
     }
 
     void StepOne()

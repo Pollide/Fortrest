@@ -9,7 +9,7 @@ public class InventoryManager : MonoBehaviour
     // Set as global so that we can access it from anywhere in scene
     public static InventoryManager global;
     // List to store the inventory slots
-    private List<InventorySlot> inventory;
+    public List<InventorySlot> inventory;
     private List<DragableItem> dragableItems;
 
     // Maximum number of items that can be held in the inventory
@@ -63,7 +63,7 @@ public class InventoryManager : MonoBehaviour
             if (slot != null)
             {
                 slot.quantity += quantity;
-                Debug.Log("Item added to inventory: " + item.name + " (Quantity: " + slot.quantity + ")");
+                // Debug.Log("Item added to inventory: " + item.name + " (Quantity: " + slot.quantity + ")");
 
                 slot.item.dragableItem.GetComponent<DragableItem>().quantityText.text = slot.quantity.ToString();
 
@@ -78,7 +78,7 @@ public class InventoryManager : MonoBehaviour
             // Adds a new inventory slot with the new item in it
             InventorySlot newSlot = new InventorySlot(item, quantity);
             inventory.Add(newSlot);
-            Debug.Log("Item added to inventory: " + item.name + " (Quantity: " + newSlot.quantity + ")");
+            //  Debug.Log("Item added to inventory: " + item.name + " (Quantity: " + newSlot.quantity + ")");
 
             for (int i = 0; i < inventorySlots.Length; i++)
             {
@@ -154,6 +154,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
+    [System.Serializable]
     public class InventorySlot
     {
         // The item in the slot

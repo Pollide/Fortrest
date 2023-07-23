@@ -66,6 +66,23 @@ public class GameManager : MonoBehaviour
     public AudioClip SlowSound;
     public AudioClip WaterSound;
 
+    public bool DebugSaveBool;
+    public bool DebugLoadBool;
+
+    private void Update()
+    {
+        if (DebugSaveBool)
+        {
+            DebugSaveBool = false;
+            DataSetVoid(false);
+        }
+
+        if (DebugLoadBool)
+        {
+            DebugLoadBool = false;
+            DataSetVoid(true);
+        }
+    }
     //runs on the frame it was awake on
     void Awake()
     {
@@ -385,5 +402,183 @@ public class GameManager : MonoBehaviour
 
         //play the outro loading animation
         state = PlayAnimation(GetComponent<Animation>(), "Load Out");
+
+        if (index == 1)
+        {
+            yield return 0; //gives a second for everything on Start to run
+
+            if (PlayerPrefs.GetInt("Game File") == 1)
+                GameManager.global.DataSetVoid(true);
+        }
+    }
+
+    public static GameObject ReturnResource(string resourceObject, Vector3 position, Quaternion rotation)
+    {
+        GameObject item = Instantiate(Resources.Load("Drops/" + resourceObject + " Drop"), position, rotation) as GameObject;
+        item.GetComponent<InventoryItem>().resourceObject = resourceObject;
+
+        return item;
+    }
+
+    public void DataSetVoid(bool load)
+    {
+        if (!load)
+            PlayerPrefs.SetInt("Game File", 1);
+
+        DataPositionVoid("Player", PlayerController.global.transform, load);
+        PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
+        PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
+
+        LevelManager.global.DaylightTimer = Pref("Daylight", LevelManager.global.DaylightTimer, load);
+        LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
+        LevelManager.global.GoblinTimer = (int)Pref("Goblin Timer", LevelManager.global.GoblinTimer, load);
+
+        LevelManager.global.GoblinThreshold = (int)Pref("Goblin Threshold", LevelManager.global.GoblinThreshold, load);
+        int itemSize = (int)Pref("Item Size", LevelManager.global.InventoryItemList.Count, load);
+
+        for (int i = 0; i < itemSize; i++)
+        {
+            string original = load ? "" : LevelManager.global.InventoryItemList[i].GetComponent<InventoryItem>().resourceObject.ToString();
+            string resourceObject = PrefString("Item Resource" + i, original, load);
+
+            Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.InventoryItemList[i].transform;
+
+            int collected = (int)Pref("Item Collected" + i, resource.gameObject.activeSelf ? 0 : 1, load);
+
+            if (load && collected == 1)
+                resource.GetComponent<InventoryItem>().CollectVoid();
+
+            DataPositionVoid("Item Position" + i, resource, load);
+            DataEulerVoid("Item Euler" + i, resource, load);
+        }
+
+        for (int i = 0; i < LevelManager.global.BridgeList.Count; i++)
+        {
+            LevelManager.global.BridgeList[i].isBuilt = Pref("Item Collected" + i, LevelManager.global.BridgeList[i].isBuilt ? 1 : 0, load) == 1;
+        }
+
+        LevelManager.ProcessEnemyList((enemy) =>
+        {
+            enemy.health = Pref("Enemy Health" + LevelManager.global.EnemyList.IndexOf(enemy), enemy.health, load);
+
+            if (enemy.health <= 0 && load)
+            {
+                enemy.gameObject.SetActive(false);
+            }
+        });
+
+        if (load)
+        {
+            int turretSize = (int)Pref("Turret Size", 0, true);
+
+            for (int i = 0; i < turretSize; i++)
+            {
+                GameObject turret = Instantiate(PlayerModeHandler.global.turretPrefabs[(int)Pref("Turret Type" + i, 0, true)]);
+
+                DataPositionVoid("Item Position" + i, turret.transform, load);
+                DataEulerVoid("Item Euler" + i, turret.transform, load);
+            }
+
+            PlayerController.global.HealthRestore(0); //refresh
+        }
+        else
+        {
+            Pref("Turret Size", 0, false); //reset
+        }
+
+        LevelManager.ProcessBuildingList((building) =>
+        {
+            DataBuildingVoid(building, load);
+        });
+
+        LevelManager.ProcessBuildingList((building) =>
+        {
+            DataBuildingVoid(building, load);
+        }, true);
+    }
+
+    float Pref(string pref, float value, bool load)
+    {
+        if (load)
+        {
+            value = PlayerPrefs.GetFloat(pref);
+        }
+        else
+        {
+            PlayerPrefs.SetFloat(pref, value);
+        }
+
+        return value;
+    }
+
+    string PrefString(string pref, string value, bool load)
+    {
+        if (load)
+        {
+            value = PlayerPrefs.GetString(pref);
+        }
+        else
+        {
+            PlayerPrefs.SetString(pref, value);
+        }
+
+        return value;
+    }
+
+
+    public void DataBuildingVoid(Transform value, bool load)
+    {
+        Building building = value.GetComponent<Building>();
+
+        if (building.resourceObject == Building.BuildingType.HouseNode)
+        {
+            building = building.transform.parent.GetComponent<Building>();
+        }
+
+        building.health = (int)Pref("Health" + LevelManager.global.ReturnIndex(value), building.health, load);
+
+        if (load)
+        {
+            building.TakeDamage(0); //refreshes the bar
+
+            if (building.health <= 0)
+                building.DisableInvoke();
+        }
+        else if (building.resourceObject == Building.BuildingType.Cannon)
+        {
+            int turretSize = (int)Pref("Turret Size", 0, true);
+
+            for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
+            {
+                if (PlayerModeHandler.global.turretPrefabs[i].name.Contains(building.name))
+                {
+                    Pref("Turret Type" + turretSize, i, false);
+                    break;
+                }
+            }
+
+            DataPositionVoid("Item Position" + turretSize, building.transform, false);
+            DataEulerVoid("Item Euler" + turretSize, building.transform, false);
+
+            Pref("Turret Size", turretSize + 1, false);
+        }
+
+    }
+    void DataPositionVoid(string pref, Transform value, bool load)
+    {
+        float x = Pref(pref + "x", value.position.x, load);
+        float y = Pref(pref + "y", value.position.y, load);
+        float z = Pref(pref + "z", value.position.z, load);
+
+        value.position = new Vector3(x, y, z);
+    }
+
+    void DataEulerVoid(string pref, Transform value, bool load)
+    {
+        float x = Pref(pref + "x", value.eulerAngles.x, load);
+        float y = Pref(pref + "y", value.eulerAngles.y, load);
+        float z = Pref(pref + "z", value.eulerAngles.z, load);
+
+        value.eulerAngles = new Vector3(x, y, z);
     }
 }

@@ -18,6 +18,7 @@ using UnityEngine.UI;
 public class Building : MonoBehaviour
 {
     public bool NaturalBool;
+    public bool DestroyedBool;
 
     public enum BuildingType
     {
@@ -25,7 +26,7 @@ public class Building : MonoBehaviour
         CannonBP,
         Wood,
         Stone,
-        Food,
+        Bush,
         House,
         HardWood,
         CoarseWood,
@@ -44,6 +45,7 @@ public class Building : MonoBehaviour
     public int constructionCostStone = 5;
 
     public Image healthBarImage;
+    public HealthBar HUDHealthBar;
 
     AnimationState HealthAnimationState;
 
@@ -52,12 +54,14 @@ public class Building : MonoBehaviour
     private bool underAttack;
     private float timerText = 0.0f;
 
+    private GameObject normalHouse;
+    private GameObject destroyedHouse;
+
     // Start is called before the first frame update
     void Start()
     {
         health = maxHealth;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
-
 
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.isKinematic = true; //prevents any forces acting upon it
@@ -78,13 +82,13 @@ public class Building : MonoBehaviour
         {
             Indicator.global.AddIndicator(transform, Color.yellow, "Home");
             lastHealth = health;
+            HUDHealthBar.SetMaxHealth(maxHealth);
+            normalHouse = gameObject.transform.GetChild(0).gameObject;
+            destroyedHouse = gameObject.transform.GetChild(1).gameObject;           
         }
-        else //the house itself is not part of the buildings list
+        else if (resourceObject != BuildingType.CannonBP) //the house itself is not part of the buildings list
         {
-            if (NaturalBool)
-                LevelManager.global.NaturalBuildingList.Add(this);
-            else
-                LevelManager.global.BuildingList.Add(transform);
+            LevelManager.global.AddBuildingVoid(transform);
         }
     }
 
@@ -105,17 +109,42 @@ public class Building : MonoBehaviour
     */
     public void GiveResources()
     {
-        // Debug.Log(resourceObject.ToString() + " Drop" + " ");
+        float posX = 0.0f;
+        float posZ = 0.0f;
         for (int i = 0; i < resourceAmount; i++)
         {
-            Instantiate(Resources.Load("Drops/" + resourceObject.ToString() + " Drop"), new Vector3(transform.position.x + Random.Range(-1, 1), transform.position.y + Random.Range(0, 2), transform.position.z + Random.Range(-1, 1)), transform.rotation);
+            if (i < 2)
+            {
+                posX += i;
+                posZ += i;
+            }
+            else if (i == 2)
+            {
+                posX -= i;
+                posZ -= i;
+            }
+            else if (i == 3)
+            {
+                posX *= -1;
+            }
+            else if (i == 4)
+            {
+                posZ = posX;
+                posX *= -1;
+            }
+            GameManager.ReturnResource(resourceObject.ToString(), new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resourceObject.ToString() == "Wood" ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
         }
     }
 
     public void TakeDamage(float amount)
     {
         health -= amount;
+        if (resourceObject == BuildingType.House)
+        {
+            HUDHealthBar.SetHealth(health);
+        }
 
+        if(amount != 0)
         HealthAnimation();
     }
 
@@ -136,31 +165,34 @@ public class Building : MonoBehaviour
         if (enabled && GetComponent<Animation>())
         {
             enabled = false;
-
+            DestroyedBool = true;
             if (resourceObject == BuildingType.House)
             {
                 GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseDestroySound);
-                GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
+                normalHouse.SetActive(false);
+                destroyedHouse.SetActive(true);
+                PlayerController.global.playerCanMove = false;
+                //GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
                 Invoke("RestartGame", GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Gameover").length);
                 PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
             }
-            Invoke("NowDestroy", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
+            Invoke("DisableInvoke", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
         }
+        PlayerController.global.currentResource = null;
     }
 
-    void NowDestroy()
+    public void DisableInvoke()
     {
+        DestroyedBool = true; //also calls in DestroyBuilding
         if (resourceObject == BuildingType.Cannon)
         {
-            Destroy(gameObject.transform.parent.gameObject);
-            LevelManager.global.BuildingList.Remove(transform);
+            transform.parent.gameObject.SetActive(false);
         }
         else
         {
-            Destroy(gameObject);
-            LevelManager.global.NaturalBuildingList.Remove(this);
+            gameObject.SetActive(false);
         }
     }
 
@@ -187,7 +219,7 @@ public class Building : MonoBehaviour
     }
 
     private void Update()
-    {        
+    {
         if (resourceObject == BuildingType.House)
         {
             if (health != lastHealth)
@@ -197,8 +229,8 @@ public class Building : MonoBehaviour
                 if (!underAttack)
                 {
                     underAttack = true;
-                    GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttacked");                                       
-                }              
+                    GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttacked");
+                }
             }
             else
             {
@@ -209,9 +241,9 @@ public class Building : MonoBehaviour
                     {
                         underAttack = false;
                         timerText = 0.0f;
-                        GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttackedDisappear");                    
+                        GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttackedDisappear");
                     }
-                }              
+                }
             }
         }
     }

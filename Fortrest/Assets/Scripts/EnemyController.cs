@@ -26,7 +26,8 @@ public class EnemyController : MonoBehaviour
     private float chaseTimerMax;
 
     // Health
-    private float health;
+    [HideInInspector]
+    public float health;
     private float maxHealth;
     public Image healthBarImage;
     AnimationState HealthAnimationState;
@@ -41,6 +42,8 @@ public class EnemyController : MonoBehaviour
     // Others
     public Animator ActiveAnimator;
     KnockBack knockBackScript;
+
+    private float enemyDamage;
 
     public enum ENEMYTYPE
     {
@@ -75,7 +78,7 @@ public class EnemyController : MonoBehaviour
         SetEnemyParameters();
 
         playerPosition = PlayerController.global.transform;
-        PlayerController.global.enemyList.Add(transform); // Adding each object transform with this script attached to the enemy list
+        LevelManager.global.EnemyList.Add(this); // Adding each object transform with this script attached to the enemy list
         if (agent.isOnNavMesh)
         {
             if (currentEnemyType != ENEMYTYPE.wolf) //wolves wild
@@ -95,29 +98,37 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         CheckHouse();
-        Checks();
-        MakeNoise();
-        Process();
-        ResetAttack();
+        if (house.transform.parent.GetComponent<Building>().DestroyedBool)
+        {
+            bestTarget = null;
+            agent.SetDestination(transform.position);
+        }
+        else
+        {
+            Checks();
+            MakeNoise();
+            Process();
+            ResetAttack();
+        }
     }
 
     void CheckHouse()
     {
         float closest = 9999;
 
-        for (int i = 0; i < LevelManager.global.BuildingList.Count; i++)
-        {
-            if (LevelManager.global.BuildingList[i].GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
-            {
-                float distance = Vector3.Distance(transform.position, LevelManager.global.BuildingList[i].position);
+        LevelManager.ProcessBuildingList((building) =>
+         {
+             if (building.GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+             {
+                 float distance = Vector3.Distance(transform.position, building.position);
 
-                if (distance < closest)
-                {
-                    closest = distance;
-                    house = LevelManager.global.BuildingList[i].gameObject;
-                }
-            }
-        }
+                 if (distance < closest)
+                 {
+                     closest = distance;
+                     house = building.gameObject;
+                 }
+             }
+         });
     }
 
     void Process()
@@ -183,20 +194,19 @@ public class EnemyController : MonoBehaviour
             {
                 if (!bestTarget || bestTarget == playerPosition || bestTarget == Boar.global.transform) // If the enemy does not have a current target
                 {
-                    for (int i = 0; i < LevelManager.global.BuildingList.Count; i++) // Goes through the list of targets
+                    LevelManager.ProcessBuildingList((building) =>
                     {
-                        if (LevelManager.global.BuildingList[i] != null)
+
+                        float compare = Vector3.Distance(transform.position, building.position); // Distance from enemy to each target
+
+                        if (compare < shortestDistance) // Only true if a new shorter distance is found
                         {
-                            float compare = Vector3.Distance(transform.position, LevelManager.global.BuildingList[i].transform.position); // Distance from enemy to each target
+                            shortestDistance = compare; // New shortest distance is assigned
+                            bestTarget = building; // Enemy's target is now the closest item in the list
 
-                            if (compare < shortestDistance) // Only true if a new shorter distance is found
-                            {
-                                shortestDistance = compare; // New shortest distance is assigned
-                                bestTarget = LevelManager.global.BuildingList[i].transform; // Enemy's target is now the closest item in the list
-
-                            }
                         }
-                    }
+
+                    });
                 }
             }
         }
@@ -267,8 +277,7 @@ public class EnemyController : MonoBehaviour
 
         if (!agent.isOnNavMesh)
         {
-            PlayerController.global.enemyList.Remove(transform);
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             return;
         }
     }
@@ -313,11 +322,18 @@ public class EnemyController : MonoBehaviour
             }
 
             Time.timeScale = 1;
-
-            PlayerController.global.enemyList.Remove(transform);
             agent.enabled = false;
-            LevelManager.global.enemyList.Remove(gameObject);
-            Destroy(gameObject);
+
+            if (currentEnemyType != ENEMYTYPE.wolf)
+            {
+                LevelManager.global.EnemyList.Remove(this);
+                Destroy(gameObject);
+            }
+            else
+            {
+                gameObject.SetActive(false); //wolves spawn in the scene on start so they need to stay in memory
+            }
+
         }
     }
 
@@ -423,6 +439,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 1.75f;
             agent.stoppingDistance = 2.0f;
             offset = 0.25f;
+            enemyDamage = 3.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.spider)
         {
@@ -433,6 +450,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 2.5f;
             offset = 0.3f;
+            enemyDamage = 4.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
@@ -443,6 +461,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
+            enemyDamage = 7.5f;
         }
         else if (currentEnemyType == ENEMYTYPE.ogre)
         {
@@ -453,6 +472,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 6.0f;
             agent.stoppingDistance = 4.5f;
             offset = 0.2f;
+            enemyDamage = 10.0f;
         }
         health = maxHealth;
         speed = agent.speed;
@@ -487,7 +507,7 @@ public class EnemyController : MonoBehaviour
         if (bestTarget == playerPosition || bestTarget == Boar.global.transform)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
-            playerPosition.GetComponent<PlayerController>().health -= 5;
+            PlayerController.global.TakeDamage(enemyDamage);
         }
         else
         {
@@ -509,7 +529,6 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                LevelManager.global.BuildingList.Remove(bestTarget); // Removes target from list
                 building.DestroyBuilding();
             }
         }
