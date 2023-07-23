@@ -63,7 +63,7 @@ public class InventoryManager : MonoBehaviour
             if (slot != null)
             {
                 slot.quantity += quantity;
-                Debug.Log("Item added to inventory: " + item.name + " (Quantity: " + slot.quantity + ")");
+                // Debug.Log("Item added to inventory: " + item.name + " (Quantity: " + slot.quantity + ")");
 
                 slot.item.dragableItem.GetComponent<DragableItem>().quantityText.text = slot.quantity.ToString();
 
@@ -78,7 +78,7 @@ public class InventoryManager : MonoBehaviour
             // Adds a new inventory slot with the new item in it
             InventorySlot newSlot = new InventorySlot(item, quantity);
             inventory.Add(newSlot);
-            Debug.Log("Item added to inventory: " + item.name + " (Quantity: " + newSlot.quantity + ")");
+            //  Debug.Log("Item added to inventory: " + item.name + " (Quantity: " + newSlot.quantity + ")");
 
             for (int i = 0; i < inventorySlots.Length; i++)
             {

@@ -452,6 +452,21 @@ public class GameManager : MonoBehaviour
             DataEulerVoid("Item Euler" + i, resource, load);
         }
 
+        for (int i = 0; i < LevelManager.global.BridgeList.Count; i++)
+        {
+            LevelManager.global.BridgeList[i].isBuilt = Pref("Item Collected" + i, LevelManager.global.BridgeList[i].isBuilt ? 1 : 0, load) == 1;
+        }
+
+        LevelManager.ProcessEnemyList((enemy) =>
+        {
+            enemy.health = Pref("Enemy Health" + LevelManager.global.EnemyList.IndexOf(enemy), enemy.health, load);
+
+            if (enemy.health <= 0 && load)
+            {
+                enemy.gameObject.SetActive(false);
+            }
+        });
+
         if (load)
         {
             int turretSize = (int)Pref("Turret Size", 0, true);

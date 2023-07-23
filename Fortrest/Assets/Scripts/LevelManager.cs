@@ -35,8 +35,9 @@ public class LevelManager : MonoBehaviour
     private GameObject NightLightGameObject;
     public float DaylightTimer;
     public int day = 0;
-    public List<GameObject> enemyList = new List<GameObject>();
+    public List<EnemyController> EnemyList = new List<EnemyController>();
     public List<GameObject> InventoryItemList = new List<GameObject>();
+    public List<BridgeBuilder> BridgeList = new List<BridgeBuilder>();
     public float daySpeed = 1;
     public float GoblinTimer;
 
@@ -139,6 +140,17 @@ public class LevelManager : MonoBehaviour
     public int ReturnIndex(Transform requestedTransform)
     {
         return BuildingList.IndexOf(requestedTransform);
+    }
+
+    public static void ProcessEnemyList(System.Action<EnemyController> processAction)
+    {
+        for (int i = 0; i < LevelManager.global.EnemyList.Count; i++)
+        {
+            if (LevelManager.global.EnemyList[i])
+            {
+                processAction(LevelManager.global.EnemyList[i]);
+            }
+        }
     }
 
     public static void ProcessBuildingList(System.Action<Transform> processAction, bool naturalBool = false)
@@ -316,8 +328,6 @@ public class LevelManager : MonoBehaviour
                 }
 
                 GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
-
-                enemyList.Add(enemy);
             }
         }
 
