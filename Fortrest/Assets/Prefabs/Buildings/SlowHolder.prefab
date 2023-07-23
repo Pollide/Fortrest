@@ -2307,7 +2307,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6440064812605483419
 Transform:
   m_ObjectHideFlags: 0
@@ -3948,14 +3948,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 0
+  DestroyedBool: 0
   resourceObject: 0
   health: 0
   maxHealth: 5
-  energyConsumptionPerClick: 2
   resourceAmount: 5
   constructionCostWood: 15
   constructionCostStone: 10
   healthBarImage: {fileID: 6847102100746607949}
+  HUDHealthBar: {fileID: 0}
 --- !u!135 &1687748617480127372
 SphereCollider:
   m_ObjectHideFlags: 0
