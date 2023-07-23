@@ -14,8 +14,12 @@ public class InventorySlotHandler : MonoBehaviour, IDropHandler
             dragableItem.parentAfterDrag = transform;
         }
         else
-        { 
-            
+        {
+            GameObject dropped = eventData.pointerDrag;
+            DragableItem dragableItem = dropped.GetComponent<DragableItem>();
+            DragableItem dragableItem2 = gameObject.GetComponentInChildren<DragableItem>();
+            dragableItem2.transform.SetParent(dragableItem.parentAfterDrag);
+            dragableItem.parentAfterDrag = transform;
         }
     }
 }
