@@ -121,7 +121,7 @@ public class PlayerController : MonoBehaviour
     private float timer1, timer2, timer3, timer4 = 0.0f;
     private float[] timers = new float[4];
 
-    public bool damageEnemy = true;
+    public bool damageEnemy = false;
 
     // Start is called before the first frame update
     void Awake()

@@ -450,7 +450,7 @@ public class EnemyController : MonoBehaviour
             agent.speed = 4.0f;
             agent.acceleration = 50.0f;
             agent.angularSpeed = 200.0f;
-            maxHealth = 2.0f;
+            maxHealth = 4.0f;
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 2.5f;
             offset = 0.3f;
@@ -461,7 +461,7 @@ public class EnemyController : MonoBehaviour
             agent.speed = 4.75f;
             agent.acceleration = 40.0f;
             agent.angularSpeed = 100.0f;
-            maxHealth = 4.0f;
+            maxHealth = 5.0f;
             attackTimerMax = 2.5f;
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
