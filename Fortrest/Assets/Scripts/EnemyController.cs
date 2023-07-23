@@ -364,40 +364,7 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
-            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
-            {
-                StopAllCoroutines();
-                chaseTimer = 0;
-                if (currentEnemyType != ENEMYTYPE.ogre)
-                {
-                    knockBackScript.knock = true;
-                }
-                canBeDamaged = false;
-                ScreenShake.global.shake = true;
-                chasing = true;
-                Damaged(PlayerController.global.attackDamage);
-                PickSound(hitSound, hitSound2, 1.0f);
-                PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
-            }
-        }
-        if (house && bestTarget == house.transform)
-        {
-            if (other.gameObject == house)
-            {
-                if (!attacking)
-                {
-                    Attack();
-                }
-                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
-            }
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject == PlayerController.global.SwordGameObject)
-        {
-            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.attackTimer > 0.2f && PlayerController.global.attackTimer < 0.7f)
+            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 StopAllCoroutines();
                 chaseTimer = 0;
@@ -424,6 +391,43 @@ public class EnemyController : MonoBehaviour
                 {
                     Attack();
                 }
+                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == PlayerController.global.SwordGameObject)
+        {
+            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
+            {
+                StopAllCoroutines();
+                chaseTimer = 0;
+                if (currentEnemyType != ENEMYTYPE.ogre)
+                {
+                    knockBackScript.knock = true;
+                }
+                if (currentEnemyType == ENEMYTYPE.goblin)
+                {
+                    chasing = true;
+                }
+                canBeDamaged = false;
+                ScreenShake.global.shake = true;
+                Damaged(PlayerController.global.attackDamage);
+                PickSound(hitSound, hitSound2, 1.0f);
+                PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
+            }
+        }
+        if (house && bestTarget == house.transform)
+        {
+            if (other.gameObject == house)
+            {
+                if (!attacking)
+                {
+                    Attack();
+                }
+                agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
             }
         }
     }

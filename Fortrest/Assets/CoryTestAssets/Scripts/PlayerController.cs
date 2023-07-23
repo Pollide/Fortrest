@@ -45,9 +45,9 @@ public class PlayerController : MonoBehaviour
     // Attacks
     public float attackDamage = 0.5f;
     public float attackTimer = 0.0f;
-    private float resetAttack = 0.75f;
+    private float resetAttack = 0.8f;
     public float comboTimer = 0.0f;
-    private float resetCombo = 1.0f;
+    private float resetCombo = 1.10f;
     public int attackCount = 0;
     public Building currentResource;
 
@@ -120,6 +120,8 @@ public class PlayerController : MonoBehaviour
     private bool animationPlayed = false;
     private float timer1, timer2, timer3, timer4 = 0.0f;
     private float[] timers = new float[4];
+
+    public bool damageEnemy = true;
 
     // Start is called before the first frame update
     void Awake()
@@ -287,6 +289,7 @@ public class PlayerController : MonoBehaviour
             if (attackTimer >= resetAttack)
             {
                 attacking = false;
+                damageEnemy = false;
             }
         }
 
@@ -388,32 +391,31 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0) && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
+            Debug.Log(attackCount);
             LevelManager.ProcessEnemyList((enemy) =>
             {
                 enemy.canBeDamaged = true;
             });
-
+                       
             attacking = true;
             attackTimer = 0;
             CharacterAnimator.ResetTrigger("Swing");
             CharacterAnimator.ResetTrigger("Swing2");
             CharacterAnimator.ResetTrigger("Swing3");
+            comboTimer = 0;
             if (attackCount == 0)
             {
                 CharacterAnimator.SetTrigger("Swing");
-                //attackCount++;
             }
             else if (attackCount == 1)
             {
-                comboTimer = 0;
-                CharacterAnimator.SetTrigger("Swing2"); // Play different animation here
-                //attackCount++;
+                //comboTimer = 0;
+                CharacterAnimator.SetTrigger("Swing2");
             }
             else if (attackCount == 2)
             {
-                comboTimer = 0;
-                CharacterAnimator.SetTrigger("Swing3"); // Play different animation here
-                //attackCount = 0;
+                //comboTimer = 0;
+                CharacterAnimator.SetTrigger("Swing3");
             }
         }
     }
@@ -450,14 +452,24 @@ public class PlayerController : MonoBehaviour
         {
             VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
         }
-
         VFXSlash.Play();
+
         if (SwordGameObject.activeSelf)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
-        }
-        attackCount++;
+
+            if (PlayerController.global.attackCount == 2)
+            {
+                PlayerController.global.attackDamage = 1.5f;
+                PlayerController.global.attackCount = 0;
+            }
+            else
+            {
+                PlayerController.global.attackDamage = 1.0f;
+                PlayerController.global.attackCount++;
+            }
+        }         
     }
 
     public void GatheringEffects()
