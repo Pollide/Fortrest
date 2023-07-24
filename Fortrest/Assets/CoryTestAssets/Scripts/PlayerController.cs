@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
     private bool deathEffects = false;
     private bool playerDead = false;
     public float playerHealth = 0.0f;
-    private float maxHealth = 100.0f;
+    [HideInInspector]public float maxHealth = 100.0f;
 
     //public float playerJumpHeight = 10f;
 
@@ -350,12 +350,12 @@ public class PlayerController : MonoBehaviour
             playerEnergy += energySpeed * Time.deltaTime;
         }
 
-        playerEnergyBarImage.fillAmount = Mathf.Lerp(0.320f, 0.935f, playerEnergy / maxPlayerEnergy);
+        playerEnergyBarImage.fillAmount = Mathf.Lerp(0.0f, 0.5f, playerEnergy / maxPlayerEnergy);
 
         if (playerEnergy >= maxPlayerEnergy)
         {
             playerEnergy = maxPlayerEnergy;
-            playerEnergyBarImage.fillAmount = 0.935f;
+            playerEnergyBarImage.fillAmount = 0.5f;
         }
         else if (playerEnergy <= 0)
         {

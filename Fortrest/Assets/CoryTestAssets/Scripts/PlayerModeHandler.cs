@@ -35,7 +35,10 @@ public class PlayerModeHandler : MonoBehaviour
     public LayerMask buildingLayer;
     public Image buildingMode;
     public Image resourceMode;
-    public Image combatMode;
+    public Image combatMode; 
+    public Image buildingModeSub;
+    public Image resourceModeSub;
+    public Image combatModeSub;
     public Grid buildGrid;
 
     private void Awake()
@@ -123,6 +126,10 @@ public class PlayerModeHandler : MonoBehaviour
         buildingMode.enabled = true;
         resourceMode.enabled = false;
         combatMode.enabled = false;
+
+        buildingModeSub.enabled = false;
+        resourceModeSub.enabled = true;
+        combatModeSub.enabled = false;
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
     }
 
@@ -138,6 +145,9 @@ public class PlayerModeHandler : MonoBehaviour
         buildingMode.enabled = false;
         resourceMode.enabled = true;
         combatMode.enabled = false;
+        buildingModeSub.enabled = false;
+        resourceModeSub.enabled = false;
+        combatModeSub.enabled = true;
     }
 
     public void SwitchToCombatMode()
@@ -152,6 +162,10 @@ public class PlayerModeHandler : MonoBehaviour
         buildingMode.enabled = false;
         resourceMode.enabled = false;
         combatMode.enabled = true;
+
+        buildingModeSub.enabled = false;
+        resourceModeSub.enabled = true;
+        combatModeSub.enabled = false;
     }
     bool runOnce;
 
