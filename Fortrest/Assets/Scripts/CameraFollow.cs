@@ -27,8 +27,9 @@ public class CameraFollow : MonoBehaviour
         float i = cameraDistance / (max * 50);
         smoothTime = Mathf.Lerp(minSmooth, maxSmooth, i);
 
-        if (Input.GetKeyDown(KeyCode.CapsLock))
+        if (Input.GetKeyDown(KeyCode.CapsLock) || PlayerController.global.lockingCTRL)
         {
+            PlayerController.global.lockingCTRL = false;
             GameManager.global.SoundManager.PlaySound(GameManager.global.CameraLockSound);
             lockCamera = !lockCamera;
             return;

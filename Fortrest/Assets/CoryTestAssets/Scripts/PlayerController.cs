@@ -4,11 +4,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.VFX;
 using TMPro;
-
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     public static PlayerController global;
+
+    GamepadControls gamepadControls;
 
     // Components
     CharacterController playerCC;
@@ -44,12 +46,13 @@ public class PlayerController : MonoBehaviour
 
     // Attacks
     public float attackDamage = 0.5f;
-    public float attackTimer = 0.0f;
+    private float attackTimer = 0.0f;
     private float resetAttack = 0.95f;
-    public float comboTimer = 0.0f;
+    private float comboTimer = 0.0f;
     private float resetCombo = 1.20f;
     public int attackCount = 0;
     public Building currentResource;
+    public bool damageEnemy = false;
 
     // States
     [Header("Player States")]
@@ -59,7 +62,8 @@ public class PlayerController : MonoBehaviour
 
     // Movement
     private Vector3 moveDirection;
-
+    private float horizontalMovement;
+    private float verticalMovement;
     private GameObject house;
     private GameObject houseSpawnPoint;
     public GameObject bodyShape;
@@ -110,8 +114,8 @@ public class PlayerController : MonoBehaviour
 
     public HealthBar healthBar;
     private bool textAnimated = false;
-    public bool gathering = false;
-    public float gatherTimer = 0.0f;
+    private bool gathering = false;
+    private float gatherTimer = 0.0f;
     private float resetGather = 1.25f;
 
     public Image[] redSlashes;
@@ -120,8 +124,20 @@ public class PlayerController : MonoBehaviour
     private bool animationPlayed = false;
     private float timer1, timer2, timer3, timer4 = 0.0f;
     private float[] timers = new float[4];
-
-    public bool damageEnemy = false;
+   
+    // Controller
+    public bool usingController = false;    
+    private bool sprintingCTRL;
+    private bool movingCTRL;
+    private bool gatheringCTRL;
+    private bool attackingCTRL;   
+    [HideInInspector] public bool interactCTRL;
+    [HideInInspector] public bool needInteraction = false;
+    [HideInInspector] public bool lockingCTRL = false;
+    [HideInInspector] public bool inventoryCTRL = false;
+    [HideInInspector] public bool swapCTRL = false;
+    private Vector2 moveCTRL;
+    private Vector2 rotateCTRL;
 
     // Start is called before the first frame update
     void Awake()
@@ -138,6 +154,105 @@ public class PlayerController : MonoBehaviour
             //itself doesnt exist so set it
             global = this;
         }
+
+        // Controller stuff
+        gamepadControls = new GamepadControls();
+        // Left stick click to sprint
+        gamepadControls.Controls.Sprint.performed += context => SprintController(true);
+        gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
+        // Left stick to move
+        gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
+        gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
+        gamepadControls.Controls.Move.performed += context => MoveController(true);
+        gamepadControls.Controls.Move.canceled += context => MoveController(false);
+        // Pause button to pause
+        gamepadControls.Controls.Pause.performed += context => PauseController();
+        // Right trigger for gathering
+        gamepadControls.Controls.Gathering.performed += context => GatheringController(true);
+        gamepadControls.Controls.Gathering.canceled += context => GatheringController(false);
+        // Right trigger for attacking
+        gamepadControls.Controls.Attacking.performed += context => AttackingController();
+        // A to interact // So far only used to respawn
+        gamepadControls.Controls.Interact.performed += context => InteractController();
+        // Select to lock / unlock camera
+        gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
+        // X to open / close inventory
+        gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
+        // Y to swap tool
+        gamepadControls.Controls.Swap.performed += context => swapCTRL = true;
+    }
+
+    private void SprintController(bool pressed)
+    {
+        if (pressed)
+        {
+            sprintingCTRL = true;
+        }
+        else
+        {
+            sprintingCTRL = false;
+        }
+    }
+
+    private void MoveController(bool pressed)
+    {
+        if (pressed)
+        {
+            movingCTRL = true;
+        }
+        else
+        {
+            movingCTRL = false;
+        }
+    }
+
+    private void PauseController()
+    {
+        PauseVoid(!PausedBool);
+    }
+
+    private void GatheringController(bool pressed)
+    {
+        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+        {
+            if (pressed)
+            {
+                gatheringCTRL = true;
+            }
+            else
+            {
+                gatheringCTRL = false;
+            }
+        }     
+    }
+
+    private void AttackingController()
+    {
+        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+        {
+            if (!attackingCTRL && !attacking)
+            {
+                attackingCTRL = true;
+            }            
+        }        
+    }
+
+    private void InteractController()
+    {
+        if (!interactCTRL && needInteraction)
+        {
+            interactCTRL = true;
+        }        
+    }
+
+    private void OnEnable()
+    {
+        gamepadControls.Controls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        gamepadControls.Controls.Disable();
     }
 
     private void Start()
@@ -193,7 +308,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if (Input.GetKey(KeyCode.LeftShift) && canRun && CharacterAnimator.GetBool("Moving") == true)
+        if ((Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && CharacterAnimator.GetBool("Moving") == true)
         {
             running = true;
         }
@@ -273,9 +388,17 @@ public class PlayerController : MonoBehaviour
 
         if (playerCanMove)
         {
-            float horizontalMovement = Input.GetAxis("Horizontal");
-            float verticalMovement = Input.GetAxis("Vertical");
-
+            if (moveCTRL.x != 0 || moveCTRL.y != 0)
+            {
+                horizontalMovement = moveCTRL.x;
+                verticalMovement = moveCTRL.y;
+            }
+            else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+            {
+                horizontalMovement = Input.GetAxis("Horizontal");
+                verticalMovement = Input.GetAxis("Vertical");
+            }
+            
             HandleSpeed();
             HandleEnergy();
             ApplyGravity();
@@ -335,7 +458,7 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyMovement(float _horizontalMove, float _verticalMove)
     {
-        playerisMoving = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
+        playerisMoving = (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || movingCTRL;
 
         CharacterAnimator.SetBool("Moving", playerisMoving);
 
@@ -391,8 +514,9 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetMouseButtonDown(0) && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
+        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
+            attackingCTRL = false;
             attacking = true;
             attackTimer = 0;
             comboTimer = 0;
@@ -436,7 +560,7 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4;
             float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, building.position);
 
-            if (FacingResource(building.position) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && Input.GetMouseButton(0) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+            if (FacingResource(building.position) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
             {
                 gathering = true;
                 gatherTimer = 0;
@@ -638,12 +762,13 @@ public class PlayerController : MonoBehaviour
             healthBar.SetHealth(playerHealth);
             if (respawnTimer >= 15.0f)
             {
+                needInteraction = true;
                 if (!textAnimated)
                 {
                     LevelManager.FloatingTextChange(interactText, true);
                     textAnimated = true;
                 }
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                     VFXSleeping.Stop();
@@ -656,6 +781,8 @@ public class PlayerController : MonoBehaviour
                     respawnTimer = 0.0f;
                     LevelManager.FloatingTextChange(interactText, false);
                     textAnimated = false;
+                    interactCTRL = false;
+                    needInteraction = false;
                 }
             }
         }

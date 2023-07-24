@@ -53,7 +53,7 @@ public class Boar : MonoBehaviour
             return;
 
         DisplayText();
-        if (Input.GetKeyDown(KeyCode.M) && inRange)
+        if ((Input.GetKeyDown(KeyCode.M) || PlayerController.global.interactCTRL) && inRange)
         {
             Mount();
         }
@@ -61,6 +61,15 @@ public class Boar : MonoBehaviour
         {
             PlayerStick();
             PlayAnimations();
+        }
+
+        if (inRange)
+        {
+            PlayerController.global.needInteraction = true;
+        }
+        else
+        {
+            PlayerController.global.needInteraction = false;
         }
     }
 
@@ -145,8 +154,9 @@ public class Boar : MonoBehaviour
     void Mount()
     {
         mounted = !mounted;
-
+        PlayerController.global.interactCTRL = false;
         player.GetComponent<CharacterController>().enabled = false;
+
         if (mounted)
         {
             GameManager.global.SoundManager.PlaySound(mountSound, 1.0f);

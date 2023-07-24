@@ -324,7 +324,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5569601162832024531}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &9109620657188660729
 MeshFilter:
@@ -612,7 +612,7 @@ Transform:
   m_Children:
   - {fileID: 6808903877018371812}
   m_Father: {fileID: 5569601162832024531}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!108 &6595368596923363309
 Light:
@@ -1177,7 +1177,7 @@ Transform:
   - {fileID: 2241949943020076725}
   - {fileID: 5743762130822632846}
   m_Father: {fileID: 5569601162832024531}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!95 &6954126482496830218
 Animator:
@@ -1593,9 +1593,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3599990959325361627}
   - {fileID: 8448632394415283981}
   - {fileID: 8001484572129650296}
-  - {fileID: 3599990959325361627}
   m_Father: {fileID: 5569601164179657949}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1619,10 +1619,9 @@ MonoBehaviour:
   playerEnergyBarImage: {fileID: 7658975014858843245}
   playerHealth: 0
   attackDamage: 1
-  attackTimer: 0
-  comboTimer: 0
   attackCount: 0
   currentResource: {fileID: 0}
+  damageEnemy: 0
   playerCanMove: 1
   playerisMoving: 0
   attacking: 0
@@ -1643,15 +1642,15 @@ MonoBehaviour:
   DarkenGameObject: {fileID: 2127865250632510180}
   UIAnimation: {fileID: 8602729549476735322}
   healthBar: {fileID: 6507117353665589282}
-  gathering: 0
-  gatherTimer: 0
   redSlashes:
   - {fileID: 4361196502290701524}
   - {fileID: 881860536046848160}
   - {fileID: 6870208182851024656}
   - {fileID: 2521500108778161878}
   redBorders: {fileID: 4763985267364216734}
-  damageEnemy: 0
+  usingController: 0
+  interactCTRL: 0
+  needInteraction: 0
 --- !u!143 &5569601162832024542
 CharacterController:
   m_ObjectHideFlags: 0

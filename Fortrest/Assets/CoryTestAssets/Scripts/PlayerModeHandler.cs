@@ -37,7 +37,7 @@ public class PlayerModeHandler : MonoBehaviour
     public Image resourceMode;
     public Image combatMode;
     public Grid buildGrid;
- 
+
     private void Awake()
     {
         if (global)
@@ -82,8 +82,9 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
         {
+            PlayerController.global.swapCTRL = false;
             GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
             switch (playerModes)
             {
