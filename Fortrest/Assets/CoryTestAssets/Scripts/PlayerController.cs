@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public static PlayerController global;
 
     GamepadControls gamepadControls;
+    public Bow bowScript;
 
     // Components
     CharacterController playerCC;
@@ -31,6 +32,11 @@ public class PlayerController : MonoBehaviour
     private bool evading = false;
     private bool canEvade;
     [HideInInspector] public bool playerCanBeDamaged = true;
+
+    // Shooting
+    private bool canShoot;
+    private bool modeSaved;
+    
 
     // Gravity
     public float playerGravMultiplier = 3f;
@@ -88,6 +94,7 @@ public class PlayerController : MonoBehaviour
     public GameObject HammerGameObject;
     public GameObject PicaxeGameObject;
     public GameObject SwordGameObject;
+    public GameObject BowGameObject;
     public GameObject RadiusGameObject;
     private GameObject RadiusCamGameObject;
     public GameObject PauseCanvasGameObject;
@@ -114,6 +121,7 @@ public class PlayerController : MonoBehaviour
         public bool PicaxeBool;
         public bool SwordBool;
         public bool HandBool;
+        public bool BowBool;
     }
 
     private float respawnTimer = 0.0f;
@@ -308,6 +316,7 @@ public class PlayerController : MonoBehaviour
         HammerGameObject.SetActive(toolData.HammerBool);
         PicaxeGameObject.SetActive(toolData.PicaxeBool);
         SwordGameObject.SetActive(toolData.SwordBool);
+        BowGameObject.SetActive(toolData.BowBool);
         RadiusGameObject.SetActive(toolData.HammerBool);
         if (RadiusCamGameObject != null)
         {
@@ -424,6 +433,7 @@ public class PlayerController : MonoBehaviour
             ApplyMovement(horizontalMovement, verticalMovement);
             Attack();
             Gathering();
+            Shooting();
             if (Input.GetKeyDown(KeyCode.Space) && canEvade)
             {
                 StartCoroutine(Evade());
@@ -600,12 +610,42 @@ public class PlayerController : MonoBehaviour
                 gathering = true;
                 gatherTimer = 0;
                 currentResource = building.GetComponent<Building>();
-                PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PicaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
-                PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
-                PlayerController.global.CharacterAnimator.SetTrigger("Swing");
+                ChangeTool(new ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PicaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+                CharacterAnimator.ResetTrigger("Swing");
+                CharacterAnimator.SetTrigger("Swing");
             }
 
         }, true); //true means natural
+    }
+
+    private void Shooting()
+    {
+        if (Input.GetMouseButton(1))
+        {
+            if (!modeSaved)
+            {
+                PlayerModeHandler.global.tempCurrentMode = PlayerModeHandler.global.playerModes;
+                modeSaved = true;
+            }            
+            PlayerModeHandler.global.playerModes = PlayerModes.BowMode;
+            ChangeTool(new ToolData() { BowBool = true });
+            canShoot = true;
+        }
+        else
+        {
+            if (modeSaved)
+            {
+                PlayerModeHandler.global.playerModes = PlayerModeHandler.global.tempCurrentMode;
+                ChangeTool(new ToolData() { AxeBool = PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode, SwordBool = PlayerModeHandler.global.playerModes == PlayerModes.CombatMode, HammerBool = PlayerModeHandler.global.playerModes == PlayerModes.BuildMode });
+                modeSaved = false;
+            }                            
+            canShoot = false;
+        }
+
+        if (Input.GetMouseButtonDown(0) && canShoot)
+        {
+            bowScript.Shoot();
+        }
     }
 
     public void AttackEffects()
