@@ -27,7 +27,7 @@ public class AnimatEvents : MonoBehaviour
 
         if (uTurret.isMultiShotActive)
         {
-            float range = Random.Range(0f, 100f);
+            float range = Random.Range(0f, 101);
             if (range <= uTurret.multiShotPercentage)
             {
                 GameObject bolt2 = Instantiate(spawnedBolt, spawnedBoltPoint);

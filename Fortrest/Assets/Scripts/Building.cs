@@ -56,7 +56,7 @@ public class Building : MonoBehaviour
 
     private GameObject normalHouse;
     private GameObject destroyedHouse;
-
+    Vector3 PlayerDirection;
     // Start is called before the first frame update
     void Start()
     {
@@ -84,7 +84,7 @@ public class Building : MonoBehaviour
             lastHealth = health;
             HUDHealthBar.SetMaxHealth(maxHealth);
             normalHouse = gameObject.transform.GetChild(0).gameObject;
-            destroyedHouse = gameObject.transform.GetChild(1).gameObject;           
+            destroyedHouse = gameObject.transform.GetChild(1).gameObject;
         }
         else if (resourceObject != BuildingType.CannonBP) //the house itself is not part of the buildings list
         {
@@ -144,8 +144,8 @@ public class Building : MonoBehaviour
             HUDHealthBar.SetHealth(health);
         }
 
-        if(amount != 0)
-        HealthAnimation();
+        if (amount != 0)
+            HealthAnimation();
     }
 
     public void Repair(float amount)
@@ -162,9 +162,8 @@ public class Building : MonoBehaviour
 
     public void DestroyBuilding()
     {
-        if (enabled && GetComponent<Animation>())
+        if (!DestroyedBool && GetComponent<Animation>())
         {
-            enabled = false;
             DestroyedBool = true;
             if (resourceObject == BuildingType.House)
             {
@@ -173,12 +172,15 @@ public class Building : MonoBehaviour
                 normalHouse.SetActive(false);
                 destroyedHouse.SetActive(true);
                 PlayerController.global.playerCanMove = false;
-                //GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
+                LevelManager.global.enabled = false;//stop the day progressing
                 Invoke("RestartGame", GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Gameover").length);
                 PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
             }
-            Invoke("DisableInvoke", GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy").length);
+
+            PlayerDirection = (PlayerController.global.transform.position - transform.position).normalized;
+
+            Invoke("DisableInvoke", GameManager.PlayAnimation(GetComponent<Animation>()).length);
         }
         PlayerController.global.currentResource = null;
     }
@@ -245,6 +247,12 @@ public class Building : MonoBehaviour
                     }
                 }
             }
+        }
+
+        if (DestroyedBool && PlayerDirection != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(PlayerDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1 * Time.deltaTime);
         }
     }
 }
