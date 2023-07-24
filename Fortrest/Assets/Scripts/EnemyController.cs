@@ -511,7 +511,10 @@ public class EnemyController : MonoBehaviour
         if (bestTarget == playerPosition || bestTarget == Boar.global.transform)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
-            PlayerController.global.TakeDamage(enemyDamage);
+            if (PlayerController.global.playerCanBeDamaged)
+            {
+                PlayerController.global.TakeDamage(enemyDamage);
+            }           
         }
         else
         {

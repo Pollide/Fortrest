@@ -24,6 +24,14 @@ public class PlayerController : MonoBehaviour
     private float runTimer = 0.0f;
     private bool canRun = true;
 
+    // Evade
+    private float evadeSpeed = 50.0f;
+    private float evadeDuration = 0.18f;
+    private float evadeCoolDown = 2.5f;
+    private bool evading = false;
+    private bool canEvade;
+    [HideInInspector] public bool playerCanBeDamaged = true;
+
     // Gravity
     public float playerGravMultiplier = 3f;
     private float playerGrav = -9.81f;
@@ -75,7 +83,6 @@ public class PlayerController : MonoBehaviour
     private VisualEffect VFXSparks;
     private VisualEffect VFXPebble;
     private VisualEffect VFXWoodChip;
-
 
     public GameObject AxeGameObject;
     public GameObject HammerGameObject;
@@ -291,6 +298,8 @@ public class PlayerController : MonoBehaviour
         timers[1] = timer2;
         timers[2] = timer3;
         timers[3] = timer4;
+
+        canEvade = true;
     }
 
     public void ChangeTool(ToolData toolData)
@@ -369,7 +378,7 @@ public class PlayerController : MonoBehaviour
     {
         // FOR TESTING
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.O))
         {
             playerHealth -= 30.0f;
             healthBar.SetHealth(playerHealth);
@@ -380,6 +389,16 @@ public class PlayerController : MonoBehaviour
             healthBar.SetHealth(playerHealth);
         }
 #endif
+        if (evading)
+        {
+            CharacterAnimator.SetBool("Moving", false);
+            playerCanBeDamaged = false;
+            return;
+        }
+        else
+        {
+            playerCanBeDamaged = true;
+        }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -397,7 +416,7 @@ public class PlayerController : MonoBehaviour
             {
                 horizontalMovement = Input.GetAxis("Horizontal");
                 verticalMovement = Input.GetAxis("Vertical");
-            }
+            }          
             
             HandleSpeed();
             HandleEnergy();
@@ -405,6 +424,10 @@ public class PlayerController : MonoBehaviour
             ApplyMovement(horizontalMovement, verticalMovement);
             Attack();
             Gathering();
+            if (Input.GetKeyDown(KeyCode.Space) && canEvade)
+            {
+                StartCoroutine(Evade());
+            }
         }
 
         if (attacking)
@@ -445,6 +468,18 @@ public class PlayerController : MonoBehaviour
         {
             Death();
         }
+    }
+
+    private IEnumerator Evade()
+    {
+        canEvade = false;
+        evading = true;
+        playerCC.Move(moveDirection * evadeSpeed * Time.deltaTime);
+        yield return new WaitForSeconds(evadeDuration);
+        evading = false;
+
+        yield return new WaitForSeconds(evadeCoolDown);
+        canEvade = true;
     }
 
     public void PauseVoid(bool pauseBool)
