@@ -205,8 +205,9 @@ public class InventoryManager : MonoBehaviour
 
     public void RunInventoryKey()
     {
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I) || PlayerController.global.inventoryCTRL)
         {
+            PlayerController.global.inventoryCTRL = false;
             if (inventoryPanel.activeInHierarchy)
             {
                 if (currentPlayerModes != PlayerModes.BuildMode)
