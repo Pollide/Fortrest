@@ -27,7 +27,7 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         image.raycastTarget = false;
         GetComponent<Animator>().enabled = true;
         // GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
-        transform.position = Input.mousePosition;
+        //transform.position = Input.mousePosition;
     }
 
 
