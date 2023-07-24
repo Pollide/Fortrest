@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 5063337700874941541}
   - component: {fileID: 775337696238727481}
   - component: {fileID: 4012779519441861351}
-  m_Layer: 0
+  - component: {fileID: 1345044777623596542}
+  m_Layer: 9
   m_Name: Boulder_Var2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,14 +113,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 0
+  DestroyedBool: 0
   resourceObject: 9
   health: 0
   maxHealth: 5
-  energyConsumptionPerClick: 2
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
   healthBarImage: {fileID: 873409708450261229}
+  HUDHealthBar: {fileID: 0}
+--- !u!111 &1345044777623596542
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7509142344824591087}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: f5efc2fc65b599b4eb7c3da1b117b24e, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: f5efc2fc65b599b4eb7c3da1b117b24e, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1001 &1747449326875269097
 PrefabInstance:
   m_ObjectHideFlags: 0
