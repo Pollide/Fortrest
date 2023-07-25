@@ -10,10 +10,7 @@ public class Bow : MonoBehaviour
 
     public void Shoot()
     {
-        GameObject arrow = Instantiate(arrowObject, firePoint.position, PlayerController.global.transform.rotation);
-        Vector3 directionToPlayer = firePoint.position - arrow.transform.position;
-        float rotationAngle = Mathf.Atan2(directionToPlayer.z, directionToPlayer.x) * Mathf.Rad2Deg;
-        arrow.transform.rotation = Quaternion.Euler(90f, rotationAngle, 0);
-        //arrow.GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * fireForce, ForceMode.Impulse);
+        GameObject arrow = Instantiate(arrowObject, firePoint.position, Quaternion.Euler(90f, PlayerController.global.transform.eulerAngles.y, 0));
+        arrow.GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * fireForce, ForceMode.Impulse);
     }
 }
