@@ -10,11 +10,12 @@ public class HealthBar : MonoBehaviour
     public void SetMaxHealth(float health)
     {
         if (playerHealthBarImage)
-        playerHealthBarImage.fillAmount = Mathf.Lerp(0.0f, 0.5f, health / PlayerController.global.maxHealth);
+            playerHealthBarImage.fillAmount = Mathf.Lerp(0.0f, 0.5f, health / PlayerController.global.maxHealth);
     }
 
     public void SetHealth(float health)
     {
-        playerHealthBarImage.fillAmount = Mathf.Lerp(0.0f, 0.5f, health / PlayerController.global.maxHealth);
+        if (playerHealthBarImage)
+            playerHealthBarImage.fillAmount = Mathf.Lerp(0.0f, 0.5f, health / PlayerController.global.maxHealth);
     }
 }

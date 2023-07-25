@@ -443,7 +443,7 @@ public class GameManager : MonoBehaviour
 
             Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.InventoryItemList[i].transform;
 
-            int collected = (int)Pref("Item Collected" + i, resource.gameObject.activeSelf ? 0 : 1, load);
+            int collected = (int)Pref("Item Collected" + i, resource.GetComponent<InventoryItem>().CollectedBool ? 1 : 0, load);
 
             if (load && collected == 1)
                 resource.GetComponent<InventoryItem>().CollectVoid();

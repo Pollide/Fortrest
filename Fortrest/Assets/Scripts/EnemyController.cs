@@ -514,9 +514,9 @@ public class EnemyController : MonoBehaviour
             if (PlayerController.global.playerCanBeDamaged)
             {
                 PlayerController.global.TakeDamage(enemyDamage);
-            }           
+            }
         }
-        else
+        else if (bestTarget)
         {
             if (currentEnemyType == ENEMYTYPE.ogre)
             {
