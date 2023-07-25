@@ -39,6 +39,8 @@ public class PlayerController : MonoBehaviour
     private float bowTimer = 0.0f;
     private float resetBow = 1.5f;
     private bool shooting = false;
+    private bool directionSaved = false;
+    private Quaternion tempDirection;
 
     // Gravity
     public float playerGravMultiplier = 3f;
@@ -328,7 +330,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if ((Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && CharacterAnimator.GetBool("Moving") == true)
+        if ((Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && CharacterAnimator.GetBool("Moving") == true && !canShoot)
         {
             running = true;
         }
@@ -638,11 +640,25 @@ public class PlayerController : MonoBehaviour
             {
                 ChangeTool(new ToolData() { BowBool = true });
                 canShoot = true;
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    if (!directionSaved)
+                    {
+                        tempDirection = transform.rotation;
+                        directionSaved = true;
+                    }
+                    transform.rotation = tempDirection;
+                    CharacterAnimator.SetBool("Moving", false);
+                }
+                else
+                {
+                    directionSaved = false;
+                }
             }
             else
             {
                 ChangeTool(new ToolData() { SwordBool = true });
-                canShoot = false;
+                canShoot = false;                
             }
 
             if (Input.GetMouseButtonDown(0) && canShoot && !shooting)
