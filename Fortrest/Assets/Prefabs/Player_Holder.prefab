@@ -1618,6 +1618,7 @@ MonoBehaviour:
   evading: 0
   playerCanBeDamaged: 1
   bowDamage: 1.5
+  arrowNumber: 10
   playerGravMultiplier: 2
   playerEnergy: 0
   playerEnergyBarImage: {fileID: 7658975014858843245}
@@ -1645,6 +1646,8 @@ MonoBehaviour:
   enemyAmountText: {fileID: 7230112057410021984}
   houseUnderAttackText: {fileID: 4801299715675258165}
   enemyDirectionText: {fileID: 5011658340423722203}
+  arrowText: {fileID: 2993162952489746833}
+  arrowAmountText: {fileID: 8724370726988222355}
   DarkenGameObject: {fileID: 2127865250632510180}
   UIAnimation: {fileID: 8602729549476735322}
   healthBar: {fileID: 1015778223}
@@ -3559,6 +3562,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2993162952489746833 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7183206376646747249, guid: cd0bc9715f16c5347a569bae16ef1c71,
+    type: 3}
+  m_PrefabInstance: {fileID: 5343021766280963552}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4361196502290701524 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8547881434892597556, guid: cd0bc9715f16c5347a569bae16ef1c71,
@@ -3740,6 +3755,18 @@ Animation:
     type: 3}
   m_PrefabInstance: {fileID: 5343021766280963552}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8724370726988222355 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3689865430545492595, guid: cd0bc9715f16c5347a569bae16ef1c71,
+    type: 3}
+  m_PrefabInstance: {fileID: 5343021766280963552}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &8867123022170650211 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3542187297752486787, guid: cd0bc9715f16c5347a569bae16ef1c71,

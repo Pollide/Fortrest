@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     private bool shooting = false;
     private bool directionSaved = false;
     private Quaternion tempDirection;
+    [HideInInspector] public float arrowNumber = 10.0f;
 
     // Gravity
     public float playerGravMultiplier = 3f;
@@ -113,6 +114,7 @@ public class PlayerController : MonoBehaviour
     public TMP_Text enemyAmountText;
     public TMP_Text houseUnderAttackText;
     public TMP_Text enemyDirectionText;
+    public TMP_Text arrowText;
 
     public GameObject DarkenGameObject;
 
@@ -313,6 +315,8 @@ public class PlayerController : MonoBehaviour
         timers[3] = timer4;
 
         canEvade = true;
+
+        arrowText.text = "Arrow: " + arrowNumber.ToString();
     }
 
     public void ChangeTool(ToolData toolData)
@@ -443,7 +447,7 @@ public class PlayerController : MonoBehaviour
             ApplyMovement(horizontalMovement, verticalMovement);
             Attack();
             Gathering();
-            Shooting();
+            Shoot();
             if (Input.GetKeyDown(KeyCode.Space) && canEvade)
             {
                 StartCoroutine(Evade());
@@ -639,12 +643,13 @@ public class PlayerController : MonoBehaviour
         }, true); //true means natural
     }
 
-    private void Shooting()
+    private void Shoot()
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
             if (Input.GetMouseButton(1))
             {
+                arrowText.gameObject.SetActive(true);
                 ChangeTool(new ToolData() { BowBool = true });
                 canShoot = true;
                 if (Input.GetKey(KeyCode.LeftShift))
@@ -664,14 +669,18 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                arrowText.gameObject.SetActive(false);
                 ChangeTool(new ToolData() { SwordBool = true });
                 canShoot = false;                
             }
 
-            if (Input.GetMouseButtonDown(0) && canShoot && !shooting)
+            if (Input.GetMouseButtonDown(0) && canShoot && !shooting && arrowNumber > 0)
             {
                 shooting = true;
                 bowTimer = 0;
+                arrowNumber -= 1;
+                GameManager.PlayAnimation(arrowText.GetComponent<Animation>(), "EnemyAmount");
+                arrowText.text = "Arrow: " + arrowNumber.ToString();
                 bowScript.Shoot();
             }
         }  
