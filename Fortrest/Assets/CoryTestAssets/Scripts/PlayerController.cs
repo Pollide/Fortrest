@@ -26,12 +26,13 @@ public class PlayerController : MonoBehaviour
     private bool canRun = true;
 
     // Evade
-    private float evadeSpeed = 50.0f;
-    private float evadeDuration = 0.18f;
+    private float evadeTimer = 0.0f;
     private float evadeCoolDown = 2.5f;
-    private bool evading = false;
+    [HideInInspector] public bool evading = false;
     private bool canEvade;
     [HideInInspector] public bool playerCanBeDamaged = true;
+    private Vector3 newPosition;
+    private bool blocked = false;
 
     // Shooting
     private bool canShoot;
@@ -404,13 +405,18 @@ public class PlayerController : MonoBehaviour
 #endif
         if (evading)
         {
-            CharacterAnimator.SetBool("Moving", false);
+            evadeTimer += Time.deltaTime;
             playerCanBeDamaged = false;
+            if (!blocked)
+            {
+                transform.position = Vector3.Lerp(transform.position, newPosition, evadeTimer / 30.0f);
+            }            
             return;
         }
         else
         {
             playerCanBeDamaged = true;
+            blocked = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -495,12 +501,13 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator Evade()
-    {
+    {       
+        evadeTimer = 0;
         canEvade = false;
         evading = true;
-        playerCC.Move(moveDirection * evadeSpeed * Time.deltaTime);
-        yield return new WaitForSeconds(evadeDuration);
-        evading = false;
+        CharacterAnimator.ResetTrigger("Evade");
+        CharacterAnimator.SetTrigger("Evade");
+        newPosition = transform.position + (transform.forward * 7.0f);
 
         yield return new WaitForSeconds(evadeCoolDown);
         canEvade = true;
@@ -619,7 +626,7 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4;
             float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, building.position);
 
-            if (FacingResource(building.position) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+            if (Facing(building.position, 75.0f) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
             {
                 gathering = true;
                 gatherTimer = 0;
@@ -902,11 +909,11 @@ public class PlayerController : MonoBehaviour
         displaySlash = true;
     }
 
-    private bool FacingResource(Vector3 enemyPosition) // Making sure the enemy always faces what it is attacking
+    private bool Facing(Vector3 otherPosition, float desiredAngle) // Making sure the enemy always faces what it is attacking
     {
-        Vector3 enemyDirection = (enemyPosition - transform.position).normalized; // Gets a direction using a normalized vector
+        Vector3 enemyDirection = (otherPosition - transform.position).normalized; // Gets a direction using a normalized vector
         float angle = Vector3.Angle(transform.forward, enemyDirection);
-        if (angle > -75.0f && angle < 75.0f)
+        if (angle > -desiredAngle && angle < desiredAngle)
         {
             return true;
         }
@@ -955,5 +962,26 @@ public class PlayerController : MonoBehaviour
             color.a = Mathf.Lerp(1.0f, 0.0f, timer / 5.0f);
         }
         return color;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (evading)
+        {
+            if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Resource") || other.gameObject.CompareTag("Building") || other.gameObject.CompareTag("Boar") || other.gameObject.CompareTag("JustForEvade"))
+            {
+                if (!other.gameObject.CompareTag("Enemy"))
+                {
+                    blocked = true;
+                }
+                else
+                {
+                    if (Facing(other.gameObject.transform.position, 30.0f))
+                    {
+                        blocked = true;
+                    }
+                }
+            }
+        }       
     }
 }

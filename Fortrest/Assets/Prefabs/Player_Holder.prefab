@@ -1615,7 +1615,9 @@ MonoBehaviour:
   CharacterAnimator: {fileID: 6954126482496830218}
   playerCurrentSpeed: 0
   running: 0
+  evading: 0
   playerCanBeDamaged: 1
+  bowDamage: 1.5
   playerGravMultiplier: 2
   playerEnergy: 0
   playerEnergyBarImage: {fileID: 7658975014858843245}
@@ -1672,7 +1674,7 @@ CharacterController:
   m_Height: 2.75
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 0.3
+  m_StepOffset: 0.05
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
@@ -1737,7 +1739,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerModes: 0
-  tempCurrentMode: 0
   buildType: 0
   turretPrefabs:
   - {fileID: 27263479634249880, guid: bc1313c41a464514abdda357ab8856a4, type: 3}
