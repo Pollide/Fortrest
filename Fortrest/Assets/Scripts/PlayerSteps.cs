@@ -6,20 +6,31 @@ public class PlayerSteps : MonoBehaviour
 {
     void Attack()
     {
-        PlayerController.global.AttackEffects();
+        if (!PlayerController.global.evading)
+        {
+            PlayerController.global.AttackEffects();
+        }       
     }
 
     void Gather()
     {
-        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && !PlayerController.global.evading)
         {
             PlayerController.global.GatheringEffects();
         }        
     }
 
     void DamageEnemy()
-    {       
-        PlayerController.global.damageEnemy = true;
+    {
+        if (!PlayerController.global.evading)
+        {
+            PlayerController.global.damageEnemy = true;
+        }
+    }
+
+    void Evading()
+    {
+        PlayerController.global.evading = false;
     }
 
     void StepOne()
