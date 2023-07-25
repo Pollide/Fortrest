@@ -6,7 +6,7 @@ public class Bow : MonoBehaviour
 {
     public GameObject arrowObject;
     public Transform firePoint;
-    public float fireForce = 20.0f;
+    public float fireForce = 45.0f;
 
     public void Shoot()
     {
