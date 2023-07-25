@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     public static PlayerController global;
 
     GamepadControls gamepadControls;
+    public Bow bowScript;
 
     // Components
     CharacterController playerCC;
@@ -25,12 +26,23 @@ public class PlayerController : MonoBehaviour
     private bool canRun = true;
 
     // Evade
-    private float evadeSpeed = 50.0f;
-    private float evadeDuration = 0.18f;
+    private float evadeTimer = 0.0f;
     private float evadeCoolDown = 2.5f;
-    private bool evading = false;
+    [HideInInspector] public bool evading = false;
     private bool canEvade;
     [HideInInspector] public bool playerCanBeDamaged = true;
+    private Vector3 newPosition;
+    private bool blocked = false;
+
+    // Shooting
+    private bool canShoot;
+    [HideInInspector] public float bowDamage = 1.5f;
+    private float bowTimer = 0.0f;
+    private float resetBow = 1.5f;
+    private bool shooting = false;
+    private bool directionSaved = false;
+    private Quaternion tempDirection;
+    [HideInInspector] public float arrowNumber = 10.0f;
 
     // Gravity
     public float playerGravMultiplier = 3f;
@@ -48,12 +60,12 @@ public class PlayerController : MonoBehaviour
     private bool deathEffects = false;
     private bool playerDead = false;
     public float playerHealth = 0.0f;
-    [HideInInspector]public float maxHealth = 100.0f;
+    [HideInInspector] public float maxHealth = 100.0f;
 
     //public float playerJumpHeight = 10f;
 
     // Attacks
-    public float attackDamage = 0.5f;
+    [HideInInspector] public float attackDamage = 1.0f;
     private float attackTimer = 0.0f;
     private float resetAttack = 0.95f;
     private float comboTimer = 0.0f;
@@ -88,6 +100,7 @@ public class PlayerController : MonoBehaviour
     public GameObject HammerGameObject;
     public GameObject PicaxeGameObject;
     public GameObject SwordGameObject;
+    public GameObject BowGameObject;
     public GameObject RadiusGameObject;
     private GameObject RadiusCamGameObject;
     public GameObject PauseCanvasGameObject;
@@ -101,6 +114,7 @@ public class PlayerController : MonoBehaviour
     public TMP_Text enemyAmountText;
     public TMP_Text houseUnderAttackText;
     public TMP_Text enemyDirectionText;
+    public TMP_Text arrowText;
 
     public GameObject DarkenGameObject;
 
@@ -114,6 +128,7 @@ public class PlayerController : MonoBehaviour
         public bool PicaxeBool;
         public bool SwordBool;
         public bool HandBool;
+        public bool BowBool;
     }
 
     private float respawnTimer = 0.0f;
@@ -300,6 +315,8 @@ public class PlayerController : MonoBehaviour
         timers[3] = timer4;
 
         canEvade = true;
+
+        arrowText.text = "Arrow: " + arrowNumber.ToString();
     }
 
     public void ChangeTool(ToolData toolData)
@@ -308,6 +325,7 @@ public class PlayerController : MonoBehaviour
         HammerGameObject.SetActive(toolData.HammerBool);
         PicaxeGameObject.SetActive(toolData.PicaxeBool);
         SwordGameObject.SetActive(toolData.SwordBool);
+        BowGameObject.SetActive(toolData.BowBool);
         RadiusGameObject.SetActive(toolData.HammerBool);
         if (RadiusCamGameObject != null)
         {
@@ -317,7 +335,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if ((Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && CharacterAnimator.GetBool("Moving") == true)
+        if ((Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && CharacterAnimator.GetBool("Moving") == true && !canShoot)
         {
             running = true;
         }
@@ -391,13 +409,18 @@ public class PlayerController : MonoBehaviour
 #endif
         if (evading)
         {
-            CharacterAnimator.SetBool("Moving", false);
+            evadeTimer += Time.deltaTime;
             playerCanBeDamaged = false;
+            if (!blocked)
+            {
+                transform.position = Vector3.Lerp(transform.position, newPosition, evadeTimer / 30.0f);
+            }            
             return;
         }
         else
         {
             playerCanBeDamaged = true;
+            blocked = false;
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -424,6 +447,7 @@ public class PlayerController : MonoBehaviour
             ApplyMovement(horizontalMovement, verticalMovement);
             Attack();
             Gathering();
+            Shoot();
             if (Input.GetKeyDown(KeyCode.Space) && canEvade)
             {
                 StartCoroutine(Evade());
@@ -462,6 +486,16 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (shooting)
+        {
+            bowTimer += Time.deltaTime;
+
+            if (bowTimer >= resetBow)
+            {
+                shooting = false;
+            }
+        }
+
         ScreenDamage();
 
         if (playerHealth <= 0 || playerDead)
@@ -471,12 +505,13 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator Evade()
-    {
+    {       
+        evadeTimer = 0;
         canEvade = false;
         evading = true;
-        playerCC.Move(moveDirection * evadeSpeed * Time.deltaTime);
-        yield return new WaitForSeconds(evadeDuration);
-        evading = false;
+        CharacterAnimator.ResetTrigger("Evade");
+        CharacterAnimator.SetTrigger("Evade");
+        newPosition = transform.position + (transform.forward * 7.0f);
 
         yield return new WaitForSeconds(evadeCoolDown);
         canEvade = true;
@@ -549,7 +584,7 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
+        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
             attackingCTRL = false;
             attacking = true;
@@ -595,17 +630,60 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4;
             float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, building.position);
 
-            if (FacingResource(building.position) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+            if (Facing(building.position, 75.0f) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
             {
                 gathering = true;
                 gatherTimer = 0;
                 currentResource = building.GetComponent<Building>();
-                PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PicaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
-                PlayerController.global.CharacterAnimator.ResetTrigger("Swing");
-                PlayerController.global.CharacterAnimator.SetTrigger("Swing");
+                ChangeTool(new ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PicaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+                CharacterAnimator.ResetTrigger("Swing");
+                CharacterAnimator.SetTrigger("Swing");
             }
 
         }, true); //true means natural
+    }
+
+    private void Shoot()
+    {
+        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+        {
+            if (Input.GetMouseButton(1))
+            {
+                arrowText.gameObject.SetActive(true);
+                ChangeTool(new ToolData() { BowBool = true });
+                canShoot = true;
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    if (!directionSaved)
+                    {
+                        tempDirection = transform.rotation;
+                        directionSaved = true;
+                    }
+                    transform.rotation = tempDirection;
+                    CharacterAnimator.SetBool("Moving", false);
+                }
+                else
+                {
+                    directionSaved = false;
+                }
+            }
+            else
+            {
+                arrowText.gameObject.SetActive(false);
+                ChangeTool(new ToolData() { SwordBool = true });
+                canShoot = false;                
+            }
+
+            if (Input.GetMouseButtonDown(0) && canShoot && !shooting && arrowNumber > 0)
+            {
+                shooting = true;
+                bowTimer = 0;
+                arrowNumber -= 1;
+                GameManager.PlayAnimation(arrowText.GetComponent<Animation>(), "EnemyAmount");
+                arrowText.text = "Arrow: " + arrowNumber.ToString();
+                bowScript.Shoot();
+            }
+        }  
     }
 
     public void AttackEffects()
@@ -840,11 +918,11 @@ public class PlayerController : MonoBehaviour
         displaySlash = true;
     }
 
-    private bool FacingResource(Vector3 enemyPosition) // Making sure the enemy always faces what it is attacking
+    private bool Facing(Vector3 otherPosition, float desiredAngle) // Making sure the enemy always faces what it is attacking
     {
-        Vector3 enemyDirection = (enemyPosition - transform.position).normalized; // Gets a direction using a normalized vector
+        Vector3 enemyDirection = (otherPosition - transform.position).normalized; // Gets a direction using a normalized vector
         float angle = Vector3.Angle(transform.forward, enemyDirection);
-        if (angle > -75.0f && angle < 75.0f)
+        if (angle > -desiredAngle && angle < desiredAngle)
         {
             return true;
         }
@@ -893,5 +971,26 @@ public class PlayerController : MonoBehaviour
             color.a = Mathf.Lerp(1.0f, 0.0f, timer / 5.0f);
         }
         return color;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (evading)
+        {
+            if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Resource") || other.gameObject.CompareTag("Building") || other.gameObject.CompareTag("Boar") || other.gameObject.CompareTag("JustForEvade"))
+            {
+                if (!other.gameObject.CompareTag("Enemy"))
+                {
+                    blocked = true;
+                }
+                else
+                {
+                    if (Facing(other.gameObject.transform.position, 30.0f))
+                    {
+                        blocked = true;
+                    }
+                }
+            }
+        }       
     }
 }

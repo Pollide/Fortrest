@@ -56,7 +56,7 @@ public class Building : MonoBehaviour
 
     private GameObject normalHouse;
     private GameObject destroyedHouse;
-    Vector3 PlayerDirection;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -178,7 +178,14 @@ public class Building : MonoBehaviour
                 return;
             }
 
-            PlayerDirection = (PlayerController.global.transform.position - transform.position).normalized;
+            //  PlayerEulerY = PlayerController.global.transform.eulerAngles.y;
+
+            if (resourceObject == BuildingType.HardWood || resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood)
+            {
+                GetComponent<Rigidbody>().isKinematic = false;
+                GetComponent<Rigidbody>().useGravity = true;
+                GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
+            }
 
             Invoke("DisableInvoke", GameManager.PlayAnimation(GetComponent<Animation>()).length);
         }
@@ -247,12 +254,6 @@ public class Building : MonoBehaviour
                     }
                 }
             }
-        }
-
-        if (DestroyedBool && PlayerDirection != Vector3.zero)
-        {
-            Quaternion targetRotation = Quaternion.LookRotation(PlayerDirection);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 1 * Time.deltaTime);
         }
     }
 }

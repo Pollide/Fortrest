@@ -430,6 +430,17 @@ public class EnemyController : MonoBehaviour
                 agent.stoppingDistance = Vector3.Distance(transform.position, house.transform.position);
             }
         }
+        if (other.gameObject.tag == "Arrow")
+        {
+            chaseTimer = 0;
+            if (currentEnemyType == ENEMYTYPE.goblin)
+            {
+                chasing = true;
+            }
+            Damaged(PlayerController.global.bowDamage);
+            PickSound(hitSound, hitSound2, 1.0f);
+            Destroy(other.gameObject);
+        }
     }
 
     private void SetEnemyParameters()
@@ -514,9 +525,9 @@ public class EnemyController : MonoBehaviour
             if (PlayerController.global.playerCanBeDamaged)
             {
                 PlayerController.global.TakeDamage(enemyDamage);
-            }           
+            }
         }
-        else
+        else if (bestTarget)
         {
             if (currentEnemyType == ENEMYTYPE.ogre)
             {

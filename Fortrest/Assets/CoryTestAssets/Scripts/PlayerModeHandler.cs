@@ -74,7 +74,7 @@ public class PlayerModeHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
         {
             PlayerController.global.swapCTRL = false;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);           
             switch (playerModes)
             {
                 case PlayerModes.CombatMode:
