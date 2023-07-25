@@ -56,8 +56,7 @@ public class Building : MonoBehaviour
 
     private GameObject normalHouse;
     private GameObject destroyedHouse;
-    float PlayerEulerY;
-    Vector3 directionToPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -181,7 +180,13 @@ public class Building : MonoBehaviour
 
             //  PlayerEulerY = PlayerController.global.transform.eulerAngles.y;
 
-            directionToPlayer = (PlayerController.global.transform.position - transform.position).normalized;
+            if (resourceObject == BuildingType.HardWood || resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood)
+            {
+                GetComponent<Rigidbody>().isKinematic = false;
+                GetComponent<Rigidbody>().useGravity = true;
+                GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
+            }
+
             Invoke("DisableInvoke", GameManager.PlayAnimation(GetComponent<Animation>()).length);
         }
         PlayerController.global.currentResource = null;
@@ -249,18 +254,6 @@ public class Building : MonoBehaviour
                     }
                 }
             }
-        }
-
-        if (DestroyedBool && directionToPlayer != Vector3.zero)
-        {
-            // Calculate the rotation angle using the Atan2 function to get the angle in radians.
-            float targetAngle = Mathf.Atan2(directionToPlayer.x, directionToPlayer.z) * Mathf.Rad2Deg;
-
-            // Create the target rotation using the targetAngle.
-            Quaternion targetRotation = Quaternion.Euler(0f, targetAngle, 0f);
-
-            // Smoothly rotate the tree towards the target rotation.
-            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 2 * Time.deltaTime);
         }
     }
 }

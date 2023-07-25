@@ -20,6 +20,9 @@ public class InventoryItem : MonoBehaviour
     public GameObject dragableItem;
     public string resourceObject;
 
+    [HideInInspector]
+    public bool CollectedBool;
+
     private void Start()
     {
         LevelManager.global.InventoryItemList.Add(gameObject);
@@ -27,18 +30,21 @@ public class InventoryItem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!CollectedBool)
         {
-            soundPlayed = false;
+            if (other.CompareTag("Player"))
+            {
+                soundPlayed = false;
 
-            CollectVoid();
+                CollectVoid();
 
-        }
+            }
 
-        if (!soundPlayed)
-        {
-            soundPlayed = true;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.CollectSound);
+            if (!soundPlayed)
+            {
+                soundPlayed = true;
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CollectSound);
+            }
         }
     }
 
@@ -46,7 +52,20 @@ public class InventoryItem : MonoBehaviour
     {
         InventoryManager.global.AddItem(this, resourceAmount);
 
-        gameObject.SetActive(false);
+        CollectedBool = true;
+    }
+
+    private void Update()
+    {
+        if (CollectedBool)
+        {
+            transform.localScale -= Vector3.one * 20 * Time.deltaTime;
+
+            if (transform.localScale.x <= 0.5f)
+            {
+                gameObject.SetActive(false);
+            }
+        }
     }
 }
 
