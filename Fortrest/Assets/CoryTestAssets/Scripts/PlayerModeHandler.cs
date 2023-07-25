@@ -9,6 +9,7 @@ public enum PlayerModes
     BuildMode,
     ResourceMode,
     CombatMode,
+    RepairMode,
     Paused,
     UpgradeMenu,
 }
@@ -36,16 +37,17 @@ public class PlayerModeHandler : MonoBehaviour
     public Image buildingMode;
     public Image resourceMode;
     public Image combatMode; 
+    public Image repairMode; 
     public Image buildingModeSub;
     public Image resourceModeSub;
     public Image combatModeSub;
+    public Image repairModeSub;
     public Grid buildGrid;
 
     private void Awake()
     {
         if (global)
         {
-
             //destroys the duplicate
             Destroy(gameObject);
             GrassComputeScript.global.interactors.Remove(GetComponentInChildren<ShaderInteractor>());
@@ -64,26 +66,10 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (playerModes == PlayerModes.BuildMode)
         {
-            if (buildType == BuildType.Turret)
-            {
-                Building building = turretPrefabs[0].GetComponentInChildren<Building>();
-                DragBuildingBlueprint("Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
-                SpawnBuilding(turretPrefabs[0], "Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
-
-            }
-            else if (buildType == BuildType.Slow)
-            {
-                Building building = turretPrefabs[1].GetComponentInChildren<Building>();
-                DragBuildingBlueprint("HardWood", "MossyStone", building.constructionCostWood, building.constructionCostStone);
-                SpawnBuilding(turretPrefabs[1], "HardWood", "MossyStone", building.constructionCostWood, building.constructionCostStone);
-            }
-            else if (buildType == BuildType.Cannon)
-            {
-                Building building = turretPrefabs[2].GetComponentInChildren<Building>();
-                DragBuildingBlueprint("CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
-                SpawnBuilding(turretPrefabs[2], "CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
-            }
+            BuildMode();
         }
+
+        ScrollSwitchTurret();
 
         if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
         {
@@ -99,6 +85,29 @@ public class PlayerModeHandler : MonoBehaviour
                     break;
                 case PlayerModes.BuildMode:
                     SwitchToGatherMode();
+                    break;
+                case PlayerModes.RepairMode:
+                    SwitchToGatherMode();
+                    break;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
+            switch (playerModes)
+            {
+                case PlayerModes.CombatMode:
+                    SwitchToBuildMode();
+                    break;
+                case PlayerModes.ResourceMode:
+                    SwitchToBuildMode();
+                    break;
+                case PlayerModes.BuildMode:
+                    SwitchToBuildRepairMode();
+                    break;
+                case PlayerModes.RepairMode:
+                    SwitchToBuildMode();
                     break;
             }
         }
@@ -117,6 +126,68 @@ public class PlayerModeHandler : MonoBehaviour
         SwitchToGatherMode();
     }
 
+    private void BuildMode()
+    {
+        if (buildType == BuildType.Turret)
+        {
+            Building building = turretPrefabs[0].GetComponentInChildren<Building>();
+            DragBuildingBlueprint("Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
+            SpawnBuilding(turretPrefabs[0], "Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
+
+        }
+        else if (buildType == BuildType.Slow)
+        {
+            Building building = turretPrefabs[1].GetComponentInChildren<Building>();
+            DragBuildingBlueprint("HardWood", "MossyStone", building.constructionCostWood, building.constructionCostStone);
+            SpawnBuilding(turretPrefabs[1], "HardWood", "MossyStone", building.constructionCostWood, building.constructionCostStone);
+        }
+        else if (buildType == BuildType.Cannon)
+        {
+            Building building = turretPrefabs[2].GetComponentInChildren<Building>();
+            DragBuildingBlueprint("CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
+            SpawnBuilding(turretPrefabs[2], "CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
+        }
+    }
+
+    private void ScrollSwitchTurret()
+    {
+        if (Input.mouseScrollDelta.y > 0f)
+        {
+            if (buildType == BuildType.Turret)
+            {
+                buildType = BuildType.Cannon;
+            }
+            else if (buildType == BuildType.Cannon)
+            {
+                buildType = BuildType.Slow;
+            }
+            else if (buildType == BuildType.Slow)
+            {
+                buildType = BuildType.Turret;
+            }
+        }
+        if (Input.mouseScrollDelta.y < 0f)
+        {
+            if (buildType == BuildType.Turret)
+            {
+                buildType = BuildType.Slow;
+            }
+            else if (buildType == BuildType.Cannon)
+            {
+                buildType = BuildType.Turret;
+            }
+            else if (buildType == BuildType.Slow)
+            {
+                buildType = BuildType.Cannon;
+            }
+        }
+    }
+
+    public void RepairMode(Building building)
+    { 
+        
+    }
+
     public void SwitchToBuildMode()
     {
         playerModes = PlayerModes.BuildMode;
@@ -126,11 +197,40 @@ public class PlayerModeHandler : MonoBehaviour
         buildingMode.enabled = true;
         resourceMode.enabled = false;
         combatMode.enabled = false;
+        repairMode.transform.GetChild(0).gameObject.SetActive(false);
+        repairMode.enabled = false;
 
         buildingModeSub.enabled = false;
         resourceModeSub.enabled = true;
         combatModeSub.enabled = false;
+        repairModeSub.transform.GetChild(0).gameObject.SetActive(true);
+        repairModeSub.enabled = true;
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
+    }
+
+    public void SwitchToBuildRepairMode()
+    {
+        if (turretBlueprint.activeInHierarchy)
+        {
+            turretBlueprint.SetActive(false);
+        }
+
+        playerModes = PlayerModes.RepairMode;
+
+        SetMouseActive(false);
+
+        buildingMode.enabled = false;
+        resourceMode.enabled = false;
+        combatMode.enabled = false;
+        repairMode.transform.GetChild(0).gameObject.SetActive(true);
+        repairMode.enabled = true;
+
+        buildingModeSub.enabled = true; 
+        resourceModeSub.enabled = true;
+        combatModeSub.enabled = false;
+        repairModeSub.transform.GetChild(0).gameObject.SetActive(false);
+        repairModeSub.enabled = false;
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
     }
 
     public void SwitchToGatherMode()
@@ -139,15 +239,21 @@ public class PlayerModeHandler : MonoBehaviour
         {
             turretBlueprint.SetActive(false);
         }
+
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
         playerModes = PlayerModes.ResourceMode;
         SetMouseActive(false);
         buildingMode.enabled = false;
         resourceMode.enabled = true;
         combatMode.enabled = false;
-        buildingModeSub.enabled = false;
+        repairMode.transform.GetChild(0).gameObject.SetActive(false);
+        repairMode.enabled = false;
+
+        buildingModeSub.enabled = true;
         resourceModeSub.enabled = false;
         combatModeSub.enabled = true;
+        repairModeSub.transform.GetChild(0).gameObject.SetActive(false);
+        repairModeSub.enabled = false;
     }
 
     public void SwitchToCombatMode()
@@ -156,16 +262,21 @@ public class PlayerModeHandler : MonoBehaviour
         {
             turretBlueprint.SetActive(false);
         }
+
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = true });
         playerModes = PlayerModes.CombatMode;
         SetMouseActive(false);
         buildingMode.enabled = false;
         resourceMode.enabled = false;
         combatMode.enabled = true;
+        repairMode.transform.GetChild(0).gameObject.SetActive(false);
+        repairMode.enabled = false;
 
-        buildingModeSub.enabled = false;
+        buildingModeSub.enabled = true;
+        repairModeSub.enabled = false;
         resourceModeSub.enabled = true;
         combatModeSub.enabled = false;
+        repairModeSub.transform.GetChild(0).gameObject.SetActive(false);
     }
     bool runOnce;
 
