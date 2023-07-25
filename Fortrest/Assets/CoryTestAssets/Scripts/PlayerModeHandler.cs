@@ -9,7 +9,6 @@ public enum PlayerModes
     BuildMode,
     ResourceMode,
     CombatMode,
-    BowMode,
     Paused,
     UpgradeMenu,
 }
@@ -26,7 +25,6 @@ public class PlayerModeHandler : MonoBehaviour
 {
     public static PlayerModeHandler global;
     public PlayerModes playerModes;
-    public PlayerModes tempCurrentMode;
     public BuildType buildType;
     public GameObject[] turretPrefabs;
     public GameObject turretBlueprint;
@@ -115,7 +113,6 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         playerModes = PlayerModes.ResourceMode;
-        tempCurrentMode = playerModes;
         buildType = BuildType.Slow;
         SwitchToGatherMode();
     }

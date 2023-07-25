@@ -35,8 +35,10 @@ public class PlayerController : MonoBehaviour
 
     // Shooting
     private bool canShoot;
-    private bool modeSaved;
-    
+    [HideInInspector] public float bowDamage = 1.5f;
+    private float bowTimer = 0.0f;
+    private float resetBow = 1.5f;
+    private bool shooting = false;
 
     // Gravity
     public float playerGravMultiplier = 3f;
@@ -54,12 +56,12 @@ public class PlayerController : MonoBehaviour
     private bool deathEffects = false;
     private bool playerDead = false;
     public float playerHealth = 0.0f;
-    [HideInInspector]public float maxHealth = 100.0f;
+    [HideInInspector] public float maxHealth = 100.0f;
 
     //public float playerJumpHeight = 10f;
 
     // Attacks
-    public float attackDamage = 0.5f;
+    [HideInInspector] public float attackDamage = 1.0f;
     private float attackTimer = 0.0f;
     private float resetAttack = 0.95f;
     private float comboTimer = 0.0f;
@@ -472,6 +474,16 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (shooting)
+        {
+            bowTimer += Time.deltaTime;
+
+            if (bowTimer >= resetBow)
+            {
+                shooting = false;
+            }
+        }
+
         ScreenDamage();
 
         if (playerHealth <= 0 || playerDead)
@@ -559,7 +571,7 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
+        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
             attackingCTRL = false;
             attacking = true;
@@ -620,32 +632,26 @@ public class PlayerController : MonoBehaviour
 
     private void Shooting()
     {
-        if (Input.GetMouseButton(1))
+        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
-            if (!modeSaved)
+            if (Input.GetMouseButton(1))
             {
-                PlayerModeHandler.global.tempCurrentMode = PlayerModeHandler.global.playerModes;
-                modeSaved = true;
-            }            
-            PlayerModeHandler.global.playerModes = PlayerModes.BowMode;
-            ChangeTool(new ToolData() { BowBool = true });
-            canShoot = true;
-        }
-        else
-        {
-            if (modeSaved)
+                ChangeTool(new ToolData() { BowBool = true });
+                canShoot = true;
+            }
+            else
             {
-                PlayerModeHandler.global.playerModes = PlayerModeHandler.global.tempCurrentMode;
-                ChangeTool(new ToolData() { AxeBool = PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode, SwordBool = PlayerModeHandler.global.playerModes == PlayerModes.CombatMode, HammerBool = PlayerModeHandler.global.playerModes == PlayerModes.BuildMode });
-                modeSaved = false;
-            }                            
-            canShoot = false;
-        }
+                ChangeTool(new ToolData() { SwordBool = true });
+                canShoot = false;
+            }
 
-        if (Input.GetMouseButtonDown(0) && canShoot)
-        {
-            bowScript.Shoot();
-        }
+            if (Input.GetMouseButtonDown(0) && canShoot && !shooting)
+            {
+                shooting = true;
+                bowTimer = 0;
+                bowScript.Shoot();
+            }
+        }  
     }
 
     public void AttackEffects()
