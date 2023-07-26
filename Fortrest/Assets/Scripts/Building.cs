@@ -195,14 +195,7 @@ public class Building : MonoBehaviour
     public void DisableInvoke()
     {
         DestroyedBool = true; //also calls in DestroyBuilding
-        if (resourceObject == BuildingType.Defense)
-        {
-            transform.parent.gameObject.SetActive(false);
-        }
-        else
-        {
-            gameObject.SetActive(false);
-        }
+        gameObject.SetActive(false);
     }
 
     public void RestartGame()

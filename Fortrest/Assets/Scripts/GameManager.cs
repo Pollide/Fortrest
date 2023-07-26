@@ -552,7 +552,7 @@ public class GameManager : MonoBehaviour
 
             for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
             {
-                if (PlayerModeHandler.global.turretPrefabs[i].name.Contains(building.transform.parent.name))
+                if (PlayerModeHandler.global.turretPrefabs[i].name.Contains(building.name))
                 {
                     //  Debug.Log(PlayerModeHandler.global.turretPrefabs[i].name + " Contains " + building.name);
 
