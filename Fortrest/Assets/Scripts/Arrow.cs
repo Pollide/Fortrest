@@ -6,7 +6,10 @@ public class Arrow : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        Destroy(gameObject);
+        if (collision.gameObject != PlayerController.global.gameObject)
+        {
+            Destroy(gameObject);
+        }       
     }
 
     private void Start()
