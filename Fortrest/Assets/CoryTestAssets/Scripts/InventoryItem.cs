@@ -20,6 +20,10 @@ public class InventoryItem : MonoBehaviour
     public GameObject dragableItem;
     public string resourceObject;
 
+    private float timer;
+    private bool rotationSet;
+    private Quaternion randomRotation;
+
     [HideInInspector]
     public bool CollectedBool;
 
@@ -28,16 +32,14 @@ public class InventoryItem : MonoBehaviour
         LevelManager.global.InventoryItemList.Add(gameObject);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (!CollectedBool)
         {
             if (other.CompareTag("Player"))
             {
                 soundPlayed = false;
-
                 CollectVoid();
-
             }
 
             if (!soundPlayed)
@@ -59,7 +61,17 @@ public class InventoryItem : MonoBehaviour
     {
         if (CollectedBool)
         {
+            timer = 0.0f;
+            timer += Time.deltaTime;     
+            if (!rotationSet)
+            {
+                randomRotation = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+                rotationSet = true;
+            }
+            transform.position = Vector3.Lerp(transform.position, new Vector3 (PlayerController.global.transform.position.x, PlayerController.global.transform.position.y + 2.0f, PlayerController.global.transform.position.z), timer * 3.0f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, randomRotation, timer / 2.0f);
             transform.localScale -= Vector3.one * 20 * Time.deltaTime;
+            gameObject.GetComponent<BoxCollider>().enabled = false;
 
             if (transform.localScale.x <= 0.5f)
             {
