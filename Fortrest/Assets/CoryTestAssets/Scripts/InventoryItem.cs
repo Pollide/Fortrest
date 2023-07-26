@@ -38,8 +38,14 @@ public class InventoryItem : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                soundPlayed = false;
-                CollectVoid();
+                if (name == "Apple" && PlayerController.global.appleAmount >= 5)
+                {
+                }
+                else
+                {
+                    soundPlayed = false;
+                    CollectVoid();
+                }               
             }
 
             if (!soundPlayed)
@@ -51,9 +57,14 @@ public class InventoryItem : MonoBehaviour
     }
 
     public void CollectVoid()
-    {
+    {        
+        if (name == "Apple")
+        {           
+            PlayerController.global.appleAmount += 1;
+            GameManager.PlayAnimation(PlayerController.global.arrowText.GetComponent<Animation>(), "EnemyAmount");
+            PlayerController.global.appleText.text = PlayerController.global.appleAmount.ToString();               
+        }
         InventoryManager.global.AddItem(this, resourceAmount);
-
         CollectedBool = true;
     }
 

@@ -62,6 +62,9 @@ public class PlayerController : MonoBehaviour
     private bool playerDead = false;
     public float playerHealth = 0.0f;
     [HideInInspector] public float maxHealth = 100.0f;
+    [HideInInspector] public int appleAmount = 0;
+    private float appleHealAmount = 10.0f;
+    [HideInInspector] public int maxApple = 5;
 
     //public float playerJumpHeight = 10f;
 
@@ -116,6 +119,7 @@ public class PlayerController : MonoBehaviour
     public TMP_Text houseUnderAttackText;
     public TMP_Text enemyDirectionText;
     public TMP_Text arrowText;
+    public TMP_Text appleText;
 
     public GameObject DarkenGameObject;
 
@@ -318,6 +322,7 @@ public class PlayerController : MonoBehaviour
         canEvade = true;
 
         arrowText.text = "Arrow: " + arrowNumber.ToString();
+        appleText.text = appleAmount.ToString();
     }
 
     public void ChangeTool(ToolData toolData)
@@ -459,6 +464,10 @@ public class PlayerController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space) && canEvade)
             {
                 StartCoroutine(Evade());
+            }
+            if (Input.GetKeyDown(KeyCode.R) && appleAmount > 0)
+            {
+                EatApple();
             }
         }
 
@@ -692,6 +701,14 @@ public class PlayerController : MonoBehaviour
                 bowScript.Shoot();
             }
         }  
+    }
+
+    private void EatApple()
+    {
+        HealthRestore(appleHealAmount);
+        appleAmount -= 1;
+        GameManager.PlayAnimation(arrowText.GetComponent<Animation>(), "EnemyAmount");
+        appleText.text = appleAmount.ToString();
     }
 
     public void AttackEffects()
