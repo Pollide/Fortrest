@@ -6,11 +6,11 @@ public class Bow : MonoBehaviour
 {
     public GameObject arrowObject;
     public Transform firePoint;
-    public float fireForce = 45.0f;
+    private float fireForce = 30.0f;
 
     public void Shoot()
     {
-        GameObject arrow = Instantiate(arrowObject, firePoint.position, Quaternion.Euler(90f, PlayerController.global.transform.eulerAngles.y, 0));
+        GameObject arrow = Instantiate(arrowObject, firePoint.position, Quaternion.Euler(0f, transform.eulerAngles.y, -90f));
         arrow.GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * fireForce, ForceMode.Impulse);
     }
 }

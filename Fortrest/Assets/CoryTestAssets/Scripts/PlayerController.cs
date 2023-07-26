@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     public float playerCurrentSpeed = 0f;
     private float playerWalkSpeed = 5.0f;
     private float playerSprintSpeed = 8.0f;
+    private float playerBowSpeed = 3.0f;
     public bool running = false;
     private float runTimer = 0.0f;
     private bool canRun = true;
@@ -344,16 +345,23 @@ public class PlayerController : MonoBehaviour
             running = false;
         }
 
-        if (running)
+        if (canShoot)
         {
-            playerCurrentSpeed = playerSprintSpeed;
-            CharacterAnimator.speed = 1.6f;
+            playerCurrentSpeed = playerBowSpeed;
         }
         else
         {
-            playerCurrentSpeed = playerWalkSpeed;
-            CharacterAnimator.speed = 1.0f;
-        }
+            if (running)
+            {
+                playerCurrentSpeed = playerSprintSpeed;
+                CharacterAnimator.speed = 1.6f;
+            }
+            else
+            {
+                playerCurrentSpeed = playerWalkSpeed;
+                CharacterAnimator.speed = 1.0f;
+            }
+        }      
 
         if (!canRun)
         {
@@ -648,7 +656,7 @@ public class PlayerController : MonoBehaviour
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
             if (Input.GetMouseButton(1))
-            {
+            {                
                 arrowText.gameObject.SetActive(true);
                 ChangeTool(new ToolData() { BowBool = true });
                 canShoot = true;
