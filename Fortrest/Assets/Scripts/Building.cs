@@ -22,8 +22,8 @@ public class Building : MonoBehaviour
 
     public enum BuildingType
     {
-        Cannon,
-        CannonBP,
+        Defense,
+        DefenseBP,
         Wood,
         Stone,
         Bush,
@@ -86,7 +86,7 @@ public class Building : MonoBehaviour
             normalHouse = gameObject.transform.GetChild(0).gameObject;
             destroyedHouse = gameObject.transform.GetChild(1).gameObject;
         }
-        else if (resourceObject != BuildingType.CannonBP) //the house itself is not part of the buildings list
+        else if (resourceObject != BuildingType.DefenseBP) //the house itself is not part of the buildings list
         {
             LevelManager.global.AddBuildingVoid(transform);
         }
@@ -195,7 +195,7 @@ public class Building : MonoBehaviour
     public void DisableInvoke()
     {
         DestroyedBool = true; //also calls in DestroyBuilding
-        if (resourceObject == BuildingType.Cannon)
+        if (resourceObject == BuildingType.Defense)
         {
             transform.parent.gameObject.SetActive(false);
         }

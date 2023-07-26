@@ -454,12 +454,15 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < LevelManager.global.BridgeList.Count; i++)
         {
-            LevelManager.global.BridgeList[i].isBuilt = Pref("Item Collected" + i, LevelManager.global.BridgeList[i].isBuilt ? 1 : 0, load) == 1;
+            LevelManager.global.BridgeList[i].isBuilt = Pref("Bridge Built" + i, LevelManager.global.BridgeList[i].isBuilt ? 1 : 0, load) == 1;
         }
 
         LevelManager.ProcessEnemyList((enemy) =>
         {
-            enemy.health = Pref("Enemy Health" + LevelManager.global.EnemyList.IndexOf(enemy), enemy.health, load);
+            int i = LevelManager.global.EnemyList.IndexOf(enemy);
+            enemy.health = Pref("Enemy Health" + i, enemy.health, load);
+            DataPositionVoid("Enemy Position" + i, enemy.transform, load);
+            DataEulerVoid("Enemy Euler" + i, enemy.transform, load);
 
             if (enemy.health <= 0 && load)
             {
@@ -468,30 +471,28 @@ public class GameManager : MonoBehaviour
 
         });
 
+        int turretSize = (int)Pref("Turret Size", 0, load); //also resets on save
+
         if (load)
         {
-            int turretSize = (int)Pref("Turret Size", 0, true);
-
             for (int i = 0; i < turretSize; i++)
             {
                 GameObject turret = Instantiate(PlayerModeHandler.global.turretPrefabs[(int)Pref("Turret Type" + i, 0, true)]);
 
-                DataPositionVoid("Item Position" + i, turret.transform, load);
-                DataEulerVoid("Item Euler" + i, turret.transform, load);
+                DataPositionVoid("Turret Position" + i, turret.transform, load);
+                DataEulerVoid("Turret Euler" + i, turret.transform, load);
             }
 
             PlayerController.global.HealthRestore(0); //refresh
         }
-        else
-        {
-            Pref("Turret Size", 0, false); //reset
-        }
 
+        //DEFENSE
         LevelManager.ProcessBuildingList((building) =>
         {
             DataBuildingVoid(building, load);
         });
 
+        //NATURE
         LevelManager.ProcessBuildingList((building) =>
         {
             DataBuildingVoid(building, load);
@@ -536,7 +537,7 @@ public class GameManager : MonoBehaviour
             building = building.transform.parent.GetComponent<Building>();
         }
 
-        building.health = (int)Pref("Health" + LevelManager.global.ReturnIndex(value), building.health, load);
+        building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
 
         if (load)
         {
@@ -545,21 +546,23 @@ public class GameManager : MonoBehaviour
             if (building.health <= 0)
                 building.DisableInvoke();
         }
-        else if (building.resourceObject == Building.BuildingType.Cannon)
+        else if (building.resourceObject == Building.BuildingType.Defense)
         {
             int turretSize = (int)Pref("Turret Size", 0, true);
 
             for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
             {
-                if (PlayerModeHandler.global.turretPrefabs[i].name.Contains(building.name))
+                if (PlayerModeHandler.global.turretPrefabs[i].name.Contains(building.transform.parent.name))
                 {
+                    //  Debug.Log(PlayerModeHandler.global.turretPrefabs[i].name + " Contains " + building.name);
+
                     Pref("Turret Type" + turretSize, i, false);
                     break;
                 }
             }
 
-            DataPositionVoid("Item Position" + turretSize, building.transform, false);
-            DataEulerVoid("Item Euler" + turretSize, building.transform, false);
+            DataPositionVoid("Turret Position" + turretSize, building.transform, false);
+            DataEulerVoid("Turret Euler" + turretSize, building.transform, false);
 
             Pref("Turret Size", turretSize + 1, false);
         }
