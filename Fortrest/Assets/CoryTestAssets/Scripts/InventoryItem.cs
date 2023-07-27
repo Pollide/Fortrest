@@ -61,7 +61,7 @@ public class InventoryItem : MonoBehaviour
         if (name == "Apple")
         {           
             PlayerController.global.appleAmount += 1;
-            GameManager.PlayAnimation(PlayerController.global.arrowText.GetComponent<Animation>(), "EnemyAmount");
+            GameManager.PlayAnimation(PlayerController.global.appleText.GetComponent<Animation>(), "EnemyAmount");
             PlayerController.global.appleText.text = PlayerController.global.appleAmount.ToString();               
         }
         InventoryManager.global.AddItem(this, resourceAmount);
