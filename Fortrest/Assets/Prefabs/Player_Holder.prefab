@@ -1620,6 +1620,7 @@ MonoBehaviour:
   playerCanBeDamaged: 1
   bowDamage: 1.5
   arrowNumber: 10
+  turretEnd: 0
   miniTurretObject: {fileID: 27263479634249880, guid: 0a5a068777832784eb981764bd909c40,
     type: 3}
   playerGravMultiplier: 2
@@ -1637,6 +1638,7 @@ MonoBehaviour:
   playerisMoving: 0
   attacking: 0
   bodyShape: {fileID: 4232939553054584673}
+  canTeleport: 0
   AxeGameObject: {fileID: 8727725965552586070}
   HammerGameObject: {fileID: 6881260825570563181}
   PicaxeGameObject: {fileID: 4922188824349335350}
@@ -2975,7 +2977,7 @@ PrefabInstance:
     - target: {fileID: 3040693575261435360, guid: 9dd211ddbb196ca4294173c2b28022aa,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6443275008082318382, guid: 9dd211ddbb196ca4294173c2b28022aa,
         type: 3}

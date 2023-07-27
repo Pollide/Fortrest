@@ -101,6 +101,9 @@ public class PlayerController : MonoBehaviour
     public GameObject bodyShape;
     private GameObject interactText;
 
+    // Teleporter
+    [HideInInspector] public bool canTeleport= false;
+
     // VFXs
     private VisualEffect VFXSlash;
     private VisualEffect VFXSleeping;
@@ -482,6 +485,10 @@ public class PlayerController : MonoBehaviour
             {
                 SpawnTurret();
             }
+            if (Input.GetKeyDown(KeyCode.T) && canTeleport)
+            {
+                Teleport();
+            }
         }
 
         if (attacking)
@@ -753,6 +760,14 @@ public class PlayerController : MonoBehaviour
         turretSpawned = true;
         turretEnd = false;
         GameObject miniTurret = Instantiate(miniTurretObject, transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);     
+    }
+
+    private void Teleport()
+    {
+        gameObject.GetComponent<CharacterController>().enabled = false;
+        transform.position = houseSpawnPoint.transform.position;
+        canTeleport = false;
+        gameObject.GetComponent<CharacterController>().enabled = true;
     }
 
     private void EatApple()
