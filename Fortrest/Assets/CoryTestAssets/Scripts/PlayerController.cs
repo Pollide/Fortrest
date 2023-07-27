@@ -707,7 +707,7 @@ public class PlayerController : MonoBehaviour
     {
         HealthRestore(appleHealAmount);
         appleAmount -= 1;
-        GameManager.PlayAnimation(arrowText.GetComponent<Animation>(), "EnemyAmount");
+        GameManager.PlayAnimation(appleText.GetComponent<Animation>(), "EnemyAmount");
         appleText.text = appleAmount.ToString();
     }
 
