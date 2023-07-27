@@ -45,6 +45,14 @@ public class PlayerController : MonoBehaviour
     private Quaternion tempDirection;
     [HideInInspector] public float arrowNumber = 10.0f;
 
+    // Spawn Turret
+    private bool turretSpawned;
+    [HideInInspector] public bool turretEnd;
+    private float turretTimer = 0.0f;
+    private float resetTurret = 30.0f;
+    private float turretDuration = 20.0f;
+    public GameObject miniTurretObject;
+
     // Gravity
     public float playerGravMultiplier = 3f;
     private float playerGrav = -9.81f;
@@ -120,6 +128,7 @@ public class PlayerController : MonoBehaviour
     public TMP_Text enemyDirectionText;
     public TMP_Text arrowText;
     public TMP_Text appleText;
+    public TMP_Text turretText;
 
     public GameObject DarkenGameObject;
 
@@ -469,6 +478,10 @@ public class PlayerController : MonoBehaviour
             {
                 EatApple();
             }
+            if (Input.GetKeyDown(KeyCode.F) && !turretSpawned)
+            {
+                SpawnTurret();
+            }
         }
 
         if (attacking)
@@ -510,6 +523,37 @@ public class PlayerController : MonoBehaviour
             if (bowTimer >= resetBow)
             {
                 shooting = false;
+            }
+        }
+
+        if (turretSpawned)
+        {
+            if (!turretText.gameObject.activeSelf)
+            {
+                turretText.gameObject.SetActive(true);
+            }
+            turretTimer += Time.deltaTime;
+            int seconds = 30 - (int)turretTimer % 60;
+            if (seconds != 0)
+            {
+                turretText.text = seconds.ToString();
+            }           
+
+            if (turretTimer >= resetTurret)
+            {
+                turretSpawned = false;
+            }
+
+            if (turretTimer >= turretDuration)
+            {
+                turretEnd = true;
+            }
+        }
+        else
+        {
+            if (turretText.gameObject.activeSelf)
+            {
+                turretText.gameObject.SetActive(false);
             }
         }
 
@@ -701,6 +745,14 @@ public class PlayerController : MonoBehaviour
                 bowScript.Shoot();
             }
         }  
+    }
+
+    private void SpawnTurret()
+    {
+        turretTimer = 0;
+        turretSpawned = true;
+        turretEnd = false;
+        GameObject miniTurret = Instantiate(miniTurretObject, transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);     
     }
 
     private void EatApple()
