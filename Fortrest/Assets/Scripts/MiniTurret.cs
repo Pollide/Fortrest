@@ -5,14 +5,13 @@ using UnityEngine;
 public class MiniTurret : MonoBehaviour
 {
     public Animator animator;
-    public float turnSpeed = 20.0f;
-    public float shootingRange = 7.5f;
+    private float turnSpeed = 10.0f;
+    private float shootingRange = 7.5f;
     private float shootTimer = 0.0f;
     private float resetShoot = 0.05f;
     private bool shooting = false;
-    public float damage = 1.0f;
+    [HideInInspector] public float damage = 1.0f;
     public LayerMask targetLayer;
-    private float turningValue;
 
     private Transform target;
     private Transform currentTarget;
@@ -33,9 +32,7 @@ public class MiniTurret : MonoBehaviour
     private void Update()
     {
         if (spawnComplete)
-        {
-            FindTarget();
-
+        {           
             if (target != null)
             {
                 if (currentTarget)
@@ -43,7 +40,6 @@ public class MiniTurret : MonoBehaviour
                     if (currentTarget != target)
                     {
                         targetAcquired = false;
-                        turningValue = 0;
                     }
                 }
 
@@ -59,21 +55,21 @@ public class MiniTurret : MonoBehaviour
 
                 Quaternion lookRotation = Quaternion.LookRotation(direction);
 
-                turningValue += Time.deltaTime / 20.0f;
+                transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, turnSpeed * Time.deltaTime);
 
-                transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, turnSpeed * turningValue);
-
-                if (Vector3.Distance(transform.position, target.transform.position) <= shootingRange)
+                if (Vector3.Distance(transform.position, target.transform.position) <= shootingRange && !shooting)
                 {
-                    if (!shooting)
-                    {
-                        Attack();
-                    }
+                    Attack();
                 }
 
+                if (target.GetComponent<EnemyController>().health <= 0f)
+                {
+                    target = null;
+                }
             }
             else
             {
+                FindTarget();
                 animator.SetBool("isAttacking", false);
             }
 
