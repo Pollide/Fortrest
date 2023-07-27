@@ -17,6 +17,10 @@ public class BoltScript : MonoBehaviour
         timer = lifetime;           // Initialize the timer to the bullet's lifetime
     }
 
+    public bool mini;
+    private bool instakill;
+    private bool damageDealt;
+
     // Update is called once per frame
     void Update()
     {
@@ -33,46 +37,56 @@ public class BoltScript : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        U_Turret uTurret = GetComponentInParent<U_Turret>();
-
-        if (other.CompareTag("Enemy"))
+        if (!damageDealt)
         {
-            // Retrieve the Enemy component from the collided object
-            EnemyController enemy = other.GetComponent<EnemyController>();
-            NavMeshAgent enemyAgent = other.GetComponent<NavMeshAgent>();
-            if (enemy != null)
-            {
-                if (uTurret.isKnockBackActive)
-                {
-                    float randomRange = Random.Range(0f, 100f);
-                    if (randomRange <= uTurret.knockBackPercentage)
-                    {
-                        Vector3 direction = (enemyAgent.transform.position - transform.position).normalized;
-                        enemyAgent.velocity = direction * pushForce;
-                    }
-                }
+            U_Turret uTurret = GetComponentInParent<U_Turret>();
 
-                if (uTurret.isInstantKillPercent)
+            if (other.CompareTag("Enemy"))
+            {
+                // Retrieve the Enemy component from the collided object
+                EnemyController enemy = other.GetComponent<EnemyController>();
+                NavMeshAgent enemyAgent = other.GetComponent<NavMeshAgent>();
+                if (enemy != null)
                 {
-                    float randomRange = Random.Range(0f, 100f);
-                    if (randomRange <= uTurret.instantKillPercent)
+                    if (!mini)
                     {
-                        enemy.Damaged(5000); // Apply damage to the enemy
+                        if (uTurret.isKnockBackActive)
+                        {
+                            float randomRange = Random.Range(0f, 100f);
+                            if (randomRange <= uTurret.knockBackPercentage)
+                            {
+                                Vector3 direction = (enemyAgent.transform.position - transform.position).normalized;
+                                enemyAgent.velocity = direction * pushForce;
+                            }
+                        }
+
+                        if (uTurret.isInstantKillPercent)
+                        {
+                            instakill = true;
+                            float randomRange = Random.Range(0f, 100f);
+                            if (randomRange <= uTurret.instantKillPercent)
+                            {
+                                enemy.Damaged(5000); // Apply damage to the enemy
+                                damageDealt = true;
+                            }
+                            else
+                            {
+                                enemy.Damaged(damage); // Apply damage to the enemy
+                                damageDealt = true;
+                            }
+
+                        }
                     }
-                    else
+                    if (!instakill)
                     {
                         enemy.Damaged(damage); // Apply damage to the enemy
+                        damageDealt = true;
                     }
-                  
-                }
-                else
-                {
-                    enemy.Damaged(damage); // Apply damage to the enemy
-                }
-                
-            }
 
-            Destroy(gameObject); // Destroy the bullet
+                }
+
+                Destroy(gameObject); // Destroy the bullet
+            }
         }
     }
 
