@@ -52,6 +52,7 @@ public class Building : MonoBehaviour
     private float lastHealth;
 
     private bool underAttack;
+    [HideInInspector]public bool playerinRange;
     private float timerText = 0.0f;
 
     private GameObject normalHouse;
@@ -82,7 +83,10 @@ public class Building : MonoBehaviour
         {
             Indicator.global.AddIndicator(transform, Color.yellow, "Home");
             lastHealth = health;
-            HUDHealthBar.SetMaxHealth(maxHealth);
+            if (HUDHealthBar != null)
+            {
+                HUDHealthBar.SetMaxHealth(maxHealth);
+            }
             normalHouse = gameObject.transform.GetChild(0).gameObject;
             destroyedHouse = gameObject.transform.GetChild(1).gameObject;
         }
@@ -92,21 +96,6 @@ public class Building : MonoBehaviour
         }
     }
 
-    /*
-    public void OnMouseDown()
-    {
-        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject(0) && !NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
-        {
-            LevelManager.global.ActiveBuildingGameObject = gameObject;
-        }
-    }
-
-    public void OnMouseUp()
-    {
-        if (!NaturalBool && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
-            LevelManager.global.ActiveBuildingGameObject = null;
-    }
-    */
     public void GiveResources()
     {
         float posX = 0.0f;
@@ -224,6 +213,16 @@ public class Building : MonoBehaviour
     {
         if (resourceObject == BuildingType.House)
         {
+            float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);
+            if (distanceToPlayer < 20)
+            {
+                playerinRange = true;
+            }
+            else
+            {
+                playerinRange = false;
+            }
+
             if (health != lastHealth)
             {
                 lastHealth = health;

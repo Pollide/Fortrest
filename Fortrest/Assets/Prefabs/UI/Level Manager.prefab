@@ -417,7 +417,6 @@ MonoBehaviour:
   ZoomBounds:
   - 10
   - 85
-  BuildingList: []
   ResourceHolderTransform: {fileID: 0}
   ActiveBuildingGameObject: {fileID: 0}
   DirectionalLightTransform: {fileID: 7444467798429044014}
@@ -426,20 +425,20 @@ MonoBehaviour:
   LanternOffMaterial: {fileID: 2100000, guid: 38dad0140edb0ba4fba296af84657a3c, type: 2}
   DaylightTimer: 0
   day: 0
-  enemyList: []
+  EnemyList: []
+  InventoryItemList: []
+  BridgeList:
+  - {fileID: 0}
   daySpeed: 2
   GoblinTimer: 0
+  GoblinThreshold: 0
   GoblinGameObject: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
     type: 3}
   OgreGameObject: {fileID: 5633042026967272240, guid: 06cff7f448c42c24bb9eed44021c8b05,
     type: 3}
   SpiderGameObject: {fileID: 5936932421964932193, guid: 7aa9da11c0a47014693eeed85fca301e,
     type: 3}
-  NaturalBuildingList: []
-  VFXSparks: {fileID: 2659559115660825906}
-  VFXPebble: {fileID: 976456803407514109}
   VFXSmokePuff: {fileID: 3283931038916066823}
-  VFXWoodChip: {fileID: 3704073109715533814}
   newDay: 0
   textGradient:
     serializedVersion: 2
@@ -542,7 +541,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 11.41
+  orthographic size: 12
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -619,6 +618,8 @@ MonoBehaviour:
   maxSmooth: 0.25
   minSmooth: 0.01
   max: 0
+  buildOffsetOrthoSize: 30
+  buildOffsetRot: 90
 --- !u!114 &758887879952812708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1782,12 +1783,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 875c7308bfb269d4f857df2b7c680ee6, type: 3}
---- !u!2083052967 &3704073109715533814 stripped
-VisualEffect:
-  m_CorrespondingSourceObject: {fileID: 4591444570186512573, guid: 875c7308bfb269d4f857df2b7c680ee6,
-    type: 3}
-  m_PrefabInstance: {fileID: 927623174700877643}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3704073109715533815 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4591444570186512572, guid: 875c7308bfb269d4f857df2b7c680ee6,
