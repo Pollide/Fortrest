@@ -59,9 +59,16 @@ public class Menu : MonoBehaviour
 
     }
 
-    IEnumerator LevelMenuIEnumerator()
+    IEnumerator LevelMenuIEnumerator(bool play = true)
     {
-        GameManager.PlayAnimation(CameraAnimation, "Play Menu");
+        if (play)
+        {
+            GameManager.PlayAnimation(CameraAnimation, "Play Menu");
+        }
+        else
+        {
+            GameManager.PlayAnimation(CameraAnimation, "Level To Exit Menu", false);
+        }
         yield return new WaitUntil(() => !CameraAnimation.isPlaying);
 
         SignAnimationVoid(LevelsSignAnimation);
@@ -85,10 +92,19 @@ public class Menu : MonoBehaviour
         {
             if (SettingsSelectedBool)
             {
-                SignAnimationVoid(SettingsSignAnimation, true, true);
-                SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().text = "\n"; //nah screw you
+                SignAnimationVoid(SettingsSignAnimation, true);
+                SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().text = "AGAIN TO CONFIRM"; //nah screw you
 
                 yield return new WaitUntil(() => InputCheck());
+
+                if (GoHorizontalInt == 0)
+                {
+                    SignAnimationVoid(SettingsSignAnimation, true, true);
+
+                    PlayerPrefs.DeleteAll();
+                    GameManager.global.NextScene(0);
+                    yield break;
+                }
             }
             else
             {
@@ -97,6 +113,8 @@ public class Menu : MonoBehaviour
                 yield break;
             }
         }
+
+
 
         if (SettingsSelectedBool)
             SignAnimationVoid(SettingsSignAnimation, false);
@@ -108,8 +126,7 @@ public class Menu : MonoBehaviour
 
         if (GoHorizontalInt > 0)
         {
-            GameManager.PlayAnimation(CameraAnimation, "Level To Exit Menu");
-            StartCoroutine(ExitMenuIEnumerator());
+            StartCoroutine(ExitMenuIEnumerator("Level To Exit Menu"));
         }
         else
         {
@@ -118,10 +135,9 @@ public class Menu : MonoBehaviour
         }
     }
 
-
-    IEnumerator ExitMenuIEnumerator()
+    IEnumerator ExitMenuIEnumerator(string animation = "Exit Menu")
     {
-        GameManager.PlayAnimation(CameraAnimation, "Exit Menu");
+        GameManager.PlayAnimation(CameraAnimation, animation);
 
         yield return new WaitUntil(() => !CameraAnimation.isPlaying);
 
@@ -142,8 +158,7 @@ public class Menu : MonoBehaviour
 
             if (GoHorizontalInt > 0)
             {
-                GameManager.PlayAnimation(CameraAnimation, "Level To Exit Menu", false);
-                StartCoroutine(LevelMenuIEnumerator());
+                StartCoroutine(LevelMenuIEnumerator(false));
             }
             else
             {

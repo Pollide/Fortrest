@@ -554,8 +554,6 @@ public class GameManager : MonoBehaviour
             {
                 if (PlayerModeHandler.global.turretPrefabs[i].name.Contains(building.name))
                 {
-                    //  Debug.Log(PlayerModeHandler.global.turretPrefabs[i].name + " Contains " + building.name);
-
                     Pref("Turret Type" + turretSize, i, false);
                     break;
                 }

@@ -14,6 +14,8 @@ public class TurretCannon : MonoBehaviour
     public float damage = 0.1f;
     private Transform target;
     private float fireCountdown = 0f;
+    float nextRotationChangeTime;
+    private Quaternion targetRotation;
 
     private void Update()
     {
@@ -36,7 +38,21 @@ public class TurretCannon : MonoBehaviour
             // Set the cannon's rotation to aim at the target
             transform.rotation = Quaternion.LookRotation(direction);
         }
+        else
+        {
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 30 * Time.deltaTime);
 
+            // Check if it's time to change the target rotation
+            if (Time.time >= nextRotationChangeTime)
+            {
+                // Update the target rotation and set the next change time
+                float randomRotationY = Random.Range(-180f, 180f); // You can adjust the range as needed
+                targetRotation = Quaternion.Euler(0f, randomRotationY, 0f);
+
+                nextRotationChangeTime = Time.time + Random.Range(2, 5);
+
+            }
+        }
         fireCountdown -= Time.deltaTime;
     }
 
