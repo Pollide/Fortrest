@@ -29,7 +29,7 @@ public class PlayerModeHandler : MonoBehaviour
     public BuildType buildType;
     public GameObject[] turretPrefabs;
     public GameObject turretBlueprint;
-    Transform[] parts;
+    private Transform[] parts;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
     public float distanceAwayFromPlayer = 30;
@@ -38,11 +38,9 @@ public class PlayerModeHandler : MonoBehaviour
     public Image resourceMode;
     public Image combatMode; 
     public Image repairMode; 
-    public Image buildingModeSub;
     public Image resourceModeSub;
     public Image combatModeSub;
-    public Image repairModeSub;
-    public Grid buildGrid;
+    private Grid buildGrid;
 
     private void Awake()
     {
@@ -92,24 +90,11 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && GameObject.Find("House") != null && GameObject.Find("House").GetComponent<Building>().playerinRange)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-            switch (playerModes)
-            {
-                case PlayerModes.CombatMode:
-                    SwitchToBuildMode();
-                    break;
-                case PlayerModes.ResourceMode:
-                    SwitchToBuildMode();
-                    break;
-                case PlayerModes.BuildMode:
-                    SwitchToBuildRepairMode();
-                    break;
-                case PlayerModes.RepairMode:
-                    SwitchToBuildMode();
-                    break;
-            }
+            PlayerController.global.playerCanMove = false;
+            PlayerController.global.transform.position = GameObject.Find("House").transform.position;
+            SwitchToBuildMode();
         }
     }
 
@@ -127,7 +112,7 @@ public class PlayerModeHandler : MonoBehaviour
     }
 
     private void BuildMode()
-    {
+    { 
         if (buildType == BuildType.Turret)
         {
             Building building = turretPrefabs[0].GetComponentInChildren<Building>();
@@ -151,7 +136,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void ScrollSwitchTurret()
     {
-        if (Input.mouseScrollDelta.y > 0f)
+        if (Input.mouseScrollDelta.y > 0f && playerModes == PlayerModes.BuildMode)
         {
             if (buildType == BuildType.Turret)
             {
@@ -166,7 +151,7 @@ public class PlayerModeHandler : MonoBehaviour
                 buildType = BuildType.Turret;
             }
         }
-        if (Input.mouseScrollDelta.y < 0f)
+        if (Input.mouseScrollDelta.y < 0f && playerModes == PlayerModes.BuildMode)
         {
             if (buildType == BuildType.Turret)
             {
@@ -183,7 +168,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    public void RepairMode(Building building)
+    public void RepairMode()
     { 
         
     }
@@ -200,11 +185,8 @@ public class PlayerModeHandler : MonoBehaviour
         repairMode.transform.GetChild(0).gameObject.SetActive(false);
         repairMode.enabled = false;
 
-        buildingModeSub.enabled = false;
         resourceModeSub.enabled = true;
         combatModeSub.enabled = false;
-        repairModeSub.transform.GetChild(0).gameObject.SetActive(true);
-        repairModeSub.enabled = true;
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
     }
 
@@ -225,11 +207,8 @@ public class PlayerModeHandler : MonoBehaviour
         repairMode.transform.GetChild(0).gameObject.SetActive(true);
         repairMode.enabled = true;
 
-        buildingModeSub.enabled = true; 
         resourceModeSub.enabled = true;
         combatModeSub.enabled = false;
-        repairModeSub.transform.GetChild(0).gameObject.SetActive(false);
-        repairModeSub.enabled = false;
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
     }
 
@@ -249,11 +228,8 @@ public class PlayerModeHandler : MonoBehaviour
         repairMode.transform.GetChild(0).gameObject.SetActive(false);
         repairMode.enabled = false;
 
-        buildingModeSub.enabled = true;
         resourceModeSub.enabled = false;
         combatModeSub.enabled = true;
-        repairModeSub.transform.GetChild(0).gameObject.SetActive(false);
-        repairModeSub.enabled = false;
     }
 
     public void SwitchToCombatMode()
@@ -272,11 +248,8 @@ public class PlayerModeHandler : MonoBehaviour
         repairMode.transform.GetChild(0).gameObject.SetActive(false);
         repairMode.enabled = false;
 
-        buildingModeSub.enabled = true;
-        repairModeSub.enabled = false;
         resourceModeSub.enabled = true;
         combatModeSub.enabled = false;
-        repairModeSub.transform.GetChild(0).gameObject.SetActive(false);
     }
     bool runOnce;
 

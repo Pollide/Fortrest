@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.VFX;
-using TMPro;
-using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
@@ -121,7 +119,6 @@ public class PlayerController : MonoBehaviour
     public GameObject PicaxeGameObject;
     public GameObject SwordGameObject;
     public GameObject BowGameObject;
-    public GameObject RadiusGameObject;
     private GameObject RadiusCamGameObject;
     public GameObject PauseCanvasGameObject;
     [System.Serializable]
@@ -323,7 +320,7 @@ public class PlayerController : MonoBehaviour
         {
             RadiusCamGameObject = GameObject.Find("Radius Camera");
         }
-        RadiusGameObject.transform.localScale = new Vector3(PlayerModeHandler.global.distanceAwayFromPlayer * 2, 0.1f, PlayerModeHandler.global.distanceAwayFromPlayer * 2);
+
         if (GameObject.Find("House"))
         {
             house = GameObject.Find("House");
@@ -536,7 +533,6 @@ public class PlayerController : MonoBehaviour
         PicaxeGameObject.SetActive(toolData.PicaxeBool);
         SwordGameObject.SetActive(toolData.SwordBool);
         BowGameObject.SetActive(toolData.BowBool);
-        RadiusGameObject.SetActive(toolData.HammerBool);
         if (RadiusCamGameObject != null)
         {
             RadiusCamGameObject.SetActive(toolData.HammerBool);
