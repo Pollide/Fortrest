@@ -10,27 +10,40 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController global;
 
+    // Class Access
     GamepadControls gamepadControls;
     public Bow bowScript;
-
-    // Components
     CharacterController playerCC;
     public Animator CharacterAnimator;
 
+    // Movement
+    private Vector3 moveDirection;
+    private float horizontalMovement;
+    private float verticalMovement;
+    private GameObject house;
+    private GameObject houseSpawnPoint;
+    public GameObject bodyShape;
+    private GameObject interactText;
+
     // Speed
-    public float playerCurrentSpeed = 0f;
+    private float playerCurrentSpeed = 0f;
     private float playerWalkSpeed = 5.0f;
     private float playerSprintSpeed = 8.0f;
     private float playerBowSpeed = 3.0f;
-    public bool running = false;
+    private bool running = false;
     private float runTimer = 0.0f;
     private bool canRun = true;
+
+    // Gathering
+    private bool gathering = false;
+    private float gatherTimer = 0.0f;
+    private float resetGather = 1.25f;
 
     // Evade
     private float evadeTimer = 0.0f;
     private float evadeCoolDown = 2.5f;
     [HideInInspector] public bool evading = false;
-    private bool canEvade;
+    private bool canEvade = true;
     [HideInInspector] public bool playerCanBeDamaged = true;
     private Vector3 newPosition;
     private bool blocked = false;
@@ -45,14 +58,21 @@ public class PlayerController : MonoBehaviour
     private Quaternion tempDirection;
     [HideInInspector] public float arrowNumber = 10.0f;
 
+    // Spawn Turret
+    private bool turretSpawned;
+    [HideInInspector] public bool turretEnd;
+    private float turretTimer = 0.0f;
+    private float resetTurret = 30.0f;
+    private float turretDuration = 20.0f;
+    public GameObject miniTurretObject;
+
     // Gravity
-    public float playerGravMultiplier = 3f;
+    private float playerGravMultiplier = 2.0f;
     private float playerGrav = -9.81f;
     private float playerVelocity;
 
     // Energy
-    [HideInInspector]
-    public float playerEnergy = 0f;
+    [HideInInspector] public float playerEnergy = 0f;
     private float maxPlayerEnergy = 100f;
     public Image playerEnergyBarImage;
     private float energySpeed = 12.5f;
@@ -60,13 +80,14 @@ public class PlayerController : MonoBehaviour
     // Health
     private bool deathEffects = false;
     private bool playerDead = false;
-    public float playerHealth = 0.0f;
+    [HideInInspector] public float playerHealth = 0.0f;
     [HideInInspector] public float maxHealth = 100.0f;
+    public HealthBar healthBar;
+
+    // Eating
     [HideInInspector] public int appleAmount = 0;
     private float appleHealAmount = 10.0f;
     [HideInInspector] public int maxApple = 5;
-
-    //public float playerJumpHeight = 10f;
 
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
@@ -74,24 +95,18 @@ public class PlayerController : MonoBehaviour
     private float resetAttack = 0.95f;
     private float comboTimer = 0.0f;
     private float resetCombo = 1.20f;
-    public int attackCount = 0;
-    public Building currentResource;
-    public bool damageEnemy = false;
+    private int attackCount = 0;
+    [HideInInspector] public Building currentResource;
+    [HideInInspector] public bool damageEnemy = false;
 
     // States
     [Header("Player States")]
-    public bool playerCanMove = true;
-    public bool playerisMoving = false;
-    public bool attacking = false;
+    [HideInInspector] public bool playerCanMove = true;
+    private bool playerisMoving = false;
+    [HideInInspector] public bool attacking = false;
 
-    // Movement
-    private Vector3 moveDirection;
-    private float horizontalMovement;
-    private float verticalMovement;
-    private GameObject house;
-    private GameObject houseSpawnPoint;
-    public GameObject bodyShape;
-    private GameObject interactText;
+    // Teleporter
+    [HideInInspector] public bool canTeleport = false;
 
     // VFXs
     private VisualEffect VFXSlash;
@@ -100,6 +115,7 @@ public class PlayerController : MonoBehaviour
     private VisualEffect VFXPebble;
     private VisualEffect VFXWoodChip;
 
+    // Tools
     public GameObject AxeGameObject;
     public GameObject HammerGameObject;
     public GameObject PicaxeGameObject;
@@ -108,23 +124,6 @@ public class PlayerController : MonoBehaviour
     public GameObject RadiusGameObject;
     private GameObject RadiusCamGameObject;
     public GameObject PauseCanvasGameObject;
-
-    bool PausedBool;
-
-    public TMP_Text DayTMP_Text;
-    public TMP_Text RemaningTMP_Text;
-    public TMP_Text SurvivedTMP_Text;
-    public TMP_Text enemyText;
-    public TMP_Text enemyAmountText;
-    public TMP_Text houseUnderAttackText;
-    public TMP_Text enemyDirectionText;
-    public TMP_Text arrowText;
-    public TMP_Text appleText;
-
-    public GameObject DarkenGameObject;
-
-    public Animation UIAnimation;
-
     [System.Serializable]
     public class ToolData
     {
@@ -136,15 +135,33 @@ public class PlayerController : MonoBehaviour
         public bool BowBool;
     }
 
+    // Texts
+    public TMP_Text DayTMP_Text;
+    public TMP_Text RemaningTMP_Text;
+    public TMP_Text SurvivedTMP_Text;
+    public TMP_Text enemyText;
+    public TMP_Text enemyAmountText;
+    public TMP_Text houseUnderAttackText;
+    public TMP_Text enemyDirectionText;
+    public TMP_Text arrowText;
+    public TMP_Text appleText;
+    public TMP_Text turretText;
+
+    // Inventory
+    public GameObject DarkenGameObject;
+    
+    // Payse
+    private bool PausedBool;
+    public Animation UIAnimation;
+
+    // Death
     private float respawnTimer = 0.0f;
+    private bool textAnimated = false;
+
+    // Enemy UI
     private int lastAmount = 0;
 
-    public HealthBar healthBar;
-    private bool textAnimated = false;
-    private bool gathering = false;
-    private float gatherTimer = 0.0f;
-    private float resetGather = 1.25f;
-
+    // Damage Indicators    
     public Image[] redSlashes;
     public Image redBorders;
     private bool displaySlash;
@@ -152,8 +169,7 @@ public class PlayerController : MonoBehaviour
     private float timer1, timer2, timer3, timer4 = 0.0f;
     private float[] timers = new float[4];
    
-    // Controller
-    public bool usingController = false;    
+    // Controller   
     private bool sprintingCTRL;
     private bool movingCTRL;
     private bool gatheringCTRL;
@@ -164,7 +180,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
     private Vector2 moveCTRL;
-    private Vector2 rotateCTRL;
+
+    // Keyboard Controls
+    private KeyCode[] keyCodes;
 
     // Start is called before the first frame update
     void Awake()
@@ -209,6 +227,7 @@ public class PlayerController : MonoBehaviour
         gamepadControls.Controls.Swap.performed += context => swapCTRL = true;
     }
 
+    // CONTROLLER FUNCTIONS START
     private void SprintController(bool pressed)
     {
         if (pressed)
@@ -281,10 +300,13 @@ public class PlayerController : MonoBehaviour
     {
         gamepadControls.Controls.Disable();
     }
+    // CONTROLLER FUNCTIONS END
 
     private void Start()
     {
         LevelManager manager = LevelManager.global;
+
+        // VFXs
         VFXSlash = manager.transform.Find("VFX").Find("VFX_Slash").GetComponent<VisualEffect>();
         VFXSleeping = manager.transform.Find("VFX").Find("VFX_Sleeping").GetComponent<VisualEffect>();
         VFXSparks = manager.transform.Find("VFX").Find("VFX_Sparks").GetComponent<VisualEffect>();
@@ -296,33 +318,215 @@ public class PlayerController : MonoBehaviour
         VFXPebble.Stop();
         VFXWoodChip.Stop();
 
+        // Game Objects
         if (GameObject.Find("Radius Camera"))
         {
             RadiusCamGameObject = GameObject.Find("Radius Camera");
         }
+        RadiusGameObject.transform.localScale = new Vector3(PlayerModeHandler.global.distanceAwayFromPlayer * 2, 0.1f, PlayerModeHandler.global.distanceAwayFromPlayer * 2);
         if (GameObject.Find("House"))
         {
             house = GameObject.Find("House");
             houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
             interactText = house.transform.Find("Floating Text").gameObject;
         }
-        RadiusGameObject.transform.localScale = new Vector3(PlayerModeHandler.global.distanceAwayFromPlayer * 2, 0.1f, PlayerModeHandler.global.distanceAwayFromPlayer * 2);
-
+        
+        // Setting default values
         playerCurrentSpeed = playerWalkSpeed;
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         playerHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
 
+        // Adding timers to array
         timers[0] = timer1;
         timers[1] = timer2;
         timers[2] = timer3;
         timers[3] = timer4;
 
-        canEvade = true;
-
+        // Setting UI Text
         arrowText.text = "Arrow: " + arrowNumber.ToString();
         appleText.text = appleAmount.ToString();
+
+        keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (evading)
+        {
+            evadeTimer += Time.deltaTime;
+            playerCanBeDamaged = false;
+            if (!blocked)
+            {
+                transform.position = Vector3.Lerp(transform.position, newPosition, evadeTimer / 30.0f);
+            }
+            return;
+        }
+        else
+        {
+            playerCanBeDamaged = true;
+            blocked = false;
+        }
+
+        if (playerCanMove)
+        {
+            // Controller
+            if (moveCTRL.x != 0 || moveCTRL.y != 0)
+            {
+                horizontalMovement = moveCTRL.x;
+                verticalMovement = moveCTRL.y;
+            }
+            // Keyboard
+            else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+            {
+                horizontalMovement = Input.GetAxis("Horizontal");
+                verticalMovement = Input.GetAxis("Vertical");
+            }
+
+            // Physics
+            HandleSpeed();
+            HandleEnergy();
+            ApplyGravity();
+            ApplyMovement(horizontalMovement, verticalMovement);
+
+            // Mechanics
+            Attack();
+            Gathering();
+            Shoot();
+        }        
+
+        TimersFunction();       
+        ScreenDamage();
+
+        foreach (KeyCode keyCode in keyCodes)
+        {
+            KeyRead(keyCode);
+        }
+
+        if (playerHealth <= 0 || playerDead)
+        {
+            Death();
+        }
+    }
+
+    private void TimersFunction()
+    {
+        if (attacking)
+        {
+            if (!TickTimers(resetAttack, ref attackTimer))
+            {
+                attacking = false;
+                damageEnemy = false;
+            }
+        }
+
+        if (attackCount >= 0)
+        {
+            if (!TickTimers(resetCombo, ref comboTimer))
+            {
+                comboTimer = 0;
+                attackCount = 0;
+            }
+        }
+
+        if (gathering)
+        {
+            gathering = TickTimers(resetGather, ref gatherTimer);
+        }
+
+        if (shooting)
+        {
+            shooting = TickTimers(resetBow, ref bowTimer);
+        }
+
+        if (turretSpawned)
+        {
+            if (!turretText.gameObject.activeSelf)
+            {
+                turretText.gameObject.SetActive(true);
+            }
+
+            turretSpawned = TickTimers(resetTurret, ref turretTimer);
+
+            int seconds = 30 - (int)turretTimer % 60;
+
+            if (seconds != 0)
+            {
+                turretText.text = seconds.ToString();
+            }
+
+            if (turretTimer >= turretDuration)
+            {
+                turretEnd = true;
+            }
+        }
+        else
+        {
+            if (turretText.gameObject.activeSelf)
+            {
+                turretText.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private bool TickTimers(float limit, ref float timer)
+    {
+        timer += Time.deltaTime;
+
+        if (timer >= limit)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    private void KeyRead (KeyCode letter)
+    {
+        if (Input.GetKeyDown(letter))
+        {
+            switch (letter)
+            {
+                case KeyCode.R:
+                    if (appleAmount > 0)
+                    {
+                        EatApple();
+                    }
+                    break;
+
+                case KeyCode.F:
+                    if (!turretSpawned)
+                    {
+                        SpawnTurret();
+                    }
+                    break;
+
+                case KeyCode.T:
+                    if (canTeleport)
+                    {
+                        Teleport();
+                    }
+                    break;
+               
+                case KeyCode.Space:
+                    if (canEvade)
+                    {
+                        StartCoroutine(Evade());
+                    }
+                    break;
+
+                case KeyCode.Escape:
+                    PauseVoid(!PausedBool);
+                    break;
+
+                default:
+                    break;
+            }
+        }       
     }
 
     public void ChangeTool(ToolData toolData)
@@ -401,123 +605,6 @@ public class PlayerController : MonoBehaviour
         {
             playerEnergy = 0;
             canRun = false;
-        }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // FOR TESTING
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            playerHealth -= 30.0f;
-            healthBar.SetHealth(playerHealth);
-        }
-        else if (Input.GetKeyDown(KeyCode.P))
-        {
-            playerHealth += 30.0f;
-            healthBar.SetHealth(playerHealth);
-        }
-#endif
-        if (evading)
-        {
-            evadeTimer += Time.deltaTime;
-            playerCanBeDamaged = false;
-            if (!blocked)
-            {
-                transform.position = Vector3.Lerp(transform.position, newPosition, evadeTimer / 30.0f);
-            }            
-            return;
-        }
-        else
-        {
-            playerCanBeDamaged = true;
-            blocked = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            PauseVoid(!PausedBool);
-        }
-
-        if (playerCanMove)
-        {
-            if (moveCTRL.x != 0 || moveCTRL.y != 0)
-            {
-                horizontalMovement = moveCTRL.x;
-                verticalMovement = moveCTRL.y;
-            }
-            else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-            {
-                horizontalMovement = Input.GetAxis("Horizontal");
-                verticalMovement = Input.GetAxis("Vertical");
-            }          
-            
-            HandleSpeed();
-            HandleEnergy();
-            ApplyGravity();
-            ApplyMovement(horizontalMovement, verticalMovement);
-            Attack();
-            Gathering();
-            Shoot();
-            if (Input.GetKeyDown(KeyCode.Space) && canEvade)
-            {
-                StartCoroutine(Evade());
-            }
-            if (Input.GetKeyDown(KeyCode.R) && appleAmount > 0)
-            {
-                EatApple();
-            }
-        }
-
-        if (attacking)
-        {
-            attackTimer += Time.deltaTime;
-
-            if (attackTimer >= resetAttack)
-            {
-                attacking = false;
-                damageEnemy = false;
-            }
-        }
-
-        if (attackCount >= 0)
-        {
-            comboTimer += Time.deltaTime;
-
-            if (comboTimer >= resetCombo)
-            {
-                comboTimer = 0;
-                attackCount = 0;
-            }
-        }
-
-        if (gathering)
-        {
-            gatherTimer += Time.deltaTime;
-
-            if (gatherTimer >= resetGather)
-            {
-                gathering = false;
-            }
-        }
-
-        if (shooting)
-        {
-            bowTimer += Time.deltaTime;
-
-            if (bowTimer >= resetBow)
-            {
-                shooting = false;
-            }
-        }
-
-        ScreenDamage();
-
-        if (playerHealth <= 0 || playerDead)
-        {
-            Death();
         }
     }
 
@@ -701,6 +788,22 @@ public class PlayerController : MonoBehaviour
                 bowScript.Shoot();
             }
         }  
+    }
+
+    private void SpawnTurret()
+    {
+        turretTimer = 0;
+        turretSpawned = true;
+        turretEnd = false;
+        GameObject miniTurret = Instantiate(miniTurretObject, transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);     
+    }
+
+    private void Teleport()
+    {
+        gameObject.GetComponent<CharacterController>().enabled = false;
+        transform.position = houseSpawnPoint.transform.position;
+        canTeleport = false;
+        gameObject.GetComponent<CharacterController>().enabled = true;
     }
 
     private void EatApple()
@@ -924,16 +1027,6 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void FirstStep()
-    {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.Footstep1Sound, 0.05f);
-    }
-
-    public void SecondStep()
-    {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.Footstep2Sound, 0.05f);
     }
 
     public void TakeDamage(float damage)

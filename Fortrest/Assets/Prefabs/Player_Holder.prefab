@@ -1620,12 +1620,16 @@ MonoBehaviour:
   playerCanBeDamaged: 1
   bowDamage: 1.5
   arrowNumber: 10
+  turretEnd: 0
+  miniTurretObject: {fileID: 27263479634249880, guid: 0a5a068777832784eb981764bd909c40,
+    type: 3}
   playerGravMultiplier: 2
   playerEnergy: 0
   playerEnergyBarImage: {fileID: 7658975014858843245}
   playerHealth: 0
   maxHealth: 100
   appleAmount: 0
+  maxApple: 5
   attackDamage: 1
   attackCount: 0
   currentResource: {fileID: 0}
@@ -1634,6 +1638,7 @@ MonoBehaviour:
   playerisMoving: 0
   attacking: 0
   bodyShape: {fileID: 4232939553054584673}
+  canTeleport: 0
   AxeGameObject: {fileID: 8727725965552586070}
   HammerGameObject: {fileID: 6881260825570563181}
   PicaxeGameObject: {fileID: 4922188824349335350}
@@ -1650,6 +1655,7 @@ MonoBehaviour:
   enemyDirectionText: {fileID: 5011658340423722203}
   arrowText: {fileID: 2993162952489746833}
   appleText: {fileID: 1866328738486511774}
+  turretText: {fileID: 2542664480710499974}
   DarkenGameObject: {fileID: 2127865250632510180}
   UIAnimation: {fileID: 8602729549476735322}
   healthBar: {fileID: 5343021766087339599}
@@ -2971,7 +2977,7 @@ PrefabInstance:
     - target: {fileID: 3040693575261435360, guid: 9dd211ddbb196ca4294173c2b28022aa,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6443275008082318382, guid: 9dd211ddbb196ca4294173c2b28022aa,
         type: 3}
@@ -3663,6 +3669,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2542664480710499974 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7597399000028543846, guid: cd0bc9715f16c5347a569bae16ef1c71,
+    type: 3}
+  m_PrefabInstance: {fileID: 5343021766280963552}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2993162952489746833 stripped
