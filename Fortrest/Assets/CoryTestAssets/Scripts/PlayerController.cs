@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviour
     private int attackCount = 0;
     [HideInInspector] public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
+    [HideInInspector] public bool lunge = false;
 
     // States
     [Header("Player States")]
@@ -397,6 +398,10 @@ public class PlayerController : MonoBehaviour
             Gathering();
             Shoot();
             ModeChanged();
+            if (lunge)
+            {
+                AttackLunge();
+            }
         }        
 
         TimersFunction();       
@@ -863,6 +868,24 @@ public class PlayerController : MonoBehaviour
                 attackCount = 0;
             }
         }
+    }
+
+    private void AttackLunge()
+    {       
+        float tempTimer = 0;
+        tempTimer += Time.deltaTime;
+
+        gameObject.GetComponent<CharacterController>().enabled = false;
+        if (attackCount == 0)
+        {
+            transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * 1.25f, tempTimer * 5.0f);
+        }
+        else if (attackCount == 1 || attackCount == 2)
+        {
+            transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * 0.75f, tempTimer * 5.0f);
+        }
+        VFXSlash.transform.position = transform.position;
+        gameObject.GetComponent<CharacterController>().enabled = true;
     }
 
     public void GatheringEffects()

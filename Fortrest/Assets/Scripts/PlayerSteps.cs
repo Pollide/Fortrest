@@ -8,7 +8,8 @@ public class PlayerSteps : MonoBehaviour
     {
         if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
         {
-            PlayerController.global.AttackEffects();
+            PlayerController.global.lunge = true;
+            PlayerController.global.AttackEffects();            
         }       
     }
 
@@ -31,6 +32,11 @@ public class PlayerSteps : MonoBehaviour
     void Evading()
     {
         PlayerController.global.evading = false;
+    }
+
+    void LungeEnd()
+    {
+        PlayerController.global.lunge = false;
     }
 
     void StepOne()
