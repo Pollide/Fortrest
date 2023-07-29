@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class U_Cannon : MonoBehaviour
 {
     // Reference to shooting script 
-    private TurretCannon turretScript;
+    private TurretShooting turretScript;
     // Reference to player transform 
     private Transform playerTransform;
 
@@ -61,9 +61,9 @@ public class U_Cannon : MonoBehaviour
     private void Awake()
     {
         // Get shooting script
-        turretScript = GetComponent<TurretCannon>();
+        turretScript = GetComponent<TurretShooting>();
         // Get player transform
-        playerTransform = GameObject.Find("Player").transform;
+        playerTransform = PlayerController.global.transform;
 
         for (int i = 0; i < explosianRadiusButtons.Count; i++)
         {
@@ -251,7 +251,7 @@ public class U_Cannon : MonoBehaviour
             {
                 uiText.text = _text + upgradeDamagePercent + "% \nCoarse Wood: " + upgradeCostWood + "  Slate: " + upgradeCostStone;
             }
-            else if(addHPButton == currentButton)
+            else if (addHPButton == currentButton)
             {
                 uiText.text = _text + increasedHPPercentage + "% \nCoarse Wood: " + upgradeCostWood + "  Slate: " + upgradeCostStone;
             }
@@ -291,7 +291,7 @@ public class U_Cannon : MonoBehaviour
             buttonImage.color = Color.white;
             buyUpgradeButton.GetComponent<Button>().interactable = false;
         }
-        
+
         foreach (GameObject button in allButtons)
         {
             if (button.GetComponent<Button>().interactable && button != currentButton)

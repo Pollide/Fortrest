@@ -9,7 +9,7 @@ public class U_Turret : MonoBehaviour
     private TurretShooting turretScript;
     // Reference to player transform 
     private Transform playerTransform;
-    
+
     [Header("Button Objects")]
     public List<GameObject> attackSpeedButtons = new();
     public List<GameObject> damageButtons = new();
@@ -62,8 +62,8 @@ public class U_Turret : MonoBehaviour
         // Get shooting script
         turretScript = GetComponent<TurretShooting>();
         // Get player transform
-        playerTransform = GameObject.Find("Player").transform;
-
+        playerTransform = PlayerController.global.transform;
+     
         for (int i = 0; i < attackSpeedButtons.Count; i++)
         {
             allButtons.Add(attackSpeedButtons[i]);
@@ -85,11 +85,11 @@ public class U_Turret : MonoBehaviour
     private void Start()
     {
         uiText.text = "";
-        
+
         upgradeTextObject.enabled = false;
         upgradeTextObject.text = "F";
         upgradeMenu.SetActive(false);
-        
+
         addKnockBackButton.GetComponent<Button>().interactable = false;
         addChanceToKillButton.GetComponent<Button>().interactable = false;
         addChanceToMultiShotButton.GetComponent<Button>().interactable = false;
@@ -159,7 +159,7 @@ public class U_Turret : MonoBehaviour
         {
             AddAttackSpeed();
             upgradeASPercent += upgradeASPercent * upgradeRankScaleAS;
-            
+
             if (AreAllBaseButtonsInactive(rangeButtons) && AreAllBaseButtonsInactive(damageButtons) && AreAllBaseButtonsInactive(attackSpeedButtons))
             {
                 addKnockBackButton.GetComponent<Button>().interactable = true;
@@ -171,7 +171,7 @@ public class U_Turret : MonoBehaviour
         {
             AddRange();
             upgradeRangePercent += upgradeRangePercent * upgradeRankScaleRange;
-            
+
             if (AreAllBaseButtonsInactive(rangeButtons) && AreAllBaseButtonsInactive(damageButtons) && AreAllBaseButtonsInactive(attackSpeedButtons))
             {
                 addKnockBackButton.GetComponent<Button>().interactable = true;
@@ -208,7 +208,7 @@ public class U_Turret : MonoBehaviour
             ColorBlock cb = addChanceToMultiShotButton.GetComponent<Button>().colors;
             cb.disabledColor = Color.green;
             addChanceToMultiShotButton.GetComponent<Button>().colors = cb;
-            
+
             specialActive = true;
         }
         else if (addKnockBackButton.name == currentButton.name)
@@ -266,7 +266,7 @@ public class U_Turret : MonoBehaviour
         {
             uiText.text = "";
         }
-        
+
     }
 
     public void ChangeColor(GameObject _button)
@@ -288,7 +288,7 @@ public class U_Turret : MonoBehaviour
             buyUpgradeButton.GetComponent<Button>().interactable = false;
         }
 
-        foreach  (GameObject button in allButtons)
+        foreach (GameObject button in allButtons)
         {
             if (button.GetComponent<Button>().interactable && button != currentButton)
             {

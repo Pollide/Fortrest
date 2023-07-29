@@ -6,15 +6,16 @@ public class PlayerSteps : MonoBehaviour
 {
     void Attack()
     {
-        if (!PlayerController.global.evading)
+        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
         {
-            PlayerController.global.AttackEffects();
+            PlayerController.global.lunge = true;
+            PlayerController.global.AttackEffects();            
         }       
     }
 
     void Gather()
     {
-        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && !PlayerController.global.evading)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && !PlayerController.global.evading && !PlayerController.global.cancelEffects)
         {
             PlayerController.global.GatheringEffects();
         }        
@@ -22,7 +23,7 @@ public class PlayerSteps : MonoBehaviour
 
     void DamageEnemy()
     {
-        if (!PlayerController.global.evading)
+        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
         {
             PlayerController.global.damageEnemy = true;
         }
@@ -31,6 +32,11 @@ public class PlayerSteps : MonoBehaviour
     void Evading()
     {
         PlayerController.global.evading = false;
+    }
+
+    void LungeEnd()
+    {
+        PlayerController.global.lunge = false;
     }
 
     void StepOne()

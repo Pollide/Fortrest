@@ -62,7 +62,7 @@ public class U_Tottem : MonoBehaviour
         // Get shooting script
         turretScript = GetComponent<TurretShooting>();
         // Get player transform
-        playerTransform = GameObject.Find("Player").transform;
+        playerTransform = PlayerController.global.transform;
 
         for (int i = 0; i < attackSpeedButtons.Count; i++)
         {
