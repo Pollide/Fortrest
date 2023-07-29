@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviour
     public AudioClip SlowSound;
     public AudioClip WaterSound;
 
+    public bool CheatInfiniteBuilding;
+
     public bool DebugSaveBool;
     public bool DebugLoadBool;
 
@@ -552,8 +554,9 @@ public class GameManager : MonoBehaviour
 
             for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
             {
-                if (PlayerModeHandler.global.turretPrefabs[i].name.Contains(building.name))
+                if (building.name.Contains(PlayerModeHandler.global.turretPrefabs[i].name))
                 {
+                    //Debug.Log(turretSize + " " + i + " " + PlayerModeHandler.global.turretPrefabs[i].name);
                     Pref("Turret Type" + turretSize, i, false);
                     break;
                 }

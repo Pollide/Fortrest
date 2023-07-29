@@ -2,18 +2,41 @@ using UnityEngine;
 
 public class TurretShooting : MonoBehaviour
 {
-    public Animator animController;
     public float turn_speed;
     public float shootingRange = 10f;
     public float fireRate = 1f;
     public float damage = 10;
+    public float explosionRadius = 5;
     public LayerMask targetLayer;
 
     private Transform target;
     private float fireCountdown = 0f;
     float nextRotationChangeTime;
     private Quaternion targetRotation;
+    public bool IsCannon;
 
+    [HideInInspector]
+    public int CurrentLevel;
+
+    public GameObject ProjectilePrefab;
+    public Transform FirePoint;
+
+    private void Start()
+    {
+        ReturnAnimator();
+    }
+
+    public Animator ReturnAnimator()
+    {
+        Animator[] animators = GetComponentsInChildren<Animator>();
+
+        for (int i = 0; i < animators.Length; i++)
+        {
+            animators[i].gameObject.SetActive(CurrentLevel == i);
+        }
+
+        return animators[CurrentLevel];
+    }
 
     private void Update()
     {
@@ -37,8 +60,6 @@ public class TurretShooting : MonoBehaviour
         }
         else
         {
-            animController.SetBool("isAttacking", false);
-
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 30 * Time.deltaTime);
 
@@ -61,11 +82,54 @@ public class TurretShooting : MonoBehaviour
         // Check if it's time to fire
         if (fireCountdown <= 0f)
         {
-            animController.SetBool("isAttacking", true);
+            ReturnAnimator().ResetTrigger("Fire");
+            ReturnAnimator().SetTrigger("Fire");
+
+            if (IsCannon)
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSound);
+            else
+                GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
+
             fireCountdown = 1f / fireRate;
         }
 
         fireCountdown -= Time.deltaTime;
+    }
+
+    public void ProjectileEvent()
+    {
+        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint);
+
+        if (IsCannon)
+        {
+            // Spawn a projectile
+            ProjectileExplosion explosion = projectile.GetComponent<ProjectileExplosion>();
+            explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            explosion.explosionRadius = explosionRadius;
+            explosion.damage = damage;
+        }
+        else
+        {
+            U_Turret uTurret = GetComponent<U_Turret>();
+            BoltScript boltScript = projectile.GetComponent<BoltScript>();
+
+            if (uTurret && uTurret.isMultiShotActive)
+            {
+                float range = Random.Range(0f, 101);
+                if (range <= uTurret.multiShotPercentage)
+                {
+                    GameObject bolt2 = Instantiate(ProjectilePrefab, FirePoint);
+                    bolt2.GetComponent<BoltScript>().SetDamage(damage / 2f);
+                    bolt2.transform.Rotate(new Vector3(0, 25, 0));
+                    GameObject bolt3 = Instantiate(ProjectilePrefab, FirePoint);
+                    bolt3.GetComponent<BoltScript>().SetDamage(damage / 2f);
+                    bolt3.transform.Rotate(new Vector3(0, -25, 0));
+                }
+            }
+
+            //   turret.animController.SetBool("isAttacking", false);
+            boltScript.SetDamage(damage);
+        }
     }
 
     private void FindTarget()

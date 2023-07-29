@@ -52,7 +52,7 @@ public class Building : MonoBehaviour
     private float lastHealth;
 
     private bool underAttack;
-    [HideInInspector]public bool playerinRange;
+    [HideInInspector] public bool playerinRange;
     private float timerText = 0.0f;
 
     private GameObject normalHouse;
@@ -198,8 +198,7 @@ public class Building : MonoBehaviour
 
         if (HealthAnimationState != null && HealthAnimationState.enabled)
         {
-            // Debug.Log("hit");
-            HealthAnimationState.time = 1;
+            GameManager.PlayAnimation(animation, "Health Hit", false, true);
             GameManager.PlayAnimation(animation, "Health Hit");
         }
         else
