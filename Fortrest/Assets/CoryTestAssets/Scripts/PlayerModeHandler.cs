@@ -36,8 +36,8 @@ public class PlayerModeHandler : MonoBehaviour
     public LayerMask buildingLayer;
     public Image buildingMode;
     public Image resourceMode;
-    public Image combatMode; 
-    public Image repairMode; 
+    public Image combatMode;
+    public Image repairMode;
     public Image resourceModeSub;
     public Image combatModeSub;
     private Grid buildGrid;
@@ -72,7 +72,7 @@ public class PlayerModeHandler : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
         {
             PlayerController.global.swapCTRL = false;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);           
+            GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
             switch (playerModes)
             {
                 case PlayerModes.CombatMode:
@@ -112,7 +112,7 @@ public class PlayerModeHandler : MonoBehaviour
     }
 
     private void BuildMode()
-    { 
+    {
         if (buildType == BuildType.Turret)
         {
             Building building = turretPrefabs[0].GetComponentInChildren<Building>();
@@ -169,8 +169,8 @@ public class PlayerModeHandler : MonoBehaviour
     }
 
     public void RepairMode()
-    { 
-        
+    {
+
     }
 
     public void SwitchToBuildMode()
@@ -255,6 +255,12 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void SpawnBuilding(GameObject _prefab, string _resource1, string _resource2, int _resource1Cost, int _resource2Cost)
     {
+        if (GameManager.global.CheatInfiniteBuilding)
+        {
+            _resource1Cost = -1;
+            _resource2Cost = -1;
+
+        }
         if (Input.GetMouseButtonDown(0) && InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost && InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost && !MouseOverUI())
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
