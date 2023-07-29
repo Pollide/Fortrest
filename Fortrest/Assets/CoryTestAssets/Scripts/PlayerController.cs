@@ -181,6 +181,10 @@ public class PlayerController : MonoBehaviour
     // Keyboard Controls
     private KeyCode[] keyCodes;
 
+    // Swapping
+    [HideInInspector] public bool cancelAnimation;
+    [HideInInspector] public bool cancelEffects;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -392,6 +396,7 @@ public class PlayerController : MonoBehaviour
             Attack();
             Gathering();
             Shoot();
+            ModeChanged();
         }        
 
         TimersFunction();       
@@ -405,6 +410,29 @@ public class PlayerController : MonoBehaviour
         if (playerHealth <= 0 || playerDead)
         {
             Death();
+        }
+    }
+
+    private void ModeChanged()
+    {
+        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1))
+        {
+            cancelAnimation = true;
+            cancelEffects = true;
+        }
+        if (Input.GetMouseButton(0))
+        {
+            cancelEffects = false;     
+        }
+
+        if (cancelAnimation)
+        {
+            CharacterAnimator.SetBool("Swapping", cancelAnimation);
+            cancelAnimation = false;
+        }
+        else
+        {
+            CharacterAnimator.SetBool("Swapping", cancelAnimation);
         }
     }
 
