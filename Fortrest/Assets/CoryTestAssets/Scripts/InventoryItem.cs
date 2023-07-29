@@ -29,7 +29,10 @@ public class InventoryItem : MonoBehaviour
 
     private void Start()
     {
-        LevelManager.global.InventoryItemList.Add(gameObject);
+        for (int i = 0; i < resourceAmount; i++)
+        {
+            LevelManager.global.InventoryItemList.Add(gameObject);
+        }
     }
 
     private void OnTriggerStay(Collider other)
