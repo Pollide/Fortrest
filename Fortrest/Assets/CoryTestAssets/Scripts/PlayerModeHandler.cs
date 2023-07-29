@@ -32,7 +32,7 @@ public class PlayerModeHandler : MonoBehaviour
     private Transform[] parts;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
-    public float distanceAwayFromPlayer = 30;
+    public Vector2 distanceAwayFromPlayer;
     public LayerMask buildingLayer;
     public Image buildingMode;
     public Image resourceMode;
@@ -92,8 +92,6 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && GameObject.Find("House") != null && GameObject.Find("House").GetComponent<Building>().playerinRange)
         {
-            PlayerController.global.playerCanMove = false;
-            PlayerController.global.transform.position = GameObject.Find("House").transform.position;
             SwitchToBuildMode();
         }
     }
@@ -109,6 +107,7 @@ public class PlayerModeHandler : MonoBehaviour
         playerModes = PlayerModes.ResourceMode;
         buildType = BuildType.Slow;
         SwitchToGatherMode();
+        buildGrid.gameObject.SetActive(false);
     }
 
     private void BuildMode()
@@ -168,6 +167,18 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
+    private void LeaveHouse()
+    {
+        if (playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode)
+        {
+            Vector3 housePos = GameObject.Find("House").transform.position;
+            Vector3 leavePosition = new(housePos.x, housePos.y, housePos.z - 100);
+            PlayerController.global.transform.position = leavePosition;
+            PlayerController.global.playerCanMove = true;
+            buildGrid.gameObject.SetActive(false);
+        }
+    }
+
     public void RepairMode()
     { 
         
@@ -175,6 +186,10 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToBuildMode()
     {
+        PlayerController.global.playerCanMove = false;
+        PlayerController.global.transform.position = GameObject.Find("House").transform.position;
+        buildGrid.gameObject.SetActive(true);
+
         playerModes = PlayerModes.BuildMode;
 
         SetMouseActive(true);
@@ -214,6 +229,8 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToGatherMode()
     {
+        LeaveHouse();
+
         if (turretBlueprint.activeInHierarchy)
         {
             turretBlueprint.SetActive(false);
@@ -234,6 +251,8 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToCombatMode()
     {
+        LeaveHouse();
+
         if (turretBlueprint.activeInHierarchy)
         {
             turretBlueprint.SetActive(false);
@@ -364,11 +383,20 @@ public class PlayerModeHandler : MonoBehaviour
     }
     public bool IsInRange(Vector3 currentTarget)
     {
-        PlayerController player = PlayerController.global;
+        Vector3 playerPos = PlayerController.global.transform.position;
 
-        return distanceAwayFromPlayer >= Vector3.Distance(player.transform.position, currentTarget);
+        float top = playerPos.x + distanceAwayFromPlayer.x;
+        float bot = playerPos.x - distanceAwayFromPlayer.x;
+        float right = playerPos.z + distanceAwayFromPlayer.y;
+        float left = playerPos.z - distanceAwayFromPlayer.y;
+
+        if (currentTarget.x < top && currentTarget.x > bot && currentTarget.z < right && currentTarget.z > left)
+        {
+            return true;
+        }
+
+        return false;
     }
-
 
     public void SetMouseActive(bool isActive)
     {
