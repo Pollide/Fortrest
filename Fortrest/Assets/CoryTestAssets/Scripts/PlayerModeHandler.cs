@@ -342,7 +342,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     void BluePrintSet(Material colorMaterial)
     {
-        List<MeshRenderer> meshRenderers = GameManager.FindComponent<MeshRenderer>(turretBlueprint.transform);
+        List<Renderer> meshRenderers = GameManager.FindComponent<Renderer>(turretBlueprint.transform);
 
         for (int i = 0; i < meshRenderers.Count; i++)
         {
