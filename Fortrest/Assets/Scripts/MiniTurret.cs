@@ -58,7 +58,7 @@ public class MiniTurret : MonoBehaviour
 
                 transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, turnSpeed * Time.deltaTime);
 
-                if (Vector3.Distance(transform.position, target.transform.position) < shootingRange && !shooting)
+                if (Vector3.Distance(transform.position, target.transform.position) <= shootingRange && !shooting)
                 {
                     Attack();
                 }

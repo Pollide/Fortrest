@@ -14,11 +14,13 @@ public class BoltScript : MonoBehaviour
 
     public MiniTurretEvents miniTurretEventsScript;
     public MiniTurret miniTurretScript;
+    public TurretShooting turretShootingScript;
 
     private void Start()
     {
         miniTurretEventsScript = transform.parent.parent.GetChild(0).GetComponent<MiniTurretEvents>();
         miniTurretScript = transform.parent.parent.GetComponent<MiniTurret>();
+        turretShootingScript = transform.parent.parent.GetComponent<TurretShooting>();
         timer = lifetime;           // Initialize the timer to the bullet's lifetime
     }
 
@@ -40,6 +42,7 @@ public class BoltScript : MonoBehaviour
             {
                 miniTurretEventsScript.boltActive = false;
                 miniTurretScript.attackStarted = false;
+                turretShootingScript.attackStarted = false;
             }
             Destroy(gameObject);
         }
@@ -99,6 +102,7 @@ public class BoltScript : MonoBehaviour
                 {
                     miniTurretEventsScript.boltActive = false;
                     miniTurretScript.attackStarted = false;
+                    turretShootingScript.attackStarted = false;
                 }
                 Destroy(gameObject); // Destroy the bullet
             }

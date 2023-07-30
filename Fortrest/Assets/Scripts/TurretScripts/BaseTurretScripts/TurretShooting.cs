@@ -14,6 +14,7 @@ public class TurretShooting : MonoBehaviour
     float nextRotationChangeTime;
     private Quaternion targetRotation;
     public bool IsCannon;
+    public bool attackStarted;
 
     [HideInInspector]
     public int CurrentLevel;
@@ -39,9 +40,7 @@ public class TurretShooting : MonoBehaviour
     }
 
     private void Update()
-    {
-        FindTarget();
-
+    {       
         if (target != null)
         {
             Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
@@ -57,9 +56,19 @@ public class TurretShooting : MonoBehaviour
                 Attack();
             }
 
+            if (Vector3.Distance(transform.position, target.position) > shootingRange && !attackStarted)
+            {
+                target = null;
+            }
+
+            if (target && target.GetComponent<EnemyController>().health <= 0f)
+            {
+                target = null;
+            }
         }
         else
         {
+            FindTarget();
 
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 30 * Time.deltaTime);
 
@@ -82,6 +91,7 @@ public class TurretShooting : MonoBehaviour
         // Check if it's time to fire
         if (fireCountdown <= 0f)
         {
+            attackStarted = true;
             ReturnAnimator().ResetTrigger("Fire");
             ReturnAnimator().SetTrigger("Fire");
 
