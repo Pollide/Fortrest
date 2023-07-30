@@ -1671,6 +1671,7 @@ MonoBehaviour:
   attackDamage: 1
   currentResource: {fileID: 0}
   damageEnemy: 0
+  lunge: 0
   playerCanMove: 1
   attacking: 0
   canTeleport: 0
@@ -1703,6 +1704,8 @@ MonoBehaviour:
   lockingCTRL: 0
   inventoryCTRL: 0
   swapCTRL: 0
+  cancelAnimation: 0
+  cancelEffects: 0
 --- !u!143 &5569601162832024542
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3111,6 +3114,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2108849385958482122, guid: cd0bc9715f16c5347a569bae16ef1c71,
+        type: 3}
+      propertyPath: m_Text
+      value: Restart Day
       objectReference: {fileID: 0}
     - target: {fileID: 3107765818315974258, guid: cd0bc9715f16c5347a569bae16ef1c71,
         type: 3}

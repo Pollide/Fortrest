@@ -196,16 +196,15 @@ public class Building : MonoBehaviour
     {
         Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
 
-        if (HealthAnimationState != null && HealthAnimationState.enabled)
+        Debug.Log(HealthAnimationState != null && HealthAnimationState.enabled);
+
+        if (HealthAnimationState == null || !HealthAnimationState.enabled)
         {
-            GameManager.PlayAnimation(animation, "Health Hit", false, true);
-            GameManager.PlayAnimation(animation, "Health Hit");
-        }
-        else
-        {
-            //Debug.Log(1);
             HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
         }
+
+        GameManager.PlayAnimation(animation, "Health Hit", false, true);
+        GameManager.PlayAnimation(animation, "Health Hit");
     }
 
     private void Update()

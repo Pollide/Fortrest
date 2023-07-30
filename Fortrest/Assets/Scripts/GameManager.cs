@@ -447,6 +447,8 @@ public class GameManager : MonoBehaviour
 
             int collected = (int)Pref("Item Collected" + i, resource.GetComponent<InventoryItem>().CollectedBool ? 1 : 0, load);
 
+            resource.GetComponent<InventoryItem>().resourceAmount = (int)Pref("Item Amount" + i, resource.GetComponent<InventoryItem>().resourceAmount, load);
+
             if (load && collected == 1)
                 resource.GetComponent<InventoryItem>().CollectVoid();
 
@@ -501,7 +503,7 @@ public class GameManager : MonoBehaviour
         }, true);
     }
 
-    float Pref(string pref, float value, bool load)
+    public static float Pref(string pref, float value, bool load)
     {
         if (load)
         {
