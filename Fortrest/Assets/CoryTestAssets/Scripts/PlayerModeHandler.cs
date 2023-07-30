@@ -200,7 +200,7 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.playerCanMove = false;
         PlayerController.global.transform.position = GameObject.Find("House").transform.position;
         buildGrid.gameObject.SetActive(true);
-
+        PlayerController.global.CharacterAnimator.SetBool("Moving", false);
 
         playerModes = PlayerModes.BuildMode;
 
