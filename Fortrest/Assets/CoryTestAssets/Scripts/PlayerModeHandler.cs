@@ -28,8 +28,7 @@ public class PlayerModeHandler : MonoBehaviour
     public PlayerModes playerModes;
     public BuildType buildType;
     public GameObject[] turretPrefabs;
-    public GameObject turretBlueprint;
-    private Transform[] parts;
+    GameObject turretBlueprint;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
     public Vector2 distanceAwayFromPlayer;
@@ -55,7 +54,6 @@ public class PlayerModeHandler : MonoBehaviour
             //itself doesnt exist so set it
             global = this;
         }
-        parts = turretBlueprint.GetComponentsInChildren<Transform>();
 
         buildGrid = GameObject.Find("BuildingGrid").GetComponent<Grid>();
     }
@@ -209,10 +207,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToBuildRepairMode()
     {
-        if (turretBlueprint.activeInHierarchy)
-        {
-            turretBlueprint.SetActive(false);
-        }
+        ClearBlueprint();
 
         playerModes = PlayerModes.RepairMode;
 
@@ -229,14 +224,18 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
     }
 
+    void ClearBlueprint()
+    {
+        if (turretBlueprint)
+        {
+            Destroy(turretBlueprint);
+        }
+    }
     public void SwitchToGatherMode()
     {
         LeaveHouse();
 
-        if (turretBlueprint.activeInHierarchy)
-        {
-            turretBlueprint.SetActive(false);
-        }
+        ClearBlueprint();
 
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
         playerModes = PlayerModes.ResourceMode;
@@ -255,10 +254,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         LeaveHouse();
 
-        if (turretBlueprint.activeInHierarchy)
-        {
-            turretBlueprint.SetActive(false);
-        }
+        ClearBlueprint();
 
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = true });
         playerModes = PlayerModes.CombatMode;
@@ -344,6 +340,16 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
+    void BluePrintSet(Material colorMaterial)
+    {
+        List<MeshRenderer> meshRenderers = GameManager.FindComponent<MeshRenderer>(turretBlueprint.transform);
+
+        for (int i = 0; i < meshRenderers.Count; i++)
+        {
+            meshRenderers[i].material = colorMaterial;
+        }
+    }
+
     private void DragBuildingBlueprint(string _resource1, string _resource2, int _resource1Cost, int _resource2Cost)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -351,7 +357,33 @@ public class PlayerModeHandler : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer))
         {
             // && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource") && !MouseOverUI()
-            turretBlueprint.SetActive(true);
+
+            if (!turretBlueprint)
+            {
+                if (buildType == BuildType.Slow)
+                {
+                    turretBlueprint = Instantiate(turretPrefabs[1]);
+                }
+                else if (buildType == BuildType.Cannon)
+                {
+                    turretBlueprint = Instantiate(turretPrefabs[2]);
+                }
+                else
+                {
+                    turretBlueprint = Instantiate(turretPrefabs[0]);
+                }
+
+                turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
+
+                TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
+
+                if (turretShooting)
+                    Destroy(turretShooting);
+
+                BluePrintSet(turretBlueprintBlue);
+
+
+            }
 
             Vector3 worldPos = hitData.point;
             Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
@@ -364,23 +396,11 @@ public class PlayerModeHandler : MonoBehaviour
                 InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost &&
                 InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
             {
-                foreach (Transform child in parts)
-                {
-                    if (child.GetComponent<MeshRenderer>() && child.GetComponent<MeshRenderer>().material != turretBlueprintBlue)
-                    {
-                        child.GetComponent<MeshRenderer>().material = turretBlueprintBlue;
-                    }
-                }
+                BluePrintSet(turretBlueprintBlue);
             }
             else
             {
-                foreach (Transform child in parts)
-                {
-                    if (child.GetComponent<MeshRenderer>() && child.GetComponent<MeshRenderer>().material != turretBlueprintRed)
-                    {
-                        child.GetComponent<MeshRenderer>().material = turretBlueprintRed;
-                    }
-                }
+                BluePrintSet(turretBlueprintRed);
             }
         }
         else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
