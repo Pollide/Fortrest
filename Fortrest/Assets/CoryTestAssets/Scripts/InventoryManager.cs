@@ -189,6 +189,12 @@ public class InventoryManager : MonoBehaviour
     public void OpenInventory()
     {
         currentPlayerModes = PlayerModeHandler.global.playerModes;
+
+        if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+        {
+            //PlayerModeHandler.global.SwitchToGatherMode();
+        }
+
         PlayerModeHandler.global.playerModes = PlayerModes.Paused;
         Time.timeScale = 0;
         inventoryPanel.SetActive(true);
