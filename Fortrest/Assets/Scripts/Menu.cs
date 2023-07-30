@@ -28,6 +28,7 @@ public class Menu : MonoBehaviour
     public Animation SettingsSignAnimation;
     public Animation LevelsSignAnimation;
     public Color TextColor;
+    public TMP_Text PlayText;
     bool GoForwardBool;
     int GoHorizontalInt;
 
@@ -40,6 +41,15 @@ public class Menu : MonoBehaviour
         GameManager.PlayAnimation(CameraAnimation, "Initial Menu");
         TextColor = SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().color;
         StartCoroutine(InitalMenuIEnumerator());
+
+        if (PlayerPrefs.GetInt("Game File") == 0)
+        {
+            PlayText.text = "New Game";
+        }
+        else
+        {
+            PlayText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
+        }
     }
 
     IEnumerator InitalMenuIEnumerator()

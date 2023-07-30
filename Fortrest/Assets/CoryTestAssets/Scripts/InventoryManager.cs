@@ -119,12 +119,18 @@ public class InventoryManager : MonoBehaviour
 
                 dragableItem.quantityText.text = slot.quantity.ToString();
 
-                for (int i = quantity - 1; i >= 0; i--)
+                for (int i = 0; i < quantity; i++)
                 {
-                    if (LevelManager.global.InventoryItemList[i].name.Contains(item))
+                    if (LevelManager.global.InventoryItemList.Count > 0 && LevelManager.global.InventoryItemList[0].name.Contains(item))
                     {
-                        Debug.Log("Clear");
-                        LevelManager.global.InventoryItemList.Remove(LevelManager.global.InventoryItemList[i]); //so it doesnt save
+                        InventoryItem inventoryItem = LevelManager.global.InventoryItemList[0].GetComponent<InventoryItem>();
+                        inventoryItem.resourceAmount--;
+
+                        if (inventoryItem.resourceAmount <= 0)
+                        {
+                            Destroy(inventoryItem.gameObject);
+                            LevelManager.global.InventoryItemList.Remove(inventoryItem.gameObject); //so it doesnt save
+                        }
                     }
                 }
 
