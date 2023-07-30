@@ -26,14 +26,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5438900332032482279}
-  m_LocalRotation: {x: -0, y: 0.10142943, z: -0, w: 0.9948428}
-  m_LocalPosition: {x: 0.026, y: 0.06021885, z: 0.047}
-  m_LocalScale: {x: 0.9682784, y: 0.9682784, z: 0.9682784}
-  m_ConstrainProportionsScale: 0
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6935669614047997176}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 11.643, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &3333286310292844786
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -98,7 +98,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 1
   m_CookingOptions: 30
-  m_Mesh: {fileID: 5376334283554726907, guid: 480049bd8c51e974c80e7a73548fb511, type: 3}
+  m_Mesh: {fileID: 1324264430746335422, guid: 4350014ec0a675442a807be4b5daea90, type: 3}
 --- !u!1 &7713437358430713410
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,16 +125,16 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7713437358430713410}
-  m_LocalRotation: {x: 0, y: 0.9961947, z: -0, w: -0.08715578}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1057400666602239870}
   - {fileID: 2981002019285793730}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 190, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &-4554220620364002257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -148,14 +148,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 1
+  DestroyedBool: 0
   resourceObject: 9
   health: 0
   maxHealth: 5
-  energyConsumptionPerClick: 2
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
   healthBarImage: {fileID: 6627474213955040157}
+  HUDHealthBar: {fileID: 0}
 --- !u!111 &8555596593215373963
 Animation:
   m_ObjectHideFlags: 0
@@ -265,17 +266,17 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.12411804
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.109103456
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.18601693
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -320,7 +321,7 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.093
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
