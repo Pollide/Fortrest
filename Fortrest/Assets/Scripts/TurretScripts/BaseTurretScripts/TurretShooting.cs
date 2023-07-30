@@ -94,6 +94,7 @@ public class TurretShooting : MonoBehaviour
             attackStarted = true;
             ReturnAnimator().ResetTrigger("Fire");
             ReturnAnimator().SetTrigger("Fire");
+            ProjectileEvent();
 
             if (IsCannon)
                 GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSound);
