@@ -163,7 +163,7 @@ public class Boar : MonoBehaviour
             player.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = false;
-            player.transform.GetChild(0).gameObject.GetComponent<Animator>().SetBool("Moving", false);
+            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
             PlayerController.global.SwordGameObject.GetComponent<BoxCollider>().enabled = false;
         }
         else
