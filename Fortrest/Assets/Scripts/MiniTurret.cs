@@ -6,7 +6,7 @@ public class MiniTurret : MonoBehaviour
 {
     public Animator animator;
     private float turnSpeed = 10.0f;
-    private float shootingRange = 7.5f;
+    private float shootingRange = 10.0f;
     private float shootTimer = 0.0f;
     private float resetShoot = 0.05f;
     private bool shooting = false;
@@ -17,10 +17,11 @@ public class MiniTurret : MonoBehaviour
     private Transform currentTarget;
     private bool targetAcquired;
     private bool spawnComplete;
+    public bool attackStarted;
 
     private void Start()
     {
-        GameManager.PlayAnimation(GetComponent<Animation>(), "Turret Shoot");        
+        GameManager.PlayAnimation(GetComponent<Animation>(), "MiniTurretSpawn");        
     }
 
     private void StartBehaving()
@@ -42,7 +43,7 @@ public class MiniTurret : MonoBehaviour
                         targetAcquired = false;
                     }
                 }
-
+                
                 if (!targetAcquired)
                 {
                     currentTarget = target;
@@ -57,13 +58,21 @@ public class MiniTurret : MonoBehaviour
 
                 transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, turnSpeed * Time.deltaTime);
 
-                if (Vector3.Distance(transform.position, target.transform.position) <= shootingRange && !shooting)
+                if (Vector3.Distance(transform.position, target.transform.position) < shootingRange && !shooting)
                 {
                     Attack();
                 }
 
-                if (target.GetComponent<EnemyController>().health <= 0f)
+                if (Vector3.Distance(transform.position, target.position) > shootingRange && !attackStarted)
                 {
+                    if (!GetComponentInChildren<MiniTurretEvents>().boltActive)
+                    {
+                        target = null;
+                    }
+                }
+
+                if (target && target.GetComponent<EnemyController>().health <= 0f)
+                {                  
                     target = null;
                 }
             }
@@ -86,13 +95,20 @@ public class MiniTurret : MonoBehaviour
             if (PlayerController.global.turretEnd)
             {
                 PlayerController.global.turretEnd = false;
-                Destroy(gameObject);
+                GameManager.PlayAnimation(GetComponent<Animation>(), "MiniTurretDisappear");
             }
         }       
     }
 
+    // Called with above anim
+    private void Destroy()
+    {
+        Destroy(gameObject);
+    }
+
     private void Attack()
     {
+        attackStarted = true;
         shooting = true;
         animator.SetBool("isAttacking", true);
     }

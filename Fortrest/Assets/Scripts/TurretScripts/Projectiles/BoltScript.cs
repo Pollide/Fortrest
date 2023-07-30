@@ -12,8 +12,13 @@ public class BoltScript : MonoBehaviour
     private float damage = 0f;      // Amount of damage the bullet applies to enemies
     private float timer = 0f;       // Timer to track the bullet's lifetime
 
+    public MiniTurretEvents miniTurretEventsScript;
+    public MiniTurret miniTurretScript;
+
     private void Start()
     {
+        miniTurretEventsScript = transform.parent.parent.GetChild(0).GetComponent<MiniTurretEvents>();
+        miniTurretScript = transform.parent.parent.GetComponent<MiniTurret>();
         timer = lifetime;           // Initialize the timer to the bullet's lifetime
     }
 
@@ -31,6 +36,11 @@ public class BoltScript : MonoBehaviour
         // Destroy the bullet if the timer reaches or goes below zero
         if (timer <= 0f)
         {
+            if (mini)
+            {
+                miniTurretEventsScript.boltActive = false;
+                miniTurretScript.attackStarted = false;
+            }
             Destroy(gameObject);
         }
     }
@@ -85,6 +95,11 @@ public class BoltScript : MonoBehaviour
 
                 }
 
+                if (mini)
+                {
+                    miniTurretEventsScript.boltActive = false;
+                    miniTurretScript.attackStarted = false;
+                }
                 Destroy(gameObject); // Destroy the bullet
             }
         }
