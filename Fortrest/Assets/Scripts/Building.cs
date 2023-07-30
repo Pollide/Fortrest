@@ -202,9 +202,11 @@ public class Building : MonoBehaviour
         {
             HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
         }
-
-        GameManager.PlayAnimation(animation, "Health Hit", false, true);
-        GameManager.PlayAnimation(animation, "Health Hit");
+        else
+        {
+            GameManager.PlayAnimation(animation, "Health Hit", false, true);
+            GameManager.PlayAnimation(animation, "Health Hit");
+        }
     }
 
     private void Update()

@@ -122,6 +122,10 @@ public class PlayerController : MonoBehaviour
     public GameObject BowGameObject;
     private GameObject RadiusCamGameObject;
     public GameObject PauseCanvasGameObject;
+    public GameObject MapCanvasGameObject;
+    public RectTransform MapPlayerRectTransform;
+
+    bool MapBool;
     [System.Serializable]
     public class ToolData
     {
@@ -147,7 +151,7 @@ public class PlayerController : MonoBehaviour
 
     // Inventory
     public GameObject DarkenGameObject;
-    
+
     // Payse
     private bool PausedBool;
     public Animation UIAnimation;
@@ -166,12 +170,12 @@ public class PlayerController : MonoBehaviour
     private bool animationPlayed = false;
     private float timer1, timer2, timer3, timer4 = 0.0f;
     private float[] timers = new float[4];
-   
+
     // Controller   
     private bool sprintingCTRL;
     private bool movingCTRL;
     private bool gatheringCTRL;
-    private bool attackingCTRL;   
+    private bool attackingCTRL;
     [HideInInspector] public bool interactCTRL;
     [HideInInspector] public bool needInteraction = false;
     [HideInInspector] public bool lockingCTRL = false;
@@ -214,6 +218,7 @@ public class PlayerController : MonoBehaviour
         gamepadControls.Controls.Move.canceled += context => MoveController(false);
         // Pause button to pause
         gamepadControls.Controls.Pause.performed += context => PauseController();
+        // gamepadControls.Controls.Pause.performed += context => MapController();
         // Right trigger for gathering
         gamepadControls.Controls.Gathering.performed += context => GatheringController(true);
         gamepadControls.Controls.Gathering.canceled += context => GatheringController(false);
@@ -259,6 +264,11 @@ public class PlayerController : MonoBehaviour
         PauseVoid(!PausedBool);
     }
 
+    private void MapController()
+    {
+        MapVoid(!MapBool);
+    }
+
     private void GatheringController(bool pressed)
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
@@ -271,7 +281,7 @@ public class PlayerController : MonoBehaviour
             {
                 gatheringCTRL = false;
             }
-        }     
+        }
     }
 
     private void AttackingController()
@@ -281,8 +291,8 @@ public class PlayerController : MonoBehaviour
             if (!attackingCTRL && !attacking)
             {
                 attackingCTRL = true;
-            }            
-        }        
+            }
+        }
     }
 
     private void InteractController()
@@ -290,7 +300,7 @@ public class PlayerController : MonoBehaviour
         if (!interactCTRL && needInteraction)
         {
             interactCTRL = true;
-        }        
+        }
     }
 
     private void OnEnable()
@@ -332,7 +342,7 @@ public class PlayerController : MonoBehaviour
             houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
             interactText = house.transform.Find("Floating Text").gameObject;
         }
-        
+
         // Setting default values
         playerCurrentSpeed = playerWalkSpeed;
         playerEnergy = maxPlayerEnergy;
@@ -402,9 +412,9 @@ public class PlayerController : MonoBehaviour
             {
                 AttackLunge();
             }
-        }        
+        }
 
-        TimersFunction();       
+        TimersFunction();
         ScreenDamage();
 
         foreach (KeyCode keyCode in keyCodes)
@@ -427,7 +437,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetMouseButton(0))
         {
-            cancelEffects = false;     
+            cancelEffects = false;
         }
 
         if (cancelAnimation)
@@ -515,7 +525,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void KeyRead (KeyCode letter)
+    private void KeyRead(KeyCode letter)
     {
         if (Input.GetKeyDown(letter))
         {
@@ -541,7 +551,7 @@ public class PlayerController : MonoBehaviour
                         Teleport();
                     }
                     break;
-               
+
                 case KeyCode.Space:
                     if (canEvade)
                     {
@@ -552,11 +562,15 @@ public class PlayerController : MonoBehaviour
                 case KeyCode.Escape:
                     PauseVoid(!PausedBool);
                     break;
+                case KeyCode.Tab:
+                    MapVoid(!MapBool);
+                    break;
+                    break;
 
                 default:
                     break;
             }
-        }       
+        }
     }
 
     public void ChangeTool(ToolData toolData)
@@ -599,7 +613,7 @@ public class PlayerController : MonoBehaviour
                 playerCurrentSpeed = playerWalkSpeed;
                 CharacterAnimator.speed = 1.0f;
             }
-        }      
+        }
 
         if (!canRun)
         {
@@ -638,7 +652,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator Evade()
-    {       
+    {
         evadeTimer = 0;
         canEvade = false;
         evading = true;
@@ -652,11 +666,47 @@ public class PlayerController : MonoBehaviour
 
     public void PauseVoid(bool pauseBool)
     {
-        PauseCanvasGameObject.SetActive(pauseBool);
-        PausedBool = pauseBool;
-        GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pauseBool);
-        GameManager.global.MusicManager.PlayMusic(pauseBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
-        Time.timeScale = pauseBool ? 0 : 1;
+        if (!MapBool)
+        {
+            PauseCanvasGameObject.SetActive(pauseBool);
+            PausedBool = pauseBool;
+            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pauseBool);
+            GameManager.global.MusicManager.PlayMusic(pauseBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            Time.timeScale = pauseBool ? 0 : 1;
+        }
+    }
+
+    public void MapVoid(bool activeBool)
+    {
+        if (!PausedBool)
+        {
+            MapCanvasGameObject.SetActive(activeBool);
+            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", activeBool);
+            GameManager.global.MusicManager.PlayMusic(activeBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            Time.timeScale = activeBool ? 0 : 1;
+            MapBool = activeBool;
+
+            if (activeBool)
+            {
+                MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
+                MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
+            }
+        }
+    }
+
+
+    public Vector2 ConvertToMapCoordinates(Vector3 position)
+    {
+        // Step 2: Convert to 2D screen space using the map camera
+        position.y = position.z;
+        position -= new Vector3(100, 120);
+        position.x *= 2.3f;
+        position.y *= 1.6f;
+
+        // Step 3: Normalize the screen position based on your map's size or aspect ratio
+        // Vector2 normalizedMapPosition = new Vector2(screenPosition.x / Screen.width, screenPosition.y / Screen.height);
+
+        return position;
     }
 
     private void ApplyMovement(float _horizontalMove, float _verticalMove)
@@ -781,7 +831,7 @@ public class PlayerController : MonoBehaviour
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
             if (Input.GetMouseButton(1))
-            {                
+            {
                 arrowText.gameObject.SetActive(true);
                 ChangeTool(new ToolData() { BowBool = true });
                 canShoot = true;
@@ -804,7 +854,7 @@ public class PlayerController : MonoBehaviour
             {
                 arrowText.gameObject.SetActive(false);
                 ChangeTool(new ToolData() { SwordBool = true });
-                canShoot = false;                
+                canShoot = false;
             }
 
             if (Input.GetMouseButtonDown(0) && canShoot && !shooting && arrowNumber > 0)
@@ -816,7 +866,7 @@ public class PlayerController : MonoBehaviour
                 arrowText.text = "Arrow: " + arrowNumber.ToString();
                 bowScript.Shoot();
             }
-        }  
+        }
     }
 
     public IEnumerator ToolAppear()
@@ -830,7 +880,7 @@ public class PlayerController : MonoBehaviour
         turretTimer = 0;
         turretSpawned = true;
         turretEnd = false;
-        GameObject miniTurret = Instantiate(miniTurretObject, transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);     
+        GameObject miniTurret = Instantiate(miniTurretObject, transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);
     }
 
     private void Teleport()
@@ -877,7 +927,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void AttackLunge()
-    {       
+    {
         float tempTimer = 0;
         tempTimer += Time.deltaTime;
 
@@ -900,7 +950,7 @@ public class PlayerController : MonoBehaviour
         {
             StopCoroutine(ToolAppear());
             StartCoroutine(ToolAppear());
-        }            
+        }
 
         if (PicaxeGameObject.activeSelf)
         {
@@ -1168,6 +1218,6 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
-        }       
+        }
     }
 }
