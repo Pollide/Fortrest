@@ -398,7 +398,7 @@ public class PlayerController : MonoBehaviour
             Gathering();
             Shoot();
             ModeChanged();
-            if (lunge)
+            if (lunge && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
             {
                 AttackLunge();
             }
@@ -819,6 +819,12 @@ public class PlayerController : MonoBehaviour
         }  
     }
 
+    public IEnumerator ToolAppear()
+    {
+        yield return new WaitForSeconds(1.5f);
+        ChangeTool(new ToolData() { AxeBool = true });
+    }
+
     private void SpawnTurret()
     {
         turretTimer = 0;
@@ -890,6 +896,12 @@ public class PlayerController : MonoBehaviour
 
     public void GatheringEffects()
     {
+        if (currentResource.resourceObject == Building.BuildingType.Bush)
+        {
+            StopCoroutine(ToolAppear());
+            StartCoroutine(ToolAppear());
+        }            
+
         if (PicaxeGameObject.activeSelf)
         {
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
