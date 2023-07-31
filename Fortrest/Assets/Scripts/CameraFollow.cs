@@ -33,12 +33,12 @@ public class CameraFollow : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.CapsLock) || PlayerController.global.lockingCTRL)
-        {
-            PlayerController.global.lockingCTRL = false;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.CameraLockSound);
-            lockCamera = !lockCamera;
-        }
+        //if (Input.GetKeyDown(KeyCode.CapsLock) || PlayerController.global.lockingCTRL)
+        //{
+        //    PlayerController.global.lockingCTRL = false;
+        //    GameManager.global.SoundManager.PlaySound(GameManager.global.CameraLockSound);
+        //    lockCamera = !lockCamera;
+        //}
 
         if (lockCamera)
         {

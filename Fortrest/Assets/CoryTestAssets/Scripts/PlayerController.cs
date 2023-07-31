@@ -125,7 +125,8 @@ public class PlayerController : MonoBehaviour
     public GameObject MapCanvasGameObject;
     public RectTransform MapPlayerRectTransform;
 
-    bool MapBool;
+    private bool mapBool;
+
     [System.Serializable]
     public class ToolData
     {
@@ -153,7 +154,7 @@ public class PlayerController : MonoBehaviour
     public GameObject DarkenGameObject;
 
     // Payse
-    private bool PausedBool;
+    [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
 
     // Death
@@ -246,7 +247,7 @@ public class PlayerController : MonoBehaviour
             sprintingCTRL = false;
         }
     }
-
+    
     private void MoveController(bool pressed)
     {
         if (pressed)
@@ -258,17 +259,17 @@ public class PlayerController : MonoBehaviour
             movingCTRL = false;
         }
     }
-
+    
     private void PauseController()
     {
-        PauseVoid(!PausedBool);
+        PauseVoid();
     }
-
+    
     private void MapController()
     {
-        MapVoid(!MapBool);
+        MapVoid();
     }
-
+    
     private void GatheringController(bool pressed)
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
@@ -283,7 +284,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+    
     private void AttackingController()
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
@@ -294,7 +295,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+    
     private void InteractController()
     {
         if (!interactCTRL && needInteraction)
@@ -302,12 +303,12 @@ public class PlayerController : MonoBehaviour
             interactCTRL = true;
         }
     }
-
+    
     private void OnEnable()
     {
         gamepadControls.Controls.Enable();
     }
-
+    
     private void OnDisable()
     {
         gamepadControls.Controls.Disable();
@@ -363,7 +364,6 @@ public class PlayerController : MonoBehaviour
         keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (evading)
@@ -430,12 +430,12 @@ public class PlayerController : MonoBehaviour
 
     private void ModeChanged()
     {
-        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1))
+        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1) || Input.GetButton("SwapTool") || Input.GetButton("Aim"))
         {
             cancelAnimation = true;
             cancelEffects = true;
         }
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) || Input.GetAxis("Action") != 0)
         {
             cancelEffects = false;
         }
@@ -560,15 +560,42 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case KeyCode.Escape:
-                    PauseVoid(!PausedBool);
+                    PauseVoid();
                     break;
+
                 case KeyCode.Tab:
-                    MapVoid(!MapBool);
-                    break;
+                    MapVoid();
                     break;
 
                 default:
                     break;
+            }
+        }
+        else
+        {
+            if (Input.GetButtonDown("Heal") && appleAmount > 0)
+            {
+                EatApple();
+            }
+            if (Input.GetButtonDown("MiniTurretDeploy") && !turretSpawned)
+            {
+                SpawnTurret();
+            }
+            if (Input.GetButtonDown("Interact") && canTeleport)
+            {
+                Teleport();
+            }
+            if (Input.GetButtonDown("Evade") && canEvade)
+            {                
+                StartCoroutine(Evade());
+            }
+            if (Input.GetButtonDown("Pause"))
+            {
+                PauseVoid();
+            }
+            if (Input.GetButtonDown("Map"))
+            {
+                MapVoid();
             }
         }
     }
@@ -664,29 +691,31 @@ public class PlayerController : MonoBehaviour
         canEvade = true;
     }
 
-    public void PauseVoid(bool pauseBool)
+    public void PauseVoid()
     {
-        if (!MapBool)
+        pausedBool = !pausedBool;
+
+        if (!mapBool)
         {
-            PauseCanvasGameObject.SetActive(pauseBool);
-            PausedBool = pauseBool;
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pauseBool);
-            GameManager.global.MusicManager.PlayMusic(pauseBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
-            Time.timeScale = pauseBool ? 0 : 1;
+            PauseCanvasGameObject.SetActive(pausedBool);
+            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pausedBool);
+            GameManager.global.MusicManager.PlayMusic(pausedBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            Time.timeScale = pausedBool ? 0 : 1;
         }
     }
 
-    public void MapVoid(bool activeBool)
+    public void MapVoid()
     {
-        if (!PausedBool)
-        {
-            MapCanvasGameObject.SetActive(activeBool);
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", activeBool);
-            GameManager.global.MusicManager.PlayMusic(activeBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
-            Time.timeScale = activeBool ? 0 : 1;
-            MapBool = activeBool;
+        mapBool = !mapBool;
 
-            if (activeBool)
+        if (!pausedBool)
+        {
+            MapCanvasGameObject.SetActive(mapBool);
+            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", mapBool);
+            GameManager.global.MusicManager.PlayMusic(mapBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            Time.timeScale = mapBool ? 0 : 1;
+
+            if (mapBool)
             {
                 MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
                 MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
@@ -711,7 +740,7 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyMovement(float _horizontalMove, float _verticalMove)
     {
-        playerisMoving = (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || movingCTRL;
+        playerisMoving = (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || (movingCTRL);
 
         CharacterAnimator.SetBool("Moving", playerisMoving);
 
@@ -830,12 +859,12 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButton(1) || Input.GetAxis("Aim") != 0)
             {
                 arrowText.gameObject.SetActive(true);
                 ChangeTool(new ToolData() { BowBool = true });
                 canShoot = true;
-                if (Input.GetKey(KeyCode.LeftShift))
+                if (Input.GetKey(KeyCode.LeftShift) || Input.GetButton("Sprint"))
                 {
                     if (!directionSaved)
                     {
@@ -857,7 +886,7 @@ public class PlayerController : MonoBehaviour
                 canShoot = false;
             }
 
-            if (Input.GetMouseButtonDown(0) && canShoot && !shooting && arrowNumber > 0)
+            if ((Input.GetMouseButtonDown(0) || Input.GetAxis("Action") != 0) && canShoot && !shooting && arrowNumber > 0)
             {
                 shooting = true;
                 bowTimer = 0;
@@ -1131,8 +1160,8 @@ public class PlayerController : MonoBehaviour
                     respawnTimer = 0.0f;
                     LevelManager.FloatingTextChange(interactText, false);
                     textAnimated = false;
-                    interactCTRL = false;
                     needInteraction = false;
+                    interactCTRL = false;
                 }
             }
         }
