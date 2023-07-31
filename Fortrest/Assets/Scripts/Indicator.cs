@@ -76,28 +76,30 @@ public class Indicator : MonoBehaviour
             MainData.transform.localEulerAngles = Vector3.zero;
             MainData.HolderTransform.localPosition = Vector2.zero;
 
-            if (!CustomSprite)
+
+            if (rightBool)
             {
-                if (rightBool)
-                {
+                if (!CustomSprite)
                     MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
-                    MainData.HolderTransform.localPosition -= Vector3.right;
-                }
-
-                if (leftBool)
-                {
-                    MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
-                    MainData.HolderTransform.localPosition += Vector3.right;
-                }
-
-                if (topBool)
-                {
-                    MainData.transform.localEulerAngles = new Vector3(0, 0, 180);
-                    MainData.HolderTransform.localPosition -= Vector3.up;
-                }
+                MainData.HolderTransform.localPosition -= Vector3.right;
             }
 
-            if ((bottomBool || topBool) && (leftBool || rightBool))
+            if (leftBool)
+            {
+                if (!CustomSprite)
+                    MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
+                MainData.HolderTransform.localPosition += Vector3.right;
+            }
+
+            if (topBool)
+            {
+                if (!CustomSprite)
+                    MainData.transform.localEulerAngles = new Vector3(0, 0, 180);
+                MainData.HolderTransform.localPosition -= Vector3.up;
+            }
+
+
+            if (!CustomSprite && (bottomBool || topBool) && (leftBool || rightBool))
             {
                 //  Debug.Log(1);
                 MainData.transform.localEulerAngles += new Vector3(0, 0, 45 * (rightBool ? -1 : 1));
@@ -128,7 +130,9 @@ public class Indicator : MonoBehaviour
             MainData.ArrowText.transform.localEulerAngles = -MainData.transform.localEulerAngles; //so text is always readable
 
             MainData.MainRect.anchoredPosition = clamp;
-            MapData.MainRect.anchoredPosition = PlayerController.global.ConvertToMapCoordinates(WorldPosition);
+
+            if (MapData)
+                MapData.MainRect.anchoredPosition = PlayerController.global.ConvertToMapCoordinates(WorldPosition);
         }
     }
 

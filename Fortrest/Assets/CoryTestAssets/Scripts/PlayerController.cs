@@ -789,6 +789,7 @@ public class PlayerController : MonoBehaviour
             {
                 MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
                 MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
+                MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
             }
         }
     }
