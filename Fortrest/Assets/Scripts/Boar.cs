@@ -53,7 +53,7 @@ public class Boar : MonoBehaviour
             return;
 
         DisplayText();
-        if ((Input.GetKeyDown(KeyCode.M) || PlayerController.global.interactCTRL) && inRange)
+        if ((Input.GetKeyDown(KeyCode.F) || PlayerController.global.interactCTRL) && inRange && !PlayerController.global.canTeleport)
         {
             Mount();
         }
@@ -67,7 +67,7 @@ public class Boar : MonoBehaviour
         {
             PlayerController.global.needInteraction = true;
         }
-        else
+        else if (!inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport)
         {
             PlayerController.global.needInteraction = false;
         }
@@ -191,7 +191,7 @@ public class Boar : MonoBehaviour
         Lerping(0.5f, 2.0f, ref deceleration, 2); // Deceleration
         Lerping(75.0f, 90.0f, ref turnAnglePerSec, 20); // Turn
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0)
         {
             currentSpeed += acceleration * Time.fixedDeltaTime;
             currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
@@ -202,11 +202,11 @@ public class Boar : MonoBehaviour
             currentSpeed = Mathf.Max(currentSpeed, 0.0f);
         }
 
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) || PlayerController.global.moveCTRL.x < -0.35f)
         {
             currentTurn = -turnAnglePerSec * Time.fixedDeltaTime;
         }
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) || PlayerController.global.moveCTRL.x > 0.35f)
         {
             currentTurn = turnAnglePerSec * Time.fixedDeltaTime;
         }

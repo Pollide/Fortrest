@@ -13,6 +13,7 @@ public class Shrine : MonoBehaviour
             GameManager.PlayAnimation(shrineObject.GetComponent<Animation>(), "ShrineSpin");
             gameObject.GetComponent<MeshRenderer>().enabled = false;
             PlayerController.global.canTeleport = true;
+            PlayerController.global.needInteraction = true;
         }
     }
 
@@ -22,6 +23,7 @@ public class Shrine : MonoBehaviour
         {
             gameObject.GetComponent<MeshRenderer>().enabled = true;
             PlayerController.global.canTeleport = false;
+            PlayerController.global.needInteraction = false;
         }
     }
 
