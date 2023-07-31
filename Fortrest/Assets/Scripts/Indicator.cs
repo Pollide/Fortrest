@@ -16,14 +16,14 @@ public class Indicator : MonoBehaviour
     public Sprite RemovedSprite;
 
     public Sprite HomeSprite;
-
+    public Sprite MountSprite;
 
     [System.Serializable]
     public class IndicatorData
     {
         public ArrowData MainData;
         public ArrowData MapData;
-
+        public Sprite CustomSprite;
         public Transform ActiveTarget;
 
         public float DestroyedTimerFloat = -1;
@@ -76,22 +76,25 @@ public class Indicator : MonoBehaviour
             MainData.transform.localEulerAngles = Vector3.zero;
             MainData.HolderTransform.localPosition = Vector2.zero;
 
-            if (rightBool)
+            if (!CustomSprite)
             {
-                MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
-                MainData.HolderTransform.localPosition -= Vector3.right;
-            }
+                if (rightBool)
+                {
+                    MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
+                    MainData.HolderTransform.localPosition -= Vector3.right;
+                }
 
-            if (leftBool)
-            {
-                MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
-                MainData.HolderTransform.localPosition += Vector3.right;
-            }
+                if (leftBool)
+                {
+                    MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
+                    MainData.HolderTransform.localPosition += Vector3.right;
+                }
 
-            if (topBool)
-            {
-                MainData.transform.localEulerAngles = new Vector3(0, 0, 180);
-                MainData.HolderTransform.localPosition -= Vector3.up;
+                if (topBool)
+                {
+                    MainData.transform.localEulerAngles = new Vector3(0, 0, 180);
+                    MainData.HolderTransform.localPosition -= Vector3.up;
+                }
             }
 
             if ((bottomBool || topBool) && (leftBool || rightBool))
@@ -114,6 +117,11 @@ public class Indicator : MonoBehaviour
             else
             {
                 MainData.ArrowText.text = ActiveString;
+
+                if (MapData && !CustomSprite)
+                {
+                    MapData.ArrowText.text = MainData.ArrowText.text;
+                }
 
             }
 
@@ -158,7 +166,7 @@ public class Indicator : MonoBehaviour
         }
     }
 
-    public void AddIndicator(Transform activeTarget, Color color, string nameString, bool unlocked = true)
+    public void AddIndicator(Transform activeTarget, Color color, string nameString, bool unlocked = true, Sprite customSprite = null)
     {
         IndicatorData indicatorData = new IndicatorData();
 
@@ -170,23 +178,28 @@ public class Indicator : MonoBehaviour
 
         indicatorData.ActiveString = nameString;
         indicatorData.Unlocked = unlocked;
+        indicatorData.CustomSprite = customSprite;
         IndicatorList.Add(indicatorData);
 
-        indicatorData.MapData = Instantiate(arrowPrefab, PlayerController.global.MapCanvasGameObject.transform).GetComponent<ArrowData>();
-        indicatorData.MapData.GetComponent<Animation>().enabled = false;
-        indicatorData.MapData.transform.localScale *= 3;
-
-        indicatorData.MapData.ArrowImage.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-        indicatorData.MapData.ArrowImage.sprite = RemovedSprite;
-        indicatorData.MapData.ArrowImage.color = color;
-        indicatorData.MapData.ArrowImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 20);
-        // indicatorData.MapData.ArrowText.text = nameString;
-        indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
-
-        if (nameString == "Home")
+        if (!unlocked || customSprite)
         {
-            indicatorData.MapData.ArrowImage.sprite = HomeSprite;
-            indicatorData.MapData.ArrowText.text = "";
+            indicatorData.MapData = Instantiate(arrowPrefab, PlayerController.global.MapSpotHolder).GetComponent<ArrowData>();
+            indicatorData.MapData.GetComponent<Animation>().enabled = false;
+            indicatorData.MapData.transform.localScale *= 2.0f;
+
+            indicatorData.MapData.ArrowImage.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            indicatorData.MapData.ArrowImage.sprite = RemovedSprite;
+            indicatorData.MapData.ArrowImage.color = color;
+            indicatorData.MapData.ArrowImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 20);
+            // indicatorData.MapData.ArrowText.text = nameString;
+            indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
+
+            if (customSprite)
+            {
+                indicatorData.MainData.ArrowImage.sprite = customSprite;
+                indicatorData.MapData.ArrowImage.sprite = customSprite;
+                indicatorData.MapData.ArrowText.text = "";
+            }
         }
     }
 }

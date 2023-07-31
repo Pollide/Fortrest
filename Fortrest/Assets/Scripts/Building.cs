@@ -81,7 +81,7 @@ public class Building : MonoBehaviour
 
         if (resourceObject == BuildingType.House)
         {
-            Indicator.global.AddIndicator(transform, Color.yellow, "Home");
+            Indicator.global.AddIndicator(transform, Color.yellow, "Home", customIcon: Indicator.global.HomeSprite);
             lastHealth = health;
             if (HUDHealthBar != null)
             {
