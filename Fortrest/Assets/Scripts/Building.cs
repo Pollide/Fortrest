@@ -14,6 +14,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Building : MonoBehaviour
 {
@@ -57,6 +58,9 @@ public class Building : MonoBehaviour
 
     private GameObject normalHouse;
     private GameObject destroyedHouse;
+
+    public TMP_Text interactText;
+    private bool textDisplayed;
 
     // Start is called before the first frame update
     void Start()
@@ -211,13 +215,30 @@ public class Building : MonoBehaviour
         if (resourceObject == BuildingType.House)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);
-            if (distanceToPlayer < 20)
+            if (distanceToPlayer < 15.0f)
             {
+                if (!textDisplayed)
+                {
+                    LevelManager.FloatingTextChange(interactText.gameObject, true);
+                    textDisplayed = true;
+                }                
+                PlayerController.global.needInteraction = true;
                 playerinRange = true;
+                PlayerController.global.canGetInHouse = true;
             }
             else
             {
+                if (textDisplayed)
+                {
+                    LevelManager.FloatingTextChange(interactText.gameObject, false);
+                    textDisplayed = false;
+                }                
                 playerinRange = false;
+                PlayerController.global.canGetInHouse = false;
+                if (!Boar.global.inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport)
+                {
+                    PlayerController.global.needInteraction = false;
+                }                
             }
 
             if (health != lastHealth)
