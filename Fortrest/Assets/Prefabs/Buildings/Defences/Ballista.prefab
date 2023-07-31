@@ -4435,7 +4435,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &8683688308162520533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4637,6 +4637,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bolt
       objectReference: {fileID: 0}
+    - target: {fileID: 7361705612080732733, guid: 87724b6b178be9b4b9bb56b0f24a914e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9120428717563986933, guid: 87724b6b178be9b4b9bb56b0f24a914e,
         type: 3}
       propertyPath: m_RootOrder
@@ -4769,7 +4774,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9005c4322f9647c40a00d657f8407f3b,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9005c4322f9647c40a00d657f8407f3b,
         type: 3}
@@ -4779,12 +4784,12 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9005c4322f9647c40a00d657f8407f3b,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9005c4322f9647c40a00d657f8407f3b,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9005c4322f9647c40a00d657f8407f3b,
         type: 3}
@@ -4794,7 +4799,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 9005c4322f9647c40a00d657f8407f3b,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 9005c4322f9647c40a00d657f8407f3b,
         type: 3}

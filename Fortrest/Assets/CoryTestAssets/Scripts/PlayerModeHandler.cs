@@ -90,7 +90,14 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E) && GameObject.Find("House") != null && GameObject.Find("House").GetComponent<Building>().playerinRange)
         {
-            SwitchToBuildMode();
+            if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
+            {
+                SwitchToBuildMode();
+            }
+            else
+            {
+                SwitchToGatherMode();
+            }
         }
     }
 
@@ -169,12 +176,17 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode)
         {
-            Vector3 housePos = GameObject.Find("House").transform.position;
-            Vector3 leavePosition = new(housePos.x, housePos.y, housePos.z - 100);
-            PlayerController.global.transform.position = leavePosition;
-            PlayerController.global.playerCanMove = true;
+            Vector3 spawnPoint = GameObject.Find("House").transform.Find("SpawnPoint").position;
+            PlayerController.global.transform.position = spawnPoint;
             buildGrid.gameObject.SetActive(false);
+            StartCoroutine(PlayerAwake());
         }
+    }
+
+    IEnumerator PlayerAwake()
+    {
+        yield return new WaitForSeconds(0.1f);
+        PlayerController.global.playerCanMove = true;
     }
 
     public void RepairMode()
@@ -188,7 +200,7 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.playerCanMove = false;
         PlayerController.global.transform.position = GameObject.Find("House").transform.position;
         buildGrid.gameObject.SetActive(true);
-
+        PlayerController.global.CharacterAnimator.SetBool("Moving", false);
 
         playerModes = PlayerModes.BuildMode;
 
