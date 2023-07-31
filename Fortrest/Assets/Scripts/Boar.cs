@@ -10,7 +10,7 @@ public class Boar : MonoBehaviour
     private GameObject text;
     bool textactive;
     public bool mounted = false;
-    private bool inRange = false;
+    public bool inRange = false;
 
     private float maxSpeed = 0.75f;
     private float acceleration = 0.2f;
@@ -21,10 +21,11 @@ public class Boar : MonoBehaviour
     private float verticalVelocity;
     private float gravity = -20.0f;
 
+    public bool canMove = true;
     private bool isMoving;
     public Animator animator;
 
-    CharacterController cc;
+    public CharacterController cc;
 
     public AudioClip mountSound;
     public AudioClip dismountSound;
@@ -53,7 +54,8 @@ public class Boar : MonoBehaviour
             return;
 
         DisplayText();
-        if ((Input.GetKeyDown(KeyCode.F) || PlayerController.global.interactCTRL) && inRange && !PlayerController.global.canTeleport)
+
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && !PlayerController.global.canGetInHouse)
         {
             Mount();
         }
@@ -67,7 +69,7 @@ public class Boar : MonoBehaviour
         {
             PlayerController.global.needInteraction = true;
         }
-        else if (!inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport)
+        else if (!inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && !PlayerController.global.canGetInHouse)
         {
             PlayerController.global.needInteraction = false;
         }
@@ -79,7 +81,7 @@ public class Boar : MonoBehaviour
             return;
 
         ApplyGravity();
-        if (mounted)
+        if (mounted && canMove)
         {
             Ride();
         }
@@ -96,12 +98,15 @@ public class Boar : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (currentSpeed > 0.0f)
+        if (canMove)
         {
-            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0.0f, currentTurn, 0.0f));
-        }
-        cc.Move(transform.forward * (currentSpeed / 10.0f) + new Vector3(0.0f, verticalVelocity, 0.0f));
-        currentTurn = 0.0f;
+            if (currentSpeed > 0.0f)
+            {
+                transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0.0f, currentTurn, 0.0f));
+            }
+            cc.Move(transform.forward * (currentSpeed / 10.0f) + new Vector3(0.0f, verticalVelocity, 0.0f));
+            currentTurn = 0.0f;
+        }     
     }
 
     private void DisplayText()
@@ -236,9 +241,12 @@ public class Boar : MonoBehaviour
 
     private void PlayAnimations()
     {
-        isMoving = (Input.GetKey(KeyCode.W)) || (currentSpeed >= 0.5f && !Input.GetKey(KeyCode.W));
-        animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
-        animator.SetBool("Moving", isMoving);
+        if (canMove)
+        {
+            isMoving = (Input.GetKey(KeyCode.W)) || (currentSpeed >= 0.5f && !Input.GetKey(KeyCode.W));
+            animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
+            animator.SetBool("Moving", isMoving);
+        }       
     }
 
     private void StepOne()

@@ -88,8 +88,9 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && GameObject.Find("House") != null && GameObject.Find("House").GetComponent<Building>().playerinRange)
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL)  && GameObject.Find("House") != null && GameObject.Find("House").GetComponent<Building>().playerinRange)
         {
+            PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
             {
                 SwitchToBuildMode();
@@ -176,8 +177,18 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode)
         {
-            Vector3 spawnPoint = GameObject.Find("House").transform.Find("SpawnPoint").position;
-            PlayerController.global.transform.position = spawnPoint;
+            if (Boar.global.mounted)
+            {
+                Boar.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
+                Boar.global.GetComponent<BoxCollider>().enabled = true;
+                Boar.global.cc.enabled = true;                
+            }
+            else
+            {                
+                PlayerController.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
+                PlayerController.global.playerCC.enabled = true;
+            }
+            
             buildGrid.gameObject.SetActive(false);
             StartCoroutine(PlayerAwake());
         }
@@ -186,7 +197,14 @@ public class PlayerModeHandler : MonoBehaviour
     IEnumerator PlayerAwake()
     {
         yield return new WaitForSeconds(0.1f);
-        PlayerController.global.playerCanMove = true;
+        if (Boar.global.mounted)
+        {
+            Boar.global.canMove = true;
+        }
+        else
+        {
+            PlayerController.global.playerCanMove = true;
+        }       
     }
 
     public void RepairMode()
@@ -196,14 +214,25 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToBuildMode()
     {
-
-        PlayerController.global.playerCanMove = false;
-        PlayerController.global.transform.position = GameObject.Find("House").transform.position;
-        buildGrid.gameObject.SetActive(true);
-        PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+        if (Boar.global.mounted)
+        {
+            Boar.global.canMove = false;
+            Boar.global.GetComponent<BoxCollider>().enabled = false;
+            Boar.global.cc.enabled = false;
+            Boar.global.transform.position = GameObject.Find("House").transform.position;
+            Boar.global.animator.SetBool("Moving", false);            
+        }
+        else
+        {
+            PlayerController.global.playerCC.enabled = false;
+            PlayerController.global.transform.position = GameObject.Find("House").transform.position;
+            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+            PlayerController.global.playerCanMove = false;
+        }                
 
         playerModes = PlayerModes.BuildMode;
 
+        buildGrid.gameObject.SetActive(true);
         SetMouseActive(true);
 
         buildingMode.enabled = true;
@@ -211,9 +240,9 @@ public class PlayerModeHandler : MonoBehaviour
         combatMode.enabled = false;
         repairMode.transform.GetChild(0).gameObject.SetActive(false);
         repairMode.enabled = false;
-
         resourceModeSub.enabled = true;
         combatModeSub.enabled = false;
+
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
     }
 
