@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     // Class Access
     GamepadControls gamepadControls;
     public Bow bowScript;
-    CharacterController playerCC;
+    public CharacterController playerCC;
     public Animator CharacterAnimator;
 
     // Movement
@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviour
     private float horizontalMovement;
     private float verticalMovement;
     private GameObject house;
-    private GameObject houseSpawnPoint;
+    [HideInInspector] public GameObject houseSpawnPoint;
     public GameObject bodyShape;
     private GameObject interactText;
 
@@ -195,6 +195,8 @@ public class PlayerController : MonoBehaviour
     // Swapping
     [HideInInspector] public bool cancelAnimation;
     [HideInInspector] public bool cancelEffects;
+
+    public bool canGetInHouse;
 
     // Start is called before the first frame update
     void Awake()
@@ -623,7 +625,7 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
 
-                case KeyCode.F:
+                case KeyCode.E:
                     if (canTeleport)
                     {
                         Teleport();
@@ -986,11 +988,20 @@ public class PlayerController : MonoBehaviour
 
     private void Teleport()
     {
-        gameObject.GetComponent<CharacterController>().enabled = false;
-        transform.position = houseSpawnPoint.transform.position;
+        if (Boar.global.mounted)
+        {
+            Boar.global.cc.enabled = false;
+            Boar.global.transform.position = houseSpawnPoint.transform.position;
+            Boar.global.cc.enabled = true;
+        }
+        else
+        {
+            playerCC.enabled = false;
+            transform.position = houseSpawnPoint.transform.position;                     
+            playerCC.enabled = true;
+        }
         canTeleport = false;
         needInteraction = false;
-        gameObject.GetComponent<CharacterController>().enabled = true;
     }
 
     private void EatApple()
@@ -1226,7 +1237,7 @@ public class PlayerController : MonoBehaviour
                     LevelManager.FloatingTextChange(interactText, true);
                     textAnimated = true;
                 }
-                if (Input.GetKeyDown(KeyCode.F) || interactCTRL)
+                if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                     VFXSleeping.Stop();
