@@ -79,27 +79,27 @@ public class Indicator : MonoBehaviour
 
             if (rightBool)
             {
-                if (!CustomSprite)
-                    MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
+                //  if (!CustomSprite)
+                MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
                 MainData.HolderTransform.localPosition -= Vector3.right;
             }
 
             if (leftBool)
             {
-                if (!CustomSprite)
-                    MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
+                //if (!CustomSprite)
+                MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
                 MainData.HolderTransform.localPosition += Vector3.right;
             }
 
             if (topBool)
             {
-                if (!CustomSprite)
-                    MainData.transform.localEulerAngles = new Vector3(0, 0, 180);
+                //  if (!CustomSprite)
+                MainData.transform.localEulerAngles = new Vector3(0, 0, 180);
                 MainData.HolderTransform.localPosition -= Vector3.up;
             }
 
 
-            if (!CustomSprite && (bottomBool || topBool) && (leftBool || rightBool))
+            if ((bottomBool || topBool) && (leftBool || rightBool))
             {
                 //  Debug.Log(1);
                 MainData.transform.localEulerAngles += new Vector3(0, 0, 45 * (rightBool ? -1 : 1));
@@ -152,7 +152,10 @@ public class Indicator : MonoBehaviour
                     IndicatorList[i].MainData.ArrowImage.sprite = RemovedSprite;
 
                     IndicatorList[i].DestroyedTimerFloat = 10;
-                    IndicatorList[i].MapData.gameObject.SetActive(false);
+
+                    if (IndicatorList[i].MapData)
+                        IndicatorList[i].MapData.gameObject.SetActive(false);
+
                     GameManager.PlayAnimation(IndicatorList[i].MainData.GetComponent<Animation>(), "Arrow Appear", false);
                 }
 
