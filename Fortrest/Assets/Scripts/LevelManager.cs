@@ -31,8 +31,7 @@ public class LevelManager : MonoBehaviour
     public Transform DirectionalLightTransform;
     public Material LanternGlowingMaterial;
     public Material LanternOffMaterial;
-    SkinnedMeshRenderer LanternSkinnedRenderer;
-    private GameObject NightLightGameObject;
+
     public float DaylightTimer;
     public int day = 0;
     public List<EnemyController> EnemyList = new List<EnemyController>();
@@ -106,8 +105,8 @@ public class LevelManager : MonoBehaviour
             playerController.transform.position = SpawnPosition.position;
         }
 
-        LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
-        NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
+        //LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
+        //NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
 
         VFXSmokePuff.Stop();
         /*
@@ -337,18 +336,18 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (NightLightGameObject != null)
+        if (PlayerController.global.NightLightGameObject != null)
         {
-            NightLightGameObject.SetActive(ReturnNight());
+            PlayerController.global.NightLightGameObject.SetActive(ReturnNight());
         }
 
         //   Debug.Log(LanternSkinnedRenderer.materials[2] + " " + (LanternSkinnedRenderer.materials[2] == (ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial)));
 
-        Material[] mats = LanternSkinnedRenderer.materials;
+        Material[] mats = PlayerController.global.LanternSkinnedRenderer.materials;
 
         mats[2] = ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial;
 
-        LanternSkinnedRenderer.materials = mats;
+        PlayerController.global.LanternSkinnedRenderer.materials = mats;
 
         if (PlayerController.global.transform.position.y < -3)
         {
