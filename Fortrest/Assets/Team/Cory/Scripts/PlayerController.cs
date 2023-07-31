@@ -196,6 +196,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool cancelAnimation;
     [HideInInspector] public bool cancelEffects;
 
+    public SkinnedMeshRenderer LanternSkinnedRenderer;
+    public GameObject NightLightGameObject;
+
     public bool canGetInHouse;
 
     // Start is called before the first frame update
@@ -267,6 +270,7 @@ public class PlayerController : MonoBehaviour
         //gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
 
     }
+
 
     // CONTROLLER FUNCTIONS START
     private void SprintController(bool pressed)

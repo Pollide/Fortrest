@@ -147,7 +147,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5047431299925290867}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -15, z: 180}
 --- !u!2083052967 &2811824872228394820
 VisualEffect:
   m_ObjectHideFlags: 0
@@ -299,15 +299,14 @@ MonoBehaviour:
   ResourceHolderTransform: {fileID: 0}
   ActiveBuildingGameObject: {fileID: 0}
   DirectionalLightTransform: {fileID: 7444467798429044014}
-  LanternGlowingMaterial: {fileID: 2100000, guid: d9ff82e589dc9f64fbd2c007f2908677,
+  LanternGlowingMaterial: {fileID: 2100000, guid: b46a801104b18ed45a14292d0b923d90,
     type: 2}
-  LanternOffMaterial: {fileID: 2100000, guid: 38dad0140edb0ba4fba296af84657a3c, type: 2}
+  LanternOffMaterial: {fileID: 2100000, guid: b11fcb8fd98ace845ace365b5f15db7a, type: 2}
   DaylightTimer: 0
   day: 0
   EnemyList: []
   InventoryItemList: []
-  BridgeList:
-  - {fileID: 0}
+  BridgeList: []
   daySpeed: 2
   GoblinTimer: 0
   GoblinThreshold: 0
@@ -384,7 +383,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975559097986637665}
   m_LocalRotation: {x: 0.27781588, y: 0.36497167, z: -0.1150751, w: 0.8811196}
-  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalPosition: {x: 0, y: 1.7724806, z: 15.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -757,7 +756,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 11.41
-  m_Depth: -1
+  m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 32
@@ -923,6 +922,8 @@ MonoBehaviour:
   IndicatorList: []
   offsets: {x: 1, y: 1, z: 1}
   RemovedSprite: {fileID: 21300000, guid: fedb542a4d1265545a84526c3578a2d9, type: 3}
+  HomeSprite: {fileID: 21300000, guid: f1095d3a51e7c6a4497b254ef38e0037, type: 3}
+  MountSprite: {fileID: 21300000, guid: 7be8bb784ea9adb429814eb08616eeed, type: 3}
 --- !u!1 &5903244205017672140
 GameObject:
   m_ObjectHideFlags: 0
