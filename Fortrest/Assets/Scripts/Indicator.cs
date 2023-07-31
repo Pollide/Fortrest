@@ -105,6 +105,11 @@ public class Indicator : MonoBehaviour
                 MainData.transform.localEulerAngles += new Vector3(0, 0, 45 * (rightBool ? -1 : 1));
             }
 
+            if (CustomSprite)
+            {
+                MainData.ArrowImage.transform.localEulerAngles = -MainData.transform.localEulerAngles;
+            }
+
             if (!Unlocked)
             {
                 float distance = Vector3.Distance(PlayerController.global.transform.position, ActiveTarget.position);

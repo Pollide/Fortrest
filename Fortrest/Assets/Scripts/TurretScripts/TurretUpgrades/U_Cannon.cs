@@ -113,14 +113,14 @@ public class U_Cannon : MonoBehaviour
                 if (upgradeMenu.activeSelf)
                 {
                     upgradeMenu.SetActive(false);
-                    PlayerModeHandler.global.SetMouseActive(false);
+                    PlayerModeHandler.SetMouseActive(false);
                     PlayerModeHandler.global.playerModes = PlayerModes.ResourceMode;
                     Time.timeScale = 1f;
                 }
                 else
                 {
                     upgradeMenu.SetActive(true);
-                    PlayerModeHandler.global.SetMouseActive(true);
+                    PlayerModeHandler.SetMouseActive(true);
                     PlayerModeHandler.global.playerModes = PlayerModes.UpgradeMenu;
                     Time.timeScale = 0f;
                 }

@@ -52,6 +52,10 @@ public class Menu : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        PlayerModeHandler.SetMouseActive(false);
+    }
     IEnumerator InitalMenuIEnumerator()
     {
         yield return new WaitUntil(() => !CameraAnimation.isPlaying);
