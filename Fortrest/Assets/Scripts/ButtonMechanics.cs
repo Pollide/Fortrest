@@ -78,7 +78,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (PlayGameBool)
         {
-            PlayerController.global.PauseVoid(false);
+            PlayerController.global.pausedBool = false;
         }
 
         if (OptionsBool)
