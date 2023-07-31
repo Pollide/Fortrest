@@ -107,7 +107,7 @@ public class Indicator : MonoBehaviour
 
             if (CustomSprite)
             {
-                MainData.ArrowImage.transform.localEulerAngles -= MainData.transform.localEulerAngles;
+                MainData.ArrowImage.transform.localEulerAngles = -MainData.transform.localEulerAngles;
             }
 
             if (!Unlocked)
