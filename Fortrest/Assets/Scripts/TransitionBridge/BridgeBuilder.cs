@@ -26,7 +26,7 @@ public class BridgeBuilder : MonoBehaviour
 
         if (TussocksBridge)
         {
-            Indicator.global.AddIndicator(transform, Color.red * Color.yellow, "Tussocks", false);
+            Indicator.global.AddIndicator(transform, new Color(1.0f, 0.6f, 0.0f, 1.0f), "Tussocks", false);
         }
 
         LevelManager.global.BridgeList.Add(this);

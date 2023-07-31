@@ -122,7 +122,7 @@ public class PlayerController : MonoBehaviour
     public GameObject BowGameObject;
     private GameObject RadiusCamGameObject;
     public GameObject PauseCanvasGameObject;
-    public GameObject MapCanvasGameObject;
+    public Transform MapSpotHolder;
     public RectTransform MapPlayerRectTransform;
 
     private bool mapBool;
@@ -213,8 +213,8 @@ public class PlayerController : MonoBehaviour
         }
 
         // Controller stuff
-        gamepadControls = new GamepadControls();   
-        
+        gamepadControls = new GamepadControls();
+
         // Left stick to move
         gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
         gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
@@ -257,13 +257,13 @@ public class PlayerController : MonoBehaviour
         // Select button to open Map
         gamepadControls.Controls.Map.performed += context => MapController();
 
-        
-        
+
+
         // Select to lock / unlock camera
         //gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
         // X to open / close inventory
         //gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
-        
+
     }
 
     // CONTROLLER FUNCTIONS START
@@ -315,7 +315,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-   
+
     private void AttackingController()
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
@@ -768,7 +768,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!mapBool)
         {
-            PauseCanvasGameObject.SetActive(pause);           
+            PauseCanvasGameObject.SetActive(pause);
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
             Time.timeScale = pause ? 0 : 1;
@@ -780,10 +780,9 @@ public class PlayerController : MonoBehaviour
     {
         if (!pausedBool)
         {
-            MapCanvasGameObject.SetActive(map);
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
             GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
-            Time.timeScale = mapBool ? 0 : 1;
+            Time.timeScale = map ? 0 : 1;
             mapBool = map;
 
             if (mapBool)
@@ -1001,7 +1000,7 @@ public class PlayerController : MonoBehaviour
             appleAmount -= 1;
             GameManager.PlayAnimation(appleText.GetComponent<Animation>(), "EnemyAmount");
             appleText.text = appleAmount.ToString();
-        }     
+        }
     }
 
     public void AttackEffects()
@@ -1058,7 +1057,7 @@ public class PlayerController : MonoBehaviour
                 StopCoroutine(ToolAppear());
                 StartCoroutine(ToolAppear());
             }
-        }       
+        }
 
         if (PicaxeGameObject.activeSelf)
         {
