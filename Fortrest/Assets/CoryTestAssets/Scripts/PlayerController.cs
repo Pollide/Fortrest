@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
 
     // Health
     private bool deathEffects = false;
-    private bool playerDead = false;
+    [HideInInspector] public bool playerDead = false;
     [HideInInspector] public float playerHealth = 0.0f;
     [HideInInspector] public float maxHealth = 100.0f;
     public HealthBar healthBar;
@@ -153,7 +153,7 @@ public class PlayerController : MonoBehaviour
     // Inventory
     public GameObject DarkenGameObject;
 
-    // Payse
+    // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
 
@@ -177,12 +177,17 @@ public class PlayerController : MonoBehaviour
     private bool movingCTRL;
     private bool gatheringCTRL;
     private bool attackingCTRL;
-    [HideInInspector] public bool interactCTRL;
-    [HideInInspector] public bool needInteraction = false;
+    private bool aimingCTRL;
+    private bool evadeCTRL;
+    private bool cancelCTRL;
+    private bool turretCTRL;
+    private bool healCTRL;
+    public bool interactCTRL;
+    public bool needInteraction = false;
     [HideInInspector] public bool lockingCTRL = false;
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
-    private Vector2 moveCTRL;
+    public Vector2 moveCTRL;
 
     // Keyboard Controls
     private KeyCode[] keyCodes;
@@ -208,31 +213,57 @@ public class PlayerController : MonoBehaviour
         }
 
         // Controller stuff
-        gamepadControls = new GamepadControls();
-        // Left stick click to sprint
-        gamepadControls.Controls.Sprint.performed += context => SprintController(true);
-        gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
+        gamepadControls = new GamepadControls();   
+        
         // Left stick to move
         gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
         gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
         gamepadControls.Controls.Move.performed += context => MoveController(true);
         gamepadControls.Controls.Move.canceled += context => MoveController(false);
-        // Pause button to pause
-        gamepadControls.Controls.Pause.performed += context => PauseController();
-        // gamepadControls.Controls.Pause.performed += context => MapController();
+
+        // A to sprint
+        gamepadControls.Controls.Sprint.performed += context => SprintController(true);
+        gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
+
+        // X to interact
+        gamepadControls.Controls.Interact.performed += context => InteractController();
+
+        // Y to swap tool
+        gamepadControls.Controls.Swap.performed += context => SwappingController();
+
+        // B to evade
+        gamepadControls.Controls.Evade.performed += context => EvadeController();
+
         // Right trigger for gathering
         gamepadControls.Controls.Gathering.performed += context => GatheringController(true);
         gamepadControls.Controls.Gathering.canceled += context => GatheringController(false);
+
         // Right trigger for attacking
         gamepadControls.Controls.Attacking.performed += context => AttackingController();
-        // A to interact // So far only used to respawn
-        gamepadControls.Controls.Interact.performed += context => InteractController();
+
+        // Left trigger for aiming
+        gamepadControls.Controls.Aiming.performed += context => AimingController(true);
+        gamepadControls.Controls.Aiming.canceled += context => AimingController(false);
+
+        // Right Bumper for Mini Turret
+        gamepadControls.Controls.Turret.performed += context => TurretController();
+
+        // Left Bumper to heal
+        gamepadControls.Controls.Heal.performed += context => HealController();
+
+        // Pause button to pause
+        gamepadControls.Controls.Pause.performed += context => PauseController();
+
+        // Select button to open Map
+        gamepadControls.Controls.Map.performed += context => MapController();
+
+        
+        
         // Select to lock / unlock camera
-        gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
+        //gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
         // X to open / close inventory
-        gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
-        // Y to swap tool
-        gamepadControls.Controls.Swap.performed += context => swapCTRL = true;
+        //gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
+        
     }
 
     // CONTROLLER FUNCTIONS START
@@ -262,12 +293,12 @@ public class PlayerController : MonoBehaviour
 
     private void PauseController()
     {
-        PauseVoid();
+        PauseVoid(!pausedBool);
     }
 
     private void MapController()
     {
-        MapVoid();
+        MapVoid(!mapBool);
     }
 
     private void GatheringController(bool pressed)
@@ -284,7 +315,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
+   
     private void AttackingController()
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
@@ -296,11 +327,57 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void AimingController(bool pressed)
+    {
+        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+        {
+            if (pressed)
+            {
+                aimingCTRL = true;
+                cancelCTRL = true;
+            }
+            else
+            {
+                aimingCTRL = false;
+            }
+        }
+    }
+
     private void InteractController()
     {
         if (!interactCTRL && needInteraction)
         {
             interactCTRL = true;
+        }
+    }
+
+    private void EvadeController()
+    {
+        if (!evadeCTRL && canEvade)
+        {
+            evadeCTRL = true;
+        }
+    }
+
+    private void SwappingController()
+    {
+        swapCTRL = true;
+        cancelCTRL = true;
+    }
+
+    private void TurretController()
+    {
+        if (!turretCTRL && !turretSpawned)
+        {
+            turretCTRL = true;
+        }
+    }
+
+    private void HealController()
+    {
+        if (!healCTRL && appleAmount > 0)
+        {
+            healCTRL = true;
         }
     }
 
@@ -430,14 +507,15 @@ public class PlayerController : MonoBehaviour
 
     private void ModeChanged()
     {
-        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1) || Input.GetButton("SwapTool") || Input.GetButton("Aim"))
+        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1) || cancelCTRL)
         {
             cancelAnimation = true;
             cancelEffects = true;
         }
-        if (Input.GetMouseButton(0) || Input.GetAxis("Action") != 0)
+        if (Input.GetMouseButton(0) || attackingCTRL || gatheringCTRL)
         {
             cancelEffects = false;
+            cancelCTRL = false;
         }
 
         if (cancelAnimation)
@@ -538,14 +616,14 @@ public class PlayerController : MonoBehaviour
                     }
                     break;
 
-                case KeyCode.F:
+                case KeyCode.T:
                     if (!turretSpawned)
                     {
                         SpawnTurret();
                     }
                     break;
 
-                case KeyCode.T:
+                case KeyCode.F:
                     if (canTeleport)
                     {
                         Teleport();
@@ -560,11 +638,11 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case KeyCode.Escape:
-                    PauseVoid();
+                    PauseVoid(!pausedBool);
                     break;
 
                 case KeyCode.Tab:
-                    MapVoid();
+                    MapVoid(!mapBool);
                     break;
 
                 default:
@@ -573,29 +651,24 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (Input.GetButtonDown("Heal") && appleAmount > 0)
+            if (evadeCTRL)
             {
-                EatApple();
-            }
-            if (Input.GetButtonDown("MiniTurretDeploy") && !turretSpawned)
-            {
-                SpawnTurret();
-            }
-            if (Input.GetButtonDown("Interact") && canTeleport)
-            {
-                Teleport();
-            }
-            if (Input.GetButtonDown("Evade") && canEvade)
-            {
+                evadeCTRL = false;
                 StartCoroutine(Evade());
             }
-            if (Input.GetButtonDown("Pause"))
+            if (turretCTRL)
             {
-                PauseVoid();
+                turretCTRL = false;
+                SpawnTurret();
             }
-            if (Input.GetButtonDown("Map"))
+            if (healCTRL)
             {
-                MapVoid();
+                healCTRL = false;
+                EatApple();
+            }
+            if (canTeleport && interactCTRL)
+            {
+                Teleport();
             }
         }
     }
@@ -691,29 +764,27 @@ public class PlayerController : MonoBehaviour
         canEvade = true;
     }
 
-    public void PauseVoid()
+    public void PauseVoid(bool pause)
     {
-        pausedBool = !pausedBool;
-
         if (!mapBool)
         {
-            PauseCanvasGameObject.SetActive(pausedBool);
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pausedBool);
-            GameManager.global.MusicManager.PlayMusic(pausedBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
-            Time.timeScale = pausedBool ? 0 : 1;
+            PauseCanvasGameObject.SetActive(pause);           
+            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
+            GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            Time.timeScale = pause ? 0 : 1;
+            pausedBool = pause;
         }
     }
 
-    public void MapVoid()
+    public void MapVoid(bool map)
     {
-        mapBool = !mapBool;
-
         if (!pausedBool)
         {
-            MapCanvasGameObject.SetActive(mapBool);
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", mapBool);
-            GameManager.global.MusicManager.PlayMusic(mapBool ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            MapCanvasGameObject.SetActive(map);
+            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
+            GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
             Time.timeScale = mapBool ? 0 : 1;
+            mapBool = map;
 
             if (mapBool)
             {
@@ -859,12 +930,12 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
-            if (Input.GetMouseButton(1) || Input.GetAxis("Aim") != 0)
+            if (Input.GetMouseButton(1) || aimingCTRL)
             {
                 arrowText.gameObject.SetActive(true);
                 ChangeTool(new ToolData() { BowBool = true });
                 canShoot = true;
-                if (Input.GetKey(KeyCode.LeftShift) || Input.GetButton("Sprint"))
+                if (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL)
                 {
                     if (!directionSaved)
                     {
@@ -886,8 +957,9 @@ public class PlayerController : MonoBehaviour
                 canShoot = false;
             }
 
-            if ((Input.GetMouseButtonDown(0) || Input.GetAxis("Action") != 0) && canShoot && !shooting && arrowNumber > 0)
+            if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting && arrowNumber > 0)
             {
+                attackingCTRL = false;
                 shooting = true;
                 bowTimer = 0;
                 arrowNumber -= 1;
@@ -917,15 +989,19 @@ public class PlayerController : MonoBehaviour
         gameObject.GetComponent<CharacterController>().enabled = false;
         transform.position = houseSpawnPoint.transform.position;
         canTeleport = false;
+        needInteraction = false;
         gameObject.GetComponent<CharacterController>().enabled = true;
     }
 
     private void EatApple()
     {
-        HealthRestore(appleHealAmount);
-        appleAmount -= 1;
-        GameManager.PlayAnimation(appleText.GetComponent<Animation>(), "EnemyAmount");
-        appleText.text = appleAmount.ToString();
+        if (playerHealth < maxHealth)
+        {
+            HealthRestore(appleHealAmount);
+            appleAmount -= 1;
+            GameManager.PlayAnimation(appleText.GetComponent<Animation>(), "EnemyAmount");
+            appleText.text = appleAmount.ToString();
+        }     
     }
 
     public void AttackEffects()
@@ -975,11 +1051,14 @@ public class PlayerController : MonoBehaviour
 
     public void GatheringEffects()
     {
-        if (currentResource.resourceObject == Building.BuildingType.Bush)
+        if (currentResource)
         {
-            StopCoroutine(ToolAppear());
-            StartCoroutine(ToolAppear());
-        }
+            if (currentResource.resourceObject == Building.BuildingType.Bush)
+            {
+                StopCoroutine(ToolAppear());
+                StartCoroutine(ToolAppear());
+            }
+        }       
 
         if (PicaxeGameObject.activeSelf)
         {
@@ -1147,7 +1226,7 @@ public class PlayerController : MonoBehaviour
                     LevelManager.FloatingTextChange(interactText, true);
                     textAnimated = true;
                 }
-                if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
+                if (Input.GetKeyDown(KeyCode.F) || interactCTRL)
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                     VFXSleeping.Stop();
