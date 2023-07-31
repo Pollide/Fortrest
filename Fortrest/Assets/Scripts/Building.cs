@@ -204,10 +204,10 @@ public class Building : MonoBehaviour
         {
             HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
         }
-        else
-        {
-            GameManager.PlayAnimation(animation, "Health Hit", false);
-        }
+
+        GameManager.PlayAnimation(animation, "Health Hit");
+
+        GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Shake");
     }
 
     private void Update()
@@ -221,7 +221,7 @@ public class Building : MonoBehaviour
                 {
                     LevelManager.FloatingTextChange(interactText.gameObject, true);
                     textDisplayed = true;
-                }                
+                }
                 PlayerController.global.needInteraction = true;
                 playerinRange = true;
                 PlayerController.global.canGetInHouse = true;
@@ -232,13 +232,13 @@ public class Building : MonoBehaviour
                 {
                     LevelManager.FloatingTextChange(interactText.gameObject, false);
                     textDisplayed = false;
-                }                
+                }
                 playerinRange = false;
                 PlayerController.global.canGetInHouse = false;
                 if (!Boar.global.inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport)
                 {
                     PlayerController.global.needInteraction = false;
-                }                
+                }
             }
 
             if (health != lastHealth)
