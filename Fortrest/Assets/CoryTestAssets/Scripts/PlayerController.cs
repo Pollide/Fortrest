@@ -247,7 +247,7 @@ public class PlayerController : MonoBehaviour
             sprintingCTRL = false;
         }
     }
-    
+
     private void MoveController(bool pressed)
     {
         if (pressed)
@@ -259,17 +259,17 @@ public class PlayerController : MonoBehaviour
             movingCTRL = false;
         }
     }
-    
+
     private void PauseController()
     {
         PauseVoid();
     }
-    
+
     private void MapController()
     {
         MapVoid();
     }
-    
+
     private void GatheringController(bool pressed)
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
@@ -284,7 +284,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     private void AttackingController()
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
@@ -295,7 +295,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     private void InteractController()
     {
         if (!interactCTRL && needInteraction)
@@ -303,12 +303,12 @@ public class PlayerController : MonoBehaviour
             interactCTRL = true;
         }
     }
-    
+
     private void OnEnable()
     {
         gamepadControls.Controls.Enable();
     }
-    
+
     private void OnDisable()
     {
         gamepadControls.Controls.Disable();
@@ -586,7 +586,7 @@ public class PlayerController : MonoBehaviour
                 Teleport();
             }
             if (Input.GetButtonDown("Evade") && canEvade)
-            {                
+            {
                 StartCoroutine(Evade());
             }
             if (Input.GetButtonDown("Pause"))
@@ -728,9 +728,9 @@ public class PlayerController : MonoBehaviour
     {
         // Step 2: Convert to 2D screen space using the map camera
         position.y = position.z;
-        position -= new Vector3(100, 120);
-        position.x *= 2.3f;
-        position.y *= 1.6f;
+        position -= new Vector3(100, 170);
+        position.x *= 1.5f;
+        position.y *= 1.5f;
 
         // Step 3: Normalize the screen position based on your map's size or aspect ratio
         // Vector2 normalizedMapPosition = new Vector2(screenPosition.x / Screen.width, screenPosition.y / Screen.height);
