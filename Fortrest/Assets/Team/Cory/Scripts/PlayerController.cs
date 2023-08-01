@@ -117,13 +117,14 @@ public class PlayerController : MonoBehaviour
     // Tools
     public GameObject AxeGameObject;
     public GameObject HammerGameObject;
-    public GameObject PicaxeGameObject;
+    public GameObject PickaxeGameObject;
     public GameObject SwordGameObject;
     public GameObject BowGameObject;
     private GameObject RadiusCamGameObject;
     public GameObject PauseCanvasGameObject;
     public Transform MapSpotHolder;
     public RectTransform MapPlayerRectTransform;
+    public bool lastWasAxe;
 
     private bool mapBool;
 
@@ -132,7 +133,7 @@ public class PlayerController : MonoBehaviour
     {
         public bool AxeBool;
         public bool HammerBool;
-        public bool PicaxeBool;
+        public bool PickaxeBool;
         public bool SwordBool;
         public bool HandBool;
         public bool BowBool;
@@ -174,7 +175,7 @@ public class PlayerController : MonoBehaviour
 
     // Controller   
     private bool sprintingCTRL;
-    private bool movingCTRL;
+    [HideInInspector] public bool movingCTRL;
     private bool gatheringCTRL;
     private bool attackingCTRL;
     private bool aimingCTRL;
@@ -445,6 +446,8 @@ public class PlayerController : MonoBehaviour
         appleText.text = appleAmount.ToString();
 
         keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
+
+        ChangeTool(new ToolData() { AxeBool = true });
     }
 
     void Update()
@@ -499,6 +502,7 @@ public class PlayerController : MonoBehaviour
 
         TimersFunction();
         ScreenDamage();
+        CheckCurrentTool();
 
         foreach (KeyCode keyCode in keyCodes)
         {
@@ -508,6 +512,21 @@ public class PlayerController : MonoBehaviour
         if (playerHealth <= 0 || playerDead)
         {
             Death();
+        }
+    }
+
+    private void CheckCurrentTool()
+    {
+        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+        {
+            if (AxeGameObject.activeSelf)
+            {
+                lastWasAxe = true;
+            }
+            else if (PickaxeGameObject.activeSelf)
+            {
+                lastWasAxe = false;
+            }
         }
     }
 
@@ -683,7 +702,7 @@ public class PlayerController : MonoBehaviour
     {
         AxeGameObject.SetActive(toolData.AxeBool);
         HammerGameObject.SetActive(toolData.HammerBool);
-        PicaxeGameObject.SetActive(toolData.PicaxeBool);
+        PickaxeGameObject.SetActive(toolData.PickaxeBool);
         SwordGameObject.SetActive(toolData.SwordBool);
         BowGameObject.SetActive(toolData.BowBool);
         if (RadiusCamGameObject != null)
@@ -924,7 +943,7 @@ public class PlayerController : MonoBehaviour
                 gathering = true;
                 gatherTimer = 0;
                 currentResource = building.GetComponent<Building>();
-                ChangeTool(new ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PicaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+                ChangeTool(new ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PickaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
                 CharacterAnimator.ResetTrigger("Swing");
                 CharacterAnimator.SetTrigger("Swing");
             }
@@ -978,8 +997,8 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator ToolAppear()
     {
-        yield return new WaitForSeconds(1.5f);
-        ChangeTool(new ToolData() { AxeBool = true });
+        yield return new WaitForSeconds(2.0f);
+        ChangeTool(new ToolData() { AxeBool = lastWasAxe, PickaxeBool = !lastWasAxe });
     }
 
     private void SpawnTurret()
@@ -1075,7 +1094,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (PicaxeGameObject.activeSelf)
+        if (PickaxeGameObject.activeSelf)
         {
             GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
 

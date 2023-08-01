@@ -262,7 +262,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         resourceModeSub.enabled = true;
         combatModeSub.enabled = false;
-        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
     }
 
     void ClearBlueprint()
@@ -278,7 +278,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         ClearBlueprint();
 
-        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = true });
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
         playerModes = PlayerModes.ResourceMode;
         SetMouseActive(false);
         buildingMode.enabled = false;

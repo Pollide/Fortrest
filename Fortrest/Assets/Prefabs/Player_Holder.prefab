@@ -2207,12 +2207,19 @@ MonoBehaviour:
   canTeleport: 0
   AxeGameObject: {fileID: 8727725965552586070}
   HammerGameObject: {fileID: 6881260825570563181}
-  PicaxeGameObject: {fileID: 4922188824349335350}
+  PickaxeGameObject: {fileID: 4922188824349335350}
   SwordGameObject: {fileID: 7030698929654266482}
   BowGameObject: {fileID: 2660571745056494471}
   PauseCanvasGameObject: {fileID: 5220638595798298418}
   MapSpotHolder: {fileID: 2053238930460962762}
   MapPlayerRectTransform: {fileID: 9154309761967047462}
+  toolData:
+    AxeBool: 0
+    HammerBool: 0
+    PickaxeBool: 0
+    SwordBool: 0
+    HandBool: 0
+    BowBool: 0
   DayTMP_Text: {fileID: 9141549524700357051}
   RemaningTMP_Text: {fileID: 9141549524747016142}
   SurvivedTMP_Text: {fileID: 9141549525225277010}
@@ -2232,6 +2239,7 @@ MonoBehaviour:
   - {fileID: 6870208182851024656}
   - {fileID: 2521500108778161878}
   redBorders: {fileID: 4763985267364216734}
+  movingCTRL: 0
   interactCTRL: 0
   needInteraction: 0
   lockingCTRL: 0
