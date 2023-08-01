@@ -25,13 +25,13 @@ public class Indicator : MonoBehaviour
         public ArrowData MapData;
         public Sprite CustomSprite;
         public Transform ActiveTarget;
-
+        bool AppearBool = true;
         public float DestroyedTimerFloat = -1;
 
         public Vector3 WorldPosition;
 
         public bool Unlocked;
-
+        public bool Recent;
         public string ActiveString;
 
         public void Refresh()
@@ -110,26 +110,36 @@ public class Indicator : MonoBehaviour
                 MainData.ArrowImage.transform.localEulerAngles = -MainData.transform.localEulerAngles;
             }
 
-            if (!Unlocked)
+            float distance = Vector3.Distance(PlayerController.global.transform.position, ActiveTarget.position);
+
+            if (distance < 20)
             {
-                float distance = Vector3.Distance(PlayerController.global.transform.position, ActiveTarget.position);
+                if (!Unlocked)
+                    Recent = true;
 
-                if (distance < 20)
-                {
-                    Unlocked = true;
-                }
-
-                MainData.gameObject.SetActive(Unlocked || distance < 60);
+                Unlocked = true;
             }
             else
             {
+                Recent = false;
+            }
+
+            if (Unlocked && !CustomSprite)
+            {
                 MainData.ArrowText.text = ActiveString;
 
-                if (MapData && !CustomSprite)
+                if (MapData)
                 {
                     MapData.ArrowText.text = MainData.ArrowText.text;
                 }
+            }
 
+            bool active = (Unlocked || distance < 60) && (Recent || distance > 25);
+
+            if (active != AppearBool)
+            {
+                AppearBool = active;
+                GameManager.PlayAnimation(MainData.GetComponent<Animation>(), "Arrow Appear", active);
             }
 
             MainData.ArrowText.transform.localEulerAngles = -MainData.transform.localEulerAngles; //so text is always readable
@@ -210,6 +220,7 @@ public class Indicator : MonoBehaviour
             {
                 indicatorData.MainData.ArrowImage.sprite = customSprite;
                 indicatorData.MapData.ArrowImage.sprite = customSprite;
+                indicatorData.MainData.ArrowText.text = "";
                 indicatorData.MapData.ArrowText.text = "";
             }
         }
