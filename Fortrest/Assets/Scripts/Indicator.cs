@@ -204,7 +204,8 @@ public class Indicator : MonoBehaviour
         indicatorData.ActiveString = nameString;
         indicatorData.Unlocked = unlocked;
         indicatorData.CustomSprite = customSprite;
-        indicatorData.AppearBool = unlocked;
+        indicatorData.AppearBool = !unlocked;
+
         IndicatorList.Add(indicatorData);
 
         if (!unlocked || customSprite)
