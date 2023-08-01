@@ -112,7 +112,7 @@ public class Indicator : MonoBehaviour
 
             float distance = Vector3.Distance(PlayerController.global.transform.position, ActiveTarget.position);
 
-            bool close = distance < 25;
+            bool close = distance < 22;
 
             if (close)
             {
@@ -204,7 +204,7 @@ public class Indicator : MonoBehaviour
         indicatorData.ActiveString = nameString;
         indicatorData.Unlocked = unlocked;
         indicatorData.CustomSprite = customSprite;
-        indicatorData.AppearBool = !unlocked;
+
 
         IndicatorList.Add(indicatorData);
 
