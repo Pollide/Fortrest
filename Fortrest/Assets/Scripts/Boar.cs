@@ -22,7 +22,7 @@ public class Boar : MonoBehaviour
     private float gravity = -20.0f;
 
     public bool canMove = true;
-    private bool isMoving;
+    public bool isMoving;
     public Animator animator;
 
     public CharacterController cc;
@@ -31,6 +31,10 @@ public class Boar : MonoBehaviour
     public AudioClip dismountSound;
     public AudioClip stepSound;
     public AudioClip stepSound2;
+
+    private float bobbing = 0f;
+    private bool reverse;
+    public bool axe;
 
     private void Awake()
     {
@@ -81,18 +85,26 @@ public class Boar : MonoBehaviour
             return;
 
         ApplyGravity();
-        if (mounted && canMove)
+        if (mounted)
         {
-            Ride();
+            if (canMove)
+            {
+                Ride();
+            }           
         }
         else
         {
-            if (currentSpeed >= 0)
+            if (currentSpeed > 0)
             {
                 Lerping(0.5f, 2.0f, ref deceleration, 2);
                 currentSpeed -= deceleration * Time.fixedDeltaTime;
                 currentSpeed = Mathf.Max(currentSpeed, 0.0f);
-            }
+                animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
+                if (currentSpeed < 0.15f)
+                {
+                    animator.SetBool("Moving", false);
+                }
+            }               
         }
     }
 
@@ -104,7 +116,7 @@ public class Boar : MonoBehaviour
             {
                 transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0.0f, currentTurn, 0.0f));
             }
-            cc.Move(transform.forward * (currentSpeed / 10.0f) + new Vector3(0.0f, verticalVelocity, 0.0f));
+            cc.Move(transform.forward * (currentSpeed / 8.0f) + new Vector3(0.0f, verticalVelocity, 0.0f));
             currentTurn = 0.0f;
         }     
     }
@@ -169,7 +181,7 @@ public class Boar : MonoBehaviour
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = false;
             PlayerController.global.CharacterAnimator.SetBool("Moving", false);
-            PlayerController.global.SwordGameObject.GetComponent<BoxCollider>().enabled = false;
+            PlayerController.global.ChangeTool(new PlayerController.ToolData() { HandBool = true });
         }
         else
         {
@@ -178,7 +190,7 @@ public class Boar : MonoBehaviour
             player.transform.rotation = transform.rotation;
             player.GetComponent<PlayerController>().playerCanMove = true;
             PlayerController.global.CharacterAnimator.SetBool("Sitting", false);
-            PlayerController.global.SwordGameObject.GetComponent<BoxCollider>().enabled = true;
+            PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = PlayerModeHandler.global.playerModes == PlayerModes.CombatMode, AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
         }
         player.GetComponent<CharacterController>().enabled = true;
     }
@@ -243,9 +255,35 @@ public class Boar : MonoBehaviour
     {
         if (canMove)
         {
-            isMoving = (Input.GetKey(KeyCode.W)) || (currentSpeed >= 0.5f && !Input.GetKey(KeyCode.W));
+            isMoving = (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0) || (currentSpeed >= 0.5f && (!Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0));
             animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
             animator.SetBool("Moving", isMoving);
+            if (isMoving)
+            {               
+                if (bobbing > -5f && !reverse)
+                {
+                    bobbing -= Time.deltaTime * (currentSpeed * 75);
+                }
+                else if (bobbing == -5f)
+                {
+                    reverse = true;
+                }
+                if (bobbing < 5f && reverse)
+                {
+                    bobbing += Time.deltaTime * (currentSpeed * 75);
+                }
+                else if (bobbing == 5f)
+                {
+                    reverse = false;
+                }
+                bobbing = Mathf.Clamp(bobbing, -5f, 5f);
+                player.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + bobbing);
+            }
+            else
+            {
+                bobbing = 0f;
+                reverse = false;
+            }
         }       
     }
 
