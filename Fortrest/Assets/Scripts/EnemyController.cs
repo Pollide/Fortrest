@@ -75,6 +75,8 @@ public class EnemyController : MonoBehaviour
         chaseTimerMax = 10.0f;
 
         agent = GetComponent<NavMeshAgent>();
+        knockBackScript = GetComponent<KnockBack>();
+
         SetEnemyParameters();
 
         playerPosition = PlayerController.global.transform;
@@ -86,9 +88,7 @@ public class EnemyController : MonoBehaviour
                 Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
             }
         }
-
-        knockBackScript = GetComponent<KnockBack>();
-
+        
         if (currentEnemyType == ENEMYTYPE.ogre)
         {
             GameManager.global.SoundManager.PlaySound(ogreSpawnSound, 1.0f);
@@ -371,10 +371,7 @@ public class EnemyController : MonoBehaviour
             {
                 StopAllCoroutines();
                 chaseTimer = 0;
-                if (currentEnemyType != ENEMYTYPE.ogre)
-                {
-                    knockBackScript.knock = true;
-                }
+                knockBackScript.knock = true;
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chasing = true;
@@ -422,6 +419,7 @@ public class EnemyController : MonoBehaviour
             agent.stoppingDistance = 2.0f;
             offset = 0.25f;
             enemyDamage = 3.0f;
+            knockBackScript.strength = 50.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.spider)
         {
@@ -433,6 +431,7 @@ public class EnemyController : MonoBehaviour
             agent.stoppingDistance = 2.5f;
             offset = 0.3f;
             enemyDamage = 4.0f;
+            knockBackScript.strength = 45.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
@@ -444,6 +443,7 @@ public class EnemyController : MonoBehaviour
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
             enemyDamage = 7.5f;
+            knockBackScript.strength = 20.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.ogre)
         {
@@ -455,6 +455,7 @@ public class EnemyController : MonoBehaviour
             agent.stoppingDistance = 4.5f;
             offset = 0.2f;
             enemyDamage = 10.0f;
+            knockBackScript.strength = 0.0f;
         }
         health = maxHealth;
         speed = agent.speed;
