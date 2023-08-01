@@ -17,8 +17,6 @@ public class InventoryManager : MonoBehaviour
 
     public InventorySlotHandler[] inventorySlots;
 
-    private GameObject inventoryPanel;
-
     PlayerModes currentPlayerModes;
 
     private void Awake()
@@ -32,13 +30,6 @@ public class InventoryManager : MonoBehaviour
         inventory = new List<InventorySlot>(inventorySize);
 
         dragableItems = new List<DragableItem>(inventorySize);
-
-        inventoryPanel = GameObject.Find("InventoryHolder");
-
-        if (inventoryPanel != null)
-        {
-            inventoryPanel.SetActive(false);
-        }
 
         currentPlayerModes = PlayerModeHandler.global.playerModes;
     }
@@ -197,7 +188,7 @@ public class InventoryManager : MonoBehaviour
 
         PlayerModeHandler.global.playerModes = PlayerModes.Paused;
         Time.timeScale = 0;
-        inventoryPanel.SetActive(true);
+        PlayerController.global.InventoryHolder.SetActive(true);
         PlayerController.global.DarkenGameObject.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
@@ -210,7 +201,7 @@ public class InventoryManager : MonoBehaviour
             PlayerModeHandler.global.playerModes = currentPlayerModes;
         }
         Time.timeScale = 1;
-        inventoryPanel.SetActive(false);
+        PlayerController.global.InventoryHolder.SetActive(false);
         PlayerController.global.DarkenGameObject.SetActive(false);
         if (_mouseLocked)
         {
@@ -230,7 +221,8 @@ public class InventoryManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I) || PlayerController.global.inventoryCTRL)
         {
             PlayerController.global.inventoryCTRL = false;
-            if (inventoryPanel.activeInHierarchy)
+
+            if (PlayerController.global.InventoryHolder.activeInHierarchy)
             {
                 if (currentPlayerModes != PlayerModes.BuildMode)
                 {

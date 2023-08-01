@@ -153,7 +153,7 @@ public class PlayerController : MonoBehaviour
 
     // Inventory
     public GameObject DarkenGameObject;
-
+    public GameObject InventoryHolder;
     // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
@@ -1020,7 +1020,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             playerCC.enabled = false;
-            transform.position = houseSpawnPoint.transform.position;                     
+            transform.position = houseSpawnPoint.transform.position;
             playerCC.enabled = true;
         }
         canTeleport = false;
