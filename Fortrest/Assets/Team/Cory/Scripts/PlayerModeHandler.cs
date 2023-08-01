@@ -39,7 +39,9 @@ public class PlayerModeHandler : MonoBehaviour
     public Image repairMode;
     public Image resourceModeSub;
     public Image combatModeSub;
-    private Grid buildGrid;
+    public Grid buildGrid;
+
+    public GameObject House;
 
     private void Awake()
     {
@@ -54,8 +56,6 @@ public class PlayerModeHandler : MonoBehaviour
             //itself doesnt exist so set it
             global = this;
         }
-
-        buildGrid = GameObject.Find("BuildingGrid").GetComponent<Grid>();
     }
 
     private void Update()
@@ -88,15 +88,26 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL)  && GameObject.Find("House") != null && GameObject.Find("House").GetComponent<Building>().playerinRange)
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL)  && House.GetComponent<Building>().playerinRange)
         {
             PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
             {
+                
+                if (House.GetComponent<Building>().textDisplayed)
+                {
+                    LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
+                    House.GetComponent<Building>().textDisplayed = false;
+                }
                 SwitchToBuildMode();
             }
             else
             {
+                if (!House.GetComponent<Building>().textDisplayed)
+                {
+                    LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
+                    House.GetComponent<Building>().textDisplayed = true;
+                }
                 SwitchToGatherMode();
             }
         }
@@ -219,13 +230,13 @@ public class PlayerModeHandler : MonoBehaviour
             Boar.global.canMove = false;
             Boar.global.GetComponent<BoxCollider>().enabled = false;
             Boar.global.cc.enabled = false;
-            Boar.global.transform.position = GameObject.Find("House").transform.position;
+            Boar.global.transform.position = House.transform.position;
             Boar.global.animator.SetBool("Moving", false);            
         }
         else
         {
             PlayerController.global.playerCC.enabled = false;
-            PlayerController.global.transform.position = GameObject.Find("House").transform.position;
+            PlayerController.global.transform.position = House.transform.position;
             PlayerController.global.CharacterAnimator.SetBool("Moving", false);
             PlayerController.global.playerCanMove = false;
         }                
