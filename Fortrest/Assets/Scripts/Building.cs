@@ -140,7 +140,7 @@ public class Building : MonoBehaviour
         if (amount != 0)
         {
             HealthAnimation();
-        }            
+        }
     }
 
     public void Repair(float amount)
@@ -200,7 +200,7 @@ public class Building : MonoBehaviour
 
     private void HealthAnimation()
     {
-        Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
+        Animation animation = healthBarImage.GetComponentInParent<Animation>();
 
         if (HealthAnimationState == null || !HealthAnimationState.enabled)
         {
