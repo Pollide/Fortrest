@@ -25,7 +25,7 @@ public class Indicator : MonoBehaviour
         public ArrowData MapData;
         public Sprite CustomSprite;
         public Transform ActiveTarget;
-        bool AppearBool = true;
+        public bool AppearBool = true;
         public float DestroyedTimerFloat = -1;
 
         public Vector3 WorldPosition;
@@ -112,12 +112,15 @@ public class Indicator : MonoBehaviour
 
             float distance = Vector3.Distance(PlayerController.global.transform.position, ActiveTarget.position);
 
-            if (distance < 20)
+            bool close = distance < 22;
+
+            if (close)
             {
                 if (!Unlocked)
                     Recent = true;
 
                 Unlocked = true;
+
             }
             else
             {
@@ -134,7 +137,7 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            bool active = (Unlocked || distance < 60) && (Recent || distance > 25);
+            bool active = (Unlocked || distance < 60) && (Recent || !close);
 
             if (active != AppearBool)
             {
@@ -201,6 +204,8 @@ public class Indicator : MonoBehaviour
         indicatorData.ActiveString = nameString;
         indicatorData.Unlocked = unlocked;
         indicatorData.CustomSprite = customSprite;
+
+
         IndicatorList.Add(indicatorData);
 
         if (!unlocked || customSprite)
