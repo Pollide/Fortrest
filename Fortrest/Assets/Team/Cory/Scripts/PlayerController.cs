@@ -433,7 +433,7 @@ public class PlayerController : MonoBehaviour
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         playerHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
+        healthBar.SetMaxHealth(maxHealth, false);
 
         // Adding timers to array
         timers[0] = timer1;
@@ -503,6 +503,7 @@ public class PlayerController : MonoBehaviour
         TimersFunction();
         ScreenDamage();
         CheckCurrentTool();
+        Resting();
 
         foreach (KeyCode keyCode in keyCodes)
         {
@@ -551,6 +552,15 @@ public class PlayerController : MonoBehaviour
         else
         {
             CharacterAnimator.SetBool("Swapping", cancelAnimation);
+        }
+    }
+
+    private void Resting()
+    {
+        if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode)
+        {
+            playerHealth += Time.deltaTime;
+            healthBar.SetHealth(playerHealth, false);
         }
     }
 
@@ -887,7 +897,7 @@ public class PlayerController : MonoBehaviour
     public void HealthRestore(float amount)
     {
         playerHealth += amount;
-        healthBar.SetHealth(playerHealth);
+        healthBar.SetHealth(playerHealth, false);
     }
 
     private void Attack()
@@ -1251,7 +1261,7 @@ public class PlayerController : MonoBehaviour
         {
             respawnTimer += Time.deltaTime;
             playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
-            healthBar.SetHealth(playerHealth);
+            healthBar.SetHealth(playerHealth, false);
             if (respawnTimer >= 15.0f)
             {
                 needInteraction = true;
@@ -1283,7 +1293,7 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(float damage)
     {
         playerHealth -= damage;
-        healthBar.SetHealth(playerHealth);
+        healthBar.SetHealth(playerHealth, false);
         displaySlash = true;
     }
 

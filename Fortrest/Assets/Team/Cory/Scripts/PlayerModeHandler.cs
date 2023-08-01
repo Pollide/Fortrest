@@ -67,7 +67,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         ScrollSwitchTurret();
 
-        if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
+        if ((Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL) && !Boar.global.mounted)
         {
             PlayerController.global.swapCTRL = false;
             GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);

@@ -89,7 +89,7 @@ public class Building : MonoBehaviour
             lastHealth = health;
             if (HUDHealthBar != null)
             {
-                HUDHealthBar.SetMaxHealth(maxHealth);
+                HUDHealthBar.SetMaxHealth(maxHealth, true);
             }
             normalHouse = gameObject.transform.GetChild(0).gameObject;
             destroyedHouse = gameObject.transform.GetChild(1).gameObject;
@@ -134,11 +134,13 @@ public class Building : MonoBehaviour
         health -= amount;
         if (resourceObject == BuildingType.House)
         {
-            HUDHealthBar.SetHealth(health);
+            HUDHealthBar.SetHealth(health, true);
         }
 
         if (amount != 0)
+        {
             HealthAnimation();
+        }            
     }
 
     public void Repair(float amount)
