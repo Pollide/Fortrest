@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 moveDirection;
     private float horizontalMovement;
     private float verticalMovement;
-    private GameObject house;
+    public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
     public GameObject bodyShape;
     private GameObject interactText;
@@ -421,12 +421,8 @@ public class PlayerController : MonoBehaviour
             RadiusCamGameObject = GameObject.Find("Radius Camera");
         }
 
-        if (GameObject.Find("House"))
-        {
-            house = GameObject.Find("House");
-            houseSpawnPoint = house.transform.Find("SpawnPoint").gameObject;
-            interactText = house.transform.Find("Floating Text").gameObject;
-        }
+        houseSpawnPoint = house.transform.GetChild(1).gameObject;
+        interactText = house.transform.GetChild(3).gameObject;
 
         // Setting default values
         playerCurrentSpeed = playerWalkSpeed;

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Boar : MonoBehaviour
 {
@@ -152,7 +153,7 @@ public class Boar : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.gameObject == player)
         {
@@ -182,6 +183,7 @@ public class Boar : MonoBehaviour
             player.GetComponent<PlayerController>().playerCanMove = false;
             PlayerController.global.CharacterAnimator.SetBool("Moving", false);
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HandBool = true });
+            GetComponent<NavMeshObstacle>().enabled = false;
         }
         else
         {
@@ -191,6 +193,7 @@ public class Boar : MonoBehaviour
             player.GetComponent<PlayerController>().playerCanMove = true;
             PlayerController.global.CharacterAnimator.SetBool("Sitting", false);
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = PlayerModeHandler.global.playerModes == PlayerModes.CombatMode, AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
+            GetComponent<NavMeshObstacle>().enabled = true;
         }
         player.GetComponent<CharacterController>().enabled = true;
     }

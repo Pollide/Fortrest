@@ -411,6 +411,7 @@ GameObject:
   - component: {fileID: 8057984985762525425}
   - component: {fileID: 7383631925837582762}
   - component: {fileID: 1273095432}
+  - component: {fileID: 933261420}
   m_Layer: 0
   m_Name: Boar
   m_TagString: Boar
@@ -463,7 +464,7 @@ CharacterController:
   m_Height: 0
   m_Radius: 0.75
   m_SlopeLimit: 45
-  m_StepOffset: 1
+  m_StepOffset: 0.2
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.58, z: 0.75}
@@ -483,12 +484,14 @@ MonoBehaviour:
   inRange: 0
   currentSpeed: 0
   canMove: 1
+  isMoving: 0
   animator: {fileID: 7383631925837582762}
   cc: {fileID: 0}
   mountSound: {fileID: 8300000, guid: 0aface736e3e167449859c76f6bbc70f, type: 3}
   dismountSound: {fileID: 8300000, guid: f9248ad0c1674b142bea348727297d4b, type: 3}
   stepSound: {fileID: 8300000, guid: a7e465f647f74704794080459b1e58cb, type: 3}
   stepSound2: {fileID: 8300000, guid: 24ce4b292b9e83a4e905b739503f8323, type: 3}
+  axe: 0
 --- !u!95 &7383631925837582762
 Animator:
   serializedVersion: 4
@@ -522,6 +525,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 2.5, z: 3.5}
   m_Center: {x: 0, y: 1.25, z: 0}
+--- !u!208 &933261420
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3333299692556185214}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.75, y: 1.25, z: 1.75}
+  m_MoveThreshold: 1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1.25, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &3950405951789042709
 GameObject:
   m_ObjectHideFlags: 0

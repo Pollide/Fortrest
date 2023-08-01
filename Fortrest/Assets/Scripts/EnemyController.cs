@@ -165,8 +165,9 @@ public class EnemyController : MonoBehaviour
         // Spider goes for the player if they are not mounted, goblin goes for the player if it gets attacked by them
         else if (currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.goblin)
         {
-            if (Boar.global.mounted == true)
+            if (Boar.global.mounted == true || PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode)
             {
+                bestTarget = null;
                 chasing = false;
             }
             else if (currentEnemyType == ENEMYTYPE.spider)
@@ -183,23 +184,15 @@ public class EnemyController : MonoBehaviour
                     // Distance between enemy and player
                     float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
 
-                    chaseTimer += Time.deltaTime; // Enemy stops chasing the player after 10s or when the player gets too far
+                    chaseTimer += Time.deltaTime; // Goblin stops chasing the player after 10s or when the player gets too far
 
-                    if (chaseTimer >= chaseTimerMax || distance >= 10.0f || (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode))
+                    if (chaseTimer >= chaseTimerMax || distance >= 10.0f)
                     {
                         bestTarget = null;
                         chasing = false;
                         chaseTimer = 0;
                     }
-                }
-                else if (currentEnemyType == ENEMYTYPE.spider)
-                {
-                    if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode)
-                    {
-                        bestTarget = null;
-                        chasing = false;
-                    }
-                }
+                }               
             }
             else
             {
@@ -214,7 +207,6 @@ public class EnemyController : MonoBehaviour
                         {
                             shortestDistance = compare; // New shortest distance is assigned
                             bestTarget = building; // Enemy's target is now the closest item in the list
-
                         }
 
                     });

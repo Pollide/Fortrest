@@ -60,7 +60,7 @@ public class Building : MonoBehaviour
     private GameObject destroyedHouse;
 
     public TMP_Text interactText;
-    private bool textDisplayed;
+    [HideInInspector] public bool textDisplayed;
 
     // Start is called before the first frame update
     void Start()
@@ -219,11 +219,15 @@ public class Building : MonoBehaviour
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);
             if (distanceToPlayer < 15.0f)
             {
-                if (!textDisplayed)
+                if (PlayerModeHandler.global.playerModes != PlayerModes.BuildMode && PlayerModeHandler.global.playerModes != PlayerModes.RepairMode)
                 {
-                    LevelManager.FloatingTextChange(interactText.gameObject, true);
-                    textDisplayed = true;
+                    if (!textDisplayed)
+                    {
+                        LevelManager.FloatingTextChange(interactText.gameObject, true);
+                        textDisplayed = true;
+                    }
                 }
+                
                 PlayerController.global.needInteraction = true;
                 playerinRange = true;
                 PlayerController.global.canGetInHouse = true;
