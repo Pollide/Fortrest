@@ -2213,13 +2213,7 @@ MonoBehaviour:
   PauseCanvasGameObject: {fileID: 5220638595798298418}
   MapSpotHolder: {fileID: 2053238930460962762}
   MapPlayerRectTransform: {fileID: 9154309761967047462}
-  toolData:
-    AxeBool: 0
-    HammerBool: 0
-    PickaxeBool: 0
-    SwordBool: 0
-    HandBool: 0
-    BowBool: 0
+  lastWasAxe: 0
   DayTMP_Text: {fileID: 9141549524700357051}
   RemaningTMP_Text: {fileID: 9141549524747016142}
   SurvivedTMP_Text: {fileID: 9141549525225277010}
@@ -2231,6 +2225,7 @@ MonoBehaviour:
   appleText: {fileID: 1866328738486511774}
   turretText: {fileID: 2542664480710499974}
   DarkenGameObject: {fileID: 2127865250632510180}
+  InventoryHolder: {fileID: 540465034107701847}
   pausedBool: 0
   UIAnimation: {fileID: 8602729549476735322}
   redSlashes:
@@ -4571,6 +4566,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd0bc9715f16c5347a569bae16ef1c71, type: 3}
+--- !u!1 &540465034107701847 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5595203469370273719, guid: cd0bc9715f16c5347a569bae16ef1c71,
+    type: 3}
+  m_PrefabInstance: {fileID: 5343021766280963552}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &540465034107701848 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5595203469370273720, guid: cd0bc9715f16c5347a569bae16ef1c71,
