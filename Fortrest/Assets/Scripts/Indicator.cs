@@ -110,7 +110,7 @@ public class Indicator : MonoBehaviour
                 MainData.ArrowImage.transform.localEulerAngles = -MainData.transform.localEulerAngles;
             }
 
-            float distance = Vector3.Distance(PlayerController.global.transform.position, ActiveTarget.position);
+            float distance = Vector3.Distance(PlayerController.global.transform.position, WorldPosition);
 
             bool close = distance < 22;
 
