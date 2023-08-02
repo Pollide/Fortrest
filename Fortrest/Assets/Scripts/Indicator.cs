@@ -74,28 +74,29 @@ public class Indicator : MonoBehaviour
             Vector2 clamp = new Vector2(clampedX, clampedY);
 
             MainData.transform.localEulerAngles = Vector3.zero;
-            MainData.HolderTransform.localPosition = Vector2.zero;
+
+            Vector3 transition = Vector3.zero;
 
 
             if (rightBool)
             {
                 //  if (!CustomSprite)
                 MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
-                MainData.HolderTransform.localPosition -= Vector3.right;
+                transition -= Vector3.right;
             }
 
             if (leftBool)
             {
                 //if (!CustomSprite)
                 MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
-                MainData.HolderTransform.localPosition += Vector3.right;
+                transition += Vector3.right;
             }
 
             if (topBool)
             {
                 //  if (!CustomSprite)
                 MainData.transform.localEulerAngles = new Vector3(0, 0, 180);
-                MainData.HolderTransform.localPosition -= Vector3.up;
+                transition -= Vector3.up;
             }
 
 
@@ -148,9 +149,12 @@ public class Indicator : MonoBehaviour
             MainData.ArrowText.transform.localEulerAngles = -MainData.transform.localEulerAngles; //so text is always readable
 
             MainData.MainRect.anchoredPosition = clamp;
+            //MainData.MainRect.anchoredPosition = Vector3.Slerp(MainData.MainRect.anchoredPosition, clamp, Time.deltaTime);
 
             if (MapData)
                 MapData.MainRect.anchoredPosition = PlayerController.global.ConvertToMapCoordinates(WorldPosition);
+
+            MainData.HolderTransform.localPosition = Vector3.Slerp(MainData.HolderTransform.localPosition, transition, Time.deltaTime);
         }
     }
 
