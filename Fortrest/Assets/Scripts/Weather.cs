@@ -24,10 +24,10 @@ public class Weather : MonoBehaviour
         weatherType[2] = transform.GetChild(2).gameObject; // Snow
 
         stepComplete = true;
-        //weatherTimer = Random.Range(200.0f, 250.0f);
-        //weatherDuration = Random.Range(100.0f, 125.0f);
-        weatherTimer = Random.Range(2.0f, 2.5f);
-        weatherDuration = Random.Range(15.0f, 20.0f);
+        weatherTimer = Random.Range(200.0f, 250.0f);
+        weatherDuration = Random.Range(100.0f, 125.0f);
+        //weatherTimer = Random.Range(2.0f, 2.5f);
+        //weatherDuration = Random.Range(15.0f, 20.0f);
 
         ColorUtility.TryParseHtmlString("#FFF4D6", out colorInitial); // Normal
         ColorUtility.TryParseHtmlString("#B0B0B0", out color1); // Light Rain
@@ -44,8 +44,8 @@ public class Weather : MonoBehaviour
         if (timer > weatherTimer && !weatherTriggered)
         {
             timer = 0;
-            //weatherTimer = Random.Range(200.0f, 250.0f);
-            weatherTimer = Random.Range(15.0f, 20.0f);
+            weatherTimer = Random.Range(200.0f, 250.0f);
+            //weatherTimer = Random.Range(15.0f, 20.0f);
             weatherTriggered = true;
             stepComplete = false;
         }
