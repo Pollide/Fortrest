@@ -6,21 +6,32 @@ public class TurretShooting : MonoBehaviour
     public float shootingRange = 10f;
     public float fireRate = 1f;
     public float damage = 10;
-    public float explosionRadius = 5;
     public LayerMask targetLayer;
 
     private Transform target;
     private float fireCountdown = 0f;
     float nextRotationChangeTime;
-    private Quaternion targetRotation;
-    public bool IsCannon;
     public bool attackStarted;
+
+    [Header("Cannon Defense")]
+    public bool IsCannon;
+    public float explosionRadius = 5;
+
+    [Header("Slow Defense")]
+    public bool IsSlow;
+    public float enemySpeedPercentage = 0.5f; // Amount to slow down enemies (0.5 represents 50% slower)
+
+    [Header("Projectile")]
+    public GameObject ProjectilePrefab;
+    public Transform FirePoint;
+
+    [Header("Other")]
+    public Transform ModelHolder;
 
     [HideInInspector]
     public int CurrentLevel;
 
-    public GameObject ProjectilePrefab;
-    public Transform FirePoint;
+    private Quaternion targetRotation;
 
     private void Start()
     {
@@ -29,7 +40,7 @@ public class TurretShooting : MonoBehaviour
 
     public Animator ReturnAnimator()
     {
-        Animator[] animators = GetComponentsInChildren<Animator>();
+        Animator[] animators = ModelHolder.GetComponentsInChildren<Animator>();
 
         for (int i = 0; i < animators.Length; i++)
         {
@@ -40,7 +51,7 @@ public class TurretShooting : MonoBehaviour
     }
 
     private void Update()
-    {       
+    {
         if (target != null)
         {
             Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
@@ -53,16 +64,25 @@ public class TurretShooting : MonoBehaviour
 
             if (Vector3.Distance(transform.position, target.transform.position) <= shootingRange)
             {
-                Attack();
+
+                if (IsSlow)
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.SlowSound);
+                    target.GetComponent<EnemyController>().ApplySlow(enemySpeedPercentage);
+                }
+                else
+                {
+                    Attack();
+                }
             }
 
-            if (Vector3.Distance(transform.position, target.position) > shootingRange && !attackStarted)
+            if (Vector3.Distance(transform.position, target.position) > shootingRange && !attackStarted || target.GetComponent<EnemyController>().health <= 0f)
             {
-                target = null;
-            }
+                if (IsSlow)
+                {
+                    target.GetComponent<EnemyController>().RemoveSlow();
+                }
 
-            if (target && target.GetComponent<EnemyController>().health <= 0f)
-            {
                 target = null;
             }
         }
@@ -115,7 +135,7 @@ public class TurretShooting : MonoBehaviour
         {
             // Spawn a projectile
             ProjectileExplosion explosion = projectile.GetComponent<ProjectileExplosion>();
-            explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            //  explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             explosion.explosionRadius = explosionRadius;
             explosion.damage = damage;
         }
