@@ -573,6 +573,10 @@ public class GameManager : MonoBehaviour
     }
     void DataPositionVoid(string pref, Transform value, bool load)
     {
+        if(value.GetComponent<Building>() && value.GetComponent<Building>().resourceObject == Building.BuildingType.House)
+        {
+            Debug.Log("mOVING");
+        }
         float x = Pref(pref + "x", value.position.x, load);
         float y = Pref(pref + "y", value.position.y, load);
         float z = Pref(pref + "z", value.position.z, load);
