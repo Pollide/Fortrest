@@ -42671,8 +42671,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4406078969547817396}
   - component: {fileID: 5481529435289494058}
+  - component: {fileID: 5481529435289494059}
   m_Layer: 0
-  m_Name: Particles
+  m_Name: Weather System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42699,6 +42700,18 @@ MonoBehaviour:
   smoothTime: 0
   maxSmooth: 4.25
   minSmooth: 4
+--- !u!114 &5481529435289494059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4454908926135760079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0215c9e2d2a38b24194d32d9f45c4a1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &5783883351085732173 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2380524841832018390, guid: d01a69221f8cdc642920786c21a4f1d0,
