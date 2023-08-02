@@ -14,6 +14,8 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float minSmooth = 0.01f;
     [SerializeField] private float max;
     [SerializeField] private float buildOffsetOrthoSize;
+    [SerializeField] private float buildOffsetPosX;
+    [SerializeField] private float buildOffsetPosZ;
     [SerializeField] private float buildOffsetRot;
     private Vector3 initialRotation;
     private float initialOrthographicSize;
@@ -78,6 +80,7 @@ public class CameraFollow : MonoBehaviour
     public void BuildCam(Vector3 targetPosition)
     {
         Vector3 offsetRotation = new(buildOffsetRot, 0, 0);
+        Vector3 offsetPosition = new(targetPosition.x + buildOffsetPosX, targetPosition.y, targetPosition.z + buildOffsetPosZ);
         GetComponent<Camera>().orthographicSize = buildOffsetOrthoSize;
         cameraDistance = Vector3.Distance(targetPosition, transform.position);
         float i = cameraDistance / (max * 50);
@@ -85,12 +88,12 @@ public class CameraFollow : MonoBehaviour
 
         if (cameraDistance > 0.1f)
         {
-            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
+            transform.position = Vector3.SmoothDamp(transform.position, offsetPosition, ref currentVelocity, smoothTime);
             
         }
         else
         {
-            transform.position = targetPosition;
+            transform.position = offsetPosition;
         }
 
         if (transform.eulerAngles != offsetRotation)
