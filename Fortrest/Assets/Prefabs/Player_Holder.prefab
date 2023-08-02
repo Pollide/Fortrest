@@ -2181,6 +2181,7 @@ MonoBehaviour:
   bowScript: {fileID: 8960337535057384903}
   playerCC: {fileID: 5569601162832024542}
   CharacterAnimator: {fileID: 6954126482496830218}
+  house: {fileID: 0}
   houseSpawnPoint: {fileID: 0}
   bodyShape: {fileID: 4232939553054584673}
   evading: 0
@@ -2315,7 +2316,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5569601164179657938}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4.5, y: 0, z: -76.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2344,7 +2345,8 @@ MonoBehaviour:
   - {fileID: 6178621800414324515, guid: 7892c0f71ff7e2f44b2637b765950f3e, type: 3}
   turretBlueprintRed: {fileID: 2100000, guid: 8d763678d7123e347b760cbd1313f174, type: 2}
   turretBlueprintBlue: {fileID: 2100000, guid: 1d0c9c39a2f4f764081420e60614ab27, type: 2}
-  distanceAwayFromPlayer: {x: 40, y: 30}
+  distanceAwayFromPlayerX: {x: 68, y: 12}
+  distanceAwayFromPlayerZ: {x: 37, y: 22.5}
   buildingLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -2354,6 +2356,8 @@ MonoBehaviour:
   repairMode: {fileID: 3034113418248021167}
   resourceModeSub: {fileID: 1562234653177485422}
   combatModeSub: {fileID: 1193642173462567565}
+  buildGrid: {fileID: 0}
+  House: {fileID: 0}
 --- !u!1 &5717661949464517805
 GameObject:
   m_ObjectHideFlags: 0
