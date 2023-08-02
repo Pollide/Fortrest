@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.VFX;
 using TMPro;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -56,6 +57,8 @@ public class LevelManager : MonoBehaviour
 
     public List<Transform> TerrainList = new List<Transform>();
 
+    public Image clockHand;
+
     public enum SPAWNDIRECTION
     {
         North = 1,
@@ -77,6 +80,7 @@ public class LevelManager : MonoBehaviour
     {
         global = this;
         DaylightTimer = DirectionalLightTransform.eulerAngles.x;
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
 
         if (!GameManager.global)
         {
@@ -232,12 +236,12 @@ public class LevelManager : MonoBehaviour
 
 
 #if UNITY_EDITOR
-        //daySpeed = 10.0f; // FOR TESTING
+        daySpeed = 10.0f; // FOR TESTING
 #endif
 
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
-
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
 
