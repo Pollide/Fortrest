@@ -31,7 +31,8 @@ public class PlayerModeHandler : MonoBehaviour
     GameObject turretBlueprint;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
-    public Vector2 distanceAwayFromPlayer;
+    public Vector2 distanceAwayFromPlayerX;
+    public Vector2 distanceAwayFromPlayerZ;
     public LayerMask buildingLayer;
     public Image buildingMode;
     public Image resourceMode;
@@ -465,10 +466,10 @@ public class PlayerModeHandler : MonoBehaviour
     {
         Vector3 playerPos = PlayerController.global.transform.position;
 
-        float top = playerPos.x + distanceAwayFromPlayer.x;
-        float bot = playerPos.x - distanceAwayFromPlayer.x;
-        float right = playerPos.z + distanceAwayFromPlayer.y;
-        float left = playerPos.z - distanceAwayFromPlayer.y;
+        float top = playerPos.x + distanceAwayFromPlayerX.x;
+        float bot = playerPos.x - distanceAwayFromPlayerX.y;
+        float right = playerPos.z + distanceAwayFromPlayerZ.x;
+        float left = playerPos.z - distanceAwayFromPlayerZ.y;
 
         if (currentTarget.x < top && currentTarget.x > bot && currentTarget.z < right && currentTarget.z > left)
         {
@@ -477,6 +478,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         return false;
     }
+
 
     public static void SetMouseActive(bool isActive)
     {

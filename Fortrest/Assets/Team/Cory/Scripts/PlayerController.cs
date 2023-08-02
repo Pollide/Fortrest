@@ -207,6 +207,7 @@ public class PlayerController : MonoBehaviour
     {
         // Get Character controller that is attached to the player
         playerCC = GetComponent<CharacterController>();
+
         if (global)
         {
             //destroys the duplicate
