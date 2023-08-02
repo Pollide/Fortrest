@@ -47,7 +47,12 @@ public class TurretShooting : MonoBehaviour
             animators[i].gameObject.SetActive(CurrentLevel == i);
         }
 
-        return animators[CurrentLevel];
+        if (animators.Length > CurrentLevel)
+            return animators[CurrentLevel];
+        else
+        {
+            return null;
+        }
     }
 
     private void Update()
