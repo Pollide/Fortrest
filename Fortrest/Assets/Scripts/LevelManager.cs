@@ -76,6 +76,8 @@ public class LevelManager : MonoBehaviour
     bool housePosObtained = false;
     private float spawnDistance = 39.0f;
 
+    private bool messageDisplayed;
+
     private void Awake()
     {
         global = this;
@@ -236,7 +238,7 @@ public class LevelManager : MonoBehaviour
 
 
 #if UNITY_EDITOR
-        daySpeed = 10.0f; // FOR TESTING
+        //daySpeed = 10.0f; // FOR TESTING
 #endif
 
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
@@ -248,6 +250,7 @@ public class LevelManager : MonoBehaviour
         if (DaylightTimer > 360)
         {
             directionEstablished = false;
+            messageDisplayed = false;
             DaylightTimer = 0;
             day++;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
@@ -256,6 +259,11 @@ public class LevelManager : MonoBehaviour
             GameManager.global.DataSetVoid(false);
         }
 
+        if (DaylightTimer > 150 && !messageDisplayed)
+        {
+            PlayerController.global.DisplayEnemiesDirection(spawnDir);
+            messageDisplayed = true;
+        }
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
 
         //   light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0 : 0.4f, Time.deltaTime);
@@ -264,7 +272,8 @@ public class LevelManager : MonoBehaviour
         {
             if (!directionEstablished)
             {
-                direction = Random.Range(1, 5);
+                // direction = Random.Range(1, 5);
+                direction = 1;
                 switch (direction)
                 {
                     case 1:
@@ -302,8 +311,7 @@ public class LevelManager : MonoBehaviour
                     default:
                         break;
                 }
-
-                PlayerController.global.DisplayEnemiesDirection(spawnDir);
+                //PlayerController.global.DisplayEnemiesDirection(spawnDir);
                 directionEstablished = true;
             }
 
