@@ -7,6 +7,7 @@ public class MiniTurretEvents : MonoBehaviour
     public GameObject boltObject;
     public GameObject projectile;
     public Transform spawnPoint;
+    public bool boltActive;
 
     private void BoltAppear()
     {
@@ -19,6 +20,7 @@ public class MiniTurretEvents : MonoBehaviour
     }
     public void SpawnBolt()
     {
+        boltActive = true;
         GameObject bolt = Instantiate(projectile, spawnPoint);        
         BoltScript boltScript = bolt.GetComponent<BoltScript>();
         boltScript.mini = true;
@@ -27,4 +29,6 @@ public class MiniTurretEvents : MonoBehaviour
         turret.animator.SetBool("isAttacking", false);
         boltScript.SetDamage(turret.damage);
     }
+
+
 }

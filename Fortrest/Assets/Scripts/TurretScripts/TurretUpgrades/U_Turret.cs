@@ -56,6 +56,7 @@ public class U_Turret : MonoBehaviour
     public bool isKnockBackActive = false;
     public bool isMultiShotActive = false;
     public bool specialActive = false;
+    public bool canUpgrade = false;
 
     private void Awake()
     {
@@ -63,7 +64,7 @@ public class U_Turret : MonoBehaviour
         turretScript = GetComponent<TurretShooting>();
         // Get player transform
         playerTransform = PlayerController.global.transform;
-     
+
         for (int i = 0; i < attackSpeedButtons.Count; i++)
         {
             allButtons.Add(attackSpeedButtons[i]);
@@ -101,7 +102,7 @@ public class U_Turret : MonoBehaviour
         // Get the distance from the player transform
         float distanceFromPlayer = Vector3.Distance(transform.position, playerTransform.position);
 
-        if (distanceFromPlayer < detectionRange)
+        if (distanceFromPlayer < detectionRange && canUpgrade)
         {
             upgradeTextObject.enabled = true;
 
@@ -111,14 +112,14 @@ public class U_Turret : MonoBehaviour
                 if (upgradeMenu.activeSelf)
                 {
                     upgradeMenu.SetActive(false);
-                    PlayerModeHandler.global.SetMouseActive(false);
+                    PlayerModeHandler.SetMouseActive(false);
                     PlayerModeHandler.global.playerModes = PlayerModes.ResourceMode;
                     Time.timeScale = 1f;
                 }
                 else
                 {
                     upgradeMenu.SetActive(true);
-                    PlayerModeHandler.global.SetMouseActive(true);
+                    PlayerModeHandler.SetMouseActive(true);
                     PlayerModeHandler.global.playerModes = PlayerModes.UpgradeMenu;
                     Time.timeScale = 0f;
                 }

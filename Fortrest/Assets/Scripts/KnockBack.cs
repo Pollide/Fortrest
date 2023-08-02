@@ -5,8 +5,8 @@ using UnityEngine;
 public class KnockBack : MonoBehaviour
 {
     [SerializeField]
-    private float strength;
-    public bool knock = false;
+    [HideInInspector] public float strength;
+    [HideInInspector] public bool knock = false;
 
     private void Update()
     {

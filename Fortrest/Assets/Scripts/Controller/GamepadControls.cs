@@ -73,6 +73,15 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Aiming"",
+                    ""type"": ""Button"",
+                    ""id"": ""86ab70cd-e0f1-4756-beeb-ef2504a9023a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Interact"",
                     ""type"": ""Button"",
                     ""id"": ""a5c4cbcb-7cfb-449a-b5e5-702f1abb1def"",
@@ -82,18 +91,9 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CameraLock"",
+                    ""name"": ""Map"",
                     ""type"": ""Button"",
                     ""id"": ""5fb0f7fd-a93d-49aa-8776-7355b6744a8a"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Inventory"",
-                    ""type"": ""Button"",
-                    ""id"": ""c1a43046-7de4-4168-945a-fd17a425a7ef"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -107,13 +107,40 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Evade"",
+                    ""type"": ""Button"",
+                    ""id"": ""75ededa6-357b-493e-a650-5cb1da35335f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Heal"",
+                    ""type"": ""Button"",
+                    ""id"": ""b6f1ebff-9c48-44a1-9bfa-db06c1019078"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Turret"",
+                    ""type"": ""Button"",
+                    ""id"": ""eb479ea0-f943-4bac-beb7-ed136154e9b9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""d7dcaf20-f3e1-4005-a9b4-508311a98af1"",
-                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -168,7 +195,7 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""3ded1994-292c-461c-b483-240ee737e9f9"",
-                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -183,18 +210,7 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""CameraLock"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""63f0de21-65be-43ed-9afc-3cc6a3536a5f"",
-                    ""path"": ""<Gamepad>/buttonWest"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Inventory"",
+                    ""action"": ""Map"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -206,6 +222,50 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Swap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""95502650-db7c-46b5-be06-0694f2da419e"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aiming"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""65752130-a0c7-4ce8-b0b9-d2e753b16ce9"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Evade"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54dd2816-5cfe-4039-b6b0-ab11cf9584f2"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Heal"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46f861a7-e4e7-4248-a54c-67cb3fd44dad"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Turret"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -221,10 +281,13 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
         m_Controls_Pause = m_Controls.FindAction("Pause", throwIfNotFound: true);
         m_Controls_Gathering = m_Controls.FindAction("Gathering", throwIfNotFound: true);
         m_Controls_Attacking = m_Controls.FindAction("Attacking", throwIfNotFound: true);
+        m_Controls_Aiming = m_Controls.FindAction("Aiming", throwIfNotFound: true);
         m_Controls_Interact = m_Controls.FindAction("Interact", throwIfNotFound: true);
-        m_Controls_CameraLock = m_Controls.FindAction("CameraLock", throwIfNotFound: true);
-        m_Controls_Inventory = m_Controls.FindAction("Inventory", throwIfNotFound: true);
+        m_Controls_Map = m_Controls.FindAction("Map", throwIfNotFound: true);
         m_Controls_Swap = m_Controls.FindAction("Swap", throwIfNotFound: true);
+        m_Controls_Evade = m_Controls.FindAction("Evade", throwIfNotFound: true);
+        m_Controls_Heal = m_Controls.FindAction("Heal", throwIfNotFound: true);
+        m_Controls_Turret = m_Controls.FindAction("Turret", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -289,10 +352,13 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Controls_Pause;
     private readonly InputAction m_Controls_Gathering;
     private readonly InputAction m_Controls_Attacking;
+    private readonly InputAction m_Controls_Aiming;
     private readonly InputAction m_Controls_Interact;
-    private readonly InputAction m_Controls_CameraLock;
-    private readonly InputAction m_Controls_Inventory;
+    private readonly InputAction m_Controls_Map;
     private readonly InputAction m_Controls_Swap;
+    private readonly InputAction m_Controls_Evade;
+    private readonly InputAction m_Controls_Heal;
+    private readonly InputAction m_Controls_Turret;
     public struct ControlsActions
     {
         private @GamepadControls m_Wrapper;
@@ -302,10 +368,13 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
         public InputAction @Pause => m_Wrapper.m_Controls_Pause;
         public InputAction @Gathering => m_Wrapper.m_Controls_Gathering;
         public InputAction @Attacking => m_Wrapper.m_Controls_Attacking;
+        public InputAction @Aiming => m_Wrapper.m_Controls_Aiming;
         public InputAction @Interact => m_Wrapper.m_Controls_Interact;
-        public InputAction @CameraLock => m_Wrapper.m_Controls_CameraLock;
-        public InputAction @Inventory => m_Wrapper.m_Controls_Inventory;
+        public InputAction @Map => m_Wrapper.m_Controls_Map;
         public InputAction @Swap => m_Wrapper.m_Controls_Swap;
+        public InputAction @Evade => m_Wrapper.m_Controls_Evade;
+        public InputAction @Heal => m_Wrapper.m_Controls_Heal;
+        public InputAction @Turret => m_Wrapper.m_Controls_Turret;
         public InputActionMap Get() { return m_Wrapper.m_Controls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -330,18 +399,27 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                 @Attacking.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnAttacking;
                 @Attacking.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnAttacking;
                 @Attacking.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnAttacking;
+                @Aiming.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnAiming;
+                @Aiming.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnAiming;
+                @Aiming.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnAiming;
                 @Interact.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInteract;
-                @CameraLock.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnCameraLock;
-                @CameraLock.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnCameraLock;
-                @CameraLock.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnCameraLock;
-                @Inventory.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInventory;
-                @Inventory.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInventory;
-                @Inventory.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnInventory;
+                @Map.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMap;
+                @Map.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMap;
+                @Map.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnMap;
                 @Swap.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSwap;
                 @Swap.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSwap;
                 @Swap.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSwap;
+                @Evade.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnEvade;
+                @Evade.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnEvade;
+                @Evade.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnEvade;
+                @Heal.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnHeal;
+                @Heal.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnHeal;
+                @Heal.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnHeal;
+                @Turret.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnTurret;
+                @Turret.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnTurret;
+                @Turret.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnTurret;
             }
             m_Wrapper.m_ControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -361,18 +439,27 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                 @Attacking.started += instance.OnAttacking;
                 @Attacking.performed += instance.OnAttacking;
                 @Attacking.canceled += instance.OnAttacking;
+                @Aiming.started += instance.OnAiming;
+                @Aiming.performed += instance.OnAiming;
+                @Aiming.canceled += instance.OnAiming;
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
-                @CameraLock.started += instance.OnCameraLock;
-                @CameraLock.performed += instance.OnCameraLock;
-                @CameraLock.canceled += instance.OnCameraLock;
-                @Inventory.started += instance.OnInventory;
-                @Inventory.performed += instance.OnInventory;
-                @Inventory.canceled += instance.OnInventory;
+                @Map.started += instance.OnMap;
+                @Map.performed += instance.OnMap;
+                @Map.canceled += instance.OnMap;
                 @Swap.started += instance.OnSwap;
                 @Swap.performed += instance.OnSwap;
                 @Swap.canceled += instance.OnSwap;
+                @Evade.started += instance.OnEvade;
+                @Evade.performed += instance.OnEvade;
+                @Evade.canceled += instance.OnEvade;
+                @Heal.started += instance.OnHeal;
+                @Heal.performed += instance.OnHeal;
+                @Heal.canceled += instance.OnHeal;
+                @Turret.started += instance.OnTurret;
+                @Turret.performed += instance.OnTurret;
+                @Turret.canceled += instance.OnTurret;
             }
         }
     }
@@ -384,9 +471,12 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
         void OnPause(InputAction.CallbackContext context);
         void OnGathering(InputAction.CallbackContext context);
         void OnAttacking(InputAction.CallbackContext context);
+        void OnAiming(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
-        void OnCameraLock(InputAction.CallbackContext context);
-        void OnInventory(InputAction.CallbackContext context);
+        void OnMap(InputAction.CallbackContext context);
         void OnSwap(InputAction.CallbackContext context);
+        void OnEvade(InputAction.CallbackContext context);
+        void OnHeal(InputAction.CallbackContext context);
+        void OnTurret(InputAction.CallbackContext context);
     }
 }

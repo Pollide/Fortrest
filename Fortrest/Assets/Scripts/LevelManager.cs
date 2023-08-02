@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.VFX;
 using TMPro;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -31,8 +32,7 @@ public class LevelManager : MonoBehaviour
     public Transform DirectionalLightTransform;
     public Material LanternGlowingMaterial;
     public Material LanternOffMaterial;
-    SkinnedMeshRenderer LanternSkinnedRenderer;
-    private GameObject NightLightGameObject;
+
     public float DaylightTimer;
     public int day = 0;
     public List<EnemyController> EnemyList = new List<EnemyController>();
@@ -57,6 +57,8 @@ public class LevelManager : MonoBehaviour
 
     public List<Transform> TerrainList = new List<Transform>();
 
+    public Image clockHand;
+
     public enum SPAWNDIRECTION
     {
         North = 1,
@@ -74,10 +76,13 @@ public class LevelManager : MonoBehaviour
     bool housePosObtained = false;
     private float spawnDistance = 39.0f;
 
+    private bool messageDisplayed;
+
     private void Awake()
     {
         global = this;
         DaylightTimer = DirectionalLightTransform.eulerAngles.x;
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
 
         if (!GameManager.global)
         {
@@ -106,8 +111,8 @@ public class LevelManager : MonoBehaviour
             playerController.transform.position = SpawnPosition.position;
         }
 
-        LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
-        NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
+        //LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
+        //NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
 
         VFXSmokePuff.Stop();
         /*
@@ -238,13 +243,14 @@ public class LevelManager : MonoBehaviour
 
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
-
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
         DaylightTimer += daySpeed * Time.deltaTime;
         GoblinTimer += Time.deltaTime;
 
         if (DaylightTimer > 360)
         {
             directionEstablished = false;
+            messageDisplayed = false;
             DaylightTimer = 0;
             day++;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
@@ -253,6 +259,11 @@ public class LevelManager : MonoBehaviour
             GameManager.global.DataSetVoid(false);
         }
 
+        if (DaylightTimer > 150 && !messageDisplayed)
+        {
+            PlayerController.global.DisplayEnemiesDirection(spawnDir);
+            messageDisplayed = true;
+        }
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
 
         //   light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0 : 0.4f, Time.deltaTime);
@@ -261,7 +272,8 @@ public class LevelManager : MonoBehaviour
         {
             if (!directionEstablished)
             {
-                direction = Random.Range(1, 5);
+                // direction = Random.Range(1, 5);
+                direction = 1;
                 switch (direction)
                 {
                     case 1:
@@ -299,8 +311,7 @@ public class LevelManager : MonoBehaviour
                     default:
                         break;
                 }
-
-                PlayerController.global.DisplayEnemiesDirection(spawnDir);
+                //PlayerController.global.DisplayEnemiesDirection(spawnDir);
                 directionEstablished = true;
             }
 
@@ -337,18 +348,18 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (NightLightGameObject != null)
+        if (PlayerController.global.NightLightGameObject != null)
         {
-            NightLightGameObject.SetActive(ReturnNight());
+            PlayerController.global.NightLightGameObject.SetActive(ReturnNight());
         }
 
         //   Debug.Log(LanternSkinnedRenderer.materials[2] + " " + (LanternSkinnedRenderer.materials[2] == (ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial)));
 
-        Material[] mats = LanternSkinnedRenderer.materials;
+        Material[] mats = PlayerController.global.LanternSkinnedRenderer.materials;
 
         mats[2] = ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial;
 
-        LanternSkinnedRenderer.materials = mats;
+        PlayerController.global.LanternSkinnedRenderer.materials = mats;
 
         if (PlayerController.global.transform.position.y < -3)
         {

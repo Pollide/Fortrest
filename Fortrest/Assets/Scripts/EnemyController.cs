@@ -75,6 +75,8 @@ public class EnemyController : MonoBehaviour
         chaseTimerMax = 10.0f;
 
         agent = GetComponent<NavMeshAgent>();
+        knockBackScript = GetComponent<KnockBack>();
+
         SetEnemyParameters();
 
         playerPosition = PlayerController.global.transform;
@@ -86,9 +88,7 @@ public class EnemyController : MonoBehaviour
                 Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
             }
         }
-
-        knockBackScript = GetComponent<KnockBack>();
-
+        
         if (currentEnemyType == ENEMYTYPE.ogre)
         {
             GameManager.global.SoundManager.PlaySound(ogreSpawnSound, 1.0f);
@@ -136,6 +136,7 @@ public class EnemyController : MonoBehaviour
         // Default value
         float shortestDistance = 9999;
 
+        // Ogre goes for the house
         if (currentEnemyType == ENEMYTYPE.ogre)
         {
             if (bestTarget == null)
@@ -143,6 +144,7 @@ public class EnemyController : MonoBehaviour
                 bestTarget = house.transform;
             }
         }
+        // Wolf goes for the player if they get close and stops chasing if they get too far or in the house
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
             if (bestTarget == null)
@@ -154,16 +156,18 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 30.0f)
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 30.0f || (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode))
                 {
                     bestTarget = null;
                 }
             }
         }
+        // Spider goes for the player if they are not mounted, goblin goes for the player if it gets attacked by them
         else if (currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.goblin)
         {
-            if (Boar.global.mounted == true)
+            if (Boar.global.mounted == true || PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode)
             {
+                bestTarget = null;
                 chasing = false;
             }
             else if (currentEnemyType == ENEMYTYPE.spider)
@@ -180,7 +184,7 @@ public class EnemyController : MonoBehaviour
                     // Distance between enemy and player
                     float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
 
-                    chaseTimer += Time.deltaTime; // Enemy stops chasing the player after 10s or when the player gets too far
+                    chaseTimer += Time.deltaTime; // Goblin stops chasing the player after 10s or when the player gets too far
 
                     if (chaseTimer >= chaseTimerMax || distance >= 10.0f)
                     {
@@ -188,7 +192,7 @@ public class EnemyController : MonoBehaviour
                         chasing = false;
                         chaseTimer = 0;
                     }
-                }
+                }               
             }
             else
             {
@@ -203,7 +207,6 @@ public class EnemyController : MonoBehaviour
                         {
                             shortestDistance = compare; // New shortest distance is assigned
                             bestTarget = building; // Enemy's target is now the closest item in the list
-
                         }
 
                     });
@@ -239,7 +242,7 @@ public class EnemyController : MonoBehaviour
                     distanceAdjusted = true;
                 }
             }
-
+            
             if (bestTarget != house.transform)
             {
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + offset) // Checks if enemy reached target
@@ -262,7 +265,7 @@ public class EnemyController : MonoBehaviour
         {
             if (currentEnemyType == ENEMYTYPE.wolf)
             {
-                agent.SetDestination(transform.position);
+                agent.SetDestination(transform.position);            
                 ActiveAnimator.SetBool("Moving", false);
             }
         }
@@ -368,10 +371,7 @@ public class EnemyController : MonoBehaviour
             {
                 StopAllCoroutines();
                 chaseTimer = 0;
-                if (currentEnemyType != ENEMYTYPE.ogre)
-                {
-                    knockBackScript.knock = true;
-                }
+                knockBackScript.knock = true;
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chasing = true;
@@ -419,6 +419,7 @@ public class EnemyController : MonoBehaviour
             agent.stoppingDistance = 2.0f;
             offset = 0.25f;
             enemyDamage = 3.0f;
+            knockBackScript.strength = 50.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.spider)
         {
@@ -430,6 +431,7 @@ public class EnemyController : MonoBehaviour
             agent.stoppingDistance = 2.5f;
             offset = 0.3f;
             enemyDamage = 4.0f;
+            knockBackScript.strength = 45.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
@@ -441,6 +443,7 @@ public class EnemyController : MonoBehaviour
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
             enemyDamage = 7.5f;
+            knockBackScript.strength = 20.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.ogre)
         {
@@ -452,6 +455,7 @@ public class EnemyController : MonoBehaviour
             agent.stoppingDistance = 4.5f;
             offset = 0.2f;
             enemyDamage = 10.0f;
+            knockBackScript.strength = 0.0f;
         }
         health = maxHealth;
         speed = agent.speed;
@@ -497,6 +501,7 @@ public class EnemyController : MonoBehaviour
             {
                 GameManager.global.SoundManager.PlaySound(ogreAttackSound, 1.0f);
             }
+
             Building building = bestTarget.GetComponent<Building>();
 
             if (building && building.resourceObject == Building.BuildingType.HouseNode)

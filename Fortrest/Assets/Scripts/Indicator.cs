@@ -15,23 +15,23 @@ public class Indicator : MonoBehaviour
 
     public Sprite RemovedSprite;
 
+    public Sprite HomeSprite;
+    public Sprite MountSprite;
+
     [System.Serializable]
     public class IndicatorData
     {
-        public RectTransform rectTransform;
-        public Text ActiveText;
-        public Image ActiveImage;
-
+        public ArrowData MainData;
+        public ArrowData MapData;
+        public Sprite CustomSprite;
         public Transform ActiveTarget;
-
-        public Transform holder;
-
+        public bool AppearBool = true;
         public float DestroyedTimerFloat = -1;
 
         public Vector3 WorldPosition;
 
         public bool Unlocked;
-
+        public bool Recent;
         public string ActiveString;
 
         public void Refresh()
@@ -41,7 +41,7 @@ public class Indicator : MonoBehaviour
 
             Vector3 worldToScreenPointVector = LevelManager.global.SceneCamera.WorldToScreenPoint(WorldPosition);
 
-            RectTransform canvasRect = rectTransform.transform.parent as RectTransform;
+            RectTransform canvasRect = MainData.transform.parent as RectTransform;
 
             //this only works if the canvas is attached as a child of the camera. Took me a long time to figure that out
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, worldToScreenPointVector, LevelManager.global.SceneCamera, out Vector2 pointVector);
@@ -50,7 +50,7 @@ public class Indicator : MonoBehaviour
 
             //  Vector2 velocity = pointVector - rectTransform.anchoredPosition;
             Vector2 canvasSize = canvasRect.sizeDelta;
-            Vector2 imagePosition = rectTransform.anchoredPosition;
+            Vector2 imagePosition = MainData.MainRect.anchoredPosition;
             // Calculate the boundaries of the canvas
             float leftBoundary = -canvasSize.x / 2;
             float rightBoundary = canvasSize.x / 2;
@@ -73,46 +73,88 @@ public class Indicator : MonoBehaviour
 
             Vector2 clamp = new Vector2(clampedX, clampedY);
 
-            rectTransform.localEulerAngles = Vector3.zero;
-            holder.localPosition = Vector2.zero;
+            MainData.transform.localEulerAngles = Vector3.zero;
+
+            Vector3 transition = Vector3.zero;
+
 
             if (rightBool)
             {
-                rectTransform.localEulerAngles = new Vector3(0, 0, 90);
-                holder.localPosition -= Vector3.right;
+                //  if (!CustomSprite)
+                MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
+                transition -= Vector3.right;
             }
 
             if (leftBool)
             {
-                rectTransform.localEulerAngles = new Vector3(0, 0, -90);
-                holder.localPosition += Vector3.right;
+                //if (!CustomSprite)
+                MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
+                transition += Vector3.right;
             }
 
             if (topBool)
             {
-                rectTransform.localEulerAngles = new Vector3(0, 0, 180);
-                holder.localPosition -= Vector3.up;
+                //  if (!CustomSprite)
+                MainData.transform.localEulerAngles = new Vector3(0, 0, 180);
+                transition -= Vector3.up;
             }
+
 
             if ((bottomBool || topBool) && (leftBool || rightBool))
             {
                 //  Debug.Log(1);
-                rectTransform.localEulerAngles += new Vector3(0, 0, 45 * (rightBool ? -1 : 1));
+                MainData.transform.localEulerAngles += new Vector3(0, 0, 45 * (rightBool ? -1 : 1));
             }
 
-            if (!Unlocked)
+            if (CustomSprite)
             {
-                if (Vector3.Distance(PlayerController.global.transform.position, ActiveTarget.position) < 20)
-                    Unlocked = true;
+                MainData.ArrowImage.transform.localEulerAngles = -MainData.transform.localEulerAngles;
+            }
+
+            float distance = Vector3.Distance(PlayerController.global.transform.position, WorldPosition);
+
+            bool close = distance < 22;
+
+            if (close)
+            {
+                if (!Unlocked)
+                    Recent = true;
+
+                Unlocked = true;
+
             }
             else
             {
-                ActiveText.text = ActiveString;
+                Recent = false;
             }
 
-            ActiveText.transform.localEulerAngles = -rectTransform.localEulerAngles; //so text is always readable
+            if (Unlocked && !CustomSprite)
+            {
+                MainData.ArrowText.text = ActiveString;
 
-            rectTransform.anchoredPosition = clamp;
+                if (MapData)
+                {
+                    MapData.ArrowText.text = MainData.ArrowText.text;
+                }
+            }
+
+            bool active = (Unlocked || distance < 60) && (Recent || !close);
+
+            if (active != AppearBool)
+            {
+                AppearBool = active;
+                GameManager.PlayAnimation(MainData.GetComponent<Animation>(), "Arrow Appear", active);
+            }
+
+            MainData.ArrowText.transform.localEulerAngles = -MainData.transform.localEulerAngles; //so text is always readable
+
+            MainData.MainRect.anchoredPosition = clamp;
+            //MainData.MainRect.anchoredPosition = Vector3.Slerp(MainData.MainRect.anchoredPosition, clamp, Time.deltaTime);
+
+            if (MapData)
+                MapData.MainRect.anchoredPosition = PlayerController.global.ConvertToMapCoordinates(WorldPosition);
+
+            MainData.HolderTransform.localPosition = Vector3.Slerp(MainData.HolderTransform.localPosition, transition, Time.deltaTime);
         }
     }
 
@@ -129,9 +171,14 @@ public class Indicator : MonoBehaviour
             {
                 if (IndicatorList[i].DestroyedTimerFloat == -1)
                 {
-                    IndicatorList[i].ActiveImage.sprite = RemovedSprite;
+                    IndicatorList[i].MainData.ArrowImage.sprite = RemovedSprite;
+
                     IndicatorList[i].DestroyedTimerFloat = 10;
-                    GameManager.PlayAnimation(IndicatorList[i].rectTransform.GetComponent<Animation>(), "Arrow Appear", false);
+
+                    if (IndicatorList[i].MapData)
+                        IndicatorList[i].MapData.gameObject.SetActive(false);
+
+                    GameManager.PlayAnimation(IndicatorList[i].MainData.GetComponent<Animation>(), "Arrow Appear", false);
                 }
 
                 IndicatorList[i].DestroyedTimerFloat -= Time.fixedDeltaTime;
@@ -148,23 +195,43 @@ public class Indicator : MonoBehaviour
         }
     }
 
-    public void AddIndicator(Transform activeTarget, Color color, string name, bool unlocked = true)
+    public void AddIndicator(Transform activeTarget, Color color, string nameString, bool unlocked = true, Sprite customSprite = null)
     {
         IndicatorData indicatorData = new IndicatorData();
 
         indicatorData.ActiveTarget = activeTarget;
 
-        indicatorData.rectTransform = Instantiate(arrowPrefab, transform).GetComponent<RectTransform>();
+        indicatorData.MainData = Instantiate(arrowPrefab, transform).GetComponent<ArrowData>();
+        indicatorData.MainData.ArrowImage.color = color;
+        indicatorData.MainData.ArrowText.text = "?";
 
-        indicatorData.holder = indicatorData.rectTransform.transform.GetChild(0);
-
-        indicatorData.ActiveImage = indicatorData.holder.GetChild(0).GetComponent<Image>();
-        indicatorData.ActiveImage.color = color;
-
-        indicatorData.ActiveText = indicatorData.holder.GetChild(1).GetComponent<Text>();
-        indicatorData.ActiveString = name;
+        indicatorData.ActiveString = nameString;
         indicatorData.Unlocked = unlocked;
-        indicatorData.ActiveText.text = "?";
+        indicatorData.CustomSprite = customSprite;
+
+
         IndicatorList.Add(indicatorData);
+
+        if (!unlocked || customSprite)
+        {
+            indicatorData.MapData = Instantiate(arrowPrefab, PlayerController.global.MapSpotHolder).GetComponent<ArrowData>();
+            indicatorData.MapData.GetComponent<Animation>().enabled = false;
+            indicatorData.MapData.transform.localScale *= 2.0f;
+
+            indicatorData.MapData.ArrowImage.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+            indicatorData.MapData.ArrowImage.sprite = RemovedSprite;
+            indicatorData.MapData.ArrowImage.color = color;
+            indicatorData.MapData.ArrowImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 20);
+            // indicatorData.MapData.ArrowText.text = nameString;
+            indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
+
+            if (customSprite)
+            {
+                indicatorData.MainData.ArrowImage.sprite = customSprite;
+                indicatorData.MapData.ArrowImage.sprite = customSprite;
+                indicatorData.MainData.ArrowText.text = "";
+                indicatorData.MapData.ArrowText.text = "";
+            }
+        }
     }
 }

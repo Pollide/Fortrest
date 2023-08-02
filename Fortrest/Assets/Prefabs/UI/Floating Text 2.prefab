@@ -12,13 +12,14 @@ GameObject:
   - component: {fileID: 3621272334931227418}
   - component: {fileID: 2797379272691658981}
   - component: {fileID: 2215214385092629471}
-  m_Layer: 0
+  - component: {fileID: 1512171106}
+  m_Layer: 5
   m_Name: Floating Text 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4540187690896439519
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28,7 +29,7 @@ RectTransform:
   m_GameObject: {fileID: 7387783509094940300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -101,7 +102,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press E to interact
+  m_text: Press E to place turrets
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cd747974e397a1641afd6a1a3f98a309, type: 2}
   m_sharedMaterial: {fileID: 2903387171833272529, guid: cd747974e397a1641afd6a1a3f98a309,
@@ -129,8 +130,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 20
+  m_fontSizeBase: 20
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -145,7 +146,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -186,3 +187,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 838b7c5a8690d7841b49a111e0ee906e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!111 &1512171106
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7387783509094940300}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 62e5458b963774048a2e36e56d2b2552, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 62e5458b963774048a2e36e56d2b2552, type: 2}
+  - {fileID: 7400000, guid: d9e15abfd227d5a4f8971c2e8bc38b0e, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0

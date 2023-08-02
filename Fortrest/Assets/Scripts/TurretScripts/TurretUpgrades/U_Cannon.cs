@@ -57,6 +57,7 @@ public class U_Cannon : MonoBehaviour
     public bool isHPActive = false;
     public bool isMultiShotActive = false;
     public bool specialActive = false;
+    public bool canUpgrade = false;
 
     private void Awake()
     {
@@ -102,7 +103,7 @@ public class U_Cannon : MonoBehaviour
         // Get the distance from the player transform
         float distanceFromPlayer = Vector3.Distance(transform.position, playerTransform.position);
 
-        if (distanceFromPlayer < detectionRange)
+        if (distanceFromPlayer < detectionRange && canUpgrade)
         {
             upgradeTextObject.enabled = true;
 
@@ -112,14 +113,14 @@ public class U_Cannon : MonoBehaviour
                 if (upgradeMenu.activeSelf)
                 {
                     upgradeMenu.SetActive(false);
-                    PlayerModeHandler.global.SetMouseActive(false);
+                    PlayerModeHandler.SetMouseActive(false);
                     PlayerModeHandler.global.playerModes = PlayerModes.ResourceMode;
                     Time.timeScale = 1f;
                 }
                 else
                 {
                     upgradeMenu.SetActive(true);
-                    PlayerModeHandler.global.SetMouseActive(true);
+                    PlayerModeHandler.SetMouseActive(true);
                     PlayerModeHandler.global.playerModes = PlayerModes.UpgradeMenu;
                     Time.timeScale = 0f;
                 }

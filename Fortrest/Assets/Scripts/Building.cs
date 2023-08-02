@@ -14,6 +14,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class Building : MonoBehaviour
 {
@@ -58,6 +59,9 @@ public class Building : MonoBehaviour
     private GameObject normalHouse;
     private GameObject destroyedHouse;
 
+    public TMP_Text interactText;
+    [HideInInspector] public bool textDisplayed;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -81,11 +85,11 @@ public class Building : MonoBehaviour
 
         if (resourceObject == BuildingType.House)
         {
-            Indicator.global.AddIndicator(transform, Color.yellow, "Home");
+            Indicator.global.AddIndicator(transform, Color.yellow, "Home", customSprite: Indicator.global.HomeSprite);
             lastHealth = health;
             if (HUDHealthBar != null)
             {
-                HUDHealthBar.SetMaxHealth(maxHealth);
+                HUDHealthBar.SetMaxHealth(maxHealth, true);
             }
             normalHouse = gameObject.transform.GetChild(0).gameObject;
             destroyedHouse = gameObject.transform.GetChild(1).gameObject;
@@ -130,11 +134,13 @@ public class Building : MonoBehaviour
         health -= amount;
         if (resourceObject == BuildingType.House)
         {
-            HUDHealthBar.SetHealth(health);
+            HUDHealthBar.SetHealth(health, true);
         }
 
         if (amount != 0)
+        {
             HealthAnimation();
+        }
     }
 
     public void Repair(float amount)
@@ -194,17 +200,16 @@ public class Building : MonoBehaviour
 
     private void HealthAnimation()
     {
-        Animation animation = healthBarImage.transform.parent.parent.GetComponent<Animation>();
-
-        Debug.Log(HealthAnimationState != null && HealthAnimationState.enabled);
+        Animation animation = healthBarImage.GetComponentInParent<Animation>();
 
         if (HealthAnimationState == null || !HealthAnimationState.enabled)
         {
             HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
         }
 
-        GameManager.PlayAnimation(animation, "Health Hit", false, true);
         GameManager.PlayAnimation(animation, "Health Hit");
+
+        GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Shake");
     }
 
     private void Update()
@@ -212,13 +217,34 @@ public class Building : MonoBehaviour
         if (resourceObject == BuildingType.House)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);
-            if (distanceToPlayer < 20)
+            if (distanceToPlayer < 15.0f)
             {
+                if (PlayerModeHandler.global.playerModes != PlayerModes.BuildMode && PlayerModeHandler.global.playerModes != PlayerModes.RepairMode)
+                {
+                    if (!textDisplayed)
+                    {
+                        LevelManager.FloatingTextChange(interactText.gameObject, true);
+                        textDisplayed = true;
+                    }
+                }
+                
+                PlayerController.global.needInteraction = true;
                 playerinRange = true;
+                PlayerController.global.canGetInHouse = true;
             }
             else
             {
+                if (textDisplayed)
+                {
+                    LevelManager.FloatingTextChange(interactText.gameObject, false);
+                    textDisplayed = false;
+                }
                 playerinRange = false;
+                PlayerController.global.canGetInHouse = false;
+                if (!Boar.global.inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport)
+                {
+                    PlayerController.global.needInteraction = false;
+                }
             }
 
             if (health != lastHealth)

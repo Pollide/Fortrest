@@ -70,6 +70,7 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 8192
+  attackStarted: 0
 --- !u!111 &8167554584532445028
 Animation:
   m_ObjectHideFlags: 0
@@ -82,6 +83,7 @@ Animation:
   m_Animation: {fileID: 7400000, guid: 67e2a851ad99558429454dcdf8ccd07e, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: 67e2a851ad99558429454dcdf8ccd07e, type: 2}
+  - {fileID: 7400000, guid: ee34dca80c8e2cd4581da4307cc1379b, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
@@ -439,6 +441,7 @@ MonoBehaviour:
   projectile: {fileID: 7361705612080732733, guid: 87724b6b178be9b4b9bb56b0f24a914e,
     type: 3}
   spawnPoint: {fileID: 5947275829984533361}
+  boltActive: 0
 --- !u!1 &5947275829984533362
 GameObject:
   m_ObjectHideFlags: 0
