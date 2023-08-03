@@ -433,9 +433,9 @@ public class GameManager : MonoBehaviour
 
         LevelManager.global.DaylightTimer = Pref("Daylight", LevelManager.global.DaylightTimer, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
-        LevelManager.global.GoblinTimer = (int)Pref("Goblin Timer", LevelManager.global.GoblinTimer, load);
+        LevelManager.global.enemyTimer = (int)Pref("Goblin Timer", LevelManager.global.enemyTimer, load);
 
-        LevelManager.global.GoblinThreshold = (int)Pref("Goblin Threshold", LevelManager.global.GoblinThreshold, load);
+        LevelManager.global.enemyThreshold = (int)Pref("Goblin Threshold", LevelManager.global.enemyThreshold, load);
         int itemSize = (int)Pref("Item Size", LevelManager.global.InventoryItemList.Count, load);
 
         for (int i = 0; i < itemSize; i++)
@@ -573,6 +573,10 @@ public class GameManager : MonoBehaviour
     }
     void DataPositionVoid(string pref, Transform value, bool load)
     {
+        if(value.GetComponent<Building>() && value.GetComponent<Building>().resourceObject == Building.BuildingType.House)
+        {
+            Debug.Log("mOVING");
+        }
         float x = Pref(pref + "x", value.position.x, load);
         float y = Pref(pref + "y", value.position.y, load);
         float z = Pref(pref + "z", value.position.z, load);

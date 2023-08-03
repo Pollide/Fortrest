@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using UnityEngine.VFX;
 using TMPro;
+using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
@@ -38,10 +39,10 @@ public class LevelManager : MonoBehaviour
     public List<GameObject> InventoryItemList = new List<GameObject>();
     public List<BridgeBuilder> BridgeList = new List<BridgeBuilder>();
     public float daySpeed = 1;
-    public float GoblinTimer;
+    public float enemyTimer;
 
     [HideInInspector]
-    public float GoblinThreshold;
+    public float enemyThreshold;
 
     public GameObject GoblinGameObject;
     public GameObject OgreGameObject;
@@ -56,27 +57,40 @@ public class LevelManager : MonoBehaviour
 
     public List<Transform> TerrainList = new List<Transform>();
 
-    public enum SPAWNDIRECTION
+    public Image clockHand;
+
+    public enum SPAWNLANE
     {
-        North = 1,
-        South,
-        West,
-        East
+        Left = 1,
+        Right,
+        Middle,
     };
 
-    public SPAWNDIRECTION spawnDir;
+    public SPAWNLANE lane;
 
-    private float direction;
-    public bool directionEstablished = false;
+    private int campsCount;
+    private int enemiesCount;
+    private bool startAttack;
+    private bool nightAttack;
+    private float randomAttackTrigger;
+    private bool randomSet;
+    private bool countSet;
+    private bool ogreSpawned;
+    private bool attackHappening;
+    private int groupSpawnAmount;
+    private int laneInt;
     private Transform houseTransform;
     private Vector3 enemySpawnPosition;
     bool housePosObtained = false;
     private float spawnDistance = 39.0f;
 
+    private bool messageDisplayed;
+
     private void Awake()
     {
         global = this;
         DaylightTimer = DirectionalLightTransform.eulerAngles.x;
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
 
         if (!GameManager.global)
         {
@@ -116,6 +130,8 @@ public class LevelManager : MonoBehaviour
         enemyNumberText = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemiesText").GetComponent<TMP_Text>();
         enemyNumberText2 = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("EnemyAmount").GetComponent<TMP_Text>();
         */
+
+        enemyThreshold = 0.0f;
     }
 
 
@@ -199,20 +215,6 @@ public class LevelManager : MonoBehaviour
         }
 
         LockCursor();
-        /*
-        if (TerrainList != null)
-        {
-            for (int i = 0; i < TerrainList.Count; i++)
-            {
-                if (TerrainList[i])
-                {
-                    bool enableBool = Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) < 250;
-                    // Debug.Log(TerrainList[i] + " + " + Vector3.Distance(TerrainList[i].position, PlayerController.global.transform.position) + "  < " + 450);
-                    TerrainList[i].gameObject.SetActive(enableBool);
-                }
-            }
-        }
-        */
 
         PlayerController.global.EnemiesTextControl();
 
@@ -230,111 +232,33 @@ public class LevelManager : MonoBehaviour
 
         daySpeed = ReturnNight() ? 2 : 1;
 
-
-#if UNITY_EDITOR
-        //daySpeed = 10.0f; // FOR TESTING
-#endif
+        //daySpeed = 7.0f; // FOR TESTING
 
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
-
-        DaylightTimer += daySpeed * Time.deltaTime;
-        GoblinTimer += Time.deltaTime;
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
+        DaylightTimer += daySpeed * Time.deltaTime;       
 
         if (DaylightTimer > 360)
         {
-            directionEstablished = false;
+            attackHappening = false;
+            randomAttackTrigger = 0f;
+            randomSet = false;
             DaylightTimer = 0;
             day++;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
             GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
             PlayerController.global.NewDay();
             GameManager.global.DataSetVoid(false);
-        }
+        }     
+
+        EnemyWaves();
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
 
         //   light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0 : 0.4f, Time.deltaTime);
 
-        if (ReturnNight())
-        {
-            if (!directionEstablished)
-            {
-                direction = Random.Range(1, 5);
-                switch (direction)
-                {
-                    case 1:
-                        spawnDir = SPAWNDIRECTION.North;
-                        break;
-                    case 2:
-                        spawnDir = SPAWNDIRECTION.South;
-                        break;
-                    case 3:
-                        spawnDir = SPAWNDIRECTION.West;
-                        break;
-                    case 4:
-                        spawnDir = SPAWNDIRECTION.East;
-                        break;
-                    default:
-                        break;
-                }
-
-                enemySpawnPosition = houseTransform.position;
-
-                switch (spawnDir)
-                {
-                    case SPAWNDIRECTION.North:
-                        enemySpawnPosition += new Vector3(spawnDistance, 0.0f, spawnDistance);
-                        break;
-                    case SPAWNDIRECTION.South:
-                        enemySpawnPosition += new Vector3(-spawnDistance, 0.0f, -spawnDistance);
-                        break;
-                    case SPAWNDIRECTION.West:
-                        enemySpawnPosition += new Vector3(-spawnDistance, 0.0f, spawnDistance);
-                        break;
-                    case SPAWNDIRECTION.East:
-                        enemySpawnPosition += new Vector3(spawnDistance, 0.0f, -spawnDistance);
-                        break;
-                    default:
-                        break;
-                }
-
-                PlayerController.global.DisplayEnemiesDirection(spawnDir);
-                directionEstablished = true;
-            }
-
-            if (GoblinTimer >= GoblinThreshold)
-            {
-                GoblinThreshold = Random.Range(15, 20) - (day * 2.5f);
-
-                if (GoblinThreshold < 0.5f)
-                {
-                    GoblinThreshold = 0.5f;
-                }
-                GoblinTimer = 0;
-
-                enemySpawnPosition.x += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);
-                enemySpawnPosition.z += Random.Range(1, 5) * (Random.Range(0, 2) == 0 ? -1 : 1);
-
-                GameObject prefab = GoblinGameObject;
-
-                enemySpawnPosition.y = 0.0f;
-
-                enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition) - 16.0f; // 16 is the magic number for this to work          
-
-                if (day > 1 && Random.Range(0, 3) == 0)
-                {
-                    prefab = SpiderGameObject;
-                }
-
-                if (day > 3 && Random.Range(0, 7) == 0)
-                {
-                    prefab = OgreGameObject;
-                }
-
-                GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
-            }
-        }
+        
 
         if (PlayerController.global.NightLightGameObject != null)
         {
@@ -469,5 +393,206 @@ public class LevelManager : MonoBehaviour
         SceneCamera.transform.position = pos;
         // Cache the position
         lastPanPosition = newPanPosition;
+    }
+
+    private void EnemyWaves()
+    {
+        // Night Attack
+        if (ReturnNight() && !startAttack)
+        {           
+            nightAttack = true;
+            startAttack = true;
+        }
+        // Day Attack
+        else if (day > 0 && !ReturnNight() && !randomSet && !startAttack)
+        {
+            float randomChance = Random.Range(0.0f, 1.0f);
+
+            switch (campsCount)
+            {
+                case 0: // No camps = no day attack
+                    attackHappening = false;
+                    break;
+                case 1: // 1 camp = 20% chance
+                    if (randomChance > 0.8f)
+                    {
+                        attackHappening = true;
+                    }
+                    break;
+                case 2: // 2 camps = 40% chance
+                    if (randomChance > 0.6f)
+                    {
+                        attackHappening = true;
+                    }
+                    break;
+                case 3: // 3 camps = 60% chance
+                    if (randomChance > 0.4f)
+                    {
+                        attackHappening = true;
+                    }
+                    break;
+                case 4: // 4 camps = 80% chance
+                    if (randomChance > 0.2f)
+                    {
+                        attackHappening = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
+            if (campsCount >= 5) // 5+ camps = 100% chance
+            {
+                attackHappening = true;
+            }
+
+            if (attackHappening)
+            {
+                randomAttackTrigger = Random.Range(60.0f, 120.0f); // Attack starts at a random time during the day
+                nightAttack = false; // It is not a night attack
+            }         
+            else
+            {
+                randomAttackTrigger = 0f; // Setting this to not display enemies are coming
+            }                     
+            randomSet = true; // Regardless of the outcome, we are not running this again until the next day                     
+        }
+
+        if (DaylightTimer >= randomAttackTrigger && DaylightTimer <= randomAttackTrigger + 1.0f && !startAttack)
+        {
+            startAttack = true; // Attack starts when the time is reached
+        }
+
+        if ((DaylightTimer > 150 || (DaylightTimer > randomAttackTrigger - 30.0f && randomAttackTrigger != 0f)) && !messageDisplayed)
+        {
+            PlayerController.global.DisplayEnemiesComingText(); // Display enemies are coming a bit before an attack
+            messageDisplayed = true;
+        }       
+
+        if (startAttack)
+        {
+            // Set the amount of enemies at the start of the attack
+            if (!countSet)
+            {
+                if (nightAttack)
+                {
+                    enemiesCount = 5 * (day + 1) + (campsCount * 3);
+                }
+                else
+                {
+                    enemiesCount = 3 * (day + 1) + (campsCount * 1);
+                }
+
+                countSet = true;
+            }           
+
+            // North position
+            enemySpawnPosition = houseTransform.position + new Vector3(spawnDistance, 0.0f, spawnDistance);
+
+            enemyTimer += Time.deltaTime;
+
+            // Spawn delay for enemies. Happens till the count reaches 0
+            if (enemyTimer >= enemyThreshold && enemiesCount > 0)
+            {
+                // Random position out of 3
+                laneInt = Random.Range(1, 4);
+                switch (laneInt)
+                {
+                    case 1:
+                        lane = SPAWNLANE.Left;
+                        enemySpawnPosition += new Vector3(-10.0f, 0.0f, 10.0f);
+                        break;
+                    case 2:
+                        lane = SPAWNLANE.Middle;
+                        break;
+                    case 3:
+                        lane = SPAWNLANE.Right;
+                        enemySpawnPosition += new Vector3(10.0f, 0.0f, -10.0f);
+                        break;
+                    default:
+                        break;
+                }
+
+                // Delay till the next enemy spawns
+                enemyThreshold = Random.Range(5.0f, 7.5f) - (day * 1.0f);
+
+                // Minimum delay
+                if (enemyThreshold < 1.0f)
+                {
+                    enemyThreshold = 1.0f;
+                }                              
+
+                // Chance to spawn a group of enemies.
+                int randomInt = Random.Range(0, 4 + groupSpawnAmount);
+
+                // Group of enemies
+                if (randomInt == 1 && enemiesCount > 3)
+                {
+                    int randomRange = Random.Range(2, 5);
+
+                    for (int i = 0; i < randomRange; i ++)
+                    {
+                        enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
+                        enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
+
+                        GameObject prefab = GoblinGameObject;
+
+                        if (day > 1 && Random.Range(0, 3) == 0)
+                        {
+                            prefab = SpiderGameObject;
+                        }
+
+                        if (day > 2 && Random.Range(0, 7) == 0 && !ogreSpawned)
+                        {
+                            prefab = OgreGameObject;
+                            ogreSpawned = true;
+                        }
+
+                        enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition) - 16.0f; // 16 is the magic number for this to work                         
+
+                        GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
+                    }
+                    enemiesCount -= randomRange;
+                    enemyTimer = 0;
+                    groupSpawnAmount++;
+                }
+                // Single enemy
+                else if (randomInt != 1)
+                {
+                    enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
+                    enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
+
+                    GameObject prefab = GoblinGameObject;
+
+                    if (day > 1 && Random.Range(0, 3) == 0)
+                    {
+                        prefab = SpiderGameObject;
+                    }
+
+                    if (day > 2 && Random.Range(0, 7) == 0 && !ogreSpawned)
+                    {
+                        prefab = OgreGameObject;
+                        ogreSpawned = true;
+                    }
+
+                    enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition) - 16.0f; // 16 is the magic number for this to work                         
+
+                    GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
+
+                    enemiesCount--;
+                    enemyTimer = 0;
+                }               
+            }      
+            // Reset everything once enemies have spawned. Day attacks variable are also reset when a new day starts
+            else if (enemiesCount <= 0)
+            {
+                startAttack = false;                
+                messageDisplayed = false;
+                countSet = false;
+                groupSpawnAmount = 0;
+                ogreSpawned = false;
+                enemiesCount = 0;
+            }
+        }           
     }
 }
