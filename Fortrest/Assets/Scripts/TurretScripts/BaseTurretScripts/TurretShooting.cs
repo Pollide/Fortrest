@@ -50,7 +50,10 @@ public class TurretShooting : MonoBehaviour
         }
 
         if (animators.Length > CurrentLevel)
+        {
+            animators[CurrentLevel].speed = fireRate;
             return animators[CurrentLevel];
+        }
         else
         {
             return null;
