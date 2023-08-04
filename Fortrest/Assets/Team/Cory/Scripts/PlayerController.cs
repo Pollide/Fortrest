@@ -201,6 +201,9 @@ public class PlayerController : MonoBehaviour
     public bool canGetInHouse;
 
     public Image countdownBar;
+    private bool gapSet;
+    private float gap;
+    private float fraction;
 
     // Start is called before the first frame update
     void Awake()
@@ -1371,11 +1374,22 @@ public class PlayerController : MonoBehaviour
     }
 
     private void BarDisappear()
-    {
+    {       
         if (enemyDirectionText.rectTransform.anchoredPosition.y == 450.0f)
-        {
+        {           
+            if (!gapSet)
+            {                
+                gap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer;
+                fraction = 663.0f / gap;
+                gapSet = true;
+            }
             countdownBar.gameObject.SetActive(true);
-            countdownBar.rectTransform.sizeDelta = new Vector2((663.0f / 30.0f) * (30.0f - (LevelManager.global.DaylightTimer - LevelManager.global.randomAttackTrigger)), 10.0f);
+            countdownBar.rectTransform.sizeDelta = new Vector2(fraction * (LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer), 10.0f);
+        }
+        else
+        {
+            gapSet = false;
+            gap = 0f;
         }
     }
 }
