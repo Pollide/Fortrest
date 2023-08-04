@@ -48,7 +48,7 @@ public class Building : MonoBehaviour
     public Image healthBarImage;
     public HealthBar HUDHealthBar;
 
-    AnimationState HealthAnimationState;
+    float HealthAppearTimer = -1;
 
     private float lastHealth;
 
@@ -202,10 +202,12 @@ public class Building : MonoBehaviour
     {
         Animation animation = healthBarImage.GetComponentInParent<Animation>();
 
-        if (HealthAnimationState == null || !HealthAnimationState.enabled)
+        if (HealthAppearTimer == -1)
         {
-            HealthAnimationState = GameManager.PlayAnimation(animation, "Health Appear");
+            GameManager.PlayAnimation(animation, "Health Appear");
         }
+
+        HealthAppearTimer = 0;
 
         GameManager.PlayAnimation(animation, "Health Hit");
 
@@ -227,7 +229,7 @@ public class Building : MonoBehaviour
                         textDisplayed = true;
                     }
                 }
-                
+
                 PlayerController.global.needInteraction = true;
                 playerinRange = true;
                 PlayerController.global.canGetInHouse = true;
@@ -271,5 +273,17 @@ public class Building : MonoBehaviour
                 }
             }
         }
+
+        if (HealthAppearTimer != -1)
+        {
+            HealthAppearTimer += Time.deltaTime;
+
+            if (HealthAppearTimer > 5)
+            {
+                HealthAppearTimer = -1;
+                GameManager.PlayAnimation(healthBarImage.GetComponentInParent<Animation>(), "Health Appear", false);
+            }
+        }
     }
+
 }

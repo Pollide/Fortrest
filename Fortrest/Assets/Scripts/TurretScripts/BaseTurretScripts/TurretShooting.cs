@@ -119,12 +119,6 @@ public class TurretShooting : MonoBehaviour
             attackStarted = true;
             ReturnAnimator().ResetTrigger("Fire");
             ReturnAnimator().SetTrigger("Fire");
-            ProjectileEvent();
-
-            if (IsCannon)
-                GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSound);
-            else
-                GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
 
             fireCountdown = 1f / fireRate;
         }
@@ -132,12 +126,13 @@ public class TurretShooting : MonoBehaviour
         fireCountdown -= Time.deltaTime;
     }
 
-    public void ProjectileEvent()
+    public void ProjectileEvent() //CALLS ON THE ANIMATOR
     {
         GameObject projectile = Instantiate(ProjectilePrefab, FirePoint);
 
         if (IsCannon)
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSound);
             // Spawn a projectile
             ProjectileExplosion explosion = projectile.GetComponent<ProjectileExplosion>();
             //  explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
@@ -146,6 +141,7 @@ public class TurretShooting : MonoBehaviour
         }
         else
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
             U_Turret uTurret = GetComponent<U_Turret>();
             BoltScript boltScript = projectile.GetComponent<BoltScript>();
 

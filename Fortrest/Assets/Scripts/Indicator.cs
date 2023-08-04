@@ -108,7 +108,7 @@ public class Indicator : MonoBehaviour
 
             if (CustomSprite)
             {
-                MainData.ArrowImage.transform.localEulerAngles = -MainData.transform.localEulerAngles;
+                MainData.CustomImage.transform.localEulerAngles = -MainData.transform.localEulerAngles;
             }
 
             float distance = Vector3.Distance(PlayerController.global.transform.position, WorldPosition);
@@ -175,16 +175,18 @@ public class Indicator : MonoBehaviour
 
                     IndicatorList[i].DestroyedTimerFloat = 10;
 
-                    if (IndicatorList[i].MapData)
-                        IndicatorList[i].MapData.gameObject.SetActive(false);
-
-                    GameManager.PlayAnimation(IndicatorList[i].MainData.GetComponent<Animation>(), "Arrow Appear", false);
+                    if (IndicatorList[i].AppearBool)
+                        GameManager.PlayAnimation(IndicatorList[i].MainData.GetComponent<Animation>(), "Arrow Appear", false);
                 }
 
                 IndicatorList[i].DestroyedTimerFloat -= Time.fixedDeltaTime;
 
                 if (IndicatorList[i].DestroyedTimerFloat <= 0)
                 {
+                    Destroy(IndicatorList[i].MainData.gameObject);
+
+                    if (IndicatorList[i].MapData)
+                        Destroy(IndicatorList[i].MapData.gameObject);
                     IndicatorList.RemoveAt(i);
 
                     continue;
@@ -203,6 +205,7 @@ public class Indicator : MonoBehaviour
 
         indicatorData.MainData = Instantiate(arrowPrefab, transform).GetComponent<ArrowData>();
         indicatorData.MainData.ArrowImage.color = color;
+        indicatorData.MainData.CustomImage.color = color;
         indicatorData.MainData.ArrowText.text = "?";
 
         indicatorData.ActiveString = nameString;
@@ -222,13 +225,16 @@ public class Indicator : MonoBehaviour
             indicatorData.MapData.ArrowImage.sprite = RemovedSprite;
             indicatorData.MapData.ArrowImage.color = color;
             indicatorData.MapData.ArrowImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 20);
-            // indicatorData.MapData.ArrowText.text = nameString;
             indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
 
             if (customSprite)
             {
-                indicatorData.MainData.ArrowImage.sprite = customSprite;
+                indicatorData.MainData.CustomImage.gameObject.SetActive(true);
+                indicatorData.MapData.CustomImage.gameObject.SetActive(true);
+
+                indicatorData.MainData.CustomImage.sprite = customSprite;
                 indicatorData.MapData.ArrowImage.sprite = customSprite;
+
                 indicatorData.MainData.ArrowText.text = "";
                 indicatorData.MapData.ArrowText.text = "";
             }
