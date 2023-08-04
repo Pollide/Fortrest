@@ -1189,9 +1189,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void DisplayEnemiesDirection(LevelManager.SPAWNDIRECTION direction)
+    public void DisplayEnemiesComingText()
     {
-        enemyDirectionText.text = "The enemies are coming soon!";
+        enemyDirectionText.text = "Enemies are coming soon!";
         //enemyDirectionText.text = "The enemies are coming from the " + direction.ToString();
         GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
     }
