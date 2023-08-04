@@ -2247,6 +2247,7 @@ MonoBehaviour:
   LanternSkinnedRenderer: {fileID: 3811071758437484868}
   NightLightGameObject: {fileID: 1879261342564991142}
   canGetInHouse: 0
+  countdownBar: {fileID: 7435020436979659710}
 --- !u!143 &5569601162832024542
 CharacterController:
   m_ObjectHideFlags: 0
@@ -4053,6 +4054,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5569601164179657949}
     m_Modifications:
+    - target: {fileID: 430194615071475497, guid: cd0bc9715f16c5347a569bae16ef1c71,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 21
+      objectReference: {fileID: 0}
     - target: {fileID: 1347007417764682685, guid: cd0bc9715f16c5347a569bae16ef1c71,
         type: 3}
       propertyPath: m_Name
@@ -4613,6 +4619,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -63
       objectReference: {fileID: 0}
+    - target: {fileID: 8563739720017625626, guid: cd0bc9715f16c5347a569bae16ef1c71,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 9196004724900196073, guid: cd0bc9715f16c5347a569bae16ef1c71,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -5151,6 +5162,18 @@ MonoBehaviour:
 --- !u!114 &7403004418962395638 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3214154749762728982, guid: cd0bc9715f16c5347a569bae16ef1c71,
+    type: 3}
+  m_PrefabInstance: {fileID: 5343021766280963552}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7435020436979659710 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3244920828276135518, guid: cd0bc9715f16c5347a569bae16ef1c71,
     type: 3}
   m_PrefabInstance: {fileID: 5343021766280963552}
   m_PrefabAsset: {fileID: 0}

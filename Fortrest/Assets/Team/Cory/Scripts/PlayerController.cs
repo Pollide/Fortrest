@@ -202,6 +202,8 @@ public class PlayerController : MonoBehaviour
 
     public bool canGetInHouse;
 
+    public Image countdownBar;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -501,6 +503,7 @@ public class PlayerController : MonoBehaviour
         ScreenDamage();
         CheckCurrentTool();
         Resting();
+        BarDisappear();
 
         foreach (KeyCode keyCode in keyCodes)
         {
@@ -1191,9 +1194,7 @@ public class PlayerController : MonoBehaviour
 
     public void DisplayEnemiesComingText()
     {
-        enemyDirectionText.text = "Enemies are coming soon!";
-        //enemyDirectionText.text = "The enemies are coming from the " + direction.ToString();
-        GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
+        GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection"); 
     }
 
     public void EnemiesTextControl()
@@ -1369,5 +1370,14 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void BarDisappear()
+    {
+        if (enemyDirectionText.rectTransform.anchoredPosition.y == 450.0f)
+        {
+            countdownBar.gameObject.SetActive(true);
+            countdownBar.rectTransform.sizeDelta = new Vector2((663.0f / 30.0f) * (30.0f - (LevelManager.global.DaylightTimer - LevelManager.global.randomAttackTrigger)), 10.0f);
+        }            
     }
 }
