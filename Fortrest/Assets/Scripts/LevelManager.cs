@@ -411,7 +411,7 @@ public class LevelManager : MonoBehaviour
             switch (campsCount)
             {
                 case 0: // No camps = no day attack
-                    attackHappening = true; // change that!
+                    attackHappening = false; // change that!
                     break;
                 case 1: // 1 camp = 20% chance
                     if (randomChance > 0.8f)
