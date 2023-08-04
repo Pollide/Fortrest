@@ -62,6 +62,7 @@ public class Building : MonoBehaviour
     public TMP_Text interactText;
     [HideInInspector] public bool textDisplayed;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -96,7 +97,8 @@ public class Building : MonoBehaviour
         }
         else if (resourceObject != BuildingType.DefenseBP) //the house itself is not part of the buildings list
         {
-            LevelManager.global.AddBuildingVoid(transform);
+            if (!GetComponent<TurretShooting>() || !GetComponent<TurretShooting>().MiniTurret)
+                LevelManager.global.AddBuildingVoid(transform);
         }
     }
 

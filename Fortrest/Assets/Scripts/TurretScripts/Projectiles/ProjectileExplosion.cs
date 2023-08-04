@@ -10,7 +10,7 @@ public class ProjectileExplosion : MonoBehaviour
     public float speed = 10f;    // Speed at which the bullet moves
     public float lifetime = 2f;  // Time in seconds before the bullet is destroyed
     private float timer;        // Timer to track the bullet's lifetime
-
+    public U_Cannon uCannon;
 
     private void Start()
     {
@@ -39,12 +39,11 @@ public class ProjectileExplosion : MonoBehaviour
             Explode();
             Destroy(gameObject);
         }
-        
+
     }
 
     void Explode()
     {
-        U_Cannon uCannon = GetComponentInParent<U_Cannon>();
         Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
         foreach (Collider collider in colliders)
@@ -68,7 +67,7 @@ public class ProjectileExplosion : MonoBehaviour
                     collider.GetComponent<EnemyController>().Damaged(damage);
                 }
             }
-            
+
             Rigidbody enemyRigidbody = collider.GetComponent<Rigidbody>();
             NavMeshAgent enemyAgent = collider.GetComponent<NavMeshAgent>();
 

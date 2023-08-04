@@ -58,12 +58,10 @@ public class PlayerController : MonoBehaviour
 
     // Spawn Turret
     private bool turretSpawned;
-    [HideInInspector] public bool turretEnd;
     private float turretTimer = 0.0f;
     private float resetTurret = 30.0f;
     private float turretDuration = 20.0f;
-    public GameObject miniTurretObject;
-
+    GameObject miniTurret;
     // Gravity
     private float playerGravMultiplier = 2.0f;
     private float playerGrav = -9.81f;
@@ -210,16 +208,7 @@ public class PlayerController : MonoBehaviour
         // Get Character controller that is attached to the player
         playerCC = GetComponent<CharacterController>();
 
-        if (global)
-        {
-            //destroys the duplicate
-            Destroy(transform.parent.gameObject);
-        }
-        else
-        {
-            //itself doesnt exist so set it
-            global = this;
-        }
+        global = this;
 
         // Controller stuff
         gamepadControls = new GamepadControls();
@@ -612,7 +601,10 @@ public class PlayerController : MonoBehaviour
 
             if (turretTimer >= turretDuration)
             {
-                turretEnd = true;
+                turretSpawned = false;
+
+                if (miniTurret)
+                    Destroy(miniTurret, GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn", false).length);
             }
         }
         else
@@ -1015,8 +1007,11 @@ public class PlayerController : MonoBehaviour
     {
         turretTimer = 0;
         turretSpawned = true;
-        turretEnd = false;
-        GameObject miniTurret = Instantiate(miniTurretObject, transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);
+
+        miniTurret = Instantiate(PlayerModeHandler.global.turretPrefabs[0], transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);
+        miniTurret.transform.localScale = new Vector3(0.3f, 1, 0.3f);
+        miniTurret.GetComponent<TurretShooting>().MiniTurret = true;
+        GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
     }
 
     private void Teleport()
@@ -1194,7 +1189,7 @@ public class PlayerController : MonoBehaviour
 
     public void DisplayEnemiesComingText()
     {
-        GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection"); 
+        GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
     }
 
     public void EnemiesTextControl()
@@ -1378,6 +1373,6 @@ public class PlayerController : MonoBehaviour
         {
             countdownBar.gameObject.SetActive(true);
             countdownBar.rectTransform.sizeDelta = new Vector2((663.0f / 30.0f) * (30.0f - (LevelManager.global.DaylightTimer - LevelManager.global.randomAttackTrigger)), 10.0f);
-        }            
+        }
     }
 }

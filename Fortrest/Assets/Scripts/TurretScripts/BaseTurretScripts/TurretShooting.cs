@@ -33,6 +33,8 @@ public class TurretShooting : MonoBehaviour
 
     private Quaternion targetRotation;
 
+    public bool MiniTurret;
+
     private void Start()
     {
         ReturnAnimator();
@@ -128,22 +130,24 @@ public class TurretShooting : MonoBehaviour
 
     public void ProjectileEvent() //CALLS ON THE ANIMATOR
     {
-        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint);
+        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
 
         if (IsCannon)
         {
+
             GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSound);
             // Spawn a projectile
             ProjectileExplosion explosion = projectile.GetComponent<ProjectileExplosion>();
             //  explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             explosion.explosionRadius = explosionRadius;
             explosion.damage = damage;
+            explosion.uCannon = GetComponent<U_Cannon>();
         }
         else
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
             U_Turret uTurret = GetComponent<U_Turret>();
-            BoltScript boltScript = projectile.GetComponent<BoltScript>();
+
 
             if (uTurret && uTurret.isMultiShotActive)
             {
@@ -159,7 +163,8 @@ public class TurretShooting : MonoBehaviour
                 }
             }
 
-            //   turret.animController.SetBool("isAttacking", false);
+            BoltScript boltScript = projectile.GetComponent<BoltScript>();
+            boltScript.turretShootingScript = this;
             boltScript.SetDamage(damage);
         }
     }
