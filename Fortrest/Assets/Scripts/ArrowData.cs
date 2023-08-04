@@ -7,4 +7,5 @@ public class ArrowData : MonoBehaviour
     public RectTransform HolderTransform;
     public Text ArrowText;
     public Image ArrowImage;
+    public Image CustomImage;
 }
