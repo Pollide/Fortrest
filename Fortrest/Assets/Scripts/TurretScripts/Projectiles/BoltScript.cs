@@ -12,19 +12,13 @@ public class BoltScript : MonoBehaviour
     private float damage = 0f;      // Amount of damage the bullet applies to enemies
     private float timer = 0f;       // Timer to track the bullet's lifetime
 
-    public MiniTurretEvents miniTurretEventsScript;
-    public MiniTurret miniTurretScript;
+    [HideInInspector]
     public TurretShooting turretShootingScript;
 
     private void Start()
     {
-        miniTurretEventsScript = transform.parent.parent.GetChild(0).GetComponent<MiniTurretEvents>();
-        miniTurretScript = transform.parent.parent.GetComponent<MiniTurret>();
-        turretShootingScript = transform.parent.parent.GetComponent<TurretShooting>();
         timer = lifetime;           // Initialize the timer to the bullet's lifetime
     }
-
-    public bool mini;
     private bool instakill;
     private bool damageDealt;
 
@@ -38,21 +32,15 @@ public class BoltScript : MonoBehaviour
         // Destroy the bullet if the timer reaches or goes below zero
         if (timer <= 0f)
         {
-            if (mini)
-            {
-                miniTurretEventsScript.boltActive = false;
-                miniTurretScript.attackStarted = false;
-                turretShootingScript.attackStarted = false;
-            }
             Destroy(gameObject);
         }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if (!damageDealt)
+        if (!damageDealt && turretShootingScript)
         {
-            U_Turret uTurret = GetComponentInParent<U_Turret>();
+            U_Turret uTurret = turretShootingScript.GetComponent<U_Turret>();
 
             if (other.CompareTag("Enemy"))
             {
@@ -61,7 +49,7 @@ public class BoltScript : MonoBehaviour
                 NavMeshAgent enemyAgent = other.GetComponent<NavMeshAgent>();
                 if (enemy != null)
                 {
-                    if (!mini)
+                    if (!turretShootingScript.MiniTurret)
                     {
                         if (uTurret.isKnockBackActive)
                         {
@@ -90,6 +78,7 @@ public class BoltScript : MonoBehaviour
 
                         }
                     }
+
                     if (!instakill)
                     {
                         enemy.Damaged(damage); // Apply damage to the enemy
@@ -98,12 +87,6 @@ public class BoltScript : MonoBehaviour
 
                 }
 
-                if (mini)
-                {
-                    miniTurretEventsScript.boltActive = false;
-                    miniTurretScript.attackStarted = false;
-                    turretShootingScript.attackStarted = false;
-                }
                 Destroy(gameObject); // Destroy the bullet
             }
         }
