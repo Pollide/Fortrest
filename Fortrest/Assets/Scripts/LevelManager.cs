@@ -72,7 +72,7 @@ public class LevelManager : MonoBehaviour
     private int enemiesCount;
     private bool startAttack;
     private bool nightAttack;
-    private float randomAttackTrigger;
+    public float randomAttackTrigger;
     private bool randomSet;
     private bool countSet;
     private bool ogreSpawned;
@@ -232,7 +232,7 @@ public class LevelManager : MonoBehaviour
 
         daySpeed = ReturnNight() ? 2 : 1;
 
-        //daySpeed = 7.0f; // FOR TESTING
+        daySpeed = 7.0f; // FOR TESTING
 
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
@@ -411,7 +411,7 @@ public class LevelManager : MonoBehaviour
             switch (campsCount)
             {
                 case 0: // No camps = no day attack
-                    attackHappening = false;
+                    attackHappening = true; // change that!
                     break;
                 case 1: // 1 camp = 20% chance
                     if (randomChance > 0.8f)
