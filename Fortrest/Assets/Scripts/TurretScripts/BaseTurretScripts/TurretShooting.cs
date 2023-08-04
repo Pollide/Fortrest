@@ -42,22 +42,19 @@ public class TurretShooting : MonoBehaviour
 
     public Animator ReturnAnimator()
     {
-        Animator[] animators = ModelHolder.GetComponentsInChildren<Animator>();
-
-        for (int i = 0; i < animators.Length; i++)
+        for (int i = 0; i < ModelHolder.childCount; i++)
         {
-            animators[i].gameObject.SetActive(CurrentLevel == i);
+            ModelHolder.GetChild(i).gameObject.SetActive(CurrentLevel == i);
         }
 
-        if (animators.Length > CurrentLevel)
+        Animator animator = ModelHolder.GetChild(CurrentLevel).GetComponent<Animator>();
+
+        if (animator)
         {
-            animators[CurrentLevel].speed = fireRate;
-            return animators[CurrentLevel];
+            animator.speed = fireRate;
         }
-        else
-        {
-            return null;
-        }
+
+        return animator;
     }
 
     private void Update()
