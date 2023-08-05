@@ -8,7 +8,7 @@ using TMPro;
 public class InventoryItem : MonoBehaviour
 {
     bool soundPlayed;
-
+    public int TierInt;
     public int resourceAmount = 1;
 
     // Whether the item is stackable or not
@@ -72,8 +72,20 @@ public class InventoryItem : MonoBehaviour
             GameManager.PlayAnimation(PlayerController.global.appleText.GetComponent<Animation>(), "EnemyAmount");
             PlayerController.global.appleText.text = PlayerController.global.appleAmount.ToString();
         }
-        InventoryManager.global.AddItem(this, resourceAmount);
+
+        if (name.Contains("Wood"))
+        {
+            LevelManager.global.WoodTierList[TierInt].ResourceAmount += resourceAmount;
+        }
+
+        if (name.Contains("Stone"))
+        {
+            LevelManager.global.StoneTierList[TierInt].ResourceAmount += resourceAmount;
+        }
+
+        // InventoryManager.global.AddItem(this, resourceAmount);
         CollectedBool = true;
+        LevelManager.global.InventoryItemList.Remove(gameObject);
     }
 
     private void Update()
@@ -94,7 +106,8 @@ public class InventoryItem : MonoBehaviour
 
             if (transform.localScale.x <= 0.5f)
             {
-                gameObject.SetActive(false);
+                // gameObject.SetActive(false);
+                Destroy(gameObject);
             }
         }
     }

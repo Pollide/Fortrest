@@ -42,13 +42,13 @@ public class Menu : MonoBehaviour
         TextColor = SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().color;
         StartCoroutine(InitalMenuIEnumerator());
 
-        if (PlayerPrefs.GetInt("Game File") == 0)
+        if ((int)GameManager.Pref("Game Started", 0, true) == 1)
         {
-            PlayText.text = "New Game";
+            PlayText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
         }
         else
         {
-            PlayText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
+            PlayText.text = "New Game";
         }
     }
 

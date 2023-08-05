@@ -21,6 +21,18 @@ public class LevelManager : MonoBehaviour
     public float[] BoundsZ = new float[] { -18f, -4f };
     public float[] ZoomBounds = new float[] { 10f, 85f };
 
+    public List<TierData> WoodTierList = new List<TierData>();
+    public List<TierData> StoneTierList = new List<TierData>();
+
+    [System.Serializable]
+    public class TierData
+    {
+        public string ResourceName = "Wood";
+        public Sprite ResourceIcon;
+        public int ResourceAmount;
+
+    }
+
     Vector3 lastPanPosition;
     bool OnceDetection;
 
@@ -237,7 +249,7 @@ public class LevelManager : MonoBehaviour
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
         clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
-        DaylightTimer += daySpeed * Time.deltaTime;       
+        DaylightTimer += daySpeed * Time.deltaTime;
 
         if (DaylightTimer > 360)
         {
@@ -250,7 +262,7 @@ public class LevelManager : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
             PlayerController.global.NewDay();
             GameManager.global.DataSetVoid(false);
-        }     
+        }
 
         EnemyWaves();
 
@@ -258,7 +270,7 @@ public class LevelManager : MonoBehaviour
 
         //   light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0 : 0.4f, Time.deltaTime);
 
-        
+
 
         if (PlayerController.global.NightLightGameObject != null)
         {
@@ -399,7 +411,7 @@ public class LevelManager : MonoBehaviour
     {
         // Night Attack
         if (ReturnNight() && !startAttack)
-        {           
+        {
             nightAttack = true;
             startAttack = true;
         }
@@ -440,7 +452,7 @@ public class LevelManager : MonoBehaviour
                 default:
                     break;
             }
-            
+
             if (campsCount >= 5) // 5+ camps = 100% chance
             {
                 attackHappening = true;
@@ -450,11 +462,11 @@ public class LevelManager : MonoBehaviour
             {
                 randomAttackTrigger = Random.Range(60.0f, 120.0f); // Attack starts at a random time during the day
                 nightAttack = false; // It is not a night attack
-            }         
+            }
             else
             {
                 randomAttackTrigger = 0f; // Setting this to not display enemies are coming
-            }                     
+            }
             randomSet = true; // Regardless of the outcome, we are not running this again until the next day                     
         }
 
@@ -467,7 +479,7 @@ public class LevelManager : MonoBehaviour
         {
             PlayerController.global.DisplayEnemiesComingText(); // Display enemies are coming a bit before an attack            
             messageDisplayed = true;
-        }       
+        }
 
         if (startAttack)
         {
@@ -484,7 +496,7 @@ public class LevelManager : MonoBehaviour
                 }
 
                 countSet = true;
-            }           
+            }
 
             // North position
             enemySpawnPosition = houseTransform.position + new Vector3(spawnDistance, 0.0f, spawnDistance);
@@ -520,7 +532,7 @@ public class LevelManager : MonoBehaviour
                 if (enemyThreshold < 1.0f)
                 {
                     enemyThreshold = 1.0f;
-                }                              
+                }
 
                 // Chance to spawn a group of enemies.
                 int randomInt = Random.Range(0, 4 + groupSpawnAmount);
@@ -530,7 +542,7 @@ public class LevelManager : MonoBehaviour
                 {
                     int randomRange = Random.Range(2, 5);
 
-                    for (int i = 0; i < randomRange; i ++)
+                    for (int i = 0; i < randomRange; i++)
                     {
                         enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
                         enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
@@ -581,18 +593,18 @@ public class LevelManager : MonoBehaviour
 
                     enemiesCount--;
                     enemyTimer = 0;
-                }               
-            }      
+                }
+            }
             // Reset everything once enemies have spawned. Day attacks variable are also reset when a new day starts
             else if (enemiesCount <= 0)
             {
-                startAttack = false;                
+                startAttack = false;
                 messageDisplayed = false;
                 countSet = false;
                 groupSpawnAmount = 0;
                 ogreSpawned = false;
                 enemiesCount = 0;
             }
-        }           
+        }
     }
 }
