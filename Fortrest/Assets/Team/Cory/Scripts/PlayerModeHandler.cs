@@ -55,7 +55,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    
+
 
     private void Update()
     {
@@ -221,7 +221,8 @@ public class PlayerModeHandler : MonoBehaviour
             }
             else
             {
-                PlayerController.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
+                if (PlayerController.global.houseSpawnPoint)
+                    PlayerController.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
                 PlayerController.global.playerCC.enabled = true;
             }
 
