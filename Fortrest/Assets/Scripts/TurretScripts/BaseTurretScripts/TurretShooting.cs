@@ -33,6 +33,8 @@ public class TurretShooting : MonoBehaviour
 
     private Quaternion targetRotation;
 
+    public bool MiniTurret;
+
     private void Start()
     {
         ReturnAnimator();
@@ -40,19 +42,19 @@ public class TurretShooting : MonoBehaviour
 
     public Animator ReturnAnimator()
     {
-        Animator[] animators = ModelHolder.GetComponentsInChildren<Animator>();
-
-        for (int i = 0; i < animators.Length; i++)
+        for (int i = 0; i < ModelHolder.childCount; i++)
         {
-            animators[i].gameObject.SetActive(CurrentLevel == i);
+            ModelHolder.GetChild(i).gameObject.SetActive(CurrentLevel == i);
         }
 
-        if (animators.Length > CurrentLevel)
-            return animators[CurrentLevel];
-        else
+        Animator animator = ModelHolder.GetChild(CurrentLevel).GetComponent<Animator>();
+
+        if (animator)
         {
-            return null;
+            animator.speed = fireRate;
         }
+
+        return animator;
     }
 
     private void Update()
@@ -119,12 +121,6 @@ public class TurretShooting : MonoBehaviour
             attackStarted = true;
             ReturnAnimator().ResetTrigger("Fire");
             ReturnAnimator().SetTrigger("Fire");
-            ProjectileEvent();
-
-            if (IsCannon)
-                GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSound);
-            else
-                GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
 
             fireCountdown = 1f / fireRate;
         }
@@ -132,22 +128,26 @@ public class TurretShooting : MonoBehaviour
         fireCountdown -= Time.deltaTime;
     }
 
-    public void ProjectileEvent()
+    public void ProjectileEvent() //CALLS ON THE ANIMATOR
     {
-        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint);
+        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
 
         if (IsCannon)
         {
+
+            GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSound);
             // Spawn a projectile
             ProjectileExplosion explosion = projectile.GetComponent<ProjectileExplosion>();
             //  explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             explosion.explosionRadius = explosionRadius;
             explosion.damage = damage;
+            explosion.uCannon = GetComponent<U_Cannon>();
         }
         else
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
             U_Turret uTurret = GetComponent<U_Turret>();
-            BoltScript boltScript = projectile.GetComponent<BoltScript>();
+
 
             if (uTurret && uTurret.isMultiShotActive)
             {
@@ -163,7 +163,8 @@ public class TurretShooting : MonoBehaviour
                 }
             }
 
-            //   turret.animController.SetBool("isAttacking", false);
+            BoltScript boltScript = projectile.GetComponent<BoltScript>();
+            boltScript.turretShootingScript = this;
             boltScript.SetDamage(damage);
         }
     }

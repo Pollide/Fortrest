@@ -58,12 +58,10 @@ public class PlayerController : MonoBehaviour
 
     // Spawn Turret
     private bool turretSpawned;
-    [HideInInspector] public bool turretEnd;
     private float turretTimer = 0.0f;
     private float resetTurret = 30.0f;
     private float turretDuration = 20.0f;
-    public GameObject miniTurretObject;
-
+    GameObject miniTurret;
     // Gravity
     private float playerGravMultiplier = 2.0f;
     private float playerGrav = -9.81f;
@@ -202,22 +200,18 @@ public class PlayerController : MonoBehaviour
 
     public bool canGetInHouse;
 
+    public Image countdownBar;
+    private bool gapSet;
+    private float gap;
+    private float fraction;
+
     // Start is called before the first frame update
     void Awake()
     {
         // Get Character controller that is attached to the player
         playerCC = GetComponent<CharacterController>();
 
-        if (global)
-        {
-            //destroys the duplicate
-            Destroy(transform.parent.gameObject);
-        }
-        else
-        {
-            //itself doesnt exist so set it
-            global = this;
-        }
+        global = this;
 
         // Controller stuff
         gamepadControls = new GamepadControls();
@@ -501,6 +495,7 @@ public class PlayerController : MonoBehaviour
         ScreenDamage();
         CheckCurrentTool();
         Resting();
+        BarDisappear();
 
         foreach (KeyCode keyCode in keyCodes)
         {
@@ -609,7 +604,10 @@ public class PlayerController : MonoBehaviour
 
             if (turretTimer >= turretDuration)
             {
-                turretEnd = true;
+                turretSpawned = false;
+
+                if (miniTurret)
+                    Destroy(miniTurret, GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn", false).length);
             }
         }
         else
@@ -1012,8 +1010,14 @@ public class PlayerController : MonoBehaviour
     {
         turretTimer = 0;
         turretSpawned = true;
-        turretEnd = false;
-        GameObject miniTurret = Instantiate(miniTurretObject, transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);
+
+        miniTurret = Instantiate(PlayerModeHandler.global.turretPrefabs[0], transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);
+        miniTurret.transform.localScale = new Vector3(0.3f, 1, 0.3f);
+        miniTurret.GetComponent<TurretShooting>().MiniTurret = true;
+        miniTurret.GetComponent<TurretShooting>().turn_speed = 10;
+        miniTurret.GetComponent<TurretShooting>().damage = 1;
+        miniTurret.GetComponent<TurretShooting>().fireRate = 20f;
+        GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
     }
 
     private void Teleport()
@@ -1191,8 +1195,6 @@ public class PlayerController : MonoBehaviour
 
     public void DisplayEnemiesComingText()
     {
-        enemyDirectionText.text = "Enemies are coming soon!";
-        //enemyDirectionText.text = "The enemies are coming from the " + direction.ToString();
         GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
     }
 
@@ -1368,6 +1370,26 @@ public class PlayerController : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    private void BarDisappear()
+    {       
+        if (enemyDirectionText.rectTransform.anchoredPosition.y == 450.0f)
+        {           
+            if (!gapSet)
+            {                
+                gap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer;
+                fraction = 663.0f / gap;
+                gapSet = true;
+            }
+            countdownBar.gameObject.SetActive(true);
+            countdownBar.rectTransform.sizeDelta = new Vector2(fraction * (LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer), 10.0f);
+        }
+        else
+        {
+            gapSet = false;
+            gap = 0f;
         }
     }
 }

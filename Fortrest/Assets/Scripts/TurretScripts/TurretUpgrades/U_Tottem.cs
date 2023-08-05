@@ -155,6 +155,8 @@ public class U_Tottem : MonoBehaviour
         upgradeCostWood += upgradeCostWood * 2;
         upgradeCostStone += upgradeCostStone * 2;
 
+
+
         if (attackSpeedButtons.Find(button => button.name == currentButton.name))
         {
             AddAttackSpeed();

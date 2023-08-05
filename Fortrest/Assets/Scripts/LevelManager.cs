@@ -72,7 +72,7 @@ public class LevelManager : MonoBehaviour
     private int enemiesCount;
     private bool startAttack;
     private bool nightAttack;
-    private float randomAttackTrigger;
+    public float randomAttackTrigger;
     private bool randomSet;
     private bool countSet;
     private bool ogreSpawned;
@@ -232,7 +232,7 @@ public class LevelManager : MonoBehaviour
 
         daySpeed = ReturnNight() ? 2 : 1;
 
-        //daySpeed = 7.0f; // FOR TESTING
+        // daySpeed = 7.0f; // FOR TESTING
 
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
@@ -404,14 +404,14 @@ public class LevelManager : MonoBehaviour
             startAttack = true;
         }
         // Day Attack
-        else if (day > 0 && !ReturnNight() && !randomSet && !startAttack)
+        else if (day >= 0 && !ReturnNight() && !randomSet && !startAttack)
         {
             float randomChance = Random.Range(0.0f, 1.0f);
 
             switch (campsCount)
             {
                 case 0: // No camps = no day attack
-                    attackHappening = false;
+                    attackHappening = false; // change that!
                     break;
                 case 1: // 1 camp = 20% chance
                     if (randomChance > 0.8f)
@@ -463,9 +463,9 @@ public class LevelManager : MonoBehaviour
             startAttack = true; // Attack starts when the time is reached
         }
 
-        if ((DaylightTimer > 150 || (DaylightTimer > randomAttackTrigger - 30.0f && randomAttackTrigger != 0f)) && !messageDisplayed)
+        if ((DaylightTimer >= 150.0f || (DaylightTimer >= randomAttackTrigger - 30.0f && randomAttackTrigger != 0f)) && !messageDisplayed)
         {
-            PlayerController.global.DisplayEnemiesComingText(); // Display enemies are coming a bit before an attack
+            PlayerController.global.DisplayEnemiesComingText(); // Display enemies are coming a bit before an attack            
             messageDisplayed = true;
         }       
 
