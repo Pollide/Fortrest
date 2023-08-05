@@ -30,7 +30,7 @@ public class EnemyController : MonoBehaviour
     public float health;
     private float maxHealth;
     public Image healthBarImage;
-    AnimationState HealthAnimationState;
+    private float HealthAppearTimer = -1;
     public Animation healthAnimation;
 
     // Booleans
@@ -68,6 +68,8 @@ public class EnemyController : MonoBehaviour
     public AudioClip ogreAttackSound;
 
     public ENEMYTYPE currentEnemyType;
+
+    private bool knockbackIncreased;
 
     void Start()
     {
@@ -109,6 +111,22 @@ public class EnemyController : MonoBehaviour
             MakeNoise();
             Process();
             ResetAttack();
+        }
+        if (PlayerController.global.upgradedMelee && !knockbackIncreased)
+        {
+            knockBackScript.strength *= 1.25f;
+            knockbackIncreased = true;
+        }
+
+        if (HealthAppearTimer != -1)
+        {
+            HealthAppearTimer += Time.deltaTime;
+
+            if (HealthAppearTimer > 5)
+            {
+                HealthAppearTimer = -1;
+                GameManager.PlayAnimation(healthAnimation, "Health Appear", false);
+            }
         }
     }
 
@@ -303,18 +321,18 @@ public class EnemyController : MonoBehaviour
     public void Damaged(float amount)
     {
         health -= amount;
-        if (HealthAnimationState != null && HealthAnimationState.enabled)
+        if (HealthAppearTimer == -1)
         {
-            HealthAnimationState.time = 1;
-            GameManager.PlayAnimation(healthAnimation, "Health Hit");
+            GameManager.PlayAnimation(healthAnimation, "Health Appear");
         }
-        else
-        {
-            HealthAnimationState = GameManager.PlayAnimation(healthAnimation, "Health Appear");
-        }
+
+        HealthAppearTimer = 0;
+
+        GameManager.PlayAnimation(healthAnimation, "Health Hit");
         healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
         if (health <= 0)
         {
+            StopAllCoroutines();
             if (currentEnemyType != ENEMYTYPE.ogre)
             {
                 PickSound(deathSound, deathSound2, 1.0f);
@@ -381,6 +399,10 @@ public class EnemyController : MonoBehaviour
                 Damaged(PlayerController.global.attackDamage);
                 PickSound(hitSound, hitSound2, 1.0f);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
+                if (PlayerController.global.upgradedMelee && health > 0)
+                {
+                    StartCoroutine(SlowedDown());
+                }                
             }
         }
         if (house && bestTarget == house.transform)
@@ -553,5 +575,12 @@ public class EnemyController : MonoBehaviour
     private void OgreStepTwo()
     {
         GameManager.global.SoundManager.PlaySound(stepSound2, 0.8f);
+    }
+
+    private IEnumerator SlowedDown()
+    {
+        agent.speed = speed / 1.25f;
+        yield return new WaitForSeconds(2.5f);
+        agent.speed = speed;
     }
 }
