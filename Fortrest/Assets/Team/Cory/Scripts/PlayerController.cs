@@ -420,7 +420,7 @@ public class PlayerController : MonoBehaviour
         }
 
         houseSpawnPoint = house.transform.GetChild(1).gameObject;
-        Debug.Log("1" + PlayerController.global.houseSpawnPoint);
+        //        Debug.Log("1" + PlayerController.global.houseSpawnPoint);
         interactText = house.transform.GetChild(3).gameObject;
 
         // Setting default values
