@@ -296,6 +296,26 @@ MonoBehaviour:
   ZoomBounds:
   - 10
   - 85
+  WoodTierList:
+  - ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
+    ResourceName: Common Wood
+    ResourceAmount: 0
+  - ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
+    ResourceName: Rare Wood
+    ResourceAmount: 0
+  - ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
+    ResourceName: Legendary Wood
+    ResourceAmount: 0
+  StoneTierList:
+  - ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
+    ResourceName: Common Stone
+    ResourceAmount: 0
+  - ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
+    ResourceName: Rare Stone
+    ResourceAmount: 0
+  - ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
+    ResourceName: Legendary Stone
+    ResourceAmount: 0
   ResourceHolderTransform: {fileID: 0}
   ActiveBuildingGameObject: {fileID: 0}
   DirectionalLightTransform: {fileID: 7444467798429044014}
@@ -308,8 +328,8 @@ MonoBehaviour:
   InventoryItemList: []
   BridgeList: []
   daySpeed: 2
-  GoblinTimer: 0
-  GoblinThreshold: 0
+  enemyTimer: 0
+  enemyThreshold: 0
   GoblinGameObject: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
     type: 3}
   OgreGameObject: {fileID: 5633042026967272240, guid: 06cff7f448c42c24bb9eed44021c8b05,
@@ -351,8 +371,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  spawnDir: 0
-  directionEstablished: 0
+  clockHand: {fileID: 0}
+  lane: 0
+  randomAttackTrigger: 0
   ActiveBiomeMusic: {fileID: 0}
 --- !u!1 &975559097986637665
 GameObject:

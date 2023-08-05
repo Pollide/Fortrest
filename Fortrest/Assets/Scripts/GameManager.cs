@@ -71,6 +71,8 @@ public class GameManager : MonoBehaviour
     public bool DebugSaveBool;
     public bool DebugLoadBool;
 
+    public AnimationClip PopupAnimation;
+
     private void Update()
     {
         if (DebugSaveBool)
@@ -409,7 +411,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if (PlayerPrefs.GetInt("Game File") == 1)
+            if ((int)Pref("Game Started", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
@@ -422,11 +424,20 @@ public class GameManager : MonoBehaviour
         return item;
     }
 
+    void TierDataVoid(List<LevelManager.TierData> tierList, bool load)
+    {
+        for (int i = 0; i < tierList.Count; i++)
+        {
+            tierList[i].ResourceAmount = (int)Pref(tierList[i].ResourceName + i.ToString(), tierList[i].ResourceAmount, load);
+        }
+    }
+
     public void DataSetVoid(bool load)
     {
         if (!load)
-            PlayerPrefs.SetInt("Game File", 1);
-
+        {
+            Pref("Game Started", 1, false);
+        }
         DataPositionVoid("Player", PlayerController.global.transform, load);
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
@@ -445,16 +456,19 @@ public class GameManager : MonoBehaviour
 
             Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.InventoryItemList[i].transform;
 
-            int collected = (int)Pref("Item Collected" + i, resource.GetComponent<InventoryItem>().CollectedBool ? 1 : 0, load);
+            // int collected = (int)Pref("Item Collected" + i, resource.GetComponent<InventoryItem>().CollectedBool ? 1 : 0, load);
 
             resource.GetComponent<InventoryItem>().resourceAmount = (int)Pref("Item Amount" + i, resource.GetComponent<InventoryItem>().resourceAmount, load);
 
-            if (load && collected == 1)
-                resource.GetComponent<InventoryItem>().CollectVoid();
+            // if (load && collected == 1)
+            //    resource.GetComponent<InventoryItem>().CollectVoid();
 
             DataPositionVoid("Item Position" + i, resource, load);
             DataEulerVoid("Item Euler" + i, resource, load);
         }
+
+        TierDataVoid(LevelManager.global.WoodTierList, load);
+        TierDataVoid(LevelManager.global.StoneTierList, load);
 
         for (int i = 0; i < LevelManager.global.BridgeList.Count; i++)
         {
@@ -566,17 +580,20 @@ public class GameManager : MonoBehaviour
 
             DataPositionVoid("Turret Position" + turretSize, building.transform, false);
             DataEulerVoid("Turret Euler" + turretSize, building.transform, false);
-
+            building.GetComponent<TurretShooting>().CurrentLevel = (int)Pref("Turret Level" + turretSize, building.GetComponent<TurretShooting>().CurrentLevel, load);
             Pref("Turret Size", turretSize + 1, false);
         }
 
     }
     void DataPositionVoid(string pref, Transform value, bool load)
     {
+        /*
         if(value.GetComponent<Building>() && value.GetComponent<Building>().resourceObject == Building.BuildingType.House)
         {
             Debug.Log("mOVING");
         }
+        */
+
         float x = Pref(pref + "x", value.position.x, load);
         float y = Pref(pref + "y", value.position.y, load);
         float z = Pref(pref + "z", value.position.z, load);
@@ -591,5 +608,60 @@ public class GameManager : MonoBehaviour
         float z = Pref(pref + "z", value.eulerAngles.z, load);
 
         value.eulerAngles = new Vector3(x, y, z);
+    }
+
+    //Runs animations like UI popping
+    public static void TemporaryAnimation(GameObject requestedGameObject, AnimationClip requestedAnimationClip, float i = 0)
+    {
+        global.StartCoroutine(TemporaryAnimationIEnumerator(requestedGameObject, requestedAnimationClip, i));
+    }
+    //checks to see if animation wrap only plays once
+    public static bool ReturnWrapOnceBool(WrapMode wrapMode)
+    {
+        return wrapMode == WrapMode.Default || wrapMode == WrapMode.Once;
+    }
+    public static IEnumerator TemporaryAnimationIEnumerator(GameObject requestedGameObject, AnimationClip requestedAnimationClip, float i)
+    {
+        Animation animation = requestedGameObject.GetComponent<Animation>();
+        bool WasCreated = false;
+
+        if (!animation)
+        {
+            animation = requestedGameObject.AddComponent<Animation>();
+            animation.playAutomatically = false;
+            WasCreated = true;
+        }
+
+        if (!animation.enabled)
+            animation.enabled = true;
+
+        if (!animation.clip)
+            animation.clip = requestedAnimationClip;
+
+        if (!animation.GetClip(requestedAnimationClip.name))
+        {
+            animation.AddClip(requestedAnimationClip, requestedAnimationClip.name);
+        }
+
+        //	Debug.Log(animation);
+
+        /*
+        if (SetupManager.singleton.PopupAnimationClip == requestedAnimationClip) //there is a single frame where the button is full size
+        {
+            //animation.transform.localScale = Vector3.zero;
+            // Debug.Log(animation);
+        }
+        */
+
+        PlayAnimation(animation, requestedAnimationClip.name);
+        animation[requestedAnimationClip.name].time -= i / 14;
+
+        if (animation && WasCreated && ReturnWrapOnceBool(requestedAnimationClip.wrapMode))
+        {
+            yield return new WaitUntil(() => !animation || !animation.isPlaying);
+
+
+            Destroy(animation);
+        }
     }
 }

@@ -36,7 +36,7 @@ public class InventoryManager : MonoBehaviour
 
     private void Update()
     {
-        RunInventoryKey();
+        // RunInventoryKey();
     }
 
     // Adds items to inventory list 

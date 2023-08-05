@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -122,6 +123,8 @@ public class PlayerController : MonoBehaviour
     public GameObject PauseCanvasGameObject;
     public Transform MapSpotHolder;
     public RectTransform MapPlayerRectTransform;
+    public Transform MapResourceHolder;
+    public GameObject MapResourcePrefab;
     public bool lastWasAxe;
 
     private bool mapBool;
@@ -820,6 +823,30 @@ public class PlayerController : MonoBehaviour
                 MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
                 MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
                 MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
+
+                for (int i = 0; i < MapResourceHolder.childCount; i++)
+                {
+                    Destroy(MapResourceHolder.GetChild(i).gameObject);
+                }
+
+                ResourceGenerate(LevelManager.global.WoodTierList);
+                ResourceGenerate(LevelManager.global.StoneTierList);
+            }
+        }
+    }
+
+    void ResourceGenerate(List<LevelManager.TierData> tierList)
+    {
+        for (int i = 0; i < tierList.Count; i++)
+        {
+            if (tierList[i].ResourceAmount > 0)
+            {
+                GameObject mapResource = Instantiate(MapResourcePrefab, MapResourceHolder);
+
+                mapResource.transform.GetChild(1).GetComponent<Text>().text = tierList[i].ResourceAmount.ToString("N0");
+                mapResource.transform.GetChild(0).GetComponent<Image>().sprite = tierList[i].ResourceIcon;
+
+                //GameManager.TemporaryAnimation(mapResource, GameManager.global.PopupAnimation, i);
             }
         }
     }
@@ -1374,11 +1401,11 @@ public class PlayerController : MonoBehaviour
     }
 
     private void BarDisappear()
-    {       
+    {
         if (enemyDirectionText.rectTransform.anchoredPosition.y == 450.0f)
-        {           
+        {
             if (!gapSet)
-            {                
+            {
                 gap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer;
                 fraction = 663.0f / gap;
                 gapSet = true;
