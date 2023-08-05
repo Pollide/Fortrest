@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 2797255765923076010}
   - component: {fileID: 4180874995037509510}
   - component: {fileID: 8130336773142844391}
+  - component: {fileID: 7549195925445845935}
   m_Layer: 7
   m_Name: Ballista
   m_TagString: Turret
@@ -56,7 +57,7 @@ MonoBehaviour:
   turn_speed: 3
   shootingRange: 20
   fireRate: 0.5
-  damage: 10
+  damage: 0.1
   targetLayer:
     serializedVersion: 2
     m_Bits: 8192
@@ -70,6 +71,7 @@ MonoBehaviour:
   FirePoint: {fileID: 5947275829984533361}
   ModelHolder: {fileID: 7795524264066912067}
   CurrentLevel: 0
+  MiniTurret: 0
 --- !u!114 &6690662782521931398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,6 +180,19 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 0
   m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
+--- !u!65 &7549195925445845935
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 27263479634249880}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.2873664, y: 1.2459419, z: 3.0911865}
+  m_Center: {x: 0.014739037, y: 0.9570018, z: -0.21522498}
 --- !u!1 &284292462403560681
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,7 +204,7 @@ GameObject:
   - component: {fileID: 8758081121546448800}
   - component: {fileID: 340835740954158904}
   - component: {fileID: 8705443681035833623}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: HB_Inner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3204,7 +3219,7 @@ GameObject:
   - component: {fileID: 6403415383137554596}
   - component: {fileID: 1718986919498812798}
   - component: {fileID: 5921853641941432018}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: UpgradeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3904,7 +3919,7 @@ GameObject:
   - component: {fileID: 3471367026675529488}
   - component: {fileID: 2955595078150765519}
   - component: {fileID: 2258693864031299376}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: HB_backDrop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4404,7 +4419,7 @@ GameObject:
   - component: {fileID: 8683688308162520533}
   - component: {fileID: 1800466374625746156}
   - component: {fileID: 5947275828200244578}
-  m_Layer: 7
+  m_Layer: 5
   m_Name: Health Canvas
   m_TagString: Building
   m_Icon: {fileID: 0}

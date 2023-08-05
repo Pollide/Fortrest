@@ -308,8 +308,8 @@ MonoBehaviour:
   InventoryItemList: []
   BridgeList: []
   daySpeed: 2
-  GoblinTimer: 0
-  GoblinThreshold: 0
+  enemyTimer: 0
+  enemyThreshold: 0
   GoblinGameObject: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
     type: 3}
   OgreGameObject: {fileID: 5633042026967272240, guid: 06cff7f448c42c24bb9eed44021c8b05,
@@ -351,8 +351,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  spawnDir: 0
-  directionEstablished: 0
+  clockHand: {fileID: 0}
+  lane: 0
+  randomAttackTrigger: 0
   ActiveBiomeMusic: {fileID: 0}
 --- !u!1 &975559097986637665
 GameObject:
@@ -496,9 +497,9 @@ MonoBehaviour:
   maxSmooth: 0.25
   minSmooth: 0.01
   max: 0
-  buildOffsetOrthoSize: 30
-  buildOffsetPosX: 35
-  buildOffsetPosZ: 7
+  buildOffsetOrthoSize: 50
+  buildOffsetPosX: 65
+  buildOffsetPosZ: 20
   buildOffsetRot: 90
 --- !u!114 &758887879952812708
 MonoBehaviour:

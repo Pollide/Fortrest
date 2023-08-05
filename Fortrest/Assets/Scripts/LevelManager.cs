@@ -154,6 +154,11 @@ public class LevelManager : MonoBehaviour
         BuildingList.Add(addTransform);
     }
 
+    public void RemoveBuildingVoid(Transform removeTransform)
+    {
+        BuildingList.Remove(removeTransform);
+    }
+
     public int ReturnIndex(Transform requestedTransform)
     {
         return BuildingList.IndexOf(requestedTransform);
