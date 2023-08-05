@@ -44,7 +44,7 @@ public class CameraFollow : MonoBehaviour
 
         if (lockCamera)
         {
-            if (PlayerModeHandler.global.playerModes != PlayerModes.BuildMode && PlayerModeHandler.global.playerModes != PlayerModes.RepairMode)
+            if (PlayerModeHandler.global.playerModes != PlayerModes.BuildMode && PlayerModeHandler.global.playerModes != PlayerModes.RepairMode && PlayerModeHandler.global.playerModes != PlayerModes.UpgradeMenu)
             {
                 FocusOnTarget(PlayerController.global.transform.position);
             }
