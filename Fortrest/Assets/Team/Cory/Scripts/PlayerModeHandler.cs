@@ -62,6 +62,29 @@ public class PlayerModeHandler : MonoBehaviour
         if (playerModes == PlayerModes.BuildMode)
         {
             BuildMode();
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SwitchToBuildRepairMode();
+            }
+        }
+        if (playerModes == PlayerModes.RepairMode)
+        {
+            RepairMode();
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SwitchToUpgradeMode();
+            }
+        }
+        if (playerModes == PlayerModes.UpgradeMenu)
+        {
+            UpgradeMode();
+
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                SwitchToBuildMode();
+            }
         }
 
         ScrollSwitchTurret();
@@ -79,10 +102,13 @@ public class PlayerModeHandler : MonoBehaviour
                     SwitchToCombatMode();
                     break;
                 case PlayerModes.BuildMode:
-                    SwitchToResourceMode();
+                    SwitchToUpgradeMode();
                     break;
                 case PlayerModes.RepairMode:
-                    SwitchToResourceMode();
+                    SwitchToBuildMode();
+                    break;
+                case PlayerModes.UpgradeMenu:
+                    SwitchToBuildRepairMode();
                     break;
             }
         }
@@ -120,11 +146,10 @@ public class PlayerModeHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerModes = PlayerModes.ResourceMode;
-        buildType = BuildType.Slow;
-        SwitchToResourceMode();
+        buildType = BuildType.Turret;
         buildGrid.gameObject.SetActive(false);
         HUD = HUDHandler.global;
+        SwitchToResourceMode();
     }
 
     private void BuildMode()
@@ -156,30 +181,30 @@ public class PlayerModeHandler : MonoBehaviour
         {
             if (buildType == BuildType.Turret)
             {
-                buildType = BuildType.Cannon;
+                SwitchBuildTypeCannon();
             }
             else if (buildType == BuildType.Cannon)
             {
-                buildType = BuildType.Slow;
+                SwitchBuildTypeSlow();
             }
             else if (buildType == BuildType.Slow)
             {
-                buildType = BuildType.Turret;
+                SwitchBuildTypeTurret();
             }
         }
         if (Input.mouseScrollDelta.y < 0f && playerModes == PlayerModes.BuildMode)
         {
             if (buildType == BuildType.Turret)
             {
-                buildType = BuildType.Slow;
+                SwitchBuildTypeSlow();
             }
             else if (buildType == BuildType.Cannon)
             {
-                buildType = BuildType.Turret;
+                SwitchBuildTypeTurret();
             }
             else if (buildType == BuildType.Slow)
             {
-                buildType = BuildType.Cannon;
+                SwitchBuildTypeCannon();
             }
         }
     }
@@ -220,7 +245,36 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void RepairMode()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hitData;
 
+            if (Physics.Raycast(ray, out hitData, 1000, buildingLayer))
+            {
+                Vector3 worldPos = hitData.point;
+
+                if (IsInRange(worldPos))
+                {
+                    Building turret = hitData.transform.GetComponent<Building>();
+                    turret.Repair(1);
+                }
+                else
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                }
+            }
+            else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Player"))
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                Debug.Log("Cannot Place Building Here");
+            }
+            else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Building") || hitData.transform.CompareTag("Resource")))
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                Debug.Log("Building Here");
+            }
+        }
     }
 
     public void UpgradeMode()
@@ -262,6 +316,8 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
 
         HUD.BuildModeHUD();
+
+        Debug.Log("Build");
     }
 
     public void SwitchToBuildRepairMode()
@@ -273,6 +329,7 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
 
         HUD.RepairModeHUD();
+        Debug.Log("Repair");
     }
 
     public void SwitchToResourceMode()
@@ -286,6 +343,7 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.ResourceModeHUD();
+        Debug.Log("Resource");
     }
 
     public void SwitchToCombatMode()
@@ -299,6 +357,7 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.CombatModeHUD();
+        Debug.Log("Combat");
     }
 
     public void SwitchToUpgradeMode()
@@ -308,6 +367,7 @@ public class PlayerModeHandler : MonoBehaviour
         playerModes = PlayerModes.UpgradeMenu;
 
         HUD.UpgradeModeHUD();
+        Debug.Log("Upgrade");
     }
 
     bool runOnce;
@@ -451,6 +511,7 @@ public class PlayerModeHandler : MonoBehaviour
             //  turretBlueprint.SetActive(!MouseOverUI());
         }
     }
+
     public bool IsInRange(Vector3 currentTarget)
     {
         Vector3 playerPos = PlayerController.global.transform.position;
@@ -492,16 +553,19 @@ public class PlayerModeHandler : MonoBehaviour
     public void SwitchBuildTypeSlow()
     {
         buildType = BuildType.Slow;
+        ClearBlueprint();
     }
 
     public void SwitchBuildTypeCannon()
     {
         buildType = BuildType.Cannon;
+        ClearBlueprint();
     }
 
     public void SwitchBuildTypeTurret()
     {
         buildType = BuildType.Turret;
+        ClearBlueprint();
     }
 
 }
