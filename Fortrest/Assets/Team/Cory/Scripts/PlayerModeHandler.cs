@@ -34,15 +34,11 @@ public class PlayerModeHandler : MonoBehaviour
     public Vector2 distanceAwayFromPlayerX;
     public Vector2 distanceAwayFromPlayerZ;
     public LayerMask buildingLayer;
-    public Image buildingMode;
-    public Image resourceMode;
-    public Image combatMode;
-    public Image repairMode;
-    public Image resourceModeSub;
-    public Image combatModeSub;
     public Grid buildGrid;
 
     public GameObject House;
+
+    private HUDHandler HUD;
 
     private void Awake()
     {
@@ -58,6 +54,8 @@ public class PlayerModeHandler : MonoBehaviour
             global = this;
         }
     }
+
+    
 
     private void Update()
     {
@@ -75,16 +73,16 @@ public class PlayerModeHandler : MonoBehaviour
             switch (playerModes)
             {
                 case PlayerModes.CombatMode:
-                    SwitchToGatherMode();
+                    SwitchToResourceMode();
                     break;
                 case PlayerModes.ResourceMode:
                     SwitchToCombatMode();
                     break;
                 case PlayerModes.BuildMode:
-                    SwitchToGatherMode();
+                    SwitchToResourceMode();
                     break;
                 case PlayerModes.RepairMode:
-                    SwitchToGatherMode();
+                    SwitchToResourceMode();
                     break;
             }
         }
@@ -109,7 +107,7 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
                     House.GetComponent<Building>().textDisplayed = true;
                 }
-                SwitchToGatherMode();
+                SwitchToResourceMode();
             }
         }
     }
@@ -124,8 +122,9 @@ public class PlayerModeHandler : MonoBehaviour
     {
         playerModes = PlayerModes.ResourceMode;
         buildType = BuildType.Slow;
-        SwitchToGatherMode();
+        SwitchToResourceMode();
         buildGrid.gameObject.SetActive(false);
+        HUD = HUDHandler.global;
     }
 
     private void BuildMode()
@@ -224,6 +223,19 @@ public class PlayerModeHandler : MonoBehaviour
 
     }
 
+    public void UpgradeMode()
+    {
+
+    }
+
+    void ClearBlueprint()
+    {
+        if (turretBlueprint)
+        {
+            Destroy(turretBlueprint);
+        }
+    }
+
     public void SwitchToBuildMode()
     {
         if (Boar.global.mounted)
@@ -247,15 +259,9 @@ public class PlayerModeHandler : MonoBehaviour
         buildGrid.gameObject.SetActive(true);
         SetMouseActive(true);
 
-        buildingMode.enabled = true;
-        resourceMode.enabled = false;
-        combatMode.enabled = false;
-        repairMode.transform.GetChild(0).gameObject.SetActive(false);
-        repairMode.enabled = false;
-        resourceModeSub.enabled = true;
-        combatModeSub.enabled = false;
-
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
+
+        HUD.BuildModeHUD();
     }
 
     public void SwitchToBuildRepairMode()
@@ -264,27 +270,12 @@ public class PlayerModeHandler : MonoBehaviour
 
         playerModes = PlayerModes.RepairMode;
 
-        SetMouseActive(false);
-
-        buildingMode.enabled = false;
-        resourceMode.enabled = false;
-        combatMode.enabled = false;
-        repairMode.transform.GetChild(0).gameObject.SetActive(true);
-        repairMode.enabled = true;
-
-        resourceModeSub.enabled = true;
-        combatModeSub.enabled = false;
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
+
+        HUD.RepairModeHUD();
     }
 
-    void ClearBlueprint()
-    {
-        if (turretBlueprint)
-        {
-            Destroy(turretBlueprint);
-        }
-    }
-    public void SwitchToGatherMode()
+    public void SwitchToResourceMode()
     {
         LeaveHouse();
 
@@ -293,14 +284,8 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
         playerModes = PlayerModes.ResourceMode;
         SetMouseActive(false);
-        buildingMode.enabled = false;
-        resourceMode.enabled = true;
-        combatMode.enabled = false;
-        repairMode.transform.GetChild(0).gameObject.SetActive(false);
-        repairMode.enabled = false;
 
-        resourceModeSub.enabled = false;
-        combatModeSub.enabled = true;
+        HUD.ResourceModeHUD();
     }
 
     public void SwitchToCombatMode()
@@ -312,15 +297,19 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = true });
         playerModes = PlayerModes.CombatMode;
         SetMouseActive(false);
-        buildingMode.enabled = false;
-        resourceMode.enabled = false;
-        combatMode.enabled = true;
-        repairMode.transform.GetChild(0).gameObject.SetActive(false);
-        repairMode.enabled = false;
 
-        resourceModeSub.enabled = true;
-        combatModeSub.enabled = false;
+        HUD.CombatModeHUD();
     }
+
+    public void SwitchToUpgradeMode()
+    {
+        ClearBlueprint();
+
+        playerModes = PlayerModes.UpgradeMenu;
+
+        HUD.UpgradeModeHUD();
+    }
+
     bool runOnce;
 
     private void SpawnBuilding(GameObject _prefab, string _resource1, string _resource2, int _resource1Cost, int _resource2Cost)
