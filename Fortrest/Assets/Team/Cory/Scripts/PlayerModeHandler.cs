@@ -318,7 +318,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         HUD.BuildModeHUD();
 
-        Debug.Log("Build");
+        //Debug.Log("Build");
     }
 
     public void SwitchToBuildRepairMode()
@@ -330,7 +330,7 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
 
         HUD.RepairModeHUD();
-        Debug.Log("Repair");
+        //Debug.Log("Repair");
     }
 
     public void SwitchToResourceMode()
@@ -344,7 +344,7 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.ResourceModeHUD();
-        Debug.Log("Resource");
+        //Debug.Log("Resource");
     }
 
     public void SwitchToCombatMode()
@@ -358,7 +358,6 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.CombatModeHUD();
-        Debug.Log("Combat");
     }
 
     public void SwitchToUpgradeMode()
@@ -368,7 +367,6 @@ public class PlayerModeHandler : MonoBehaviour
         playerModes = PlayerModes.UpgradeMenu;
 
         HUD.UpgradeModeHUD();
-        Debug.Log("Upgrade");
     }
 
     bool runOnce;

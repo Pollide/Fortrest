@@ -96,6 +96,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
     [HideInInspector] public bool lunge = false;
+    public bool upgradedMelee;
 
     // States
     [Header("Player States")]
@@ -495,11 +496,17 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        CharacterAnimator.SetBool("Upgraded", upgradedMelee);
         TimersFunction();
         ScreenDamage();
         CheckCurrentTool();
         Resting();
         BarDisappear();
+
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            upgradedMelee = !upgradedMelee;
+        }
 
         foreach (KeyCode keyCode in keyCodes)
         {
@@ -941,24 +948,51 @@ public class PlayerController : MonoBehaviour
             CharacterAnimator.ResetTrigger("Swing3");
 
             if (attackCount == 0)
-            {
-                resetAttack = 0.95f;
-                resetCombo = 1.2f;
-                attackDamage = 1.0f;
+            {              
+                if (upgradedMelee)
+                {
+                    resetAttack = 0.75f;
+                    resetCombo = 1.0f;
+                    attackDamage = 1.25f;
+                }
+                else
+                {
+                    resetAttack = 0.95f;
+                    resetCombo = 1.2f;
+                    attackDamage = 1.0f;
+                }               
                 CharacterAnimator.SetTrigger("Swing");
             }
             else if (attackCount == 1)
-            {
-                resetAttack = 0.9f;
-                resetCombo = 1.15f;
-                attackDamage = 1.0f;
+            {              
+                if (upgradedMelee)
+                {
+                    resetAttack = 0.7f;
+                    resetCombo = 0.95f;
+                    attackDamage = 1.25f;
+                }
+                else
+                {
+                    resetAttack = 0.9f;
+                    resetCombo = 1.15f;
+                    attackDamage = 1.0f;
+                }
                 CharacterAnimator.SetTrigger("Swing2");
             }
             else if (attackCount == 2)
             {
-                resetAttack = 0.95f;
-                resetCombo = 1.2f;
-                attackDamage = 1.5f;
+                if (upgradedMelee)
+                {
+                    resetAttack = 0.75f;
+                    resetCombo = 1.0f;
+                    attackDamage = 2.0f;
+                }
+                else
+                {
+                    resetAttack = 0.95f;
+                    resetCombo = 1.2f;
+                    attackDamage = 1.5f;
+                }
                 CharacterAnimator.SetTrigger("Swing3");
             }
         }
