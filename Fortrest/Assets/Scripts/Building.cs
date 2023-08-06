@@ -173,8 +173,13 @@ public class Building : MonoBehaviour
 
                 GameManager.Pref("Game Started", 0, false); //restart game
                 LevelManager.global.enabled = false; //stops functions happening
+                PlayerController.global.enabled = false;
+                PlayerModeHandler.global.enabled = false;
                 Invoke(nameof(RestartGame), GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Gameover").length);
-                PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
+
+
+
+                PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " day" + (LevelManager.global.day > 1 ? "s" : "");
                 return;
             }
 
