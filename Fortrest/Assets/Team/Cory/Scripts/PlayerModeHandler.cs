@@ -37,6 +37,8 @@ public class PlayerModeHandler : MonoBehaviour
     public Grid buildGrid;
 
     public GameObject House;
+    public GameObject selectionGrid;
+    GameObject newSelectionGrid;
 
     private HUDHandler HUD;
 
@@ -55,7 +57,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-
+    
 
     private void Update()
     {
@@ -65,24 +67,27 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.R))
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
                 SwitchToBuildRepairMode();
             }
         }
-        if (playerModes == PlayerModes.RepairMode)
+        else if (playerModes == PlayerModes.RepairMode)
         {
             RepairMode();
 
             if (Input.GetKeyDown(KeyCode.R))
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
                 SwitchToUpgradeMode();
             }
         }
-        if (playerModes == PlayerModes.UpgradeMenu)
+        else if (playerModes == PlayerModes.UpgradeMenu)
         {
             UpgradeMode();
 
             if (Input.GetKeyDown(KeyCode.R))
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
                 SwitchToBuildMode();
             }
         }
@@ -221,8 +226,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
             else
             {
-                if (PlayerController.global.houseSpawnPoint)
-                    PlayerController.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
+                PlayerController.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
                 PlayerController.global.playerCC.enabled = true;
             }
 
@@ -246,41 +250,86 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void RepairMode()
     {
-        if (Input.GetMouseButtonDown(0))
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hitData, 1000))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitData;
+            Vector3 worldPos = hitData.point;
 
-            if (Physics.Raycast(ray, out hitData, 1000, buildingLayer))
+            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
+
+            worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
+
+            if (IsInRange(worldPos))
             {
-                Vector3 worldPos = hitData.point;
-
-                if (IsInRange(worldPos))
+                if (Input.GetMouseButtonDown(0) && hitData.transform.gameObject.layer == buildingLayer)
                 {
                     Building turret = hitData.transform.GetComponent<Building>();
                     turret.Repair(1);
                 }
-                else
+
+                if (!newSelectionGrid)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                    newSelectionGrid = Instantiate(selectionGrid, worldPos, Quaternion.Euler(90, 0, 0));
                 }
+
+                if (hitData.transform.gameObject.layer == buildingLayer)
+                {
+                    newSelectionGrid.GetComponentInChildren<Image>().color = Color.green;
+                }
+                if (hitData.transform.gameObject.layer != buildingLayer)
+                {
+                    newSelectionGrid.GetComponentInChildren<Image>().color = Color.red;
+                }
+                newSelectionGrid.transform.position = worldPos;   
             }
-            else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Player"))
+            else
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-                Debug.Log("Cannot Place Building Here");
+                ClearSelectionGrid();
             }
-            else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Building") || hitData.transform.CompareTag("Resource")))
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-                Debug.Log("Building Here");
-            }
+
         }
+
     }
 
     public void UpgradeMode()
     {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
+        if (Physics.Raycast(ray, out RaycastHit hitData, 1000))
+        {
+            Vector3 worldPos = hitData.point;
+
+            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
+
+            worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
+            if (IsInRange(worldPos))
+            {
+                if (Input.GetMouseButtonDown(0) && hitData.transform.gameObject.layer == buildingLayer)
+                {
+                    Building turret = hitData.transform.GetComponent<Building>();
+                }
+
+                if (!newSelectionGrid)
+                {
+                    newSelectionGrid = Instantiate(selectionGrid, worldPos, Quaternion.Euler(90, 0, 0));
+                }
+                else
+                {
+                    
+                    if (newSelectionGrid.GetComponentInChildren<Image>().color != Color.green && hitData.transform.gameObject.layer == buildingLayer)
+                    {
+                        newSelectionGrid.GetComponentInChildren<Image>().color = Color.green;
+                    }
+                    else if (newSelectionGrid.GetComponentInChildren<Image>().color != Color.red && hitData.transform.gameObject.layer == buildingLayer)
+                    {
+                        newSelectionGrid.GetComponentInChildren<Image>().color = Color.red;
+                    }
+                    newSelectionGrid.transform.position = worldPos;
+                }
+            }
+
+        }
     }
 
     void ClearBlueprint()
@@ -291,8 +340,17 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
+    void ClearSelectionGrid()
+    {
+        if (newSelectionGrid)
+        {
+            Destroy(newSelectionGrid);
+        }
+    }
+
     public void SwitchToBuildMode()
     {
+        ClearSelectionGrid();
         if (Boar.global.mounted)
         {
             Boar.global.canMove = false;
@@ -318,23 +376,24 @@ public class PlayerModeHandler : MonoBehaviour
 
         HUD.BuildModeHUD();
 
-        //Debug.Log("Build");
+        Debug.Log("Build");
     }
 
     public void SwitchToBuildRepairMode()
     {
+        ClearSelectionGrid();
         ClearBlueprint();
 
         playerModes = PlayerModes.RepairMode;
 
-        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
-
         HUD.RepairModeHUD();
-        //Debug.Log("Repair");
+
+        Debug.Log("Repair");
     }
 
     public void SwitchToResourceMode()
     {
+        ClearSelectionGrid();
         LeaveHouse();
 
         ClearBlueprint();
@@ -344,7 +403,7 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.ResourceModeHUD();
-        //Debug.Log("Resource");
+        Debug.Log("Resource");
     }
 
     public void SwitchToCombatMode()
@@ -358,15 +417,18 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.CombatModeHUD();
+        Debug.Log("Combat");
     }
 
     public void SwitchToUpgradeMode()
     {
+        ClearSelectionGrid();
         ClearBlueprint();
 
         playerModes = PlayerModes.UpgradeMenu;
 
         HUD.UpgradeModeHUD();
+        Debug.Log("Upgrade");
     }
 
     bool runOnce;
@@ -382,9 +444,8 @@ public class PlayerModeHandler : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost && InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost && !MouseOverUI())
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitData;
 
-            if (Physics.Raycast(ray, out hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
+            if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
             {
                 Vector3 worldPos = hitData.point;
 

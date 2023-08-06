@@ -77,12 +77,12 @@ public class Building : MonoBehaviour
         List<Transform> transformList = GameManager.FindComponent<Transform>(transform);
 
         //create a for loop from the list
-        for (int i = 0; i < transformList.Count; i++)
-        {
-            //sets all transforms to the building layer, so the mouse will easily be able to click the building
-            if (transformList[i].gameObject.layer != LayerMask.NameToLayer("UI"))
-                transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
-        }
+        //for (int i = 0; i < transformList.Count; i++)
+        //{
+        //    //sets all transforms to the building layer, so the mouse will easily be able to click the building
+        //    if (transformList[i].gameObject.layer != LayerMask.NameToLayer("UI"))
+        //        transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
+        //}
 
         if (resourceObject == BuildingType.House)
         {
@@ -148,7 +148,7 @@ public class Building : MonoBehaviour
     public void Repair(float amount)
     {
         health += amount;
-
+        Debug.Log("Repaired + " + amount);
         HealthAnimation();
     }
 
@@ -170,7 +170,7 @@ public class Building : MonoBehaviour
                 destroyedHouse.SetActive(true);
                 PlayerController.global.playerCanMove = false;
                 LevelManager.global.enabled = false;//stop the day progressing
-                Invoke("RestartGame", GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Gameover").length);
+                Invoke(nameof(RestartGame), GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Gameover").length);
                 PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
             }
@@ -184,7 +184,13 @@ public class Building : MonoBehaviour
                 GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
             }
 
-            Invoke("DisableInvoke", GameManager.PlayAnimation(GetComponent<Animation>()).length);
+            Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
+
+            if (resourceObject == BuildingType.Defense)
+            {
+                LevelManager.global.RemoveBuildingVoid(transform);
+                Destroy(this);
+            }
         }
         PlayerController.global.currentResource = null;
     }
