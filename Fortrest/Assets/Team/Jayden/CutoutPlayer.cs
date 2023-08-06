@@ -29,7 +29,7 @@ public class CutoutPlayer : MonoBehaviour
 
         for (int i=0; i< hitObjects.Length; ++i)
         {
-            Material[] materials = hitObjects[i].transform.GetComponent<Renderer>().materials;
+            Material[] materials = hitObjects[i].transform.GetComponent<MeshRenderer>().materials;
 
             for (int m = 0; m < materials.Length; ++m)
             {
