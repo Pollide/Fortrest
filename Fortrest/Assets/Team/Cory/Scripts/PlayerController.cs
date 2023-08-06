@@ -1452,6 +1452,7 @@ public class PlayerController : MonoBehaviour
         {
             gapSet = false;
             gap = 0f;
+            countdownBar.gameObject.SetActive(false);
         }
     }
 }
