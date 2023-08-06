@@ -57,7 +57,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    
+
 
     private void Update()
     {
@@ -226,7 +226,8 @@ public class PlayerModeHandler : MonoBehaviour
             }
             else
             {
-                PlayerController.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
+                if (PlayerController.global.houseSpawnPoint)
+                    PlayerController.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
                 PlayerController.global.playerCC.enabled = true;
             }
 
@@ -281,7 +282,7 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     newSelectionGrid.GetComponentInChildren<Image>().color = Color.red;
                 }
-                newSelectionGrid.transform.position = worldPos;   
+                newSelectionGrid.transform.position = worldPos;
             }
             else
             {
@@ -316,7 +317,7 @@ public class PlayerModeHandler : MonoBehaviour
                 }
                 else
                 {
-                    
+
                     if (newSelectionGrid.GetComponentInChildren<Image>().color != Color.green && hitData.transform.gameObject.layer == buildingLayer)
                     {
                         newSelectionGrid.GetComponentInChildren<Image>().color = Color.green;

@@ -39,6 +39,8 @@ public class Menu : MonoBehaviour
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
 
         GameManager.PlayAnimation(CameraAnimation, "Initial Menu");
+
+
         TextColor = SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().color;
         StartCoroutine(InitalMenuIEnumerator());
 
@@ -52,12 +54,22 @@ public class Menu : MonoBehaviour
         }
     }
 
+    void SpeedAnimation()
+    {
+        foreach (AnimationState animation in CameraAnimation)
+        {
+            if (!animation.name.Contains("Initial"))
+                animation.speed *= 2;
+        }
+    }
+
     private void Update()
     {
         PlayerModeHandler.SetMouseActive(false);
     }
     IEnumerator InitalMenuIEnumerator()
     {
+        SpeedAnimation();
         yield return new WaitUntil(() => !CameraAnimation.isPlaying);
 
         SignAnimationVoid(WelcomeSignAnimation);
@@ -83,6 +95,7 @@ public class Menu : MonoBehaviour
         {
             GameManager.PlayAnimation(CameraAnimation, "Level To Exit Menu", false);
         }
+        SpeedAnimation();
         yield return new WaitUntil(() => !CameraAnimation.isPlaying);
 
         SignAnimationVoid(LevelsSignAnimation);
@@ -152,7 +165,7 @@ public class Menu : MonoBehaviour
     IEnumerator ExitMenuIEnumerator(string animation = "Exit Menu")
     {
         GameManager.PlayAnimation(CameraAnimation, animation);
-
+        SpeedAnimation();
         yield return new WaitUntil(() => !CameraAnimation.isPlaying);
 
         SignAnimationVoid(ExitSignAnimation);

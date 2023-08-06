@@ -170,6 +170,9 @@ public class Building : MonoBehaviour
                 destroyedHouse.SetActive(true);
                 PlayerController.global.playerCanMove = false;
                 LevelManager.global.enabled = false;//stop the day progressing
+
+                GameManager.Pref("Game Started", 0, false); //restart game
+                LevelManager.global.enabled = false; //stops functions happening
                 Invoke(nameof(RestartGame), GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Gameover").length);
                 PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " days";
                 return;
