@@ -153,8 +153,8 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         buildType = BuildType.Turret;
-        buildGrid.gameObject.SetActive(false);
         HUD = HUDHandler.global;
+        SwitchToBuildMode(false);
         SwitchToResourceMode();
     }
 
@@ -246,7 +246,7 @@ public class PlayerModeHandler : MonoBehaviour
                 PlayerController.global.playerCC.enabled = true;
             }
 
-            buildGrid.gameObject.SetActive(false);
+            SwitchToBuildMode(false);
             StartCoroutine(PlayerAwake());
         }
     }
@@ -278,10 +278,10 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (IsInRange(worldPos))
             {
-                
+
                 if (Input.GetMouseButtonDown(0) && hitData.transform.CompareTag("Turret"))
                 {
-                    
+
                 }
 
                 if (!newSelectionGrid)
@@ -311,7 +311,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void UpgradeMode()
     {
-        
+
     }
 
     void ClearBlueprint()
@@ -320,6 +320,8 @@ public class PlayerModeHandler : MonoBehaviour
         {
             Destroy(turretBlueprint);
         }
+
+        PlayerController.global.UpdateResourceHolder();
     }
 
     void ClearSelectionGrid()
@@ -330,37 +332,47 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    public void SwitchToBuildMode()
+    public void SwitchToBuildMode(bool active = true)
     {
-        ModeSwitchText.global.ResetText();
-        ClearSelectionGrid();
-        if (Boar.global.mounted)
+
+        buildGrid.gameObject.SetActive(active);
+        PlayerController.global.MapResourceHolder.gameObject.SetActive(active);
+
+        if (active)
         {
-            Boar.global.canMove = false;
-            Boar.global.GetComponent<BoxCollider>().enabled = false;
-            Boar.global.cc.enabled = false;
-            Boar.global.transform.position = House.transform.position;
-            Boar.global.animator.SetBool("Moving", false);
+            ModeSwitchText.global.ResetText();
+            ClearSelectionGrid();
+
+            if (Boar.global.mounted)
+            {
+                Boar.global.canMove = false;
+                Boar.global.GetComponent<BoxCollider>().enabled = false;
+                Boar.global.cc.enabled = false;
+                Boar.global.transform.position = House.transform.position;
+                Boar.global.animator.SetBool("Moving", false);
+            }
+            else
+            {
+                PlayerController.global.playerCC.enabled = false;
+                PlayerController.global.transform.position = House.transform.position;
+                PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+                PlayerController.global.playerCanMove = false;
+            }
+
+            playerModes = PlayerModes.BuildMode;
+
+            SetMouseActive(true);
+            PlayerController.global.UpdateResourceHolder();
+            PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
+
+            HUD.BuildModeHUD();
+
+            Debug.Log("Build");
         }
-        else
-        {
-            PlayerController.global.playerCC.enabled = false;
-            PlayerController.global.transform.position = House.transform.position;
-            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
-            PlayerController.global.playerCanMove = false;
-        }
-
-        playerModes = PlayerModes.BuildMode;
-
-        buildGrid.gameObject.SetActive(true);
-        SetMouseActive(true);
-
-        PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
-
-        HUD.BuildModeHUD();
-
-        Debug.Log("Build");
     }
+
+
+
 
     public void SwitchToBuildRepairMode()
     {
@@ -527,8 +539,11 @@ public class PlayerModeHandler : MonoBehaviour
                 }
 
                 turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
+                turretBlueprint.GetComponent<Building>().enabled = false;
+                turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
 
                 TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
+                turretShooting.enabled = false;
 
                 if (turretShooting)
                     Destroy(turretShooting);

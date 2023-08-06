@@ -208,6 +208,7 @@ public class PlayerController : MonoBehaviour
     private bool gapSet;
     private float gap;
     private float fraction;
+    public const int MaxApples = 5;
 
     // Start is called before the first frame update
     void Awake()
@@ -438,7 +439,7 @@ public class PlayerController : MonoBehaviour
 
         // Setting UI Text
         arrowText.text = "Arrow: " + arrowNumber.ToString();
-        appleText.text = appleAmount.ToString();
+        UpdateAppleText();
 
         keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
 
@@ -818,42 +819,101 @@ public class PlayerController : MonoBehaviour
 
     public void MapVoid(bool map)
     {
-        if (!pausedBool)
+        if (!pausedBool && PlayerModeHandler.global.playerModes != PlayerModes.BuildMode)
         {
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
             GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
-
+            MapResourceHolder.gameObject.SetActive(map);
             if (mapBool)
             {
                 MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
                 MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
                 MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
 
-                for (int i = 0; i < MapResourceHolder.childCount; i++)
-                {
-                    Destroy(MapResourceHolder.GetChild(i).gameObject);
-                }
-
-                ResourceGenerate(LevelManager.global.WoodTierList);
-                ResourceGenerate(LevelManager.global.StoneTierList);
+                UpdateResourceHolder();
             }
         }
     }
 
-    void ResourceGenerate(List<LevelManager.TierData> tierList)
+    public void UpdateResourceHolder()
+    {
+        for (int i = 0; i < MapResourceHolder.childCount; i++)
+        {
+            Destroy(MapResourceHolder.GetChild(i).gameObject);
+        }
+
+        List<LevelManager.TierData> woodCostList = new List<LevelManager.TierData>();
+        List<LevelManager.TierData> stoneCostList = new List<LevelManager.TierData>();
+
+        for (int i = 0; i < LevelManager.global.WoodTierList.Count; i++)
+        {
+            woodCostList.Add(new LevelManager.TierData());
+        }
+
+        for (int i = 0; i < LevelManager.global.StoneTierList.Count; i++)
+        {
+            stoneCostList.Add(new LevelManager.TierData());
+        }
+
+        if (PlayerModeHandler.global.buildType == BuildType.Turret)
+        {
+            woodCostList[0].ResourceAmount = 10;
+            stoneCostList[0].ResourceAmount = 5;
+        }
+
+        if (PlayerModeHandler.global.buildType == BuildType.Cannon)
+        {
+            woodCostList[0].ResourceAmount = 15;
+            stoneCostList[0].ResourceAmount = 15;
+            woodCostList[1].ResourceAmount = 10;
+            stoneCostList[1].ResourceAmount = 5;
+        }
+
+        Debug.Log(PlayerModeHandler.global.playerModes == PlayerModes.BuildMode);
+
+        ResourceGenerate(LevelManager.global.WoodTierList, woodCostList);
+        ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList);
+    }
+
+    void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
         for (int i = 0; i < tierList.Count; i++)
         {
-            if (tierList[i].ResourceAmount > 0)
-            {
-                GameObject mapResource = Instantiate(MapResourcePrefab, MapResourceHolder);
+            int costInt = 0;
 
-                mapResource.transform.GetChild(1).GetComponent<Text>().text = tierList[i].ResourceAmount.ToString("N0");
+            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+            {
+
+                if (costList[i].ResourceAmount > 0)
+                {
+                    costInt = costList[i].ResourceAmount;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+
+            if (tierList[i].ResourceAmount > 0 || costInt > 0)
+            {
+
+
+                GameObject mapResource = Instantiate(MapResourcePrefab, MapResourceHolder);
+                Text costText = mapResource.transform.GetChild(1).GetComponent<Text>();
+
+                costText.text = tierList[i].ResourceAmount.ToString("N0");
                 mapResource.transform.GetChild(0).GetComponent<Image>().sprite = tierList[i].ResourceIcon;
 
                 //GameManager.TemporaryAnimation(mapResource, GameManager.global.PopupAnimation, i);
+
+                if (costInt > 0)
+                {
+                    costText.text += " -" + costInt;
+
+                    costText.color = costInt > tierList[i].ResourceAmount ? Color.red : Color.green;
+                }
             }
         }
     }
@@ -947,7 +1007,7 @@ public class PlayerController : MonoBehaviour
             CharacterAnimator.ResetTrigger("Swing3");
 
             if (attackCount == 0)
-            {              
+            {
                 if (upgradedMelee)
                 {
                     resetAttack = 0.75f;
@@ -959,11 +1019,11 @@ public class PlayerController : MonoBehaviour
                     resetAttack = 0.95f;
                     resetCombo = 1.2f;
                     attackDamage = 1.0f;
-                }               
+                }
                 CharacterAnimator.SetTrigger("Swing");
             }
             else if (attackCount == 1)
-            {              
+            {
                 if (upgradedMelee)
                 {
                     resetAttack = 0.7f;
@@ -1106,8 +1166,15 @@ public class PlayerController : MonoBehaviour
             HealthRestore(appleHealAmount);
             appleAmount -= 1;
             GameManager.PlayAnimation(appleText.GetComponent<Animation>(), "EnemyAmount");
-            appleText.text = appleAmount.ToString();
+            UpdateAppleText();
         }
+    }
+
+    public void UpdateAppleText()
+    {
+        appleText.text = appleAmount.ToString();
+
+        appleText.color = appleAmount >= maxApple ? Color.green : Color.white;
     }
 
     public void AttackEffects()

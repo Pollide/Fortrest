@@ -46,7 +46,7 @@ public class InventoryItem : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                if (name == "Apple" && PlayerController.global.appleAmount >= 5)
+                if (name == "Apple" && PlayerController.global.appleAmount >= PlayerController.MaxApples)
                 {
                 }
                 else
@@ -70,7 +70,7 @@ public class InventoryItem : MonoBehaviour
         {
             PlayerController.global.appleAmount += 1;
             GameManager.PlayAnimation(PlayerController.global.appleText.GetComponent<Animation>(), "EnemyAmount");
-            PlayerController.global.appleText.text = PlayerController.global.appleAmount.ToString();
+            PlayerController.global.UpdateAppleText();
         }
 
         if (name.Contains("Wood"))
