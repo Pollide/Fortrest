@@ -859,19 +859,33 @@ public class PlayerController : MonoBehaviour
 
         if (PlayerModeHandler.global.buildType == BuildType.Turret)
         {
-            woodCostList[0].ResourceAmount = -10;
-            stoneCostList[0].ResourceAmount = -5;
+            woodCostList[0].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -5;
         }
 
         if (PlayerModeHandler.global.buildType == BuildType.Cannon)
         {
-            woodCostList[0].ResourceAmount = -15;
-            stoneCostList[0].ResourceAmount = -15;
-            woodCostList[1].ResourceAmount = -10;
-            stoneCostList[1].ResourceAmount = -5;
+            woodCostList[0].ResourceCost = -3;
+            stoneCostList[0].ResourceCost = -3;
+            woodCostList[1].ResourceCost = -5;
+            stoneCostList[1].ResourceCost = -5;
         }
 
-        Debug.Log(PlayerModeHandler.global.playerModes == PlayerModes.BuildMode);
+        if (PlayerModeHandler.global.buildType == BuildType.Slow)
+        {
+            stoneCostList[0].ResourceCost = -5;
+            stoneCostList[1].ResourceCost = -10;
+            stoneCostList[2].ResourceCost = -2;
+        }
+
+        if (PlayerModeHandler.global.buildType == BuildType.Scatter)
+        {
+            stoneCostList[1].ResourceCost = -5;
+            woodCostList[2].ResourceCost = -10;
+            stoneCostList[2].ResourceCost = -2;
+        }
+
+        //      Debug.Log("UPDATE");
 
         ResourceGenerate(LevelManager.global.WoodTierList, woodCostList);
         ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList);
@@ -883,17 +897,15 @@ public class PlayerController : MonoBehaviour
         {
             if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
             {
-                if (costList[i].ResourceAmount > 0)
-                {
-                    tierList[i].ResourceCost = costList[i].ResourceAmount;
-                }
-                else
+                tierList[i].ResourceCost = costList[i].ResourceCost;
+
+                if (costList[i].ResourceCost == 0)
                 {
                     continue;
                 }
             }
-
-            if (tierList[i].ResourceAmount > 0 || tierList[i].ResourceCost > 0)
+            // Debug.Log(tierList[i].ResourceAmount + "> 0 || " + tierList[i].ResourceCost + "> 0");
+            if (tierList[i].ResourceAmount != 0 || tierList[i].ResourceCost != 0)
             {
                 GameObject mapResource = Instantiate(MapResourcePrefab, MapResourceHolder);
                 Text costText = mapResource.transform.GetChild(1).GetComponent<Text>();
@@ -910,6 +922,7 @@ public class PlayerController : MonoBehaviour
                     costText.color = tierList[i].SufficientResource() ? Color.green : Color.red;
                 }
             }
+
         }
     }
 
