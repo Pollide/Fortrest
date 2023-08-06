@@ -34,7 +34,7 @@ public class LevelManager : MonoBehaviour
 
         public bool SufficientResource()
         {
-            return ResourceAmount >= ResourceCost;
+            return ResourceAmount + ResourceCost >= 0;
         }
 
     }
