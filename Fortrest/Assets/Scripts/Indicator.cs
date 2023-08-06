@@ -233,7 +233,7 @@ public class Indicator : MonoBehaviour
                 indicatorData.MapData.CustomImage.gameObject.SetActive(true);
 
                 indicatorData.MainData.CustomImage.sprite = customSprite;
-                indicatorData.MapData.ArrowImage.sprite = customSprite;
+                indicatorData.MapData.ArrowImage.gameObject.SetActive(false);
 
                 indicatorData.MainData.ArrowText.text = "";
                 indicatorData.MapData.ArrowText.text = "";
