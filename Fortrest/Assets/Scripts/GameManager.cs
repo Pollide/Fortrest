@@ -564,6 +564,7 @@ public class GameManager : MonoBehaviour
             if (building.health <= 0)
                 building.DisableInvoke();
         }
+
         else if (building.resourceObject == Building.BuildingType.Defense)
         {
             int turretSize = (int)Pref("Turret Size", 0, true);
