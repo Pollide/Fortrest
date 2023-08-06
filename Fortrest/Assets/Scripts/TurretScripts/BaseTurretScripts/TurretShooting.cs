@@ -115,8 +115,14 @@ public class TurretShooting : MonoBehaviour
 
     private void Attack()
     {
+        Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
+
+        Vector3 direction = targetPos - transform.position;
+
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+
         // Check if it's time to fire
-        if (fireCountdown <= 0f)
+        if (fireCountdown <= 0f && transform.rotation == lookRotation)
         {
             attackStarted = true;
             ReturnAnimator().ResetTrigger("Fire");

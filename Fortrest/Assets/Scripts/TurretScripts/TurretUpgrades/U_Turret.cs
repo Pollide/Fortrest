@@ -97,40 +97,6 @@ public class U_Turret : MonoBehaviour
         buyUpgradeButton.GetComponent<Button>().interactable = false;
     }
 
-    private void Update()
-    {
-        // Get the distance from the player transform
-        float distanceFromPlayer = Vector3.Distance(transform.position, playerTransform.position);
-
-        if (distanceFromPlayer < detectionRange && canUpgrade)
-        {
-            upgradeTextObject.enabled = true;
-
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                // Run Upgerade screen
-                if (upgradeMenu.activeSelf)
-                {
-                    upgradeMenu.SetActive(false);
-                    PlayerModeHandler.SetMouseActive(false);
-                    PlayerModeHandler.global.playerModes = PlayerModes.ResourceMode;
-                    Time.timeScale = 1f;
-                }
-                else
-                {
-                    upgradeMenu.SetActive(true);
-                    PlayerModeHandler.SetMouseActive(true);
-                    PlayerModeHandler.global.playerModes = PlayerModes.UpgradeMenu;
-                    Time.timeScale = 0f;
-                }
-            }
-        }
-        else
-        {
-            upgradeTextObject.enabled = false;
-        }
-    }
-
     public void AddAttackSpeed()
     {
         turretScript.fireRate += turretScript.fireRate * (upgradeASPercent / 100f);
@@ -144,6 +110,19 @@ public class U_Turret : MonoBehaviour
     public void AddDamage()
     {
         turretScript.damage += turretScript.damage * (upgradeDamagePercent / 100f);
+    }
+
+    public void OpenMenu()
+    {
+        upgradeMenu.SetActive(true);
+        PlayerModeHandler.SetMouseActive(true);
+        PlayerModeHandler.global.playerModes = PlayerModes.UpgradeMenu;
+        Time.timeScale = 0f;
+    }
+
+    public bool IsOpen()
+    {
+        return upgradeMenu.activeSelf;
     }
 
     public void RunUpgrade()

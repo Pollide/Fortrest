@@ -147,9 +147,13 @@ public class Building : MonoBehaviour
 
     public void Repair(float amount)
     {
-        health += amount;
-        Debug.Log("Repaired + " + amount);
-        HealthAnimation();
+        if (health < maxHealth)
+        {
+            health += amount;
+
+            HealthAnimation();
+        }
+        
     }
 
     public float GetHealth()
