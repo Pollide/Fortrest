@@ -859,16 +859,16 @@ public class PlayerController : MonoBehaviour
 
         if (PlayerModeHandler.global.buildType == BuildType.Turret)
         {
-            woodCostList[0].ResourceAmount = 10;
-            stoneCostList[0].ResourceAmount = 5;
+            woodCostList[0].ResourceAmount = -10;
+            stoneCostList[0].ResourceAmount = -5;
         }
 
         if (PlayerModeHandler.global.buildType == BuildType.Cannon)
         {
-            woodCostList[0].ResourceAmount = 15;
-            stoneCostList[0].ResourceAmount = 15;
-            woodCostList[1].ResourceAmount = 10;
-            stoneCostList[1].ResourceAmount = 5;
+            woodCostList[0].ResourceAmount = -15;
+            stoneCostList[0].ResourceAmount = -15;
+            woodCostList[1].ResourceAmount = -10;
+            stoneCostList[1].ResourceAmount = -5;
         }
 
         Debug.Log(PlayerModeHandler.global.playerModes == PlayerModes.BuildMode);
@@ -881,14 +881,11 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < tierList.Count; i++)
         {
-            int costInt = 0;
-
             if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
             {
-
                 if (costList[i].ResourceAmount > 0)
                 {
-                    costInt = costList[i].ResourceAmount;
+                    tierList[i].ResourceCost = costList[i].ResourceAmount;
                 }
                 else
                 {
@@ -896,10 +893,8 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (tierList[i].ResourceAmount > 0 || costInt > 0)
+            if (tierList[i].ResourceAmount > 0 || tierList[i].ResourceCost > 0)
             {
-
-
                 GameObject mapResource = Instantiate(MapResourcePrefab, MapResourceHolder);
                 Text costText = mapResource.transform.GetChild(1).GetComponent<Text>();
 
@@ -908,16 +903,55 @@ public class PlayerController : MonoBehaviour
 
                 //GameManager.TemporaryAnimation(mapResource, GameManager.global.PopupAnimation, i);
 
-                if (costInt > 0)
+                if (tierList[i].ResourceCost > 0)
                 {
-                    costText.text += " -" + costInt;
+                    costText.text += " " + tierList[i].ResourceCost.ToString("N0");
 
-                    costText.color = costInt > tierList[i].ResourceAmount ? Color.red : Color.green;
+                    costText.color = tierList[i].SufficientResource() ? Color.green : Color.red;
                 }
             }
         }
     }
 
+    public bool CheckSufficientResources(bool purchase = false)
+    {
+        if (!GameManager.global.CheatInfiniteBuilding)
+        {
+            if (!Sufficient(LevelManager.global.WoodTierList, purchase))
+            {
+                return false;
+            }
+
+            if (!Sufficient(LevelManager.global.StoneTierList, purchase))
+            {
+                return false;
+            }
+        }
+
+        if (purchase)
+        {
+            PlayerController.global.UpdateResourceHolder();
+        }
+
+        return true;
+    }
+
+    bool Sufficient(List<LevelManager.TierData> tierList, bool purchase)
+    {
+        for (int i = 0; i < tierList.Count; i++)
+        {
+            if (!tierList[i].SufficientResource())
+            {
+                return false;
+            }
+            else if (purchase)
+            {
+                tierList[i].ResourceAmount += tierList[i].ResourceCost;
+            }
+        }
+
+        return true;
+    }
 
     public Vector2 ConvertToMapCoordinates(Vector3 position)
     {

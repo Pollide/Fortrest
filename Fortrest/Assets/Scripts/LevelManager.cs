@@ -30,6 +30,12 @@ public class LevelManager : MonoBehaviour
         public string ResourceName = "Wood";
         public Sprite ResourceIcon;
         public int ResourceAmount;
+        public int ResourceCost;
+
+        public bool SufficientResource()
+        {
+            return ResourceAmount >= ResourceCost;
+        }
 
     }
 
