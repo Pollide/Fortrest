@@ -532,11 +532,13 @@ public class PlayerModeHandler : MonoBehaviour
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
 
                 TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
-                turretShooting.enabled = false;
+
 
                 if (turretShooting)
+                {
+                    turretShooting.enabled = false;
                     Destroy(turretShooting);
-
+                }
                 BluePrintSet(turretBlueprintBlue);
 
 
