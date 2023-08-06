@@ -915,7 +915,7 @@ public class PlayerController : MonoBehaviour
 
                 //GameManager.TemporaryAnimation(mapResource, GameManager.global.PopupAnimation, i);
 
-                if (tierList[i].ResourceCost > 0)
+                if (tierList[i].ResourceCost != 0)
                 {
                     costText.text += " " + tierList[i].ResourceCost.ToString("N0");
 
