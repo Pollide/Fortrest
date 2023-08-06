@@ -19,6 +19,7 @@ public enum BuildType
     Turret,
     Cannon,
     Slow,
+    Scatter,
     None,
 }
 
@@ -178,6 +179,12 @@ public class PlayerModeHandler : MonoBehaviour
             DragBuildingBlueprint("CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
             SpawnBuilding(turretPrefabs[2], "CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
         }
+        else if (buildType == BuildType.Scatter)
+        {
+            Building building = turretPrefabs[3].GetComponentInChildren<Building>();
+            DragBuildingBlueprint("Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
+            SpawnBuilding(turretPrefabs[3], "Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
+        }
     }
 
     private void ScrollSwitchTurret()
@@ -194,6 +201,10 @@ public class PlayerModeHandler : MonoBehaviour
             }
             else if (buildType == BuildType.Slow)
             {
+                SwitchBuildTypeScatter();
+            }
+            else if (buildType == BuildType.Scatter)
+            {
                 SwitchBuildTypeTurret();
             }
         }
@@ -201,7 +212,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             if (buildType == BuildType.Turret)
             {
-                SwitchBuildTypeSlow();
+                SwitchBuildTypeScatter();
             }
             else if (buildType == BuildType.Cannon)
             {
@@ -210,6 +221,10 @@ public class PlayerModeHandler : MonoBehaviour
             else if (buildType == BuildType.Slow)
             {
                 SwitchBuildTypeCannon();
+            }
+            else if (buildType == BuildType.Scatter)
+            {
+                SwitchBuildTypeSlow();
             }
         }
     }
@@ -629,4 +644,9 @@ public class PlayerModeHandler : MonoBehaviour
         ClearBlueprint();
     }
 
+    public void SwitchBuildTypeScatter()
+    {
+        buildType = BuildType.Scatter;
+        ClearBlueprint();
+    }
 }
