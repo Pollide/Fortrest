@@ -904,6 +904,11 @@ public class PlayerController : MonoBehaviour
                     continue;
                 }
             }
+            else
+            {
+                tierList[i].ResourceCost = 0;
+            }
+
             // Debug.Log(tierList[i].ResourceAmount + "> 0 || " + tierList[i].ResourceCost + "> 0");
             if (tierList[i].ResourceAmount != 0 || tierList[i].ResourceCost != 0)
             {
