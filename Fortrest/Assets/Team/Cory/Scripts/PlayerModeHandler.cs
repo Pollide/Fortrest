@@ -153,8 +153,8 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         buildType = BuildType.Turret;
-        buildGrid.gameObject.SetActive(false);
         HUD = HUDHandler.global;
+        SwitchToBuildMode(false);
         SwitchToResourceMode();
     }
 
@@ -162,29 +162,23 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (buildType == BuildType.Turret)
         {
-            Building building = turretPrefabs[0].GetComponentInChildren<Building>();
-            DragBuildingBlueprint("Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
-            SpawnBuilding(turretPrefabs[0], "Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
+            SpawnBuilding(turretPrefabs[0]);
 
         }
         else if (buildType == BuildType.Slow)
         {
-            Building building = turretPrefabs[1].GetComponentInChildren<Building>();
-            DragBuildingBlueprint("HardWood", "MossyStone", building.constructionCostWood, building.constructionCostStone);
-            SpawnBuilding(turretPrefabs[1], "HardWood", "MossyStone", building.constructionCostWood, building.constructionCostStone);
+            SpawnBuilding(turretPrefabs[1]);
         }
         else if (buildType == BuildType.Cannon)
         {
-            Building building = turretPrefabs[2].GetComponentInChildren<Building>();
-            DragBuildingBlueprint("CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
-            SpawnBuilding(turretPrefabs[2], "CoarseWood", "Slate", building.constructionCostWood, building.constructionCostStone);
+            SpawnBuilding(turretPrefabs[2]);
         }
         else if (buildType == BuildType.Scatter)
         {
-            Building building = turretPrefabs[3].GetComponentInChildren<Building>();
-            DragBuildingBlueprint("Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
-            SpawnBuilding(turretPrefabs[3], "Wood", "Stone", building.constructionCostWood, building.constructionCostStone);
+            SpawnBuilding(turretPrefabs[3]);
         }
+
+        DragBuildingBlueprint();
     }
 
     private void ScrollSwitchTurret()
@@ -246,7 +240,7 @@ public class PlayerModeHandler : MonoBehaviour
                 PlayerController.global.playerCC.enabled = true;
             }
 
-            buildGrid.gameObject.SetActive(false);
+            SwitchToBuildMode(false);
             StartCoroutine(PlayerAwake());
         }
     }
@@ -278,10 +272,10 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (IsInRange(worldPos))
             {
-                
+
                 if (Input.GetMouseButtonDown(0) && hitData.transform.CompareTag("Turret"))
                 {
-                    
+
                 }
 
                 if (!newSelectionGrid)
@@ -311,7 +305,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void UpgradeMode()
     {
-        
+
     }
 
     void ClearBlueprint()
@@ -320,6 +314,8 @@ public class PlayerModeHandler : MonoBehaviour
         {
             Destroy(turretBlueprint);
         }
+
+        PlayerController.global.UpdateResourceHolder();
     }
 
     void ClearSelectionGrid()
@@ -330,37 +326,47 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    public void SwitchToBuildMode()
+    public void SwitchToBuildMode(bool active = true)
     {
-        ModeSwitchText.global.ResetText();
-        ClearSelectionGrid();
-        if (Boar.global.mounted)
+
+        buildGrid.gameObject.SetActive(active);
+        PlayerController.global.MapResourceHolder.gameObject.SetActive(active);
+
+        if (active)
         {
-            Boar.global.canMove = false;
-            Boar.global.GetComponent<BoxCollider>().enabled = false;
-            Boar.global.cc.enabled = false;
-            Boar.global.transform.position = House.transform.position;
-            Boar.global.animator.SetBool("Moving", false);
+            ModeSwitchText.global.ResetText();
+            ClearSelectionGrid();
+
+            if (Boar.global.mounted)
+            {
+                Boar.global.canMove = false;
+                Boar.global.GetComponent<BoxCollider>().enabled = false;
+                Boar.global.cc.enabled = false;
+                Boar.global.transform.position = House.transform.position;
+                Boar.global.animator.SetBool("Moving", false);
+            }
+            else
+            {
+                PlayerController.global.playerCC.enabled = false;
+                PlayerController.global.transform.position = House.transform.position;
+                PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+                PlayerController.global.playerCanMove = false;
+            }
+
+            playerModes = PlayerModes.BuildMode;
+
+            SetMouseActive(true);
+            PlayerController.global.UpdateResourceHolder();
+            PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
+
+            HUD.BuildModeHUD();
+
+            Debug.Log("Build");
         }
-        else
-        {
-            PlayerController.global.playerCC.enabled = false;
-            PlayerController.global.transform.position = House.transform.position;
-            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
-            PlayerController.global.playerCanMove = false;
-        }
-
-        playerModes = PlayerModes.BuildMode;
-
-        buildGrid.gameObject.SetActive(true);
-        SetMouseActive(true);
-
-        PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
-
-        HUD.BuildModeHUD();
-
-        Debug.Log("Build");
     }
+
+
+
 
     public void SwitchToBuildRepairMode()
     {
@@ -420,15 +426,9 @@ public class PlayerModeHandler : MonoBehaviour
 
     bool runOnce;
 
-    private void SpawnBuilding(GameObject _prefab, string _resource1, string _resource2, int _resource1Cost, int _resource2Cost)
+    private void SpawnBuilding(GameObject _prefab)
     {
-        if (GameManager.global.CheatInfiniteBuilding)
-        {
-            _resource1Cost = -1;
-            _resource2Cost = -1;
-
-        }
-        if (Input.GetMouseButtonDown(0) && InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost && InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost && !MouseOverUI())
+        if (Input.GetMouseButtonDown(0) && PlayerController.global.CheckSufficientResources() && !MouseOverUI())
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -444,8 +444,9 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
                     GameObject newTurret = Instantiate(_prefab, worldPos, Quaternion.identity);
-                    InventoryManager.global.RemoveItem(_resource1, _resource1Cost);
-                    InventoryManager.global.RemoveItem(_resource2, _resource2Cost);
+
+                    PlayerController.global.CheckSufficientResources(true);
+
 
                     LevelManager.global.VFXSmokePuff.transform.position = newTurret.transform.position + new Vector3(0, .5f, 0);
 
@@ -475,7 +476,7 @@ public class PlayerModeHandler : MonoBehaviour
                 if (!runOnce)
                 {
                     runOnce = true;
-                    if (InventoryManager.global.GetItemQuantity("Wood") < _resource1Cost || InventoryManager.global.GetItemQuantity("Stone") < _resource2Cost)
+                    if (!PlayerController.global.CheckSufficientResources())
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                         Debug.Log("Not Enough Resources");
@@ -499,7 +500,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    private void DragBuildingBlueprint(string _resource1, string _resource2, int _resource1Cost, int _resource2Cost)
+    private void DragBuildingBlueprint()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
@@ -527,12 +528,17 @@ public class PlayerModeHandler : MonoBehaviour
                 }
 
                 turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
+                turretBlueprint.GetComponent<Building>().enabled = false;
+                turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
 
                 TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
 
-                if (turretShooting)
-                    Destroy(turretShooting);
 
+                if (turretShooting)
+                {
+                    turretShooting.enabled = false;
+                    Destroy(turretShooting);
+                }
                 BluePrintSet(turretBlueprintBlue);
 
 
@@ -545,9 +551,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             turretBlueprint.transform.position = worldPos;
 
-            if (IsInRange(worldPos) &&
-                InventoryManager.global.GetItemQuantity(_resource1) >= _resource1Cost &&
-                InventoryManager.global.GetItemQuantity(_resource2) >= _resource2Cost && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
+            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
             {
                 BluePrintSet(turretBlueprintBlue);
             }
