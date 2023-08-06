@@ -262,7 +262,7 @@ public class PlayerController : MonoBehaviour
         // Select button to open Map
         gamepadControls.Controls.Map.performed += context => MapController();
 
-
+        houseSpawnPoint = house.transform.GetChild(1).gameObject;
 
         // Select to lock / unlock camera
         //gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
@@ -420,7 +420,6 @@ public class PlayerController : MonoBehaviour
             RadiusCamGameObject = GameObject.Find("Radius Camera");
         }
 
-        houseSpawnPoint = house.transform.GetChild(1).gameObject;
         //        Debug.Log("1" + PlayerController.global.houseSpawnPoint);
         interactText = house.transform.GetChild(3).gameObject;
 

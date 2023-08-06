@@ -278,10 +278,10 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (IsInRange(worldPos))
             {
-                if (Input.GetMouseButtonDown(0) && hitData.transform.gameObject.layer == buildingLayer)
+                
+                if (Input.GetMouseButtonDown(0) && hitData.transform.CompareTag("Turret"))
                 {
-                    Building turret = hitData.transform.GetComponent<Building>();
-                    turret.Repair(1);
+                    
                 }
 
                 if (!newSelectionGrid)
@@ -289,14 +289,15 @@ public class PlayerModeHandler : MonoBehaviour
                     newSelectionGrid = Instantiate(selectionGrid, worldPos, Quaternion.Euler(90, 0, 0));
                 }
 
-                if (hitData.transform.gameObject.layer == buildingLayer)
+                if (hitData.transform.CompareTag("Turret"))
                 {
                     newSelectionGrid.GetComponentInChildren<Image>().color = Color.green;
                 }
-                if (hitData.transform.gameObject.layer != buildingLayer)
+                else
                 {
                     newSelectionGrid.GetComponentInChildren<Image>().color = Color.red;
                 }
+
                 newSelectionGrid.transform.position = worldPos;
             }
             else
@@ -310,42 +311,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void UpgradeMode()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hitData, 1000))
-        {
-            Vector3 worldPos = hitData.point;
-
-            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
-
-            worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
-            if (IsInRange(worldPos))
-            {
-                if (Input.GetMouseButtonDown(0) && hitData.transform.gameObject.layer == buildingLayer)
-                {
-                    Building turret = hitData.transform.GetComponent<Building>();
-                }
-
-                if (!newSelectionGrid)
-                {
-                    newSelectionGrid = Instantiate(selectionGrid, worldPos, Quaternion.Euler(90, 0, 0));
-                }
-                else
-                {
-
-                    if (newSelectionGrid.GetComponentInChildren<Image>().color != Color.green && hitData.transform.gameObject.layer == buildingLayer)
-                    {
-                        newSelectionGrid.GetComponentInChildren<Image>().color = Color.green;
-                    }
-                    else if (newSelectionGrid.GetComponentInChildren<Image>().color != Color.red && hitData.transform.gameObject.layer == buildingLayer)
-                    {
-                        newSelectionGrid.GetComponentInChildren<Image>().color = Color.red;
-                    }
-                    newSelectionGrid.transform.position = worldPos;
-                }
-            }
-
-        }
+        
     }
 
     void ClearBlueprint()
@@ -366,6 +332,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToBuildMode()
     {
+        ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
         if (Boar.global.mounted)
         {
@@ -397,6 +364,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToBuildRepairMode()
     {
+        ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
         ClearBlueprint();
 
@@ -409,6 +377,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToResourceMode()
     {
+        ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
         LeaveHouse();
 
@@ -424,6 +393,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToCombatMode()
     {
+        ModeSwitchText.global.ResetText();
         LeaveHouse();
 
         ClearBlueprint();
@@ -438,6 +408,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToUpgradeMode()
     {
+        ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
         ClearBlueprint();
 
@@ -545,6 +516,10 @@ public class PlayerModeHandler : MonoBehaviour
                 else if (buildType == BuildType.Cannon)
                 {
                     turretBlueprint = Instantiate(turretPrefabs[2]);
+                }
+                else if (buildType == BuildType.Scatter)
+                {
+                    turretBlueprint = Instantiate(turretPrefabs[3]);
                 }
                 else
                 {

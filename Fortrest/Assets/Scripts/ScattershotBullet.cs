@@ -19,11 +19,10 @@ public class ScattershotBullet : MonoBehaviour
             }
         }
 
-        if (other.gameObject != parent)
+        if (other.gameObject != parent && other.isTrigger == false)
         {
             Destroy(gameObject); // Destroy the bullet
         }
-       
     }
 
     // Sets the damage value
