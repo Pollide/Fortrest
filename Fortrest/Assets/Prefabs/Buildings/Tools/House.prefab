@@ -228,6 +228,7 @@ MonoBehaviour:
   HUDHealthBar: {fileID: 0}
   playerinRange: 0
   interactText: {fileID: 3610397270993068056}
+  textDisplayed: 0
 --- !u!111 &7699820106225378607
 Animation:
   m_ObjectHideFlags: 0
@@ -1130,17 +1131,17 @@ PrefabInstance:
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 140
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 140
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 140
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
@@ -1160,7 +1161,7 @@ PrefabInstance:
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0
+      value: -0.70710576
       objectReference: {fileID: 0}
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
@@ -1170,7 +1171,7 @@ PrefabInstance:
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 1
+      value: 0.70710784
       objectReference: {fileID: 0}
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
@@ -1185,7 +1186,7 @@ PrefabInstance:
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
+      value: 270
       objectReference: {fileID: 0}
     - target: {fileID: 2078144742485573069, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
@@ -1237,11 +1238,27 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6533654824935933252, guid: 2c0b955b6a351784387d287929952f78,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 15c307ef3a8351e459085e9ef47d3b92, type: 2}
+    - target: {fileID: 6533654824935933252, guid: 2c0b955b6a351784387d287929952f78,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 15c307ef3a8351e459085e9ef47d3b92, type: 2}
     - target: {fileID: 6912904562429476264, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
       propertyPath: m_StaticEditorFlags
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7764486911440138471, guid: 2c0b955b6a351784387d287929952f78,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 6239881831769578202, guid: 75f8721b77e03d54abdd6c7a5f9fb98e,
+        type: 3}
     - target: {fileID: 8342643221601614698, guid: 2c0b955b6a351784387d287929952f78,
         type: 3}
       propertyPath: m_StaticEditorFlags
