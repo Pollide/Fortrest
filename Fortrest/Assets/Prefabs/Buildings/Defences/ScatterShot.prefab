@@ -126,6 +126,7 @@ GameObject:
   - component: {fileID: 5034843378620606336}
   - component: {fileID: 5034843378620606337}
   - component: {fileID: 5374597453168542865}
+  - component: {fileID: 804743355647506232}
   m_Layer: 7
   m_Name: ScatterShot
   m_TagString: Turret
@@ -189,6 +190,22 @@ MonoBehaviour:
   playerinRange: 0
   interactText: {fileID: 0}
   textDisplayed: 0
+--- !u!208 &804743355647506232
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5034843378620606342}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 1, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 1, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &5034843378685048317
 GameObject:
   m_ObjectHideFlags: 0
