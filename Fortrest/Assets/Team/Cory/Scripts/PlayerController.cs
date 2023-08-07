@@ -480,8 +480,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Physics
-            HandleSpeed();
-            HandleEnergy();
+            HandleSpeed();            
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
 
@@ -495,6 +494,14 @@ public class PlayerController : MonoBehaviour
                 AttackLunge();
             }
         }
+        else
+        {
+            horizontalMovement = 0;
+            verticalMovement = 0;
+            running = false;
+        }
+
+        HandleEnergy();
 
         CharacterAnimator.SetBool("Upgraded", upgradedMelee);
         TimersFunction();
