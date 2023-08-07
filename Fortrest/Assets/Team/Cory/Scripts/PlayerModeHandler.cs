@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public enum PlayerModes
 {
@@ -44,6 +45,8 @@ public class PlayerModeHandler : MonoBehaviour
     private HUDHandler HUD;
 
     public bool inTheFortress;
+    private bool centerMouse;
+    Vector2 cursorPosition;
 
     private void Awake()
     {
@@ -68,6 +71,15 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (inTheFortress)
         {
+            if (!centerMouse)
+            {
+                Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
+                cursorPosition = new Vector2(Screen.width / 2, Screen.height / 2);
+                centerMouse = true;
+            }
+            cursorPosition += PlayerController.global.moveCTRL * 1.25f;
+            Mouse.current.WarpCursorPosition(cursorPosition);
+
             if (playerModes == PlayerModes.BuildMode)
             {
                 BuildMode();
@@ -142,6 +154,7 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
                     House.GetComponent<Building>().textDisplayed = false;
                 }
+                centerMouse = false;
                 SwitchToBuildMode();
             }
             else
