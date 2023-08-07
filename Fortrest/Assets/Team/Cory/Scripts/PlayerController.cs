@@ -368,8 +368,11 @@ public class PlayerController : MonoBehaviour
 
     private void SwappingController()
     {
-        swapCTRL = true;
-        cancelCTRL = true;
+        if (!swapCTRL)
+        {
+            swapCTRL = true;
+            cancelCTRL = true;
+        }     
     }
 
     private void TurretController()
@@ -547,12 +550,14 @@ public class PlayerController : MonoBehaviour
         {
             cancelAnimation = true;
             cancelEffects = true;
-        }
-        if (Input.GetMouseButton(0) || attackingCTRL || gatheringCTRL)
-        {
-            cancelEffects = false;
             cancelCTRL = false;
+            StopCoroutine("RevertCancel");
+            StartCoroutine("RevertCancel");
         }
+        //if (Input.GetMouseButton(0) || attackingCTRL || gatheringCTRL)
+        //{
+        //    cancelEffects = false;
+        //}
 
         if (cancelAnimation)
         {
@@ -563,6 +568,13 @@ public class PlayerController : MonoBehaviour
         {
             CharacterAnimator.SetBool("Swapping", cancelAnimation);
         }
+    }
+
+    private IEnumerator RevertCancel()
+    {
+        yield return new WaitForSeconds(0.1f);
+        cancelEffects = false;
+        //cancelAnimation = false;
     }
 
     private void Resting()
@@ -1298,19 +1310,15 @@ public class PlayerController : MonoBehaviour
                 StopCoroutine("ToolAppear");
                 StartCoroutine("ToolAppear");
             }
-        }
+            if (PickaxeGameObject.activeSelf)
+            {
+                GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
 
-        if (PickaxeGameObject.activeSelf)
-        {
-            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
-
-            VFXSparks.transform.position = currentResource.transform.position;
-            VFXSparks.Play();
-            VFXPebble.transform.position = currentResource.transform.position;
-            VFXPebble.Play();
-        }
-        if (currentResource != null)
-        {
+                VFXSparks.transform.position = currentResource.transform.position;
+                VFXSparks.Play();
+                VFXPebble.transform.position = currentResource.transform.position;
+                VFXPebble.Play();
+            }
             if (AxeGameObject.activeSelf && currentResource.resourceObject != Building.BuildingType.Bush)
             {
                 GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
