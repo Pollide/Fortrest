@@ -1566,11 +1566,14 @@ public class PlayerController : MonoBehaviour
             countdownBar.gameObject.SetActive(true);
             countdownBar.rectTransform.sizeDelta = new Vector2(fraction * (LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer), 10.0f);
         }
-        else
+        if (countdownBar.rectTransform.sizeDelta.x <= 0f)
         {
+            enemyDirectionText.rectTransform.anchoredPosition = new Vector2(0f, 0f);
+            enemyDirectionText.rectTransform.localScale = new Vector3(0f, 0f, 0f);
             gapSet = false;
             gap = 0f;
             countdownBar.gameObject.SetActive(false);
+            LevelManager.global.messageDisplayed = false;
         }
     }
 }
