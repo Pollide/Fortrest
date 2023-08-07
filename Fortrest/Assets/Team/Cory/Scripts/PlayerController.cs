@@ -1120,10 +1120,18 @@ public class PlayerController : MonoBehaviour
     {
         LevelManager.ProcessBuildingList((building) =>
         {
-            float minDistanceFloat = 4;
+            float minDistanceFloat = 4.0f;
             float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, building.position);
+            float smallestDistance = 5.0f;
+            if (distanceFloat < minDistanceFloat)
+            {
+                if (distanceFloat <= smallestDistance)
+                {
+                    smallestDistance = distanceFloat;
+                }
+            }
 
-            if (Facing(building.position, 75.0f) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+            if (Facing(building.position, 75.0f) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && distanceFloat == smallestDistance && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
             {
                 gathering = true;
                 gatherTimer = 0;
