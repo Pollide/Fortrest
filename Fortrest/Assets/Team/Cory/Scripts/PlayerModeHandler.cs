@@ -81,7 +81,11 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 cursorPosition += PlayerController.global.moveCTRL * 1.25f;
                 Mouse.current.WarpCursorPosition(cursorPosition);
-            }          
+            }
+            else
+            {
+                cursorPosition = Input.mousePosition;
+            }
 
             if (playerModes == PlayerModes.BuildMode)
             {
