@@ -1175,7 +1175,7 @@ public class PlayerController : MonoBehaviour
 
     public IEnumerator ToolAppear()
     {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.5f);
         ChangeTool(new ToolData() { AxeBool = lastWasAxe, PickaxeBool = !lastWasAxe });
     }
 
@@ -1280,8 +1280,8 @@ public class PlayerController : MonoBehaviour
         {
             if (currentResource.resourceObject == Building.BuildingType.Bush)
             {
-                StopCoroutine(ToolAppear());
-                StartCoroutine(ToolAppear());
+                StopCoroutine("ToolAppear");
+                StartCoroutine("ToolAppear");
             }
         }
 

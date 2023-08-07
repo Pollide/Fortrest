@@ -78,20 +78,15 @@ public class Boar : MonoBehaviour
         {
             PlayerController.global.needInteraction = false;
         }
-    }
-
-    private void FixedUpdate()
-    {
-        if (Time.timeScale == 0)
-            return;
 
         ApplyGravity();
+
         if (mounted)
         {
             if (canMove)
             {
                 Ride();
-            }           
+            }
         }
         else
         {
@@ -105,12 +100,9 @@ public class Boar : MonoBehaviour
                 {
                     animator.SetBool("Moving", false);
                 }
-            }               
+            }
         }
-    }
 
-    private void LateUpdate()
-    {
         if (canMove)
         {
             if (currentSpeed > 0.0f)
@@ -119,7 +111,7 @@ public class Boar : MonoBehaviour
             }
             cc.Move(transform.forward * (currentSpeed / 8.0f) + new Vector3(0.0f, verticalVelocity, 0.0f));
             currentTurn = 0.0f;
-        }     
+        }
     }
 
     private void DisplayText()
@@ -208,8 +200,8 @@ public class Boar : MonoBehaviour
     void Ride()
     {
         Lerping(0.2f, 0.4f, ref acceleration, 0.2667f); // Acceleration
-        Lerping(0.5f, 2.0f, ref deceleration, 2); // Deceleration
-        Lerping(75.0f, 90.0f, ref turnAnglePerSec, 20); // Turn
+        Lerping(0.5f, 2.0f, ref deceleration, 2f); // Deceleration
+        Lerping(30.0f, 45.0f, ref turnAnglePerSec, 20f); // Turn
 
         if (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0)
         {
