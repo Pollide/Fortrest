@@ -43,6 +43,8 @@ public class PlayerModeHandler : MonoBehaviour
 
     private HUDHandler HUD;
 
+    public bool inTheFortress;
+
     private void Awake()
     {
         if (global)
@@ -62,60 +64,71 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void Update()
     {
-        if (playerModes == PlayerModes.BuildMode)
+        inTheFortress = playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode || playerModes == PlayerModes.UpgradeMenu;
+
+        if (inTheFortress)
         {
-            BuildMode();
-
-            if (Input.GetKeyDown(KeyCode.R))
+            if (playerModes == PlayerModes.BuildMode)
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                SwitchToBuildRepairMode();
-            }
-        }
-        else if (playerModes == PlayerModes.RepairMode)
-        {
-            RepairMode();
+                BuildMode();
 
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                SwitchToUpgradeMode();
-            }
-        }
-        else if (playerModes == PlayerModes.UpgradeMenu)
-        {
-            UpgradeMode();
-
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                SwitchToBuildMode();
-            }
-        }
-
-        ScrollSwitchTurret();
-
-        if ((Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL) && !Boar.global.mounted)
-        {
-            PlayerController.global.swapCTRL = false;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-            switch (playerModes)
-            {
-                case PlayerModes.CombatMode:
-                    SwitchToResourceMode();
-                    break;
-                case PlayerModes.ResourceMode:
-                    SwitchToCombatMode();
-                    break;
-                case PlayerModes.BuildMode:
-                    SwitchToUpgradeMode();
-                    break;
-                case PlayerModes.RepairMode:
-                    SwitchToBuildMode();
-                    break;
-                case PlayerModes.UpgradeMenu:
+                if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
+                {
+                    PlayerController.global.swapCTRL = false;
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
                     SwitchToBuildRepairMode();
-                    break;
+                }
+            }
+            else if (playerModes == PlayerModes.RepairMode)
+            {
+                RepairMode();
+
+                if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
+                {
+                    PlayerController.global.swapCTRL = false;
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
+                    SwitchToUpgradeMode();
+                }
+            }
+            else if (playerModes == PlayerModes.UpgradeMenu)
+            {
+                UpgradeMode();
+
+                if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
+                {
+                    PlayerController.global.swapCTRL = false;
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
+                    SwitchToBuildMode();
+                }
+            }
+            ScrollSwitchTurret();
+        }
+        else
+        {
+            if ((Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL) && !Boar.global.mounted)
+            {
+                PlayerController.global.swapCTRL = false;
+                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
+                switch (playerModes)
+                {
+                    case PlayerModes.CombatMode:
+                        SwitchToResourceMode();
+                        break;
+                    case PlayerModes.ResourceMode:
+                        SwitchToCombatMode();
+                        break;
+                    default:
+                        break;
+                    //case PlayerModes.BuildMode:
+                    //    SwitchToUpgradeMode();
+                    //    break;
+                    //case PlayerModes.RepairMode:
+                    //    SwitchToBuildMode();
+                    //    break;
+                    //case PlayerModes.UpgradeMenu:
+                    //    SwitchToBuildRepairMode();
+                    //    break;
+                }
             }
         }
 
@@ -124,7 +137,6 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
             {
-
                 if (House.GetComponent<Building>().textDisplayed)
                 {
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
@@ -273,9 +285,9 @@ public class PlayerModeHandler : MonoBehaviour
             if (IsInRange(worldPos))
             {
 
-                if (Input.GetMouseButtonDown(0) && hitData.transform.CompareTag("Turret"))
+                if ((Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && hitData.transform.CompareTag("Turret"))
                 {
-
+                    PlayerController.global.selectCTRL = false;
                 }
 
                 if (!newSelectionGrid)
@@ -428,8 +440,10 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void SpawnBuilding(GameObject _prefab)
     {
-        if (Input.GetMouseButtonDown(0) && PlayerController.global.CheckSufficientResources() && !MouseOverUI())
+        if ((Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && PlayerController.global.CheckSufficientResources() && !MouseOverUI())
         {
+            PlayerController.global.selectCTRL = false;
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
@@ -471,8 +485,9 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL)
             {
+                PlayerController.global.selectCTRL = false;
                 if (!runOnce)
                 {
                     runOnce = true;
@@ -483,7 +498,7 @@ public class PlayerModeHandler : MonoBehaviour
                     }
                 }
             }
-            if (!Input.GetMouseButton(0))
+            if (!Input.GetMouseButton(0) || !PlayerController.global.selectCTRL)
             {
                 runOnce = false;
             }

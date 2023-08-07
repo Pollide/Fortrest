@@ -178,6 +178,7 @@ public class PlayerController : MonoBehaviour
     // Controller   
     private bool sprintingCTRL;
     [HideInInspector] public bool movingCTRL;
+    [HideInInspector] public bool selectCTRL;
     private bool gatheringCTRL;
     private bool attackingCTRL;
     private bool aimingCTRL;
@@ -185,12 +186,12 @@ public class PlayerController : MonoBehaviour
     private bool cancelCTRL;
     private bool turretCTRL;
     private bool healCTRL;
-    public bool interactCTRL;
-    public bool needInteraction = false;
+    [HideInInspector] public bool interactCTRL;
+    [HideInInspector] public bool needInteraction = false;
     [HideInInspector] public bool lockingCTRL = false;
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
-    public Vector2 moveCTRL;
+    [HideInInspector] public Vector2 moveCTRL;
 
     // Keyboard Controls
     private KeyCode[] keyCodes;
@@ -230,6 +231,9 @@ public class PlayerController : MonoBehaviour
         // A to sprint
         gamepadControls.Controls.Sprint.performed += context => SprintController(true);
         gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
+
+        // A to select in build mode
+        gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
 
         // X to interact
         gamepadControls.Controls.Interact.performed += context => InteractController();
@@ -276,14 +280,28 @@ public class PlayerController : MonoBehaviour
     // CONTROLLER FUNCTIONS START
     private void SprintController(bool pressed)
     {
-        if (pressed)
+        if (!PlayerModeHandler.global.inTheFortress)
         {
-            sprintingCTRL = true;
+            if (pressed)
+            {
+                sprintingCTRL = true;
+            }
+            else
+            {
+                sprintingCTRL = false;
+            }
         }
-        else
+    }
+
+    private void BuildSelectController()
+    {
+        if (PlayerModeHandler.global.inTheFortress)
         {
-            sprintingCTRL = false;
-        }
+            if (!selectCTRL)
+            {
+                selectCTRL = true;
+            }
+        }       
     }
 
     private void MoveController(bool pressed)
@@ -513,7 +531,7 @@ public class PlayerController : MonoBehaviour
         Resting();
         BarDisappear();
 
-        if (Input.GetKeyDown(KeyCode.U))
+        if (Input.GetKeyDown(KeyCode.U)) // TEMPORARY
         {
             upgradedMelee = !upgradedMelee;
         }
