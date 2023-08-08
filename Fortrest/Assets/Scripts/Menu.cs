@@ -93,7 +93,7 @@ public class Menu : MonoBehaviour
             else
             {
 
-                ReturnButton().OnPointerClick(null);
+                ReturnButton().SelectVoid();
 
             }
         }
