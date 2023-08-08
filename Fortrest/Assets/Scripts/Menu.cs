@@ -38,23 +38,21 @@ public class Menu : MonoBehaviour
     private bool canGo;
     private bool right;
     private bool left;
+    private bool select;
 
     private void Awake()
     {
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
-
-
     }
 
     private void Start()
     {
         // Left stick to move
-
         GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
         GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
         GameManager.global.gamepadControls.Controls.Move.canceled += context => canGo = false;
 
-        GameManager.global.gamepadControls.Controls.Interact.performed += context => ControllerInput();
+        GameManager.global.gamepadControls.Controls.Sprint.performed += context => ControllerInput();
 
         GameManager.PlayAnimation(CameraAnimation, "Initial Menu");
 
@@ -74,7 +72,10 @@ public class Menu : MonoBehaviour
 
     void ControllerInput()
     {
-        Debug.Log("yox");
+        if (!select)
+        {
+            select = true;
+        }
     }
 
     private void ControllerSelection()
@@ -243,8 +244,9 @@ public class Menu : MonoBehaviour
         GoForwardBool = false;
         GoHorizontalInt = 0;
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.W))
+        if (select || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.W))
         {
+            select = false;
             GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
             GoForwardBool = true;
             return true;
