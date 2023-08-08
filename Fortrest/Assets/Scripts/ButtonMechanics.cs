@@ -37,7 +37,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     bool ToggleBool;
     [Space(10)]
     public TMP_Text MenuText;
-
+    public string TextString;
     void Start()
     {
         if (!MenuText)
@@ -51,16 +51,20 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
                 ImageList[i].raycastTarget = i == 0;
             }
         }
-
-        if (PlayBool)
+        else
         {
-            if ((int)GameManager.Pref("Game Started", 0, true) == 1)
+            TextString = MenuText.text;
+
+            if (PlayBool)
             {
-                MenuText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
-            }
-            else
-            {
-                MenuText.text = "New Game";
+                if ((int)GameManager.Pref("Game Started", 0, true) == 1)
+                {
+                    MenuText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
+                }
+                else
+                {
+                    MenuText.text = "New Game";
+                }
             }
         }
     }
@@ -108,8 +112,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             GameManager.global.NextScene(0);
         }
 
-        if (MenuText)
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
 
         if (AreYouSureBool)
         {
@@ -121,6 +123,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
                 return;
             }
         }
+
+        if (MenuText)
+            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
 
         if (PlayBool)
         {
@@ -154,6 +159,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         }
         else
         {
+            MenuText.text = TextString;
             GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Stop");
         }
     }
