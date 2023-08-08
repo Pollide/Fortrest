@@ -25,13 +25,7 @@ public class Menu : MonoBehaviour
     [HideInInspector] public Vector2 moveCTRL;
     public AnimationState IntialAnimationState;
 
-<<<<<<< Updated upstream
-    private bool canGo, left, right;
-
-=======
-    private bool canGoCTRL, leftCTRL, rightCTRL;
-    
->>>>>>> Stashed changes
+    private bool canGoCTRL, leftCTRL, rightCTRL, selectCTRL;  
 
     private void Awake()
     {
@@ -41,14 +35,21 @@ public class Menu : MonoBehaviour
     private void Start()
     {
         // Left stick to move
-
         GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
         GameManager.global.gamepadControls.Controls.Move.performed += context => ControllerSelection();
         GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
         GameManager.global.gamepadControls.Controls.Move.canceled += context => canGoCTRL = false;
-
+        GameManager.global.gamepadControls.Controls.Sprint.performed += context => SelectController();
         IntialAnimationState = GameManager.PlayAnimation(GetComponent<Animation>(), "Initial Menu");
         ReturnButton().HighlightVoid(true);
+    }
+
+    private void SelectController()
+    {
+        if (!selectCTRL)
+        {
+            selectCTRL = true;
+        }
     }
 
     private void ControllerSelection()
@@ -89,8 +90,9 @@ public class Menu : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || selectCTRL)
         {
+            selectCTRL = false;
             if (initialBool)
             {
                 GetComponent<Animation>()["Initial Menu"].speed = 5;
