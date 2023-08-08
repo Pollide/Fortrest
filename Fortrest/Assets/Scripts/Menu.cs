@@ -18,27 +18,12 @@ using TMPro;
 public class Menu : MonoBehaviour
 {
     public static Menu global;
+    public Transform CameraTransform;
+    public int ActiveSignInt = 1;
+    public List<Transform> SignList = new List<Transform>();
 
-    public GameObject OptionsCanvas;
-    public GameObject MenuCanvas;
-    public Animation CameraAnimation;
-
-    public Animation WelcomeSignAnimation;
-    public Animation ExitSignAnimation;
-    public Animation SettingsSignAnimation;
-    public Animation LevelsSignAnimation;
-    public Color TextColor;
-    public TMP_Text PlayText;
-    bool GoForwardBool;
-    int GoHorizontalInt;
-
-    bool SettingsSelectedBool;
-
-    public Vector2 moveCTRL;
-    private bool canGo;
-    private bool right;
-    private bool left;
-    private bool select;
+    [HideInInspector] public Vector2 moveCTRL;
+    public AnimationState IntialAnimationState;
 
     private void Awake()
     {
@@ -48,251 +33,61 @@ public class Menu : MonoBehaviour
     private void Start()
     {
         // Left stick to move
+
         GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
         GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
-        GameManager.global.gamepadControls.Controls.Move.canceled += context => canGo = false;
+        GameManager.global.gamepadControls.Controls.Move.performed += context => Direction(moveCTRL.x > 0 ? 1 : -1);
+        // GameManager.global.gamepadControls.Controls.Move.canceled += context => MoveController(false);
+        // GameManager.global.gamepadControls.Controls.Move.canceled += context => canGo = false;
 
-        GameManager.global.gamepadControls.Controls.Sprint.performed += context => ControllerInput();
-
-        GameManager.PlayAnimation(CameraAnimation, "Initial Menu");
-
-
-        TextColor = SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().color;
-        StartCoroutine(InitalMenuIEnumerator());
-
-        if ((int)GameManager.Pref("Game Started", 0, true) == 1)
-        {
-            PlayText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
-        }
-        else
-        {
-            PlayText.text = "New Game";
-        }
+        IntialAnimationState = GameManager.PlayAnimation(GetComponent<Animation>(), "Initial Menu");
+        ReturnButton().SelectVoid(true);
     }
 
-    void ControllerInput()
-    {
-        if (!select)
-        {
-            select = true;
-        }
-    }
-
-    private void ControllerSelection()
-    {
-        if (moveCTRL.x > 0f && !canGo)
-        {
-            right = true;
-            canGo = true;
-        }
-        else if (moveCTRL.x < 0f && !canGo)
-        {
-            left = true;
-            canGo = true;
-        }
-    }
-
-    void SpeedAnimation()
-    {
-        foreach (AnimationState animation in CameraAnimation)
-        {
-            if (!animation.name.Contains("Initial"))
-                animation.speed *= 2;
-        }
-    }
 
     private void Update()
     {
-        ControllerSelection();
         PlayerModeHandler.SetMouseActive(false);
-    }
-    IEnumerator InitalMenuIEnumerator()
-    {
-        SpeedAnimation();
-        yield return new WaitUntil(() => !CameraAnimation.isPlaying);
 
-        SignAnimationVoid(WelcomeSignAnimation);
-
-        yield return new WaitUntil(() => InputCheck() && GoHorizontalInt != 0);
-
-        SignAnimationVoid(WelcomeSignAnimation, false);
-
-        if (GoHorizontalInt > 0)
-            StartCoroutine(LevelMenuIEnumerator());
-        else
-            StartCoroutine(ExitMenuIEnumerator());
-
-    }
-
-    IEnumerator LevelMenuIEnumerator(bool play = true)
-    {
-        if (play)
+        if (!IntialAnimationState || !IntialAnimationState.enabled)
         {
-            GameManager.PlayAnimation(CameraAnimation, "Play Menu");
-        }
-        else
-        {
-            GameManager.PlayAnimation(CameraAnimation, "Level To Exit Menu", false);
-        }
-        SpeedAnimation();
-        yield return new WaitUntil(() => !CameraAnimation.isPlaying);
+            CameraTransform.position = Vector3.Slerp(CameraTransform.position, ReturnSign().position + (ReturnSign().forward * -10) + Vector3.up, 3 * Time.deltaTime);
+            CameraTransform.rotation = Quaternion.RotateTowards(CameraTransform.rotation, ReturnSign().rotation, 20 * Time.deltaTime);
 
-        SignAnimationVoid(LevelsSignAnimation);
-        SettingsSelectedBool = false;
-
-        do
-        {
-            yield return new WaitUntil(() => InputCheck());
-
-            if (GoHorizontalInt != 0)
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                SettingsSelectedBool = !SettingsSelectedBool;
-                SignAnimationVoid(SettingsSelectedBool ? SettingsSignAnimation : LevelsSignAnimation);
-                SignAnimationVoid(SettingsSelectedBool ? LevelsSignAnimation : SettingsSignAnimation, false);
+                Direction(-1);
             }
-            yield return 0;
-        }
-        while (GoHorizontalInt == 0 || SettingsSelectedBool ? GoHorizontalInt == 1 : GoHorizontalInt == -1);
 
-        if (GoForwardBool)
-        {
-            if (SettingsSelectedBool)
+            if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
             {
-                SignAnimationVoid(SettingsSignAnimation, true);
-                SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().text = "AGAIN TO CONFIRM"; //nah screw you
-
-                yield return new WaitUntil(() => InputCheck());
-
-                if (GoHorizontalInt == 0)
-                {
-                    SignAnimationVoid(SettingsSignAnimation, true, true);
-
-                    PlayerPrefs.DeleteAll();
-
-                    GameManager.global.NextScene(0);
-                    GameManager.global.transform.SetParent(transform);
-                    GameManager.global = null;
-
-
-                    yield break;
-                }
+                Direction(1);
             }
-            else
+
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
-                SignAnimationVoid(LevelsSignAnimation, true, true);
-                GameManager.global.NextScene(1);
-                yield break;
-            }
-        }
-
-
-
-        if (SettingsSelectedBool)
-            SignAnimationVoid(SettingsSignAnimation, false);
-        else
-            SignAnimationVoid(LevelsSignAnimation, false);
-
-
-
-
-        if (GoHorizontalInt > 0)
-        {
-            StartCoroutine(ExitMenuIEnumerator("Level To Exit Menu"));
-        }
-        else
-        {
-            GameManager.PlayAnimation(CameraAnimation, "Play Menu", false);
-            StartCoroutine(InitalMenuIEnumerator());
-        }
-    }
-
-    IEnumerator ExitMenuIEnumerator(string animation = "Exit Menu")
-    {
-        GameManager.PlayAnimation(CameraAnimation, animation);
-        SpeedAnimation();
-        yield return new WaitUntil(() => !CameraAnimation.isPlaying);
-
-        SignAnimationVoid(ExitSignAnimation);
-
-        yield return new WaitUntil(() => InputCheck());
-
-        if (GoForwardBool)
-        {
-            SignAnimationVoid(ExitSignAnimation, true, true);
-            Application.Quit();
-            GameManager.global.NextScene(0);
-            yield break;
-        }
-        else
-        {
-            SignAnimationVoid(ExitSignAnimation, false);
-
-            if (GoHorizontalInt > 0)
-            {
-                StartCoroutine(LevelMenuIEnumerator(false));
-            }
-            else
-            {
-                GameManager.PlayAnimation(CameraAnimation, "Exit Menu", false);
-                StartCoroutine(InitalMenuIEnumerator());
+                ReturnButton().OnPointerClick(null);
             }
         }
     }
 
-    bool InputCheck()
+    Transform ReturnSign()
     {
-        GoForwardBool = false;
-        GoHorizontalInt = 0;
-
-        if (select || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.W))
-        {
-            select = false;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
-            GoForwardBool = true;
-            return true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) || left)
-        {
-            left = false;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
-            GoHorizontalInt = -1;
-            return true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D) || right)
-        {
-            right = false;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
-            GoHorizontalInt = 1;
-            return true;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            return true;
-        }
-
-        return false;
+        return SignList[ActiveSignInt].transform;
     }
 
-    void SignAnimationVoid(Animation signAnimation, bool forward = true, bool accepted = false)
+    ButtonMechanics ReturnButton()
     {
-        if (forward)
-            GameManager.PlayAnimation(signAnimation, accepted ? "Sign Accepted" : "Sign Selected", forward);
+        return SignList[ActiveSignInt].GetComponent<ButtonMechanics>();
+    }
 
-        if (!accepted)
-        {
+    void Direction(int direction)
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
 
-            if (forward)
-                signAnimation.Play("Sign Loop");
-            else
-            {
-                // GameManager.PlayAnimation(signAnimation, "Sign Loop", false, true);
-                signAnimation.Stop("Sign Loop");
-                SettingsSignAnimation.transform.GetChild(2).GetComponent<TMP_Text>().color = TextColor;
-                // GameManager.PlayAnimation(signAnimation, "Sign Loop", false, true);
-            }
-        }
+        ReturnButton().SelectVoid(false);
+        ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignList.Count - 1);
+
+        ReturnButton().SelectVoid(true);
     }
 }
