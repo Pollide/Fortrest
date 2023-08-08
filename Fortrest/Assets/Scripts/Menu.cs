@@ -25,6 +25,9 @@ public class Menu : MonoBehaviour
     [HideInInspector] public Vector2 moveCTRL;
     public AnimationState IntialAnimationState;
 
+    private bool canGo, left, right;
+    
+
     private void Awake()
     {
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
@@ -35,15 +38,27 @@ public class Menu : MonoBehaviour
         // Left stick to move
 
         GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
+        GameManager.global.gamepadControls.Controls.Move.performed += context => ControllerSelection();
         GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
-        GameManager.global.gamepadControls.Controls.Move.performed += context => Direction(moveCTRL.x > 0 ? 1 : -1);
-        // GameManager.global.gamepadControls.Controls.Move.canceled += context => MoveController(false);
-        // GameManager.global.gamepadControls.Controls.Move.canceled += context => canGo = false;
+        GameManager.global.gamepadControls.Controls.Move.canceled += context => canGo = false;
 
         IntialAnimationState = GameManager.PlayAnimation(GetComponent<Animation>(), "Initial Menu");
         ReturnButton().SelectVoid(true);
     }
 
+    private void ControllerSelection()
+    {
+        if (moveCTRL.x > 0f && !canGo)
+        {
+            right = true;
+            canGo = true;
+        }
+        else if (moveCTRL.x < 0f && !canGo)
+        {
+            left = true;
+            canGo = true;
+        }
+    }
 
     private void Update()
     {
@@ -54,13 +69,15 @@ public class Menu : MonoBehaviour
             CameraTransform.position = Vector3.Slerp(CameraTransform.position, ReturnSign().position + (ReturnSign().forward * -10) + Vector3.up, 3 * Time.deltaTime);
             CameraTransform.rotation = Quaternion.RotateTowards(CameraTransform.rotation, ReturnSign().rotation, 20 * Time.deltaTime);
 
-            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
+            if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) || left)
             {
+                left = false;
                 Direction(-1);
             }
 
-            if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+            if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow) || right)
             {
+                right = false;
                 Direction(1);
             }
 
