@@ -15,33 +15,53 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
 
-    [Header("Button Properties")]
+    [Header("Pause")]
 
     [Tooltip("quits the exe, does not work in editor")]
-    public bool PlayGameBool;
+    public bool ResumeBool;
     public bool RestartBool;
-    public bool OptionsBool;
-    public bool QuitGameBool;
-    public bool BackBool;
     public bool MenuBool;
     [Space(10)] //creates a gap in the inspector
-    public bool NextScene;
-    public Sprite play;
-    public Sprite fastForward;
+
+    [Header("Menu")]
+    public bool PlayBool;
+    public bool ExitBool;
+    public bool ResetBool;
+    [Space(10)]
+    public bool AreYouSureBool;
+    bool ToggleBool;
+    [Space(10)]
+    public TMP_Text MenuText;
 
     void Start()
     {
-        //this finds all images in the button and makes sure only the top is raycastable so the button clicks properly
-        List<Image> ImageList = GameManager.FindComponent<Image>(transform);
-
-        //change the childs to not be raycastable so it doesnt interfare with this
-        for (int i = 0; i < ImageList.Count; i++)
+        if (!MenuText)
         {
-            ImageList[i].raycastTarget = i == 0;
+            //this finds all images in the button and makes sure only the top is raycastable so the button clicks properly
+            List<Image> ImageList = GameManager.FindComponent<Image>(transform);
+
+            //change the childs to not be raycastable so it doesnt interfare with this
+            for (int i = 0; i < ImageList.Count; i++)
+            {
+                ImageList[i].raycastTarget = i == 0;
+            }
+        }
+
+        if (PlayBool)
+        {
+            if ((int)GameManager.Pref("Game Started", 0, true) == 1)
+            {
+                MenuText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
+            }
+            else
+            {
+                MenuText.text = "New Game";
+            }
         }
     }
 
@@ -71,44 +91,69 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     {
         OnPointerEnter(eventData);
 
-        if (QuitGameBool)
-        {
-            Application.Quit();
-        }
-
-        if (PlayGameBool)
+        if (ResumeBool)
         {
             PlayerController.global.PauseVoid(false);
         }
 
-        if (OptionsBool)
-        {
-            Menu.global.OptionsCanvas.SetActive(true);
-            Menu.global.MenuCanvas.SetActive(false);
-        }
         if (RestartBool)
         {
             Time.timeScale = 1f;
-            //   PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
-            // PlayerController.global.transform.SetParent(LevelManager.global.transform); //so it can properly reset and clear old player
-            // Destroy(PlayerController.global.transform.parent.gameObject, 0.6f);
             GameManager.global.NextScene(1);
         }
 
-        if (BackBool)
-        {
-            Menu.global.OptionsCanvas.SetActive(false);
-            Menu.global.MenuCanvas.SetActive(true);
-        }
         if (MenuBool)
         {
             Time.timeScale = 1f;
             GameManager.global.NextScene(0);
         }
-        if (NextScene)
+
+        if (MenuText)
+            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
+
+        if (AreYouSureBool)
         {
-            Time.timeScale = 1f;
-            GameManager.global.NextScene(SceneManager.GetActiveScene().buildIndex + 1);
+            ToggleBool = !ToggleBool;
+
+            if (ToggleBool)
+            {
+                MenuText.text = "Are You Sure?";
+                return;
+            }
+        }
+
+        if (PlayBool)
+        {
+            GameManager.global.NextScene(1);
+        }
+
+        if (ResetBool)
+        {
+            PlayerPrefs.DeleteAll();
+
+            GameManager.global.NextScene(0);
+            GameManager.global.transform.SetParent(transform);
+            GameManager.global = null;
+        }
+
+        if (ExitBool)
+        {
+            Application.Quit();
+            GameManager.global.NextScene(0);
+        }
+    }
+
+    public void SelectVoid(bool select)
+    {
+        if (select)
+        {
+            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Selected");
+            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Loop");
+        }
+        else
+        {
+            GetComponent<Animation>().Stop();
+            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Stop");
         }
     }
 
@@ -116,12 +161,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     void ChangeSizeVoid(float shrinkFloat)
     {
         transform.localScale = new Vector3(shrinkFloat, shrinkFloat, shrinkFloat);
-    }
-
-    //change the color when its clicked for more visual feedback
-    void ChangeColourVoid(Color _color)
-    {
-        GetComponent<Image>().color = _color;
     }
 
     void Update()
