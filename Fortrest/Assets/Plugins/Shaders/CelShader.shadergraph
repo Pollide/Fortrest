@@ -372,6 +372,9 @@
         },
         {
             "m_Id": "649e1089a90a4f57b82cffd129de63a6"
+        },
+        {
+            "m_Id": "03c8769fd8e643c7a4865ecde5753275"
         }
     ],
     "m_GroupDatas": [],
@@ -1753,6 +1756,9 @@
             },
             {
                 "m_Id": "dfea3e0580844386bae7867fc4db8558"
+            },
+            {
+                "m_Id": "03c8769fd8e643c7a4865ecde5753275"
             }
         ]
     },
@@ -1772,6 +1778,9 @@
     "m_ActiveTargets": [
         {
             "m_Id": "8e2f683ef949476ebcbb9e01fc44bf89"
+        },
+        {
+            "m_Id": "e6e6b5c2df8444d788cd85f88b92f5ec"
         }
     ]
 }
@@ -1824,6 +1833,39 @@
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.BlockNode",
+    "m_ObjectId": "03c8769fd8e643c7a4865ecde5753275",
+    "m_Group": {
+        "m_Id": ""
+    },
+    "m_Name": "SurfaceDescription.Emission",
+    "m_DrawState": {
+        "m_Expanded": true,
+        "m_Position": {
+            "serializedVersion": "2",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 0.0,
+            "height": 0.0
+        }
+    },
+    "m_Slots": [
+        {
+            "m_Id": "09582ae1362e4f4cbd9f00bcdff85f74"
+        }
+    ],
+    "synonyms": [],
+    "m_Precision": 0,
+    "m_PreviewExpanded": true,
+    "m_PreviewMode": 0,
+    "m_CustomColors": {
+        "m_SerializableColors": []
+    },
+    "m_SerializedDescriptor": "SurfaceDescription.Emission"
 }
 
 {
@@ -2042,6 +2084,36 @@
         "m_SerializableColors": []
     },
     "m_Value": 0.0
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.ColorRGBMaterialSlot",
+    "m_ObjectId": "09582ae1362e4f4cbd9f00bcdff85f74",
+    "m_Id": 0,
+    "m_DisplayName": "Emission",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "Emission",
+    "m_StageCapability": 2,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0
+    },
+    "m_Labels": [],
+    "m_ColorMode": 1,
+    "m_DefaultColor": {
+        "r": 0.0,
+        "g": 0.0,
+        "b": 0.0,
+        "a": 1.0
+    }
 }
 
 {
@@ -10869,6 +10941,14 @@
         "y": 0.0
     },
     "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.VFXTarget",
+    "m_ObjectId": "e6e6b5c2df8444d788cd85f88b92f5ec",
+    "m_Lit": false,
+    "m_AlphaTest": false
 }
 
 {
