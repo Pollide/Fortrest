@@ -67,6 +67,11 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerController.global.pausedBool)
+        {
+            return;
+        }
+
         inTheFortress = playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode || playerModes == PlayerModes.UpgradeMenu;
 
         if (inTheFortress)
@@ -124,7 +129,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
-            if ((Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL) && !Boar.global.mounted)
+            if ((Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL) && PlayerController.global.playerCanMove)
             {
                 PlayerController.global.swapCTRL = false;
                 GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);

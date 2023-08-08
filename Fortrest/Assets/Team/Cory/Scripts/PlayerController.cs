@@ -175,7 +175,6 @@ public class PlayerController : MonoBehaviour
     private float[] timers = new float[4];
 
     // Controller
-
     private bool sprintingCTRL;
     [HideInInspector] public bool movingCTRL;
     [HideInInspector] public bool selectCTRL;
@@ -192,6 +191,11 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
     [HideInInspector] public Vector2 moveCTRL;
+    [HideInInspector] public bool upCTRL;
+    [HideInInspector] public bool downCTRL;
+    [HideInInspector] public bool canPressCTRL;
+    [HideInInspector] public bool pauseSelectCTRL;
+    [HideInInspector] public bool releasedCTRL;
 
     // Keyboard Controls
     private KeyCode[] keyCodes;
@@ -226,6 +230,8 @@ public class PlayerController : MonoBehaviour
         GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
         GameManager.global.gamepadControls.Controls.Move.performed += context => MoveController(true);
         GameManager.global.gamepadControls.Controls.Move.canceled += context => MoveController(false);
+        GameManager.global.gamepadControls.Controls.Move.performed += context => PauseSelection();
+        GameManager.global.gamepadControls.Controls.Move.canceled += context => canPressCTRL = false;
 
         // A to sprint
         GameManager.global.gamepadControls.Controls.Sprint.performed += context => SprintController(true);
@@ -233,6 +239,10 @@ public class PlayerController : MonoBehaviour
 
         // A to select in build mode
         GameManager.global.gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
+
+        // A to select in pause mode
+        GameManager.global.gamepadControls.Controls.Sprint.performed += context => PauseEnter(true);
+        GameManager.global.gamepadControls.Controls.Sprint.canceled += context => PauseEnter(false);
 
         // X to interact
         GameManager.global.gamepadControls.Controls.Interact.performed += context => InteractController();
@@ -300,7 +310,7 @@ public class PlayerController : MonoBehaviour
             {
                 selectCTRL = true;
             }
-        }
+        }  
     }
 
     private void MoveController(bool pressed)
@@ -312,6 +322,39 @@ public class PlayerController : MonoBehaviour
         else
         {
             movingCTRL = false;
+        }
+    }
+
+    private void PauseSelection()
+    {
+        if (pausedBool)
+        {
+            if (moveCTRL.y > 0f && !canPressCTRL)
+            {
+                upCTRL = true;
+                canPressCTRL = true;
+            }
+            else if (moveCTRL.y < 0f && !canPressCTRL)
+            {
+                downCTRL = true;
+                canPressCTRL = true;
+            }
+        }        
+    }
+
+    private void PauseEnter(bool pressed)
+    {
+        if (pausedBool)
+        {
+            if (pressed)
+            {
+                pauseSelectCTRL = true;
+            }
+            else
+            {
+                pauseSelectCTRL = false;
+                releasedCTRL = true;
+            }
         }
     }
 
@@ -460,6 +503,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (pausedBool)
+        {
+            return;
+        }
+
         if (evading)
         {
             evadeTimer += Time.deltaTime;
@@ -474,6 +522,11 @@ public class PlayerController : MonoBehaviour
         {
             playerCanBeDamaged = true;
             blocked = false;
+        }
+
+        if (pausedBool)
+        {
+            playerCanMove = false;
         }
 
         if (playerCanMove)
@@ -698,7 +751,7 @@ public class PlayerController : MonoBehaviour
                 case KeyCode.E:
                     if (canTeleport)
                     {
-                        PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
+                        TeleportPlayer(houseSpawnPoint.transform.position);
                     }
                     break;
 
@@ -740,7 +793,7 @@ public class PlayerController : MonoBehaviour
             }
             if (canTeleport && interactCTRL)
             {
-                PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
+                TeleportPlayer(houseSpawnPoint.transform.position);
             }
         }
     }
@@ -762,7 +815,7 @@ public class PlayerController : MonoBehaviour
             playerCC.enabled = false;
             transform.position = newPosition;
             playerCC.enabled = true;
-            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+            CharacterAnimator.SetBool("Moving", false);
             //PlayerController.global.playerCanMove = false;
         }
 
@@ -1003,7 +1056,7 @@ public class PlayerController : MonoBehaviour
 
         if (purchase)
         {
-            PlayerController.global.UpdateResourceHolder();
+            UpdateResourceHolder();
         }
 
         return true;
@@ -1169,7 +1222,7 @@ public class PlayerController : MonoBehaviour
         LevelManager.ProcessBuildingList((building) =>
         {
             float minDistanceFloat = 4.0f;
-            float distanceFloat = Vector3.Distance(PlayerController.global.transform.position, building.position);
+            float distanceFloat = Vector3.Distance(transform.position, building.position);
             float smallestDistance = 5.0f;
             if (distanceFloat < minDistanceFloat)
             {
@@ -1471,7 +1524,7 @@ public class PlayerController : MonoBehaviour
             VFXSleeping.Play();
             Vector3 sleepingVector = house.transform.position;
             sleepingVector.y = transform.position.y;
-            PlayerController.global.TeleportPlayer(sleepingVector);
+            TeleportPlayer(sleepingVector);
             playerCanMove = false;
             playerCC.enabled = false;
             bodyShape.SetActive(false);
@@ -1495,7 +1548,7 @@ public class PlayerController : MonoBehaviour
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                     VFXSleeping.Stop();
-                    PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
+                    TeleportPlayer(houseSpawnPoint.transform.position);
                     playerCanMove = true;
                     bodyShape.SetActive(true);
                     playerDead = false;
