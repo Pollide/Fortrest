@@ -34,9 +34,21 @@ public class Menu : MonoBehaviour
 
     bool SettingsSelectedBool;
 
+    public Vector2 moveCTRL;
+    private bool canGo;
+    private bool right;
+    private bool left;
+
     private void Awake()
     {
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
+
+        // Left stick to move
+        GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
+        GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
+        GameManager.global.gamepadControls.Controls.Move.canceled += context => canGo = false;
+
+        GameManager.global.gamepadControls.Controls.Interact.performed += context => Debug.Log("yox");
 
         GameManager.PlayAnimation(CameraAnimation, "Initial Menu");
 
@@ -54,6 +66,20 @@ public class Menu : MonoBehaviour
         }
     }
 
+    private void ControllerSelection()
+    {
+        if (moveCTRL.x > 0f && !canGo)
+        {
+            right = true;
+            canGo = true;
+        }
+        else if (moveCTRL.x < 0f && !canGo)
+        {
+            left = true;
+            canGo = true;
+        }
+    }
+
     void SpeedAnimation()
     {
         foreach (AnimationState animation in CameraAnimation)
@@ -65,6 +91,7 @@ public class Menu : MonoBehaviour
 
     private void Update()
     {
+        ControllerSelection();
         PlayerModeHandler.SetMouseActive(false);
     }
     IEnumerator InitalMenuIEnumerator()
@@ -207,15 +234,17 @@ public class Menu : MonoBehaviour
             return true;
         }
 
-        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A) || left)
         {
+            left = false;
             GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
             GoHorizontalInt = -1;
             return true;
         }
 
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D) || right)
         {
+            right = false;
             GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
             GoHorizontalInt = 1;
             return true;
