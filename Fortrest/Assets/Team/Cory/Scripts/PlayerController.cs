@@ -363,6 +363,7 @@ public class PlayerController : MonoBehaviour
             else
             {
                 aimingCTRL = false;
+                cancelCTRL = false;
             }
         }
     }
@@ -558,7 +559,10 @@ public class PlayerController : MonoBehaviour
         {
             cancelAnimation = true;
             cancelEffects = true;
-            cancelCTRL = false;
+            if (!aimingCTRL)
+            {
+                cancelCTRL = false;
+            }          
             StopCoroutine("RevertCancel");
             StartCoroutine("RevertCancel");
         }
