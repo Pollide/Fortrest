@@ -43,8 +43,6 @@ public class SFXManager : MonoBehaviour
     {
         name = AudioName + " Holder";
 
-        DontDestroyOnLoad(gameObject);
-
         for (int i = 0; i < 20; i++)
         {
             AudioSource audioCreated = new GameObject().AddComponent<AudioSource>();

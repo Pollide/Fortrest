@@ -129,7 +129,12 @@ public class Menu : MonoBehaviour
                     SignAnimationVoid(SettingsSignAnimation, true, true);
 
                     PlayerPrefs.DeleteAll();
+
                     GameManager.global.NextScene(0);
+                    GameManager.global.transform.SetParent(transform);
+                    GameManager.global = null;
+
+
                     yield break;
                 }
             }

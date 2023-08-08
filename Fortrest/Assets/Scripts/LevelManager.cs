@@ -284,9 +284,10 @@ public class LevelManager : MonoBehaviour
 
 
 
-        if (PlayerController.global.NightLightGameObject != null)
+        if (PlayerController.global.LanternLighted != ReturnNight())
         {
-            PlayerController.global.NightLightGameObject.SetActive(ReturnNight());
+            PlayerController.global.LanternLighted = ReturnNight();
+            GameManager.PlayAnimation(PlayerController.global.GetComponent<Animation>(), "Lantern Light", PlayerController.global.LanternLighted);
         }
 
         //   Debug.Log(LanternSkinnedRenderer.materials[2] + " " + (LanternSkinnedRenderer.materials[2] == (ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial)));
@@ -491,8 +492,8 @@ public class LevelManager : MonoBehaviour
             spawnEnemies = true; // Attack starts when the time is reached
             countSet = false;
             runOnce = true;
-        }        
-        
+        }
+
         if (spawnEnemies)
         {
             // Set the amount of enemies at the start of the attack

@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public GameObject houseSpawnPoint;
     public GameObject bodyShape;
     private GameObject interactText;
-
+    [HideInInspector] public bool LanternLighted;
     // Speed
     private float playerCurrentSpeed = 0f;
     private float playerWalkSpeed = 5.0f;
@@ -201,7 +201,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool cancelEffects;
 
     public SkinnedMeshRenderer LanternSkinnedRenderer;
-    public GameObject NightLightGameObject;
 
     public bool canGetInHouse;
 
@@ -301,7 +300,7 @@ public class PlayerController : MonoBehaviour
             {
                 selectCTRL = true;
             }
-        }       
+        }
     }
 
     private void MoveController(bool pressed)
@@ -390,7 +389,7 @@ public class PlayerController : MonoBehaviour
         {
             swapCTRL = true;
             cancelCTRL = true;
-        }     
+        }
     }
 
     private void TurretController()
@@ -501,7 +500,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Physics
-            HandleSpeed();            
+            HandleSpeed();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
 
