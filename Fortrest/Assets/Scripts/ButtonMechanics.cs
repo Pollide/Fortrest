@@ -95,9 +95,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the mouse was let go ontop of the button
     public void OnPointerClick(PointerEventData eventData)
     {
-        OnPointerEnter(eventData);
+        //  OnPointerEnter(eventData);
 
-        SelectVoid();
+        //  SelectVoid();
 
 
 
