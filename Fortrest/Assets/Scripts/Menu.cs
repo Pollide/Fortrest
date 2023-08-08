@@ -43,7 +43,7 @@ public class Menu : MonoBehaviour
         GameManager.global.gamepadControls.Controls.Move.canceled += context => canGo = false;
 
         IntialAnimationState = GameManager.PlayAnimation(GetComponent<Animation>(), "Initial Menu");
-        ReturnButton().SelectVoid(true);
+        ReturnButton().HighlightVoid(true);
     }
 
     private void ControllerSelection()
@@ -114,9 +114,9 @@ public class Menu : MonoBehaviour
     {
         GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
 
-        ReturnButton().SelectVoid(false);
+        ReturnButton().HighlightVoid(false);
         ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);
 
-        ReturnButton().SelectVoid(true);
+        ReturnButton().HighlightVoid(true);
     }
 }
