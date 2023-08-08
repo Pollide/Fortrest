@@ -53,7 +53,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         }
         else
         {
-            TextString = MenuText.text;
 
             if (PlayBool)
             {
@@ -66,13 +65,15 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
                     MenuText.text = "New Game";
                 }
             }
+
+            TextString = MenuText.text;
         }
     }
 
     //checks to see if the pointer has exited the button
     public void OnPointerExit(PointerEventData eventData)
     {
-        ChangeSizeVoid(1f);
+        //ChangeSizeVoid(1f);
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
     }
 
@@ -80,21 +81,31 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public void OnPointerEnter(PointerEventData eventData)
     {
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
-        ChangeSizeVoid(1);
+        //ChangeSizeVoid(1);
         //ChangeColourVoid(Color.white);
     }
 
     //checks to see if the mouse was clicked ontop of the button
     public void OnPointerDown(PointerEventData eventData)
     {
-        ChangeSizeVoid(0.9f);
+        //ChangeSizeVoid(0.9f);
+
+        SelectVoid();
     }
 
     //checks to see if the mouse was let go ontop of the button
     public void OnPointerClick(PointerEventData eventData)
     {
-        OnPointerEnter(eventData);
+        //  OnPointerEnter(eventData);
 
+        //  SelectVoid();
+
+
+
+    }
+
+    public void SelectVoid()
+    {
         if (ResumeBool)
         {
             PlayerController.global.PauseVoid(false);
@@ -148,7 +159,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         }
     }
 
-    public void SelectVoid(bool select)
+    public void HighlightVoid(bool select)
     {
         GetComponent<Animation>().Stop();
 
