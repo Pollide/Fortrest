@@ -133,15 +133,18 @@ public class Building : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
-        health -= amount;
-        if (resourceObject == BuildingType.House)
+        if (!DestroyedBool)
         {
-            HUDHealthBar.SetHealth(health, true);
-        }
+            health -= amount;
+            if (resourceObject == BuildingType.House)
+            {
+                HUDHealthBar.SetHealth(health, true);
+            }
 
-        if (amount != 0)
-        {
-            HealthAnimation();
+            if (amount != 0)
+            {
+                HealthAnimation();
+            }
         }
     }
 
@@ -153,7 +156,7 @@ public class Building : MonoBehaviour
 
             HealthAnimation();
         }
-        
+
     }
 
     public float GetHealth()
@@ -166,6 +169,7 @@ public class Building : MonoBehaviour
         if (!DestroyedBool && GetComponent<Animation>())
         {
             DestroyedBool = true;
+            HealthAppearTimer = 999;//so it fades away
             if (resourceObject == BuildingType.House)
             {
                 GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);

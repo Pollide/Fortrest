@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
 
             GameObject eventSystemGameObject = new GameObject().AddComponent<EventSystem>().gameObject;
             eventSystemGameObject.AddComponent<StandaloneInputModule>();
-            DontDestroyOnLoad(eventSystemGameObject);
+            eventSystemGameObject.transform.SetParent(transform);
             eventSystemGameObject.name = "Event System";
 
             //this checks if it is the first time playing the game. It wont run again
@@ -389,7 +389,8 @@ public class GameManager : MonoBehaviour
         yield return 0; //gives a frame for sfx to load
 
         //switches between music
-        GameManager.global.MusicManager.PlayMusic(index == 0 ? GameManager.global.MenuMusic : GameManager.global.GameMusic);
+        if (GameManager.global)
+            GameManager.global.MusicManager.PlayMusic(index == 0 ? GameManager.global.MenuMusic : GameManager.global.GameMusic);
 
         //wait until the animation is done
         yield return new WaitUntil(() => !state || !state.enabled || first);
