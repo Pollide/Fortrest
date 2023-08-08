@@ -138,15 +138,15 @@ public class PlayerModeHandler : MonoBehaviour
                         break;
                     default:
                         break;
-                    //case PlayerModes.BuildMode:
-                    //    SwitchToUpgradeMode();
-                    //    break;
-                    //case PlayerModes.RepairMode:
-                    //    SwitchToBuildMode();
-                    //    break;
-                    //case PlayerModes.UpgradeMenu:
-                    //    SwitchToBuildRepairMode();
-                    //    break;
+                        //case PlayerModes.BuildMode:
+                        //    SwitchToUpgradeMode();
+                        //    break;
+                        //case PlayerModes.RepairMode:
+                        //    SwitchToBuildMode();
+                        //    break;
+                        //case PlayerModes.UpgradeMenu:
+                        //    SwitchToBuildRepairMode();
+                        //    break;
                 }
             }
         }
@@ -259,18 +259,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode)
         {
-            if (Boar.global.mounted)
-            {
-                Boar.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
-                Boar.global.GetComponent<BoxCollider>().enabled = true;
-                Boar.global.cc.enabled = true;
-            }
-            else
-            {
-
-                PlayerController.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
-                PlayerController.global.playerCC.enabled = true;
-            }
+            PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
 
             SwitchToBuildMode(false);
             StartCoroutine(PlayerAwake());
@@ -368,22 +357,8 @@ public class PlayerModeHandler : MonoBehaviour
         {
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
+            PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
 
-            if (Boar.global.mounted)
-            {
-                Boar.global.canMove = false;
-                Boar.global.GetComponent<BoxCollider>().enabled = false;
-                Boar.global.cc.enabled = false;
-                Boar.global.transform.position = House.transform.position;
-                Boar.global.animator.SetBool("Moving", false);
-            }
-            else
-            {
-                PlayerController.global.playerCC.enabled = false;
-                PlayerController.global.transform.position = House.transform.position;
-                PlayerController.global.CharacterAnimator.SetBool("Moving", false);
-                PlayerController.global.playerCanMove = false;
-            }
 
             playerModes = PlayerModes.BuildMode;
 

@@ -93,6 +93,8 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         //checks if itself exists, as they can only be one
+        gamepadControls = new GamepadControls();
+        gamepadControls.Controls.Enable();
 
         if (PlayerController.global)
         {
