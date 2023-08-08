@@ -60,13 +60,8 @@ public class Pause : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || PlayerController.global.pauseSelectCTRL)
         {
-            buttonHolder.GetChild(buttonInt).GetComponent<ButtonMechanics>().OnPointerDown(null);
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return) || (!PlayerController.global.pauseSelectCTRL && PlayerController.global.releasedCTRL))
-        {
-            PlayerController.global.releasedCTRL = false;
-            buttonHolder.GetChild(buttonInt).GetComponent<ButtonMechanics>().OnPointerClick(null);
+            PlayerController.global.pauseSelectCTRL = false;
+            buttonHolder.GetChild(buttonInt).GetComponent<ButtonMechanics>().SelectVoid();
         }
     }
 }

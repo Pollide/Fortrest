@@ -241,8 +241,7 @@ public class PlayerController : MonoBehaviour
         GameManager.global.gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
 
         // A to select in pause mode
-        GameManager.global.gamepadControls.Controls.Sprint.performed += context => PauseEnter(true);
-        GameManager.global.gamepadControls.Controls.Sprint.canceled += context => PauseEnter(false);
+        GameManager.global.gamepadControls.Controls.Sprint.performed += context => PauseEnter();
 
         // X to interact
         GameManager.global.gamepadControls.Controls.Interact.performed += context => InteractController();
@@ -342,18 +341,13 @@ public class PlayerController : MonoBehaviour
         }        
     }
 
-    private void PauseEnter(bool pressed)
+    private void PauseEnter()
     {
         if (pausedBool)
         {
-            if (pressed)
+            if (!pauseSelectCTRL)
             {
                 pauseSelectCTRL = true;
-            }
-            else
-            {
-                pauseSelectCTRL = false;
-                releasedCTRL = true;
             }
         }
     }
