@@ -497,7 +497,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (pausedBool)
+        if (pausedBool && !Input.GetKeyDown(KeyCode.Escape))
         {
             return;
         }
@@ -516,11 +516,6 @@ public class PlayerController : MonoBehaviour
         {
             playerCanBeDamaged = true;
             blocked = false;
-        }
-
-        if (pausedBool)
-        {
-            playerCanMove = false;
         }
 
         if (playerCanMove)
@@ -915,6 +910,7 @@ public class PlayerController : MonoBehaviour
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
             Time.timeScale = pause ? 0 : 1;
+            playerCanMove = pause ? false : true;
             pausedBool = pause;
         }
     }

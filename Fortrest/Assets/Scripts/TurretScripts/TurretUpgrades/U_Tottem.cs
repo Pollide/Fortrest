@@ -105,7 +105,7 @@ public class U_Tottem : MonoBehaviour
         {
             upgradeTextObject.enabled = true;
 
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.F) && !PlayerController.global.pausedBool)
             {
                 // Run Upgerade screen
                 if (upgradeMenu.activeSelf)
