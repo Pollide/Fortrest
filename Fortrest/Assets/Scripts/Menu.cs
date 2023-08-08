@@ -26,7 +26,7 @@ public class Menu : MonoBehaviour
     public AnimationState IntialAnimationState;
 
     private bool canGo, left, right;
-    
+
 
     private void Awake()
     {
@@ -64,7 +64,9 @@ public class Menu : MonoBehaviour
     {
         PlayerModeHandler.SetMouseActive(false);
 
-        if (!IntialAnimationState || !IntialAnimationState.enabled)
+        bool initialBool = IntialAnimationState && IntialAnimationState.enabled;
+
+        if (!initialBool)
         {
             CameraTransform.position = Vector3.Slerp(CameraTransform.position, ReturnSign().position + (ReturnSign().forward * -10) + Vector3.up, 3 * Time.deltaTime);
             CameraTransform.rotation = Quaternion.RotateTowards(CameraTransform.rotation, ReturnSign().rotation, 20 * Time.deltaTime);
@@ -80,12 +82,22 @@ public class Menu : MonoBehaviour
                 right = false;
                 Direction(1);
             }
+        }
 
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            if (initialBool)
             {
+                GetComponent<Animation>()["Initial Menu"].speed = 5;
+            }
+            else
+            {
+
                 ReturnButton().OnPointerClick(null);
+
             }
         }
+
     }
 
     Transform ReturnSign()
