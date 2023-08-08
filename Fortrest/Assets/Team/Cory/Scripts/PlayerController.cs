@@ -213,8 +213,11 @@ public class PlayerController : MonoBehaviour
     private float gap;
     private float fraction;
     public const int MaxApples = 5;
+    private float newGap;
 
-    bool resetPauseOption;
+    private bool resetPauseOption;
+    private bool displayAmount;
+    private bool textIsGone = true;
 
     // Start is called before the first frame update
     void Awake()
@@ -1470,50 +1473,64 @@ public class PlayerController : MonoBehaviour
     public void DisplayEnemiesComingText()
     {
         GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
+        displayAmount = true;   
     }
 
     public void EnemiesTextControl()
     {
-        if (enemyAmountText)
+        if (displayAmount && textIsGone)
         {
-            int goblinsInt = 0;
+            StartCoroutine(TextAppearing());
+            displayAmount = false;
+            textIsGone = false;
+        }
 
-            LevelManager.ProcessEnemyList((enemy) =>
+        int goblinsInt = 0;
+
+        LevelManager.ProcessEnemyList((enemy) =>
+        {
+            if (enemy.currentEnemyType != EnemyController.ENEMYTYPE.wolf)
             {
-                if (enemy.currentEnemyType != EnemyController.ENEMYTYPE.wolf)
-                {
-                    goblinsInt++;
-                }
-            });
+                goblinsInt++;
+            }
+        });
 
-            if (lastAmount != goblinsInt)
+        Debug.Log(goblinsInt);
+
+        if (goblinsInt > 0 || LevelManager.global.spawnEnemies)
+        {          
+            int remaining = LevelManager.global.enemiesCount + goblinsInt;
+
+            if (lastAmount != remaining)
             {
                 GameManager.PlayAnimation(enemyAmountText.GetComponent<Animation>(), "EnemyAmount");
-                lastAmount = goblinsInt;
+                lastAmount = remaining;
             }
 
-            enemyAmountText.text = goblinsInt.ToString();
-
-            if (LevelManager.global.newDay)
-            {
-                LevelManager.global.newDay = false;
-                StartCoroutine(TextAppearing());
-            }
+            enemyAmountText.text = remaining.ToString();
         }
-    }
 
-    private IEnumerator TextAppearing()
-    {
-        float fraction = 0.0f;
-        while (fraction < 1.0f)
+        if (!LevelManager.global.spawnEnemies && goblinsInt <= 0 && LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer > 30.0f)
         {
-            //   Debug.Log(fraction);
-            fraction = LevelManager.global.DaylightTimer / 180.0f;
-            enemyText.color = LevelManager.global.textGradient.Evaluate(fraction);
-            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(fraction);
-            yield return null;
+            float temp = 1.0f;            
+            if (temp > 0)
+            {
+                temp -= Time.deltaTime;
+                enemyText.color = LevelManager.global.textGradient.Evaluate(temp);
+                enemyAmountText.color = LevelManager.global.textGradient.Evaluate(temp);
+            }
+            else
+            {
+                temp = 0;
+                textIsGone = true;
+            }
+
+            if (displayAmount)
+            {
+                textIsGone = true;
+            }
         }
-    }
+    }    
 
     private void Death()
     {
@@ -1667,6 +1684,26 @@ public class PlayerController : MonoBehaviour
             gap = 0f;
             countdownBar.gameObject.SetActive(false);
             LevelManager.global.messageDisplayed = false;
+        }
+    }
+
+    private IEnumerator TextAppearing()
+    {
+        bool gapSet = false;
+        float fraction = 0f;
+        float gradient = 0f;
+        if (!gapSet)
+        {
+            newGap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer;
+            fraction = 1.0f / newGap;
+            gapSet = true;
+        }
+        while (gradient < 1.0f)
+        {
+            gradient = fraction * ((LevelManager.global.DaylightTimer + newGap) - LevelManager.global.randomAttackTrigger);
+            enemyText.color = LevelManager.global.textGradient.Evaluate(gradient);
+            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(gradient);
+            yield return null;
         }
     }
 }
