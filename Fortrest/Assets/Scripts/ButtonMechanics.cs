@@ -160,6 +160,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         else
         {
             MenuText.text = TextString;
+            ToggleBool = false;
             GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Stop");
         }
     }

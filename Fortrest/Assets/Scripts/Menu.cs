@@ -18,9 +18,9 @@ using TMPro;
 public class Menu : MonoBehaviour
 {
     public static Menu global;
+    public Transform SignHolderTransform;
     public Transform CameraTransform;
-    public int ActiveSignInt = 1;
-    public List<Transform> SignList = new List<Transform>();
+    public int ActiveSignInt;
 
     [HideInInspector] public Vector2 moveCTRL;
     public AnimationState IntialAnimationState;
@@ -90,12 +90,12 @@ public class Menu : MonoBehaviour
 
     Transform ReturnSign()
     {
-        return SignList[ActiveSignInt].transform;
+        return SignHolderTransform.GetChild(ActiveSignInt).transform;
     }
 
     ButtonMechanics ReturnButton()
     {
-        return SignList[ActiveSignInt].GetComponent<ButtonMechanics>();
+        return ReturnSign().GetComponent<ButtonMechanics>();
     }
 
     void Direction(int direction)
@@ -103,7 +103,7 @@ public class Menu : MonoBehaviour
         GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
 
         ReturnButton().SelectVoid(false);
-        ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignList.Count - 1);
+        ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);
 
         ReturnButton().SelectVoid(true);
     }
