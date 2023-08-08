@@ -9,8 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     public static PlayerController global;
 
-    // Class Access
-    GamepadControls gamepadControls;
+    // Class Access   
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
@@ -175,7 +174,8 @@ public class PlayerController : MonoBehaviour
     private float timer1, timer2, timer3, timer4 = 0.0f;
     private float[] timers = new float[4];
 
-    // Controller   
+    // Controller
+    
     private bool sprintingCTRL;
     [HideInInspector] public bool movingCTRL;
     [HideInInspector] public bool selectCTRL;
@@ -219,52 +219,52 @@ public class PlayerController : MonoBehaviour
         global = this;
 
         // Controller stuff
-        gamepadControls = new GamepadControls();
+        GameManager.global.gamepadControls = new GamepadControls();
 
         // Left stick to move
-        gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
-        gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
-        gamepadControls.Controls.Move.performed += context => MoveController(true);
-        gamepadControls.Controls.Move.canceled += context => MoveController(false);
+        GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
+        GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
+        GameManager.global.gamepadControls.Controls.Move.performed += context => MoveController(true);
+        GameManager.global.gamepadControls.Controls.Move.canceled += context => MoveController(false);
 
         // A to sprint
-        gamepadControls.Controls.Sprint.performed += context => SprintController(true);
-        gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
+        GameManager.global.gamepadControls.Controls.Sprint.performed += context => SprintController(true);
+        GameManager.global.gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
 
         // A to select in build mode
-        gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
+        GameManager.global.gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
 
         // X to interact
-        gamepadControls.Controls.Interact.performed += context => InteractController();
+        GameManager.global.gamepadControls.Controls.Interact.performed += context => InteractController();
 
         // Y to swap tool
-        gamepadControls.Controls.Swap.performed += context => SwappingController();
+        GameManager.global.gamepadControls.Controls.Swap.performed += context => SwappingController();
 
         // B to evade
-        gamepadControls.Controls.Evade.performed += context => EvadeController();
+        GameManager.global.gamepadControls.Controls.Evade.performed += context => EvadeController();
 
         // Right trigger for gathering
-        gamepadControls.Controls.Gathering.performed += context => GatheringController(true);
-        gamepadControls.Controls.Gathering.canceled += context => GatheringController(false);
+        GameManager.global.gamepadControls.Controls.Gathering.performed += context => GatheringController(true);
+        GameManager.global.gamepadControls.Controls.Gathering.canceled += context => GatheringController(false);
 
         // Right trigger for attacking
-        gamepadControls.Controls.Attacking.performed += context => AttackingController();
+        GameManager.global.gamepadControls.Controls.Attacking.performed += context => AttackingController();
 
         // Left trigger for aiming
-        gamepadControls.Controls.Aiming.performed += context => AimingController(true);
-        gamepadControls.Controls.Aiming.canceled += context => AimingController(false);
+        GameManager.global.gamepadControls.Controls.Aiming.performed += context => AimingController(true);
+        GameManager.global.gamepadControls.Controls.Aiming.canceled += context => AimingController(false);
 
         // Right Bumper for Mini Turret
-        gamepadControls.Controls.Turret.performed += context => TurretController();
+        GameManager.global.gamepadControls.Controls.Turret.performed += context => TurretController();
 
         // Left Bumper to heal
-        gamepadControls.Controls.Heal.performed += context => HealController();
+        GameManager.global.gamepadControls.Controls.Heal.performed += context => HealController();
 
         // Pause button to pause
-        gamepadControls.Controls.Pause.performed += context => PauseController();
+        GameManager.global.gamepadControls.Controls.Pause.performed += context => PauseController();
 
         // Select button to open Map
-        gamepadControls.Controls.Map.performed += context => MapController();
+        GameManager.global.gamepadControls.Controls.Map.performed += context => MapController();
 
         houseSpawnPoint = house.transform.GetChild(1).gameObject;
 
@@ -410,12 +410,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        gamepadControls.Controls.Enable();
+        GameManager.global.gamepadControls.Controls.Enable();
     }
 
     private void OnDisable()
     {
-        gamepadControls.Controls.Disable();
+        GameManager.global.gamepadControls.Controls.Disable();
     }
     // CONTROLLER FUNCTIONS END
 

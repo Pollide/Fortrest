@@ -73,6 +73,8 @@ public class GameManager : MonoBehaviour
 
     public AnimationClip PopupAnimation;
 
+    public GamepadControls gamepadControls;
+
     private void Update()
     {
         if (DebugSaveBool)
