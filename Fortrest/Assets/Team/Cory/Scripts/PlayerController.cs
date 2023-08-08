@@ -214,6 +214,8 @@ public class PlayerController : MonoBehaviour
     private float fraction;
     public const int MaxApples = 5;
 
+    bool resetPauseOption;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -223,7 +225,6 @@ public class PlayerController : MonoBehaviour
         global = this;
 
         // Controller stuff
-
 
         // Left stick to move
         GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
@@ -905,13 +906,22 @@ public class PlayerController : MonoBehaviour
     public void PauseVoid(bool pause)
     {
         if (!mapBool)
-        {
+        {          
             PauseCanvasGameObject.SetActive(pause);
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
             Time.timeScale = pause ? 0 : 1;
             playerCanMove = pause ? false : true;
             pausedBool = pause;
+            if (pause && !resetPauseOption)
+            {
+                Pause.global.StartButtonInt = 0;
+                resetPauseOption = true;
+            }
+            else if (!pause)
+            {
+                resetPauseOption = false;
+            }
         }
     }
 
