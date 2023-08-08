@@ -55,6 +55,11 @@ public class Boar : MonoBehaviour
 
     void Update()
     {
+        if (PlayerController.global.pausedBool)
+        {
+            return;
+        }
+
         if (Time.timeScale == 0)
             return;
 
