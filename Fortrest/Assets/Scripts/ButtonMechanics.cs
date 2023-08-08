@@ -145,6 +145,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
     public void SelectVoid(bool select)
     {
+        GetComponent<Animation>().Stop();
+
         if (select)
         {
             GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Selected");
@@ -152,7 +154,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         }
         else
         {
-            GetComponent<Animation>().Stop();
             GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Stop");
         }
     }
