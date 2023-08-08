@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour
     private float[] timers = new float[4];
 
     // Controller
-    
+
     private bool sprintingCTRL;
     [HideInInspector] public bool movingCTRL;
     [HideInInspector] public bool selectCTRL;
@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour
         global = this;
 
         // Controller stuff
-        GameManager.global.gamepadControls = new GamepadControls();
+
 
         // Left stick to move
         GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
@@ -408,15 +408,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        GameManager.global.gamepadControls.Controls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        GameManager.global.gamepadControls.Controls.Disable();
-    }
     // CONTROLLER FUNCTIONS END
 
     private void Start()
@@ -703,7 +694,7 @@ public class PlayerController : MonoBehaviour
                 case KeyCode.E:
                     if (canTeleport)
                     {
-                        Teleport();
+                        PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
                     }
                     break;
 
@@ -745,11 +736,35 @@ public class PlayerController : MonoBehaviour
             }
             if (canTeleport && interactCTRL)
             {
-                Teleport();
+                PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
             }
         }
     }
 
+    public void TeleportPlayer(Vector3 newPosition)
+    {
+        LevelManager.global.SceneCamera.transform.position = newPosition;
+
+        if (Boar.global.mounted)
+        {
+            Boar.global.cc.enabled = false;
+            Boar.global.transform.position = newPosition;
+            //  Boar.global.GetComponent<BoxCollider>().enabled = false;
+            Boar.global.cc.enabled = true;
+            Boar.global.animator.SetBool("Moving", false);
+        }
+        else
+        {
+            playerCC.enabled = false;
+            transform.position = newPosition;
+            playerCC.enabled = true;
+            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+            //PlayerController.global.playerCanMove = false;
+        }
+
+        canTeleport = false;
+        needInteraction = false;
+    }
     public void ChangeTool(ToolData toolData)
     {
         AxeGameObject.SetActive(toolData.AxeBool);
@@ -1237,24 +1252,6 @@ public class PlayerController : MonoBehaviour
         GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
     }
 
-    private void Teleport()
-    {
-        if (Boar.global.mounted)
-        {
-            Boar.global.cc.enabled = false;
-            Boar.global.transform.position = houseSpawnPoint.transform.position;
-            Boar.global.cc.enabled = true;
-        }
-        else
-        {
-            playerCC.enabled = false;
-            transform.position = houseSpawnPoint.transform.position;
-            playerCC.enabled = true;
-        }
-        canTeleport = false;
-        needInteraction = false;
-    }
-
     private void EatApple()
     {
         if (playerHealth < maxHealth)
@@ -1470,7 +1467,7 @@ public class PlayerController : MonoBehaviour
             VFXSleeping.Play();
             Vector3 sleepingVector = house.transform.position;
             sleepingVector.y = transform.position.y;
-            transform.position = sleepingVector;
+            PlayerController.global.TeleportPlayer(sleepingVector);
             playerCanMove = false;
             playerCC.enabled = false;
             bodyShape.SetActive(false);
@@ -1494,9 +1491,8 @@ public class PlayerController : MonoBehaviour
                 {
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                     VFXSleeping.Stop();
-                    transform.position = houseSpawnPoint.transform.position;
+                    PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
                     playerCanMove = true;
-                    playerCC.enabled = true;
                     bodyShape.SetActive(true);
                     playerDead = false;
                     deathEffects = false;

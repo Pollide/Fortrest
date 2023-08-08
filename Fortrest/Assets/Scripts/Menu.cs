@@ -43,12 +43,18 @@ public class Menu : MonoBehaviour
     {
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
 
+
+    }
+
+    private void Start()
+    {
         // Left stick to move
+
         GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
         GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
         GameManager.global.gamepadControls.Controls.Move.canceled += context => canGo = false;
 
-        GameManager.global.gamepadControls.Controls.Interact.performed += context => Debug.Log("yox");
+        GameManager.global.gamepadControls.Controls.Interact.performed += context => ControllerInput();
 
         GameManager.PlayAnimation(CameraAnimation, "Initial Menu");
 
@@ -64,6 +70,11 @@ public class Menu : MonoBehaviour
         {
             PlayText.text = "New Game";
         }
+    }
+
+    void ControllerInput()
+    {
+        Debug.Log("yox");
     }
 
     private void ControllerSelection()
