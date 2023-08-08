@@ -53,7 +53,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         }
         else
         {
-            TextString = MenuText.text;
 
             if (PlayBool)
             {
@@ -66,6 +65,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
                     MenuText.text = "New Game";
                 }
             }
+
+            TextString = MenuText.text;
         }
     }
 
