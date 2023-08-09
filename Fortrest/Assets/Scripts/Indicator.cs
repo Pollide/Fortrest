@@ -143,6 +143,7 @@ public class Indicator : MonoBehaviour
             if (active != AppearBool)
             {
                 AppearBool = active;
+                Debug.Log(distance);
                 GameManager.PlayAnimation(MainData.GetComponent<Animation>(), "Arrow Appear", active);
             }
 
@@ -220,22 +221,23 @@ public class Indicator : MonoBehaviour
             indicatorData.MapData = Instantiate(arrowPrefab, PlayerController.global.MapSpotHolder).GetComponent<ArrowData>();
             indicatorData.MapData.GetComponent<Animation>().enabled = false;
             indicatorData.MapData.transform.localScale *= 2.0f;
+            indicatorData.MapData.ArrowImage.gameObject.SetActive(false);
+            indicatorData.MapData.CustomImage.gameObject.SetActive(true);
 
-            indicatorData.MapData.ArrowImage.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            indicatorData.MapData.ArrowImage.sprite = RemovedSprite;
-            indicatorData.MapData.ArrowImage.color = color;
-            indicatorData.MapData.ArrowImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 20);
+            indicatorData.MapData.CustomImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            indicatorData.MapData.CustomImage.color = color;
+
             indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
 
             if (customSprite)
             {
                 indicatorData.MainData.CustomImage.gameObject.SetActive(true);
-                indicatorData.MapData.CustomImage.gameObject.SetActive(true);
-
                 indicatorData.MainData.CustomImage.sprite = customSprite;
-                indicatorData.MapData.ArrowImage.gameObject.SetActive(false);
+                indicatorData.MainData.CustomImage.color = color;
 
                 indicatorData.MainData.ArrowText.text = "";
+
+                indicatorData.MapData.CustomImage.sprite = customSprite;
                 indicatorData.MapData.ArrowText.text = "";
             }
         }
