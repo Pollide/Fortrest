@@ -142,6 +142,7 @@ GameObject:
   - component: {fileID: 4012779519441861351}
   - component: {fileID: 1345044777623596542}
   - component: {fileID: 775337696238727481}
+  - component: {fileID: 1622656302796097390}
   m_Layer: 9
   m_Name: Boulder_Var2
   m_TagString: Untagged
@@ -190,6 +191,7 @@ MonoBehaviour:
   HUDHealthBar: {fileID: 0}
   playerinRange: 0
   interactText: {fileID: 0}
+  textDisplayed: 0
 --- !u!111 &1345044777623596542
 Animation:
   m_ObjectHideFlags: 0
@@ -220,6 +222,22 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.28428712
   m_Center: {x: 0.012346178, y: 0.26598445, z: -0.038570017}
+--- !u!208 &1622656302796097390
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7509142344824591087}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 1, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &1747449326875269097
 PrefabInstance:
   m_ObjectHideFlags: 0
