@@ -87,8 +87,8 @@ public class LevelManager : MonoBehaviour
     public SPAWNLANE lane;
 
     private int campsCount;
-    private int enemiesCount;
-    private bool startAttack;
+    public int enemiesCount;
+    public bool spawnEnemies;
     private bool nightAttack;
     public float randomAttackTrigger;
     private bool randomSet;
@@ -102,7 +102,8 @@ public class LevelManager : MonoBehaviour
     bool housePosObtained = false;
     private float spawnDistance = 39.0f;
 
-    private bool messageDisplayed;
+    public bool messageDisplayed;
+    private bool runOnce;
 
     private void Awake()
     {
@@ -255,7 +256,7 @@ public class LevelManager : MonoBehaviour
 
         daySpeed = ReturnNight() ? 2 : 1;
 
-        // daySpeed = 7.0f; // FOR TESTING
+        //daySpeed = 7.0f; // FOR TESTING
 
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
@@ -283,9 +284,10 @@ public class LevelManager : MonoBehaviour
 
 
 
-        if (PlayerController.global.NightLightGameObject != null)
+        if (PlayerController.global.LanternLighted != ReturnNight())
         {
-            PlayerController.global.NightLightGameObject.SetActive(ReturnNight());
+            PlayerController.global.LanternLighted = ReturnNight();
+            GameManager.PlayAnimation(PlayerController.global.GetComponent<Animation>(), "Lantern Light", PlayerController.global.LanternLighted);
         }
 
         //   Debug.Log(LanternSkinnedRenderer.materials[2] + " " + (LanternSkinnedRenderer.materials[2] == (ReturnNight() ? LanternGlowingMaterial : LanternOffMaterial)));
@@ -420,21 +422,15 @@ public class LevelManager : MonoBehaviour
 
     private void EnemyWaves()
     {
-        // Night Attack
-        if (ReturnNight() && !startAttack)
-        {
-            nightAttack = true;
-            startAttack = true;
-        }
         // Day Attack
-        else if (day >= 0 && !ReturnNight() && !randomSet && !startAttack)
+        if (day > 0 && !ReturnNight() && !randomSet)
         {
             float randomChance = Random.Range(0.0f, 1.0f);
 
             switch (campsCount)
             {
                 case 0: // No camps = no day attack
-                    attackHappening = false; // change that!
+                    attackHappening = false;
                     break;
                 case 1: // 1 camp = 20% chance
                     if (randomChance > 0.8f)
@@ -474,38 +470,43 @@ public class LevelManager : MonoBehaviour
                 randomAttackTrigger = Random.Range(60.0f, 120.0f); // Attack starts at a random time during the day
                 nightAttack = false; // It is not a night attack
             }
-            else
-            {
-                randomAttackTrigger = 0f; // Setting this to not display enemies are coming
-            }
             randomSet = true; // Regardless of the outcome, we are not running this again until the next day                     
         }
 
-        if (DaylightTimer >= randomAttackTrigger && DaylightTimer <= randomAttackTrigger + 1.0f && !startAttack)
+        // Night attack
+        if (DaylightTimer >= 150.0f && DaylightTimer <= 151.0f)
         {
-            startAttack = true; // Attack starts when the time is reached
+            randomAttackTrigger = 180.0f;
+            nightAttack = true;
         }
 
-        if ((DaylightTimer >= 150.0f || (DaylightTimer >= randomAttackTrigger - 30.0f && randomAttackTrigger != 0f)) && !messageDisplayed)
+        if ((DaylightTimer >= randomAttackTrigger - 30.0f && DaylightTimer <= randomAttackTrigger - 30.0f + 1.0f) && randomAttackTrigger != 0f && !messageDisplayed)
         {
             PlayerController.global.DisplayEnemiesComingText(); // Display enemies are coming a bit before an attack            
             messageDisplayed = true;
+            runOnce = false;
         }
 
-        if (startAttack)
+        if ((DaylightTimer >= randomAttackTrigger && DaylightTimer <= randomAttackTrigger + 1.0f) && randomAttackTrigger != 0f && !runOnce)
+        {
+            spawnEnemies = true; // Attack starts when the time is reached
+            countSet = false;
+            runOnce = true;
+        }
+
+        if (spawnEnemies)
         {
             // Set the amount of enemies at the start of the attack
             if (!countSet)
             {
                 if (nightAttack)
                 {
-                    enemiesCount = 5 * (day + 1) + (campsCount * 3);
+                    enemiesCount += 5 * (day + 1) + (campsCount * 3);
                 }
                 else
                 {
-                    enemiesCount = 3 * (day + 1) + (campsCount * 1);
+                    enemiesCount += 3 * (day + 1) + (campsCount * 1);
                 }
-
                 countSet = true;
             }
 
@@ -609,9 +610,7 @@ public class LevelManager : MonoBehaviour
             // Reset everything once enemies have spawned. Day attacks variable are also reset when a new day starts
             else if (enemiesCount <= 0)
             {
-                startAttack = false;
-                messageDisplayed = false;
-                countSet = false;
+                spawnEnemies = false;
                 groupSpawnAmount = 0;
                 ogreSpawned = false;
                 enemiesCount = 0;

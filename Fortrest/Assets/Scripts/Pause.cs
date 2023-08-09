@@ -39,13 +39,15 @@ public class Pause : MonoBehaviour
 
     void ButtonInput(Transform buttonHolder, ref int buttonInt)
     {
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || PlayerController.global.upCTRL)
         {
+            PlayerController.global.upCTRL = false;
             buttonInt--;
         }
 
-        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || PlayerController.global.downCTRL)
         {
+            PlayerController.global.downCTRL = false;
             buttonInt++;
         }
 
@@ -56,14 +58,10 @@ public class Pause : MonoBehaviour
             buttonHolder.GetChild(i).GetChild(1).gameObject.SetActive(buttonInt == i);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || PlayerController.global.pauseSelectCTRL)
         {
-            buttonHolder.GetChild(buttonInt).GetComponent<ButtonMechanics>().OnPointerDown(null);
-        }
-
-        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.KeypadEnter) || Input.GetKeyUp(KeyCode.Return))
-        {
-            buttonHolder.GetChild(buttonInt).GetComponent<ButtonMechanics>().OnPointerClick(null);
+            PlayerController.global.pauseSelectCTRL = false;
+            buttonHolder.GetChild(buttonInt).GetComponent<ButtonMechanics>().SelectVoid();
         }
     }
 }

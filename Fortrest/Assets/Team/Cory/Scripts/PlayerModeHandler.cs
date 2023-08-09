@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 
 public enum PlayerModes
 {
@@ -43,6 +44,10 @@ public class PlayerModeHandler : MonoBehaviour
 
     private HUDHandler HUD;
 
+    public bool inTheFortress;
+    private bool centerMouse;
+    Vector2 cursorPosition;
+
     private void Awake()
     {
         if (global)
@@ -62,60 +67,92 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void Update()
     {
-        if (playerModes == PlayerModes.BuildMode)
+        if (PlayerController.global.pausedBool)
         {
-            BuildMode();
-
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                SwitchToBuildRepairMode();
-            }
-        }
-        else if (playerModes == PlayerModes.RepairMode)
-        {
-            RepairMode();
-
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                SwitchToUpgradeMode();
-            }
-        }
-        else if (playerModes == PlayerModes.UpgradeMenu)
-        {
-            UpgradeMode();
-
-            if (Input.GetKeyDown(KeyCode.R))
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                SwitchToBuildMode();
-            }
+            return;
         }
 
-        ScrollSwitchTurret();
+        inTheFortress = playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode || playerModes == PlayerModes.UpgradeMenu;
 
-        if ((Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL) && !Boar.global.mounted)
+        if (inTheFortress)
         {
-            PlayerController.global.swapCTRL = false;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-            switch (playerModes)
+            if (!centerMouse)
             {
-                case PlayerModes.CombatMode:
-                    SwitchToResourceMode();
-                    break;
-                case PlayerModes.ResourceMode:
-                    SwitchToCombatMode();
-                    break;
-                case PlayerModes.BuildMode:
-                    SwitchToUpgradeMode();
-                    break;
-                case PlayerModes.RepairMode:
-                    SwitchToBuildMode();
-                    break;
-                case PlayerModes.UpgradeMenu:
+                Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
+                cursorPosition = new Vector2(Screen.width / 2, Screen.height / 2);
+                centerMouse = true;
+            }
+            if (PlayerController.global.moveCTRL.x != 0 || PlayerController.global.moveCTRL.y != 0)
+            {
+                cursorPosition += PlayerController.global.moveCTRL * 1.25f;
+                Mouse.current.WarpCursorPosition(cursorPosition);
+            }
+            else
+            {
+                cursorPosition = Input.mousePosition;
+            }
+
+            if (playerModes == PlayerModes.BuildMode)
+            {
+                BuildMode();
+
+                if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
+                {
+                    PlayerController.global.swapCTRL = false;
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
                     SwitchToBuildRepairMode();
-                    break;
+                }
+            }
+            else if (playerModes == PlayerModes.RepairMode)
+            {
+                RepairMode();
+
+                if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
+                {
+                    PlayerController.global.swapCTRL = false;
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
+                    SwitchToUpgradeMode();
+                }
+            }
+            else if (playerModes == PlayerModes.UpgradeMenu)
+            {
+                UpgradeMode();
+
+                if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
+                {
+                    PlayerController.global.swapCTRL = false;
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
+                    SwitchToBuildMode();
+                }
+            }
+            ScrollSwitchTurret();
+        }
+        else
+        {
+            if ((Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL) && PlayerController.global.playerCanMove)
+            {
+                PlayerController.global.swapCTRL = false;
+                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
+                switch (playerModes)
+                {
+                    case PlayerModes.CombatMode:
+                        SwitchToResourceMode();
+                        break;
+                    case PlayerModes.ResourceMode:
+                        SwitchToCombatMode();
+                        break;
+                    default:
+                        break;
+                        //case PlayerModes.BuildMode:
+                        //    SwitchToUpgradeMode();
+                        //    break;
+                        //case PlayerModes.RepairMode:
+                        //    SwitchToBuildMode();
+                        //    break;
+                        //case PlayerModes.UpgradeMenu:
+                        //    SwitchToBuildRepairMode();
+                        //    break;
+                }
             }
         }
 
@@ -124,12 +161,12 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
             {
-
                 if (House.GetComponent<Building>().textDisplayed)
                 {
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
                     House.GetComponent<Building>().textDisplayed = false;
                 }
+                centerMouse = false;
                 SwitchToBuildMode();
             }
             else
@@ -227,18 +264,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode)
         {
-            if (Boar.global.mounted)
-            {
-                Boar.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
-                Boar.global.GetComponent<BoxCollider>().enabled = true;
-                Boar.global.cc.enabled = true;
-            }
-            else
-            {
-
-                PlayerController.global.transform.position = PlayerController.global.houseSpawnPoint.transform.position;
-                PlayerController.global.playerCC.enabled = true;
-            }
+            PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
 
             SwitchToBuildMode(false);
             StartCoroutine(PlayerAwake());
@@ -273,9 +299,9 @@ public class PlayerModeHandler : MonoBehaviour
             if (IsInRange(worldPos))
             {
 
-                if (Input.GetMouseButtonDown(0) && hitData.transform.CompareTag("Turret"))
+                if ((Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && hitData.transform.CompareTag("Turret"))
                 {
-
+                    PlayerController.global.selectCTRL = false;
                 }
 
                 if (!newSelectionGrid)
@@ -336,22 +362,8 @@ public class PlayerModeHandler : MonoBehaviour
         {
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
+            PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
 
-            if (Boar.global.mounted)
-            {
-                Boar.global.canMove = false;
-                Boar.global.GetComponent<BoxCollider>().enabled = false;
-                Boar.global.cc.enabled = false;
-                Boar.global.transform.position = House.transform.position;
-                Boar.global.animator.SetBool("Moving", false);
-            }
-            else
-            {
-                PlayerController.global.playerCC.enabled = false;
-                PlayerController.global.transform.position = House.transform.position;
-                PlayerController.global.CharacterAnimator.SetBool("Moving", false);
-                PlayerController.global.playerCanMove = false;
-            }
 
             playerModes = PlayerModes.BuildMode;
 
@@ -428,8 +440,10 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void SpawnBuilding(GameObject _prefab)
     {
-        if (Input.GetMouseButtonDown(0) && PlayerController.global.CheckSufficientResources() && !MouseOverUI())
+        if ((Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && PlayerController.global.CheckSufficientResources() && !MouseOverUI())
         {
+            PlayerController.global.selectCTRL = false;
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
@@ -471,8 +485,9 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL)
             {
+                PlayerController.global.selectCTRL = false;
                 if (!runOnce)
                 {
                     runOnce = true;
@@ -483,7 +498,7 @@ public class PlayerModeHandler : MonoBehaviour
                     }
                 }
             }
-            if (!Input.GetMouseButton(0))
+            if (!Input.GetMouseButton(0) || !PlayerController.global.selectCTRL)
             {
                 runOnce = false;
             }

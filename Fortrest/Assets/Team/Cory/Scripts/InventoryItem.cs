@@ -48,6 +48,9 @@ public class InventoryItem : MonoBehaviour
             {
                 if (name == "Apple" && PlayerController.global.appleAmount >= PlayerController.MaxApples)
                 {
+                    Vector3 direction = (transform.position - PlayerController.global.transform.position).normalized;
+                    direction.y = 0.4f;
+                    GetComponent<Rigidbody>().AddForce(direction / 5.5f, ForceMode.Impulse);
                 }
                 else
                 {
