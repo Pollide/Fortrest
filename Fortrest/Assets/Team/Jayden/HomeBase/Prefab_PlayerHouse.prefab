@@ -92,6 +92,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HouseAnimator: {fileID: 2118738539353561336}
+  ActivateAnimation: {fileID: 0}
+  DeactivateAnimation: {fileID: 0}
+  ActivateAnimationVariable: 
+  DectivateAnimationVariable: 
 --- !u!1001 &6680366931387476736
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -301,6 +305,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!65 &5457447497181280887
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6005842835042768243}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.35, y: 4.32, z: 9}
+  m_Center: {x: 0, y: 2.11, z: 0.2}
 --- !u!4 &6346375138761297865 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: eca988a6142b9e44192f1504bbbb7b52,
