@@ -79,7 +79,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the pointer has exited the button
     public void OnPointerExit(PointerEventData eventData)
     {
-        ChangeSizeVoid(1f);
+        //Pause.global.SelectedList[Pause.global.ReturnIndex()] = -1;
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
     }
 
@@ -87,7 +87,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public void OnPointerEnter(PointerEventData eventData)
     {
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
-        ChangeSizeVoid(1.1f);
+
         Pause.global.SelectedList[Pause.global.ReturnIndex()] = transform.GetSiblingIndex();
         //ChangeColourVoid(Color.white);
     }
@@ -203,16 +203,5 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             ToggleBool = false;
             GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Stop");
         }
-    }
-
-    //changes the size of the button for visual feedback
-    void ChangeSizeVoid(float shrinkFloat)
-    {
-        transform.localScale = new Vector3(shrinkFloat, shrinkFloat, shrinkFloat);
-    }
-
-    void Update()
-    {
-
     }
 }
