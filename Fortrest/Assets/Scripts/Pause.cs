@@ -19,49 +19,62 @@ public class Pause : MonoBehaviour
 {
     public static Pause global;
 
-    public int StartButtonInt;
-    public int CheatButtonInt;
-    [Space(10)]
-    public Transform StartButtonHolder;
-    public Transform CheatButtonHolder;
+    public Transform ButtonHolder;
 
-
+    [HideInInspector]
+    public List<int> SelectedList = new List<int>();
     private void Awake()
     {
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
+
 
     }
 
     private void Update()
     {
-        ButtonInput(StartButtonHolder.gameObject.activeSelf ? StartButtonHolder : CheatButtonHolder, ref (StartButtonHolder.gameObject.activeSelf ? ref StartButtonInt : ref CheatButtonInt));
+        PlayerModeHandler.SetMouseActive(true);
+        ButtonInput();
     }
 
-    void ButtonInput(Transform buttonHolder, ref int buttonInt)
+    public int ReturnIndex()
     {
+        for (int i = 0; i < ButtonHolder.childCount; i++)
+        {
+            if (ButtonHolder.GetChild(i).gameObject.activeSelf)
+            {
+                return i;
+            }
+        }
+        return 0;
+    }
+
+    void ButtonInput()
+    {
+        int index = ReturnIndex();
+
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || PlayerController.global.upCTRL)
         {
             PlayerController.global.upCTRL = false;
-            buttonInt--;
+            SelectedList[index]--;
         }
 
         if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || PlayerController.global.downCTRL)
         {
             PlayerController.global.downCTRL = false;
-            buttonInt++;
+            SelectedList[index]++;
         }
 
-        buttonInt = (int)GameManager.ReturnThresholds(buttonInt, buttonHolder.childCount - 1);
+        SelectedList[index] = (int)GameManager.ReturnThresholds(SelectedList[index], ButtonHolder.GetChild(index).childCount - 1);
 
-        for (int i = 0; i < buttonHolder.childCount; i++)
+        for (int i = 0; i < ButtonHolder.GetChild(index).childCount; i++)
         {
-            buttonHolder.GetChild(i).GetChild(1).gameObject.SetActive(buttonInt == i);
+            ButtonHolder.GetChild(index).GetChild(i).GetChild(1).gameObject.SetActive(SelectedList[index] == i);
         }
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || PlayerController.global.pauseSelectCTRL)
         {
             PlayerController.global.pauseSelectCTRL = false;
-            buttonHolder.GetChild(buttonInt).GetComponent<ButtonMechanics>().SelectVoid();
+            ButtonHolder.GetChild(index).GetChild(SelectedList[index]).GetComponent<ButtonMechanics>().SelectVoid();
         }
     }
 }
