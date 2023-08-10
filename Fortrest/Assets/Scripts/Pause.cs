@@ -68,7 +68,14 @@ public class Pause : MonoBehaviour
 
         for (int i = 0; i < ButtonHolder.GetChild(index).childCount; i++)
         {
-            ButtonHolder.GetChild(index).GetChild(i).GetChild(1).gameObject.SetActive(SelectedList[index] == i);
+            Transform button = ButtonHolder.GetChild(index).GetChild(i);
+
+            bool selected = SelectedList[index] == i;
+            button.GetChild(1).gameObject.SetActive(selected);
+
+            float shrinkFloat = selected ? 1.1f : 1;
+
+            button.localScale = new Vector3(shrinkFloat, shrinkFloat, shrinkFloat);
         }
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || PlayerController.global.pauseSelectCTRL)
