@@ -28,6 +28,12 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public bool MenuBool;
     [Space(10)] //creates a gap in the inspector
 
+    [Header("Cheats")]
+    public bool CheatsBool;
+    public bool BackBool;
+    public bool MaxResourcesBool;
+    public int TerrainTeleportInt = -1;
+
     [Header("Menu")]
     public bool PlayBool;
     public bool ExitBool;
@@ -56,7 +62,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
             if (PlayBool)
             {
-                if ((int)GameManager.Pref("Game Started", 0, true) == 1)
+                if ((int)GameManager.Pref("Game Start", 0, true) == 1)
                 {
                     MenuText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
                 }
@@ -109,6 +115,28 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         if (ResumeBool)
         {
             PlayerController.global.PauseVoid(false);
+        }
+
+        if (MaxResourcesBool)
+        {
+            for (int i = 0; i < LevelManager.global.StoneTierList.Count; i++)
+            {
+                LevelManager.global.WoodTierList[i].ResourceAmount = 9999;
+                LevelManager.global.StoneTierList[i].ResourceAmount = 9999;
+            }
+
+            PlayerController.global.UpdateResourceHolder();
+        }
+
+        if (TerrainTeleportInt != -1)
+        {
+            PlayerController.global.TeleportPlayer(LevelManager.global.TerrainList[TerrainTeleportInt].transform.position + new Vector3(0, 5, 0));
+        }
+
+        if (CheatsBool || BackBool)
+        {
+            Pause.global.StartButtonHolder.gameObject.SetActive(BackBool);
+            Pause.global.CheatButtonHolder.gameObject.SetActive(!BackBool);
         }
 
         if (RestartBool)

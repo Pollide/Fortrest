@@ -19,11 +19,11 @@ public class Pause : MonoBehaviour
 {
     public static Pause global;
 
-    public int StartButtonInt = 0;
-    public int OptionButtonInt = 2;
+    public int StartButtonInt;
+    public int CheatButtonInt;
     [Space(10)]
     public Transform StartButtonHolder;
-    public Transform OptionButtonHolder;
+    public Transform CheatButtonHolder;
 
 
     private void Awake()
@@ -34,7 +34,7 @@ public class Pause : MonoBehaviour
 
     private void Update()
     {
-        ButtonInput(StartButtonHolder.gameObject.activeSelf ? StartButtonHolder : OptionButtonHolder, ref (StartButtonHolder.gameObject.activeSelf ? ref StartButtonInt : ref OptionButtonInt));
+        ButtonInput(StartButtonHolder.gameObject.activeSelf ? StartButtonHolder : CheatButtonHolder, ref (StartButtonHolder.gameObject.activeSelf ? ref StartButtonInt : ref CheatButtonInt));
     }
 
     void ButtonInput(Transform buttonHolder, ref int buttonInt)

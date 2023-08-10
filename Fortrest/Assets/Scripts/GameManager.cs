@@ -416,7 +416,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if ((int)Pref("Game Started", 0, true) == 1)
+            if ((int)Pref("Game Start", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
@@ -441,7 +441,7 @@ public class GameManager : MonoBehaviour
     {
         if (!load)
         {
-            Pref("Game Started", 1, false);
+            Pref("Game Start", 1, false);
         }
         DataPositionVoid("Player", PlayerController.global.transform, load);
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
