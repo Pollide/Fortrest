@@ -222,72 +222,73 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        // Get Character controller that is attached to the player
-        playerCC = GetComponent<CharacterController>();
+        if (GameManager.global)
+        {
+            // Get Character controller that is attached to the player
+            playerCC = GetComponent<CharacterController>();
 
-        global = this;
+            global = this;
 
-        // Controller stuff
+            houseSpawnPoint = house.transform.GetChild(1).gameObject;
+            // Controller stuff
 
-        // Left stick to move
-        GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
-        GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
-        GameManager.global.gamepadControls.Controls.Move.performed += context => MoveController(true);
-        GameManager.global.gamepadControls.Controls.Move.canceled += context => MoveController(false);
-        GameManager.global.gamepadControls.Controls.Move.performed += context => PauseSelection();
-        GameManager.global.gamepadControls.Controls.Move.canceled += context => canPressCTRL = false;
+            // Left stick to move
+            GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
+            GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
+            GameManager.global.gamepadControls.Controls.Move.performed += context => MoveController(true);
+            GameManager.global.gamepadControls.Controls.Move.canceled += context => MoveController(false);
+            GameManager.global.gamepadControls.Controls.Move.performed += context => PauseSelection();
+            GameManager.global.gamepadControls.Controls.Move.canceled += context => canPressCTRL = false;
 
-        // A to sprint
-        GameManager.global.gamepadControls.Controls.Sprint.performed += context => SprintController(true);
-        GameManager.global.gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
+            // A to sprint
+            GameManager.global.gamepadControls.Controls.Sprint.performed += context => SprintController(true);
+            GameManager.global.gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
 
-        // A to select in build mode
-        GameManager.global.gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
+            // A to select in build mode
+            GameManager.global.gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
 
-        // A to select in pause mode
-        GameManager.global.gamepadControls.Controls.Sprint.performed += context => PauseEnter();
+            // A to select in pause mode
+            GameManager.global.gamepadControls.Controls.Sprint.performed += context => PauseEnter();
 
-        // X to interact
-        GameManager.global.gamepadControls.Controls.Interact.performed += context => InteractController();
+            // X to interact
+            GameManager.global.gamepadControls.Controls.Interact.performed += context => InteractController();
 
-        // Y to swap tool
-        GameManager.global.gamepadControls.Controls.Swap.performed += context => SwappingController();
+            // Y to swap tool
+            GameManager.global.gamepadControls.Controls.Swap.performed += context => SwappingController();
 
-        // B to evade
-        GameManager.global.gamepadControls.Controls.Evade.performed += context => EvadeController();
+            // B to evade
+            GameManager.global.gamepadControls.Controls.Evade.performed += context => EvadeController();
 
-        // Right trigger for gathering
-        GameManager.global.gamepadControls.Controls.Gathering.performed += context => GatheringController(true);
-        GameManager.global.gamepadControls.Controls.Gathering.canceled += context => GatheringController(false);
+            // Right trigger for gathering
+            GameManager.global.gamepadControls.Controls.Gathering.performed += context => GatheringController(true);
+            GameManager.global.gamepadControls.Controls.Gathering.canceled += context => GatheringController(false);
 
-        // Right trigger for attacking
-        GameManager.global.gamepadControls.Controls.Attacking.performed += context => AttackingController();
+            // Right trigger for attacking
+            GameManager.global.gamepadControls.Controls.Attacking.performed += context => AttackingController();
 
-        // Left trigger for aiming
-        GameManager.global.gamepadControls.Controls.Aiming.performed += context => AimingController(true);
-        GameManager.global.gamepadControls.Controls.Aiming.canceled += context => AimingController(false);
+            // Left trigger for aiming
+            GameManager.global.gamepadControls.Controls.Aiming.performed += context => AimingController(true);
+            GameManager.global.gamepadControls.Controls.Aiming.canceled += context => AimingController(false);
 
-        // Right Bumper for Mini Turret
-        GameManager.global.gamepadControls.Controls.Turret.performed += context => TurretController();
+            // Right Bumper for Mini Turret
+            GameManager.global.gamepadControls.Controls.Turret.performed += context => TurretController();
 
-        // Left Bumper to heal
-        GameManager.global.gamepadControls.Controls.Heal.performed += context => HealController();
+            // Left Bumper to heal
+            GameManager.global.gamepadControls.Controls.Heal.performed += context => HealController();
 
-        // Pause button to pause
-        GameManager.global.gamepadControls.Controls.Pause.performed += context => PauseController();
+            // Pause button to pause
+            GameManager.global.gamepadControls.Controls.Pause.performed += context => PauseController();
 
-        // Select button to open Map
-        GameManager.global.gamepadControls.Controls.Map.performed += context => MapController();
+            // Select button to open Map
+            GameManager.global.gamepadControls.Controls.Map.performed += context => MapController();
 
-        houseSpawnPoint = house.transform.GetChild(1).gameObject;
+            // Select to lock / unlock camera
+            //gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
+            // X to open / close inventory
+            //gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
 
-        // Select to lock / unlock camera
-        //gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
-        // X to open / close inventory
-        //gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
-
+        }
     }
-
 
     // CONTROLLER FUNCTIONS START
     private void SprintController(bool pressed)
@@ -313,7 +314,7 @@ public class PlayerController : MonoBehaviour
             {
                 selectCTRL = true;
             }
-        }  
+        }
     }
 
     private void MoveController(bool pressed)
@@ -342,7 +343,7 @@ public class PlayerController : MonoBehaviour
                 downCTRL = true;
                 canPressCTRL = true;
             }
-        }        
+        }
     }
 
     private void PauseEnter()
@@ -608,7 +609,7 @@ public class PlayerController : MonoBehaviour
             if (!aimingCTRL)
             {
                 cancelCTRL = false;
-            }          
+            }
             StopCoroutine("RevertCancel");
             StartCoroutine("RevertCancel");
         }
@@ -909,13 +910,18 @@ public class PlayerController : MonoBehaviour
     public void PauseVoid(bool pause)
     {
         if (!mapBool)
-        {          
+        {
             PauseCanvasGameObject.SetActive(pause);
+            Pause.global.StartButtonHolder.gameObject.SetActive(true);
+            Pause.global.CheatButtonHolder.gameObject.SetActive(false);
+
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            PlayerModeHandler.SetMouseActive(pause);
             Time.timeScale = pause ? 0 : 1;
-            playerCanMove = pause ? false : true;
+            playerCanMove = !pause;
             pausedBool = pause;
+
             if (pause && !resetPauseOption)
             {
                 Pause.global.StartButtonInt = 0;
@@ -1473,7 +1479,7 @@ public class PlayerController : MonoBehaviour
     public void DisplayEnemiesComingText()
     {
         GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
-        displayAmount = true;   
+        displayAmount = true;
     }
 
     public void EnemiesTextControl()
@@ -1495,10 +1501,10 @@ public class PlayerController : MonoBehaviour
             }
         });
 
-        Debug.Log(goblinsInt);
+        //Debug.Log(goblinsInt);
 
         if (goblinsInt > 0 || LevelManager.global.spawnEnemies)
-        {          
+        {
             int remaining = LevelManager.global.enemiesCount + goblinsInt;
 
             if (lastAmount != remaining)
@@ -1512,7 +1518,7 @@ public class PlayerController : MonoBehaviour
 
         if (!LevelManager.global.spawnEnemies && goblinsInt <= 0 && LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer > 30.0f)
         {
-            float temp = 1.0f;            
+            float temp = 1.0f;
             if (temp > 0)
             {
                 temp -= Time.deltaTime;
@@ -1530,7 +1536,7 @@ public class PlayerController : MonoBehaviour
                 textIsGone = true;
             }
         }
-    }    
+    }
 
     private void Death()
     {

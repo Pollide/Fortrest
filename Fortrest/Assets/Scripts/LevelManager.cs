@@ -328,18 +328,7 @@ public class LevelManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
-            if (Cursor.visible)
-            {
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
-                // locked = true;
-            }
-            else
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-                //   locked = true;
-            }
+            PlayerModeHandler.SetMouseActive(!Cursor.visible);
         }
     }
 

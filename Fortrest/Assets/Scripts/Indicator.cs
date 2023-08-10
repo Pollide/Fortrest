@@ -143,7 +143,7 @@ public class Indicator : MonoBehaviour
             if (active != AppearBool)
             {
                 AppearBool = active;
-                Debug.Log(distance);
+
                 GameManager.PlayAnimation(MainData.GetComponent<Animation>(), "Arrow Appear", active);
             }
 

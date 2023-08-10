@@ -390,7 +390,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         HUD.RepairModeHUD();
 
-        Debug.Log("Repair");
+        //  Debug.Log("Repair");
     }
 
     public void SwitchToResourceMode()
@@ -406,7 +406,7 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.ResourceModeHUD();
-        Debug.Log("Resource");
+        //  Debug.Log("Resource");
     }
 
     public void SwitchToCombatMode()
@@ -421,7 +421,7 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.CombatModeHUD();
-        Debug.Log("Combat");
+        // Debug.Log("Combat");
     }
 
     public void SwitchToUpgradeMode()
@@ -433,7 +433,7 @@ public class PlayerModeHandler : MonoBehaviour
         playerModes = PlayerModes.UpgradeMenu;
 
         HUD.UpgradeModeHUD();
-        Debug.Log("Upgrade");
+        //   Debug.Log("Upgrade");
     }
 
     bool runOnce;
@@ -599,10 +599,24 @@ public class PlayerModeHandler : MonoBehaviour
         return false;
     }
 
+    public static bool ReturnKeyboard()
+    {
+        InputDevice[] devices = InputSystem.devices.ToArray();
+
+        foreach (var device in devices)
+        {
+            if (device is Gamepad)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public static void SetMouseActive(bool isActive)
     {
-        if (isActive == true)
+        if (isActive && ReturnKeyboard())
         {
             if (!Cursor.visible)
             {
@@ -614,6 +628,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             if (Cursor.visible)
             {
+                Debug.Log(1);
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
             }
