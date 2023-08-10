@@ -136,7 +136,7 @@ public class Building : MonoBehaviour
         if (!DestroyedBool)
         {
             health -= amount;
-            if (resourceObject == BuildingType.House)
+            if (HUDHealthBar && resourceObject == BuildingType.House)
             {
                 HUDHealthBar.SetHealth(health, true);
             }

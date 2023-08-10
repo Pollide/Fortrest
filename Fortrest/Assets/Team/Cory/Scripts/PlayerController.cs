@@ -509,9 +509,12 @@ public class PlayerController : MonoBehaviour
         {
             evadeTimer += Time.deltaTime;
             playerCanBeDamaged = false;
+
+
             if (!blocked)
             {
-                transform.position = Vector3.Lerp(transform.position, newPosition, evadeTimer / 30.0f);
+
+                transform.position = Vector3.Lerp(transform.position, newPosition, evadeTimer * 5 * Time.deltaTime);
             }
             return;
         }
@@ -793,15 +796,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TeleportPlayer(Vector3 newPosition)
+    public void TeleportPlayer(Vector3 pos)
     {
-        LevelManager.global.SceneCamera.transform.position = newPosition;
+        LevelManager.global.SceneCamera.transform.position = pos;
 
         if (Boar.global.mounted)
         {
             //Boar.global.canMove = false;
             Boar.global.cc.enabled = false;
-            Boar.global.transform.position = newPosition;
+            Boar.global.transform.position = pos;
             //  Boar.global.GetComponent<BoxCollider>().enabled = false;
             Boar.global.cc.enabled = true;
             Boar.global.animator.SetBool("Moving", false);
@@ -809,7 +812,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             playerCC.enabled = false;
-            transform.position = newPosition;
+            transform.position = pos;
             playerCC.enabled = true;
             CharacterAnimator.SetBool("Moving", false);
             //PlayerController.global.playerCanMove = false;
@@ -902,6 +905,7 @@ public class PlayerController : MonoBehaviour
         evadeTimer = 0;
         canEvade = false;
         evading = true;
+        blocked = false;
         CharacterAnimator.ResetTrigger("Evade");
         CharacterAnimator.SetTrigger("Evade");
         newPosition = transform.position + (transform.forward * 7.0f);
