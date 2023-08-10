@@ -13,8 +13,8 @@ public class Boar : MonoBehaviour
     public bool mounted = false;
     public bool inRange = false;
 
-    private float maxSpeed = 0.75f;
-    private float acceleration = 0.2f;
+    private float maxSpeed = 70f;
+    public float acceleration = 10f;
     private float deceleration = 0.0f;
     public float currentSpeed;
     private float currentTurn;
@@ -98,7 +98,7 @@ public class Boar : MonoBehaviour
             if (currentSpeed > 0)
             {
                 Lerping(0.5f, 2.0f, ref deceleration, 2);
-                currentSpeed -= deceleration * Time.fixedDeltaTime;
+                currentSpeed -= deceleration * Time.deltaTime;
                 currentSpeed = Mathf.Max(currentSpeed, 0.0f);
                 animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
                 if (currentSpeed < 0.15f)
@@ -114,7 +114,7 @@ public class Boar : MonoBehaviour
             {
                 transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0.0f, currentTurn, 0.0f));
             }
-            cc.Move(transform.forward * (currentSpeed / 8.0f) + new Vector3(0.0f, verticalVelocity, 0.0f));
+            cc.Move((transform.forward * (currentSpeed / 8.0f) * Time.deltaTime) + new Vector3(0.0f, verticalVelocity, 0.0f));
             currentTurn = 0.0f;
         }
     }
@@ -204,28 +204,28 @@ public class Boar : MonoBehaviour
 
     void Ride()
     {
-        Lerping(0.2f, 0.4f, ref acceleration, 0.2667f); // Acceleration
-        Lerping(0.5f, 2.0f, ref deceleration, 2f); // Deceleration
+        Lerping(5, maxSpeed / 2, ref acceleration, 5); // Acceleration
+        Lerping(0.5f, maxSpeed * 2, ref deceleration, 2f); // Deceleration
         Lerping(30.0f, 45.0f, ref turnAnglePerSec, 20f); // Turn
 
         if (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0)
         {
-            currentSpeed += acceleration * Time.fixedDeltaTime;
+            currentSpeed += acceleration * Time.deltaTime;
             currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
         }
         else
         {
-            currentSpeed -= deceleration * Time.fixedDeltaTime;
+            currentSpeed -= deceleration * Time.deltaTime;
             currentSpeed = Mathf.Max(currentSpeed, 0.0f);
         }
 
         if (Input.GetKey(KeyCode.A) || PlayerController.global.moveCTRL.x < -0.35f)
         {
-            currentTurn = -turnAnglePerSec * Time.fixedDeltaTime;
+            currentTurn = -turnAnglePerSec * Time.deltaTime;
         }
         if (Input.GetKey(KeyCode.D) || PlayerController.global.moveCTRL.x > 0.35f)
         {
-            currentTurn = turnAnglePerSec * Time.fixedDeltaTime;
+            currentTurn = turnAnglePerSec * Time.deltaTime;
         }
     }
 
@@ -239,7 +239,7 @@ public class Boar : MonoBehaviour
         }
         else
         {
-            verticalVelocity += gravity * Time.fixedDeltaTime;
+            verticalVelocity += gravity * Time.deltaTime;
         }
         //}
     }
@@ -259,10 +259,10 @@ public class Boar : MonoBehaviour
             animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
             animator.SetBool("Moving", isMoving);
             if (isMoving)
-            {               
+            {
                 if (bobbing > -5f && !reverse)
                 {
-                    bobbing -= Time.deltaTime * (currentSpeed * 75);
+                    bobbing -= Time.deltaTime * (currentSpeed);
                 }
                 else if (bobbing == -5f)
                 {
@@ -270,7 +270,7 @@ public class Boar : MonoBehaviour
                 }
                 if (bobbing < 5f && reverse)
                 {
-                    bobbing += Time.deltaTime * (currentSpeed * 75);
+                    bobbing += Time.deltaTime * (currentSpeed);
                 }
                 else if (bobbing == 5f)
                 {
@@ -284,7 +284,7 @@ public class Boar : MonoBehaviour
                 bobbing = 0f;
                 reverse = false;
             }
-        }       
+        }
     }
 
     private void StepOne()
