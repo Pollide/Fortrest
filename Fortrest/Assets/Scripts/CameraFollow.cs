@@ -33,7 +33,7 @@ public class CameraFollow : MonoBehaviour
         max = maxSmooth - minSmooth;
     }
 
-    private void Update()
+    public void Update()
     {
         //if (Input.GetKeyDown(KeyCode.CapsLock) || PlayerController.global.lockingCTRL)
         //{
@@ -89,7 +89,7 @@ public class CameraFollow : MonoBehaviour
         if (cameraDistance > 0.1f)
         {
             transform.position = Vector3.SmoothDamp(transform.position, offsetPosition, ref currentVelocity, smoothTime);
-            
+
         }
         else
         {
