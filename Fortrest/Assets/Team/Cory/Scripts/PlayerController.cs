@@ -214,8 +214,6 @@ public class PlayerController : MonoBehaviour
     private float fraction;
     public const int MaxApples = 5;
     private float newGap;
-
-    private bool resetPauseOption;
     private bool displayAmount;
     private bool textIsGone = true;
 
@@ -912,25 +910,27 @@ public class PlayerController : MonoBehaviour
         if (!mapBool)
         {
             PauseCanvasGameObject.SetActive(pause);
-            Pause.global.StartButtonHolder.gameObject.SetActive(true);
-            Pause.global.CheatButtonHolder.gameObject.SetActive(false);
+            if (pause)
+            {
+                for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
+                {
+                    Pause.global.ButtonHolder.GetChild(i).gameObject.SetActive(i == 0);
+                }
+
+                Pause.global.SelectedList = new List<int>();
+
+                for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
+                {
+                    Pause.global.SelectedList.Add(0);
+                }
+            }
 
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
-            PlayerModeHandler.SetMouseActive(pause);
+
             Time.timeScale = pause ? 0 : 1;
             playerCanMove = !pause;
             pausedBool = pause;
-
-            if (pause && !resetPauseOption)
-            {
-                Pause.global.StartButtonInt = 0;
-                resetPauseOption = true;
-            }
-            else if (!pause)
-            {
-                resetPauseOption = false;
-            }
         }
     }
 

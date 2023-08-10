@@ -607,6 +607,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             if (device is Gamepad)
             {
+
                 return false;
             }
         }
@@ -616,19 +617,22 @@ public class PlayerModeHandler : MonoBehaviour
 
     public static void SetMouseActive(bool isActive)
     {
+
+
         if (isActive && ReturnKeyboard())
         {
-            if (!Cursor.visible)
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
+            // Debug.Log(isActive + " && " + ReturnKeyboard() + " " + Cursor.visible);
+
+            //  Debug.Log(1);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
         }
         else
         {
             if (Cursor.visible)
             {
-                Debug.Log(1);
+
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
             }

@@ -79,7 +79,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the pointer has exited the button
     public void OnPointerExit(PointerEventData eventData)
     {
-        //ChangeSizeVoid(1f);
+        ChangeSizeVoid(1f);
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
     }
 
@@ -87,7 +87,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public void OnPointerEnter(PointerEventData eventData)
     {
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
-        //ChangeSizeVoid(1);
+        ChangeSizeVoid(1.1f);
+        Pause.global.SelectedList[Pause.global.ReturnIndex()] = transform.GetSiblingIndex();
         //ChangeColourVoid(Color.white);
     }
 
@@ -135,8 +136,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (CheatsBool || BackBool)
         {
-            Pause.global.StartButtonHolder.gameObject.SetActive(BackBool);
-            Pause.global.CheatButtonHolder.gameObject.SetActive(!BackBool);
+            Pause.global.ButtonHolder.GetChild(0).gameObject.SetActive(BackBool);
+            Pause.global.ButtonHolder.GetChild(1).gameObject.SetActive(!BackBool);
         }
 
         if (RestartBool)

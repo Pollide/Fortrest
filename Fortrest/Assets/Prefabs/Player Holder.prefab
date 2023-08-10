@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 5091102508025272910}
   - component: {fileID: 4055337832892099889}
   m_Layer: 5
-  m_Name: Cheat Button Holder
+  m_Name: Cheats
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3270,7 +3270,7 @@ GameObject:
   - component: {fileID: 6330279248206954768}
   - component: {fileID: 3285777715576483694}
   m_Layer: 5
-  m_Name: Frame
+  m_Name: Button Holder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4259,10 +4259,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de3f74c7bd8a194fb268d09033e4c35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartButtonInt: 0
-  CheatButtonInt: 0
-  StartButtonHolder: {fileID: 8772146454925088577}
-  CheatButtonHolder: {fileID: 3596950992737368681}
+  ButtonHolder: {fileID: 6330279248206954768}
+  SelectedList: 
 --- !u!1 &5253122756691711064
 GameObject:
   m_ObjectHideFlags: 0
@@ -5491,7 +5489,7 @@ GameObject:
   - component: {fileID: 5267547006823067064}
   - component: {fileID: 2551327805260701453}
   m_Layer: 5
-  m_Name: Start Button Holder
+  m_Name: Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
