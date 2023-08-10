@@ -550,6 +550,9 @@ public class PlayerController : MonoBehaviour
             {
                 AttackLunge();
             }
+
+
+
         }
         else
         {
@@ -743,7 +746,7 @@ public class PlayerController : MonoBehaviour
                 case KeyCode.E:
                     if (canTeleport)
                     {
-                        TeleportPlayer(houseSpawnPoint.transform.position);
+                        TeleportPlayer(house.transform.position);
                     }
                     break;
 
@@ -785,7 +788,7 @@ public class PlayerController : MonoBehaviour
             }
             if (canTeleport && interactCTRL)
             {
-                TeleportPlayer(houseSpawnPoint.transform.position);
+                TeleportPlayer(house.transform.position);
             }
         }
     }
@@ -796,6 +799,7 @@ public class PlayerController : MonoBehaviour
 
         if (Boar.global.mounted)
         {
+            //Boar.global.canMove = false;
             Boar.global.cc.enabled = false;
             Boar.global.transform.position = newPosition;
             //  Boar.global.GetComponent<BoxCollider>().enabled = false;
@@ -814,6 +818,7 @@ public class PlayerController : MonoBehaviour
         canTeleport = false;
         needInteraction = false;
     }
+
     public void ChangeTool(ToolData toolData)
     {
         AxeGameObject.SetActive(toolData.AxeBool);
@@ -924,7 +929,7 @@ public class PlayerController : MonoBehaviour
                     Pause.global.SelectedList.Add(0);
                 }
             }
-
+            PlayerModeHandler.SetMouseActive(pause);
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
 
@@ -1314,7 +1319,7 @@ public class PlayerController : MonoBehaviour
         miniTurret.GetComponent<TurretShooting>().MiniTurret = true;
         miniTurret.GetComponent<TurretShooting>().turn_speed = 10;
         miniTurret.GetComponent<TurretShooting>().damage = 1;
-        miniTurret.GetComponent<TurretShooting>().fireRate = 20f;
+        miniTurret.GetComponent<TurretShooting>().fireRate = 10f;
         GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
     }
 
@@ -1545,9 +1550,8 @@ public class PlayerController : MonoBehaviour
             // lose inventory
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
-            Vector3 sleepingVector = house.transform.position;
-            sleepingVector.y = transform.position.y;
-            TeleportPlayer(sleepingVector);
+
+            TeleportPlayer(house.transform.position);
             playerCanMove = false;
             playerCC.enabled = false;
             bodyShape.SetActive(false);

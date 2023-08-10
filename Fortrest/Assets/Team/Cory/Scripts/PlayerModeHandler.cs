@@ -358,12 +358,13 @@ public class PlayerModeHandler : MonoBehaviour
         buildGrid.gameObject.SetActive(active);
         PlayerController.global.MapResourceHolder.gameObject.SetActive(active);
 
+        PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
         if (active)
         {
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
-            PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
-
+            PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position);
+            PlayerController.global.playerCanMove = false;
 
             playerModes = PlayerModes.BuildMode;
 
@@ -373,8 +374,10 @@ public class PlayerModeHandler : MonoBehaviour
 
             HUD.BuildModeHUD();
 
-            Debug.Log("Build");
+            // Debug.Log("Build");
         }
+
+        CameraFollow.global.Update(); //refreshes it instantly
     }
 
 
