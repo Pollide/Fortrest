@@ -47,6 +47,7 @@ public class PlayerModeHandler : MonoBehaviour
     public bool inTheFortress;
     private bool centerMouse;
     Vector2 cursorPosition;
+    Vector3 entryPosition;
 
     private void Awake()
     {
@@ -136,22 +137,13 @@ public class PlayerModeHandler : MonoBehaviour
                 switch (playerModes)
                 {
                     case PlayerModes.CombatMode:
-                        SwitchToResourceMode();
+                        SwitchToResourceMode(false);
                         break;
                     case PlayerModes.ResourceMode:
                         SwitchToCombatMode();
                         break;
                     default:
                         break;
-                        //case PlayerModes.BuildMode:
-                        //    SwitchToUpgradeMode();
-                        //    break;
-                        //case PlayerModes.RepairMode:
-                        //    SwitchToBuildMode();
-                        //    break;
-                        //case PlayerModes.UpgradeMenu:
-                        //    SwitchToBuildRepairMode();
-                        //    break;
                 }
             }
         }
@@ -161,6 +153,7 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
             {
+                entryPosition = PlayerController.global.transform.position;
                 if (House.GetComponent<Building>().textDisplayed)
                 {
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
@@ -176,7 +169,7 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
                     House.GetComponent<Building>().textDisplayed = true;
                 }
-                SwitchToResourceMode();
+                SwitchToResourceMode(false);
             }
         }
     }
@@ -192,7 +185,7 @@ public class PlayerModeHandler : MonoBehaviour
         buildType = BuildType.Turret;
         HUD = HUDHandler.global;
         SwitchToBuildMode(false);
-        SwitchToResourceMode();
+        SwitchToResourceMode(true);
     }
 
     private void BuildMode()
@@ -264,7 +257,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode)
         {
-            PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
+            PlayerController.global.TeleportPlayer(entryPosition);
 
             SwitchToBuildMode(false);
             StartCoroutine(PlayerAwake());
@@ -395,11 +388,15 @@ public class PlayerModeHandler : MonoBehaviour
         //  Debug.Log("Repair");
     }
 
-    public void SwitchToResourceMode()
+    public void SwitchToResourceMode(bool start)
     {
         ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
-        LeaveHouse();
+
+        if (!start)
+        {
+            LeaveHouse();
+        }        
 
         ClearBlueprint();
 
