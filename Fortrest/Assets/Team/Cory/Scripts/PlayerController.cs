@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour
     private float evadeTimer = 0.0f;
     private float evadeCoolDown = 2.5f;
     [HideInInspector] public bool evading = false;
-    private bool canEvade = true;
+    [HideInInspector] public bool canEvade = true;
     [HideInInspector] public bool playerCanBeDamaged = true;
     private Vector3 newPosition;
     private bool blocked = false;
@@ -553,9 +553,6 @@ public class PlayerController : MonoBehaviour
             {
                 AttackLunge();
             }
-
-
-
         }
         else
         {
@@ -733,14 +730,14 @@ public class PlayerController : MonoBehaviour
             switch (letter)
             {
                 case KeyCode.R:
-                    if (appleAmount > 0)
+                    if (appleAmount > 0 && playerCanMove)
                     {
                         EatApple();
                     }
                     break;
 
                 case KeyCode.T:
-                    if (!turretSpawned)
+                    if (!turretSpawned && playerCanMove)
                     {
                         SpawnTurret();
                     }
@@ -754,7 +751,7 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case KeyCode.Space:
-                    if (canEvade)
+                    if (canEvade && playerCanMove)
                     {
                         StartCoroutine(Evade());
                     }
