@@ -771,21 +771,24 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (evadeCTRL)
+            if (playerCanMove)
             {
-                evadeCTRL = false;
-                StartCoroutine(Evade());
-            }
-            if (turretCTRL)
-            {
-                turretCTRL = false;
-                SpawnTurret();
-            }
-            if (healCTRL)
-            {
-                healCTRL = false;
-                EatApple();
-            }
+                if (evadeCTRL)
+                {
+                    evadeCTRL = false;
+                    StartCoroutine(Evade());
+                }
+                if (turretCTRL)
+                {
+                    turretCTRL = false;
+                    SpawnTurret();
+                }
+                if (healCTRL)
+                {
+                    healCTRL = false;
+                    EatApple();
+                }
+            }           
             if (canTeleport && interactCTRL)
             {
                 TeleportPlayer(house.transform.position);
