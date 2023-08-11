@@ -13,8 +13,8 @@ public class Boar : MonoBehaviour
     public bool mounted = false;
     public bool inRange = false;
 
-    private float maxSpeed = 70f;
-    public float acceleration = 10f;
+    private float maxSpeed = 90f;
+    public float acceleration = 40f;
     private float deceleration = 0.0f;
     public float currentSpeed;
     private float currentTurn;
@@ -36,6 +36,7 @@ public class Boar : MonoBehaviour
     private float bobbing = 0f;
     private bool reverse;
     public bool axe;
+    private bool midAir;
 
     private void Awake()
     {
@@ -65,7 +66,7 @@ public class Boar : MonoBehaviour
 
         DisplayText();
 
-        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && !PlayerController.global.canGetInHouse)
+        if (!midAir && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && !PlayerController.global.canGetInHouse)
         {
             Mount();
         }
@@ -97,7 +98,7 @@ public class Boar : MonoBehaviour
         {
             if (currentSpeed > 0)
             {
-                Lerping(0.5f, 2.0f, ref deceleration, 2);
+                Lerping(100f, 300f, ref deceleration, 20 / 9f); // Deceleration
                 currentSpeed -= deceleration * Time.deltaTime;
                 currentSpeed = Mathf.Max(currentSpeed, 0.0f);
                 animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
@@ -177,6 +178,7 @@ public class Boar : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(mountSound, 1.0f);
             player.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
             player.transform.rotation = transform.rotation;
+            player.GetComponent<CharacterController>().enabled = true;
             player.GetComponent<PlayerController>().playerCanMove = false;
             PlayerController.global.CharacterAnimator.SetBool("Moving", false);
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HandBool = true });
@@ -187,12 +189,22 @@ public class Boar : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(dismountSound, 1.0f);
             player.transform.position += transform.right * 2;
             player.transform.rotation = transform.rotation;
+            player.GetComponent<CharacterController>().enabled = true;
             player.GetComponent<PlayerController>().playerCanMove = true;
             PlayerController.global.CharacterAnimator.SetBool("Sitting", false);
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = PlayerModeHandler.global.playerModes == PlayerModes.CombatMode, AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
             GetComponent<NavMeshObstacle>().enabled = true;
-        }
-        player.GetComponent<CharacterController>().enabled = true;
+            StartCoroutine(MidAir());
+        }       
+    }
+
+    private IEnumerator MidAir()
+    {
+        PlayerController.global.canEvade = false;
+        midAir = true;
+        yield return new WaitForSeconds(0.45f);
+        PlayerController.global.canEvade = true;
+        midAir = false;
     }
 
     void PlayerStick()
@@ -204,9 +216,9 @@ public class Boar : MonoBehaviour
 
     void Ride()
     {
-        Lerping(5, maxSpeed / 2, ref acceleration, 5); // Acceleration
-        Lerping(0.5f, maxSpeed * 2, ref deceleration, 2f); // Deceleration
-        Lerping(30.0f, 45.0f, ref turnAnglePerSec, 20f); // Turn
+        Lerping(40f, 60f, ref acceleration, 2/9f); // Acceleration
+        Lerping(100f, 300f, ref deceleration, 20/9f); // Deceleration
+        Lerping(40f, 60f, ref turnAnglePerSec, 2/9f); // Turn
 
         if (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0)
         {
@@ -256,13 +268,13 @@ public class Boar : MonoBehaviour
         if (canMove)
         {
             isMoving = (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0) || (currentSpeed >= 0.5f && (!Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0));
-            animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
+            animator.speed = Mathf.Clamp(1 * ((currentSpeed / 120.0f) * 2.0f), 0.5f, 1.5f);
             animator.SetBool("Moving", isMoving);
             if (isMoving)
             {
                 if (bobbing > -5f && !reverse)
                 {
-                    bobbing -= Time.deltaTime * (currentSpeed);
+                    bobbing -= Time.deltaTime * ((currentSpeed / 120.0f) * 75f);
                 }
                 else if (bobbing == -5f)
                 {
@@ -270,7 +282,7 @@ public class Boar : MonoBehaviour
                 }
                 if (bobbing < 5f && reverse)
                 {
-                    bobbing += Time.deltaTime * (currentSpeed);
+                    bobbing += Time.deltaTime * ((currentSpeed / 120.0f) * 75f);
                 }
                 else if (bobbing == 5f)
                 {
@@ -289,11 +301,17 @@ public class Boar : MonoBehaviour
 
     private void StepOne()
     {
-        GameManager.global.SoundManager.PlaySound(stepSound, 0.25f);
+        if (isMoving)
+        {
+            GameManager.global.SoundManager.PlaySound(stepSound, 0.25f);
+        }        
     }
 
     private void StepTwo()
     {
-        GameManager.global.SoundManager.PlaySound(stepSound2, 0.25f);
+        if (isMoving)
+        {
+            GameManager.global.SoundManager.PlaySound(stepSound2, 0.25f);
+        }
     }
 }
