@@ -156,7 +156,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && House.GetComponent<Building>().playerinRange)
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && House.GetComponent<Building>().playerinRange && !PlayerController.global.teleporting)
         {
             PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
@@ -354,7 +354,6 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToBuildMode(bool active = true)
     {
-
         buildGrid.gameObject.SetActive(active);
         PlayerController.global.MapResourceHolder.gameObject.SetActive(active);
 
