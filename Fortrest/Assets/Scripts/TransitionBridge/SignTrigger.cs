@@ -24,13 +24,24 @@ public class SignTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             activateText.SetActive(false);
+            inRange = false;
         }
     }
 
     private void Update()
     {
-        if (inRange && Input.GetKeyDown(KeyCode.E) && !hasRun)
+        if (inRange)
         {
+            PlayerController.global.needInteraction = true;
+        }
+        else
+        {
+            PlayerController.global.needInteraction = false;
+        }
+
+        if (inRange && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && !hasRun)
+        {
+            PlayerController.global.interactCTRL = false;
             if (bridgeBuilder.resourceCostList.Keys.Count < bridgeBuilder.resourceCostList.Values.Count)
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
