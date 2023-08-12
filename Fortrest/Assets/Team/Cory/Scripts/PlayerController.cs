@@ -1258,7 +1258,7 @@ public class PlayerController : MonoBehaviour
             if (Facing(building.position, 75.0f) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && distanceFloat == smallestDistance && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
             {
                 gathering = true;
-                gatherTimer = 0;
+                gatherTimer = 0;            
                 currentResource = building.GetComponent<Building>();
                 ChangeTool(new ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PickaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
                 CharacterAnimator.ResetTrigger("Swing");
