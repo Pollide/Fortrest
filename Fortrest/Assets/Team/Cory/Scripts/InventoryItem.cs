@@ -79,11 +79,41 @@ public class InventoryItem : MonoBehaviour
         if (name.Contains("Wood"))
         {
             LevelManager.global.WoodTierList[TierInt].ResourceAmount += resourceAmount;
+            switch(TierInt)
+            {
+                case 0:
+                    PopUpResource.global.resourceInt = 0;
+                    break;
+                case 1:
+                    PopUpResource.global.resourceInt = 1;
+                    break;
+                case 2:
+                    PopUpResource.global.resourceInt = 2;
+                    break;
+                default:
+                    break;
+            }
+            PopUpResource.global.displayNow = true;
         }
 
         if (name.Contains("Stone"))
-        {
+        {            
             LevelManager.global.StoneTierList[TierInt].ResourceAmount += resourceAmount;
+            switch (TierInt)
+            {
+                case 0:
+                    PopUpResource.global.resourceInt = 3;
+                    break;
+                case 1:
+                    PopUpResource.global.resourceInt = 4;
+                    break;
+                case 2:
+                    PopUpResource.global.resourceInt = 5;
+                    break;
+                default:
+                    break;
+            }
+            PopUpResource.global.displayNow = true;
         }
 
         // InventoryManager.global.AddItem(this, resourceAmount);
