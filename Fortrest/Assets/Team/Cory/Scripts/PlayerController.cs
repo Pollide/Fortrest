@@ -1336,6 +1336,7 @@ public class PlayerController : MonoBehaviour
     {
         if (playerHealth < maxHealth)
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.EatingSound);
             HealthRestore(appleHealAmount);
             appleAmount -= 1;
             GameManager.PlayAnimation(appleText.GetComponent<Animation>(), "EnemyAmount");

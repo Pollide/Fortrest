@@ -60,6 +60,7 @@ public class SignTrigger : MonoBehaviour
             else if (bridgeBuilder.resourceCostList.Keys.Count > 0 && bridgeBuilder.resourceCostList.Values.Count > 0 && bridgeBuilder.resourceCostList.Keys.Count == bridgeBuilder.resourceCostList.Values.Count && HasAllResources() == true)
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound);
                 GetComponentInParent<BridgeBuilder>().isBuilt = true;
                 hasRun = true;
             }
