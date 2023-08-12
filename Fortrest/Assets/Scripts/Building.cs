@@ -140,9 +140,15 @@ public class Building : MonoBehaviour
             {
                 HUDHealthBar.SetHealth(health, true);
             }
+            else if (healthBarImage)
+            {
+                healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
+                // Debug.Log(health + " / " + maxHealth + " " + amount);
+            }
 
             if (amount != 0)
             {
+
                 HealthAnimation();
             }
         }
