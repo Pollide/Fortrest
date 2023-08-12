@@ -793,7 +793,7 @@ public class PlayerController : MonoBehaviour
                     healCTRL = false;
                     EatApple();
                 }
-            }           
+            }
             if (canTeleport && interactCTRL)
             {              
                 TeleportPlayer(houseSpawnPoint.transform.position);
@@ -803,7 +803,6 @@ public class PlayerController : MonoBehaviour
 
     public void TeleportPlayer(Vector3 pos)
     {
-        LevelManager.global.SceneCamera.transform.position = pos;
 
         if (Boar.global.mounted)
         {
@@ -825,6 +824,8 @@ public class PlayerController : MonoBehaviour
         canTeleport = false;
         needInteraction = false;
         teleporting = true;
+
+            LevelManager.global.SceneCamera.transform.position = pos;
     }
 
     public void ChangeTool(ToolData toolData)
@@ -938,13 +939,14 @@ public class PlayerController : MonoBehaviour
                     Pause.global.SelectedList.Add(0);
                 }
             }
-            PlayerModeHandler.SetMouseActive(pause);
+
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
 
             Time.timeScale = pause ? 0 : 1;
             playerCanMove = !pause;
             pausedBool = pause;
+            PlayerModeHandler.SetMouseActive(pause);
         }
     }
 
@@ -988,32 +990,35 @@ public class PlayerController : MonoBehaviour
             stoneCostList.Add(new LevelManager.TierData());
         }
 
-        if (PlayerModeHandler.global.buildType == BuildType.Turret)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
         {
-            woodCostList[0].ResourceCost = -10;
-            stoneCostList[0].ResourceCost = -5;
-        }
+            if (PlayerModeHandler.global.buildType == BuildType.Turret)
+            {
+                woodCostList[0].ResourceCost = -10;
+                stoneCostList[0].ResourceCost = -5;
+            }
 
-        if (PlayerModeHandler.global.buildType == BuildType.Cannon)
-        {
-            woodCostList[0].ResourceCost = -3;
-            stoneCostList[0].ResourceCost = -3;
-            woodCostList[1].ResourceCost = -5;
-            stoneCostList[1].ResourceCost = -5;
-        }
+            if (PlayerModeHandler.global.buildType == BuildType.Cannon)
+            {
+                woodCostList[0].ResourceCost = -3;
+                stoneCostList[0].ResourceCost = -3;
+                woodCostList[1].ResourceCost = -5;
+                stoneCostList[1].ResourceCost = -5;
+            }
 
-        if (PlayerModeHandler.global.buildType == BuildType.Slow)
-        {
-            stoneCostList[0].ResourceCost = -5;
-            stoneCostList[1].ResourceCost = -10;
-            stoneCostList[2].ResourceCost = -2;
-        }
+            if (PlayerModeHandler.global.buildType == BuildType.Slow)
+            {
+                stoneCostList[0].ResourceCost = -5;
+                stoneCostList[1].ResourceCost = -10;
+                stoneCostList[2].ResourceCost = -2;
+            }
 
-        if (PlayerModeHandler.global.buildType == BuildType.Scatter)
-        {
-            stoneCostList[1].ResourceCost = -5;
-            woodCostList[2].ResourceCost = -10;
-            stoneCostList[2].ResourceCost = -2;
+            if (PlayerModeHandler.global.buildType == BuildType.Scatter)
+            {
+                stoneCostList[1].ResourceCost = -5;
+                woodCostList[2].ResourceCost = -10;
+                stoneCostList[2].ResourceCost = -2;
+            }
         }
 
         //      Debug.Log("UPDATE");
@@ -1425,7 +1430,7 @@ public class PlayerController : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
             }
             currentResource.TakeDamage(1);
-            currentResource.healthBarImage.fillAmount = Mathf.Clamp(currentResource.health / currentResource.maxHealth, 0, 1f);
+
             if (currentResource.health == 0)
             {
                 currentResource.GiveResources();

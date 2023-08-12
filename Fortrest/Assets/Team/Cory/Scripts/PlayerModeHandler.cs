@@ -49,6 +49,7 @@ public class PlayerModeHandler : MonoBehaviour
     Vector2 cursorPosition;
     Vector3 entryPosition;
 
+    bool runOnce;
     private void Awake()
     {
         if (global)
@@ -255,12 +256,14 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void LeaveHouse()
     {
-        if (playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode)
+
+        if (playerModes == PlayerModes.ResourceMode)
         {
-            PlayerController.global.TeleportPlayer(entryPosition);
+          //  PlayerController.global.TeleportPlayer(entryPosition);
 
             SwitchToBuildMode(false);
             StartCoroutine(PlayerAwake());
+            PlayerController.global.TeleportPlayer(entryPosition);
         }
     }
 
@@ -368,12 +371,13 @@ public class PlayerModeHandler : MonoBehaviour
 
             // Debug.Log("Build");
         }
+        else
+        {
+            
+        }
 
         CameraFollow.global.Update(); //refreshes it instantly
     }
-
-
-
 
     public void SwitchToBuildRepairMode()
     {
@@ -405,6 +409,9 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.ResourceModeHUD();
+
+
+        LeaveHouse();
         //  Debug.Log("Resource");
     }
 
@@ -434,8 +441,6 @@ public class PlayerModeHandler : MonoBehaviour
         HUD.UpgradeModeHUD();
         //   Debug.Log("Upgrade");
     }
-
-    bool runOnce;
 
     private void SpawnBuilding(GameObject _prefab)
     {
