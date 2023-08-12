@@ -216,6 +216,7 @@ public class PlayerController : MonoBehaviour
     private float newGap;
     private bool displayAmount;
     private bool textIsGone = true;
+    public bool teleporting;
 
     // Start is called before the first frame update
     void Awake()
@@ -473,7 +474,6 @@ public class PlayerController : MonoBehaviour
             RadiusCamGameObject = GameObject.Find("Radius Camera");
         }
 
-        //        Debug.Log("1" + PlayerController.global.houseSpawnPoint);
         interactText = house.transform.GetChild(3).gameObject;
 
         // Setting default values
@@ -569,6 +569,11 @@ public class PlayerController : MonoBehaviour
         CheckCurrentTool();
         Resting();
         BarDisappear();
+
+        if (teleporting)
+        {
+            teleporting = false;
+        }
 
         if (Input.GetKeyDown(KeyCode.U)) // TEMPORARY
         {
@@ -746,7 +751,7 @@ public class PlayerController : MonoBehaviour
                 case KeyCode.E:
                     if (canTeleport)
                     {
-                        TeleportPlayer(house.transform.position);
+                        TeleportPlayer(houseSpawnPoint.transform.position);
                     }
                     break;
 
@@ -790,8 +795,8 @@ public class PlayerController : MonoBehaviour
                 }
             }
             if (canTeleport && interactCTRL)
-            {
-                TeleportPlayer(house.transform.position);
+            {              
+                TeleportPlayer(houseSpawnPoint.transform.position);
             }
         }
     }
@@ -804,23 +809,23 @@ public class PlayerController : MonoBehaviour
             //Boar.global.canMove = false;
             Boar.global.cc.enabled = false;
             Boar.global.transform.position = pos;
-            //  Boar.global.GetComponent<BoxCollider>().enabled = false;
             Boar.global.cc.enabled = true;
             Boar.global.animator.SetBool("Moving", false);
         }
         else
         {
+            //PlayerController.global.playerCanMove = false;
             playerCC.enabled = false;
             transform.position = pos;
             playerCC.enabled = true;
-            CharacterAnimator.SetBool("Moving", false);
-            //PlayerController.global.playerCanMove = false;
+            CharacterAnimator.SetBool("Moving", false);           
         }
-
-        LevelManager.global.SceneCamera.transform.position = pos;
-
+        interactCTRL = false;
         canTeleport = false;
         needInteraction = false;
+        teleporting = true;
+
+            LevelManager.global.SceneCamera.transform.position = pos;
     }
 
     public void ChangeTool(ToolData toolData)

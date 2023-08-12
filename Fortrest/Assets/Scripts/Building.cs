@@ -53,7 +53,7 @@ public class Building : MonoBehaviour
     private float lastHealth;
 
     private bool underAttack;
-    [HideInInspector] public bool playerinRange;
+    public bool playerinRange;
     private float timerText = 0.0f;
 
     private GameObject normalHouse;
