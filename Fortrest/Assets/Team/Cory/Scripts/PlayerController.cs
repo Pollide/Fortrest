@@ -985,32 +985,35 @@ public class PlayerController : MonoBehaviour
             stoneCostList.Add(new LevelManager.TierData());
         }
 
-        if (PlayerModeHandler.global.buildType == BuildType.Turret)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
         {
-            woodCostList[0].ResourceCost = -10;
-            stoneCostList[0].ResourceCost = -5;
-        }
+            if (PlayerModeHandler.global.buildType == BuildType.Turret)
+            {
+                woodCostList[0].ResourceCost = -10;
+                stoneCostList[0].ResourceCost = -5;
+            }
 
-        if (PlayerModeHandler.global.buildType == BuildType.Cannon)
-        {
-            woodCostList[0].ResourceCost = -3;
-            stoneCostList[0].ResourceCost = -3;
-            woodCostList[1].ResourceCost = -5;
-            stoneCostList[1].ResourceCost = -5;
-        }
+            if (PlayerModeHandler.global.buildType == BuildType.Cannon)
+            {
+                woodCostList[0].ResourceCost = -3;
+                stoneCostList[0].ResourceCost = -3;
+                woodCostList[1].ResourceCost = -5;
+                stoneCostList[1].ResourceCost = -5;
+            }
 
-        if (PlayerModeHandler.global.buildType == BuildType.Slow)
-        {
-            stoneCostList[0].ResourceCost = -5;
-            stoneCostList[1].ResourceCost = -10;
-            stoneCostList[2].ResourceCost = -2;
-        }
+            if (PlayerModeHandler.global.buildType == BuildType.Slow)
+            {
+                stoneCostList[0].ResourceCost = -5;
+                stoneCostList[1].ResourceCost = -10;
+                stoneCostList[2].ResourceCost = -2;
+            }
 
-        if (PlayerModeHandler.global.buildType == BuildType.Scatter)
-        {
-            stoneCostList[1].ResourceCost = -5;
-            woodCostList[2].ResourceCost = -10;
-            stoneCostList[2].ResourceCost = -2;
+            if (PlayerModeHandler.global.buildType == BuildType.Scatter)
+            {
+                stoneCostList[1].ResourceCost = -5;
+                woodCostList[2].ResourceCost = -10;
+                stoneCostList[2].ResourceCost = -2;
+            }
         }
 
         //      Debug.Log("UPDATE");
