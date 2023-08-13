@@ -22,54 +22,61 @@ public class GameManager : MonoBehaviour
     public SFXManager SoundManager; //manages all sound effects
     public SFXManager MusicManager; //manages all music
 
-    public AudioClip MenuMusic; //the music that plays in the menu scene
-    public AudioClip GameMusic;  //the music that plays in the game scene
-    public AudioClip PauseMusic;  //the music that plays when paused
+    // Music
+    public AudioClip MenuMusic; 
+    public AudioClip GameMusic; 
+    public AudioClip PauseMusic;
     public AudioClip NightMusic;
-
-    public AudioClip CollectSound; //the sfx that plays when the mouse presses a button
-    public AudioClip MenuClick1Sound;
-    public AudioClip MenuClick2Sound;
-    public AudioClip Pickaxe1Sound;
-    public AudioClip Pickaxe2Sound;
-    public AudioClip Pickaxe3Sound;
-    public AudioClip PlayerAttackSound;
-    public AudioClip PlayerHitSound;
-    public AudioClip PlayerJumpSound;
-    public AudioClip Footstep1Sound;
-    public AudioClip Footstep2Sound;
-    public AudioClip SwordSwing1Sound;
-    public AudioClip SwordSwing2Sound;
-    public AudioClip SwordSwing3Sound;
-    public AudioClip TreeChop1Sound;
-    public AudioClip TreeChop2Sound;
-    public AudioClip TreeChop3Sound;
+    // SFX
+    public AudioClip CollectSound;
+    public AudioClip MenuClick1Sound; // NOT USED
+    public AudioClip MenuClick2Sound; // NOT USED
     public AudioClip TurretPlaceSound;
-    public AudioClip TurretShootSound;
-    public AudioClip PlayerEatSound;
-    public AudioClip CameraLockSound;
+    public AudioClip EatingSound;
+    public AudioClip CameraLockSound; // NOT USED
     public AudioClip MenuSwooshSound;
-    public AudioClip SpeedButtonClickSound;
-    public AudioClip BushSound;
+    public AudioClip SpeedButtonClickSound; // NOT USED
     public AudioClip ModeChangeClickSound;
     public AudioClip HouseBuiltNoiseSound;
     public AudioClip HouseBuiltSound;
     public AudioClip SnoringSound;
     public AudioClip CantPlaceSound;
-    public AudioClip WhistlingSound;
-
-    public AudioClip CannonSound;
-    public AudioClip EatingSound;
+    public AudioClip WhistlingSound; // NOT USED
     public AudioClip HouseDestroySound;
-    public AudioClip InventoryClickSound;
+    public AudioClip InventoryClickSound; // NOT USED
     public AudioClip NewDaySound;
-    public AudioClip SlowSound;
     public AudioClip WaterSound;
+    // Tools
+    public AudioClip Pickaxe1Sound; // NOT USED
+    public AudioClip Pickaxe2Sound;
+    public AudioClip Pickaxe3Sound;
+    public AudioClip SwordSwing1Sound;
+    public AudioClip SwordSwing2Sound;
+    public AudioClip SwordSwing3Sound; // NOT USED
+    public AudioClip TreeChop1Sound;
+    public AudioClip TreeChop2Sound;
+    public AudioClip TreeChop3Sound; // NOT USED
+    public AudioClip BushSound;
+    // Player
+    public AudioClip PlayerHitSound;
+    public AudioClip PlayerHitSound2; // TO BE ASSIGNED
+    public AudioClip PlayerAttackSound;
+    public AudioClip PlayerAttackSound2; // TO BE ASSIGNED
+    public AudioClip PlayerDeathSound; // TO BE ASSIGNED
+    public AudioClip PlayerDeathSound2; // TO BE ASSIGNED
+    public AudioClip PlayerNoiseSound; // TO BE ASSIGNED
+    public AudioClip PlayerNoiseSound2; // TO BE ASSIGNED
+    public AudioClip PlayerJumpSound; // NOT USED
+    public AudioClip PlayerStepSound;
+    public AudioClip PlayerStepSound2;
+    // Turret
+    public AudioClip BallistaShootSound;
+    public AudioClip CannonShootSound;
+    public AudioClip SlowShootSound; // NEED BETTER SOUND
 
     public bool CheatInfiniteBuilding;
 
     public AnimationClip PopupAnimation;
-
     public GamepadControls gamepadControls;
 
     //runs on the frame it was awake on
