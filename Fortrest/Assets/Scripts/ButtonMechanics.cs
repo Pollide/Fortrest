@@ -31,6 +31,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     [Header("Cheats")]
     public bool CheatsBool;
     public bool BackBool;
+    public bool SaveBool;
     public bool MaxResourcesBool;
     public int TerrainTeleportInt = -1;
 
@@ -132,6 +133,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         if (TerrainTeleportInt != -1)
         {
             PlayerController.global.TeleportPlayer(LevelManager.global.TerrainList[TerrainTeleportInt].transform.position + new Vector3(0, 5, 0));
+        }
+
+        if (SaveBool)
+        {
+            GameManager.global.DataSetVoid(false);
         }
 
         if (CheatsBool || BackBool)

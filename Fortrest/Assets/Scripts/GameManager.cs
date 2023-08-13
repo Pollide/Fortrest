@@ -68,27 +68,10 @@ public class GameManager : MonoBehaviour
 
     public bool CheatInfiniteBuilding;
 
-    public bool DebugSaveBool;
-    public bool DebugLoadBool;
-
     public AnimationClip PopupAnimation;
 
     public GamepadControls gamepadControls;
 
-    private void Update()
-    {
-        if (DebugSaveBool)
-        {
-            DebugSaveBool = false;
-            DataSetVoid(false);
-        }
-
-        if (DebugLoadBool)
-        {
-            DebugLoadBool = false;
-            DataSetVoid(true);
-        }
-    }
     //runs on the frame it was awake on
     void Awake()
     {
