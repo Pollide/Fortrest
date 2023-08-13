@@ -803,7 +803,6 @@ public class PlayerController : MonoBehaviour
 
     public void TeleportPlayer(Vector3 pos)
     {
-        Debug.Log("telepoprt");
         if (Boar.global.mounted)
         {
             //Boar.global.canMove = false;
@@ -1041,9 +1040,20 @@ public class PlayerController : MonoBehaviour
 
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
+        bool cost = false;
+
         for (int i = 0; i < tierList.Count; i++)
         {
-            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+            if (costList[i].ResourceCost != 0)
+            {
+                cost = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < tierList.Count; i++)
+        {
+            if (cost)
             {
                 tierList[i].ResourceCost = costList[i].ResourceCost;
 

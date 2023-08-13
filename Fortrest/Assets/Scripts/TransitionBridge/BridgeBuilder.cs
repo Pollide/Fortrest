@@ -8,6 +8,7 @@ public class BridgeBuilder : MonoBehaviour
 
     public int BridgeTypeInt;
     public bool isBuilt;
+    bool triggered;
     public GameObject DamagedGameObject;
     public GameObject RepairedGameObject;
 
@@ -28,8 +29,9 @@ public class BridgeBuilder : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (enabled && other.CompareTag("Player"))
+        if (!isBuilt && other.CompareTag("Player"))
         {
+            triggered = true;
             ShowResources(true);
             PlayerController.global.UpdateResourceHolder(BridgeTypeInt);
         }
@@ -37,8 +39,9 @@ public class BridgeBuilder : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (enabled && other.CompareTag("Player"))
+        if (!isBuilt && other.CompareTag("Player"))
         {
+            triggered = false;
             ShowResources(false);
         }
     }
@@ -51,7 +54,7 @@ public class BridgeBuilder : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerController.global.MapResourceHolder.gameObject.activeSelf && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
+        if (!isBuilt && triggered && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
         {
             PlayerController.global.interactCTRL = false;
 
@@ -59,6 +62,7 @@ public class BridgeBuilder : MonoBehaviour
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound);
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound);
+                isBuilt = true;
                 ShowResources(false);
                 BuildBridge();
             }
@@ -71,7 +75,6 @@ public class BridgeBuilder : MonoBehaviour
 
     public void BuildBridge()
     {
-        enabled = false;
         DamagedGameObject.SetActive(false);
         RepairedGameObject.SetActive(true);
     }
