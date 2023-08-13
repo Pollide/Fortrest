@@ -126,6 +126,7 @@ namespace UnityTemplateProjects
 				UnityEditor.EditorApplication.isPlaying = false; 
 				#endif
             }
+            /*
             // Hide and lock cursor when right mouse button pressed
             if (Input.GetMouseButtonDown(1))
             {
@@ -138,6 +139,7 @@ namespace UnityTemplateProjects
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
             }
+            */
 
             // Rotation
             if (Input.GetMouseButton(1))

@@ -53,7 +53,7 @@ public class Building : MonoBehaviour
     private float lastHealth;
 
     private bool underAttack;
-    [HideInInspector] public bool playerinRange;
+    public bool playerinRange;
     private float timerText = 0.0f;
 
     private GameObject normalHouse;
@@ -136,13 +136,19 @@ public class Building : MonoBehaviour
         if (!DestroyedBool)
         {
             health -= amount;
-            if (resourceObject == BuildingType.House)
+            if (HUDHealthBar && resourceObject == BuildingType.House)
             {
                 HUDHealthBar.SetHealth(health, true);
+            }
+            else if (healthBarImage)
+            {
+                healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
+                // Debug.Log(health + " / " + maxHealth + " " + amount);
             }
 
             if (amount != 0)
             {
+
                 HealthAnimation();
             }
         }
@@ -179,7 +185,7 @@ public class Building : MonoBehaviour
                 PlayerController.global.playerCanMove = false;
                 LevelManager.global.enabled = false;//stop the day progressing
 
-                GameManager.Pref("Game Started", 0, false); //restart game
+                GameManager.Pref("Has Started", 0, false); //restart game
                 LevelManager.global.enabled = false; //stops functions happening
                 PlayerController.global.enabled = false;
                 PlayerModeHandler.global.enabled = false;

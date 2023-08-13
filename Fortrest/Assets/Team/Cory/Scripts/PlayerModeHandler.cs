@@ -47,7 +47,9 @@ public class PlayerModeHandler : MonoBehaviour
     public bool inTheFortress;
     private bool centerMouse;
     Vector2 cursorPosition;
+    Vector3 entryPosition;
 
+    bool runOnce;
     private void Awake()
     {
         if (global)
@@ -143,24 +145,16 @@ public class PlayerModeHandler : MonoBehaviour
                         break;
                     default:
                         break;
-                        //case PlayerModes.BuildMode:
-                        //    SwitchToUpgradeMode();
-                        //    break;
-                        //case PlayerModes.RepairMode:
-                        //    SwitchToBuildMode();
-                        //    break;
-                        //case PlayerModes.UpgradeMenu:
-                        //    SwitchToBuildRepairMode();
-                        //    break;
                 }
             }
         }
 
-        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && House.GetComponent<Building>().playerinRange)
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && House.GetComponent<Building>().playerinRange && !PlayerController.global.teleporting)
         {
             PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
             {
+                entryPosition = PlayerController.global.transform.position;
                 if (House.GetComponent<Building>().textDisplayed)
                 {
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
@@ -176,7 +170,7 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
                     House.GetComponent<Building>().textDisplayed = true;
                 }
-                SwitchToResourceMode();
+                SwitchToResourceMode(true);
             }
         }
     }
@@ -193,6 +187,7 @@ public class PlayerModeHandler : MonoBehaviour
         HUD = HUDHandler.global;
         SwitchToBuildMode(false);
         SwitchToResourceMode();
+        entryPosition = PlayerController.global.transform.position;
     }
 
     private void BuildMode()
@@ -257,17 +252,6 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 SwitchBuildTypeSlow();
             }
-        }
-    }
-
-    private void LeaveHouse()
-    {
-        if (playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode)
-        {
-            PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
-
-            SwitchToBuildMode(false);
-            StartCoroutine(PlayerAwake());
         }
     }
 
@@ -354,16 +338,16 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void SwitchToBuildMode(bool active = true)
     {
-
         buildGrid.gameObject.SetActive(active);
         PlayerController.global.MapResourceHolder.gameObject.SetActive(active);
 
+        PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
         if (active)
         {
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
-            PlayerController.global.TeleportPlayer(PlayerController.global.houseSpawnPoint.transform.position);
-
+            PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position);
+            PlayerController.global.playerCanMove = false;
 
             playerModes = PlayerModes.BuildMode;
 
@@ -373,12 +357,15 @@ public class PlayerModeHandler : MonoBehaviour
 
             HUD.BuildModeHUD();
 
-            Debug.Log("Build");
+            // Debug.Log("Build");
         }
+        else
+        {
+
+        }
+
+        CameraFollow.global.Update(); //refreshes it instantly
     }
-
-
-
 
     public void SwitchToBuildRepairMode()
     {
@@ -390,14 +377,14 @@ public class PlayerModeHandler : MonoBehaviour
 
         HUD.RepairModeHUD();
 
-        Debug.Log("Repair");
+        //  Debug.Log("Repair");
     }
 
-    public void SwitchToResourceMode()
+    public void SwitchToResourceMode(bool teleportHome = false)
     {
         ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
-        LeaveHouse();
+
 
         ClearBlueprint();
 
@@ -406,13 +393,21 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.ResourceModeHUD();
-        Debug.Log("Resource");
+
+
+        if (teleportHome)
+        {
+            SwitchToBuildMode(false);
+            StartCoroutine(PlayerAwake());
+            PlayerController.global.TeleportPlayer(entryPosition);
+        }
+
+        //  Debug.Log("Resource");
     }
 
     public void SwitchToCombatMode()
     {
         ModeSwitchText.global.ResetText();
-        LeaveHouse();
 
         ClearBlueprint();
 
@@ -421,7 +416,7 @@ public class PlayerModeHandler : MonoBehaviour
         SetMouseActive(false);
 
         HUD.CombatModeHUD();
-        Debug.Log("Combat");
+        // Debug.Log("Combat");
     }
 
     public void SwitchToUpgradeMode()
@@ -433,10 +428,8 @@ public class PlayerModeHandler : MonoBehaviour
         playerModes = PlayerModes.UpgradeMenu;
 
         HUD.UpgradeModeHUD();
-        Debug.Log("Upgrade");
+        //   Debug.Log("Upgrade");
     }
-
-    bool runOnce;
 
     private void SpawnBuilding(GameObject _prefab)
     {
@@ -599,21 +592,40 @@ public class PlayerModeHandler : MonoBehaviour
         return false;
     }
 
+    public static bool ReturnKeyboard()
+    {
+        InputDevice[] devices = InputSystem.devices.ToArray();
+
+        foreach (var device in devices)
+        {
+            if (device is Gamepad)
+            {
+
+                return false;
+            }
+        }
+
+        return true;
+    }
 
     public static void SetMouseActive(bool isActive)
     {
-        if (isActive == true)
+
+
+        if (isActive && ReturnKeyboard())
         {
-            if (!Cursor.visible)
-            {
-                Cursor.visible = true;
-                Cursor.lockState = CursorLockMode.None;
-            }
+            // Debug.Log(isActive + " && " + ReturnKeyboard() + " " + Cursor.visible);
+
+            //  Debug.Log(1);
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
         }
         else
         {
             if (Cursor.visible)
             {
+
                 Cursor.visible = false;
                 Cursor.lockState = CursorLockMode.Locked;
             }

@@ -22,73 +22,63 @@ public class GameManager : MonoBehaviour
     public SFXManager SoundManager; //manages all sound effects
     public SFXManager MusicManager; //manages all music
 
-    public AudioClip MenuMusic; //the music that plays in the menu scene
-    public AudioClip GameMusic;  //the music that plays in the game scene
-    public AudioClip PauseMusic;  //the music that plays when paused
+    // Music
+    public AudioClip MenuMusic;
+    public AudioClip GameMusic;
+    public AudioClip PauseMusic;
     public AudioClip NightMusic;
-
-    public AudioClip CollectSound; //the sfx that plays when the mouse presses a button
-    public AudioClip MenuClick1Sound;
-    public AudioClip MenuClick2Sound;
-    public AudioClip Pickaxe1Sound;
-    public AudioClip Pickaxe2Sound;
-    public AudioClip Pickaxe3Sound;
-    public AudioClip PlayerAttackSound;
-    public AudioClip PlayerHitSound;
-    public AudioClip PlayerJumpSound;
-    public AudioClip Footstep1Sound;
-    public AudioClip Footstep2Sound;
-    public AudioClip SwordSwing1Sound;
-    public AudioClip SwordSwing2Sound;
-    public AudioClip SwordSwing3Sound;
-    public AudioClip TreeChop1Sound;
-    public AudioClip TreeChop2Sound;
-    public AudioClip TreeChop3Sound;
+    // SFX
+    public AudioClip CollectSound;
+    public AudioClip MenuClick1Sound; // NOT USED
+    public AudioClip MenuClick2Sound; // NOT USED
     public AudioClip TurretPlaceSound;
-    public AudioClip TurretShootSound;
-    public AudioClip PlayerEatSound;
-    public AudioClip CameraLockSound;
+    public AudioClip EatingSound;
+    public AudioClip CameraLockSound; // NOT USED
     public AudioClip MenuSwooshSound;
-    public AudioClip SpeedButtonClickSound;
-    public AudioClip BushSound;
+    public AudioClip SpeedButtonClickSound; // NOT USED
     public AudioClip ModeChangeClickSound;
     public AudioClip HouseBuiltNoiseSound;
     public AudioClip HouseBuiltSound;
     public AudioClip SnoringSound;
     public AudioClip CantPlaceSound;
-    public AudioClip WhistlingSound;
-
-    public AudioClip CannonSound;
-    public AudioClip EatingSound;
+    public AudioClip WhistlingSound; // NOT USED
     public AudioClip HouseDestroySound;
-    public AudioClip InventoryClickSound;
+    public AudioClip InventoryClickSound; // NOT USED
     public AudioClip NewDaySound;
-    public AudioClip SlowSound;
     public AudioClip WaterSound;
+    // Tools
+    public AudioClip Pickaxe1Sound; // NOT USED
+    public AudioClip Pickaxe2Sound;
+    public AudioClip Pickaxe3Sound;
+    public AudioClip SwordSwing1Sound;
+    public AudioClip SwordSwing2Sound;
+    public AudioClip SwordSwing3Sound; // NOT USED
+    public AudioClip TreeChop1Sound;
+    public AudioClip TreeChop2Sound;
+    public AudioClip TreeChop3Sound; // NOT USED
+    public AudioClip BushSound;
+    // Player
+    public AudioClip PlayerHitSound;
+    public AudioClip PlayerHitSound2; // TO BE ASSIGNED
+    public AudioClip PlayerAttackSound;
+    public AudioClip PlayerAttackSound2; // TO BE ASSIGNED
+    public AudioClip PlayerDeathSound; // TO BE ASSIGNED
+    public AudioClip PlayerDeathSound2; // TO BE ASSIGNED
+    public AudioClip PlayerNoiseSound; // TO BE ASSIGNED
+    public AudioClip PlayerNoiseSound2; // TO BE ASSIGNED
+    public AudioClip PlayerJumpSound; // NOT USED
+    public AudioClip PlayerStepSound;
+    public AudioClip PlayerStepSound2;
+    // Turret
+    public AudioClip BallistaShootSound;
+    public AudioClip CannonShootSound;
+    public AudioClip SlowShootSound; // NEED BETTER SOUND
 
     public bool CheatInfiniteBuilding;
 
-    public bool DebugSaveBool;
-    public bool DebugLoadBool;
-
     public AnimationClip PopupAnimation;
-
     public GamepadControls gamepadControls;
 
-    private void Update()
-    {
-        if (DebugSaveBool)
-        {
-            DebugSaveBool = false;
-            DataSetVoid(false);
-        }
-
-        if (DebugLoadBool)
-        {
-            DebugLoadBool = false;
-            DataSetVoid(true);
-        }
-    }
     //runs on the frame it was awake on
     void Awake()
     {
@@ -120,12 +110,12 @@ public class GameManager : MonoBehaviour
             eventSystemGameObject.name = "Event System";
 
             //this checks if it is the first time playing the game. It wont run again
-            if (PlayerPrefs.GetInt("First Time") == 0)
+            if (PlayerPrefs.GetInt("First Load") == 0)
             {
-                PlayerPrefs.SetInt("First Time", 1);
+                PlayerPrefs.SetInt("First Load", 1);
 
-                PlayerPrefs.SetFloat("Music", 0.65f); //sets the music level
-                PlayerPrefs.SetFloat("Sound", 0.9f); //sets the sound volume
+                PlayerPrefs.SetFloat("Music", 0.6f); //sets the music level
+                PlayerPrefs.SetFloat("Sound", 1.0f); //sets the sound volume
             }
 
             //quick load is an editor feature that I added to help other peers when testing projects.
@@ -416,7 +406,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if ((int)Pref("Game Started", 0, true) == 1)
+            if ((int)Pref("Has Started", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
@@ -441,7 +431,7 @@ public class GameManager : MonoBehaviour
     {
         if (!load)
         {
-            Pref("Game Started", 1, false);
+            Pref("Has Started", 1, false);
         }
         DataPositionVoid("Player", PlayerController.global.transform, load);
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
@@ -478,6 +468,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < LevelManager.global.BridgeList.Count; i++)
         {
             LevelManager.global.BridgeList[i].isBuilt = Pref("Bridge Built" + i, LevelManager.global.BridgeList[i].isBuilt ? 1 : 0, load) == 1;
+
+            if (load && LevelManager.global.BridgeList[i].isBuilt)
+            {
+                LevelManager.global.BridgeList[i].BuildBridge();
+            }
         }
 
         LevelManager.ProcessEnemyList((enemy) =>
@@ -604,6 +599,11 @@ public class GameManager : MonoBehaviour
         float y = Pref(pref + "y", value.position.y, load);
         float z = Pref(pref + "z", value.position.z, load);
 
+        if (load && value.GetComponent<PlayerController>())
+        {
+            value.GetComponent<PlayerController>().TeleportPlayer(new Vector3(x, y, z));
+            return;
+        }
         value.position = new Vector3(x, y, z);
     }
 

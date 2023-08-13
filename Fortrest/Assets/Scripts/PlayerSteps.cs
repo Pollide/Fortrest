@@ -41,11 +41,11 @@ public class PlayerSteps : MonoBehaviour
 
     void StepOne()
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.Footstep1Sound, 0.05f);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound, 0.05f);
     }
 
     void StepTwo()
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.Footstep2Sound, 0.05f);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound2, 0.05f);
     }
 }

@@ -74,7 +74,7 @@ public class TurretShooting : MonoBehaviour
 
                 if (IsSlow)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.SlowSound);
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound, 0.3f, true, 0, false, transform);
                     target.GetComponent<EnemyController>().ApplySlow(enemySpeedPercentage);
                 }
                 else
@@ -141,7 +141,7 @@ public class TurretShooting : MonoBehaviour
         if (IsCannon)
         {
 
-            GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSound);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.CannonShootSound, 0.3f, true, 0, false, transform);
             // Spawn a projectile
             ProjectileExplosion explosion = projectile.GetComponent<ProjectileExplosion>();
             //  explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
@@ -151,7 +151,7 @@ public class TurretShooting : MonoBehaviour
         }
         else
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.TurretShootSound);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.BallistaShootSound, 0.3f, true, 0, false, transform);
             U_Turret uTurret = GetComponent<U_Turret>();
 
 

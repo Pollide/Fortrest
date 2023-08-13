@@ -90,7 +90,7 @@ public class EnemyController : MonoBehaviour
                 Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
             }
         }
-        
+
         if (currentEnemyType == ENEMYTYPE.ogre)
         {
             GameManager.global.SoundManager.PlaySound(ogreSpawnSound, 1.0f);
@@ -210,7 +210,7 @@ public class EnemyController : MonoBehaviour
                         chasing = false;
                         chaseTimer = 0;
                     }
-                }               
+                }
             }
             else
             {
@@ -260,7 +260,7 @@ public class EnemyController : MonoBehaviour
                     distanceAdjusted = true;
                 }
             }
-            
+
             if (bestTarget != house.transform)
             {
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + offset) // Checks if enemy reached target
@@ -283,7 +283,7 @@ public class EnemyController : MonoBehaviour
         {
             if (currentEnemyType == ENEMYTYPE.wolf)
             {
-                agent.SetDestination(transform.position);            
+                agent.SetDestination(transform.position);
                 ActiveAnimator.SetBool("Moving", false);
             }
         }
@@ -402,7 +402,7 @@ public class EnemyController : MonoBehaviour
                 if (PlayerController.global.upgradedMelee && health > 0)
                 {
                     StartCoroutine(SlowedDown());
-                }                
+                }
             }
         }
         if (house && bestTarget == house.transform)
@@ -457,7 +457,7 @@ public class EnemyController : MonoBehaviour
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
-            agent.speed = 4.75f;
+            agent.speed = 7f;
             agent.acceleration = 40.0f;
             agent.angularSpeed = 100.0f;
             maxHealth = 5.0f;
@@ -525,20 +525,22 @@ public class EnemyController : MonoBehaviour
             }
 
             Building building = bestTarget.GetComponent<Building>();
+            if (building)
+            {
+                if (building.resourceObject == Building.BuildingType.HouseNode)
+                {
+                    building = building.transform.parent.GetComponent<Building>();
+                }
 
-            if (building && building.resourceObject == Building.BuildingType.HouseNode)
-            {
-                building = building.transform.parent.GetComponent<Building>();
-            }
-
-            if (building.GetHealth() > 0)
-            {
-                building.healthBarImage.fillAmount = Mathf.Clamp(building.GetHealth() / building.maxHealth, 0, 1f);
-                building.TakeDamage(1f);
-            }
-            else
-            {
-                building.DestroyBuilding();
+                if (building.GetHealth() > 0)
+                {
+                    building.healthBarImage.fillAmount = Mathf.Clamp(building.GetHealth() / building.maxHealth, 0, 1f);
+                    building.TakeDamage(1f);
+                }
+                else
+                {
+                    building.DestroyBuilding();
+                }
             }
         }
     }

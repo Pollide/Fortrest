@@ -190,12 +190,12 @@ public class InventoryManager : MonoBehaviour
         Time.timeScale = 0;
         PlayerController.global.InventoryHolder.SetActive(true);
         PlayerController.global.DarkenGameObject.SetActive(true);
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+
     }
 
     public void CloseInventory(bool _currmode = true, bool _mouseLocked = true)
     {
+        /*
         if (_currmode)
         {
             PlayerModeHandler.global.playerModes = currentPlayerModes;
@@ -203,16 +203,7 @@ public class InventoryManager : MonoBehaviour
         Time.timeScale = 1;
         PlayerController.global.InventoryHolder.SetActive(false);
         PlayerController.global.DarkenGameObject.SetActive(false);
-        if (_mouseLocked)
-        {
-            Cursor.visible = false;
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-        else
-        {
-            Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.None;
-        }
+        */
 
     }
 
