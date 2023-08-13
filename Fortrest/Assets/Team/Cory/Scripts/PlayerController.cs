@@ -795,7 +795,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
             if (canTeleport && interactCTRL)
-            {              
+            {
                 TeleportPlayer(houseSpawnPoint.transform.position);
             }
         }
@@ -803,7 +803,7 @@ public class PlayerController : MonoBehaviour
 
     public void TeleportPlayer(Vector3 pos)
     {
-
+        Debug.Log("telepoprt");
         if (Boar.global.mounted)
         {
             //Boar.global.canMove = false;
@@ -818,14 +818,14 @@ public class PlayerController : MonoBehaviour
             playerCC.enabled = false;
             transform.position = pos;
             playerCC.enabled = true;
-            CharacterAnimator.SetBool("Moving", false);           
+            CharacterAnimator.SetBool("Moving", false);
         }
         interactCTRL = false;
         canTeleport = false;
         needInteraction = false;
         teleporting = true;
 
-            LevelManager.global.SceneCamera.transform.position = pos;
+        LevelManager.global.SceneCamera.transform.position = pos;
     }
 
     public void ChangeTool(ToolData toolData)
@@ -1263,7 +1263,7 @@ public class PlayerController : MonoBehaviour
             if (Facing(building.position, 75.0f) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && distanceFloat == smallestDistance && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
             {
                 gathering = true;
-                gatherTimer = 0;            
+                gatherTimer = 0;
                 currentResource = building.GetComponent<Building>();
                 ChangeTool(new ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PickaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
                 CharacterAnimator.ResetTrigger("Swing");
