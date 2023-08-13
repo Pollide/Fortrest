@@ -803,7 +803,6 @@ public class PlayerController : MonoBehaviour
 
     public void TeleportPlayer(Vector3 pos)
     {
-        Debug.Log("telepoprt");
         if (Boar.global.mounted)
         {
             //Boar.global.canMove = false;
@@ -970,7 +969,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void UpdateResourceHolder()
+    public void UpdateResourceHolder(int bridgeTypeInt = 0)
     {
         for (int i = 0; i < MapResourceHolder.childCount; i++)
         {
@@ -988,6 +987,18 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < LevelManager.global.StoneTierList.Count; i++)
         {
             stoneCostList.Add(new LevelManager.TierData());
+        }
+
+        if (bridgeTypeInt == 1)
+        {
+            woodCostList[0].ResourceCost = -30;
+            stoneCostList[0].ResourceCost = -30;
+        }
+
+        if (bridgeTypeInt == 2)
+        {
+            woodCostList[1].ResourceCost = -30;
+            stoneCostList[1].ResourceCost = -30;
         }
 
         if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
@@ -1029,9 +1040,20 @@ public class PlayerController : MonoBehaviour
 
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
+        bool cost = false;
+
         for (int i = 0; i < tierList.Count; i++)
         {
-            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+            if (costList[i].ResourceCost != 0)
+            {
+                cost = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < tierList.Count; i++)
+        {
+            if (cost)
             {
                 tierList[i].ResourceCost = costList[i].ResourceCost;
 
