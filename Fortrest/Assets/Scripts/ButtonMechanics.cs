@@ -38,6 +38,10 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     [Header("Menu")]
     public bool PlayBool;
     public bool ExitBool;
+    [Space(10)]
+    public bool VolumeBool;
+    public bool MusicBool;
+    public bool FullScreenBool;
     public bool ResetBool;
     [Space(10)]
     public bool AreYouSureBool;
@@ -63,7 +67,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
             if (PlayBool)
             {
-                if ((int)GameManager.Pref("Game Start", 0, true) == 1)
+                if ((int)GameManager.Pref("Has Started", 0, true) == 1)
                 {
                     MenuText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
                 }
@@ -71,6 +75,16 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
                 {
                     MenuText.text = "New Game";
                 }
+            }
+
+            if (VolumeBool || MusicBool)
+            {
+                //transform.GetChild(0).GetComponent<TMP_Text>().text = "%" + ((int)(PlayerPrefs.GetFloat(ReturnSFXManager().AudioName) * 100)) + " " + ReturnSFXManager().AudioName;
+
+
+                MenuText.text = (VolumeBool ? "Sound\n" : "Music\n") + (PlayerPrefs.GetFloat(ReturnSFXManager().AudioName) * 100).ToString("N0") + "%";
+
+                // transform.GetChild(2).GetComponent<Slider>().onValueChanged += OnPointerClick(null);
             }
 
             TextString = MenuText.text;
@@ -158,6 +172,33 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             GameManager.global.NextScene(0);
         }
 
+        if (VolumeBool || MusicBool)
+        {
+
+            PlayerPrefs.SetFloat(ReturnSFXManager().AudioName, PlayerPrefs.GetFloat(ReturnSFXManager().AudioName) + 0.1f);
+
+            if (PlayerPrefs.GetFloat(ReturnSFXManager().AudioName) > 1.01f)
+            {
+                PlayerPrefs.SetFloat(ReturnSFXManager().AudioName, 0);
+            }
+
+            Start();
+
+            ReturnSFXManager().RefreshAudioVolumes();
+
+        }
+
+        if (FullScreenBool)
+        {
+            Screen.fullScreen = !Screen.fullScreen;
+
+            if (Screen.fullScreen)
+                Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
+
+#if UNITY_EDITOR
+            MenuText.text = "Won't work\nin editor";
+#endif
+        }
 
         if (AreYouSureBool)
         {
@@ -170,12 +211,10 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             }
         }
 
-        if (MenuText)
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
-
         if (PlayBool)
         {
             GameManager.global.NextScene(1);
+            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
         }
 
         if (ResetBool)
@@ -185,20 +224,29 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             GameManager.global.NextScene(0);
             GameManager.global.transform.SetParent(transform);
             GameManager.global = null;
+            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
         }
 
         if (ExitBool)
         {
             Application.Quit();
             GameManager.global.NextScene(0);
+            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
         }
     }
 
-    public void HighlightVoid(bool select)
+
+    SFXManager ReturnSFXManager()
+    {
+        return VolumeBool ? GameManager.global.SoundManager : GameManager.global.MusicManager;
+    }
+
+
+    public void HighlightVoid(bool highlight)
     {
         GetComponent<Animation>().Stop();
 
-        if (select)
+        if (highlight)
         {
             GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Selected");
             GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Loop");
@@ -208,6 +256,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             MenuText.text = TextString;
             ToggleBool = false;
             GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Stop");
+
+            if (Menu.global.ArrivedAtSign)
+                GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Key", false);
         }
     }
 }

@@ -25,7 +25,10 @@ public class Menu : MonoBehaviour
     [HideInInspector] public Vector2 moveCTRL;
     public AnimationState IntialAnimationState;
 
-    private bool canGoCTRL, leftCTRL, rightCTRL, selectCTRL;  
+    private bool canGoCTRL, leftCTRL, rightCTRL, selectCTRL;
+
+    [HideInInspector]
+    public bool ArrivedAtSign;
 
     private void Awake()
     {
@@ -74,8 +77,15 @@ public class Menu : MonoBehaviour
 
         if (!initialBool)
         {
-            CameraTransform.position = Vector3.Slerp(CameraTransform.position, ReturnSign().position + (ReturnSign().forward * -10) + Vector3.up, 3 * Time.deltaTime);
+            Vector3 position = ReturnSign().position + (ReturnSign().forward * -10) + Vector3.up;
+            CameraTransform.position = Vector3.Slerp(CameraTransform.position, position, 3 * Time.deltaTime);
             CameraTransform.rotation = Quaternion.RotateTowards(CameraTransform.rotation, ReturnSign().rotation, 20 * Time.deltaTime);
+
+            if (!ArrivedAtSign && Vector3.Distance(CameraTransform.position, position) < 1)
+            {
+                ArrivedAtSign = true;
+                GameManager.PlayAnimation(ReturnSign().GetComponent<Animation>(), "Sign Key");
+            }
 
             if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow) || leftCTRL)
             {
@@ -90,7 +100,7 @@ public class Menu : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || selectCTRL)
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || selectCTRL)
         {
             selectCTRL = false;
             if (initialBool)
@@ -123,7 +133,7 @@ public class Menu : MonoBehaviour
 
         ReturnButton().HighlightVoid(false);
         ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);
-
+        ArrivedAtSign = false;
         ReturnButton().HighlightVoid(true);
     }
 }

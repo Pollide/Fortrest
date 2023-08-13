@@ -103,12 +103,12 @@ public class GameManager : MonoBehaviour
             eventSystemGameObject.name = "Event System";
 
             //this checks if it is the first time playing the game. It wont run again
-            if (PlayerPrefs.GetInt("First Time") == 0)
+            if (PlayerPrefs.GetInt("First Load") == 0)
             {
-                PlayerPrefs.SetInt("First Time", 1);
+                PlayerPrefs.SetInt("First Load", 1);
 
-                PlayerPrefs.SetFloat("Music", 0.65f); //sets the music level
-                PlayerPrefs.SetFloat("Sound", 0.9f); //sets the sound volume
+                PlayerPrefs.SetFloat("Music", 0.6f); //sets the music level
+                PlayerPrefs.SetFloat("Sound", 1.0f); //sets the sound volume
             }
 
             //quick load is an editor feature that I added to help other peers when testing projects.
@@ -399,7 +399,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if ((int)Pref("Game Start", 0, true) == 1)
+            if ((int)Pref("Has Started", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
@@ -424,7 +424,7 @@ public class GameManager : MonoBehaviour
     {
         if (!load)
         {
-            Pref("Game Start", 1, false);
+            Pref("Has Started", 1, false);
         }
         DataPositionVoid("Player", PlayerController.global.transform, load);
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
