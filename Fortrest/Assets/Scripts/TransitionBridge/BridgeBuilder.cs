@@ -5,26 +5,20 @@ using UnityEngine;
 
 public class BridgeBuilder : MonoBehaviour
 {
-    //   [SerializeField] private Material BPMat;
-    //   private Material originalMat;
-    public bool isBuilt = false;
 
-    [SerializeField] private bool hasRun = false;
-    public SerializableDictionary<string, int> resourceCostList = new SerializableDictionary<string, int>();
+    public int BridgeTypeInt;
+    public bool isBuilt;
     public GameObject DamagedGameObject;
     public GameObject RepairedGameObject;
 
-    public bool MarshBridge;
-    public bool TussocksBridge;
-
     private void Start()
     {
-        if (MarshBridge)
+        if (BridgeTypeInt == 1)
         {
             Indicator.global.AddIndicator(transform, Color.magenta, "Marsh", false);
         }
 
-        if (TussocksBridge)
+        if (BridgeTypeInt == 2)
         {
             Indicator.global.AddIndicator(transform, new Color(1.0f, 0.6f, 0.0f, 1.0f), "Tussocks", false);
         }
@@ -32,21 +26,53 @@ public class BridgeBuilder : MonoBehaviour
         LevelManager.global.BridgeList.Add(this);
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (enabled && other.CompareTag("Player"))
+        {
+            ShowResources(true);
+            PlayerController.global.UpdateResourceHolder(BridgeTypeInt);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (enabled && other.CompareTag("Player"))
+        {
+            ShowResources(false);
+        }
+    }
+
+    void ShowResources(bool show)
+    {
+        PlayerController.global.MapResourceHolder.gameObject.SetActive(show);
+        PlayerController.global.needInteraction = show;
+    }
 
     private void Update()
     {
-        if (isBuilt && !hasRun)
+        if (PlayerController.global.MapResourceHolder.gameObject.activeSelf && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
         {
-            InventoryManager inventory = InventoryManager.global;
-            for (int i = 0; i < resourceCostList.Count; i++)
+            PlayerController.global.interactCTRL = false;
+
+            if (PlayerController.global.CheckSufficientResources(true))
             {
-                inventory.RemoveItem(resourceCostList.Keys[i], resourceCostList.Values[i]);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound);
+                ShowResources(false);
+                BuildBridge();
             }
-
-            RepairedGameObject.SetActive(true);
-            DamagedGameObject.SetActive(false);
-
-            hasRun = true;
+            else
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+            }
         }
+    }
+
+    public void BuildBridge()
+    {
+        enabled = false;
+        DamagedGameObject.SetActive(false);
+        RepairedGameObject.SetActive(true);
     }
 }

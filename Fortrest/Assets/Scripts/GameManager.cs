@@ -23,8 +23,8 @@ public class GameManager : MonoBehaviour
     public SFXManager MusicManager; //manages all music
 
     // Music
-    public AudioClip MenuMusic; 
-    public AudioClip GameMusic; 
+    public AudioClip MenuMusic;
+    public AudioClip GameMusic;
     public AudioClip PauseMusic;
     public AudioClip NightMusic;
     // SFX
@@ -468,6 +468,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < LevelManager.global.BridgeList.Count; i++)
         {
             LevelManager.global.BridgeList[i].isBuilt = Pref("Bridge Built" + i, LevelManager.global.BridgeList[i].isBuilt ? 1 : 0, load) == 1;
+
+            if (load && LevelManager.global.BridgeList[i].isBuilt)
+            {
+                LevelManager.global.BridgeList[i].BuildBridge();
+            }
         }
 
         LevelManager.ProcessEnemyList((enemy) =>
