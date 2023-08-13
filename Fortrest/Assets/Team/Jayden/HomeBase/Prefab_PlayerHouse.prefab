@@ -277,6 +277,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SK_PlayerHouse_FirstStage
       objectReference: {fileID: 0}
+    - target: {fileID: 2285837056625974355, guid: eca988a6142b9e44192f1504bbbb7b52,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2285837056625974355, guid: eca988a6142b9e44192f1504bbbb7b52,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: daa08eb53e24d764b872373ff435ef57, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eca988a6142b9e44192f1504bbbb7b52, type: 3}
 --- !u!1 &6005842835042768243 stripped
@@ -285,6 +295,19 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 6888365499948836898}
   m_PrefabAsset: {fileID: 0}
+--- !u!65 &5457447497181280887
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6005842835042768243}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 7.35, y: 4.32, z: 9}
+  m_Center: {x: 0, y: 2.11, z: 0.2}
 --- !u!95 &2118738539353561336
 Animator:
   serializedVersion: 4
@@ -305,19 +328,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &5457447497181280887
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6005842835042768243}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 7.35, y: 4.32, z: 9}
-  m_Center: {x: 0, y: 2.11, z: 0.2}
 --- !u!4 &6346375138761297865 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: eca988a6142b9e44192f1504bbbb7b52,
