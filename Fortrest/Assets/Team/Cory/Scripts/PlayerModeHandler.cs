@@ -259,7 +259,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (playerModes == PlayerModes.ResourceMode)
         {
-          //  PlayerController.global.TeleportPlayer(entryPosition);
+            //  PlayerController.global.TeleportPlayer(entryPosition);
 
             SwitchToBuildMode(false);
             StartCoroutine(PlayerAwake());
@@ -373,7 +373,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
-            
+
         }
 
         CameraFollow.global.Update(); //refreshes it instantly
@@ -397,10 +397,6 @@ public class PlayerModeHandler : MonoBehaviour
         ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
 
-        if (!start)
-        {
-            LeaveHouse();
-        }        
 
         ClearBlueprint();
 
@@ -411,7 +407,11 @@ public class PlayerModeHandler : MonoBehaviour
         HUD.ResourceModeHUD();
 
 
-        LeaveHouse();
+        if (!start)
+        {
+            LeaveHouse();
+        }
+
         //  Debug.Log("Resource");
     }
 
