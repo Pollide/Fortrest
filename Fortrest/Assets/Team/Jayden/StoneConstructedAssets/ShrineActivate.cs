@@ -15,34 +15,37 @@ public class ShrineActivate : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.gameObject == PlayerController.global.gameObject)
         {
-            PropAnimator.SetBool(AnimationTriggerName, true);
-            Debug.Log("ShrineGetsHere");
-            //PlayerController.global.canTeleport = true;
-            //PlayerController.global.needInteraction = true;
-           // LevelManager.FloatingTextChange(interactText.gameObject, true);
+            PropAnimator.SetTrigger(AnimationTriggerName);
+            PlayerController.global.canTeleport = true;
+            PlayerController.global.needInteraction = true;
+            //LevelManager.FloatingTextChange(interactText.gameObject, true);
+            
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.gameObject == PlayerController.global.gameObject)
         {
-            PropAnimator.SetBool(AnimationTriggerName, false);
-            //PlayerController.global.canTeleport = false;
-            //PlayerController.global.needInteraction = false;
+
+            PropAnimator.ResetTrigger(AnimationTriggerName);
+            PlayerController.global.canTeleport = false;
+            PlayerController.global.needInteraction = false;
             //LevelManager.FloatingTextChange(interactText.gameObject, false);
-            Debug.Log("Itgetsheretoo");
+            
         }
     }
 
     private void Update()
     {
+        
         if (!PlayerController.global.canTeleport && gameObject.GetComponent<MeshRenderer>().enabled == false)
         {
-            gameObject.GetComponent<MeshRenderer>().enabled = true;
-            LevelManager.FloatingTextChange(interactText.gameObject, false);
+            
+            //gameObject.GetComponent<MeshRenderer>().enabled = true;
+            //LevelManager.FloatingTextChange(interactText.gameObject, false);
         }
     }
 }

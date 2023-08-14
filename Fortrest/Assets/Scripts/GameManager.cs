@@ -309,7 +309,7 @@ public class GameManager : MonoBehaviour
         return new AnimationState(); //something default, will likely return error that needs to be corrected anyways
     }
 
-    public static AnimatorStateInfo PlayAnimator(Animator animator, string clipNameString = "", bool forwardBool = true, bool instantBool = false)
+    public static AnimatorStateInfo PlayAnimator(Animator animator, string clipNameString = "", bool forwardBool = true, bool instantBool = false, int layer = 0)
     {
         if (animator)
         {
@@ -330,7 +330,7 @@ public class GameManager : MonoBehaviour
 
                     animator.speed = forwardBool ? 1 : -1;
 
-                    animator.Play(clip.name, 0, forwardBool ? 0 : 1);
+                    animator.Play(clip.name, layer, forwardBool ? 0 : 1);
 
                     if (instantBool)
                     {

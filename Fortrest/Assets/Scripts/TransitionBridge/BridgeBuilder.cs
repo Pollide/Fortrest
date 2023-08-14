@@ -48,7 +48,7 @@ public class BridgeBuilder : MonoBehaviour
 
     void ShowResources(bool show)
     {
-        PlayerController.global.MapResourceHolder.gameObject.SetActive(show);
+        PlayerController.global.OpenResourceHolder(show);
         PlayerController.global.needInteraction = show;
     }
 
