@@ -24,6 +24,8 @@ public class LevelManager : MonoBehaviour
     public List<TierData> WoodTierList = new List<TierData>();
     public List<TierData> StoneTierList = new List<TierData>();
 
+    public Gradient SunriseGradient;
+
     [System.Serializable]
     public class TierData
     {
@@ -228,7 +230,7 @@ public class LevelManager : MonoBehaviour
 
     public bool ReturnNight()
     {
-        return DaylightTimer > 180;
+        return DaylightTimer > 180 || DaylightTimer < 20;
     }
 
     private void Update()
@@ -263,6 +265,11 @@ public class LevelManager : MonoBehaviour
         clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
         DaylightTimer += daySpeed * Time.deltaTime;
 
+        Light light = DirectionalLightTransform.GetComponent<Light>();
+
+        if (!ReturnNight())
+            light.color = SunriseGradient.Evaluate(DaylightTimer / 180);
+
         if (DaylightTimer > 360)
         {
             attackHappening = false;
@@ -280,7 +287,7 @@ public class LevelManager : MonoBehaviour
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
 
-        //   light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0 : 0.4f, Time.deltaTime);
+        light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0.0f : 1f, 0.2f * Time.deltaTime);
 
 
 
