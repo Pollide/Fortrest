@@ -280,7 +280,14 @@ public class EnemyController : MonoBehaviour
             {
                 agent.SetDestination(bestTarget.position); // Makes the enemy move
             }
-            ActiveAnimator.SetBool("Moving", Vector3.Distance(transform.position, bestTarget.position) > agent.stoppingDistance + offset);
+            if (agent.velocity != Vector3.zero)
+            {
+                ActiveAnimator.SetBool("Moving", true);
+            }   
+            else
+            {
+                ActiveAnimator.SetBool("Moving", false);
+            }
         }
         else
         {
@@ -480,7 +487,7 @@ public class EnemyController : MonoBehaviour
             agent.acceleration = 40.0f;
             agent.angularSpeed = 100.0f;
             maxHealth = 5.0f;
-            attackTimerMax = 2.0f;
+            attackTimerMax = 3.0f;
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
             enemyDamage = 7.5f;
