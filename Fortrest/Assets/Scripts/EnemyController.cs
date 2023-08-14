@@ -330,8 +330,10 @@ public class EnemyController : MonoBehaviour
 
         GameManager.PlayAnimation(healthAnimation, "Health Hit");
         healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
+
         if (health <= 0)
         {
+            ActiveAnimator.SetTrigger("Death");
             StopAllCoroutines();
             if (currentEnemyType != ENEMYTYPE.ogre)
             {
@@ -343,18 +345,6 @@ public class EnemyController : MonoBehaviour
             }
 
             Time.timeScale = 1;
-            agent.enabled = false;
-
-            if (currentEnemyType != ENEMYTYPE.wolf)
-            {
-                LevelManager.global.EnemyList.Remove(this);
-                Destroy(gameObject);
-            }
-            else
-            {
-                gameObject.SetActive(false); //wolves spawn in the scene on start so they need to stay in memory
-            }
-
         }
     }
 
@@ -388,16 +378,32 @@ public class EnemyController : MonoBehaviour
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 StopAllCoroutines();
-                chaseTimer = 0;
-                knockBackScript.knock = true;
+                chaseTimer = 0;                
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chasing = true;
                 }
-                canBeDamaged = false;
+                canBeDamaged = false;                
+                PickSound(hitSound, hitSound2, 1.0f);
+                ActiveAnimator.ResetTrigger("Hit1");
+                ActiveAnimator.ResetTrigger("Hit2");
+                ActiveAnimator.ResetTrigger("Hit3");
+                int random = Random.Range(1, 4);
+                if (random == 1)
+                {
+                    ActiveAnimator.SetTrigger("Hit1");
+                }
+                else if (random == 2)
+                {
+                    ActiveAnimator.SetTrigger("Hit2");
+                }
+                else
+                {
+                    ActiveAnimator.SetTrigger("Hit3");
+                }
+                knockBackScript.knock = true;
                 ScreenShake.global.shake = true;
                 Damaged(PlayerController.global.attackDamage);
-                PickSound(hitSound, hitSound2, 1.0f);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
                 if (PlayerController.global.upgradedMelee && health > 0)
                 {
@@ -479,6 +485,7 @@ public class EnemyController : MonoBehaviour
             enemyDamage = 10.0f;
             knockBackScript.strength = 0.0f;
         }
+        health = maxHealth;
         health = maxHealth;
         speed = agent.speed;
         stoppingDist = agent.stoppingDistance;
@@ -584,5 +591,19 @@ public class EnemyController : MonoBehaviour
         agent.speed = speed / 1.25f;
         yield return new WaitForSeconds(2.5f);
         agent.speed = speed;
+    }
+
+    private void Death()
+    {
+        agent.enabled = false;
+        if (currentEnemyType != ENEMYTYPE.wolf)
+        {
+            LevelManager.global.EnemyList.Remove(this);
+            Destroy(gameObject);
+        }
+        else
+        {
+            gameObject.SetActive(false); //wolves spawn in the scene on start so they need to stay in memory
+        }
     }
 }
