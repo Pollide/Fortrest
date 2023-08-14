@@ -136,8 +136,8 @@ public class TurretShooting : MonoBehaviour
 
     public void ProjectileEvent() //CALLS ON THE ANIMATOR
     {
-        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
-
+        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint);
+        //       GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
         if (IsCannon)
         {
 
