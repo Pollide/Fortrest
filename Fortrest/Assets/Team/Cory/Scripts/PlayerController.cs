@@ -601,7 +601,7 @@ public class PlayerController : MonoBehaviour
             else if (random == 2)
             {
                 CharacterAnimator.SetTrigger("Death2");
-            }            
+            }
         }
     }
 
@@ -818,6 +818,11 @@ public class PlayerController : MonoBehaviour
 
     public void TeleportPlayer(Vector3 pos)
     {
+        if (pos == Vector3.zero)
+        {
+            Debug.LogError("POSITION WAS ZERO. IF YOU SEE THIS MESSAGE SEE WHERE IT WAS CALLED FROM TY");
+            return;
+        }
         if (Boar.global.mounted)
         {
             //Boar.global.canMove = false;
