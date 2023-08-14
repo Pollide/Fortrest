@@ -1604,7 +1604,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!deathEffects)
         {
-            Debug.Log("yoza");
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
             TeleportPlayer(house.transform.position);
