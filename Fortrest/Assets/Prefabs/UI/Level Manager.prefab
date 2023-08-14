@@ -297,25 +297,31 @@ MonoBehaviour:
   - 10
   - 85
   WoodTierList:
-  - ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
-    ResourceName: Common Wood
+  - ResourceName: Common Wood
+    ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
     ResourceAmount: 0
-  - ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
-    ResourceName: Rare Wood
+    ResourceCost: 0
+  - ResourceName: Rare Wood
+    ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
     ResourceAmount: 0
-  - ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
-    ResourceName: Legendary Wood
+    ResourceCost: 0
+  - ResourceName: Legendary Wood
+    ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
     ResourceAmount: 0
+    ResourceCost: 0
   StoneTierList:
-  - ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
-    ResourceName: Common Stone
+  - ResourceName: Common Stone
+    ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
     ResourceAmount: 0
-  - ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
-    ResourceName: Rare Stone
+    ResourceCost: 0
+  - ResourceName: Rare Stone
+    ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
     ResourceAmount: 0
-  - ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
-    ResourceName: Legendary Stone
+    ResourceCost: 0
+  - ResourceName: Legendary Stone
+    ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
     ResourceAmount: 0
+    ResourceCost: 0
   ResourceHolderTransform: {fileID: 0}
   ActiveBuildingGameObject: {fileID: 0}
   DirectionalLightTransform: {fileID: 7444467798429044014}
@@ -373,7 +379,10 @@ MonoBehaviour:
   - {fileID: 0}
   clockHand: {fileID: 0}
   lane: 0
+  enemiesCount: 0
+  spawnEnemies: 0
   randomAttackTrigger: 0
+  messageDisplayed: 0
   ActiveBiomeMusic: {fileID: 0}
 --- !u!1 &975559097986637665
 GameObject:
@@ -514,8 +523,8 @@ MonoBehaviour:
   cameraDistance: 0
   lockCamera: 0
   smoothTime: 0.25
-  maxSmooth: 0.25
-  minSmooth: 0.01
+  maxSmooth: 1
+  minSmooth: 0.5
   max: 0
   buildOffsetOrthoSize: 50
   buildOffsetPosX: 65

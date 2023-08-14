@@ -305,6 +305,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void OpenResourceHolder(bool open)
+    {
+        GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Resource Holder Appear", open, false, 1);
+    }
+
     private void BuildSelectController()
     {
         if (PlayerModeHandler.global.inTheFortress)
@@ -957,7 +962,7 @@ public class PlayerController : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
-            MapResourceHolder.gameObject.SetActive(map);
+            OpenResourceHolder(map);
             if (mapBool)
             {
                 MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);

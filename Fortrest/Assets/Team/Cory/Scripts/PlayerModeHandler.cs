@@ -339,7 +339,8 @@ public class PlayerModeHandler : MonoBehaviour
     public void SwitchToBuildMode(bool active = true)
     {
         buildGrid.gameObject.SetActive(active);
-        PlayerController.global.MapResourceHolder.gameObject.SetActive(active);
+        PlayerController.global.OpenResourceHolder(active);
+
 
         PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
         if (active)

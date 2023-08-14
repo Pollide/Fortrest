@@ -110,8 +110,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the mouse was clicked ontop of the button
     public void OnPointerDown(PointerEventData eventData)
     {
-        //ChangeSizeVoid(0.9f);
-
         SelectVoid();
     }
 
