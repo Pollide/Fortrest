@@ -592,7 +592,15 @@ public class PlayerController : MonoBehaviour
 
         if (playerHealth <= 0 || playerDead)
         {
-            Death();
+            int random = Random.Range(1, 3);
+            if (random == 1)
+            {
+                CharacterAnimator.SetTrigger("Death1");
+            }
+            else if (random == 2)
+            {
+                CharacterAnimator.SetTrigger("Death2");
+            }            
         }
     }
 
@@ -1585,14 +1593,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Death()
+    public void Death()
     {
         if (!deathEffects)
         {
-            // lose inventory
+            Debug.Log("yoza");
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
-
             TeleportPlayer(house.transform.position);
             playerCanMove = false;
             playerCC.enabled = false;
@@ -1634,6 +1641,22 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        CharacterAnimator.ResetTrigger("Swing");
+        CharacterAnimator.ResetTrigger("Swing2");
+        CharacterAnimator.ResetTrigger("Swing3");
+        int random = Random.Range(1, 4);
+        if (random == 1)
+        {
+            CharacterAnimator.SetTrigger("Hit1");
+        }
+        else if (random == 2)
+        {
+            CharacterAnimator.SetTrigger("Hit2");
+        }
+        else
+        {
+            CharacterAnimator.SetTrigger("Hit3");
+        }
         playerHealth -= damage;
         healthBar.SetHealth(playerHealth, false);
         displaySlash = true;

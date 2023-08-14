@@ -48,4 +48,9 @@ public class PlayerSteps : MonoBehaviour
     {
         GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound2, 0.05f);
     }
+
+    void Death()
+    {
+        PlayerController.global.Death();
+    }
 }
