@@ -71,6 +71,9 @@ public class EnemyController : MonoBehaviour
 
     private bool knockbackIncreased;
 
+    public Animation flashingAnimation;
+    public bool flashing;
+
     void Start()
     {
         noiseTimerMax = 2.5f;
@@ -320,6 +323,12 @@ public class EnemyController : MonoBehaviour
 
     public void Damaged(float amount)
     {
+        if (currentEnemyType != ENEMYTYPE.ogre && !flashing)
+        {
+            GameManager.PlayAnimation(flashingAnimation, "Flashing");
+            flashing = true;
+        }
+        
         health -= amount;
         if (HealthAppearTimer == -1)
         {
@@ -333,6 +342,7 @@ public class EnemyController : MonoBehaviour
 
         if (health <= 0)
         {
+            healthAnimation.gameObject.SetActive(false);
             ActiveAnimator.SetTrigger("Death");
             StopAllCoroutines();
             if (currentEnemyType != ENEMYTYPE.ogre)
@@ -384,23 +394,26 @@ public class EnemyController : MonoBehaviour
                     chasing = true;
                 }
                 canBeDamaged = false;                
-                PickSound(hitSound, hitSound2, 1.0f);
-                ActiveAnimator.ResetTrigger("Hit1");
-                ActiveAnimator.ResetTrigger("Hit2");
-                ActiveAnimator.ResetTrigger("Hit3");
-                int random = Random.Range(1, 4);
-                if (random == 1)
+                PickSound(hitSound, hitSound2, 1.0f);                
+                if (currentEnemyType != ENEMYTYPE.ogre && !flashing)
                 {
-                    ActiveAnimator.SetTrigger("Hit1");
-                }
-                else if (random == 2)
-                {
-                    ActiveAnimator.SetTrigger("Hit2");
-                }
-                else
-                {
-                    ActiveAnimator.SetTrigger("Hit3");
-                }
+                    ActiveAnimator.ResetTrigger("Hit1");
+                    ActiveAnimator.ResetTrigger("Hit2");
+                    ActiveAnimator.ResetTrigger("Hit3");
+                    int random = Random.Range(1, 4);
+                    if (random == 1)
+                    {
+                        ActiveAnimator.SetTrigger("Hit1");
+                    }
+                    else if (random == 2)
+                    {
+                        ActiveAnimator.SetTrigger("Hit2");
+                    }
+                    else
+                    {
+                        ActiveAnimator.SetTrigger("Hit3");
+                    }
+                }              
                 knockBackScript.knock = true;
                 ScreenShake.global.shake = true;
                 Damaged(PlayerController.global.attackDamage);
@@ -455,7 +468,7 @@ public class EnemyController : MonoBehaviour
             agent.acceleration = 50.0f;
             agent.angularSpeed = 200.0f;
             maxHealth = 4.0f;
-            attackTimerMax = 2.5f;
+            attackTimerMax = 2.0f;
             agent.stoppingDistance = 2.5f;
             offset = 0.3f;
             enemyDamage = 4.0f;
@@ -467,7 +480,7 @@ public class EnemyController : MonoBehaviour
             agent.acceleration = 40.0f;
             agent.angularSpeed = 100.0f;
             maxHealth = 5.0f;
-            attackTimerMax = 2.5f;
+            attackTimerMax = 2.0f;
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
             enemyDamage = 7.5f;

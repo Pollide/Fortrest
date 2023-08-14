@@ -217,6 +217,7 @@ public class PlayerController : MonoBehaviour
     private bool displayAmount;
     private bool textIsGone = true;
     public bool teleporting;
+    private bool cancelHit;
 
     // Start is called before the first frame update
     void Awake()
@@ -621,8 +622,9 @@ public class PlayerController : MonoBehaviour
 
     private void ModeChanged()
     {
-        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1) || cancelCTRL)
+        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1) || cancelCTRL || cancelHit)
         {
+            cancelHit = false;
             cancelAnimation = true;
             cancelEffects = true;
             if (!aimingCTRL)
@@ -1641,6 +1643,7 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        cancelHit = true;
         CharacterAnimator.ResetTrigger("Swing");
         CharacterAnimator.ResetTrigger("Swing2");
         CharacterAnimator.ResetTrigger("Swing3");
