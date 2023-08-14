@@ -135,6 +135,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (MaxResourcesBool)
         {
+            Debug.Log("max");
             for (int i = 0; i < LevelManager.global.StoneTierList.Count; i++)
             {
                 LevelManager.global.WoodTierList[i].ResourceAmount = 9999;

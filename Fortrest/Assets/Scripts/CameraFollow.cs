@@ -46,55 +46,28 @@ public class CameraFollow : MonoBehaviour
         {
             if (PlayerModeHandler.global.playerModes != PlayerModes.BuildMode && PlayerModeHandler.global.playerModes != PlayerModes.RepairMode && PlayerModeHandler.global.playerModes != PlayerModes.UpgradeMenu)
             {
-                FocusOnTarget(PlayerController.global.transform.position);
+                FocusOnTarget(false, PlayerController.global.transform.position, initialRotation);
             }
             else
             {
-                BuildCam(PlayerController.global.transform.position);
+                FocusOnTarget(true, PlayerController.global.transform.position, new(buildOffsetRot, 0, 0));
             }
         }
     }
 
-    private void FocusOnTarget(Vector3 targetPosition)
+    public void FocusOnTarget(bool build, Vector3 targetPosition, Vector3 offsetRotation)
     {
-        GetComponent<Camera>().orthographicSize = initialOrthographicSize;
+        if (build)
+            targetPosition = new(targetPosition.x + buildOffsetPosX, targetPosition.y, targetPosition.z + buildOffsetPosZ);
+
+        GetComponent<Camera>().orthographicSize = build ? buildOffsetOrthoSize : initialOrthographicSize;
         cameraDistance = Vector3.Distance(targetPosition, transform.position);
+
         float i = cameraDistance / (max * 50);
         smoothTime = Mathf.Lerp(minSmooth, maxSmooth, i);
 
-        if (cameraDistance > 0.1f)
-        {
-            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
-        }
-        else
-        {
-            transform.position = targetPosition;
-        }
 
-        if (transform.eulerAngles != initialRotation)
-        {
-            transform.eulerAngles = initialRotation;
-        }
-    }
-
-    public void BuildCam(Vector3 targetPosition)
-    {
-        Vector3 offsetRotation = new(buildOffsetRot, 0, 0);
-        Vector3 offsetPosition = new(targetPosition.x + buildOffsetPosX, targetPosition.y, targetPosition.z + buildOffsetPosZ);
-        GetComponent<Camera>().orthographicSize = buildOffsetOrthoSize;
-        cameraDistance = Vector3.Distance(targetPosition, transform.position);
-        float i = cameraDistance / (max * 50);
-        smoothTime = Mathf.Lerp(minSmooth, maxSmooth, i);
-
-        if (cameraDistance > 0.1f)
-        {
-            transform.position = Vector3.SmoothDamp(transform.position, offsetPosition, ref currentVelocity, smoothTime);
-
-        }
-        else
-        {
-            transform.position = offsetPosition;
-        }
+        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
 
         if (transform.eulerAngles != offsetRotation)
         {
