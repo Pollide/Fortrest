@@ -1001,6 +1001,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7008334718618285104}
   - component: {fileID: 8884981709554810587}
+  - component: {fileID: 4801667003439677623}
+  - component: {fileID: 614471715686034115}
   m_Layer: 13
   m_Name: Wolf_enemy
   m_TagString: Untagged
@@ -1111,6 +1113,35 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.002373952, y: 0.009860722, z: -0.0026943423}
     m_Extent: {x: 0.0143824555, y: 0.029356224, z: 0.018475153}
   m_DirtyAABB: 0
+--- !u!111 &4801667003439677623
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6267094712564872108}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 277121d23cea71d46ae2c80bff622da4, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 277121d23cea71d46ae2c80bff622da4, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &614471715686034115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6267094712564872108}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39c38604cc4f54297a5dffc76c26ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  script: {fileID: 1900514606650509098}
 --- !u!1 &6313254143917911281
 GameObject:
   m_ObjectHideFlags: 0
@@ -1972,6 +2003,8 @@ MonoBehaviour:
   ogreSpawnSound: {fileID: 0}
   ogreAttackSound: {fileID: 0}
   currentEnemyType: 3
+  flashingAnimation: {fileID: 4801667003439677623}
+  flashing: 0
 --- !u!114 &6763374028765096810
 MonoBehaviour:
   m_ObjectHideFlags: 0

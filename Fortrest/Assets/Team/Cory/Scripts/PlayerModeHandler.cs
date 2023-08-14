@@ -138,7 +138,7 @@ public class PlayerModeHandler : MonoBehaviour
                 switch (playerModes)
                 {
                     case PlayerModes.CombatMode:
-                        SwitchToResourceMode(false);
+                        SwitchToResourceMode();
                         break;
                     case PlayerModes.ResourceMode:
                         SwitchToCombatMode();
@@ -170,7 +170,7 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
                     House.GetComponent<Building>().textDisplayed = true;
                 }
-                SwitchToResourceMode(false);
+                SwitchToResourceMode(true);
             }
         }
     }
@@ -186,7 +186,8 @@ public class PlayerModeHandler : MonoBehaviour
         buildType = BuildType.Turret;
         HUD = HUDHandler.global;
         SwitchToBuildMode(false);
-        SwitchToResourceMode(true);
+        SwitchToResourceMode();
+        entryPosition = PlayerController.global.transform.position;
     }
 
     private void BuildMode()
@@ -251,19 +252,6 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 SwitchBuildTypeSlow();
             }
-        }
-    }
-
-    private void LeaveHouse()
-    {
-
-        if (playerModes == PlayerModes.ResourceMode)
-        {
-          //  PlayerController.global.TeleportPlayer(entryPosition);
-
-            SwitchToBuildMode(false);
-            StartCoroutine(PlayerAwake());
-            PlayerController.global.TeleportPlayer(entryPosition);
         }
     }
 
@@ -351,7 +339,8 @@ public class PlayerModeHandler : MonoBehaviour
     public void SwitchToBuildMode(bool active = true)
     {
         buildGrid.gameObject.SetActive(active);
-        PlayerController.global.MapResourceHolder.gameObject.SetActive(active);
+        PlayerController.global.OpenResourceHolder(active);
+
 
         PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
         if (active)
@@ -373,7 +362,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
-            
+
         }
 
         CameraFollow.global.Update(); //refreshes it instantly
@@ -392,15 +381,11 @@ public class PlayerModeHandler : MonoBehaviour
         //  Debug.Log("Repair");
     }
 
-    public void SwitchToResourceMode(bool start)
+    public void SwitchToResourceMode(bool teleportHome = false)
     {
         ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
 
-        if (!start)
-        {
-            LeaveHouse();
-        }        
 
         ClearBlueprint();
 
@@ -411,14 +396,19 @@ public class PlayerModeHandler : MonoBehaviour
         HUD.ResourceModeHUD();
 
 
-        LeaveHouse();
+        if (teleportHome)
+        {
+            SwitchToBuildMode(false);
+            StartCoroutine(PlayerAwake());
+            PlayerController.global.TeleportPlayer(entryPosition);
+        }
+
         //  Debug.Log("Resource");
     }
 
     public void SwitchToCombatMode()
     {
         ModeSwitchText.global.ResetText();
-        LeaveHouse();
 
         ClearBlueprint();
 

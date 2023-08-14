@@ -168,6 +168,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1183485445676424544}
   - component: {fileID: 1758348669761842107}
+  - component: {fileID: 335623215080273736}
+  - component: {fileID: 2953808494342328573}
   m_Layer: 13
   m_Name: Spider_enemy
   m_TagString: Untagged
@@ -282,6 +284,35 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: -0.0019941898, z: -0.0040259594}
     m_Extent: {x: 0.017400756, y: 0.021702304, z: 0.014647209}
   m_DirtyAABB: 0
+--- !u!111 &335623215080273736
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512815015539028850}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: dc08e6dbb896c474a98b9a246021246f, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: dc08e6dbb896c474a98b9a246021246f, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &2953808494342328573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 512815015539028850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39c38604cc4f54297a5dffc76c26ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  script: {fileID: 9017704178118484176}
 --- !u!1 &1216032577981699078
 GameObject:
   m_ObjectHideFlags: 0
@@ -1468,6 +1499,8 @@ MonoBehaviour:
   ogreSpawnSound: {fileID: 0}
   ogreAttackSound: {fileID: 0}
   currentEnemyType: 2
+  flashingAnimation: {fileID: 335623215080273736}
+  flashing: 0
 --- !u!114 &7711817039593075443
 MonoBehaviour:
   m_ObjectHideFlags: 0

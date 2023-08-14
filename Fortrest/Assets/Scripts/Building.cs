@@ -185,7 +185,7 @@ public class Building : MonoBehaviour
                 PlayerController.global.playerCanMove = false;
                 LevelManager.global.enabled = false;//stop the day progressing
 
-                GameManager.Pref("Game Start", 0, false); //restart game
+                GameManager.Pref("Has Started", 0, false); //restart game
                 LevelManager.global.enabled = false; //stops functions happening
                 PlayerController.global.enabled = false;
                 PlayerModeHandler.global.enabled = false;

@@ -136,6 +136,8 @@ MonoBehaviour:
   ogreSpawnSound: {fileID: 0}
   ogreAttackSound: {fileID: 0}
   currentEnemyType: 1
+  flashingAnimation: {fileID: 0}
+  flashing: 0
 --- !u!114 &5949272027921974290
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -952,6 +954,41 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b915528f2cd4a4643b5aa3b1dba7042a, type: 3}
+--- !u!1 &4664554001824965806 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2040542448765327740, guid: b915528f2cd4a4643b5aa3b1dba7042a,
+    type: 3}
+  m_PrefabInstance: {fileID: 6695345959119109586}
+  m_PrefabAsset: {fileID: 0}
+--- !u!111 &8011458941628339803
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4664554001824965806}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 86a792d626af67445b6a0fadfb8f8a03, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 86a792d626af67445b6a0fadfb8f8a03, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &5419999020057716669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4664554001824965806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da39c38604cc4f54297a5dffc76c26ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  script: {fileID: 1402647301061185263}
 --- !u!1 &5776935783229882499 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: b915528f2cd4a4643b5aa3b1dba7042a,

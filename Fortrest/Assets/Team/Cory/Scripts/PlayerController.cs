@@ -217,6 +217,7 @@ public class PlayerController : MonoBehaviour
     private bool displayAmount;
     private bool textIsGone = true;
     public bool teleporting;
+    private bool cancelHit;
 
     // Start is called before the first frame update
     void Awake()
@@ -303,6 +304,11 @@ public class PlayerController : MonoBehaviour
                 sprintingCTRL = false;
             }
         }
+    }
+
+    public void OpenResourceHolder(bool open)
+    {
+        GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Resource Holder Appear", open, false, 1);
     }
 
     private void BuildSelectController()
@@ -587,7 +593,15 @@ public class PlayerController : MonoBehaviour
 
         if (playerHealth <= 0 || playerDead)
         {
-            Death();
+            int random = Random.Range(1, 3);
+            if (random == 1)
+            {
+                CharacterAnimator.SetTrigger("Death1");
+            }
+            else if (random == 2)
+            {
+                CharacterAnimator.SetTrigger("Death2");
+            }
         }
     }
 
@@ -608,8 +622,9 @@ public class PlayerController : MonoBehaviour
 
     private void ModeChanged()
     {
-        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1) || cancelCTRL)
+        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1) || cancelCTRL || cancelHit)
         {
+            cancelHit = false;
             cancelAnimation = true;
             cancelEffects = true;
             if (!aimingCTRL)
@@ -795,7 +810,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
             if (canTeleport && interactCTRL)
-            {              
+            {
                 TeleportPlayer(houseSpawnPoint.transform.position);
             }
         }
@@ -803,7 +818,11 @@ public class PlayerController : MonoBehaviour
 
     public void TeleportPlayer(Vector3 pos)
     {
-
+        if (pos == Vector3.zero)
+        {
+            Debug.LogError("POSITION WAS ZERO. IF YOU SEE THIS MESSAGE SEE WHERE IT WAS CALLED FROM TY");
+            return;
+        }
         if (Boar.global.mounted)
         {
             //Boar.global.canMove = false;
@@ -818,14 +837,14 @@ public class PlayerController : MonoBehaviour
             playerCC.enabled = false;
             transform.position = pos;
             playerCC.enabled = true;
-            CharacterAnimator.SetBool("Moving", false);           
+            CharacterAnimator.SetBool("Moving", false);
         }
         interactCTRL = false;
         canTeleport = false;
         needInteraction = false;
         teleporting = true;
 
-            LevelManager.global.SceneCamera.transform.position = pos;
+        LevelManager.global.SceneCamera.transform.position = pos;
     }
 
     public void ChangeTool(ToolData toolData)
@@ -958,7 +977,7 @@ public class PlayerController : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
-            MapResourceHolder.gameObject.SetActive(map);
+            OpenResourceHolder(map);
             if (mapBool)
             {
                 MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
@@ -970,7 +989,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void UpdateResourceHolder()
+    public void UpdateResourceHolder(int bridgeTypeInt = 0)
     {
         for (int i = 0; i < MapResourceHolder.childCount; i++)
         {
@@ -988,6 +1007,18 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < LevelManager.global.StoneTierList.Count; i++)
         {
             stoneCostList.Add(new LevelManager.TierData());
+        }
+
+        if (bridgeTypeInt == 1)
+        {
+            woodCostList[0].ResourceCost = -30;
+            stoneCostList[0].ResourceCost = -30;
+        }
+
+        if (bridgeTypeInt == 2)
+        {
+            woodCostList[1].ResourceCost = -30;
+            stoneCostList[1].ResourceCost = -30;
         }
 
         if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
@@ -1029,9 +1060,20 @@ public class PlayerController : MonoBehaviour
 
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
+        bool cost = false;
+
         for (int i = 0; i < tierList.Count; i++)
         {
-            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+            if (costList[i].ResourceCost != 0)
+            {
+                cost = true;
+                break;
+            }
+        }
+
+        for (int i = 0; i < tierList.Count; i++)
+        {
+            if (cost)
             {
                 tierList[i].ResourceCost = costList[i].ResourceCost;
 
@@ -1263,7 +1305,7 @@ public class PlayerController : MonoBehaviour
             if (Facing(building.position, 75.0f) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && distanceFloat == smallestDistance && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
             {
                 gathering = true;
-                gatherTimer = 0;            
+                gatherTimer = 0;
                 currentResource = building.GetComponent<Building>();
                 ChangeTool(new ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PickaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
                 CharacterAnimator.ResetTrigger("Swing");
@@ -1558,14 +1600,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void Death()
+    public void Death()
     {
         if (!deathEffects)
         {
-            // lose inventory
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
-
             TeleportPlayer(house.transform.position);
             playerCanMove = false;
             playerCC.enabled = false;
@@ -1607,6 +1647,23 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        cancelHit = true;
+        CharacterAnimator.ResetTrigger("Swing");
+        CharacterAnimator.ResetTrigger("Swing2");
+        CharacterAnimator.ResetTrigger("Swing3");
+        int random = Random.Range(1, 4);
+        if (random == 1)
+        {
+            CharacterAnimator.SetTrigger("Hit1");
+        }
+        else if (random == 2)
+        {
+            CharacterAnimator.SetTrigger("Hit2");
+        }
+        else
+        {
+            CharacterAnimator.SetTrigger("Hit3");
+        }
         playerHealth -= damage;
         healthBar.SetHealth(playerHealth, false);
         displaySlash = true;

@@ -23,8 +23,8 @@ public class GameManager : MonoBehaviour
     public SFXManager MusicManager; //manages all music
 
     // Music
-    public AudioClip MenuMusic; 
-    public AudioClip GameMusic; 
+    public AudioClip MenuMusic;
+    public AudioClip GameMusic;
     public AudioClip PauseMusic;
     public AudioClip NightMusic;
     // SFX
@@ -75,25 +75,10 @@ public class GameManager : MonoBehaviour
     public AudioClip SlowShootSound; // NEED BETTER SOUND
 
     public bool CheatInfiniteBuilding;
-    public bool DebugSaveBool;
-    public bool DebugLoadBool;
+
     public AnimationClip PopupAnimation;
     public GamepadControls gamepadControls;
 
-    private void Update()
-    {
-        if (DebugSaveBool)
-        {
-            DebugSaveBool = false;
-            DataSetVoid(false);
-        }
-
-        if (DebugLoadBool)
-        {
-            DebugLoadBool = false;
-            DataSetVoid(true);
-        }
-    }
     //runs on the frame it was awake on
     void Awake()
     {
@@ -125,12 +110,12 @@ public class GameManager : MonoBehaviour
             eventSystemGameObject.name = "Event System";
 
             //this checks if it is the first time playing the game. It wont run again
-            if (PlayerPrefs.GetInt("First Time") == 0)
+            if (PlayerPrefs.GetInt("First Load") == 0)
             {
-                PlayerPrefs.SetInt("First Time", 1);
+                PlayerPrefs.SetInt("First Load", 1);
 
-                PlayerPrefs.SetFloat("Music", 0.65f); //sets the music level
-                PlayerPrefs.SetFloat("Sound", 0.9f); //sets the sound volume
+                PlayerPrefs.SetFloat("Music", 0.6f); //sets the music level
+                PlayerPrefs.SetFloat("Sound", 1.0f); //sets the sound volume
             }
 
             //quick load is an editor feature that I added to help other peers when testing projects.
@@ -324,7 +309,7 @@ public class GameManager : MonoBehaviour
         return new AnimationState(); //something default, will likely return error that needs to be corrected anyways
     }
 
-    public static AnimatorStateInfo PlayAnimator(Animator animator, string clipNameString = "", bool forwardBool = true, bool instantBool = false)
+    public static AnimatorStateInfo PlayAnimator(Animator animator, string clipNameString = "", bool forwardBool = true, bool instantBool = false, int layer = 0)
     {
         if (animator)
         {
@@ -345,7 +330,7 @@ public class GameManager : MonoBehaviour
 
                     animator.speed = forwardBool ? 1 : -1;
 
-                    animator.Play(clip.name, 0, forwardBool ? 0 : 1);
+                    animator.Play(clip.name, layer, forwardBool ? 0 : 1);
 
                     if (instantBool)
                     {
@@ -421,7 +406,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if ((int)Pref("Game Start", 0, true) == 1)
+            if ((int)Pref("Has Started", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
@@ -446,7 +431,7 @@ public class GameManager : MonoBehaviour
     {
         if (!load)
         {
-            Pref("Game Start", 1, false);
+            Pref("Has Started", 1, false);
         }
         DataPositionVoid("Player", PlayerController.global.transform, load);
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
@@ -483,6 +468,11 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < LevelManager.global.BridgeList.Count; i++)
         {
             LevelManager.global.BridgeList[i].isBuilt = Pref("Bridge Built" + i, LevelManager.global.BridgeList[i].isBuilt ? 1 : 0, load) == 1;
+
+            if (load && LevelManager.global.BridgeList[i].isBuilt)
+            {
+                LevelManager.global.BridgeList[i].BuildBridge();
+            }
         }
 
         LevelManager.ProcessEnemyList((enemy) =>
