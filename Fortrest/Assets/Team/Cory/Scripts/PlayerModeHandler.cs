@@ -28,6 +28,7 @@ public class PlayerModeHandler : MonoBehaviour
 {
     public static PlayerModeHandler global;
     public PlayerModes playerModes;
+    private PlayerModes lastMode;
     public BuildType buildType;
     public GameObject[] turretPrefabs;
     GameObject turretBlueprint;
@@ -149,11 +150,12 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && House.GetComponent<Building>().playerinRange && !PlayerController.global.teleporting)
+        if (!PlayerController.global.playerDead && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && House.GetComponent<Building>().playerinRange && !PlayerController.global.teleporting)
         {
             PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
             {
+                lastMode = playerModes;
                 entryPosition = PlayerController.global.transform.position;
                 if (House.GetComponent<Building>().textDisplayed)
                 {
@@ -170,7 +172,7 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
                     House.GetComponent<Building>().textDisplayed = true;
                 }
-                SwitchToResourceMode(true);
+                ExitHouseCleanUp();
             }
         }
     }
@@ -381,43 +383,37 @@ public class PlayerModeHandler : MonoBehaviour
         //  Debug.Log("Repair");
     }
 
-    public void SwitchToResourceMode(bool teleportHome = false)
+    public void ExitHouseCleanUp()
     {
         ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
-
-
         ClearBlueprint();
-
-        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
-        playerModes = PlayerModes.ResourceMode;
         SetMouseActive(false);
-
-        HUD.ResourceModeHUD();
-
-
-        if (teleportHome)
+        SwitchToBuildMode(false);
+        StartCoroutine(PlayerAwake());
+        PlayerController.global.TeleportPlayer(entryPosition);
+        if (lastMode == PlayerModes.ResourceMode)
         {
-            SwitchToBuildMode(false);
-            StartCoroutine(PlayerAwake());
-            PlayerController.global.TeleportPlayer(entryPosition);
+            SwitchToResourceMode();
         }
+        else if (lastMode == PlayerModes.CombatMode)
+        {
+            SwitchToCombatMode();
+        }
+    }
 
-        //  Debug.Log("Resource");
+    public void SwitchToResourceMode()
+    {       
+        PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
+        playerModes = PlayerModes.ResourceMode;       
+        HUD.ResourceModeHUD();
     }
 
     public void SwitchToCombatMode()
     {
-        ModeSwitchText.global.ResetText();
-
-        ClearBlueprint();
-
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = true });
         playerModes = PlayerModes.CombatMode;
-        SetMouseActive(false);
-
         HUD.CombatModeHUD();
-        // Debug.Log("Combat");
     }
 
     public void SwitchToUpgradeMode()

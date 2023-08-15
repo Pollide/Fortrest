@@ -21,21 +21,20 @@ public class HouseAnimationScript : MonoBehaviour
     // Start is called before the first frame update
     void OnTriggerEnter(Collider other) //Enter Trigger Box
     {
-        if (other.CompareTag("Player")) { //Checks to see if collider has tag "Player"
+        if (other.CompareTag("Player") && !PlayerController.global.playerDead) 
+        { //Checks to see if collider has tag "Player"
             HouseAnimator.SetBool("activateHouse", true); //Sets a variable inside the chosen animator
             HouseAnimator.SetBool("deactivateHouse", false); //Sets a variable inside the chosen animator
-
-        }
-        
+        }        
     }
 
     // Update is called once per frame
     void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player")) { //Checks to see if collider has tag "Player"
+        if (other.CompareTag("Player")) 
+        { //Checks to see if collider has tag "Player"
             HouseAnimator.SetBool("deactivateHouse", true); //Sets a variable inside the chosen animator
             HouseAnimator.SetBool("activateHouse", false); //Sets a variable inside the chosen animator
-
         }
     }
 }

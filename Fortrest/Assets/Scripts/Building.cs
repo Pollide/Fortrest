@@ -249,7 +249,7 @@ public class Building : MonoBehaviour
         if (resourceObject == BuildingType.House)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);
-            if (distanceToPlayer < 15.0f)
+            if (distanceToPlayer < 15.0f && !PlayerController.global.playerDead)
             {
                 if (PlayerModeHandler.global.playerModes != PlayerModes.BuildMode && PlayerModeHandler.global.playerModes != PlayerModes.RepairMode)
                 {
@@ -264,7 +264,7 @@ public class Building : MonoBehaviour
                 playerinRange = true;
                 PlayerController.global.canGetInHouse = true;
             }
-            else
+            else if (distanceToPlayer >= 15.0f)
             {
                 if (textDisplayed)
                 {
