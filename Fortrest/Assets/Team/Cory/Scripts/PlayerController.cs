@@ -43,7 +43,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool evading = false;
     [HideInInspector] public bool canEvade = true;
     [HideInInspector] public bool playerCanBeDamaged = true;
-    private Vector3 newPosition;
+    private Vector3 startPosition;
+    private Vector3 endPosition;
     private bool blocked = false;
 
     // Shooting
@@ -467,7 +468,6 @@ public class PlayerController : MonoBehaviour
         VFXSparks = manager.transform.Find("VFX").Find("VFX_Sparks").GetComponent<VisualEffect>();
         VFXPebble = manager.transform.Find("VFX").Find("VFX_Pebble").GetComponent<VisualEffect>();
         VFXWoodChip = manager.transform.Find("VFX").Find("VFX_Woodchips").GetComponent<VisualEffect>();
-        newPosition = transform.position;
         VFXSlash.Stop();
         VFXSleeping.Stop();
         VFXSparks.Stop();
@@ -511,13 +511,12 @@ public class PlayerController : MonoBehaviour
         }
 
         if (evading)
-        {
-            evadeTimer += Time.deltaTime;
+        {           
             playerCanBeDamaged = false;
-
+            evadeTimer += Time.deltaTime;
             if (!blocked)
             {
-                transform.position = Vector3.Lerp(transform.position, newPosition, evadeTimer / 30.0f);
+                transform.position = Vector3.Lerp(startPosition, endPosition, evadeTimer);               
             }
             return;
         }
@@ -930,7 +929,9 @@ public class PlayerController : MonoBehaviour
         blocked = false;
         CharacterAnimator.ResetTrigger("Evade");
         CharacterAnimator.SetTrigger("Evade");
-        newPosition = transform.position + (transform.forward * 7.0f);
+        startPosition = transform.position;
+        endPosition = transform.position + (transform.forward * 8.5f);
+        staggered = false;
 
         yield return new WaitForSeconds(evadeCoolDown);
         canEvade = true;
