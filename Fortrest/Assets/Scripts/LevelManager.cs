@@ -320,10 +320,12 @@ public class LevelManager : MonoBehaviour
 
     void LockCursor()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
             PlayerModeHandler.SetMouseActive(!Cursor.visible);
         }
+#endif
     }
 
     void HandleMouse()
