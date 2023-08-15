@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
     public GameObject bodyShape;
-    private GameObject interactText;
+    private GameObject respawnText;
     [HideInInspector] public bool LanternLighted;
     // Speed
     private float playerCurrentSpeed = 0f;
@@ -482,7 +482,7 @@ public class PlayerController : MonoBehaviour
             RadiusCamGameObject = GameObject.Find("Radius Camera");
         }
 
-        interactText = house.transform.GetChild(3).gameObject;
+        respawnText = house.transform.GetChild(4).gameObject;
 
         // Setting default values
         playerCurrentSpeed = playerWalkSpeed;
@@ -1610,7 +1610,7 @@ public class PlayerController : MonoBehaviour
                 needInteraction = true;
                 if (!textAnimated)
                 {
-                    LevelManager.FloatingTextChange(interactText, true);
+                    LevelManager.FloatingTextChange(respawnText, true);
                     textAnimated = true;
                 }
                 if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
@@ -1624,7 +1624,7 @@ public class PlayerController : MonoBehaviour
                     deathEffects = false;
                     playerRespawned = true;
                     respawnTimer = 0.0f;
-                    LevelManager.FloatingTextChange(interactText, false);
+                    LevelManager.FloatingTextChange(respawnText, false);
                     textAnimated = false;
                     needInteraction = false;
                     interactCTRL = false;
