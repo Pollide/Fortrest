@@ -6,7 +6,7 @@ public class Bow : MonoBehaviour
 {
     public static Bow global;
     public GameObject arrowObject;
-    private float fireForce = 30.0f;
+    private float fireForce = 40.0f;
 
     private void Start()
     {
