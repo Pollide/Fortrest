@@ -515,11 +515,9 @@ public class PlayerController : MonoBehaviour
             evadeTimer += Time.deltaTime;
             playerCanBeDamaged = false;
 
-
             if (!blocked)
             {
-
-                transform.position = Vector3.Lerp(transform.position, newPosition, evadeTimer * 5 * Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, newPosition, evadeTimer / 30.0f);
             }
             return;
         }
