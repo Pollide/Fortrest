@@ -118,12 +118,6 @@ public class LevelManager : MonoBehaviour
             PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
-        else if (!PlayerController.global && SceneManager.GetActiveScene().buildIndex != 1)
-        {
-            Instantiate(PlayerPrefab, SpawnPosition);
-        }
-
-
     }
 
     public AudioClip ActiveBiomeMusic;
