@@ -116,7 +116,7 @@ public class TurretShooting : MonoBehaviour
     {
         if (target.GetComponent<EnemyController>())
         {
-            if (target.GetComponent<EnemyController>().health - damage < 0)
+            if (target.GetComponent<EnemyController>().health - damage <= 0)
             {
                 target.gameObject.layer = 0; //so it doesnt get detected
 
