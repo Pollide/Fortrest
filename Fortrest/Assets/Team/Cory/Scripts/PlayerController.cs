@@ -77,6 +77,7 @@ public class PlayerController : MonoBehaviour
     // Health
     private bool deathEffects = false;
     [HideInInspector] public bool playerDead = false;
+    private bool playerRespawned;
     [HideInInspector] public float playerHealth = 0.0f;
     [HideInInspector] public float maxHealth = 100.0f;
     public HealthBar healthBar;
@@ -526,6 +527,12 @@ public class PlayerController : MonoBehaviour
             blocked = false;
         }
 
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            playerHealth = 0;
+            healthBar.SetHealth(playerHealth, false);
+        }
+
         if (playerCanMove)
         {
             // Controller
@@ -572,6 +579,11 @@ public class PlayerController : MonoBehaviour
         Resting();
         BarDisappear();
 
+        if (playerDead)
+        {
+            Death();
+        }       
+
         if (teleporting)
         {
             teleporting = false;
@@ -587,8 +599,9 @@ public class PlayerController : MonoBehaviour
             KeyRead(keyCode);
         }
 
-        if (playerHealth <= 0 || playerDead)
+        if (playerHealth <= 0)
         {
+            playerCanMove = false;
             int random = Random.Range(1, 3);
             if (random == 1)
             {
@@ -1580,13 +1593,12 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
             TeleportPlayer(house.transform.position);
-            playerCanMove = false;
             playerCC.enabled = false;
             bodyShape.SetActive(false);
-            playerDead = true;
+            playerRespawned = false;
             deathEffects = true;
         }
-        if (playerDead)
+        if (!playerRespawned)
         {
             respawnTimer += Time.deltaTime;
             playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
@@ -1608,6 +1620,7 @@ public class PlayerController : MonoBehaviour
                     bodyShape.SetActive(true);
                     playerDead = false;
                     deathEffects = false;
+                    playerRespawned = true;
                     respawnTimer = 0.0f;
                     LevelManager.FloatingTextChange(interactText, false);
                     textAnimated = false;
