@@ -114,6 +114,14 @@ public class TurretShooting : MonoBehaviour
 
     private void Attack()
     {
+        if (target.GetComponent<EnemyController>())
+        {
+            if (target.GetComponent<EnemyController>().health - damage <= 0)
+            {
+                target.gameObject.layer = 0; //so it doesnt get detected
+
+            }
+        }
         Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
 
         Vector3 direction = targetPos - transform.position;
@@ -121,7 +129,7 @@ public class TurretShooting : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(direction);
 
         // Check if it's time to fire
-        if (fireCountdown <= 0f && Quaternion.Dot(transform.rotation, lookRotation) > 0.95f)
+        if (fireCountdown <= 0f && Mathf.Abs(Quaternion.Dot(transform.rotation, lookRotation)) > 0.8f)
         {
             attackStarted = true;
             ReturnAnimator().ResetTrigger("Fire");
@@ -135,8 +143,19 @@ public class TurretShooting : MonoBehaviour
 
     public void ProjectileEvent() //CALLS ON THE ANIMATOR
     {
-        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint);
+        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
         //       GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
+
+
+        BoltScript boltScript = projectile.GetComponent<BoltScript>();
+
+        if (boltScript)
+        {
+            boltScript.turretShootingScript = this;
+            boltScript.ActiveTarget = target;
+            boltScript.SetDamage(damage);
+        }
+
         if (IsCannon)
         {
 
@@ -167,10 +186,6 @@ public class TurretShooting : MonoBehaviour
                     bolt3.transform.Rotate(new Vector3(0, -25, 0));
                 }
             }
-
-            BoltScript boltScript = projectile.GetComponent<BoltScript>();
-            boltScript.turretShootingScript = this;
-            boltScript.SetDamage(damage);
         }
     }
 

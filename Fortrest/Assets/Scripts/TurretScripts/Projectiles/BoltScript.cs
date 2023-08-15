@@ -5,20 +5,16 @@ using UnityEngine.AI;
 
 public class BoltScript : MonoBehaviour
 {
-    public float speed = 10f;       // Speed at which the bullet moves
-    public float lifetime = 2f;     // Time in seconds before the bullet is destroyed
     public float pushForce = 5f;    // Time in seconds before the bullet is destroyed
-
+    public float speed = 2;
     private float damage = 0f;      // Amount of damage the bullet applies to enemies
-    private float timer = 0f;       // Timer to track the bullet's lifetime
 
     [HideInInspector]
     public TurretShooting turretShootingScript;
 
-    private void Start()
-    {
-        timer = lifetime;           // Initialize the timer to the bullet's lifetime
-    }
+    [HideInInspector]
+    public Transform ActiveTarget;
+
     private bool instakill;
     private bool damageDealt;
 
@@ -26,11 +22,12 @@ public class BoltScript : MonoBehaviour
     void Update()
     {
         // Move the bullet forward along the Z-axis
-        transform.Translate(speed * Time.deltaTime * Vector3.forward);
-        timer -= Time.deltaTime;    // Decrease the timer based on the elapsed time
-
-        // Destroy the bullet if the timer reaches or goes below zero
-        if (timer <= 0f)
+        if (ActiveTarget)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, ActiveTarget.position, speed * Time.deltaTime);
+            transform.rotation = Quaternion.LookRotation(ActiveTarget.position - transform.position);
+        }
+        else
         {
             Destroy(gameObject);
         }
@@ -38,7 +35,7 @@ public class BoltScript : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!damageDealt && turretShootingScript)
+        if (!damageDealt && turretShootingScript && !GetComponent<ProjectileExplosion>())
         {
             U_Turret uTurret = turretShootingScript.GetComponent<U_Turret>();
 

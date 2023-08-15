@@ -599,11 +599,14 @@ public class GameManager : MonoBehaviour
         float y = Pref(pref + "y", value.position.y, load);
         float z = Pref(pref + "z", value.position.z, load);
 
-        if (load && value.GetComponent<PlayerController>())
+        if (value.GetComponent<PlayerController>())
         {
-            value.GetComponent<PlayerController>().TeleportPlayer(new Vector3(x, y, z));
+            if (load)
+                value.GetComponent<PlayerController>().TeleportPlayer(new Vector3(x, y, z));
+
             return;
         }
+
         value.position = new Vector3(x, y, z);
     }
 

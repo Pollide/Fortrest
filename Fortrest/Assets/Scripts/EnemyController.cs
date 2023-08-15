@@ -283,7 +283,7 @@ public class EnemyController : MonoBehaviour
             if (agent.velocity != Vector3.zero)
             {
                 ActiveAnimator.SetBool("Moving", true);
-            }   
+            }
             else
             {
                 ActiveAnimator.SetBool("Moving", false);
@@ -335,7 +335,7 @@ public class EnemyController : MonoBehaviour
             GameManager.PlayAnimation(flashingAnimation, "Flashing");
             flashing = true;
         }
-        
+
         health -= amount;
         if (HealthAppearTimer == -1)
         {
@@ -395,13 +395,13 @@ public class EnemyController : MonoBehaviour
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 StopAllCoroutines();
-                chaseTimer = 0;                
+                chaseTimer = 0;
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chasing = true;
                 }
-                canBeDamaged = false;                
-                PickSound(hitSound, hitSound2, 1.0f);                
+                canBeDamaged = false;
+                PickSound(hitSound, hitSound2, 1.0f);
                 if (currentEnemyType != ENEMYTYPE.ogre && !flashing)
                 {
                     ActiveAnimator.ResetTrigger("Hit1");
@@ -420,7 +420,7 @@ public class EnemyController : MonoBehaviour
                     {
                         ActiveAnimator.SetTrigger("Hit3");
                     }
-                }              
+                }
                 knockBackScript.knock = true;
                 ScreenShake.global.shake = true;
                 Damaged(PlayerController.global.attackDamage);

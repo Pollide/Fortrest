@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7281693922789053899}
   - component: {fileID: 2259373432877075917}
+  - component: {fileID: 6871647525366733927}
   - component: {fileID: 2513738952014007482}
   - component: {fileID: -4583171827207095457}
   m_Layer: 0
@@ -48,6 +49,22 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6871647525366733927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4323165861798559352}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cff3c68ebb52d2146b2925be1752c284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pushForce: 5
+  speed: 10
+  turretShootingScript: {fileID: 0}
+  ActiveTarget: {fileID: 0}
 --- !u!114 &2513738952014007482
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,8 +81,7 @@ MonoBehaviour:
   damage: 1
   pushForce: 10
   explosionEffect: {fileID: 0}
-  speed: 50
-  lifetime: 5
+  uCannon: {fileID: 0}
 --- !u!54 &-4583171827207095457
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -110,7 +126,7 @@ Transform:
   m_GameObject: {fileID: 5893296055270043483}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.1149, y: 1.1149, z: 1.1149}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7281693922789053899}

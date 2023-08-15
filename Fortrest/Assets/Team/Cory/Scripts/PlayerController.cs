@@ -468,6 +468,7 @@ public class PlayerController : MonoBehaviour
         VFXSparks = manager.transform.Find("VFX").Find("VFX_Sparks").GetComponent<VisualEffect>();
         VFXPebble = manager.transform.Find("VFX").Find("VFX_Pebble").GetComponent<VisualEffect>();
         VFXWoodChip = manager.transform.Find("VFX").Find("VFX_Woodchips").GetComponent<VisualEffect>();
+        newPosition = transform.position;
         VFXSlash.Stop();
         VFXSleeping.Stop();
         VFXSparks.Stop();
@@ -1377,6 +1378,7 @@ public class PlayerController : MonoBehaviour
         miniTurret.GetComponent<TurretShooting>().turn_speed = 10;
         miniTurret.GetComponent<TurretShooting>().damage = 1;
         miniTurret.GetComponent<TurretShooting>().fireRate = 3f;
+        miniTurret.GetComponent<TurretShooting>().shootingRange = 10;
         GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
     }
 
