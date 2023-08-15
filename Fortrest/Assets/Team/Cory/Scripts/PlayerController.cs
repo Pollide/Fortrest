@@ -844,7 +844,7 @@ public class PlayerController : MonoBehaviour
         canTeleport = false;
         needInteraction = false;
         teleporting = true;
-        Debug.Log(pos);
+
         LevelManager.global.SceneCamera.transform.position = pos;
     }
 
@@ -1378,6 +1378,7 @@ public class PlayerController : MonoBehaviour
         miniTurret.GetComponent<TurretShooting>().turn_speed = 10;
         miniTurret.GetComponent<TurretShooting>().damage = 1;
         miniTurret.GetComponent<TurretShooting>().fireRate = 3f;
+        miniTurret.GetComponent<TurretShooting>().shootingRange = 10;
         GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
     }
 
