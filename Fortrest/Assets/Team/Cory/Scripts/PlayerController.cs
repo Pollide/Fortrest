@@ -468,6 +468,7 @@ public class PlayerController : MonoBehaviour
         VFXSparks = manager.transform.Find("VFX").Find("VFX_Sparks").GetComponent<VisualEffect>();
         VFXPebble = manager.transform.Find("VFX").Find("VFX_Pebble").GetComponent<VisualEffect>();
         VFXWoodChip = manager.transform.Find("VFX").Find("VFX_Woodchips").GetComponent<VisualEffect>();
+        newPosition = transform.position;
         VFXSlash.Stop();
         VFXSleeping.Stop();
         VFXSparks.Stop();
@@ -843,7 +844,7 @@ public class PlayerController : MonoBehaviour
         canTeleport = false;
         needInteraction = false;
         teleporting = true;
-
+        Debug.Log(pos);
         LevelManager.global.SceneCamera.transform.position = pos;
     }
 

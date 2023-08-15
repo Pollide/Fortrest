@@ -10,7 +10,6 @@ using UnityEngine.UI;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager global;
-    public Transform SpawnPosition;
     public Camera SceneCamera;
     public GameObject PlayerPrefab;
     public float PanSpeed = 20f;
@@ -118,11 +117,6 @@ public class LevelManager : MonoBehaviour
             PlayerPrefs.SetInt("Quick Load", SceneManager.GetActiveScene().buildIndex);
             SceneManager.LoadScene(0);
         }
-        else if (!PlayerController.global && SceneManager.GetActiveScene().buildIndex != 1)
-        {
-            Instantiate(PlayerPrefab, SpawnPosition);
-        }
-
 
     }
 
@@ -132,13 +126,6 @@ public class LevelManager : MonoBehaviour
     {
         ActiveBiomeMusic = GameManager.global.GameMusic;
         newDay = true;
-
-        PlayerController playerController = PlayerController.global;
-
-        if (SpawnPosition)
-        {
-            playerController.transform.position = SpawnPosition.position;
-        }
 
         //LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         //NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;

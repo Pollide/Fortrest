@@ -6,8 +6,6 @@ using UnityEngine.AI;
 public class Boar : MonoBehaviour
 {
     public static Boar global;
-
-    private GameObject player;
     private GameObject text;
     bool textactive;
     public bool mounted = false;
@@ -49,7 +47,6 @@ public class Boar : MonoBehaviour
     void Start()
     {
         text = transform.GetChild(0).gameObject;
-        player = PlayerController.global.gameObject;
         cc = GetComponent<CharacterController>();
         Indicator.global.AddIndicator(transform, Color.cyan, "Mount", false, Indicator.global.MountSprite);
     }
@@ -153,7 +150,7 @@ public class Boar : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject == player)
+        if (other.gameObject == PlayerController.global.gameObject)
         {
             inRange = true;
         }
@@ -161,7 +158,7 @@ public class Boar : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == player)
+        if (other.gameObject == PlayerController.global.gameObject)
         {
             inRange = false;
         }
@@ -171,15 +168,15 @@ public class Boar : MonoBehaviour
     {
         mounted = !mounted;
         PlayerController.global.interactCTRL = false;
-        player.GetComponent<CharacterController>().enabled = false;
+        PlayerController.global.GetComponent<CharacterController>().enabled = false;
 
         if (mounted)
         {
             GameManager.global.SoundManager.PlaySound(mountSound, 1.0f);
-            player.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
-            player.transform.rotation = transform.rotation;
-            player.GetComponent<CharacterController>().enabled = true;
-            player.GetComponent<PlayerController>().playerCanMove = false;
+            PlayerController.global.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
+            PlayerController.global.transform.rotation = transform.rotation;
+            PlayerController.global.GetComponent<CharacterController>().enabled = true;
+            PlayerController.global.GetComponent<PlayerController>().playerCanMove = false;
             PlayerController.global.CharacterAnimator.SetBool("Moving", false);
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HandBool = true });
             GetComponent<NavMeshObstacle>().enabled = false;
@@ -187,15 +184,15 @@ public class Boar : MonoBehaviour
         else
         {
             GameManager.global.SoundManager.PlaySound(dismountSound, 1.0f);
-            player.transform.position += transform.right * 2;
-            player.transform.rotation = transform.rotation;
-            player.GetComponent<CharacterController>().enabled = true;
-            player.GetComponent<PlayerController>().playerCanMove = true;
+            PlayerController.global.transform.position += transform.right * 2;
+            PlayerController.global.transform.rotation = transform.rotation;
+            PlayerController.global.GetComponent<CharacterController>().enabled = true;
+            PlayerController.global.GetComponent<PlayerController>().playerCanMove = true;
             PlayerController.global.CharacterAnimator.SetBool("Sitting", false);
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = PlayerModeHandler.global.playerModes == PlayerModes.CombatMode, AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
             GetComponent<NavMeshObstacle>().enabled = true;
             StartCoroutine(MidAir());
-        }       
+        }
     }
 
     private IEnumerator MidAir()
@@ -209,16 +206,17 @@ public class Boar : MonoBehaviour
 
     void PlayerStick()
     {
-        player.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
-        player.transform.rotation = transform.rotation;
+
+        PlayerController.global.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
+        PlayerController.global.transform.rotation = transform.rotation;
         PlayerController.global.CharacterAnimator.SetBool("Sitting", true);
     }
 
     void Ride()
     {
-        Lerping(40f, 60f, ref acceleration, 2/9f); // Acceleration
-        Lerping(100f, 300f, ref deceleration, 20/9f); // Deceleration
-        Lerping(40f, 60f, ref turnAnglePerSec, 2/9f); // Turn
+        Lerping(40f, 60f, ref acceleration, 2 / 9f); // Acceleration
+        Lerping(100f, 300f, ref deceleration, 20 / 9f); // Deceleration
+        Lerping(40f, 60f, ref turnAnglePerSec, 2 / 9f); // Turn
 
         if (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0)
         {
@@ -289,7 +287,7 @@ public class Boar : MonoBehaviour
                     reverse = false;
                 }
                 bobbing = Mathf.Clamp(bobbing, -5f, 5f);
-                player.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + bobbing);
+                PlayerController.global.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + bobbing);
             }
             else
             {
@@ -304,7 +302,7 @@ public class Boar : MonoBehaviour
         if (isMoving)
         {
             GameManager.global.SoundManager.PlaySound(stepSound, 0.25f);
-        }        
+        }
     }
 
     private void StepTwo()
