@@ -32,7 +32,6 @@ public class TurretShooting : MonoBehaviour
     public int CurrentLevel;
 
     private Quaternion targetRotation;
-
     public bool MiniTurret;
 
     private void Start()
@@ -122,7 +121,7 @@ public class TurretShooting : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(direction);
 
         // Check if it's time to fire
-        if (fireCountdown <= 0f && transform.rotation == lookRotation)
+        if (fireCountdown <= 0f && Quaternion.Dot(transform.rotation, lookRotation) > 0.95f)
         {
             attackStarted = true;
             ReturnAnimator().ResetTrigger("Fire");
@@ -136,8 +135,8 @@ public class TurretShooting : MonoBehaviour
 
     public void ProjectileEvent() //CALLS ON THE ANIMATOR
     {
-        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
-
+        GameObject projectile = Instantiate(ProjectilePrefab, FirePoint);
+        //       GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
         if (IsCannon)
         {
 
