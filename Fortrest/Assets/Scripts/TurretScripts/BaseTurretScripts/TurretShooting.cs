@@ -122,7 +122,7 @@ public class TurretShooting : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(direction);
 
         // Check if it's time to fire
-        if (fireCountdown <= 0f && transform.rotation == lookRotation)
+        if (fireCountdown <= 0f && Quaternion.Dot(transform.rotation, lookRotation) > 0.95f)
         {
             attackStarted = true;
             ReturnAnimator().ResetTrigger("Fire");
