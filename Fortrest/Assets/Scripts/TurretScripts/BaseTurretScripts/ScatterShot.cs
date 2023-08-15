@@ -21,7 +21,7 @@ public class ScatterShot : MonoBehaviour
         // Update the cooldown timer
         cooldownTimer -= Time.deltaTime;
 
-        if (cooldownTimer <= 0f)
+        if (cooldownTimer <= 0f && PlayerModeHandler.global.playerModes != PlayerModes.BuildMode)
         {
             ShootBulletFromNextSpawnPoint();
             cooldownTimer = cooldownTime;
