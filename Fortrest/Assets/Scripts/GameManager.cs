@@ -604,11 +604,9 @@ public class GameManager : MonoBehaviour
             if (load)
                 value.GetComponent<PlayerController>().TeleportPlayer(new Vector3(x, y, z));
 
-            Debug.Log(value);
             return;
         }
 
-        Debug.Log(value);
         value.position = new Vector3(x, y, z);
     }
 

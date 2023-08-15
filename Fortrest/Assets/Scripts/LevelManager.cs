@@ -217,7 +217,7 @@ public class LevelManager : MonoBehaviour
 
     public bool ReturnNight()
     {
-        return DaylightTimer > 180 || DaylightTimer < 20;
+        return DaylightTimer > 180;
     }
 
     private void Update()
