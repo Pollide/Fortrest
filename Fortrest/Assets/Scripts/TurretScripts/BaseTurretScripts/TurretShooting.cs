@@ -32,7 +32,6 @@ public class TurretShooting : MonoBehaviour
     public int CurrentLevel;
 
     private Quaternion targetRotation;
-
     public bool MiniTurret;
 
     private void Start()
