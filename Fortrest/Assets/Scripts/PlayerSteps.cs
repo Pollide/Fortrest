@@ -53,4 +53,9 @@ public class PlayerSteps : MonoBehaviour
     {
         PlayerController.global.Death();
     }
+
+    void StaggerEnd()
+    {
+        PlayerController.global.staggered = false;
+    }
 }

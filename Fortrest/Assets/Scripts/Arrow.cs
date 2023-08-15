@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Arrow : MonoBehaviour
 {
+    public bool singleHit;
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject != PlayerController.global.gameObject)

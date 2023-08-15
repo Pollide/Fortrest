@@ -177,7 +177,7 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 30.0f || (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode))
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 35.0f || (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode))
                 {
                     bestTarget = null;
                 }
@@ -329,13 +329,7 @@ public class EnemyController : MonoBehaviour
     }
 
     public void Damaged(float amount)
-    {
-        if (currentEnemyType != ENEMYTYPE.ogre && !flashing)
-        {
-            GameManager.PlayAnimation(flashingAnimation, "Flashing");
-            flashing = true;
-        }
-
+    {       
         health -= amount;
         if (HealthAppearTimer == -1)
         {
@@ -350,7 +344,14 @@ public class EnemyController : MonoBehaviour
         if (health <= 0)
         {
             healthAnimation.gameObject.SetActive(false);
-            ActiveAnimator.SetTrigger("Death");
+            if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin) // remove once we got anims
+            {
+                ActiveAnimator.SetTrigger("Death");
+            }
+            else
+            {
+                Death();
+            }
             StopAllCoroutines();
             if (currentEnemyType != ENEMYTYPE.ogre)
             {
@@ -394,15 +395,15 @@ public class EnemyController : MonoBehaviour
         {
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
-                StopAllCoroutines();
-                chaseTimer = 0;
+                StopAllCoroutines();            
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
+                    chaseTimer = 0;
                     chasing = true;
                 }
                 canBeDamaged = false;
                 PickSound(hitSound, hitSound2, 1.0f);
-                if (currentEnemyType != ENEMYTYPE.ogre && !flashing)
+                if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin && !flashing) // remove goblin once we have the anim
                 {
                     ActiveAnimator.ResetTrigger("Hit1");
                     ActiveAnimator.ResetTrigger("Hit2");
@@ -420,6 +421,8 @@ public class EnemyController : MonoBehaviour
                     {
                         ActiveAnimator.SetTrigger("Hit3");
                     }
+                    GameManager.PlayAnimation(flashingAnimation, "Flashing");
+                    flashing = true;
                 }
                 knockBackScript.knock = true;
                 ScreenShake.global.shake = true;
@@ -443,15 +446,23 @@ public class EnemyController : MonoBehaviour
             }
         }
         if (other.gameObject.tag == "Arrow")
-        {
-            chaseTimer = 0;
-            if (currentEnemyType == ENEMYTYPE.goblin)
+        {           
+            if (!other.GetComponent<Arrow>().singleHit)
             {
-                chasing = true;
-            }
-            Damaged(PlayerController.global.bowDamage);
-            PickSound(hitSound, hitSound2, 1.0f);
-            Destroy(other.gameObject);
+                other.GetComponent<Arrow>().singleHit = true;
+                if (currentEnemyType == ENEMYTYPE.goblin)
+                {
+                    chaseTimer = 0;
+                    chasing = true;
+                }
+                else if (currentEnemyType == ENEMYTYPE.wolf)
+                {
+                    bestTarget = playerPosition;
+                }
+                Damaged(PlayerController.global.bowDamage);
+                PickSound(hitSound, hitSound2, 1.0f);
+                Destroy(other.gameObject);
+            }          
         }
     }
 
@@ -541,7 +552,14 @@ public class EnemyController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
             if (PlayerController.global.playerCanBeDamaged)
             {
-                PlayerController.global.TakeDamage(enemyDamage);
+                if (currentEnemyType == ENEMYTYPE.goblin)
+                {
+                    PlayerController.global.TakeDamage(enemyDamage, false);
+                }
+                else
+                {
+                    PlayerController.global.TakeDamage(enemyDamage, true);
+                }               
             }
         }
         else if (bestTarget)
