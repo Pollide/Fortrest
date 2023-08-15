@@ -274,7 +274,7 @@ public class LevelManager : MonoBehaviour
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
 
-        light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0.0f : 1f, 0.2f * Time.deltaTime);
+        light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0.25f : 1f, 0.2f * Time.deltaTime);
 
 
 
