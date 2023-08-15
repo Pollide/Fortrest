@@ -351,6 +351,7 @@ public class PlayerModeHandler : MonoBehaviour
             ClearSelectionGrid();
             PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position);
             PlayerController.global.playerCanMove = false;
+            CameraFollow.global.transform.position = CameraFollow.global.ReturnBuildOffset();
 
             playerModes = PlayerModes.BuildMode;
 
@@ -403,9 +404,9 @@ public class PlayerModeHandler : MonoBehaviour
     }
 
     public void SwitchToResourceMode()
-    {       
+    {
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
-        playerModes = PlayerModes.ResourceMode;       
+        playerModes = PlayerModes.ResourceMode;
         HUD.ResourceModeHUD();
     }
 

@@ -1383,7 +1383,7 @@ public class PlayerController : MonoBehaviour
         miniTurret.GetComponent<TurretShooting>().MiniTurret = true;
         miniTurret.GetComponent<TurretShooting>().CurrentLevel = miniTurret.GetComponent<TurretShooting>().ModelHolder.childCount - 1;
         miniTurret.GetComponent<TurretShooting>().turn_speed = 10;
-        miniTurret.GetComponent<TurretShooting>().damage = 0.5f;
+        miniTurret.GetComponent<TurretShooting>().damage = 0.3f;
         miniTurret.GetComponent<TurretShooting>().fireRate = 3f;
         miniTurret.GetComponent<TurretShooting>().shootingRange = 10;
         GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");

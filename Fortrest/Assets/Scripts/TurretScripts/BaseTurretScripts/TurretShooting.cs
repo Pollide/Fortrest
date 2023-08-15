@@ -169,6 +169,10 @@ public class TurretShooting : MonoBehaviour
         }
         else
         {
+            if (!MiniTurret)
+            {
+                projectile.transform.localScale *= 2.5f;
+            }
             GameManager.global.SoundManager.PlaySound(GameManager.global.BallistaShootSound, 0.3f, true, 0, false, transform);
             U_Turret uTurret = GetComponent<U_Turret>();
 
