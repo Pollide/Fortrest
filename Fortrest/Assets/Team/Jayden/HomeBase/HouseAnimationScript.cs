@@ -28,6 +28,15 @@ public class HouseAnimationScript : MonoBehaviour
         }        
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Player") && PlayerController.global.houseDisplay)
+        { //Checks to see if collider has tag "Player"
+            HouseAnimator.SetBool("activateHouse", true); //Sets a variable inside the chosen animator
+            HouseAnimator.SetBool("deactivateHouse", false); //Sets a variable inside the chosen animator
+        }
+    }
+
     // Update is called once per frame
     void OnTriggerExit(Collider other)
     {
