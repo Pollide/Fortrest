@@ -78,6 +78,7 @@ public class PlayerController : MonoBehaviour
     private bool deathEffects = false;
     [HideInInspector] public bool playerDead = false;
     private bool playerRespawned;
+    [HideInInspector] public bool houseDisplay;
     [HideInInspector] public float playerHealth = 0.0f;
     [HideInInspector] public float maxHealth = 100.0f;
     public HealthBar healthBar;
@@ -1626,6 +1627,7 @@ public class PlayerController : MonoBehaviour
                     textAnimated = false;
                     needInteraction = false;
                     interactCTRL = false;
+                    houseDisplay = true; // Used to reanimate house and make text appear once player respawns
                 }
             }
         }
