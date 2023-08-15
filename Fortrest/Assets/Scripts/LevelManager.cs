@@ -78,6 +78,8 @@ public class LevelManager : MonoBehaviour
 
     public Image clockHand;
 
+    public bool waveEnd;
+
     public enum SPAWNLANE
     {
         Left = 1,
@@ -141,8 +143,6 @@ public class LevelManager : MonoBehaviour
 
         enemyThreshold = 0.0f;
     }
-
-
 
     private void GetHousePosition()
     {
@@ -320,10 +320,12 @@ public class LevelManager : MonoBehaviour
 
     void LockCursor()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.LeftAlt))
         {
             PlayerModeHandler.SetMouseActive(!Cursor.visible);
         }
+#endif
     }
 
     void HandleMouse()
@@ -463,13 +465,21 @@ public class LevelManager : MonoBehaviour
             nightAttack = true;
         }
 
+        // Message and countdown bar appear 30f before the attack
         if ((DaylightTimer >= randomAttackTrigger - 30.0f && DaylightTimer <= randomAttackTrigger - 30.0f + 1.0f) && randomAttackTrigger != 0f && !messageDisplayed)
         {
-            PlayerController.global.DisplayEnemiesComingText(); // Display enemies are coming a bit before an attack            
+            PlayerController.global.DisplayEnemiesComingText(); // Display enemies are coming a bit before an attack
             messageDisplayed = true;
             runOnce = false;
         }
 
+        // For enemy remaining text to not disappear right before the spawning starts
+        if ((DaylightTimer >= randomAttackTrigger - 2.0f && DaylightTimer <= randomAttackTrigger) && randomAttackTrigger != 0f)
+        {
+            waveEnd = false;
+        }
+
+        // Enemies start spawning
         if ((DaylightTimer >= randomAttackTrigger && DaylightTimer <= randomAttackTrigger + 1.0f) && randomAttackTrigger != 0f && !runOnce)
         {
             spawnEnemies = true; // Attack starts when the time is reached
@@ -593,6 +603,7 @@ public class LevelManager : MonoBehaviour
             // Reset everything once enemies have spawned. Day attacks variable are also reset when a new day starts
             else if (enemiesCount <= 0)
             {
+                waveEnd = true;
                 spawnEnemies = false;
                 groupSpawnAmount = 0;
                 ogreSpawned = false;

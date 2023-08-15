@@ -54,7 +54,6 @@ public class PlayerController : MonoBehaviour
     private bool shooting = false;
     private bool directionSaved = false;
     private Quaternion tempDirection;
-    [HideInInspector] public float arrowNumber = 10.0f;
 
     // Spawn Turret
     private bool turretSpawned;
@@ -62,6 +61,7 @@ public class PlayerController : MonoBehaviour
     private float resetTurret = 30.0f;
     private float turretDuration = 20.0f;
     GameObject miniTurret;
+
     // Gravity
     private float playerGravMultiplier = 2.0f;
     private float playerGrav = -9.81f;
@@ -148,7 +148,6 @@ public class PlayerController : MonoBehaviour
     public TMP_Text enemyAmountText;
     public TMP_Text houseUnderAttackText;
     public TMP_Text enemyDirectionText;
-    public TMP_Text arrowText;
     public TMP_Text appleText;
     public TMP_Text turretText;
 
@@ -215,9 +214,9 @@ public class PlayerController : MonoBehaviour
     public const int MaxApples = 5;
     private float newGap;
     private bool displayAmount;
-    private bool textIsGone = true;
     public bool teleporting;
     private bool cancelHit;
+    [HideInInspector] public bool staggered;
 
     // Start is called before the first frame update
     void Awake()
@@ -497,7 +496,6 @@ public class PlayerController : MonoBehaviour
         timers[3] = timer4;
 
         // Setting UI Text
-        arrowText.text = "Arrow: " + arrowNumber.ToString();
         UpdateAppleText();
 
         keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
@@ -662,7 +660,7 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode)
         {
-            playerHealth += Time.deltaTime;
+            playerHealth += Time.deltaTime * 2.0f;
             healthBar.SetHealth(playerHealth, false);
         }
     }
@@ -863,7 +861,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if ((Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && CharacterAnimator.GetBool("Moving") == true && !canShoot)
+        if ((Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && CharacterAnimator.GetBool("Moving") == true && !canShoot)
         {
             running = true;
         }
@@ -1322,7 +1320,6 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(1) || aimingCTRL)
             {
-                arrowText.gameObject.SetActive(true);
                 ChangeTool(new ToolData() { BowBool = true });
                 canShoot = true;
                 if (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL)
@@ -1342,19 +1339,15 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                arrowText.gameObject.SetActive(false);
                 ChangeTool(new ToolData() { SwordBool = true });
                 canShoot = false;
             }
 
-            if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting && arrowNumber > 0)
+            if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting)
             {
                 attackingCTRL = false;
                 shooting = true;
                 bowTimer = 0;
-                arrowNumber -= 1;
-                GameManager.PlayAnimation(arrowText.GetComponent<Animation>(), "EnemyAmount");
-                arrowText.text = "Arrow: " + arrowNumber.ToString();
                 bowScript.Shoot();
             }
         }
@@ -1549,15 +1542,16 @@ public class PlayerController : MonoBehaviour
 
     public void EnemiesTextControl()
     {
-        if (displayAmount && textIsGone)
+        // Enemy remaining and enemy amount appearing
+        if (displayAmount)
         {
+            StopCoroutine("TextDisappearing");
             StartCoroutine(TextAppearing());
             displayAmount = false;
-            textIsGone = false;
         }
 
+        // Calculate enemy amount and display it
         int goblinsInt = 0;
-
         LevelManager.ProcessEnemyList((enemy) =>
         {
             if (enemy.currentEnemyType != EnemyController.ENEMYTYPE.wolf)
@@ -1565,41 +1559,18 @@ public class PlayerController : MonoBehaviour
                 goblinsInt++;
             }
         });
-
-        //Debug.Log(goblinsInt);
-
-        if (goblinsInt > 0 || LevelManager.global.spawnEnemies)
+        int remaining = LevelManager.global.enemiesCount + goblinsInt;
+        if (lastAmount != remaining)
         {
-            int remaining = LevelManager.global.enemiesCount + goblinsInt;
-
-            if (lastAmount != remaining)
-            {
-                GameManager.PlayAnimation(enemyAmountText.GetComponent<Animation>(), "EnemyAmount");
-                lastAmount = remaining;
-            }
-
-            enemyAmountText.text = remaining.ToString();
+            GameManager.PlayAnimation(enemyAmountText.GetComponent<Animation>(), "EnemyAmount");
+            lastAmount = remaining;
         }
+        enemyAmountText.text = remaining.ToString();
 
-        if (!LevelManager.global.spawnEnemies && goblinsInt <= 0 && LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer > 30.0f)
+        // Enemy remaining and enemy amount disappearing
+        if (LevelManager.global.waveEnd && remaining <= 0)
         {
-            float temp = 1.0f;
-            if (temp > 0)
-            {
-                temp -= Time.deltaTime;
-                enemyText.color = LevelManager.global.textGradient.Evaluate(temp);
-                enemyAmountText.color = LevelManager.global.textGradient.Evaluate(temp);
-            }
-            else
-            {
-                temp = 0;
-                textIsGone = true;
-            }
-
-            if (displayAmount)
-            {
-                textIsGone = true;
-            }
+            StartCoroutine(TextDisappearing());           
         }
     }
 
@@ -1648,25 +1619,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, bool stagger)
     {
         cancelHit = true;
-        CharacterAnimator.ResetTrigger("Swing");
-        CharacterAnimator.ResetTrigger("Swing2");
-        CharacterAnimator.ResetTrigger("Swing3");
-        int random = Random.Range(1, 4);
-        if (random == 1)
+        staggered = true;
+        if (stagger)
         {
-            CharacterAnimator.SetTrigger("Hit1");
-        }
-        else if (random == 2)
-        {
-            CharacterAnimator.SetTrigger("Hit2");
-        }
-        else
-        {
-            CharacterAnimator.SetTrigger("Hit3");
-        }
+            CharacterAnimator.ResetTrigger("Swing");
+            CharacterAnimator.ResetTrigger("Swing2");
+            CharacterAnimator.ResetTrigger("Swing3");
+            int random = Random.Range(1, 4);
+            if (random == 1)
+            {
+                CharacterAnimator.SetTrigger("Hit1");
+            }
+            else if (random == 2)
+            {
+                CharacterAnimator.SetTrigger("Hit2");
+            }
+            else
+            {
+                CharacterAnimator.SetTrigger("Hit3");
+            }
+        }       
         playerHealth -= damage;
         healthBar.SetHealth(playerHealth, false);
         displaySlash = true;
@@ -1788,6 +1763,18 @@ public class PlayerController : MonoBehaviour
             gradient = fraction * ((LevelManager.global.DaylightTimer + newGap) - LevelManager.global.randomAttackTrigger);
             enemyText.color = LevelManager.global.textGradient.Evaluate(gradient);
             enemyAmountText.color = LevelManager.global.textGradient.Evaluate(gradient);
+            yield return null;
+        }
+    }
+
+    private IEnumerator TextDisappearing()
+    {
+        float temp = 1.0f;
+        while (temp > 0)
+        {
+            temp -= Time.deltaTime / 2.0f;
+            enemyText.color = LevelManager.global.textGradient.Evaluate(temp);
+            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(temp);
             yield return null;
         }
     }
