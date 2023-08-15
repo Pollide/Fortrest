@@ -24,7 +24,7 @@ public class BoltScript : MonoBehaviour
         // Move the bullet forward along the Z-axis
         if (ActiveTarget)
         {
-            transform.position = Vector3.Slerp(transform.position, ActiveTarget.position, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, ActiveTarget.position, speed * Time.deltaTime);
             transform.rotation = Quaternion.LookRotation(ActiveTarget.position - transform.position);
         }
         else
