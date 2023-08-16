@@ -43,9 +43,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool evading = false;
     [HideInInspector] public bool canEvade = true;
     [HideInInspector] public bool playerCanBeDamaged = true;
-    private Vector3 startPosition;
-    private Vector3 endPosition;
-    private bool blocked = false;
 
     // Shooting
     private bool canShoot;
@@ -516,16 +513,13 @@ public class PlayerController : MonoBehaviour
         {
             playerCanBeDamaged = false;
             evadeTimer += Time.deltaTime;
-            if (!blocked)
-            {
-                transform.position = Vector3.Lerp(startPosition, endPosition, evadeTimer);
-            }
+
+            playerCC.Move(transform.forward * 8.0f * Time.deltaTime);
             return;
         }
         else
         {
             playerCanBeDamaged = true;
-            blocked = false;
         }
 
         if (Input.GetKeyDown(KeyCode.L))
@@ -941,11 +935,8 @@ public class PlayerController : MonoBehaviour
         evadeTimer = 0;
         canEvade = false;
         evading = true;
-        blocked = false;
         CharacterAnimator.ResetTrigger("Evade");
         CharacterAnimator.SetTrigger("Evade");
-        startPosition = transform.position;
-        endPosition = transform.position + (transform.forward * 8.5f);
         staggered = false;
 
         yield return new WaitForSeconds(evadeCoolDown);
@@ -1437,20 +1428,15 @@ public class PlayerController : MonoBehaviour
 
     private void AttackLunge()
     {
-        float tempTimer = 0;
-        tempTimer += Time.deltaTime;
-
-        gameObject.GetComponent<CharacterController>().enabled = false;
         if (attackCount == 0)
         {
-            transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * 1.25f, tempTimer * 5.0f);
+            playerCC.Move(transform.forward * 10f * Time.deltaTime);
         }
         else if (attackCount == 1 || attackCount == 2)
         {
-            transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * 0.75f, tempTimer * 5.0f);
+            playerCC.Move(transform.forward * 7f * Time.deltaTime);
         }
         VFXSlash.transform.position = transform.position;
-        gameObject.GetComponent<CharacterController>().enabled = true;
     }
 
     public void GatheringEffects()
@@ -1715,27 +1701,6 @@ public class PlayerController : MonoBehaviour
             color.a = Mathf.Lerp(1.0f, 0.0f, timer / 5.0f);
         }
         return color;
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (evading)
-        {
-            if (other.gameObject.CompareTag("Enemy") || other.gameObject.CompareTag("Resource") || other.gameObject.CompareTag("Building") || other.gameObject.CompareTag("Boar") || other.gameObject.CompareTag("JustForEvade"))
-            {
-                if (!other.gameObject.CompareTag("Enemy"))
-                {
-                    blocked = true;
-                }
-                else
-                {
-                    if (Facing(other.gameObject.transform.position, 30.0f))
-                    {
-                        blocked = true;
-                    }
-                }
-            }
-        }
     }
 
     private void BarDisappear()
