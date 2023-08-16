@@ -7,24 +7,24 @@ public class Boar : MonoBehaviour
 {
     public static Boar global;
     private GameObject text;
-    bool textactive;
-    public bool mounted = false;
-    public bool inRange = false;
+    private bool textactive;
+    [HideInInspector] public bool mounted = false;
+    [HideInInspector] public bool inRange = false;
 
     private float maxSpeed = 90f;
-    public float acceleration = 40f;
+    [HideInInspector] public float acceleration = 40f;
     private float deceleration = 0.0f;
-    public float currentSpeed;
+    [HideInInspector] public float currentSpeed;
     private float currentTurn;
     private float turnAnglePerSec = 90.0f;
     private float verticalVelocity;
     private float gravity = -20.0f;
 
-    public bool canMove = true;
-    public bool isMoving;
+    [HideInInspector] public bool canMove = true;
+    [HideInInspector] public bool isMoving;
+    
     public Animator animator;
-
-    public CharacterController cc;
+    [HideInInspector] public CharacterController cc;
 
     public AudioClip mountSound;
     public AudioClip dismountSound;
@@ -33,8 +33,9 @@ public class Boar : MonoBehaviour
 
     private float bobbing = 0f;
     private bool reverse;
-    public bool axe;
     private bool midAir;
+
+    private float damage = 1f;
 
     private void Awake()
     {

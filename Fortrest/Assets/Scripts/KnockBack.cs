@@ -4,16 +4,31 @@ using UnityEngine;
 
 public class KnockBack : MonoBehaviour
 {
-    [SerializeField]
     [HideInInspector] public float strength;
+    private float mountStrength;
     [HideInInspector] public bool knock = false;
+    [HideInInspector] public bool mountKnock;
+
+    private void Start()
+    {
+        mountStrength = strength * 5;
+    }
 
     private void Update()
     {
         if (knock)
         {
-            knock = false;
+            if (mountKnock)
+            {
+                strength = mountStrength;
+            }       
+            else
+            {
+                strength = mountStrength / 5;
+            }
             StartCoroutine(Push());
+            mountKnock = false;
+            knock = false;
         }
     }
 
