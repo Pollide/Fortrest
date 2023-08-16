@@ -419,7 +419,7 @@ public class GameManager : MonoBehaviour
         return item;
     }
 
-    void TierDataVoid(List<LevelManager.TierData> tierList, bool load)
+    void TierDataVoid(ref List<LevelManager.TierData> tierList, bool load)
     {
         for (int i = 0; i < tierList.Count; i++)
         {
@@ -462,8 +462,8 @@ public class GameManager : MonoBehaviour
             DataEulerVoid("Item Euler" + i, resource, load);
         }
 
-        TierDataVoid(LevelManager.global.WoodTierList, load);
-        TierDataVoid(LevelManager.global.StoneTierList, load);
+        TierDataVoid(ref LevelManager.global.WoodTierList, load);
+        TierDataVoid(ref LevelManager.global.StoneTierList, load);
 
         for (int i = 0; i < LevelManager.global.BridgeList.Count; i++)
         {

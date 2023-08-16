@@ -50,16 +50,18 @@ public class CameraFollow : MonoBehaviour
             }
             else
             {
-                FocusOnTarget(true, PlayerController.global.transform.position, new(buildOffsetRot, 0, 0));
+                FocusOnTarget(true, ReturnBuildOffset(), new(buildOffsetRot, 0, 0));
             }
         }
     }
 
+    public Vector3 ReturnBuildOffset()
+    {
+        return new Vector3(PlayerController.global.transform.position.x + buildOffsetPosX, PlayerController.global.transform.position.y, PlayerController.global.transform.position.z + buildOffsetPosZ);
+    }
+
     public void FocusOnTarget(bool build, Vector3 targetPosition, Vector3 offsetRotation)
     {
-        if (build)
-            targetPosition = new(targetPosition.x + buildOffsetPosX, targetPosition.y, targetPosition.z + buildOffsetPosZ);
-
         GetComponent<Camera>().orthographicSize = build ? buildOffsetOrthoSize : initialOrthographicSize;
         cameraDistance = Vector3.Distance(targetPosition, transform.position);
 

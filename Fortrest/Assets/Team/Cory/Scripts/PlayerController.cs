@@ -513,12 +513,12 @@ public class PlayerController : MonoBehaviour
         }
 
         if (evading)
-        {           
+        {
             playerCanBeDamaged = false;
             evadeTimer += Time.deltaTime;
             if (!blocked)
             {
-                transform.position = Vector3.Lerp(startPosition, endPosition, evadeTimer);               
+                transform.position = Vector3.Lerp(startPosition, endPosition, evadeTimer);
             }
             return;
         }
@@ -583,7 +583,7 @@ public class PlayerController : MonoBehaviour
         if (playerDead)
         {
             Death();
-        }       
+        }
 
         if (teleporting)
         {
@@ -705,6 +705,7 @@ public class PlayerController : MonoBehaviour
         {
             shooting = TickTimers(resetBow, ref bowTimer);
         }
+
 
         if (turretSpawned)
         {
@@ -1382,7 +1383,7 @@ public class PlayerController : MonoBehaviour
         miniTurret.GetComponent<TurretShooting>().MiniTurret = true;
         miniTurret.GetComponent<TurretShooting>().CurrentLevel = miniTurret.GetComponent<TurretShooting>().ModelHolder.childCount - 1;
         miniTurret.GetComponent<TurretShooting>().turn_speed = 10;
-        miniTurret.GetComponent<TurretShooting>().damage = 1;
+        miniTurret.GetComponent<TurretShooting>().damage = 0.3f;
         miniTurret.GetComponent<TurretShooting>().fireRate = 3f;
         miniTurret.GetComponent<TurretShooting>().shootingRange = 10;
         GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
@@ -1583,7 +1584,7 @@ public class PlayerController : MonoBehaviour
         // Enemy remaining and enemy amount disappearing
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
-            StartCoroutine(TextDisappearing());           
+            StartCoroutine(TextDisappearing());
         }
     }
 
@@ -1655,7 +1656,7 @@ public class PlayerController : MonoBehaviour
             {
                 CharacterAnimator.SetTrigger("Hit3");
             }
-        }       
+        }
         playerHealth -= damage;
         healthBar.SetHealth(playerHealth, false);
         displaySlash = true;
