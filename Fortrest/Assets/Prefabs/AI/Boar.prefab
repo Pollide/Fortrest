@@ -112,7 +112,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 16777215
+    rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
@@ -130,8 +130,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 10
-  m_fontSizeBase: 10
+  m_fontSize: 12
+  m_fontSizeBase: 12
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -480,6 +480,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf60edac64948d54e93bc37e6565ba35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
   mounted: 0
   inRange: 0
   acceleration: 40
@@ -493,6 +494,9 @@ MonoBehaviour:
   stepSound: {fileID: 8300000, guid: a7e465f647f74704794080459b1e58cb, type: 3}
   stepSound2: {fileID: 8300000, guid: 24ce4b292b9e83a4e905b739503f8323, type: 3}
   body: {fileID: 7095448348226686101}
+  house: {fileID: 0}
+  closerToHouse: 0
+  canInteractWithBoar: 0
 --- !u!95 &7383631925837582762
 Animator:
   serializedVersion: 4
