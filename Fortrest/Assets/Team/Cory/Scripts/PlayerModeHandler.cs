@@ -353,14 +353,21 @@ public class PlayerModeHandler : MonoBehaviour
         buildGrid.gameObject.SetActive(active);
         PlayerController.global.OpenResourceHolder(active);
 
-
         PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
         if (active)
         {
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
             PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position);
-            PlayerController.global.playerCanMove = false;
+            if (Boar.global.mounted)
+            {
+                Boar.global.canMove = false;
+            }
+            else
+            {
+                PlayerController.global.playerCanMove = false;
+            }
+                
             CameraFollow.global.transform.position = CameraFollow.global.ReturnBuildOffset();
 
             playerModes = PlayerModes.BuildMode;
