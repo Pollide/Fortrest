@@ -80,7 +80,7 @@ public class ShrineActivate : MonoBehaviour
 
         if (Boar.global.mounted)
         {
-            notGood = false;
+            //notGood = false;
         }
     }
 }

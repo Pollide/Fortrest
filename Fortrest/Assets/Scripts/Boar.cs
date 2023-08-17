@@ -38,7 +38,7 @@ public class Boar : MonoBehaviour
     public GameObject body;
     public GameObject house;
     [HideInInspector] public bool closerToHouse;
-    [HideInInspector] public bool canInteractWithBoar;
+    public bool canInteractWithBoar;
 
     private void Awake()
     {
@@ -69,8 +69,9 @@ public class Boar : MonoBehaviour
 
         DisplayText();
 
-        if (!midAir && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && (mounted || (!mounted && !closerToHouse)))
+        if (!midAir && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && (mounted || (!mounted && !closerToHouse)) && !PlayerController.global.teleporting)
         {
+            Debug.Log("bruh");
             canInteractWithBoar = true;
             PlayerController.global.needInteraction = true;
         }
@@ -81,7 +82,7 @@ public class Boar : MonoBehaviour
         }
 
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithBoar)
-        {
+        {           
             Mount();                      
         }
         if (mounted)
@@ -214,7 +215,6 @@ public class Boar : MonoBehaviour
 
     void PlayerStick()
     {
-
         PlayerController.global.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
         PlayerController.global.transform.rotation = transform.rotation;
         PlayerController.global.CharacterAnimator.SetBool("Sitting", true);
