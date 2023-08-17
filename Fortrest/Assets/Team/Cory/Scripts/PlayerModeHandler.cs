@@ -455,7 +455,9 @@ public class PlayerModeHandler : MonoBehaviour
 
                 worldPos = new Vector3(gridPos.x, 0.36f, gridPos.z);
 
-                if (IsInRange(worldPos))
+                Collider[] collidershit = Physics.OverlapSphere(worldPos, 1.5f);
+
+                if (IsInRange(worldPos) && !ReturnColiders(collidershit))
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
                     GameObject newTurret = Instantiate(_prefab, worldPos, Quaternion.identity);
@@ -506,6 +508,20 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
+    private bool ReturnColiders(Collider[] colliders)
+    {
+        foreach (Collider collider in colliders)
+        {
+            if (collider.CompareTag("Building") || collider.CompareTag("Resource") || collider.CompareTag("Turret"))
+            {
+                Debug.Log("true");
+                return true;
+            }
+        }
+        Debug.Log("false");
+        return false;
+    }
+
     void BluePrintSet(Material colorMaterial)
     {
         List<Renderer> meshRenderers = GameManager.FindComponent<Renderer>(turretBlueprint.transform);
@@ -522,8 +538,6 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer))
         {
-            // && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource") && !MouseOverUI()
-
             if (!turretBlueprint)
             {
                 if (buildType == BuildType.Slow)
@@ -546,28 +560,26 @@ public class PlayerModeHandler : MonoBehaviour
                 turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
                 turretBlueprint.GetComponent<Building>().enabled = false;
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
+                turretBlueprint.tag = "BuildingBP";
 
                 TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
-
 
                 if (turretShooting)
                 {
                     turretShooting.enabled = false;
                     Destroy(turretShooting);
                 }
-                BluePrintSet(turretBlueprintBlue);
-
-
             }
 
             Vector3 worldPos = hitData.point;
             Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
 
             worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
-
             turretBlueprint.transform.position = worldPos;
 
-            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
+            Collider[] collidershit = Physics.OverlapSphere(new Vector3(worldPos.x, 0.36f, worldPos.z), 1.5f);
+
+            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !ReturnColiders(collidershit))
             {
                 BluePrintSet(turretBlueprintBlue);
             }
@@ -575,11 +587,6 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 BluePrintSet(turretBlueprintRed);
             }
-        }
-        else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Player") || hitData.transform.CompareTag("Building") || MouseOverUI()))
-        {
-            //  Cory FYI I disabled this because there is an issue where it will stay disabled for some reason and its kind of game breaking so lets just leave it active
-            //  turretBlueprint.SetActive(!MouseOverUI());
         }
     }
 
