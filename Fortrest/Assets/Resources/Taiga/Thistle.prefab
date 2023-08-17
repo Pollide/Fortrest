@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 7706243652678526390}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4111915459659159143}
@@ -43,9 +43,9 @@ GameObject:
   - component: {fileID: 8707849239115483156}
   - component: {fileID: 8707849239115483157}
   - component: {fileID: -6799876280890107172}
-  - component: {fileID: -1345251657013764140}
+  - component: {fileID: 4686476661182051577}
   m_Layer: 9
-  m_Name: CabbageTree
+  m_Name: Thistle
   m_TagString: Resource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -113,7 +113,7 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!135 &-1345251657013764140
+--- !u!135 &4686476661182051577
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -124,8 +124,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 1.0903306
-  m_Center: {x: 0.0927262, y: 0.6220403, z: -0.12395942}
+  m_Radius: 2.55
+  m_Center: {x: 0, y: 0.69, z: 0}
 --- !u!1001 &403687447353365103
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -299,27 +299,47 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 4cec281cfecb56a4086c6e0a9a2d7ecf, type: 2}
+      objectReference: {fileID: 2100000, guid: f8a9ac0ad6eb75c46a33536a7ea846f2, type: 2}
     - target: {fileID: 474675439065559326, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
       objectReference: {fileID: 2100000, guid: eaaa68b6cfae86e43995fbb9ae7d433e, type: 2}
+    - target: {fileID: 2201514103370431727, guid: edbc04a15628aaa4dbc8ece363929e4f,
+        type: 3}
+      propertyPath: m_Height
+      value: 5.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 2201514103370431727, guid: edbc04a15628aaa4dbc8ece363929e4f,
+        type: 3}
+      propertyPath: m_Radius
+      value: 1.51
+      objectReference: {fileID: 0}
     - target: {fileID: 5020325937464689298, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 8467286848044335837, guid: f0891aa69609d194188d387d60eab964,
+      objectReference: {fileID: -1633821710574564935, guid: 61fa40ddc9fb9b7499d7148bf9d9cf17,
         type: 3}
     - target: {fileID: 5599316802004647299, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_Name
-      value: SM_CabbageTree
+      value: Thistle
       objectReference: {fileID: 0}
     - target: {fileID: 5599316802004647299, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_Layer
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160462424135546295, guid: edbc04a15628aaa4dbc8ece363929e4f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7160462424135546295, guid: edbc04a15628aaa4dbc8ece363929e4f,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
@@ -329,17 +349,17 @@ PrefabInstance:
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 3.0153003
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 3.0153003
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 3.0153003
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
@@ -394,7 +414,7 @@ PrefabInstance:
     - target: {fileID: 8851073699574906483, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_Name
-      value: CabbageTree
+      value: Thistle
       objectReference: {fileID: 0}
     - target: {fileID: 8851073699574906483, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
