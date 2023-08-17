@@ -171,6 +171,7 @@ public class PlayerModeHandler : MonoBehaviour
                     House.GetComponent<Building>().textDisplayed = false;
                 }
                 centerMouse = false;
+                Boar.global.body.SetActive(false);
                 SwitchToBuildMode();
             }
             else
@@ -180,6 +181,7 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
                     House.GetComponent<Building>().textDisplayed = true;
                 }
+                Boar.global.body.SetActive(true);
                 ExitHouseCleanUp();
             }
         }
