@@ -12,6 +12,10 @@ public class CutoutPlayer : MonoBehaviour
 
     private Camera cutoutMainCamera;
 
+    public float CutoutSize = 0.1f;
+    public float FalloffSize = 0.05f;
+
+
     // Start is called before the first frame update
     private void Awake()
     {
@@ -29,7 +33,9 @@ public class CutoutPlayer : MonoBehaviour
 
         for (int i=0; i< hitObjects.Length; ++i)
         {
+            Debug.Log("ObjectDoBeHit");
             Material[] materials = hitObjects[i].transform.GetComponent<MeshRenderer>().materials;
+            
 
             for (int m = 0; m < materials.Length; ++m)
             {
