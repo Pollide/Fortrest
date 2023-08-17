@@ -515,6 +515,11 @@ public class GameManager : MonoBehaviour
         {
             DataBuildingVoid(building, load);
         }, true);
+
+        for (int i = 0; i < Indicator.global.IndicatorList.Count; i++)
+        {
+            Indicator.global.IndicatorList[i].Unlocked = Pref("Indicator Unlocked" + i, Indicator.global.IndicatorList[i].Unlocked ? 1 : 0, load) == 1;
+        }
     }
 
     public static float Pref(string pref, float value, bool load)
