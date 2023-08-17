@@ -1626,7 +1626,8 @@ public class PlayerController : MonoBehaviour
     public void TakeDamage(float damage, bool stagger)
     {
         cancelHit = true;
-        staggered = true;
+        StopCoroutine("Staggered");
+        StartCoroutine("Staggered");
         if (stagger)
         {
             CharacterAnimator.ResetTrigger("Swing");
@@ -1649,6 +1650,13 @@ public class PlayerController : MonoBehaviour
         playerHealth -= damage;
         healthBar.SetHealth(playerHealth, false);
         displaySlash = true;
+    }
+
+    private IEnumerator Staggered()
+    {
+        staggered = true;
+        yield return new WaitForSeconds(0.33f);
+        staggered = false;
     }
 
     private bool Facing(Vector3 otherPosition, float desiredAngle) // Making sure the enemy always faces what it is attacking
