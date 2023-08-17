@@ -62,7 +62,7 @@ public class Building : MonoBehaviour
     public TMP_Text interactText;
     [HideInInspector] public bool textDisplayed;
 
-
+    public bool DebugDestroyInstantly;
     // Start is called before the first frame update
     void Start()
     {
@@ -244,6 +244,14 @@ public class Building : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_EDITOR
+        if (DebugDestroyInstantly)
+        {
+            DebugDestroyInstantly = false;
+            DestroyBuilding();
+        }
+#endif
+
         if (resourceObject == BuildingType.House)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);

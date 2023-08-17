@@ -6,19 +6,18 @@ public class Weather : MonoBehaviour
 {
     public static Weather global;
 
-    private GameObject[] weatherType = new GameObject[3];   
+    private GameObject[] weatherType = new GameObject[3];
     private float timer;
     private float weatherTimer;
     private float weatherDuration;
     private bool weatherTriggered;
     private bool stepComplete;
     private int randomInt;
-    private Color colorInitial;
-    private Color color1;
-    private Color color2;
-    private Color color3;
     private float startEmission;
+    public float DecreaseDayLightIntensity;
 
+    public bool DebugForceRain;
+    public bool DebugEndRain;
     private void Awake()
     {
         global = this;
@@ -31,21 +30,35 @@ public class Weather : MonoBehaviour
         weatherType[2] = transform.GetChild(2).gameObject; // Snow
 
         stepComplete = true;
-        //weatherTimer = Random.Range(200.0f, 250.0f);
-        weatherDuration = Random.Range(100.0f, 125.0f);
-        weatherTimer = Random.Range(2.0f, 2.5f);
-        //weatherDuration = Random.Range(15.0f, 20.0f);
-
+        weatherTimer = Random.Range(200.0f, 250.0f);
+        // weatherDuration = Random.Range(100.0f, 125.0f);
+        //weatherTimer = Random.Range(2.0f, 2.5f);
+        weatherDuration = Random.Range(15.0f, 20.0f);
+        /*
         ColorUtility.TryParseHtmlString("#FFF4D6", out colorInitial); // Normal
         ColorUtility.TryParseHtmlString("#B0B0B0", out color1); // Light Rain
         ColorUtility.TryParseHtmlString("#202020", out color2); // Heavy Rain
         ColorUtility.TryParseHtmlString("#CFCFCF", out color3); // Snow
-
+        */
         startEmission = 0.0f;
     }
 
     void Update()
     {
+#if UNITY_EDITOR
+        if (DebugForceRain)
+        {
+            DebugForceRain = false;
+            timer = weatherTimer;
+        }
+
+        if (DebugEndRain)
+        {
+            DebugEndRain = false;
+            timer = weatherDuration;
+
+        }
+#endif
         timer += Time.deltaTime;
 
         if (timer > weatherTimer && !weatherTriggered)
@@ -63,16 +76,19 @@ public class Weather : MonoBehaviour
             switch (randomInt)
             {
                 case 0: // Light Rain
-                    StartCoroutine(LerpSky(color1));
+                        // StartCoroutine(LerpSky(color1));
                     StartCoroutine(LerpParticles(125.0f));
+                    DecreaseDayLightIntensity = 0.5f;
                     break;
                 case 1: // Heavy Rain
-                    StartCoroutine(LerpSky(color2));
+                        // StartCoroutine(LerpSky(color2));
                     StartCoroutine(LerpParticles(350.0f));
+                    DecreaseDayLightIntensity = 0.75f;
                     break;
                 case 2: // Snow
-                    StartCoroutine(LerpSky(color2));
+                        //StartCoroutine(LerpSky(color2));
                     StartCoroutine(LerpParticles(75.0f));
+                    DecreaseDayLightIntensity = 0.25f;
                     break;
                 default:
                     break;
@@ -81,11 +97,12 @@ public class Weather : MonoBehaviour
         }
         else if (timer > weatherDuration && weatherTriggered)
         {
-            timer = 0;           
-            StartCoroutine(LerpSky(colorInitial)); // Normal
+            timer = 0;
+            // StartCoroutine(LerpSky(colorInitial)); // Normal
             StartCoroutine(LerpParticles(0.0f));
-            weatherTriggered = false;          
-        }        
+            DecreaseDayLightIntensity = 0;
+            weatherTriggered = false;
+        }
     }
 
     private IEnumerator LerpSky(Color color)
