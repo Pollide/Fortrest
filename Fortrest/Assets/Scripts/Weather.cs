@@ -31,9 +31,9 @@ public class Weather : MonoBehaviour
 
         stepComplete = true;
         weatherTimer = Random.Range(200.0f, 250.0f);
-        // weatherDuration = Random.Range(100.0f, 125.0f);
+        weatherDuration = Random.Range(100.0f, 150.0f);
         //weatherTimer = Random.Range(2.0f, 2.5f);
-        weatherDuration = Random.Range(15.0f, 20.0f);
+        //weatherDuration = Random.Range(15.0f, 20.0f);
         /*
         ColorUtility.TryParseHtmlString("#FFF4D6", out colorInitial); // Normal
         ColorUtility.TryParseHtmlString("#B0B0B0", out color1); // Light Rain
@@ -71,6 +71,7 @@ public class Weather : MonoBehaviour
         }
         else if (weatherTriggered && !stepComplete)
         {
+            weatherDuration = Random.Range(100.0f, 150.0f);
             randomInt = Random.Range(0, 2); // Make the 2 a 3 to allow for snow
             weatherType[randomInt].SetActive(true);
             switch (randomInt)
