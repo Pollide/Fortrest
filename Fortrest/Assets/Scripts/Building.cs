@@ -146,7 +146,6 @@ public class Building : MonoBehaviour
 
             if (amount != 0)
             {
-
                 HealthAnimation();
             }
         }
