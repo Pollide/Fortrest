@@ -79,6 +79,10 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (inTheFortress)
         {
+            if (Weather.global.gameObject.activeSelf)
+            {
+                Weather.global.gameObject.SetActive(false);
+            }         
             if (!centerMouse)
             {
                 Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
@@ -132,6 +136,10 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
+            if (!Weather.global.gameObject.activeSelf)
+            {
+                Weather.global.gameObject.SetActive(true);
+            }
             if ((Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL) && PlayerController.global.playerCanMove)
             {
                 PlayerController.global.swapCTRL = false;
