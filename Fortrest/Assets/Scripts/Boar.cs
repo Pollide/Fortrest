@@ -12,15 +12,15 @@ public class Boar : MonoBehaviour
     [HideInInspector] public bool inRange = false;
 
     private float maxSpeed = 90f;
-    [HideInInspector] public float acceleration = 40f;
+    private float acceleration = 0f;
     private float deceleration = 0.0f;
-    [HideInInspector] public float currentSpeed;
+    private float currentSpeed;
     private float currentTurn;
-    private float turnAnglePerSec = 90.0f;
+    private float turnAnglePerSec = 0.0f;
     private float verticalVelocity;
     private float gravity = -20.0f;
 
-    public bool canMove = true;
+    [HideInInspector] public bool canMove = true;
     [HideInInspector] public bool isMoving;
     
     public Animator animator;
@@ -37,9 +37,8 @@ public class Boar : MonoBehaviour
 
     public GameObject body;
     public GameObject house;
-    public bool closerToHouse;
-
-    public bool canInteractWithBoar;
+    [HideInInspector] public bool closerToHouse;
+    [HideInInspector] public bool canInteractWithBoar;
 
     private void Awake()
     {
@@ -225,7 +224,7 @@ public class Boar : MonoBehaviour
     {
         Lerping(40f, 60f, ref acceleration, 2 / 9f); // Acceleration
         Lerping(100f, 300f, ref deceleration, 20 / 9f); // Deceleration
-        Lerping(40f, 60f, ref turnAnglePerSec, 2 / 9f); // Turn
+        Lerping(50f, 70f, ref turnAnglePerSec, 2 / 9f); // Turn
 
         if (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0)
         {
