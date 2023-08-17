@@ -25,14 +25,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1658321191}
-  m_LocalRotation: {x: 0.99156797, y: 0.0016053293, z: -0.0011537803, w: 0.1295728}
+  m_LocalRotation: {x: -0.7323625, y: -0.0017524977, z: 0.0017255448, w: -0.6809105}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7444467798429044014}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 165.11, y: 0.11099243, z: -0.17102051}
+  m_LocalEulerAnglesHint: {x: 454.17, y: 0.11099243, z: -0.17102051}
 --- !u!108 &1658321194
 Light:
   m_ObjectHideFlags: 0
@@ -323,20 +323,20 @@ MonoBehaviour:
     ResourceCost: 0
   SunriseGradient:
     serializedVersion: 2
-    key0: {r: 1, g: 0.14576916, b: 0, a: 1}
-    key1: {r: 1, g: 0.3454259, b: 0, a: 1}
+    key0: {r: 1, g: 0.3454259, b: 0, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
     key2: {r: 1, g: 1, b: 1, a: 0}
-    key3: {r: 1, g: 1, b: 1, a: 0}
-    key4: {r: 1, g: 0.3454259, b: 0, a: 0}
-    key5: {r: 1, g: 0.14576916, b: 0, a: 0}
-    key6: {r: 1, g: 0.14576916, b: 0, a: 0}
+    key3: {r: 1, g: 0.3454259, b: 0, a: 0}
+    key4: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 0}
+    key5: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 0}
+    key6: {r: 1, g: 0.3454259, b: 0, a: 0}
     key7: {r: 0, g: 0, b: 0, a: 0}
     ctime0: 0
-    ctime1: 5590
-    ctime2: 15806
-    ctime3: 48188
-    ctime4: 60716
-    ctime5: 65535
+    ctime1: 10216
+    ctime2: 29105
+    ctime3: 34117
+    ctime4: 40285
+    ctime5: 63415
     ctime6: 65535
     ctime7: 0
     atime0: 0
@@ -348,7 +348,7 @@ MonoBehaviour:
     atime6: 0
     atime7: 0
     m_Mode: 0
-    m_NumColorKeys: 6
+    m_NumColorKeys: 7
     m_NumAlphaKeys: 2
   ResourceHolderTransform: {fileID: 0}
   ActiveBuildingGameObject: {fileID: 0}
@@ -356,12 +356,12 @@ MonoBehaviour:
   LanternGlowingMaterial: {fileID: 2100000, guid: b46a801104b18ed45a14292d0b923d90,
     type: 2}
   LanternOffMaterial: {fileID: 2100000, guid: b11fcb8fd98ace845ace365b5f15db7a, type: 2}
-  DaylightTimer: 0
+  DaylightTimer: 5
   day: 0
   EnemyList: []
   InventoryItemList: []
   BridgeList: []
-  daySpeed: 2
+  daySpeed: 1
   enemyTimer: 0
   enemyThreshold: 0
   GoblinGameObject: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
@@ -405,7 +405,10 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   clockHand: {fileID: 0}
+  waveEnd: 0
   lane: 0
   enemiesCount: 0
   spawnEnemies: 0
@@ -441,7 +444,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975559097986637665}
   m_LocalRotation: {x: 0.27781588, y: 0.36497167, z: -0.1150751, w: 0.8811196}
-  m_LocalPosition: {x: -5.160212, y: 1.7724806, z: -92.6637}
+  m_LocalPosition: {x: -29.469997, y: 0.3750998, z: -135.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -630,7 +633,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354247512816183170}
-  m_LocalRotation: {x: 0.084186025, y: -0.25783414, z: 0.022557573, w: 0.9622502}
+  m_LocalRotation: {x: 0.16964014, y: -0.25479627, z: 0.045454934, w: 0.9509127}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -638,7 +641,7 @@ Transform:
   - {fileID: 1658321192}
   m_Father: {fileID: 6694460402543658492}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 10, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 20.23, y: -30, z: 0}
 --- !u!108 &7185075909050736379
 Light:
   m_ObjectHideFlags: 0
@@ -650,7 +653,7 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
@@ -1010,7 +1013,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5903244205017672140}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 30.35, y: 4.68, z: 29.42}
+  m_LocalPosition: {x: -57.41, y: 3.601, z: -162.83}
   m_LocalScale: {x: 5, y: 2.5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []

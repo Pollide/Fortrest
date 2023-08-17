@@ -82,7 +82,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (Weather.global.gameObject.activeSelf)
             {
                 Weather.global.gameObject.SetActive(false);
-            }         
+            }
             if (!centerMouse)
             {
                 Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
@@ -367,7 +367,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 PlayerController.global.playerCanMove = false;
             }
-                
+
             CameraFollow.global.transform.position = CameraFollow.global.ReturnBuildOffset();
 
             playerModes = PlayerModes.BuildMode;
@@ -460,7 +460,7 @@ public class PlayerModeHandler : MonoBehaviour
 
                 Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
 
-                worldPos = new Vector3(gridPos.x, 0.36f, gridPos.z);
+                worldPos = new Vector3(gridPos.x, 0.0f, gridPos.z);
 
                 if (IsInRange(worldPos))
                 {
