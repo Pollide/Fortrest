@@ -76,10 +76,7 @@ public class Indicator : MonoBehaviour
 
             Vector2 clamp = new Vector2(clampedX, clampedY);
 
-            if (isOutsideCanvas)
-            {
-                clamp.x -= shift;
-            }
+
 
             MainData.transform.localEulerAngles = Vector3.zero;
 
