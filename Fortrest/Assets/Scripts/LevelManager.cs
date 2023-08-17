@@ -563,7 +563,7 @@ public class LevelManager : MonoBehaviour
                             ogreSpawned = true;
                         }
 
-                        enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition) - 16.0f; // 16 is the magic number for this to work                         
+                        enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition); // 16 is the magic number for this to work                         
 
                         GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
                     }
@@ -590,7 +590,7 @@ public class LevelManager : MonoBehaviour
                         ogreSpawned = true;
                     }
 
-                    enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition) - 16.0f; // 16 is the magic number for this to work                         
+                    enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition); // 16 is the magic number for this to work                         
 
                     GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
 
