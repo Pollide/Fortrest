@@ -20,7 +20,7 @@ public class Boar : MonoBehaviour
     private float verticalVelocity;
     private float gravity = -20.0f;
 
-    [HideInInspector] public bool canMove = true;
+    public bool canMove = true;
     [HideInInspector] public bool isMoving;
     
     public Animator animator;
@@ -36,6 +36,8 @@ public class Boar : MonoBehaviour
     private bool midAir;
 
     public GameObject body;
+    public GameObject house;
+    public bool closerToHouse;
 
     private void Awake()
     {
@@ -54,6 +56,8 @@ public class Boar : MonoBehaviour
 
     void Update()
     {
+        closerToHouse = Vector3.Distance(PlayerController.global.transform.position, house.transform.position) < Vector3.Distance(PlayerController.global.transform.position, transform.position) ? true : false;
+
         if (PlayerController.global.pausedBool)
         {
             return;
@@ -64,9 +68,21 @@ public class Boar : MonoBehaviour
 
         DisplayText();
 
-        if (!midAir && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && !PlayerController.global.canGetInHouse)
+        if (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL)
         {
-            Mount();
+            if (!midAir && inRange)
+            {
+                if (!PlayerController.global.playerDead && !PlayerController.global.canTeleport)
+                {
+                    if (!mounted && closerToHouse)
+                    {
+                    }
+                    else
+                    {
+                        Mount();
+                    }                  
+                }
+            }          
         }
         if (mounted)
         {
