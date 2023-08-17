@@ -125,6 +125,7 @@ public class PlayerController : MonoBehaviour
     public RectTransform MapPlayerRectTransform;
     public Transform MapResourceHolder;
     public GameObject MapResourcePrefab;
+    public Animator ResourceHolderAnimator;
     public bool lastWasAxe;
 
     private bool mapBool;
@@ -307,7 +308,7 @@ public class PlayerController : MonoBehaviour
 
     public void OpenResourceHolder(bool open)
     {
-        GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Resource Holder Appear", open, false, 1);
+        GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
     }
 
     private void BuildSelectController()
@@ -992,6 +993,8 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+
+
 
     public void UpdateResourceHolder(int bridgeTypeInt = 0)
     {

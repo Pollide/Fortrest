@@ -443,7 +443,7 @@ public class PlayerModeHandler : MonoBehaviour
 
                 Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
 
-                worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
+                worldPos = new Vector3(gridPos.x, 0.36f, gridPos.z);
 
                 if (IsInRange(worldPos))
                 {

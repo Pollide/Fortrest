@@ -138,7 +138,7 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            bool active = (Unlocked || distance < 60) && (Recent || !close);
+            bool active = (Unlocked || distance < 90) && (Recent || !close);
 
             if (active != AppearBool)
             {
