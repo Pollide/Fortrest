@@ -8,20 +8,48 @@ public class ShrineActivate : MonoBehaviour
     
     public Animator PropAnimator;
     public string AnimationTriggerName;
-
-
-
     public TMP_Text interactText;
+    bool textDisplayed;
+    bool notGood;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == PlayerController.global.gameObject)
+        if (other.gameObject == Boar.global.gameObject && !Boar.global.mounted)
         {
+            PlayerController.global.canTeleport = false;
+            notGood = true;
+        }
+
+        if (other.gameObject == PlayerController.global.gameObject && !notGood)
+        {
+            if (!textDisplayed)
+            {
+                LevelManager.FloatingTextChange(interactText.gameObject, true);
+                textDisplayed = true;
+            }
+            PropAnimator.ResetTrigger(AnimationTriggerName);
             PropAnimator.SetTrigger(AnimationTriggerName);
             PlayerController.global.canTeleport = true;
             PlayerController.global.needInteraction = true;
-            //LevelManager.FloatingTextChange(interactText.gameObject, true);
-            
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == Boar.global.gameObject && !Boar.global.mounted)
+        {
+            PlayerController.global.canTeleport = false;
+            notGood = true;
+        }
+
+        if (other.gameObject == PlayerController.global.gameObject && !notGood)
+        {
+            if (!textDisplayed)
+            {
+                LevelManager.FloatingTextChange(interactText.gameObject, true);
+                textDisplayed = true;
+            }
+            PlayerController.global.canTeleport = true;
         }
     }
 
@@ -29,23 +57,30 @@ public class ShrineActivate : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.gameObject)
         {
-
-            PropAnimator.ResetTrigger(AnimationTriggerName);
+            if (textDisplayed)
+            {
+                LevelManager.FloatingTextChange(interactText.gameObject, false);
+                textDisplayed = false;
+            }
             PlayerController.global.canTeleport = false;
             PlayerController.global.needInteraction = false;
-            //LevelManager.FloatingTextChange(interactText.gameObject, false);
-            
         }
     }
 
     private void Update()
     {
-        
-        if (!PlayerController.global.canTeleport && gameObject.GetComponent<MeshRenderer>().enabled == false)
+        if (!PlayerController.global.canTeleport)
         {
-            
-            //gameObject.GetComponent<MeshRenderer>().enabled = true;
-            //LevelManager.FloatingTextChange(interactText.gameObject, false);
+            if (textDisplayed)
+            {
+                LevelManager.FloatingTextChange(interactText.gameObject, false);
+                textDisplayed = false;
+            }
+        }
+
+        if (Boar.global.mounted)
+        {
+            notGood = false;
         }
     }
 }

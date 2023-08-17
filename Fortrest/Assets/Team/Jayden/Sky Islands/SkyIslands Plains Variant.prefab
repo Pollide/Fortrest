@@ -1055,11 +1055,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6310547523896073862}
     m_Modifications:
-    - target: {fileID: 1418696505842796160, guid: 56ef14a73f1b40e4189e62511f023b04,
-        type: 3}
-      propertyPath: m_Animation
-      value: 
-      objectReference: {fileID: 7400000, guid: 62e5458b963774048a2e36e56d2b2552, type: 2}
     - target: {fileID: 1418696506995212630, guid: 56ef14a73f1b40e4189e62511f023b04,
         type: 3}
       propertyPath: m_RootOrder
@@ -1120,61 +1115,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shrine
       objectReference: {fileID: 0}
-    - target: {fileID: 1844471978801137705, guid: 56ef14a73f1b40e4189e62511f023b04,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 01b91eb0437a29340a430b7d982580a7, type: 2}
-    - target: {fileID: 2191081476277618697, guid: 56ef14a73f1b40e4189e62511f023b04,
-        type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9118579604301744816, guid: 56ef14a73f1b40e4189e62511f023b04,
-        type: 3}
-      propertyPath: m_Animations.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9118579604301744816, guid: 56ef14a73f1b40e4189e62511f023b04,
-        type: 3}
-      propertyPath: m_Animations.Array.data[0]
-      value: 
-      objectReference: {fileID: 7400000, guid: ad218cae9c0085446b125db07e6060a4, type: 2}
-    - target: {fileID: 9118579604301744816, guid: 56ef14a73f1b40e4189e62511f023b04,
-        type: 3}
-      propertyPath: m_Animations.Array.data[1]
-      value: 
-      objectReference: {fileID: 7400000, guid: ad218cae9c0085446b125db07e6060a4, type: 2}
-    m_RemovedComponents:
-    - {fileID: 4604349990002034490, guid: 56ef14a73f1b40e4189e62511f023b04, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56ef14a73f1b40e4189e62511f023b04, type: 3}
---- !u!95 &732074128754922872 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 1844471978801137705, guid: 56ef14a73f1b40e4189e62511f023b04,
-    type: 3}
-  m_PrefabInstance: {fileID: 1418696505915235665}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8681123122881997792 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7766936432461346481, guid: 56ef14a73f1b40e4189e62511f023b04,
-    type: 3}
-  m_PrefabInstance: {fileID: 1418696505915235665}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1409717406
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8681123122881997792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3e6fdb34b7f95774280ab77f4e9cea5c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PropAnimator: {fileID: 732074128754922872}
-  AnimationTriggerName: MakeShrineMove
-  interactText: {fileID: 0}
 --- !u!1001 &6372138181118652655
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1319,7 +1261,7 @@ PrefabInstance:
     - target: {fileID: 6408549913273543615, guid: 6855a0ab7f8c2d6479cc41c067fe0fef,
         type: 3}
       propertyPath: m_Name
-      value: SkyIslands Plains
+      value: SkyIslands Plains Variant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6855a0ab7f8c2d6479cc41c067fe0fef, type: 3}
