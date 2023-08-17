@@ -13122,7 +13122,7 @@ Transform:
   - {fileID: 1766200501}
   - {fileID: 1419800369}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &660826456
 PrefabInstance:
@@ -24940,7 +24940,7 @@ Transform:
   - {fileID: 1060727845}
   - {fileID: 536295260}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1205952541
 PrefabInstance:
@@ -26536,7 +26536,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1271039035
 PrefabInstance:
@@ -32155,75 +32155,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1516302658}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &1517423473
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_Name
-      value: Goblin
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 13.866232
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.39738178
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -69.39169
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1402647301061185262, guid: 051132bc636477a4894f685c1348af03,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 051132bc636477a4894f685c1348af03, type: 3}
 --- !u!1001 &1520661294
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34468,6 +34399,11 @@ PrefabInstance:
       value: Boar
       objectReference: {fileID: 0}
     - target: {fileID: 3333299692556185214, guid: 4c7f0939d26439b44be8f3e4c51cebd3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7095448348226686101, guid: 4c7f0939d26439b44be8f3e4c51cebd3,
         type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -47219,6 +47155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0215c9e2d2a38b24194d32d9f45c4a1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DecreaseDayLightIntensity: 0
+  DebugForceRain: 0
+  DebugEndRain: 0
 --- !u!4 &5783883351085732173 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2380524841832018390, guid: d01a69221f8cdc642920786c21a4f1d0,

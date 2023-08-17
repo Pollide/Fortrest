@@ -35,7 +35,7 @@ public class Boar : MonoBehaviour
     private bool reverse;
     private bool midAir;
 
-    private float damage = 1f;
+    public GameObject body;
 
     private void Awake()
     {
