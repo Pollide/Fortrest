@@ -19,7 +19,7 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float buildOffsetRot;
     private Vector3 initialRotation;
     private float initialOrthographicSize;
-    Vector3 playerVelocity;
+
     private void Awake()
     {
         global = this;
@@ -31,7 +31,7 @@ public class CameraFollow : MonoBehaviour
         initialOrthographicSize = GetComponent<Camera>().orthographicSize;
         lockCamera = true;
         max = maxSmooth - minSmooth;
-        playerVelocity = PlayerController.global.transform.position;
+
     }
 
     public void Update()
@@ -47,8 +47,8 @@ public class CameraFollow : MonoBehaviour
         {
             if (PlayerModeHandler.global.playerModes != PlayerModes.BuildMode && PlayerModeHandler.global.playerModes != PlayerModes.RepairMode && PlayerModeHandler.global.playerModes != PlayerModes.UpgradeMenu)
             {
-                playerVelocity = PlayerController.global.transform.position - playerVelocity;
-                FocusOnTarget(false, PlayerController.global.transform.position, initialRotation, playerVelocity.normalized);
+
+                FocusOnTarget(false, PlayerController.global.transform.position, initialRotation, PlayerController.global.moveDirection);
             }
             else
             {

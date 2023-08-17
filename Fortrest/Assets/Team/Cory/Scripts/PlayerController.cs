@@ -15,7 +15,9 @@ public class PlayerController : MonoBehaviour
     public Animator CharacterAnimator;
 
     // Movement
-    private Vector3 moveDirection;
+    [HideInInspector]
+    public Vector3 moveDirection;
+   
     private float horizontalMovement;
     private float verticalMovement;
     public GameObject house;

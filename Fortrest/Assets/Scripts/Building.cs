@@ -56,13 +56,13 @@ public class Building : MonoBehaviour
     public bool playerinRange;
     private float timerText = 0.0f;
 
-    private GameObject normalHouse;
-    private GameObject destroyedHouse;
+    public GameObject normalHouse;
+    public GameObject destroyedHouse;
 
     public TMP_Text interactText;
     [HideInInspector] public bool textDisplayed;
 
-
+    public bool DebugDestroyInstantly;
     // Start is called before the first frame update
     void Start()
     {
@@ -92,8 +92,6 @@ public class Building : MonoBehaviour
             {
                 HUDHealthBar.SetMaxHealth(maxHealth, true);
             }
-            normalHouse = gameObject.transform.GetChild(0).gameObject;
-            destroyedHouse = gameObject.transform.GetChild(1).gameObject;
         }
         else if (resourceObject != BuildingType.DefenseBP) //the house itself is not part of the buildings list
         {
@@ -246,6 +244,14 @@ public class Building : MonoBehaviour
 
     private void Update()
     {
+#if UNITY_EDITOR
+        if (DebugDestroyInstantly)
+        {
+            DebugDestroyInstantly = false;
+            DestroyBuilding();
+        }
+#endif
+
         if (resourceObject == BuildingType.House)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);
