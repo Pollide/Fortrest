@@ -18,12 +18,9 @@ public class GamepadDetector : MonoBehaviour
 
     private void Update()
     {
-        bool keyboardBool = PlayerModeHandler.ReturnKeyboard();
-
-        if (KeyboardBool != keyboardBool)
+        if (KeyboardBool != GameManager.global.KeyboardBool)
         {
-
-            KeyboardBool = keyboardBool;
+            KeyboardBool = GameManager.global.KeyboardBool;
 
             KeyboardText.gameObject.SetActive(KeyboardBool);
             KeyboardText.text = KeyboardString.ToUpper();

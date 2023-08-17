@@ -196,7 +196,7 @@ public class PlayerModeHandler : MonoBehaviour
                 }
                 Boar.global.body.SetActive(true);
                 ExitHouseCleanUp();
-            }           
+            }
         }
     }
 
@@ -627,27 +627,12 @@ public class PlayerModeHandler : MonoBehaviour
         return false;
     }
 
-    public static bool ReturnKeyboard()
-    {
-        InputDevice[] devices = InputSystem.devices.ToArray();
-
-        foreach (var device in devices)
-        {
-            if (device is Gamepad)
-            {
-
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     public static void SetMouseActive(bool isActive)
     {
 
 
-        if (isActive && ReturnKeyboard())
+        if (isActive && GameManager.global.KeyboardBool)
         {
             // Debug.Log(isActive + " && " + ReturnKeyboard() + " " + Cursor.visible);
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 424764306}
-  m_IndirectSpecularColor: {r: 0.1823935, g: 0.22506586, b: 0.28964525, a: 1}
+  m_IndirectSpecularColor: {r: 0.18239374, g: 0.22506636, b: 0.28964582, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -137,20 +137,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1581521454}
     m_Modifications:
-    - target: {fileID: 161727376061012220, guid: fbe951531c8e83d40a5417560192c756,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 478256116518443612, guid: fbe951531c8e83d40a5417560192c756,
         type: 3}
       propertyPath: m_Name
       value: SkyIslands Plains
-      objectReference: {fileID: 0}
-    - target: {fileID: 4707559605529837148, guid: fbe951531c8e83d40a5417560192c756,
-        type: 3}
-      propertyPath: ShowAsset
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6310547523896073862, guid: fbe951531c8e83d40a5417560192c756,
         type: 3}
@@ -207,28 +197,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8567011831915084022, guid: fbe951531c8e83d40a5417560192c756,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 4.907485
-      objectReference: {fileID: 0}
-    - target: {fileID: 8567011831915084022, guid: fbe951531c8e83d40a5417560192c756,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8567011831915084022, guid: fbe951531c8e83d40a5417560192c756,
-        type: 3}
-      propertyPath: m_Center.x
-      value: -2.4605527
-      objectReference: {fileID: 0}
-    - target: {fileID: 8567011831915084022, guid: fbe951531c8e83d40a5417560192c756,
-        type: 3}
-      propertyPath: m_Center.z
-      value: -7.429575
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4662592335251691849, guid: fbe951531c8e83d40a5417560192c756, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fbe951531c8e83d40a5417560192c756, type: 3}
 --- !u!1001 &379596049
 PrefabInstance:
@@ -369,25 +338,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &829239482 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1272984416752818042, guid: eefd96987ab17bd40b5d66ae486fa408,
-    type: 3}
-  m_PrefabInstance: {fileID: 1313716111}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &829239488
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 829239482}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5.0063605, y: 20.244343, z: 5.7139754}
-  m_Center: {x: -2.460553, y: 0.122169495, z: -7.143012}
 --- !u!114 &911530204 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6798298796163532355, guid: 6909057cc05e5f446a9a6a2433f2911a,
@@ -588,25 +538,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec484cfb130f4a8479e472d3dcb5e2fa, type: 3}
---- !u!1 &1018205026 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5318416777042639147, guid: eefd96987ab17bd40b5d66ae486fa408,
-    type: 3}
-  m_PrefabInstance: {fileID: 1313716111}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1018205032
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1018205026}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5.006362, y: 20.244343, z: 5.3750267}
-  m_Center: {x: -2.4605534, y: 0.122169495, z: 7.3124914}
 --- !u!1 &1270996740
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,45 +582,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1581521454}
     m_Modifications:
-    - target: {fileID: 581062000431338426, guid: eefd96987ab17bd40b5d66ae486fa408,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 5.5563927
-      objectReference: {fileID: 0}
-    - target: {fileID: 581062000431338426, guid: eefd96987ab17bd40b5d66ae486fa408,
-        type: 3}
-      propertyPath: m_Center.x
-      value: -2.4605527
-      objectReference: {fileID: 0}
-    - target: {fileID: 581062000431338426, guid: eefd96987ab17bd40b5d66ae486fa408,
-        type: 3}
-      propertyPath: m_Center.z
-      value: -7.2218065
-      objectReference: {fileID: 0}
     - target: {fileID: 1033953511156419822, guid: eefd96987ab17bd40b5d66ae486fa408,
         type: 3}
       propertyPath: m_Name
       value: SkyIslands Marsh
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584919045340960016, guid: eefd96987ab17bd40b5d66ae486fa408,
-        type: 3}
-      propertyPath: ShowAsset
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4584919045340960016, guid: eefd96987ab17bd40b5d66ae486fa408,
-        type: 3}
-      propertyPath: IsWaterfall
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5797289114164428267, guid: eefd96987ab17bd40b5d66ae486fa408,
-        type: 3}
-      propertyPath: m_Size.z
-      value: 5.489646
-      objectReference: {fileID: 0}
-    - target: {fileID: 5797289114164428267, guid: eefd96987ab17bd40b5d66ae486fa408,
-        type: 3}
-      propertyPath: m_Center.z
-      value: 7.255179
       objectReference: {fileID: 0}
     - target: {fileID: 6875270205506422836, guid: eefd96987ab17bd40b5d66ae486fa408,
         type: 3}
@@ -745,11 +641,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7477282563779394369, guid: eefd96987ab17bd40b5d66ae486fa408,
-        type: 3}
-      propertyPath: IsWaterfall
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eefd96987ab17bd40b5d66ae486fa408, type: 3}
@@ -1233,25 +1124,6 @@ Transform:
   m_Father: {fileID: 651902476}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1816595322 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3979692172092330599, guid: fbe951531c8e83d40a5417560192c756,
-    type: 3}
-  m_PrefabInstance: {fileID: 99834671}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &1816595328
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1816595322}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5.006362, y: 20.244343, z: 4.9858055}
-  m_Center: {x: -2.4605534, y: 0.122169495, z: 7.507108}
 --- !u!1001 &1834107413
 PrefabInstance:
   m_ObjectHideFlags: 0
