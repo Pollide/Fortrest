@@ -668,6 +668,15 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode)
         {
+            if (playerHealth < maxHealth)
+            {
+                playerHealth += Time.deltaTime * 2.0f;
+            }
+
+            if (playerHealth > maxHealth)
+            {
+                playerHealth = maxHealth;
+            }
             playerHealth += Time.deltaTime * 2.0f;
             healthBar.SetHealth(playerHealth, false);
         }
