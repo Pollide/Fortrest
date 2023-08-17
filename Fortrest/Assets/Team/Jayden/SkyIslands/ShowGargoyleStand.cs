@@ -45,8 +45,5 @@ public class ShowGargoyleStand : MonoBehaviour
             AssetMeshFilter.mesh = Base;
             AssetMeshCollider.sharedMesh = DefaultCollider;
         }
-    }
-
-    
-    
+    }    
 }
