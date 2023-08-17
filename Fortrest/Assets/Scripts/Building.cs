@@ -255,35 +255,31 @@ public class Building : MonoBehaviour
         if (resourceObject == BuildingType.House)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);
-            if (distanceToPlayer < 15.0f && !PlayerController.global.playerDead)
+            if (distanceToPlayer < 17.5f)
             {
-                if (PlayerModeHandler.global.playerModes != PlayerModes.BuildMode && PlayerModeHandler.global.playerModes != PlayerModes.RepairMode)
-                {
-                    if (!textDisplayed)
-                    {
-                        LevelManager.FloatingTextChange(interactText.gameObject, true);
-                        textDisplayed = true;
-                    }
-                }
-
-                PlayerController.global.needInteraction = true;
-                playerinRange = true;
-                PlayerController.global.canGetInHouse = true;
+                playerinRange = true;                                      
             }
-            else if (distanceToPlayer >= 15.0f)
+            else
+            {               
+                playerinRange = false;
+            }
+
+            if (PlayerModeHandler.global.canInteractWithHouse)
+            {
+                if (!textDisplayed)
+                {
+                    LevelManager.FloatingTextChange(interactText.gameObject, true);
+                    textDisplayed = true;
+                }
+            }
+            else
             {
                 if (textDisplayed)
                 {
                     LevelManager.FloatingTextChange(interactText.gameObject, false);
                     textDisplayed = false;
                 }
-                playerinRange = false;
-                PlayerController.global.canGetInHouse = false;
-                if (!Boar.global.inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport)
-                {
-                    PlayerController.global.needInteraction = false;
-                }
-            }
+            }            
 
             if (health != lastHealth)
             {

@@ -50,6 +50,8 @@ public class PlayerModeHandler : MonoBehaviour
     Vector2 cursorPosition;
     Vector3 entryPosition;
 
+    [HideInInspector] public bool canInteractWithHouse;
+
     bool runOnce;
     private void Awake()
     {
@@ -158,7 +160,18 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if (!PlayerController.global.playerDead && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && House.GetComponent<Building>().playerinRange && !PlayerController.global.teleporting)
+        if (House.GetComponent<Building>().playerinRange && !Boar.global.mounted && Boar.global.closerToHouse && !PlayerController.global.playerDead && !PlayerController.global.teleporting)
+        {
+            canInteractWithHouse = true;
+            PlayerController.global.needInteraction = true;
+        }
+        else
+        {
+            canInteractWithHouse = false;
+            PlayerController.global.needInteraction = false;
+        }
+
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
@@ -183,7 +196,7 @@ public class PlayerModeHandler : MonoBehaviour
                 }
                 Boar.global.body.SetActive(true);
                 ExitHouseCleanUp();
-            }
+            }           
         }
     }
 
