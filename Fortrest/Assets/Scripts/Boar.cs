@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class Boar : MonoBehaviour
 {
     public static Boar global;
-    private GameObject text;
+    [HideInInspector] public GameObject text;
     private bool textactive;
     [HideInInspector] public bool mounted = false;
     [HideInInspector] public bool inRange = false;
@@ -20,7 +20,7 @@ public class Boar : MonoBehaviour
     private float verticalVelocity;
     private float gravity = -20.0f;
 
-    [HideInInspector] public bool canMove = true;
+    public bool canMove = true;
     [HideInInspector] public bool isMoving;
     
     public Animator animator;
@@ -36,6 +36,10 @@ public class Boar : MonoBehaviour
     private bool midAir;
 
     public GameObject body;
+    public GameObject house;
+    public bool closerToHouse;
+
+    public bool canInteractWithBoar;
 
     private void Awake()
     {
@@ -53,7 +57,7 @@ public class Boar : MonoBehaviour
     }
 
     void Update()
-    {
+    {       
         if (PlayerController.global.pausedBool)
         {
             return;
@@ -62,25 +66,29 @@ public class Boar : MonoBehaviour
         if (Time.timeScale == 0)
             return;
 
+        closerToHouse = Vector3.Distance(PlayerController.global.transform.position, house.transform.position) < Vector3.Distance(PlayerController.global.transform.position, transform.position) ? true : false;
+
         DisplayText();
 
-        if (!midAir && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && !PlayerController.global.canGetInHouse)
+        if (!midAir && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && (mounted || (!mounted && !closerToHouse)))
         {
-            Mount();
+            canInteractWithBoar = true;
+            PlayerController.global.needInteraction = true;
+        }
+        else
+        {
+            canInteractWithBoar = false;
+            PlayerController.global.needInteraction = false;
+        }
+
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithBoar)
+        {
+            Mount();                      
         }
         if (mounted)
         {
             PlayerStick();
             PlayAnimations();
-        }
-
-        if (inRange)
-        {
-            PlayerController.global.needInteraction = true;
-        }
-        else if (!inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && !PlayerController.global.canGetInHouse)
-        {
-            PlayerController.global.needInteraction = false;
         }
 
         ApplyGravity();
@@ -120,7 +128,7 @@ public class Boar : MonoBehaviour
 
     private void DisplayText()
     {
-        if (inRange)
+        if (canInteractWithBoar)
         {
             if (mounted)
             {

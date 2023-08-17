@@ -96,6 +96,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 5504b4bc152fb824a8d33a9b5dae08ad, type: 2}
+  - {fileID: 2100000, guid: 6f200111a8d2e3c45bf6ac0a280f8847, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -310,6 +311,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SK_StoneShrine
       objectReference: {fileID: 0}
+    - target: {fileID: 1139293749931909517, guid: 5a593a92f92de9044884b16cac784d34,
+        type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1139293749931909517, guid: 5a593a92f92de9044884b16cac784d34,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6f200111a8d2e3c45bf6ac0a280f8847, type: 2}
     m_RemovedComponents:
     - {fileID: -8798570223032397630, guid: 5a593a92f92de9044884b16cac784d34, type: 3}
     - {fileID: -4828190115575174650, guid: 5a593a92f92de9044884b16cac784d34, type: 3}

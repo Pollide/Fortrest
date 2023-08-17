@@ -50,6 +50,8 @@ public class PlayerModeHandler : MonoBehaviour
     Vector2 cursorPosition;
     Vector3 entryPosition;
 
+    [HideInInspector] public bool canInteractWithHouse;
+
     bool runOnce;
     private void Awake()
     {
@@ -82,7 +84,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (Weather.global.gameObject.activeSelf)
             {
                 Weather.global.gameObject.SetActive(false);
-            }         
+            }
             if (!centerMouse)
             {
                 Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
@@ -158,7 +160,18 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if (!PlayerController.global.playerDead && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && House.GetComponent<Building>().playerinRange && !PlayerController.global.teleporting)
+        if (House.GetComponent<Building>().playerinRange && !Boar.global.mounted && Boar.global.closerToHouse && !PlayerController.global.playerDead && !PlayerController.global.teleporting)
+        {
+            canInteractWithHouse = true;
+            PlayerController.global.needInteraction = true;
+        }
+        else
+        {
+            canInteractWithHouse = false;
+            PlayerController.global.needInteraction = false;
+        }
+
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
             if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
@@ -183,7 +196,7 @@ public class PlayerModeHandler : MonoBehaviour
                 }
                 Boar.global.body.SetActive(true);
                 ExitHouseCleanUp();
-            }
+            }           
         }
     }
 
@@ -353,14 +366,21 @@ public class PlayerModeHandler : MonoBehaviour
         buildGrid.gameObject.SetActive(active);
         PlayerController.global.OpenResourceHolder(active);
 
-
         PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
         if (active)
         {
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
             PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position);
-            PlayerController.global.playerCanMove = false;
+            if (Boar.global.mounted)
+            {
+                Boar.global.canMove = false;
+            }
+            else
+            {
+                PlayerController.global.playerCanMove = false;
+            }
+
             CameraFollow.global.transform.position = CameraFollow.global.ReturnBuildOffset();
 
             playerModes = PlayerModes.BuildMode;
@@ -453,7 +473,7 @@ public class PlayerModeHandler : MonoBehaviour
 
                 Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
 
-                worldPos = new Vector3(gridPos.x, 0.36f, gridPos.z);
+                worldPos = new Vector3(gridPos.x, 0.0f, gridPos.z);
 
                 Collider[] collidershit = Physics.OverlapSphere(worldPos, 1.5f);
 
