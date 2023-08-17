@@ -26,6 +26,7 @@ Material:
   stringTagMap:
     RenderType: Transparent
   disabledShaderPasses:
+  - DepthOnly
   - SHADOWCASTER
   m_SavedProperties:
     serializedVersion: 3
@@ -168,7 +169,7 @@ Material:
     - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _AlphaClip: 1
     - _AlphaClipThreshold: 0.01
-    - _Ambience_Multiplier: 0
+    - _Ambience_Multiplier: 1
     - _Ambient_Occlusion: 0
     - _Blend: 0
     - _BumpScale: 1
@@ -180,12 +181,12 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 10
-    - _EdgeDiffuse: 1.13
-    - _EdgeDistanceAttenuation: 1.49
+    - _EdgeDiffuse: 1.16
+    - _EdgeDistanceAttenuation: 1.77
     - _EdgeRim: 0
     - _EdgeRimAmount: 0.413
     - _EdgeRimStrength: 0
-    - _EdgeShadowAttenuation: 1.33
+    - _EdgeShadowAttenuation: 1
     - _EdgeSpecular: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
@@ -218,10 +219,10 @@ Material:
     - _Wind_Strength: 0.339
     - _WorkflowMode: 1
     - _ZTest: 4
-    - _ZWrite: 1
-    - _ZWriteControl: 1
+    - _ZWrite: 0
+    - _ZWriteControl: 0
     m_Colors:
-    - _Ambient_Color: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0}
+    - _Ambient_Color: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorAlbedo: {r: 0.4764916, g: 0.6698113, b: 0.2432805, a: 0}
