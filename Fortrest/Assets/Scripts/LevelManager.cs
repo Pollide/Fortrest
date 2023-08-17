@@ -52,7 +52,7 @@ public class LevelManager : MonoBehaviour
     public Material LanternGlowingMaterial;
     public Material LanternOffMaterial;
 
-    public float DaylightTimer;
+    public float DaylightTimer = 20;
     public int day = 0;
     public List<EnemyController> EnemyList = new List<EnemyController>();
     public List<GameObject> InventoryItemList = new List<GameObject>();
@@ -253,11 +253,9 @@ public class LevelManager : MonoBehaviour
         DaylightTimer += daySpeed * Time.deltaTime;
 
         Light light = DirectionalLightTransform.GetComponent<Light>();
-
-        if (!ReturnNight())
-            light.color = SunriseGradient.Evaluate(DaylightTimer / 180);
-
-        if (DaylightTimer > 360)
+        int cycle = 360;
+        light.color = SunriseGradient.Evaluate(DaylightTimer / cycle);
+        if (DaylightTimer > cycle)
         {
             attackHappening = false;
             randomAttackTrigger = 0f;

@@ -990,8 +990,15 @@ public class PlayerController : MonoBehaviour
 
                 UpdateResourceHolder();
             }
+            else
+            {
+                UIAnimation.GetComponent<Animator>().ResetTrigger("MapClose");
+                UIAnimation.GetComponent<Animator>().SetTrigger("MapClose");
+            }
         }
     }
+
+
 
     public void UpdateResourceHolder(int bridgeTypeInt = 0)
     {

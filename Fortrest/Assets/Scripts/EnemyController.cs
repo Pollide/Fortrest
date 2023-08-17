@@ -80,6 +80,7 @@ public class EnemyController : MonoBehaviour
         chaseTimerMax = 10.0f;
 
         agent = GetComponent<NavMeshAgent>();
+        agent.angularSpeed *= 2;
         knockBackScript = GetComponent<KnockBack>();
 
         SetEnemyParameters();
@@ -329,7 +330,7 @@ public class EnemyController : MonoBehaviour
     }
 
     public void Damaged(float amount)
-    {       
+    {
         health -= amount;
         if (HealthAppearTimer == -1)
         {
@@ -395,7 +396,7 @@ public class EnemyController : MonoBehaviour
         {
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
-                StopAllCoroutines();            
+                StopAllCoroutines();
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chaseTimer = 0;
@@ -446,7 +447,7 @@ public class EnemyController : MonoBehaviour
             }
         }
         if (other.gameObject.tag == "Arrow")
-        {           
+        {
             if (!other.GetComponent<Arrow>().singleHit)
             {
                 other.GetComponent<Arrow>().singleHit = true;
@@ -462,7 +463,7 @@ public class EnemyController : MonoBehaviour
                 Damaged(PlayerController.global.bowDamage);
                 PickSound(hitSound, hitSound2, 1.0f);
                 Destroy(other.gameObject);
-            }          
+            }
         }
     }
 
@@ -559,7 +560,7 @@ public class EnemyController : MonoBehaviour
                 else
                 {
                     PlayerController.global.TakeDamage(enemyDamage, true);
-                }               
+                }
             }
         }
         else if (bestTarget)

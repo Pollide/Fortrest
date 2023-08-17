@@ -21134,9 +21134,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
+      propertyPath: daySpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
       propertyPath: clockHand
       value: 
       objectReference: {fileID: 911530204}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: DaylightTimer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: SunriseGradient.ctime0
@@ -21150,22 +21160,42 @@ PrefabInstance:
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: SunriseGradient.ctime2
-      value: 56283
+      value: 29105
       objectReference: {fileID: 0}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: SunriseGradient.ctime3
-      value: 65535
+      value: 34117
       objectReference: {fileID: 0}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: SunriseGradient.ctime4
+      value: 40285
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.ctime5
+      value: 63415
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.ctime6
       value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.key0.b
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: SunriseGradient.key0.g
       value: 0.3454259
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.key0.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
@@ -21189,8 +21219,48 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
+      propertyPath: SunriseGradient.key4.b
+      value: 0.4433962
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
       propertyPath: SunriseGradient.key4.g
-      value: 0.14576916
+      value: 0.4433962
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.key4.r
+      value: 0.4433962
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.key5.b
+      value: 0.4433962
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.key5.g
+      value: 0.4433962
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.key5.r
+      value: 0.4433962
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.key6.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.key6.g
+      value: 0.3454259
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
+      propertyPath: SunriseGradient.key6.r
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
@@ -21210,7 +21280,7 @@ PrefabInstance:
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
       propertyPath: SunriseGradient.m_NumColorKeys
-      value: 4
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 927623175018942830, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
