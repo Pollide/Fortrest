@@ -34,10 +34,13 @@ public class Indicator : MonoBehaviour
         public bool Recent;
         public string ActiveString;
 
-        public void Refresh()
+        public void Refresh(int shift)
         {
             if (ActiveTarget)
+            {
                 WorldPosition = ActiveTarget.position;
+
+            }
 
             Vector3 worldToScreenPointVector = LevelManager.global.SceneCamera.WorldToScreenPoint(WorldPosition);
 
@@ -72,6 +75,11 @@ public class Indicator : MonoBehaviour
             float clampedY = Mathf.Clamp(pointVector.y, bottomBoundary, topBoundary);
 
             Vector2 clamp = new Vector2(clampedX, clampedY);
+
+            if (isOutsideCanvas)
+            {
+                clamp.x -= shift;
+            }
 
             MainData.transform.localEulerAngles = Vector3.zero;
 
@@ -138,7 +146,7 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            bool active = (Unlocked || distance < 90) && (Recent || !close);
+            bool active = (Unlocked || distance < 240) && (Recent || !close);
 
             if (active != AppearBool)
             {
@@ -194,7 +202,7 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            IndicatorList[i].Refresh();
+            IndicatorList[i].Refresh(i * 10);
         }
     }
 
