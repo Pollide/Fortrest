@@ -8,15 +8,18 @@ public class ShowGargoyleStand : MonoBehaviour
 
     //Bools
     public bool ShowAsset = false;
-    public bool IsWaterfall = false;
+    public bool IsLoweredLip = false;
 
     //Components
     public MeshRenderer AssetMeshRenderer;
     public MeshFilter AssetMeshFilter;
+    public MeshCollider AssetMeshCollider;
 
     //Stored Meshes
-    public Mesh WaterfallVariation;
+    public Mesh LoweredLipVariation;
     public Mesh Base;
+    public Mesh DefaultCollider;
+    public Mesh LoweredLipCollider;
 
 
     //Start Function
@@ -32,13 +35,15 @@ public class ShowGargoyleStand : MonoBehaviour
             AssetMeshRenderer.enabled = false; //If the bool if false, the mesh is not rendered.
         }
 
-        if (IsWaterfall == true)
+        if (IsLoweredLip == true)
         {
-            AssetMeshFilter.mesh = WaterfallVariation;
+            AssetMeshFilter.mesh = LoweredLipVariation;
+            AssetMeshCollider.sharedMesh = LoweredLipCollider;
         }
         else
         {
             AssetMeshFilter.mesh = Base;
+            AssetMeshCollider.sharedMesh = DefaultCollider;
         }
     }    
 }

@@ -71,7 +71,7 @@ public class Indicator : MonoBehaviour
             bool isOutsideCanvas = leftBool || rightBool || bottomBool || topBool;
 
             // Clamp the image's position within the canvas boundaries
-            float clampedX = Mathf.Clamp(pointVector.x, leftBoundary, rightBoundary);
+            float clampedX = Mathf.Clamp(pointVector.x + (isOutsideCanvas ? -shift : 0), leftBoundary, rightBoundary);
             float clampedY = Mathf.Clamp(pointVector.y, bottomBoundary, topBoundary);
 
             Vector2 clamp = new Vector2(clampedX, clampedY);

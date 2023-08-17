@@ -34,7 +34,7 @@ public class CutoutPlayer : MonoBehaviour
         for (int i=0; i< hitObjects.Length; ++i)
         {
             Debug.Log("ObjectDoBeHit");
-            Material[] materials = hitObjects[i].transform.GetComponent<MeshRenderer>().materials;
+            Material[] materials = hitObjects[i].transform.GetComponentInChildren<MeshRenderer>().materials;
             
 
             for (int m = 0; m < materials.Length; ++m)

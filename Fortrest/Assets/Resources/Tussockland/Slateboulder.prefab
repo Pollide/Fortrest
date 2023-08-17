@@ -92,8 +92,11 @@ MonoBehaviour:
   healthBarImage: {fileID: 1280423068281564523}
   HUDHealthBar: {fileID: 0}
   playerinRange: 0
+  normalHouse: {fileID: 0}
+  destroyedHouse: {fileID: 0}
   interactText: {fileID: 0}
   textDisplayed: 0
+  DebugDestroyInstantly: 0
 --- !u!111 &-6799876280890107172
 Animation:
   m_ObjectHideFlags: 0
@@ -313,14 +316,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 5561349426305759274, guid: e1ef7d632bbe5e24eae7886769e75f8e,
-        type: 3}
+      objectReference: {fileID: 2100000, guid: 0c664a43d3efd7746911cd96d6b2358d, type: 2}
     - target: {fileID: 474675439065559326, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 5561349426305759274, guid: e1ef7d632bbe5e24eae7886769e75f8e,
-        type: 3}
+      objectReference: {fileID: 2100000, guid: 6f200111a8d2e3c45bf6ac0a280f8847, type: 2}
     - target: {fileID: 5020325937464689298, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_Mesh
