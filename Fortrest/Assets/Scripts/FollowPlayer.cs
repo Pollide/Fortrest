@@ -21,6 +21,6 @@ public class FollowPlayer : MonoBehaviour
         distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
         float i = distance / 25;
         smoothTime = Mathf.Lerp(minSmooth, maxSmooth, i);
-        transform.position = Vector3.SmoothDamp(transform.position, PlayerController.global.transform.position, ref currentVelocity, smoothTime);
+        transform.position = Vector3.SmoothDamp(transform.position, PlayerController.global.transform.position, ref currentVelocity, smoothTime);   
     }
 }

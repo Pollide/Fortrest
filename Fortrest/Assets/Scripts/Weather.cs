@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Weather : MonoBehaviour
 {
+    public static Weather global;
+
     private GameObject[] weatherType = new GameObject[3];   
     private float timer;
     private float weatherTimer;
@@ -17,6 +19,11 @@ public class Weather : MonoBehaviour
     private Color color3;
     private float startEmission;
 
+    private void Awake()
+    {
+        global = this;
+    }
+
     void Start()
     {
         weatherType[0] = transform.GetChild(0).gameObject; // Light Rain
@@ -24,9 +31,9 @@ public class Weather : MonoBehaviour
         weatherType[2] = transform.GetChild(2).gameObject; // Snow
 
         stepComplete = true;
-        weatherTimer = Random.Range(200.0f, 250.0f);
+        //weatherTimer = Random.Range(200.0f, 250.0f);
         weatherDuration = Random.Range(100.0f, 125.0f);
-        //weatherTimer = Random.Range(2.0f, 2.5f);
+        weatherTimer = Random.Range(2.0f, 2.5f);
         //weatherDuration = Random.Range(15.0f, 20.0f);
 
         ColorUtility.TryParseHtmlString("#FFF4D6", out colorInitial); // Normal
@@ -51,7 +58,7 @@ public class Weather : MonoBehaviour
         }
         else if (weatherTriggered && !stepComplete)
         {
-            randomInt = Random.Range(0, 3);
+            randomInt = Random.Range(0, 2); // Make the 2 a 3 to allow for snow
             weatherType[randomInt].SetActive(true);
             switch (randomInt)
             {
