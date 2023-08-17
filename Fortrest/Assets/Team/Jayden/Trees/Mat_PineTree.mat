@@ -21,7 +21,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Mat_PineTree
-  m_Shader: {fileID: -6465566751694194690, guid: b98908b31ddac1f49a1bc5fb88be449b,
+  m_Shader: {fileID: -6465566751694194690, guid: 6d1e564e810b5b04a9227282c1e3218e,
     type: 3}
   m_ValidKeywords:
   - _ADDITIONAL_LIGHTS
@@ -41,6 +41,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AO:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Albedo:
         m_Texture: {fileID: 2800000, guid: 4f5c2a3328f2f93478831a6334170ba7, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -197,7 +201,7 @@ Material:
     - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _AlphaClip: 1
     - _AlphaClipThreshold: 0.5
-    - _Ambience_Multiplier: 0
+    - _Ambience_Multiplier: 10
     - _Blend: 0
     - _BlendOp: 0
     - _BumpScale: 1
@@ -281,14 +285,14 @@ Material:
     - _ZWrite: 1
     - _ZWriteControl: 1
     m_Colors:
-    - _Ambient_Color: {r: 0.735849, g: 0.735849, b: 0.735849, a: 0}
+    - _Ambient_Color: {r: 0.7924528, g: 0.7924528, b: 0.7924528, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorAlbedo: {r: 0, g: 0, b: 0, a: 0}
     - _CutoutPosition: {r: 0.5, g: 0.25, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _HueVariation: {r: 1, g: 0.5, b: 0, a: 0.1}
-    - _RimColor: {r: 0.8861903, g: 1, b: 0.8726415, a: 0}
+    - _RimColor: {r: 0.6981132, g: 0.6981132, b: 0.6981132, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
     - _White: {r: 1, g: 1, b: 1, a: 0}
     - _WindEffectScale: {r: 0.05, g: 0.5, b: 0.05, a: 0}
