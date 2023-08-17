@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     // Movement
     [HideInInspector]
     public Vector3 moveDirection;
-   
+
     private float horizontalMovement;
     private float verticalMovement;
     public GameObject house;
@@ -987,7 +987,11 @@ public class PlayerController : MonoBehaviour
             OpenResourceHolder(map);
             if (mapBool)
             {
+
                 MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
+
+                MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
+
                 MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
                 MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
 
@@ -995,8 +999,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-
 
     public void UpdateResourceHolder(int bridgeTypeInt = 0)
     {
@@ -1028,6 +1030,22 @@ public class PlayerController : MonoBehaviour
         {
             woodCostList[1].ResourceCost = -30;
             stoneCostList[1].ResourceCost = -30;
+        }
+
+        if (bridgeTypeInt == 3)
+        {
+            woodCostList[2].ResourceCost = -30;
+            stoneCostList[2].ResourceCost = -30;
+        }
+
+        if (bridgeTypeInt == 4)
+        {
+            woodCostList[0].ResourceCost = -30;
+            stoneCostList[0].ResourceCost = -30;
+            woodCostList[1].ResourceCost = -30;
+            stoneCostList[1].ResourceCost = -30;
+            woodCostList[2].ResourceCost = -30;
+            stoneCostList[2].ResourceCost = -30;
         }
 
         if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
@@ -1157,15 +1175,12 @@ public class PlayerController : MonoBehaviour
 
         return true;
     }
-
     public Vector2 ConvertToMapCoordinates(Vector3 position)
     {
         // Step 2: Convert to 2D screen space using the map camera
         position.y = position.z;
-        position -= new Vector3(100, 170);
-        position.x *= 1.5f;
-        position.y *= 1.5f;
-
+        position -= new Vector3(110, 60);
+        position *= 1.9f;
         // Step 3: Normalize the screen position based on your map's size or aspect ratio
         // Vector2 normalizedMapPosition = new Vector2(screenPosition.x / Screen.width, screenPosition.y / Screen.height);
 

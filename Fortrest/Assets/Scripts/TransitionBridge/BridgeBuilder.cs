@@ -24,6 +24,17 @@ public class BridgeBuilder : MonoBehaviour
             Indicator.global.AddIndicator(transform, new Color(1.0f, 0.6f, 0.0f, 1.0f), "Tussocks", false);
         }
 
+        if (BridgeTypeInt == 3)
+        {
+            Indicator.global.AddIndicator(transform, Color.yellow, "Coast", false);
+        }
+
+        if (BridgeTypeInt == 4)
+        {
+            Indicator.global.AddIndicator(transform, Color.blue, "Taiga", false);
+        }
+
+
         LevelManager.global.BridgeList.Add(this);
     }
 
