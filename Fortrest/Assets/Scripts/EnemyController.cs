@@ -41,7 +41,7 @@ public class EnemyController : MonoBehaviour
 
     // Others
     public Animator ActiveAnimator;
-    KnockBack knockBackScript;
+    [HideInInspector] public KnockBack knockBackScript;
 
     private float enemyDamage;
 
