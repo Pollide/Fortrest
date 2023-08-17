@@ -73,6 +73,7 @@ public class EnemyController : MonoBehaviour
 
     public Animation flashingAnimation;
     public bool flashing;
+    private bool dead;
 
     void Start()
     {
@@ -279,7 +280,14 @@ public class EnemyController : MonoBehaviour
 
             if (agent.isOnNavMesh)
             {
-                agent.SetDestination(bestTarget.position); // Makes the enemy move
+                if (!dead)
+                {
+                    agent.SetDestination(bestTarget.position); // Makes the enemy move
+                }
+                else
+                {
+                    agent.SetDestination(transform.position); // Avoids them moving while dead
+                }
             }
             if (agent.velocity != Vector3.zero)
             {
@@ -344,6 +352,8 @@ public class EnemyController : MonoBehaviour
 
         if (health <= 0)
         {
+            dead = true;
+            agent.SetDestination(transform.position);
             healthAnimation.gameObject.SetActive(false);
             if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin) // remove once we got anims
             {
@@ -499,7 +509,7 @@ public class EnemyController : MonoBehaviour
             agent.acceleration = 40.0f;
             agent.angularSpeed = 100.0f;
             maxHealth = 5.0f;
-            attackTimerMax = 3.0f;
+            attackTimerMax = 2.75f;
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
             enemyDamage = 7.5f;

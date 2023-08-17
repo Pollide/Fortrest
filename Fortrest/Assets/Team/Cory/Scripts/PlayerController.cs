@@ -106,7 +106,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool attacking = false;
 
     // Teleporter
-    [HideInInspector] public bool canTeleport = false;
+    public bool canTeleport = false;
 
     // VFXs
     private VisualEffect VFXSlash;
@@ -218,6 +218,7 @@ public class PlayerController : MonoBehaviour
     private float newGap;
     private bool displayAmount;
     public bool teleporting;
+    [HideInInspector] public bool respawning;
     private bool cancelHit;
     [HideInInspector] public bool staggered;
 
@@ -524,13 +525,13 @@ public class PlayerController : MonoBehaviour
         {
             playerCanBeDamaged = true;
         }
-
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.L))
         {
             playerHealth = 0;
             healthBar.SetHealth(playerHealth, false);
         }
-
+#endif
         if (playerCanMove)
         {
             // Controller
@@ -580,11 +581,6 @@ public class PlayerController : MonoBehaviour
         if (playerDead)
         {
             Death();
-        }
-
-        if (teleporting)
-        {
-            teleporting = false;
         }
 
         if (Input.GetKeyDown(KeyCode.U)) // TEMPORARY
@@ -842,7 +838,6 @@ public class PlayerController : MonoBehaviour
         }
         if (Boar.global.mounted)
         {
-            //Boar.global.canMove = false;
             Boar.global.cc.enabled = false;
             Boar.global.transform.position = pos;
             Boar.global.cc.enabled = true;
@@ -850,7 +845,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            //PlayerController.global.playerCanMove = false;
             playerCC.enabled = false;
             transform.position = pos;
             playerCC.enabled = true;
@@ -860,6 +854,7 @@ public class PlayerController : MonoBehaviour
         canTeleport = false;
         needInteraction = false;
         teleporting = true;
+        StartCoroutine(RevertBool(true));
 
         LevelManager.global.SceneCamera.transform.position = pos;
     }
@@ -1644,8 +1639,23 @@ public class PlayerController : MonoBehaviour
                     needInteraction = false;
                     interactCTRL = false;
                     houseDisplay = true; // Used to reanimate house and make text appear once player respawns
+                    respawning = true;
+                    StartCoroutine(RevertBool(false));
                 }
             }
+        }
+    }
+
+    private IEnumerator RevertBool (bool teleporter)
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (teleporter)
+        {
+            teleporting = false;
+        }
+        else
+        {
+            respawning = false;
         }
     }
 

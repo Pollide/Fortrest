@@ -50,7 +50,7 @@ public class PlayerModeHandler : MonoBehaviour
     Vector2 cursorPosition;
     Vector3 entryPosition;
 
-    [HideInInspector] public bool canInteractWithHouse;
+    public bool canInteractWithHouse;
 
     bool runOnce;
     private void Awake()
@@ -160,7 +160,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if (House.GetComponent<Building>().playerinRange && !Boar.global.mounted && Boar.global.closerToHouse && !PlayerController.global.playerDead && !PlayerController.global.teleporting)
+        if (House.GetComponent<Building>().playerinRange && !Boar.global.mounted && Boar.global.closerToHouse && !PlayerController.global.playerDead && !PlayerController.global.teleporting && !PlayerController.global.respawning)
         {
             canInteractWithHouse = true;
             PlayerController.global.needInteraction = true;
