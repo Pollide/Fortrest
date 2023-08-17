@@ -56,8 +56,8 @@ public class Building : MonoBehaviour
     public bool playerinRange;
     private float timerText = 0.0f;
 
-    private GameObject normalHouse;
-    private GameObject destroyedHouse;
+    public GameObject normalHouse;
+    public GameObject destroyedHouse;
 
     public TMP_Text interactText;
     [HideInInspector] public bool textDisplayed;
@@ -92,8 +92,6 @@ public class Building : MonoBehaviour
             {
                 HUDHealthBar.SetMaxHealth(maxHealth, true);
             }
-            normalHouse = gameObject.transform.GetChild(0).gameObject;
-            destroyedHouse = gameObject.transform.GetChild(1).gameObject;
         }
         else if (resourceObject != BuildingType.DefenseBP) //the house itself is not part of the buildings list
         {
