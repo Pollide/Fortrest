@@ -53,7 +53,7 @@ public class PlayerModeHandler : MonoBehaviour
     public bool canInteractWithHouse;
 
     public float nimDistanceBetweenTurrts = 3;
-
+    
     bool runOnce;
     private void Awake()
     {
@@ -89,16 +89,20 @@ public class PlayerModeHandler : MonoBehaviour
             }
             if (!centerMouse)
             {
-                Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
+                if (GameManager.global.KeyboardBool)
+                    Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
+
                 cursorPosition = new Vector2(Screen.width / 2, Screen.height / 2);
                 centerMouse = true;
             }
             if (PlayerController.global.moveCTRL.x != 0 || PlayerController.global.moveCTRL.y != 0)
             {
                 cursorPosition += PlayerController.global.moveCTRL * 1.25f;
-                Mouse.current.WarpCursorPosition(cursorPosition);
+
+                if (GameManager.global.KeyboardBool)
+                    Mouse.current.WarpCursorPosition(cursorPosition);
             }
-            else
+            else if (GameManager.global.KeyboardBool)
             {
                 cursorPosition = Input.mousePosition;
             }
@@ -170,7 +174,10 @@ public class PlayerModeHandler : MonoBehaviour
         else
         {
             canInteractWithHouse = false;
-            PlayerController.global.needInteraction = false;
+            if (!Boar.global.canInteractWithBoar && !PlayerController.global.canTeleport)
+            {
+                PlayerController.global.needInteraction = false;
+            }                
         }
 
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
@@ -297,7 +304,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void RepairMode()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(cursorPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hitData, 1000))
         {
@@ -467,7 +474,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             PlayerController.global.selectCTRL = false;
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(cursorPosition);
 
             if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
             {
@@ -556,7 +563,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void DragBuildingBlueprint()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(cursorPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer))
         {

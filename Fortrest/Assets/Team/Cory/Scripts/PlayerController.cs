@@ -188,7 +188,7 @@ public class PlayerController : MonoBehaviour
     private bool turretCTRL;
     private bool healCTRL;
     [HideInInspector] public bool interactCTRL;
-    [HideInInspector] public bool needInteraction = false;
+    public bool needInteraction = false;
     [HideInInspector] public bool lockingCTRL = false;
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
@@ -420,8 +420,9 @@ public class PlayerController : MonoBehaviour
 
     private void InteractController()
     {
-        if (!interactCTRL && needInteraction)
+        if (!interactCTRL && (needInteraction))
         {
+            Debug.Log(1);
             interactCTRL = true;
         }
     }
@@ -855,7 +856,10 @@ public class PlayerController : MonoBehaviour
         }
         interactCTRL = false;
         canTeleport = false;
-        needInteraction = false;
+        if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse)
+        {
+            needInteraction = false;
+        }       
         teleporting = true;
         StartCoroutine(RevertBool(true));
 
@@ -896,6 +900,7 @@ public class PlayerController : MonoBehaviour
             {
                 playerCurrentSpeed = playerSprintSpeed;
                 CharacterAnimator.speed = 1.6f;
+                directionSaved = false;
             }
             else
             {
@@ -957,29 +962,37 @@ public class PlayerController : MonoBehaviour
     {
         if (!mapBool)
         {
-            PauseCanvasGameObject.SetActive(pause);
-            if (pause)
+            if (!pausedBool && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
             {
-                for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
-                {
-                    Pause.global.ButtonHolder.GetChild(i).gameObject.SetActive(i == 0);
-                }
-
-                Pause.global.SelectedList = new List<int>();
-
-                for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
-                {
-                    Pause.global.SelectedList.Add(0);
-                }
+                PlayerController.global.interactCTRL = true;
             }
+            else
+            {
 
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
-            GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+                PauseCanvasGameObject.SetActive(pause);
+                if (pause)
+                {
+                    for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
+                    {
+                        Pause.global.ButtonHolder.GetChild(i).gameObject.SetActive(i == 0);
+                    }
 
-            Time.timeScale = pause ? 0 : 1;
-            playerCanMove = !pause;
-            pausedBool = pause;
-            PlayerModeHandler.SetMouseActive(pause);
+                    Pause.global.SelectedList = new List<int>();
+
+                    for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
+                    {
+                        Pause.global.SelectedList.Add(0);
+                    }
+                }
+
+                GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
+                GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+
+                Time.timeScale = pause ? 0 : 1;
+                playerCanMove = !pause;
+                pausedBool = pause;
+                PlayerModeHandler.SetMouseActive(pause);
+            }
         }
     }
 
@@ -1377,6 +1390,8 @@ public class PlayerController : MonoBehaviour
 
             if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting)
             {
+                CharacterAnimator.ResetTrigger("Fire");
+                CharacterAnimator.SetTrigger("Fire");
                 attackingCTRL = false;
                 shooting = true;
                 bowTimer = 0;
@@ -1639,7 +1654,10 @@ public class PlayerController : MonoBehaviour
                     respawnTimer = 0.0f;
                     LevelManager.FloatingTextChange(respawnText, false);
                     textAnimated = false;
-                    needInteraction = false;
+                    if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport)
+                    {
+                        needInteraction = false;
+                    }                       
                     interactCTRL = false;
                     houseDisplay = true; // Used to reanimate house and make text appear once player respawns
                     respawning = true;
@@ -1649,7 +1667,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private IEnumerator RevertBool (bool teleporter)
+    private IEnumerator RevertBool(bool teleporter)
     {
         yield return new WaitForSeconds(0.2f);
         if (teleporter)
