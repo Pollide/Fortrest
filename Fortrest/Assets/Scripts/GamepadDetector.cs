@@ -16,21 +16,30 @@ public class GamepadDetector : MonoBehaviour
 
     bool KeyboardBool = true;
 
+    private void Start()
+    {
+        Refresh();
+    }
     private void Update()
     {
         if (GameManager.global && KeyboardBool != GameManager.global.KeyboardBool)
         {
-            KeyboardBool = GameManager.global.KeyboardBool;
-
-            KeyboardText.gameObject.SetActive(KeyboardBool);
-            KeyboardText.text = KeyboardString.ToUpper();
-
-            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-
-            if (spriteRenderer)
-                spriteRenderer.sprite = KeyboardBool ? KeyboardSprite : GamepadSprite;
-            else
-                GetComponent<Image>().sprite = KeyboardBool ? KeyboardSprite : GamepadSprite;
+            Refresh();
         }
+    }
+
+    public void Refresh()
+    {
+        KeyboardBool = GameManager.global.KeyboardBool;
+
+        KeyboardText.gameObject.SetActive(KeyboardBool);
+        KeyboardText.text = KeyboardString.ToUpper();
+
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+
+        if (spriteRenderer)
+            spriteRenderer.sprite = KeyboardBool ? KeyboardSprite : GamepadSprite;
+        else
+            GetComponent<Image>().sprite = KeyboardBool ? KeyboardSprite : GamepadSprite;
     }
 }
