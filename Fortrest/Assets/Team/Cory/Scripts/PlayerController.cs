@@ -221,7 +221,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool respawning;
     private bool cancelHit;
     [HideInInspector] public bool staggered;
-
+    public bool ResourceHolderOpened;
     // Start is called before the first frame update
     void Awake()
     {
@@ -312,7 +312,11 @@ public class PlayerController : MonoBehaviour
 
     public void OpenResourceHolder(bool open)
     {
-        GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
+        if (ResourceHolderOpened != open)
+        {
+            ResourceHolderOpened = open;
+            GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
+        }
     }
 
     private void BuildSelectController()
