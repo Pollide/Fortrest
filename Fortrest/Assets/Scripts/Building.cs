@@ -203,13 +203,14 @@ public class Building : MonoBehaviour
                 GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
             }
 
-            Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
-
             if (resourceObject == BuildingType.Defense)
             {
                 LevelManager.global.RemoveBuildingVoid(transform);
-                Destroy(this);
+
+                Destroy(gameObject);
             }
+
+            Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
         }
         PlayerController.global.currentResource = null;
     }
