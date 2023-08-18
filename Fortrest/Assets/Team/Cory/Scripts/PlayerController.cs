@@ -101,7 +101,7 @@ public class PlayerController : MonoBehaviour
 
     // States
     [Header("Player States")]
-    [HideInInspector] public bool playerCanMove = true;
+    public bool playerCanMove = true;
     private bool playerisMoving = false;
     [HideInInspector] public bool attacking = false;
 
@@ -428,7 +428,7 @@ public class PlayerController : MonoBehaviour
 
     private void EvadeController()
     {
-        if (!evadeCTRL && canEvade)
+        if (!evadeCTRL && canEvade && !Boar.global.mounted)
         {
             evadeCTRL = true;
         }
@@ -1678,7 +1678,7 @@ public class PlayerController : MonoBehaviour
         cancelHit = true;
         StopCoroutine("Staggered");
         StartCoroutine("Staggered");
-        if (stagger)
+        if (stagger && !Boar.global.mounted)
         {
             CharacterAnimator.ResetTrigger("Swing");
             CharacterAnimator.ResetTrigger("Swing2");
