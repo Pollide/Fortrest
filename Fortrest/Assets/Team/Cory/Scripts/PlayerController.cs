@@ -896,6 +896,7 @@ public class PlayerController : MonoBehaviour
             {
                 playerCurrentSpeed = playerSprintSpeed;
                 CharacterAnimator.speed = 1.6f;
+                directionSaved = false;
             }
             else
             {
@@ -1377,6 +1378,8 @@ public class PlayerController : MonoBehaviour
 
             if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting)
             {
+                CharacterAnimator.ResetTrigger("Fire");
+                CharacterAnimator.SetTrigger("Fire");
                 attackingCTRL = false;
                 shooting = true;
                 bowTimer = 0;
