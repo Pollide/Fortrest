@@ -358,6 +358,7 @@ public class PlayerModeHandler : MonoBehaviour
         if (turretBlueprint)
         {
             Destroy(turretBlueprint);
+            Destroy(KeyHint.gameObject);
         }
 
         PlayerController.global.UpdateResourceHolder();
