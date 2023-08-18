@@ -42,7 +42,7 @@ public class PlayerModeHandler : MonoBehaviour
     public GameObject House;
     public GameObject selectionGrid;
     GameObject newSelectionGrid;
-
+    public GameObject KeyBlueprintHintPrefab;
     private HUDHandler HUD;
 
     public bool inTheFortress;
@@ -589,6 +589,8 @@ public class PlayerModeHandler : MonoBehaviour
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
                 turretBlueprint.tag = "BuildingBP";
 
+                GameObject key = Instantiate(KeyBlueprintHintPrefab, turretBlueprint.transform);
+
                 TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
 
                 if (turretShooting)
@@ -661,6 +663,8 @@ public class PlayerModeHandler : MonoBehaviour
     {
         if (set)
             GameManager.global.CursorActiveBool = isActive;
+
+        Debug.Log("Cursor " + isActive);
 
         if (isActive && GameManager.global.KeyboardBool)
         {

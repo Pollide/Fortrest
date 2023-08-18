@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         Vector3 currentMousePosition = Input.mousePosition;
-        
+
         if (currentMousePosition != lastMousePosition || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             KeyboardBool = true;
@@ -460,7 +460,9 @@ public class GameManager : MonoBehaviour
         }
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
+        DataEulerVoid("Player", PlayerController.global.transform, load);
         DataPositionVoid("Mount", Boar.global.transform, load);
+        DataEulerVoid("Mount", Boar.global.transform, load);
 
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
