@@ -22,7 +22,7 @@ public class Boar : MonoBehaviour
 
     [HideInInspector] public bool canMove = true;
     [HideInInspector] public bool isMoving;
-    
+
     public Animator animator;
     [HideInInspector] public CharacterController cc;
 
@@ -36,7 +36,7 @@ public class Boar : MonoBehaviour
     private bool midAir;
 
     public GameObject body;
-    public GameObject house;
+    GameObject house;
     [HideInInspector] public bool closerToHouse;
     public bool canInteractWithBoar;
 
@@ -53,10 +53,11 @@ public class Boar : MonoBehaviour
         text = transform.GetChild(0).gameObject;
         cc = GetComponent<CharacterController>();
         Indicator.global.AddIndicator(transform, Color.cyan, "Mount", false, Indicator.global.MountSprite);
+        house = PlayerController.global.house;
     }
 
     void Update()
-    {       
+    {
         if (PlayerController.global.pausedBool)
         {
             return;
@@ -82,8 +83,8 @@ public class Boar : MonoBehaviour
         }
 
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithBoar)
-        {           
-            Mount();                      
+        {
+            Mount();
         }
         if (mounted)
         {

@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
     public AudioClip BallistaShootSound;
     public AudioClip CannonShootSound;
     public AudioClip SlowShootSound; // NEED BETTER SOUND
-
+    private Vector3 lastMousePosition;
     public bool CheatInfiniteBuilding;
 
     public AnimationClip PopupAnimation;
@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
         gamepadControls.Controls.Enable();
         gamepadControls.Controls.Move.performed += ctx => OnGamepadInput();
         gamepadControls.Controls.Interact.performed += ctx => OnGamepadInput();
-
+        lastMousePosition = Input.mousePosition;
         if (PlayerController.global)
         {
             Destroy(PlayerController.global.transform.parent.gameObject); //no players in main menu
@@ -142,10 +142,13 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.anyKeyDown)
+        Vector3 currentMousePosition = Input.mousePosition;
+
+        if (currentMousePosition != lastMousePosition || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             KeyboardBool = true;
         }
+        lastMousePosition = currentMousePosition;
     }
 
 
