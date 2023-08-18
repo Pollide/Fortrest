@@ -1774,6 +1774,7 @@ public class PlayerController : MonoBehaviour
                 fraction = 663.0f / gap;
                 gapSet = true;
             }
+            Debug.Log("yoza");
             countdownBar.gameObject.SetActive(true);
             countdownBar.rectTransform.sizeDelta = new Vector2(fraction * (LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat), 10.0f);
         }

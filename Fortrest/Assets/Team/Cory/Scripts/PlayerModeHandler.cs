@@ -166,7 +166,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if (House.GetComponent<Building>().playerinRange && !Boar.global.mounted && Boar.global.closerToHouse && !PlayerController.global.playerDead && !PlayerController.global.teleporting && !PlayerController.global.respawning)
+        if (House.GetComponent<Building>().playerinRange && !Boar.global.mounted && (Boar.global.closerToHouse || (!Boar.global.closerToHouse && !Boar.global.inRange)) && !PlayerController.global.playerDead && !PlayerController.global.teleporting && !PlayerController.global.respawning)
         {
             canInteractWithHouse = true;
             PlayerController.global.needInteraction = true;
