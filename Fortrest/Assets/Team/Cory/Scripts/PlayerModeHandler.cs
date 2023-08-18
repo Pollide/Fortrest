@@ -173,7 +173,7 @@ public class PlayerModeHandler : MonoBehaviour
         else
         {
             canInteractWithHouse = false;
-            if (!Boar.global.canInteractWithBoar && !PlayerController.global.canTeleport)
+            if (!Boar.global.canInteractWithBoar && !PlayerController.global.canTeleport && PlayerController.global.playerRespawned && !PlayerController.global.bridgeInteract)
             {
                 PlayerController.global.needInteraction = false;
             }
@@ -248,8 +248,9 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void ScrollSwitchTurret()
     {
-        if (Input.mouseScrollDelta.y > 0f && playerModes == PlayerModes.BuildMode)
+        if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
+            PlayerController.global.scrollCTRL = false;
             if (buildType == BuildType.Turret)
             {
                 SwitchBuildTypeCannon();
@@ -267,8 +268,9 @@ public class PlayerModeHandler : MonoBehaviour
                 SwitchBuildTypeTurret();
             }
         }
-        if (Input.mouseScrollDelta.y < 0f && playerModes == PlayerModes.BuildMode)
+        if ((Input.mouseScrollDelta.y < 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
+            PlayerController.global.scrollCTRL = false;
             if (buildType == BuildType.Turret)
             {
                 SwitchBuildTypeScatter();
