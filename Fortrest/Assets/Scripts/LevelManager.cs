@@ -77,6 +77,8 @@ public class LevelManager : MonoBehaviour
     public List<Transform> TerrainList = new List<Transform>();
 
     public Image clockHand;
+    public Image clockSun;
+    public Image clockMoon;
 
     public bool waveEnd;
 
@@ -112,7 +114,7 @@ public class LevelManager : MonoBehaviour
     {
         global = this;
         DaylightTimer = DirectionalLightTransform.eulerAngles.x;
-        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer + 90);
 
         if (!GameManager.global)
         {
@@ -227,6 +229,16 @@ public class LevelManager : MonoBehaviour
             GetHousePosition();
         }
 
+        if (ReturnNight())
+        {
+            clockMoon.enabled = true;
+            clockSun.enabled = false;
+        }
+        else
+        {
+            clockMoon.enabled = false;
+            clockSun.enabled = true;
+        }
         LockCursor();
 
         PlayerController.global.EnemiesTextControl();
@@ -243,13 +255,13 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = ReturnNight() ? 2 : 1;
+        //daySpeed = ReturnNight() ? 2 : 1;
 
-        //daySpeed = 7.0f; // FOR TESTING
+        daySpeed = 7.0f; // FOR TESTING
 
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
-        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer);
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer + 90);
         DaylightTimer += daySpeed * Time.deltaTime;
 
         Light light = DirectionalLightTransform.GetComponent<Light>();
