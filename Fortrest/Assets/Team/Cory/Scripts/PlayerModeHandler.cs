@@ -32,7 +32,7 @@ public class PlayerModeHandler : MonoBehaviour
     public BuildType buildType;
     public GameObject[] turretPrefabs;
     GameObject turretBlueprint;
-    public Transform KeyHint;
+    Transform KeyHint;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
     public Vector2 distanceAwayFromPlayerX;
@@ -358,7 +358,9 @@ public class PlayerModeHandler : MonoBehaviour
         if (turretBlueprint)
         {
             Destroy(turretBlueprint);
-            //    Destroy(KeyHint.gameObject);
+
+            if (KeyHint)
+                Destroy(KeyHint.gameObject);
         }
 
         PlayerController.global.UpdateResourceHolder();
@@ -594,7 +596,8 @@ public class PlayerModeHandler : MonoBehaviour
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
                 turretBlueprint.tag = "BuildingBP";
 
-                //   KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
+                //NOT IN USE RIGHT NOW but basically it would hover over the building to say to place
+                //KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
 
                 TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
 
@@ -611,7 +614,9 @@ public class PlayerModeHandler : MonoBehaviour
 
             worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
             turretBlueprint.transform.position = worldPos;
-            //  KeyHint.position = worldPos + HintOffset;
+
+            if (KeyHint)
+                KeyHint.position = worldPos + HintOffset;
 
             Collider[] collidershit = Physics.OverlapSphere(new Vector3(worldPos.x, 0f, worldPos.z), nimDistanceBetweenTurrts);
 
