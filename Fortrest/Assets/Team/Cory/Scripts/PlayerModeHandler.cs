@@ -32,6 +32,7 @@ public class PlayerModeHandler : MonoBehaviour
     public BuildType buildType;
     public GameObject[] turretPrefabs;
     GameObject turretBlueprint;
+    public Transform KeyHint;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
     public Vector2 distanceAwayFromPlayerX;
@@ -558,6 +559,7 @@ public class PlayerModeHandler : MonoBehaviour
             meshRenderers[i].material = colorMaterial;
         }
     }
+    public Vector3 HintOffset;
 
     private void DragBuildingBlueprint()
     {
@@ -589,7 +591,7 @@ public class PlayerModeHandler : MonoBehaviour
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
                 turretBlueprint.tag = "BuildingBP";
 
-                GameObject key = Instantiate(KeyBlueprintHintPrefab, turretBlueprint.transform);
+                KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
 
                 TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
 
@@ -606,6 +608,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
             turretBlueprint.transform.position = worldPos;
+            KeyHint.position = worldPos + HintOffset;
 
             Collider[] collidershit = Physics.OverlapSphere(new Vector3(worldPos.x, 0f, worldPos.z), nimDistanceBetweenTurrts);
 
@@ -664,7 +667,7 @@ public class PlayerModeHandler : MonoBehaviour
         if (set)
             GameManager.global.CursorActiveBool = isActive;
 
-        Debug.Log("Cursor " + isActive);
+        //  Debug.Log("Cursor " + isActive);
 
         if (isActive && GameManager.global.KeyboardBool)
         {
