@@ -5,13 +5,17 @@ using TMPro;
 
 public class ShrineActivate : MonoBehaviour
 {
-    
+
     public Animator PropAnimator;
     public string AnimationTriggerName;
     public TMP_Text interactText;
     bool textDisplayed;
     bool notGood;
 
+    private void Start()
+    {
+        Indicator.global.AddIndicator(transform, Color.cyan, "Shrine", false);
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == Boar.global.gameObject && !Boar.global.mounted)

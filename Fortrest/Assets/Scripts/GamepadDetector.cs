@@ -40,6 +40,9 @@ public class GamepadDetector : MonoBehaviour
         if (spriteRenderer)
             spriteRenderer.sprite = KeyboardBool ? KeyboardSprite : GamepadSprite;
         else
+        {
             GetComponent<Image>().sprite = KeyboardBool ? KeyboardSprite : GamepadSprite;
+            GetComponent<Image>().preserveAspect = !KeyboardBool;
+        }
     }
 }

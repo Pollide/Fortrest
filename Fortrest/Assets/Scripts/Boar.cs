@@ -53,7 +53,7 @@ public class Boar : MonoBehaviour
     {
         text = transform.GetChild(0).gameObject;
         cc = GetComponent<CharacterController>();
-        Indicator.global.AddIndicator(transform, Color.cyan, "Mount", false, Indicator.global.MountSprite);
+        Indicator.global.AddIndicator(transform, Color.green, "Mount", false, Indicator.global.MountSprite);
         house = PlayerController.global.house;
     }
 
@@ -82,7 +82,7 @@ public class Boar : MonoBehaviour
             if (!PlayerModeHandler.global.canInteractWithHouse && !PlayerController.global.canTeleport)
             {
                 PlayerController.global.needInteraction = false;
-            }           
+            }
         }
 
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithBoar)
@@ -264,7 +264,7 @@ public class Boar : MonoBehaviour
         if (Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y < 0)
         {
             currentSpeed -= acceleration * Time.deltaTime;
-            currentSpeed = Mathf.Max(- 45.0f, currentSpeed);
+            currentSpeed = Mathf.Max(-45.0f, currentSpeed);
         }
         else if (!isMoving)
         {
@@ -303,11 +303,11 @@ public class Boar : MonoBehaviour
             isReversing = (Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y < 0) || (currentSpeed <= -0.5f && (!Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y < 0));
             if (isMoving)
             {
-                animator.speed = Mathf.Clamp(1 * ((currentSpeed / 120.0f) * 2.0f), 0.5f, 1.5f);               
+                animator.speed = Mathf.Clamp(1 * ((currentSpeed / 120.0f) * 2.0f), 0.5f, 1.5f);
             }
             if (isReversing)
             {
-                animator.speed = Mathf.Clamp(1 * ((currentSpeed / 60.0f) * 2.0f), 0.5f, 1.5f);             
+                animator.speed = Mathf.Clamp(1 * ((currentSpeed / 60.0f) * 2.0f), 0.5f, 1.5f);
             }
             animator.SetBool("Moving", isMoving);
             animator.SetBool("Reversing", isReversing);
