@@ -12,6 +12,8 @@ public class BridgeBuilder : MonoBehaviour
     public GameObject DamagedGameObject;
     public GameObject RepairedGameObject;
     public Animation FloatingTextAnimation;
+    
+
     private void Start()
     {
         if (BridgeTypeInt == 1)
@@ -41,11 +43,12 @@ public class BridgeBuilder : MonoBehaviour
     {
         PlayerController.global.OpenResourceHolder(show);
         PlayerController.global.needInteraction = show;
-
+        PlayerController.global.bridgeInteract = show;
         LevelManager.FloatingTextChange(FloatingTextAnimation.gameObject, show);
 
         if (show)
             PlayerController.global.UpdateResourceHolder(BridgeTypeInt);
+
     }
 
     private void Update()

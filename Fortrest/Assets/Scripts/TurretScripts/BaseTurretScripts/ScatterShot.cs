@@ -20,7 +20,7 @@ public class ScatterShot : MonoBehaviour
 
     private void Update()
     {
-        if (BuildingScript)
+        if (BuildingScript && BuildingScript.enabled)
         {
             // Rotate the GameObject around its up axis
             transform.Rotate(rotationSpeed * Time.deltaTime * Vector3.up);

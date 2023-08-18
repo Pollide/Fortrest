@@ -76,7 +76,7 @@ public class PlayerController : MonoBehaviour
     // Health
     private bool deathEffects = false;
     [HideInInspector] public bool playerDead = false;
-    private bool playerRespawned;
+    [HideInInspector] public bool playerRespawned;
     [HideInInspector] public bool houseDisplay;
     [HideInInspector] public float playerHealth = 0.0f;
     [HideInInspector] public float maxHealth = 100.0f;
@@ -187,7 +187,7 @@ public class PlayerController : MonoBehaviour
     private bool cancelCTRL;
     private bool turretCTRL;
     private bool healCTRL;
-    [HideInInspector] public bool interactCTRL;
+    public bool interactCTRL;
     public bool needInteraction = false;
     [HideInInspector] public bool lockingCTRL = false;
     [HideInInspector] public bool inventoryCTRL = false;
@@ -198,6 +198,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool canPressCTRL;
     [HideInInspector] public bool pauseSelectCTRL;
     [HideInInspector] public bool releasedCTRL;
+    [HideInInspector] public bool scrollCTRL;
 
     // Keyboard Controls
     private KeyCode[] keyCodes;
@@ -222,6 +223,8 @@ public class PlayerController : MonoBehaviour
     private bool cancelHit;
     [HideInInspector] public bool staggered;
     public bool ResourceHolderOpened;
+    public bool bridgeInteract;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -279,6 +282,7 @@ public class PlayerController : MonoBehaviour
 
             // Left Bumper to heal
             GameManager.global.gamepadControls.Controls.Heal.performed += context => HealController();
+            GameManager.global.gamepadControls.Controls.Heal.performed += context => SwapTurret();
 
             // Pause button to pause
             GameManager.global.gamepadControls.Controls.Pause.performed += context => PauseController();
@@ -326,6 +330,17 @@ public class PlayerController : MonoBehaviour
             if (!selectCTRL)
             {
                 selectCTRL = true;
+            }
+        }
+    }
+
+    private void SwapTurret()
+    {
+        if (PlayerModeHandler.global.inTheFortress)
+        {
+            if (!scrollCTRL)
+            {
+                scrollCTRL = true;
             }
         }
     }
@@ -433,7 +448,7 @@ public class PlayerController : MonoBehaviour
 
     private void EvadeController()
     {
-        if (!evadeCTRL && canEvade && !Boar.global.mounted && !pausedBool)
+        if (!evadeCTRL && canEvade && !Boar.global.mounted && !pausedBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
         {
             evadeCTRL = true;
         }
@@ -584,7 +599,7 @@ public class PlayerController : MonoBehaviour
         BarDisappear();
 
         if (playerDead)
-        {
+        {           
             Death();
         }
 
@@ -601,6 +616,10 @@ public class PlayerController : MonoBehaviour
         if (playerHealth <= 0)
         {
             playerCanMove = false;
+            if (Boar.global.mounted)
+            {
+                Boar.global.Mount();               
+            }
             int random = Random.Range(1, 3);
             if (random == 1)
             {
@@ -860,7 +879,7 @@ public class PlayerController : MonoBehaviour
         }
         interactCTRL = false;
         canTeleport = false;
-        if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse)
+        if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && playerRespawned && !bridgeInteract)
         {
             needInteraction = false;
         }
@@ -978,6 +997,7 @@ public class PlayerController : MonoBehaviour
                     Pause.global.ButtonHolder.GetChild(1).gameObject.SetActive(false);
                     return;
                 }
+                
                 PauseCanvasGameObject.SetActive(pause);
                 if (pause)
                 {
@@ -1247,7 +1267,10 @@ public class PlayerController : MonoBehaviour
             moveDirection.z = 0f;
         }
 
-        playerCC.Move(moveDirection * Time.deltaTime);
+        if (!playerDead)
+        {
+            playerCC.Move(moveDirection * Time.deltaTime);
+        }       
     }
 
     private void ApplyGravity()
@@ -1624,10 +1647,11 @@ public class PlayerController : MonoBehaviour
     public void Death()
     {
         if (!deathEffects)
-        {
+        {    
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
             TeleportPlayer(house.transform.position);
+            redBorders.gameObject.SetActive(false);
             playerCC.enabled = false;
             bodyShape.SetActive(false);
             playerRespawned = false;
@@ -1659,7 +1683,7 @@ public class PlayerController : MonoBehaviour
                     respawnTimer = 0.0f;
                     LevelManager.FloatingTextChange(respawnText, false);
                     textAnimated = false;
-                    if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport)
+                    if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport && !bridgeInteract)
                     {
                         needInteraction = false;
                     }
@@ -1744,7 +1768,7 @@ public class PlayerController : MonoBehaviour
             timers[randomSlash] = 0.0f;
             displaySlash = false;
         }
-        if (playerHealth <= 20.0f)
+        if (playerHealth <= 20.0f && !playerDead)
         {
             redBorders.gameObject.SetActive(true);
             if (!animationPlayed)
