@@ -730,7 +730,10 @@ public class PlayerController : MonoBehaviour
                 turretSpawned = false;
 
                 if (miniTurret)
+                {
+                    miniTurret.GetComponent<TurretShooting>().enabled = false; //stops it shooting
                     Destroy(miniTurret, GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn", false).length);
+                }
             }
         }
         else

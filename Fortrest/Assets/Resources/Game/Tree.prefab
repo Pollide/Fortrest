@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &5499070552906641385
+--- !u!1 &5977055529968349208
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8086184434739641863}
+  - component: {fileID: 6046952067857373537}
   m_Layer: 9
   m_Name: Model
   m_TagString: Untagged
@@ -16,13 +16,13 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8086184434739641863
+--- !u!4 &6046952067857373537
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5499070552906641385}
+  m_GameObject: {fileID: 5977055529968349208}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 8707849239115483157}
   - component: {fileID: -6799876280890107172}
   - component: {fileID: -1345251657013764140}
-  - component: {fileID: 50857152037588098}
+  - component: {fileID: 6260000125674593710}
   m_Layer: 9
   m_Name: Tree
   m_TagString: Resource
@@ -64,7 +64,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8086184434739641863}
+  - {fileID: 6046952067857373537}
   - {fileID: 7161806266648159540}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -83,9 +83,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NaturalBool: 1
   DestroyedBool: 0
-  resourceObject: 2
+  resourceObject: 6
   health: 0
-  maxHealth: 4
+  maxHealth: 5
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
@@ -124,7 +124,7 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1.0903306
   m_Center: {x: 0.0927262, y: 0.6220403, z: -0.12395942}
---- !u!208 &50857152037588098
+--- !u!208 &6260000125674593710
 NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -134,7 +134,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 0.5, y: 1, z: 0.5}
+  m_Extents: {x: 1, y: 1, z: 1}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
@@ -302,22 +302,33 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 8086184434739641863}
+    m_TransformParent: {fileID: 6046952067857373537}
     m_Modifications:
-    - target: {fileID: 2201514103370431727, guid: edbc04a15628aaa4dbc8ece363929e4f,
+    - target: {fileID: 474675439065559326, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
-      propertyPath: m_Height
-      value: 1.1084826
+      propertyPath: m_Materials.Array.size
+      value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 2201514103370431727, guid: edbc04a15628aaa4dbc8ece363929e4f,
+    - target: {fileID: 474675439065559326, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
-      propertyPath: m_Radius
-      value: 0.09000001
-      objectReference: {fileID: 0}
-    - target: {fileID: 2201514103370431727, guid: edbc04a15628aaa4dbc8ece363929e4f,
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 5e94c36828ed80941b27860a0a5e325e, type: 2}
+    - target: {fileID: 474675439065559326, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
-      propertyPath: m_Center.y
-      value: 0.4711948
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: f8a9ac0ad6eb75c46a33536a7ea846f2, type: 2}
+    - target: {fileID: 5020325937464689298, guid: edbc04a15628aaa4dbc8ece363929e4f,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -5913333090866348535, guid: ff29c8f1c565d2148ad305382b884d29,
+        type: 3}
+    - target: {fileID: 5599316802004647299, guid: edbc04a15628aaa4dbc8ece363929e4f,
+        type: 3}
+      propertyPath: m_Name
+      value: SM_Willow
       objectReference: {fileID: 0}
     - target: {fileID: 5599316802004647299, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
@@ -382,7 +393,7 @@ PrefabInstance:
     - target: {fileID: 8851073699574906483, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_Name
-      value: Pine Tree
+      value: Willow
       objectReference: {fileID: 0}
     - target: {fileID: 8851073699574906483, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}

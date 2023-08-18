@@ -228,7 +228,7 @@ public class GenerateList
             }
         }
 
-        return mTerrainData.terrainLayers[ret].diffuseTexture;
+        return mTerrainData.terrainLayers.Length > ret ? mTerrainData.terrainLayers[ret].diffuseTexture : null;
     }
 
     ///<summary>

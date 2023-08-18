@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour
     public SFXManager SoundManager; //manages all sound effects
     public SFXManager MusicManager; //manages all music
 
+    //[HideInInspector]
+    public bool KeyboardBool = true;
     // Music
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
@@ -85,6 +87,8 @@ public class GameManager : MonoBehaviour
         //checks if itself exists, as they can only be one
         gamepadControls = new GamepadControls();
         gamepadControls.Controls.Enable();
+        gamepadControls.Controls.Move.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Interact.performed += ctx => OnGamepadInput();
 
         if (PlayerController.global)
         {
@@ -134,6 +138,20 @@ public class GameManager : MonoBehaviour
             NextScene(quickLoadInt, quickLoadInt == 0); //go to that next scene
         }
 
+    }
+
+    private void Update()
+    {
+        if (Input.anyKeyDown)
+        {
+            KeyboardBool = true;
+        }
+    }
+
+
+    private void OnGamepadInput()
+    {
+        KeyboardBool = false;
     }
 
     /*
