@@ -111,12 +111,19 @@ public class Boar : MonoBehaviour
                 Lerping(100f, 300f, ref deceleration, 20 / 9f); // Deceleration
                 currentSpeed -= deceleration * Time.deltaTime;
                 currentSpeed = Mathf.Max(currentSpeed, 0.0f);
-                animator.speed = Mathf.Clamp(1 * (currentSpeed * 2), 0.5f, 1.5f);
+                animator.speed = Mathf.Clamp(1 * ((currentSpeed / 120.0f) * 2.0f), 0.5f, 1.5f);
                 if (currentSpeed < 0.15f)
                 {
                     animator.SetBool("Moving", false);
                 }
-                if (currentSpeed > 0.15f)
+            }
+            if (currentSpeed < 0)
+            {
+                Lerping(100f, 300f, ref deceleration, 20 / 9f); // Deceleration
+                currentSpeed += deceleration * Time.deltaTime;
+                currentSpeed = Mathf.Min(currentSpeed, 0.0f);
+                animator.speed = Mathf.Clamp(1 * ((currentSpeed / 60.0f) * 2.0f), 0.5f, 1.5f);
+                if (currentSpeed > -0.15f)
                 {
                     animator.SetBool("Reversing", false);
                 }
@@ -239,7 +246,7 @@ public class Boar : MonoBehaviour
             currentSpeed += acceleration * Time.deltaTime;
             currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
         }
-        else if (!Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y !< 0)
+        else if (!isReversing)
         {
             currentSpeed -= deceleration * Time.deltaTime;
             currentSpeed = Mathf.Max(currentSpeed, 0.0f);
@@ -258,6 +265,11 @@ public class Boar : MonoBehaviour
         {
             currentSpeed -= acceleration * Time.deltaTime;
             currentSpeed = Mathf.Max(- 45.0f, currentSpeed);
+        }
+        else if (!isMoving)
+        {
+            currentSpeed += deceleration * Time.deltaTime;
+            currentSpeed = Mathf.Min(currentSpeed, 0.0f);
         }
     }
 
