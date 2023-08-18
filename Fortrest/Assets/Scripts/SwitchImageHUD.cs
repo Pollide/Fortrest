@@ -21,14 +21,7 @@ public class SwitchImageHUD : MonoBehaviour
 
     private void Update()
     {
-        if (playerMode.playerModes == PlayerModes.BuildMode)
-        {
-            turretSubHolder.SetActive(true);
-        }
-        if (playerMode.playerModes != PlayerModes.BuildMode)
-        {
-            turretSubHolder.SetActive(false);
-        }
+        turretSubHolder.SetActive(playerMode.playerModes == PlayerModes.BuildMode);
 
         if (playerMode.buildType == BuildType.Turret)
         {

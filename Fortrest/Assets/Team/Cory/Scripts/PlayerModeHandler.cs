@@ -53,7 +53,7 @@ public class PlayerModeHandler : MonoBehaviour
     public bool canInteractWithHouse;
 
     public float nimDistanceBetweenTurrts = 3;
-    
+
     bool runOnce;
     private void Awake()
     {
@@ -69,8 +69,6 @@ public class PlayerModeHandler : MonoBehaviour
             global = this;
         }
     }
-
-
 
     private void Update()
     {
@@ -177,13 +175,13 @@ public class PlayerModeHandler : MonoBehaviour
             if (!Boar.global.canInteractWithBoar && !PlayerController.global.canTeleport)
             {
                 PlayerController.global.needInteraction = false;
-            }                
+            }
         }
 
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
-            if (playerModes != PlayerModes.BuildMode && playerModes != PlayerModes.RepairMode)
+            if (!PlayerModeHandler.global.inTheFortress)
             {
                 lastMode = playerModes;
                 entryPosition = PlayerController.global.transform.position;
@@ -598,6 +596,14 @@ public class PlayerModeHandler : MonoBehaviour
                     turretShooting.enabled = false;
                     Destroy(turretShooting);
                 }
+
+                ScatterShot scatterShot = turretBlueprint.GetComponent<ScatterShot>();
+
+                if (scatterShot)
+                {
+                    scatterShot.enabled = false;
+                }
+
             }
 
             Vector3 worldPos = hitData.point;
@@ -657,7 +663,6 @@ public class PlayerModeHandler : MonoBehaviour
 
         return false;
     }
-
 
     public static void SetMouseActive(bool isActive)
     {

@@ -662,7 +662,7 @@ public class PlayerController : MonoBehaviour
 
     private void Resting()
     {
-        if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode)
+        if (PlayerModeHandler.global.inTheFortress)
         {
             if (playerHealth < maxHealth)
             {
@@ -961,7 +961,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!mapBool)
         {
-            if (!pausedBool && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+            if (!pausedBool && PlayerModeHandler.global.inTheFortress)
             {
                 PlayerController.global.interactCTRL = true;
             }
@@ -997,7 +997,7 @@ public class PlayerController : MonoBehaviour
 
     public void MapVoid(bool map)
     {
-        if (!pausedBool && PlayerModeHandler.global.playerModes != PlayerModes.BuildMode)
+        if (!pausedBool && !PlayerModeHandler.global.inTheFortress)
         {
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
             GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);

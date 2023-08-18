@@ -169,8 +169,15 @@ public class Indicator : MonoBehaviour
         global = this;
     }
 
+
+
     private void FixedUpdate()
     {
+        if (!PlayerModeHandler.global)
+        {
+            return;
+        }
+        GetComponent<Canvas>().enabled = !PlayerModeHandler.global.inTheFortress;
         for (int i = 0; i < IndicatorList.Count; i++)
         {
             if (!IndicatorList[i].ActiveTarget)

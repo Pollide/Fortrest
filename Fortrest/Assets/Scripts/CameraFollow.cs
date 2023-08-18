@@ -45,7 +45,7 @@ public class CameraFollow : MonoBehaviour
 
         if (lockCamera)
         {
-            if (PlayerModeHandler.global.playerModes != PlayerModes.BuildMode && PlayerModeHandler.global.playerModes != PlayerModes.RepairMode && PlayerModeHandler.global.playerModes != PlayerModes.UpgradeMenu)
+            if (!PlayerModeHandler.global.inTheFortress)
             {
 
                 FocusOnTarget(false, PlayerController.global.transform.position, initialRotation, PlayerController.global.moveDirection);

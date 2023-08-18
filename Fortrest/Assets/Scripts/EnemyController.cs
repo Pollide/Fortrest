@@ -179,7 +179,7 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 35.0f || (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode))
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 35.0f || PlayerModeHandler.global.inTheFortress)
                 {
                     bestTarget = null;
                 }
@@ -188,7 +188,7 @@ public class EnemyController : MonoBehaviour
         // Spider goes for the player if they are not mounted, goblin goes for the player if it gets attacked by them
         else if (currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.goblin)
         {
-            if (Boar.global.mounted == true || PlayerModeHandler.global.playerModes == PlayerModes.BuildMode || PlayerModeHandler.global.playerModes == PlayerModes.RepairMode)
+            if (Boar.global.mounted == true || PlayerModeHandler.global.inTheFortress)
             {
                 bestTarget = null;
                 chasing = false;
