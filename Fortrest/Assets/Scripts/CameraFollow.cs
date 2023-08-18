@@ -62,20 +62,16 @@ public class CameraFollow : MonoBehaviour
         return new Vector3(PlayerController.global.transform.position.x + buildOffsetPosX, PlayerController.global.transform.position.y, PlayerController.global.transform.position.z + buildOffsetPosZ);
     }
 
-    public void FocusOnTarget(bool build, Vector3 targetPosition, Vector3 offsetRotation, Vector3 forward)
+    public void FocusOnTarget(bool build, Vector3 targetPosition, Vector3 offsetRotation, Vector3 direction)
     {
         GetComponent<Camera>().orthographicSize = build ? buildOffsetOrthoSize : initialOrthographicSize;
+        cameraDistance = Vector3.Distance(targetPosition, transform.position);
 
-        // Calculate the new target position that is 'lagDistance' units ahead of the player.
-        Vector3 laggedTargetPosition = targetPosition + forward;
-
-        // Calculate the smooth time based on the camera distance.
-        cameraDistance = Vector3.Distance(laggedTargetPosition, transform.position);
         float i = cameraDistance / (max * 50);
         smoothTime = Mathf.Lerp(minSmooth, maxSmooth, i);
 
-        // Interpolate the camera's position towards the lagged target position.
-        transform.position = Vector3.SmoothDamp(transform.position, laggedTargetPosition, ref currentVelocity, smoothTime);
+
+        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
 
         if (transform.eulerAngles != offsetRotation)
         {
