@@ -148,6 +148,12 @@ public class Building : MonoBehaviour
             {
                 HealthAnimation();
             }
+
+            if (health <= 0)
+            {
+
+                DestroyBuilding();
+            }
         }
     }
 
@@ -160,11 +166,6 @@ public class Building : MonoBehaviour
             HealthAnimation();
         }
 
-    }
-
-    public float GetHealth()
-    {
-        return health;
     }
 
     public void DestroyBuilding()
@@ -209,8 +210,13 @@ public class Building : MonoBehaviour
 
                 Destroy(gameObject);
             }
+            else
+            {
+                Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
 
-            Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
+                if (PlayerController.global.currentResource == this)
+                    GiveResources();
+            }
         }
         PlayerController.global.currentResource = null;
     }

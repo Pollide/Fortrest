@@ -588,15 +588,10 @@ public class EnemyController : MonoBehaviour
                     building = building.transform.parent.GetComponent<Building>();
                 }
 
-                if (building.GetHealth() > 0)
-                {
-                    building.healthBarImage.fillAmount = Mathf.Clamp(building.GetHealth() / building.maxHealth, 0, 1f);
-                    building.TakeDamage(1f);
-                }
-                else
-                {
-                    building.DestroyBuilding();
-                }
+
+                building.TakeDamage(1f);
+
+
             }
         }
     }
