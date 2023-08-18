@@ -14,14 +14,15 @@ public class Boar : MonoBehaviour
     private float maxSpeed = 90f;
     private float acceleration = 0f;
     private float deceleration = 0.0f;
-    private float currentSpeed;
+    public float currentSpeed;
     private float currentTurn;
     private float turnAnglePerSec = 0.0f;
     private float verticalVelocity;
     private float gravity = -20.0f;
 
     [HideInInspector] public bool canMove = true;
-    [HideInInspector] public bool isMoving;
+    private bool isMoving;
+    private bool isReversing;
 
     public Animator animator;
     [HideInInspector] public CharacterController cc;
@@ -72,14 +73,16 @@ public class Boar : MonoBehaviour
 
         if (!midAir && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && (mounted || (!mounted && !closerToHouse)) && !PlayerController.global.teleporting)
         {
-            Debug.Log("bruh");
             canInteractWithBoar = true;
             PlayerController.global.needInteraction = true;
         }
         else
         {
             canInteractWithBoar = false;
-            PlayerController.global.needInteraction = false;
+            if (!PlayerModeHandler.global.canInteractWithHouse && !PlayerController.global.canTeleport)
+            {
+                PlayerController.global.needInteraction = false;
+            }           
         }
 
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithBoar)
@@ -113,12 +116,16 @@ public class Boar : MonoBehaviour
                 {
                     animator.SetBool("Moving", false);
                 }
+                if (currentSpeed > 0.15f)
+                {
+                    animator.SetBool("Reversing", false);
+                }
             }
         }
 
         if (canMove)
         {
-            if (currentSpeed > 0.0f)
+            if (currentSpeed > 0.0f || currentSpeed < 0.0f)
             {
                 transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0.0f, currentTurn, 0.0f));
             }
@@ -232,7 +239,7 @@ public class Boar : MonoBehaviour
             currentSpeed += acceleration * Time.deltaTime;
             currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
         }
-        else
+        else if (!Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y !< 0)
         {
             currentSpeed -= deceleration * Time.deltaTime;
             currentSpeed = Mathf.Max(currentSpeed, 0.0f);
@@ -245,6 +252,12 @@ public class Boar : MonoBehaviour
         if (Input.GetKey(KeyCode.D) || PlayerController.global.moveCTRL.x > 0.35f)
         {
             currentTurn = turnAnglePerSec * Time.deltaTime;
+        }
+
+        if (Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y < 0)
+        {
+            currentSpeed -= acceleration * Time.deltaTime;
+            currentSpeed = Mathf.Max(- 45.0f, currentSpeed);
         }
     }
 
@@ -275,8 +288,17 @@ public class Boar : MonoBehaviour
         if (canMove)
         {
             isMoving = (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0) || (currentSpeed >= 0.5f && (!Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0));
-            animator.speed = Mathf.Clamp(1 * ((currentSpeed / 120.0f) * 2.0f), 0.5f, 1.5f);
+            isReversing = (Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y < 0) || (currentSpeed <= -0.5f && (!Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y < 0));
+            if (isMoving)
+            {
+                animator.speed = Mathf.Clamp(1 * ((currentSpeed / 120.0f) * 2.0f), 0.5f, 1.5f);               
+            }
+            if (isReversing)
+            {
+                animator.speed = Mathf.Clamp(1 * ((currentSpeed / 60.0f) * 2.0f), 0.5f, 1.5f);             
+            }
             animator.SetBool("Moving", isMoving);
+            animator.SetBool("Reversing", isReversing);
             if (isMoving)
             {
                 if (bobbing > -5f && !reverse)

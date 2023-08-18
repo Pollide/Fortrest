@@ -171,7 +171,10 @@ public class PlayerModeHandler : MonoBehaviour
         else
         {
             canInteractWithHouse = false;
-            PlayerController.global.needInteraction = false;
+            if (!Boar.global.canInteractWithBoar && !PlayerController.global.canTeleport)
+            {
+                PlayerController.global.needInteraction = false;
+            }                
         }
 
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)

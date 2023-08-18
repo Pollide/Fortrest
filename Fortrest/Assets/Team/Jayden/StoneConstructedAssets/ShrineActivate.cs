@@ -63,7 +63,10 @@ public class ShrineActivate : MonoBehaviour
                 textDisplayed = false;
             }
             PlayerController.global.canTeleport = false;
-            PlayerController.global.needInteraction = false;
+            if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse)
+            {
+                PlayerController.global.needInteraction = false;
+            }
         }
     }
 
