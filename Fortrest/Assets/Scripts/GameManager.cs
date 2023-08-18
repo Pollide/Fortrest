@@ -454,6 +454,7 @@ public class GameManager : MonoBehaviour
         {
             Pref("Has Started", 1, false);
         }
+        Debug.Log(load);
         DataPositionVoid("Player", PlayerController.global.transform, load);
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
