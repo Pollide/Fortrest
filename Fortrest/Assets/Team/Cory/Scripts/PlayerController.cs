@@ -422,7 +422,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!interactCTRL && (needInteraction))
         {
-            Debug.Log(1);
             interactCTRL = true;
         }
     }

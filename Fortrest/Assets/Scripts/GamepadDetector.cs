@@ -18,7 +18,7 @@ public class GamepadDetector : MonoBehaviour
 
     private void Update()
     {
-        if (KeyboardBool != GameManager.global.KeyboardBool)
+        if (GameManager.global && KeyboardBool != GameManager.global.KeyboardBool)
         {
             KeyboardBool = GameManager.global.KeyboardBool;
 
