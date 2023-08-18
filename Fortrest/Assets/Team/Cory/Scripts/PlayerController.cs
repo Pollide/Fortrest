@@ -420,8 +420,10 @@ public class PlayerController : MonoBehaviour
 
     private void InteractController()
     {
+
         if (!interactCTRL && needInteraction)
         {
+            Debug.Log(1);
             interactCTRL = true;
         }
     }
