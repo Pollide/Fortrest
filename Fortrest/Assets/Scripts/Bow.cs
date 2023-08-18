@@ -7,6 +7,7 @@ public class Bow : MonoBehaviour
     public static Bow global;
     public GameObject arrowObject;
     private float fireForce = 40.0f;
+    public GameObject bowMeshObject;
 
     private void Start()
     {
@@ -15,7 +16,7 @@ public class Bow : MonoBehaviour
 
     public void Shoot()
     {
-        GameObject arrow = Instantiate(arrowObject, transform.position, Quaternion.Euler(90f, transform.eulerAngles.y, 0f));
-        arrow.GetComponent<Rigidbody>().AddForce(transform.forward * fireForce, ForceMode.Impulse);
+        GameObject arrow = Instantiate(arrowObject, bowMeshObject.transform.position, Quaternion.Euler(90f, transform.eulerAngles.y - 90f, 0f));
+        arrow.GetComponent<Rigidbody>().AddForce(-transform.right * fireForce, ForceMode.Impulse);
     }
 }
