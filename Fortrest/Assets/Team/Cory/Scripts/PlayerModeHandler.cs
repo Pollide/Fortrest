@@ -52,6 +52,8 @@ public class PlayerModeHandler : MonoBehaviour
 
     public bool canInteractWithHouse;
 
+    public float nimDistanceBetweenTurrts = 3;
+
     bool runOnce;
     private void Awake()
     {
@@ -475,7 +477,7 @@ public class PlayerModeHandler : MonoBehaviour
 
                 worldPos = new Vector3(gridPos.x, 0.0f, gridPos.z);
 
-                Collider[] collidershit = Physics.OverlapSphere(worldPos, 1.5f);
+                Collider[] collidershit = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts);
 
                 if (IsInRange(worldPos) && !ReturnColiders(collidershit))
                 {
@@ -597,7 +599,7 @@ public class PlayerModeHandler : MonoBehaviour
             worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
             turretBlueprint.transform.position = worldPos;
 
-            Collider[] collidershit = Physics.OverlapSphere(new Vector3(worldPos.x, 0.36f, worldPos.z), 1.5f);
+            Collider[] collidershit = Physics.OverlapSphere(new Vector3(worldPos.x, 0f, worldPos.z), nimDistanceBetweenTurrts);
 
             if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !ReturnColiders(collidershit))
             {
@@ -609,6 +611,28 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
     }
+
+    //// Check building distance
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.red;
+
+    //    Vector3 house = House.transform.position;
+
+    //    float top = house.x + distanceAwayFromPlayerX.x;
+    //    float bot = house.x - distanceAwayFromPlayerX.y;
+    //    float right = house.z + distanceAwayFromPlayerZ.x;
+    //    float left = house.z - distanceAwayFromPlayerZ.y;
+
+    //    Vector3 houseX1 = new(top, house.y, house.z);
+    //    Vector3 houseX2 = new(bot, house.y, house.z);
+    //    Vector3 houseZ1 = new(house.x, house.y, right);
+    //    Vector3 houseZ2 = new(house.x, house.y, left);
+    //    Gizmos.DrawLine(house, houseX1);
+    //    Gizmos.DrawLine(house, houseX2);
+    //    Gizmos.DrawLine(house, houseZ1);
+    //    Gizmos.DrawLine(house, houseZ2);
+    //}
 
     public bool IsInRange(Vector3 currentTarget)
     {
