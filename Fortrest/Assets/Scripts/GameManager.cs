@@ -145,17 +145,14 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         Vector3 currentMousePosition = Input.mousePosition;
-        bool previous = KeyboardBool;
+        
         if (currentMousePosition != lastMousePosition || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             KeyboardBool = true;
         }
         lastMousePosition = currentMousePosition;
 
-        if(previous != KeyboardBool)
-        {
-            PlayerModeHandler.SetMouseActive(KeyboardBool && CursorActiveBool, false);
-        }
+        PlayerModeHandler.SetMouseActive(KeyboardBool && CursorActiveBool, false);
     }
 
 
