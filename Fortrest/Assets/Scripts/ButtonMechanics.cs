@@ -25,6 +25,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     [Tooltip("quits the exe, does not work in editor")]
     public bool ResumeBool;
     public bool RestartBool;
+    public bool BeginingBool;
     public bool MenuBool;
     [Space(10)] //creates a gap in the inspector
 
@@ -129,6 +130,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         if (ResumeBool)
         {
             PlayerController.global.PauseVoid(false);
+        }
+
+        if(BeginingBool)
+        {
+
         }
 
         if (MaxResourcesBool)

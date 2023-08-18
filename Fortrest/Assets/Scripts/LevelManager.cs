@@ -258,10 +258,11 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        //daySpeed = ReturnNight() ? 2 : 1;
+        daySpeed = ReturnNight() ? 2 : 1;
 
-        daySpeed = 7.0f; // FOR TESTING
-
+#if UNITY_EDITOR
+        // daySpeed = 7.0f; // FOR TESTING
+#endif
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
         clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer + 90);
