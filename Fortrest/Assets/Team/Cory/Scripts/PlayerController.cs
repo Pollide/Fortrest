@@ -188,7 +188,7 @@ public class PlayerController : MonoBehaviour
     private bool turretCTRL;
     private bool healCTRL;
     [HideInInspector] public bool interactCTRL;
-    [HideInInspector] public bool needInteraction = false;
+    public bool needInteraction = false;
     [HideInInspector] public bool lockingCTRL = false;
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
@@ -420,8 +420,9 @@ public class PlayerController : MonoBehaviour
 
     private void InteractController()
     {
-        if (!interactCTRL && needInteraction)
+        if (!interactCTRL && (needInteraction))
         {
+            Debug.Log(1);
             interactCTRL = true;
         }
     }
@@ -855,7 +856,10 @@ public class PlayerController : MonoBehaviour
         }
         interactCTRL = false;
         canTeleport = false;
-        needInteraction = false;
+        if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse)
+        {
+            needInteraction = false;
+        }       
         teleporting = true;
         StartCoroutine(RevertBool(true));
 
@@ -1650,7 +1654,10 @@ public class PlayerController : MonoBehaviour
                     respawnTimer = 0.0f;
                     LevelManager.FloatingTextChange(respawnText, false);
                     textAnimated = false;
-                    needInteraction = false;
+                    if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport)
+                    {
+                        needInteraction = false;
+                    }                       
                     interactCTRL = false;
                     houseDisplay = true; // Used to reanimate house and make text appear once player respawns
                     respawning = true;
