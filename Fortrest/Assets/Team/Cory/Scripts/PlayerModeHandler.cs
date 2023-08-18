@@ -298,7 +298,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void RepairMode()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(cursorPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hitData, 1000))
         {
@@ -468,7 +468,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             PlayerController.global.selectCTRL = false;
 
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray ray = Camera.main.ScreenPointToRay(cursorPosition);
 
             if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
             {
@@ -557,7 +557,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void DragBuildingBlueprint()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(cursorPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer))
         {

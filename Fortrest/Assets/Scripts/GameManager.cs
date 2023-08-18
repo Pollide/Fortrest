@@ -465,6 +465,9 @@ public class GameManager : MonoBehaviour
         LevelManager.global.enemyThreshold = (int)Pref("Goblin Threshold", LevelManager.global.enemyThreshold, load);
         int itemSize = (int)Pref("Item Size", LevelManager.global.InventoryItemList.Count, load);
 
+        LevelManager.global.runOnce = Pref("Run Once", LevelManager.global.runOnce ? 1 : 0, load) == 1;
+        LevelManager.global.messageDisplayed = Pref("Message Display", LevelManager.global.messageDisplayed ? 1 : 0, load) == 1;
+
         for (int i = 0; i < itemSize; i++)
         {
             string original = load ? "" : LevelManager.global.InventoryItemList[i].GetComponent<InventoryItem>().resourceObject.ToString();
