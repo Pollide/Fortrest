@@ -505,14 +505,14 @@ public class EnemyController : MonoBehaviour
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
-            agent.speed = 7f;
+            agent.speed = 8.5f;
             agent.acceleration = 40.0f;
-            agent.angularSpeed = 100.0f;
-            maxHealth = 5.0f;
+            agent.angularSpeed = 130.0f;
+            maxHealth = 6.0f;
             attackTimerMax = 2.75f;
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
-            enemyDamage = 7.5f;
+            enemyDamage = 8.0f;
             knockBackScript.strength = 20.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.ogre)
