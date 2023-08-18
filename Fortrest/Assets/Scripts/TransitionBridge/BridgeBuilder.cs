@@ -11,6 +11,7 @@ public class BridgeBuilder : MonoBehaviour
     bool triggered;
     public GameObject DamagedGameObject;
     public GameObject RepairedGameObject;
+    
 
     private void Start()
     {
@@ -61,6 +62,7 @@ public class BridgeBuilder : MonoBehaviour
     {
         PlayerController.global.OpenResourceHolder(show);
         PlayerController.global.needInteraction = show;
+        PlayerController.global.bridgeInteract = show;
     }
 
     private void Update()

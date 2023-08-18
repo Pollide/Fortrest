@@ -71,7 +71,7 @@ public class Boar : MonoBehaviour
 
         DisplayText();
 
-        if (!midAir && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && (mounted || (!mounted && !closerToHouse)) && !PlayerController.global.teleporting)
+        if (!midAir && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && (mounted || (!mounted && !closerToHouse)) && !PlayerController.global.teleporting && !PlayerController.global.bridgeInteract)
         {
             canInteractWithBoar = true;
             PlayerController.global.needInteraction = true;
@@ -79,7 +79,7 @@ public class Boar : MonoBehaviour
         else
         {
             canInteractWithBoar = false;
-            if (!PlayerModeHandler.global.canInteractWithHouse && !PlayerController.global.canTeleport)
+            if (!PlayerModeHandler.global.canInteractWithHouse && !PlayerController.global.canTeleport && PlayerController.global.playerRespawned && !PlayerController.global.bridgeInteract)
             {
                 PlayerController.global.needInteraction = false;
             }
@@ -188,7 +188,7 @@ public class Boar : MonoBehaviour
         }
     }
 
-    void Mount()
+    public void Mount()
     {
         mounted = !mounted;
         PlayerController.global.interactCTRL = false;
