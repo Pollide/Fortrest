@@ -262,6 +262,7 @@ public class PlayerController : MonoBehaviour
             // B to evade
             GameManager.global.gamepadControls.Controls.Evade.performed += context => EvadeController();
             GameManager.global.gamepadControls.Controls.Evade.performed += context => PauseVoid(false);
+
             // Right trigger for gathering
             GameManager.global.gamepadControls.Controls.Gathering.performed += context => GatheringController(true);
             GameManager.global.gamepadControls.Controls.Gathering.canceled += context => GatheringController(false);
@@ -428,7 +429,7 @@ public class PlayerController : MonoBehaviour
 
     private void EvadeController()
     {
-        if (!evadeCTRL && canEvade && !Boar.global.mounted)
+        if (!evadeCTRL && canEvade && !Boar.global.mounted && !pausedBool)
         {
             evadeCTRL = true;
         }
@@ -963,7 +964,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!pausedBool && PlayerModeHandler.global.inTheFortress)
             {
-                PlayerController.global.interactCTRL = true;
+                interactCTRL = true;
             }
             else if (pause != pausedBool)
             {
