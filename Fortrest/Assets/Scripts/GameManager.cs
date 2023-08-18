@@ -22,8 +22,10 @@ public class GameManager : MonoBehaviour
     public SFXManager SoundManager; //manages all sound effects
     public SFXManager MusicManager; //manages all music
 
-    //[HideInInspector]
+    [HideInInspector]
     public bool KeyboardBool = true;
+    [HideInInspector]
+    public bool CursorActiveBool;
     // Music
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
@@ -143,12 +145,17 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         Vector3 currentMousePosition = Input.mousePosition;
-
+        bool previous = KeyboardBool;
         if (currentMousePosition != lastMousePosition || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             KeyboardBool = true;
         }
         lastMousePosition = currentMousePosition;
+
+        if(previous != KeyboardBool)
+        {
+            PlayerModeHandler.SetMouseActive(KeyboardBool && CursorActiveBool, false);
+        }
     }
 
 
@@ -454,8 +461,10 @@ public class GameManager : MonoBehaviour
         {
             Pref("Has Started", 1, false);
         }
-        Debug.Log(load);
+
         DataPositionVoid("Player", PlayerController.global.transform, load);
+        DataPositionVoid("Mount", Boar.global.transform, load);
+
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
 

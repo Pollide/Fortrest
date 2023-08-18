@@ -597,13 +597,6 @@ public class PlayerModeHandler : MonoBehaviour
                     Destroy(turretShooting);
                 }
 
-                ScatterShot scatterShot = turretBlueprint.GetComponent<ScatterShot>();
-
-                if (scatterShot)
-                {
-                    scatterShot.enabled = false;
-                }
-
             }
 
             Vector3 worldPos = hitData.point;
@@ -664,9 +657,10 @@ public class PlayerModeHandler : MonoBehaviour
         return false;
     }
 
-    public static void SetMouseActive(bool isActive)
+    public static void SetMouseActive(bool isActive, bool set = true)
     {
-
+        if (set)
+            GameManager.global.CursorActiveBool = isActive;
 
         if (isActive && GameManager.global.KeyboardBool)
         {
@@ -674,6 +668,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             //  Debug.Log(1);
             Cursor.visible = true;
+
             Cursor.lockState = CursorLockMode.None;
 
         }

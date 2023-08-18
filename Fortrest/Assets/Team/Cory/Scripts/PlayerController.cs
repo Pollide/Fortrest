@@ -968,7 +968,12 @@ public class PlayerController : MonoBehaviour
             }
             else if (pause != pausedBool)
             {
-
+                if (!pause && Pause.global.ButtonHolder.GetChild(1).gameObject.activeSelf)
+                {
+                    Pause.global.ButtonHolder.GetChild(0).gameObject.SetActive(true);
+                    Pause.global.ButtonHolder.GetChild(1).gameObject.SetActive(false);
+                    return;
+                }
                 PauseCanvasGameObject.SetActive(pause);
                 if (pause)
                 {
@@ -1093,9 +1098,8 @@ public class PlayerController : MonoBehaviour
 
             if (PlayerModeHandler.global.buildType == BuildType.Scatter)
             {
-                stoneCostList[1].ResourceCost = -5;
                 woodCostList[2].ResourceCost = -10;
-                stoneCostList[2].ResourceCost = -2;
+                stoneCostList[2].ResourceCost = -10;
             }
         }
 
@@ -1411,7 +1415,10 @@ public class PlayerController : MonoBehaviour
         turretTimer = 0;
         turretSpawned = true;
 
-        miniTurret = Instantiate(PlayerModeHandler.global.turretPrefabs[0], transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f)), transform.rotation);
+        Vector3 spawn = transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f));
+        spawn.y = 0;
+
+        miniTurret = Instantiate(PlayerModeHandler.global.turretPrefabs[0], spawn, transform.rotation);
         miniTurret.transform.localScale = new Vector3(0.3f, 1, 0.3f);
         miniTurret.GetComponent<TurretShooting>().MiniTurret = true;
         miniTurret.GetComponent<TurretShooting>().CurrentLevel = miniTurret.GetComponent<TurretShooting>().ModelHolder.childCount - 1;
