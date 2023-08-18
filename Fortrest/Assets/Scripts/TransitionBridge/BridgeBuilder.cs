@@ -12,7 +12,7 @@ public class BridgeBuilder : MonoBehaviour
     public GameObject DamagedGameObject;
     public GameObject RepairedGameObject;
     public Animation FloatingTextAnimation;
-    
+
 
     private void Start()
     {
@@ -53,30 +53,33 @@ public class BridgeBuilder : MonoBehaviour
 
     private void Update()
     {
-        bool open = Vector3.Distance(transform.position, PlayerController.global.transform.position) < 15;
-
-        if (triggered != open)
+        if (!isBuilt)
         {
-            triggered = open;
-            ShowResources(open);
+            bool open = Vector3.Distance(transform.position, PlayerController.global.transform.position) < 15;
 
-        }
-
-        if (!isBuilt && triggered && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
-        {
-            PlayerController.global.interactCTRL = false;
-
-            if (PlayerController.global.CheckSufficientResources(true))
+            if (triggered != open)
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound);
-                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound);
-                isBuilt = true;
-                ShowResources(false);
-                BuildBridge();
+                triggered = open;
+                ShowResources(open);
+
             }
-            else
+
+            if (triggered && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                PlayerController.global.interactCTRL = false;
+
+                if (PlayerController.global.CheckSufficientResources(true))
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound);
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound);
+                    isBuilt = true;
+                    ShowResources(false);
+                    BuildBridge();
+                }
+                else
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                }
             }
         }
     }

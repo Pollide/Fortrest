@@ -599,7 +599,7 @@ public class PlayerController : MonoBehaviour
         BarDisappear();
 
         if (playerDead)
-        {           
+        {
             Death();
         }
 
@@ -618,7 +618,7 @@ public class PlayerController : MonoBehaviour
             playerCanMove = false;
             if (Boar.global.mounted)
             {
-                Boar.global.Mount();               
+                Boar.global.Mount();
             }
             int random = Random.Range(1, 3);
             if (random == 1)
@@ -997,7 +997,7 @@ public class PlayerController : MonoBehaviour
                     Pause.global.ButtonHolder.GetChild(1).gameObject.SetActive(false);
                     return;
                 }
-                
+
                 PauseCanvasGameObject.SetActive(pause);
                 if (pause)
                 {
@@ -1033,7 +1033,7 @@ public class PlayerController : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
-            OpenResourceHolder(map);
+
             if (mapBool)
             {
 
@@ -1044,8 +1044,11 @@ public class PlayerController : MonoBehaviour
                 MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
                 MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
 
-                UpdateResourceHolder();
+                if (!ResourceHolderOpened)
+                    UpdateResourceHolder();
             }
+
+            OpenResourceHolder(map);
         }
     }
 
@@ -1270,7 +1273,7 @@ public class PlayerController : MonoBehaviour
         if (!playerDead)
         {
             playerCC.Move(moveDirection * Time.deltaTime);
-        }       
+        }
     }
 
     private void ApplyGravity()
@@ -1647,7 +1650,7 @@ public class PlayerController : MonoBehaviour
     public void Death()
     {
         if (!deathEffects)
-        {    
+        {
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
             TeleportPlayer(house.transform.position);
