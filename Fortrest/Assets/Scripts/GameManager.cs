@@ -454,6 +454,7 @@ public class GameManager : MonoBehaviour
         {
             Pref("Has Started", 1, false);
         }
+        Debug.Log(load);
         DataPositionVoid("Player", PlayerController.global.transform, load);
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
@@ -465,7 +466,7 @@ public class GameManager : MonoBehaviour
         LevelManager.global.enemyThreshold = (int)Pref("Goblin Threshold", LevelManager.global.enemyThreshold, load);
         int itemSize = (int)Pref("Item Size", LevelManager.global.InventoryItemList.Count, load);
 
-        LevelManager.global.runOnce = Pref("Run Once", LevelManager.global.runOnce ? 1 : 0, load) == 1;
+        // LevelManager.global.runOnce = Pref("Run Once", LevelManager.global.runOnce ? 1 : 0, load) == 1;
         LevelManager.global.messageDisplayed = Pref("Message Display", LevelManager.global.messageDisplayed ? 1 : 0, load) == 1;
 
         for (int i = 0; i < itemSize; i++)

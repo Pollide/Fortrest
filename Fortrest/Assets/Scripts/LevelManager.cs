@@ -52,7 +52,7 @@ public class LevelManager : MonoBehaviour
     public Material LanternGlowingMaterial;
     public Material LanternOffMaterial;
 
-    public float DaylightTimer = 20;
+    public float DaylightTimer;
     public int day = 0;
     public List<EnemyController> EnemyList = new List<EnemyController>();
     public List<GameObject> InventoryItemList = new List<GameObject>();

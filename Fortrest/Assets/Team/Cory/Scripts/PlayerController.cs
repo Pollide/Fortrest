@@ -422,7 +422,6 @@ public class PlayerController : MonoBehaviour
     {
         if (!interactCTRL && (needInteraction))
         {
-            Debug.Log(1);
             interactCTRL = true;
         }
     }
@@ -859,7 +858,7 @@ public class PlayerController : MonoBehaviour
         if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse)
         {
             needInteraction = false;
-        }       
+        }
         teleporting = true;
         StartCoroutine(RevertBool(true));
 
@@ -1511,12 +1510,6 @@ public class PlayerController : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
             }
             currentResource.TakeDamage(1);
-
-            if (currentResource.health == 0)
-            {
-                currentResource.GiveResources();
-                currentResource.DestroyBuilding();
-            }
         }
     }
 
@@ -1657,7 +1650,7 @@ public class PlayerController : MonoBehaviour
                     if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport)
                     {
                         needInteraction = false;
-                    }                       
+                    }
                     interactCTRL = false;
                     houseDisplay = true; // Used to reanimate house and make text appear once player respawns
                     respawning = true;

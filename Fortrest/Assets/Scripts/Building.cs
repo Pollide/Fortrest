@@ -125,7 +125,7 @@ public class Building : MonoBehaviour
                 posZ = posX;
                 posX *= -1;
             }
-            GameManager.ReturnResource(resourceObject.ToString(), new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resourceObject.ToString() == "Wood" ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
+            GameManager.ReturnResource(resourceObject.ToString(), new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resourceObject.ToString().Contains("Wood") ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
         }
     }
 
@@ -148,6 +148,12 @@ public class Building : MonoBehaviour
             {
                 HealthAnimation();
             }
+
+            if (health <= 0)
+            {
+
+                DestroyBuilding();
+            }
         }
     }
 
@@ -160,11 +166,6 @@ public class Building : MonoBehaviour
             HealthAnimation();
         }
 
-    }
-
-    public float GetHealth()
-    {
-        return health;
     }
 
     public void DestroyBuilding()
@@ -209,8 +210,13 @@ public class Building : MonoBehaviour
 
                 Destroy(gameObject);
             }
+            else
+            {
+                Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
 
-            Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
+                if (PlayerController.global.currentResource == this)
+                    GiveResources();
+            }
         }
         PlayerController.global.currentResource = null;
     }
@@ -257,10 +263,10 @@ public class Building : MonoBehaviour
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);
             if (distanceToPlayer < 17.5f)
             {
-                playerinRange = true;                                      
+                playerinRange = true;
             }
             else
-            {               
+            {
                 playerinRange = false;
             }
 
@@ -279,7 +285,7 @@ public class Building : MonoBehaviour
                     LevelManager.FloatingTextChange(interactText.gameObject, false);
                     textDisplayed = false;
                 }
-            }            
+            }
 
             if (health != lastHealth)
             {

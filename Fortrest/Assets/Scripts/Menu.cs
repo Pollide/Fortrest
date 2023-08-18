@@ -129,11 +129,14 @@ public class Menu : MonoBehaviour
 
     void Direction(int direction)
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
+        if (GameManager.global)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
 
-        ReturnButton().HighlightVoid(false);
-        ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);
-        ArrivedAtSign = false;
-        ReturnButton().HighlightVoid(true);
+            ReturnButton().HighlightVoid(false);
+            ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);
+            ArrivedAtSign = false;
+            ReturnButton().HighlightVoid(true);
+        }
     }
 }
