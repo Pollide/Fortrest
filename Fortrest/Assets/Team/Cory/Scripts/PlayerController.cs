@@ -261,7 +261,7 @@ public class PlayerController : MonoBehaviour
 
             // B to evade
             GameManager.global.gamepadControls.Controls.Evade.performed += context => EvadeController();
-
+            GameManager.global.gamepadControls.Controls.Evade.performed += context => PauseVoid(false);
             // Right trigger for gathering
             GameManager.global.gamepadControls.Controls.Gathering.performed += context => GatheringController(true);
             GameManager.global.gamepadControls.Controls.Gathering.canceled += context => GatheringController(false);
@@ -965,7 +965,7 @@ public class PlayerController : MonoBehaviour
             {
                 PlayerController.global.interactCTRL = true;
             }
-            else
+            else if (pause != pausedBool)
             {
 
                 PauseCanvasGameObject.SetActive(pause);
@@ -1770,12 +1770,12 @@ public class PlayerController : MonoBehaviour
         {
             if (!gapSet)
             {
-                gap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer;
+                gap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat;
                 fraction = 663.0f / gap;
                 gapSet = true;
             }
             countdownBar.gameObject.SetActive(true);
-            countdownBar.rectTransform.sizeDelta = new Vector2(fraction * (LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer), 10.0f);
+            countdownBar.rectTransform.sizeDelta = new Vector2(fraction * (LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat), 10.0f);
         }
         if (countdownBar.rectTransform.sizeDelta.x <= 0f)
         {
@@ -1795,13 +1795,13 @@ public class PlayerController : MonoBehaviour
         float gradient = 0f;
         if (!gapSet)
         {
-            newGap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimer;
+            newGap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat;
             fraction = 1.0f / newGap;
             gapSet = true;
         }
         while (gradient < 1.0f)
         {
-            gradient = fraction * ((LevelManager.global.DaylightTimer + newGap) - LevelManager.global.randomAttackTrigger);
+            gradient = fraction * ((LevelManager.global.DaylightTimerFloat + newGap) - LevelManager.global.randomAttackTrigger);
             enemyText.color = LevelManager.global.textGradient.Evaluate(gradient);
             enemyAmountText.color = LevelManager.global.textGradient.Evaluate(gradient);
             yield return null;

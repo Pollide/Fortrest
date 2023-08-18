@@ -52,7 +52,7 @@ public class LevelManager : MonoBehaviour
     public Material LanternGlowingMaterial;
     public Material LanternOffMaterial;
 
-    public float DaylightTimer;
+    public float DaylightTimerFloat;
     public int day = 0;
     public List<EnemyController> EnemyList = new List<EnemyController>();
     public List<GameObject> InventoryItemList = new List<GameObject>();
@@ -116,8 +116,8 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         global = this;
-        DaylightTimer = DirectionalLightTransform.eulerAngles.x;
-        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer + 90);
+
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimerFloat + 90);
 
         if (!GameManager.global)
         {
@@ -222,7 +222,7 @@ public class LevelManager : MonoBehaviour
 
     public bool ReturnNight()
     {
-        return DaylightTimer > 180;
+        return DaylightTimerFloat > 180;
     }
 
     private void Update()
@@ -264,19 +264,19 @@ public class LevelManager : MonoBehaviour
         // daySpeed = 7.0f; // FOR TESTING
 #endif
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
-        DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimer, 0, 0);
-        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimer + 90);
-        DaylightTimer += daySpeed * Time.deltaTime;
+        DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimerFloat, 0, 0);
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimerFloat + 90);
+        DaylightTimerFloat += daySpeed * Time.deltaTime;
 
         Light light = DirectionalLightTransform.GetComponent<Light>();
         int cycle = 360;
-        light.color = SunriseGradient.Evaluate(DaylightTimer / cycle);
-        if (DaylightTimer > cycle)
+        light.color = SunriseGradient.Evaluate(DaylightTimerFloat / cycle);
+        if (DaylightTimerFloat > cycle)
         {
             attackHappening = false;
             randomAttackTrigger = 0f;
             randomSet = false;
-            DaylightTimer = 0;
+            DaylightTimerFloat = 0;
             day++;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
             GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
@@ -473,14 +473,14 @@ public class LevelManager : MonoBehaviour
         }
 
         // Night attack
-        if (DaylightTimer >= 150.0f && DaylightTimer <= 151.0f)
+        if (DaylightTimerFloat >= 150.0f && DaylightTimerFloat <= 151.0f)
         {
             randomAttackTrigger = 180.0f;
             nightAttack = true;
         }
 
         // Message and countdown bar appear 30f before the attack
-        if ((DaylightTimer >= randomAttackTrigger - 30.0f && DaylightTimer <= randomAttackTrigger - 30.0f + 1.0f) && randomAttackTrigger != 0f && !messageDisplayed)
+        if ((DaylightTimerFloat >= randomAttackTrigger - 30.0f && DaylightTimerFloat <= randomAttackTrigger - 30.0f + 1.0f) && randomAttackTrigger != 0f && !messageDisplayed)
         {
             PlayerController.global.DisplayEnemiesComingText(); // Display enemies are coming a bit before an attack
             messageDisplayed = true;
@@ -488,13 +488,13 @@ public class LevelManager : MonoBehaviour
         }
 
         // For enemy remaining text to not disappear right before the spawning starts
-        if ((DaylightTimer >= randomAttackTrigger - 2.0f && DaylightTimer <= randomAttackTrigger) && randomAttackTrigger != 0f)
+        if ((DaylightTimerFloat >= randomAttackTrigger - 2.0f && DaylightTimerFloat <= randomAttackTrigger) && randomAttackTrigger != 0f)
         {
             waveEnd = false;
         }
 
         // Enemies start spawning
-        if ((DaylightTimer >= randomAttackTrigger && DaylightTimer <= randomAttackTrigger + 1.0f) && randomAttackTrigger != 0f && !runOnce)
+        if ((DaylightTimerFloat >= randomAttackTrigger && DaylightTimerFloat <= randomAttackTrigger + 1.0f) && randomAttackTrigger != 0f && !runOnce)
         {
             spawnEnemies = true; // Attack starts when the time is reached
             countSet = false;

@@ -459,7 +459,7 @@ public class GameManager : MonoBehaviour
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
 
-        LevelManager.global.DaylightTimer = Pref("Daylight", LevelManager.global.DaylightTimer, load);
+        LevelManager.global.DaylightTimerFloat = Pref("Daylight", LevelManager.global.DaylightTimerFloat, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
         LevelManager.global.enemyTimer = (int)Pref("Goblin Timer", LevelManager.global.enemyTimer, load);
 

@@ -132,9 +132,12 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             PlayerController.global.PauseVoid(false);
         }
 
-        if(BeginingBool)
+        if (BeginingBool)
         {
+            GameManager.Pref("Has Started", 0, false); //restart game
 
+            Time.timeScale = 1f;
+            GameManager.global.NextScene(1);
         }
 
         if (MaxResourcesBool)
