@@ -358,7 +358,7 @@ public class PlayerModeHandler : MonoBehaviour
         if (turretBlueprint)
         {
             Destroy(turretBlueprint);
-            Destroy(KeyHint.gameObject);
+            //    Destroy(KeyHint.gameObject);
         }
 
         PlayerController.global.UpdateResourceHolder();
@@ -594,7 +594,7 @@ public class PlayerModeHandler : MonoBehaviour
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
                 turretBlueprint.tag = "BuildingBP";
 
-                KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
+                //   KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
 
                 TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
 
@@ -611,7 +611,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
             turretBlueprint.transform.position = worldPos;
-            KeyHint.position = worldPos + HintOffset;
+            //  KeyHint.position = worldPos + HintOffset;
 
             Collider[] collidershit = Physics.OverlapSphere(new Vector3(worldPos.x, 0f, worldPos.z), nimDistanceBetweenTurrts);
 
