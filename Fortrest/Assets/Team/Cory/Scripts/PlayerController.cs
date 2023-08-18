@@ -958,29 +958,37 @@ public class PlayerController : MonoBehaviour
     {
         if (!mapBool)
         {
-            PauseCanvasGameObject.SetActive(pause);
-            if (pause)
+            if (!pausedBool && PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
             {
-                for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
-                {
-                    Pause.global.ButtonHolder.GetChild(i).gameObject.SetActive(i == 0);
-                }
-
-                Pause.global.SelectedList = new List<int>();
-
-                for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
-                {
-                    Pause.global.SelectedList.Add(0);
-                }
+                PlayerController.global.interactCTRL = true;
             }
+            else
+            {
 
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
-            GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+                PauseCanvasGameObject.SetActive(pause);
+                if (pause)
+                {
+                    for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
+                    {
+                        Pause.global.ButtonHolder.GetChild(i).gameObject.SetActive(i == 0);
+                    }
 
-            Time.timeScale = pause ? 0 : 1;
-            playerCanMove = !pause;
-            pausedBool = pause;
-            PlayerModeHandler.SetMouseActive(pause);
+                    Pause.global.SelectedList = new List<int>();
+
+                    for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
+                    {
+                        Pause.global.SelectedList.Add(0);
+                    }
+                }
+
+                GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
+                GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+
+                Time.timeScale = pause ? 0 : 1;
+                playerCanMove = !pause;
+                pausedBool = pause;
+                PlayerModeHandler.SetMouseActive(pause);
+            }
         }
     }
 
@@ -1652,7 +1660,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private IEnumerator RevertBool (bool teleporter)
+    private IEnumerator RevertBool(bool teleporter)
     {
         yield return new WaitForSeconds(0.2f);
         if (teleporter)

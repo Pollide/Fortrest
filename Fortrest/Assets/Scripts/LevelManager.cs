@@ -105,8 +105,11 @@ public class LevelManager : MonoBehaviour
     bool housePosObtained = false;
     private float spawnDistance = 39.0f;
 
+    [HideInInspector]
     public bool messageDisplayed;
-    private bool runOnce;
+
+    [HideInInspector]
+    public bool runOnce;
 
     private void Awake()
     {
