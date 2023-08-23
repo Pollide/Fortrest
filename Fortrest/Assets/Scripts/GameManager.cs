@@ -594,6 +594,7 @@ public class GameManager : MonoBehaviour
         }
 
         building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
+        building.SetLastHealth();
 
         if (load)
         {
