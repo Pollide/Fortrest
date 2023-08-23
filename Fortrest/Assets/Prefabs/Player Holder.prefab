@@ -344,7 +344,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2.9, y: -0.3}
+  m_AnchoredPosition: {x: 2.899994, y: -0.29999924}
   m_SizeDelta: {x: 264.3, y: 44.644}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5017559060158386700
@@ -685,7 +685,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -100, y: -100}
+  m_AnchoredPosition: {x: -100, y: -129}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &661760714583607400
@@ -854,7 +854,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 788243291083536010}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -864,12 +864,12 @@ RectTransform:
   - {fileID: 7588912936544517460}
   m_Father: {fileID: 8215368943879176248}
   m_RootOrder: 10
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 50, y: 140}
+  m_AnchoredPosition: {x: 50, y: 50}
   m_SizeDelta: {x: 270, y: 60}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0, y: 0}
 --- !u!114 &7431168838757815354
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3017,7 +3017,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -40}
+  m_AnchoredPosition: {x: 273, y: -75.00006}
   m_SizeDelta: {x: 447, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2036234876212552444
@@ -3591,7 +3591,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   amountText: {fileID: 2341711676219075203}
   displayNow: 0
-  resourceInt: 0
+  TierData:
+    ResourceName: Wood
+    ResourceIcon: {fileID: 0}
+    ResourceAmount: 0
+    ResourceCost: 0
 --- !u!114 &3011136880845289299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3639,7 +3643,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -40, y: 39.00003}
+  m_AnchoredPosition: {x: -40, y: 71}
   m_SizeDelta: {x: 100, y: 71.601}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4640040108432233108
@@ -3860,7 +3864,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 140}
+  m_AnchoredPosition: {x: 0, y: 184}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7378572066998752221
@@ -4640,6 +4644,7 @@ MonoBehaviour:
   playerEnergy: 0
   playerEnergyBarImage: {fileID: 7658975014858843245}
   playerDead: 0
+  playerRespawned: 0
   houseDisplay: 0
   playerHealth: 0
   maxHealth: 100
@@ -4699,6 +4704,7 @@ MonoBehaviour:
   canPressCTRL: 0
   pauseSelectCTRL: 0
   releasedCTRL: 0
+  scrollCTRL: 0
   cancelAnimation: 0
   cancelEffects: 0
   LanternSkinnedRenderer: {fileID: 3811071758437484868}
@@ -4707,6 +4713,8 @@ MonoBehaviour:
   teleporting: 0
   respawning: 0
   staggered: 0
+  ResourceHolderOpened: 0
+  bridgeInteract: 0
 --- !u!143 &5569601162832024542
 CharacterController:
   m_ObjectHideFlags: 0
@@ -4831,9 +4839,11 @@ MonoBehaviour:
   House: {fileID: 0}
   selectionGrid: {fileID: 1115839516284195578, guid: c5faba79d5adac7418f032a9046df7b7,
     type: 3}
+  KeyBlueprintHintPrefab: {fileID: 0}
   inTheFortress: 0
   canInteractWithHouse: 0
   nimDistanceBetweenTurrts: 4
+  HintOffset: {x: 0, y: 0, z: 0}
 --- !u!1 &5629966036032299004
 GameObject:
   m_ObjectHideFlags: 0
@@ -8229,7 +8239,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 250, y: -100}
+  m_AnchoredPosition: {x: 273, y: -135}
   m_SizeDelta: {x: 60, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3659779964807373244
@@ -8658,7 +8668,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 40, y: 39}
+  m_AnchoredPosition: {x: 40, y: 71}
   m_SizeDelta: {x: 100, y: 71.601}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8472958299524971537
