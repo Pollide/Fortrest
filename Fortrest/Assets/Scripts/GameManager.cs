@@ -587,14 +587,19 @@ public class GameManager : MonoBehaviour
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
-
-        if (building.resourceObject == Building.BuildingType.HouseNode)
+        bool house = building.resourceObject == Building.BuildingType.HouseNode;
+        if (house)
         {
             building = building.transform.parent.GetComponent<Building>();
         }
 
         building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
         building.SetLastHealth();
+
+        if (house && building.health <= 0) //prevents a softlock
+        {
+            Pref("Has Started", 0, false);
+        }
 
         if (load)
         {
