@@ -1385,7 +1385,7 @@ public class PlayerController : MonoBehaviour
                 gathering = true;
                 gatherTimer = 0;
                 currentResource = building.GetComponent<Building>();
-                ChangeTool(new ToolData() { AxeBool = currentResource.resourceObject == Building.BuildingType.Wood, PickaxeBool = currentResource.resourceObject == Building.BuildingType.Stone, HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+                ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
                 CharacterAnimator.ResetTrigger("Swing");
                 CharacterAnimator.SetTrigger("Swing");
             }
@@ -1522,11 +1522,7 @@ public class PlayerController : MonoBehaviour
     {
         if (currentResource)
         {
-            if (currentResource.resourceObject == Building.BuildingType.Bush)
-            {
-                StopCoroutine("ToolAppear");
-                StartCoroutine("ToolAppear");
-            }
+
             if (PickaxeGameObject.activeSelf)
             {
                 GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
@@ -1536,17 +1532,20 @@ public class PlayerController : MonoBehaviour
                 VFXPebble.transform.position = currentResource.transform.position;
                 VFXPebble.Play();
             }
-            if (AxeGameObject.activeSelf && currentResource.resourceObject != Building.BuildingType.Bush)
+            if (currentResource.resourceObject == Building.BuildingType.Bush)
+            {
+                StopCoroutine("ToolAppear");
+                StartCoroutine("ToolAppear");
+                GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
+            }
+            else if (AxeGameObject.activeSelf)
             {
                 GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
 
                 VFXWoodChip.transform.position = currentResource.transform.position;
                 VFXWoodChip.Play();
             }
-            else if (currentResource.resourceObject == Building.BuildingType.Bush)
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
-            }
+
             currentResource.TakeDamage(1);
         }
     }

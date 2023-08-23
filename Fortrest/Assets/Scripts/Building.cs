@@ -31,7 +31,7 @@ public class Building : MonoBehaviour
         House,
         HardWood,
         CoarseWood,
-        Slate,
+        SlateStone,
         MossyStone,
         HouseNode,
     }
@@ -197,7 +197,7 @@ public class Building : MonoBehaviour
 
             //  PlayerEulerY = PlayerController.global.transform.eulerAngles.y;
 
-            if (resourceObject == BuildingType.HardWood || resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood)
+            if (ReturnWood())
             {
                 GetComponent<Rigidbody>().isKinematic = false;
                 GetComponent<Rigidbody>().useGravity = true;
@@ -246,6 +246,16 @@ public class Building : MonoBehaviour
         GameManager.PlayAnimation(animation, "Health Hit");
 
         GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Shake");
+    }
+
+    public bool ReturnWood()
+    {
+        return resourceObject == BuildingType.HardWood || resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood;
+    }
+
+    public bool ReturnStone()
+    {
+        return resourceObject == BuildingType.Stone || resourceObject == BuildingType.MossyStone || resourceObject == BuildingType.SlateStone;
     }
 
     private void Update()
