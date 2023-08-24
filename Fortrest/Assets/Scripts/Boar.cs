@@ -21,7 +21,7 @@ public class Boar : MonoBehaviour
     private float gravity = -20.0f;
 
     [HideInInspector] public bool canMove = true;
-    private bool isMoving;
+    [HideInInspector] public bool isMoving;
     private bool isReversing;
 
     public Animator animator;
