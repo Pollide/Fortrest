@@ -27,7 +27,7 @@ public class Menu : MonoBehaviour
 
     private bool canGoCTRL, leftCTRL, rightCTRL, selectCTRL;
 
-    [HideInInspector]
+    //  [HideInInspector]
     public bool ArrivedAtSign;
     public bool CanMouseSign;
     private void Awake()
@@ -102,17 +102,18 @@ public class Menu : MonoBehaviour
             {
                 if (Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
                 {
-
-                    ButtonMechanics buttonMechanics = hitData.transform.GetComponentInParent<ButtonMechanics>();
-
-                    if (CanMouseSign && buttonMechanics)
+                    if (transform.parent)
                     {
-                        CanMouseSign = false;
-                        int childIndex = hitData.transform.GetComponentInParent<ButtonMechanics>().transform.GetSiblingIndex();
+                        ButtonMechanics buttonMechanics = hitData.transform.parent.GetComponent<ButtonMechanics>();
 
-                        Direction(childIndex - ActiveSignInt);
+                        if (CanMouseSign && buttonMechanics)
+                        {
+                            CanMouseSign = false;
+                            int childIndex = buttonMechanics.transform.GetSiblingIndex(); //just one parent not getcomponent in parent
+
+                            Direction(childIndex - ActiveSignInt);
+                        }
                     }
-
                 }
                 else
                 {
