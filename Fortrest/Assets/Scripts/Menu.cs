@@ -78,7 +78,7 @@ public class Menu : MonoBehaviour
             CameraTransform.position = Vector3.Slerp(CameraTransform.position, position, 3 * Time.deltaTime);
             CameraTransform.rotation = Quaternion.RotateTowards(CameraTransform.rotation, ReturnSign().rotation, 20 * Time.deltaTime);
 
-            if (!ArrivedAtSign && Vector3.Distance(CameraTransform.position, position) < 1)
+            if (!ArrivedAtSign && Vector3.Distance(CameraTransform.position, position) < 0.5f)
             {
                 ArrivedAtSign = true;
                 GameManager.PlayAnimation(ReturnSign().GetComponent<Animation>(), "Sign Key");
@@ -97,7 +97,7 @@ public class Menu : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0) && Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
+        if (ArrivedAtSign && Input.GetMouseButtonDown(0) && Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
         {
             if (hitData.transform.name == "Cursor Detection")
             {
