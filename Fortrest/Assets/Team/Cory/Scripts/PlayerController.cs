@@ -1028,7 +1028,6 @@ public class PlayerController : MonoBehaviour
                 Time.timeScale = pause ? 0 : 1;
                 playerCanMove = !pause;
                 pausedBool = pause;
-                PlayerModeHandler.SetMouseActive(pause);
             }
         }
     }

@@ -24,8 +24,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public bool KeyboardBool = true;
-    [HideInInspector]
-    public bool CursorActiveBool;
+
     // Music
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
@@ -152,8 +151,7 @@ public class GameManager : MonoBehaviour
         }
         lastMousePosition = currentMousePosition;
 
-        PlayerModeHandler.SetMouseActive(true);
-        //PlayerModeHandler.SetMouseActive(KeyboardBool && CursorActiveBool, false);
+        PlayerModeHandler.SetMouseActive(KeyboardBool);
     }
 
 
