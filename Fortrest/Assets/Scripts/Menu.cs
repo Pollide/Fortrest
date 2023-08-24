@@ -71,8 +71,6 @@ public class Menu : MonoBehaviour
 
     private void Update()
     {
-        PlayerModeHandler.SetMouseActive(false);
-
         bool initialBool = IntialAnimationState && IntialAnimationState.enabled;
 
         if (!initialBool)
@@ -98,9 +96,22 @@ public class Menu : MonoBehaviour
                 rightCTRL = false;
                 Direction(1);
             }
+
+
+            if (ArrivedAtSign && Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
+            {
+                ButtonMechanics buttonMechanics = hitData.transform.GetComponentInParent<ButtonMechanics>();
+
+                if (buttonMechanics)
+                {
+                    int childIndex = hitData.transform.GetComponentInParent<ButtonMechanics>().transform.GetSiblingIndex();
+
+                    Direction(childIndex - ActiveSignInt);
+                }
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || selectCTRL)
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || selectCTRL)
         {
             selectCTRL = false;
             if (initialBool)
@@ -129,7 +140,7 @@ public class Menu : MonoBehaviour
 
     void Direction(int direction)
     {
-        if (GameManager.global)
+        if (GameManager.global && direction != 0)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
 

@@ -305,7 +305,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void RepairMode()
     {
-        Ray ray = Camera.main.ScreenPointToRay(cursorPosition);
+        Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hitData, 1000))
         {
@@ -397,8 +397,6 @@ public class PlayerModeHandler : MonoBehaviour
             CameraFollow.global.transform.position = CameraFollow.global.ReturnBuildOffset();
 
             playerModes = PlayerModes.BuildMode;
-
-            SetMouseActive(true);
             PlayerController.global.UpdateResourceHolder();
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
 
@@ -432,7 +430,6 @@ public class PlayerModeHandler : MonoBehaviour
         ModeSwitchText.global.ResetText();
         ClearSelectionGrid();
         ClearBlueprint();
-        SetMouseActive(false);
         SwitchToBuildMode(false);
         StartCoroutine(PlayerAwake());
         PlayerController.global.TeleportPlayer(entryPosition);
@@ -478,7 +475,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             PlayerController.global.selectCTRL = false;
 
-            Ray ray = Camera.main.ScreenPointToRay(cursorPosition);
+            Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
             if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
             {
@@ -568,7 +565,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void DragBuildingBlueprint()
     {
-        Ray ray = Camera.main.ScreenPointToRay(cursorPosition);
+        Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer))
         {
@@ -670,21 +667,19 @@ public class PlayerModeHandler : MonoBehaviour
         return false;
     }
 
-    public static void SetMouseActive(bool isActive, bool set = true)
-    {
-        if (set)
-            GameManager.global.CursorActiveBool = isActive;
 
+    public static void SetMouseActive(bool isActive)
+    {
         //  Debug.Log("Cursor " + isActive);
 
         if (isActive && GameManager.global.KeyboardBool)
         {
-            // Debug.Log(isActive + " && " + ReturnKeyboard() + " " + Cursor.visible);
+            if (!Cursor.visible)
+            {
+                Cursor.visible = true;
 
-            //  Debug.Log(1);
-            Cursor.visible = true;
-
-            Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.None;
+            }
 
         }
         else

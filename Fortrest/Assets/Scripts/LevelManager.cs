@@ -242,7 +242,6 @@ public class LevelManager : MonoBehaviour
             clockMoon.enabled = false;
             clockSun.enabled = true;
         }
-        LockCursor();
 
         PlayerController.global.EnemiesTextControl();
 
@@ -329,17 +328,6 @@ public class LevelManager : MonoBehaviour
             return;
 
         //HandleMouse();
-    }
-
-
-    void LockCursor()
-    {
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.LeftAlt))
-        {
-            PlayerModeHandler.SetMouseActive(!Cursor.visible);
-        }
-#endif
     }
 
     void HandleMouse()
