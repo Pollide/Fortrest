@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     // Movement
     [HideInInspector]
     public Vector3 moveDirection;
-    private Vector3 mousePos;
+    public Vector3 mousePos;
 
     private float horizontalMovement;
     private float verticalMovement;
