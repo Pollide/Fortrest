@@ -99,9 +99,9 @@ public class Menu : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
         {
-            if (hitData.transform.parent)
+            if (hitData.transform.name == "Cursor Detection")
             {
-                ButtonMechanics buttonMechanics = hitData.transform.parent.GetComponent<ButtonMechanics>();
+                ButtonMechanics buttonMechanics = hitData.transform.GetComponentInParent<ButtonMechanics>();
 
                 if (buttonMechanics)
                 {
