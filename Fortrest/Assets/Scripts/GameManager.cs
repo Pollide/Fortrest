@@ -22,8 +22,10 @@ public class GameManager : MonoBehaviour
     public SFXManager SoundManager; //manages all sound effects
     public SFXManager MusicManager; //manages all music
 
-    //[HideInInspector]
+    [HideInInspector]
     public bool KeyboardBool = true;
+    [HideInInspector]
+    public bool CursorActiveBool;
     // Music
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
@@ -149,6 +151,9 @@ public class GameManager : MonoBehaviour
             KeyboardBool = true;
         }
         lastMousePosition = currentMousePosition;
+
+        PlayerModeHandler.SetMouseActive(true);
+        //PlayerModeHandler.SetMouseActive(KeyboardBool && CursorActiveBool, false);
     }
 
 
@@ -454,8 +459,12 @@ public class GameManager : MonoBehaviour
         {
             Pref("Has Started", 1, false);
         }
-        Debug.Log(load);
+
         DataPositionVoid("Player", PlayerController.global.transform, load);
+        ///  DataEulerVoid("Player", PlayerController.global.transform, load);
+        DataPositionVoid("Mount", Boar.global.transform, load);
+        //  DataEulerVoid("Mount", Boar.global.transform, load);
+
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
 
@@ -579,13 +588,19 @@ public class GameManager : MonoBehaviour
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
-
-        if (building.resourceObject == Building.BuildingType.HouseNode)
+        bool house = building.resourceObject == Building.BuildingType.HouseNode;
+        if (house)
         {
             building = building.transform.parent.GetComponent<Building>();
         }
 
         building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
+        building.SetLastHealth();
+
+        if (house && building.health <= 0) //prevents a softlock
+        {
+            Pref("Has Started", 0, false);
+        }
 
         if (load)
         {

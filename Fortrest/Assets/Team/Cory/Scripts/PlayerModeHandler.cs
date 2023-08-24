@@ -32,6 +32,7 @@ public class PlayerModeHandler : MonoBehaviour
     public BuildType buildType;
     public GameObject[] turretPrefabs;
     GameObject turretBlueprint;
+    Transform KeyHint;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
     public Vector2 distanceAwayFromPlayerX;
@@ -42,7 +43,7 @@ public class PlayerModeHandler : MonoBehaviour
     public GameObject House;
     public GameObject selectionGrid;
     GameObject newSelectionGrid;
-
+    public GameObject KeyBlueprintHintPrefab;
     private HUDHandler HUD;
 
     public bool inTheFortress;
@@ -172,7 +173,7 @@ public class PlayerModeHandler : MonoBehaviour
         else
         {
             canInteractWithHouse = false;
-            if (!Boar.global.canInteractWithBoar && !PlayerController.global.canTeleport)
+            if (!Boar.global.canInteractWithBoar && !PlayerController.global.canTeleport && PlayerController.global.playerRespawned && !PlayerController.global.bridgeInteract)
             {
                 PlayerController.global.needInteraction = false;
             }
@@ -247,8 +248,9 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void ScrollSwitchTurret()
     {
-        if (Input.mouseScrollDelta.y > 0f && playerModes == PlayerModes.BuildMode)
+        if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
+            PlayerController.global.scrollCTRL = false;
             if (buildType == BuildType.Turret)
             {
                 SwitchBuildTypeCannon();
@@ -266,8 +268,9 @@ public class PlayerModeHandler : MonoBehaviour
                 SwitchBuildTypeTurret();
             }
         }
-        if (Input.mouseScrollDelta.y < 0f && playerModes == PlayerModes.BuildMode)
+        if ((Input.mouseScrollDelta.y < 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
+            PlayerController.global.scrollCTRL = false;
             if (buildType == BuildType.Turret)
             {
                 SwitchBuildTypeScatter();
@@ -355,6 +358,9 @@ public class PlayerModeHandler : MonoBehaviour
         if (turretBlueprint)
         {
             Destroy(turretBlueprint);
+
+            if (KeyHint)
+                Destroy(KeyHint.gameObject);
         }
 
         PlayerController.global.UpdateResourceHolder();
@@ -558,6 +564,7 @@ public class PlayerModeHandler : MonoBehaviour
             meshRenderers[i].material = colorMaterial;
         }
     }
+    public Vector3 HintOffset;
 
     private void DragBuildingBlueprint()
     {
@@ -589,19 +596,15 @@ public class PlayerModeHandler : MonoBehaviour
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
                 turretBlueprint.tag = "BuildingBP";
 
+                //NOT IN USE RIGHT NOW but basically it would hover over the building to say to place
+                //KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
+
                 TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
 
                 if (turretShooting)
                 {
                     turretShooting.enabled = false;
                     Destroy(turretShooting);
-                }
-
-                ScatterShot scatterShot = turretBlueprint.GetComponent<ScatterShot>();
-
-                if (scatterShot)
-                {
-                    scatterShot.enabled = false;
                 }
 
             }
@@ -611,6 +614,9 @@ public class PlayerModeHandler : MonoBehaviour
 
             worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
             turretBlueprint.transform.position = worldPos;
+
+            if (KeyHint)
+                KeyHint.position = worldPos + HintOffset;
 
             Collider[] collidershit = Physics.OverlapSphere(new Vector3(worldPos.x, 0f, worldPos.z), nimDistanceBetweenTurrts);
 
@@ -664,9 +670,12 @@ public class PlayerModeHandler : MonoBehaviour
         return false;
     }
 
-    public static void SetMouseActive(bool isActive)
+    public static void SetMouseActive(bool isActive, bool set = true)
     {
+        if (set)
+            GameManager.global.CursorActiveBool = isActive;
 
+        //  Debug.Log("Cursor " + isActive);
 
         if (isActive && GameManager.global.KeyboardBool)
         {
@@ -674,6 +683,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             //  Debug.Log(1);
             Cursor.visible = true;
+
             Cursor.lockState = CursorLockMode.None;
 
         }

@@ -12,19 +12,27 @@ public class ScatterShot : MonoBehaviour
     public Transform[] spawnPositions; // Array of designated spawn positions
     public float cooldownTime = 0.5f; // Cooldown time in seconds
     private float cooldownTimer = 0f;
+    Building BuildingScript;
+    private void Start()
+    {
+        BuildingScript = GetComponentInParent<Building>();
+    }
 
     private void Update()
     {
-        // Rotate the GameObject around its up axis
-        transform.Rotate(rotationSpeed * Time.deltaTime * Vector3.up);
-
-        // Update the cooldown timer
-        cooldownTimer -= Time.deltaTime;
-
-        if (cooldownTimer <= 0f)
+        if (BuildingScript && BuildingScript.enabled)
         {
-            ShootBulletFromNextSpawnPoint();
-            cooldownTimer = cooldownTime;
+            // Rotate the GameObject around its up axis
+            transform.Rotate(rotationSpeed * Time.deltaTime * Vector3.up);
+
+            // Update the cooldown timer
+            cooldownTimer -= Time.deltaTime;
+
+            if (cooldownTimer <= 0f)
+            {
+                ShootBulletFromNextSpawnPoint();
+                cooldownTimer = cooldownTime;
+            }
         }
     }
 

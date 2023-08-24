@@ -31,7 +31,7 @@ public class Building : MonoBehaviour
         House,
         HardWood,
         CoarseWood,
-        Slate,
+        SlateStone,
         MossyStone,
         HouseNode,
     }
@@ -87,7 +87,7 @@ public class Building : MonoBehaviour
         if (resourceObject == BuildingType.House)
         {
             Indicator.global.AddIndicator(transform, Color.yellow, "Home", customSprite: Indicator.global.HomeSprite);
-            lastHealth = health;
+            SetLastHealth();
             if (HUDHealthBar != null)
             {
                 HUDHealthBar.SetMaxHealth(maxHealth, true);
@@ -98,6 +98,11 @@ public class Building : MonoBehaviour
             if (!GetComponent<TurretShooting>() || !GetComponent<TurretShooting>().MiniTurret)
                 LevelManager.global.AddBuildingVoid(transform);
         }
+    }
+
+    public void SetLastHealth()
+    {
+        lastHealth = health;
     }
 
     public void GiveResources()
@@ -197,7 +202,7 @@ public class Building : MonoBehaviour
 
             //  PlayerEulerY = PlayerController.global.transform.eulerAngles.y;
 
-            if (resourceObject == BuildingType.HardWood || resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood)
+            if (ReturnWood())
             {
                 GetComponent<Rigidbody>().isKinematic = false;
                 GetComponent<Rigidbody>().useGravity = true;
@@ -248,6 +253,16 @@ public class Building : MonoBehaviour
         GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Shake");
     }
 
+    public bool ReturnWood()
+    {
+        return resourceObject == BuildingType.HardWood || resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood;
+    }
+
+    public bool ReturnStone()
+    {
+        return resourceObject == BuildingType.Stone || resourceObject == BuildingType.MossyStone || resourceObject == BuildingType.SlateStone;
+    }
+
     private void Update()
     {
 #if UNITY_EDITOR
@@ -289,8 +304,8 @@ public class Building : MonoBehaviour
 
             if (health != lastHealth)
             {
-                lastHealth = health;
-                timerText = 0.0f;
+                SetLastHealth();
+                   timerText = 0.0f;
                 if (!underAttack)
                 {
                     underAttack = true;
