@@ -58,52 +58,68 @@ public class CameraFollow : MonoBehaviour
 
     public void FocusOnTarget(bool build, Vector3 targetPosition, Vector3 offsetRotation)
     {
-        GetComponent<Camera>().orthographicSize = build ? buildOffsetOrthoSize : initialOrthographicSize;
-
-        cameraDistance = Vector3.Distance(targetPosition, transform.position);
-
-        float i = cameraDistance / (max / (5f / 36) * (Time.deltaTime * 100));
-
-        smoothTime = Mathf.Lerp(maxSmooth, minSmooth, i);
+        GetComponent<Camera>().orthographicSize = build ? buildOffsetOrthoSize : initialOrthographicSize;       
+        
+        //if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || (PlayerController.global.movingCTRL))
+        //{
+        //    if (!Boar.global.mounted)
+        //    {
+        //        if (PlayerController.global.moveDirection != Vector3.zero)
+        //        {
+        //            if (PlayerController.global.running)
+        //            {
+        //                transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 5f, ref currentVelocity, smoothTime);
+        //            }
+        //            else
+        //            {
+        //                transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 3.5f, ref currentVelocity, smoothTime);
+        //            }
+        //        }                            
+        //    }
+        //    else if (Boar.global.currentSpeed > 0)
+        //    {
+        //        transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 5.5f * Boar.global.currentSpeed / 90.0f, ref currentVelocity, smoothTime);
+        //    }
+        //    
+        //}
+        //else
+        //{
+        //    transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
+        //}
 
         if (!Boar.global.mounted)
         {
-            direction = PlayerController.global.moveDirection;
+            float distance = Vector3.Distance(PlayerController.global.transform.position, PlayerController.global.mousePos);
+            distance = Mathf.Clamp(distance, 2f, 12f);
+            distance /= 12.5f;
+
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition + PlayerController.global.transform.forward * distance, ref currentVelocity, 0.2f);
         }
         else
         {
-            direction = Boar.global.transform.forward;
-            smoothTime *= 0.75f;
-        }
+            cameraDistance = Vector3.Distance(targetPosition, transform.position);
 
-        direction.Normalize();
-        direction.y = 0;
+            float i = cameraDistance / (max / (5f / 36) * (Time.deltaTime * 100));
 
-        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || (PlayerController.global.movingCTRL))
-        {
-            if (!Boar.global.mounted)
+            smoothTime = Mathf.Lerp(maxSmooth, minSmooth, i);
+
+            direction = Boar.global.transform.forward;           
+
+            direction.Normalize();
+            direction.y = 0;
+
+            if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || (PlayerController.global.movingCTRL))
             {
-                if (PlayerController.global.moveDirection != Vector3.zero)
+                if (Boar.global.currentSpeed > 0)
                 {
-                    if (PlayerController.global.running)
-                    {
-                        transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 5f, ref currentVelocity, smoothTime);
-                    }
-                    else
-                    {
-                        transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 3.5f, ref currentVelocity, smoothTime);
-                    }
-                }                            
+                    smoothTime *= 0.75f;
+                    transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 5.5f * Boar.global.currentSpeed / 90.0f, ref currentVelocity, smoothTime);
+                }
             }
-            else if (Boar.global.currentSpeed > 0)
+            else
             {
-                transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 5.5f * Boar.global.currentSpeed / 90.0f, ref currentVelocity, smoothTime);
+                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
             }
-            
-        }
-        else
-        {
-            transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
         }
 
         if (transform.eulerAngles != offsetRotation)
