@@ -27,9 +27,8 @@ public class Menu : MonoBehaviour
 
     private bool canGoCTRL, leftCTRL, rightCTRL, selectCTRL;
 
-    [HideInInspector]
+    //  [HideInInspector]
     public bool ArrivedAtSign;
-    public bool CanMouseSign;
     private void Awake()
     {
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
@@ -96,32 +95,24 @@ public class Menu : MonoBehaviour
                 rightCTRL = false;
                 Direction(1);
             }
+        }
 
-
-            if (ArrivedAtSign)
+        if (Input.GetMouseButtonDown(0) && Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
+        {
+            if (hitData.transform.name == "Cursor Detection")
             {
-                if (Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
+                ButtonMechanics buttonMechanics = hitData.transform.GetComponentInParent<ButtonMechanics>();
+
+                if (buttonMechanics)
                 {
+                    int childIndex = buttonMechanics.transform.GetSiblingIndex(); //just one parent not getcomponent in parent
 
-                    ButtonMechanics buttonMechanics = hitData.transform.GetComponentInParent<ButtonMechanics>();
-
-                    if (CanMouseSign && buttonMechanics)
-                    {
-                        CanMouseSign = false;
-                        int childIndex = hitData.transform.GetComponentInParent<ButtonMechanics>().transform.GetSiblingIndex();
-
-                        Direction(childIndex - ActiveSignInt);
-                    }
-
-                }
-                else
-                {
-                    CanMouseSign = true;
+                    Direction(childIndex - ActiveSignInt);
                 }
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || selectCTRL)
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || selectCTRL)
         {
             selectCTRL = false;
             if (initialBool)
@@ -150,14 +141,21 @@ public class Menu : MonoBehaviour
 
     void Direction(int direction)
     {
-        if (GameManager.global && direction != 0)
+        if (GameManager.global)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
+            if (direction != 0)
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
 
-            ReturnButton().HighlightVoid(false);
-            ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);
-            ArrivedAtSign = false;
-            ReturnButton().HighlightVoid(true);
+                ReturnButton().HighlightVoid(false);
+                ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);
+                ArrivedAtSign = false;
+                ReturnButton().HighlightVoid(true);
+            }
+            else
+            {
+                ReturnButton().SelectVoid(); //mouse select
+            }
         }
     }
 }
