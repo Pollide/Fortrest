@@ -29,7 +29,7 @@ public class Menu : MonoBehaviour
 
     [HideInInspector]
     public bool ArrivedAtSign;
-
+    public bool CanMouseSign;
     private void Awake()
     {
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
@@ -98,15 +98,25 @@ public class Menu : MonoBehaviour
             }
 
 
-            if (ArrivedAtSign && Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
+            if (ArrivedAtSign)
             {
-                ButtonMechanics buttonMechanics = hitData.transform.GetComponentInParent<ButtonMechanics>();
-
-                if (buttonMechanics)
+                if (Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
                 {
-                    int childIndex = hitData.transform.GetComponentInParent<ButtonMechanics>().transform.GetSiblingIndex();
 
-                    Direction(childIndex - ActiveSignInt);
+                    ButtonMechanics buttonMechanics = hitData.transform.GetComponentInParent<ButtonMechanics>();
+
+                    if (CanMouseSign && buttonMechanics)
+                    {
+                        CanMouseSign = false;
+                        int childIndex = hitData.transform.GetComponentInParent<ButtonMechanics>().transform.GetSiblingIndex();
+
+                        Direction(childIndex - ActiveSignInt);
+                    }
+
+                }
+                else
+                {
+                    CanMouseSign = true;
                 }
             }
         }
