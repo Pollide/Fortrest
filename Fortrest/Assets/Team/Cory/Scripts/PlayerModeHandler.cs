@@ -394,8 +394,6 @@ public class PlayerModeHandler : MonoBehaviour
                 PlayerController.global.playerCanMove = false;
             }
 
-            CameraFollow.global.transform.position = CameraFollow.global.ReturnBuildOffset();
-
             playerModes = PlayerModes.BuildMode;
             PlayerController.global.UpdateResourceHolder();
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });

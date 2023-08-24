@@ -893,8 +893,6 @@ public class PlayerController : MonoBehaviour
         }
         teleporting = true;
         StartCoroutine(RevertBool(true));
-
-        LevelManager.global.SceneCamera.transform.position = pos;
     }
 
     public void ChangeTool(ToolData toolData)
@@ -1262,7 +1260,7 @@ public class PlayerController : MonoBehaviour
 
             moveDirection *= playerCurrentSpeed;
 
-            moveDirection = Quaternion.AngleAxis(45, Vector3.up) * moveDirection;          
+            moveDirection = Quaternion.AngleAxis(45, Vector3.up) * moveDirection;
 
             //if (moveDirection != Vector3.zero)
             //{

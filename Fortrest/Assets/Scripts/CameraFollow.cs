@@ -14,12 +14,10 @@ public class CameraFollow : MonoBehaviour
     private float maxSmooth = 0.6f;
     private float minSmooth = 0.4f;
     private float max;
-    private float buildOffsetOrthoSize;
     private float buildOffsetPosX;
     private float buildOffsetPosZ;
     private float buildOffsetRot;
     private Vector3 initialRotation;
-    private float initialOrthographicSize;
     private Vector3 direction;
 
     private void Awake()
@@ -30,7 +28,6 @@ public class CameraFollow : MonoBehaviour
 
     private void Start()
     {
-        initialOrthographicSize = GetComponent<Camera>().orthographicSize;
         lockCamera = true;
         max = maxSmooth - minSmooth;
     }
@@ -39,15 +36,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (lockCamera)
         {
-            if (!PlayerModeHandler.global.inTheFortress)
-            {
-
-                FocusOnTarget(false, PlayerController.global.transform.position, initialRotation);
-            }
-            else
-            {
-                FocusOnTarget(true, ReturnBuildOffset(), new(buildOffsetRot, 0, 0));
-            }
+            FocusOnTarget(PlayerController.global.transform.position + (PlayerModeHandler.global.inTheFortress ? Vector3.up : Vector3.zero), initialRotation);
         }
     }
 
@@ -56,10 +45,8 @@ public class CameraFollow : MonoBehaviour
         return new Vector3(PlayerController.global.transform.position.x + buildOffsetPosX, PlayerController.global.transform.position.y, PlayerController.global.transform.position.z + buildOffsetPosZ);
     }
 
-    public void FocusOnTarget(bool build, Vector3 targetPosition, Vector3 offsetRotation)
+    public void FocusOnTarget(Vector3 targetPosition, Vector3 offsetRotation)
     {
-        GetComponent<Camera>().orthographicSize = build ? buildOffsetOrthoSize : initialOrthographicSize;       
-        
         //if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || (PlayerController.global.movingCTRL))
         //{
         //    if (!Boar.global.mounted)
@@ -103,7 +90,7 @@ public class CameraFollow : MonoBehaviour
 
             smoothTime = Mathf.Lerp(maxSmooth, minSmooth, i);
 
-            direction = Boar.global.transform.forward;           
+            direction = Boar.global.transform.forward;
 
             direction.Normalize();
             direction.y = 0;
