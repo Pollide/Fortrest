@@ -152,7 +152,8 @@ public class GameManager : MonoBehaviour
         }
         lastMousePosition = currentMousePosition;
 
-        PlayerModeHandler.SetMouseActive(KeyboardBool && CursorActiveBool, false);
+        PlayerModeHandler.SetMouseActive(true);
+        //PlayerModeHandler.SetMouseActive(KeyboardBool && CursorActiveBool, false);
     }
 
 

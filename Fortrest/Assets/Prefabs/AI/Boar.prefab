@@ -465,7 +465,7 @@ CharacterController:
   m_Height: 0
   m_Radius: 0.75
   m_SlopeLimit: 45
-  m_StepOffset: 0.2
+  m_StepOffset: 0.1
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0.58, z: 0.75}
@@ -486,6 +486,7 @@ MonoBehaviour:
   inRange: 0
   currentSpeed: 0
   canMove: 1
+  isMoving: 0
   animator: {fileID: 7383631925837582762}
   cc: {fileID: 0}
   mountSound: {fileID: 8300000, guid: 0aface736e3e167449859c76f6bbc70f, type: 3}

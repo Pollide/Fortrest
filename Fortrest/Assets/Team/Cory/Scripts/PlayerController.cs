@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour
     // Movement
     [HideInInspector]
     public Vector3 moveDirection;
+    private Vector3 mousePos;
 
     private float horizontalMovement;
     private float verticalMovement;
@@ -30,7 +31,7 @@ public class PlayerController : MonoBehaviour
     private float playerWalkSpeed = 5.0f;
     private float playerSprintSpeed = 8.0f;
     private float playerBowSpeed = 3.0f;
-    private bool running = false;
+    public bool running = false;
     private float runTimer = 0.0f;
     private bool canRun = true;
 
@@ -102,7 +103,7 @@ public class PlayerController : MonoBehaviour
     // States
     [Header("Player States")]
     public bool playerCanMove = true;
-    private bool playerisMoving = false;
+    public bool playerisMoving = false;
     [HideInInspector] public bool attacking = false;
 
     // Teleporter
@@ -224,6 +225,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool staggered;
     public bool ResourceHolderOpened;
     public bool bridgeInteract;
+
+    public Camera cam;
 
     // Start is called before the first frame update
     void Awake()
@@ -524,6 +527,10 @@ public class PlayerController : MonoBehaviour
         keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
 
         ChangeTool(new ToolData() { AxeBool = true });
+
+        playerCC.enabled = false;
+        RotatePlayer();
+        playerCC.enabled = true;
     }
 
     void Update()
@@ -571,6 +578,7 @@ public class PlayerController : MonoBehaviour
             HandleSpeed();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
+            RotatePlayer();
 
             // Mechanics
             Attack();
@@ -1255,12 +1263,12 @@ public class PlayerController : MonoBehaviour
 
             moveDirection *= playerCurrentSpeed;
 
-            moveDirection = Quaternion.AngleAxis(45, Vector3.up) * moveDirection;
+            moveDirection = Quaternion.AngleAxis(45, Vector3.up) * moveDirection;          
 
-            if (moveDirection != Vector3.zero)
-            {
-                transform.forward = moveDirection;
-            }
+            //if (moveDirection != Vector3.zero)
+            //{
+            //    transform.forward = moveDirection;
+            //}
 
             ApplyGravity();
         }
@@ -1274,6 +1282,17 @@ public class PlayerController : MonoBehaviour
         {
             playerCC.Move(moveDirection * Time.deltaTime);
         }
+    }
+
+    private void RotatePlayer()
+    {
+        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+        Vector2 lookDirection = mousePos - transform.position;
+
+        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 112.5f;
+
+        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
     }
 
     private void ApplyGravity()
