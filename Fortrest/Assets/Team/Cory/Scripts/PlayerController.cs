@@ -17,7 +17,7 @@ public class PlayerController : MonoBehaviour
     // Movement
     [HideInInspector]
     public Vector3 moveDirection;
-
+    private Vector3 pushDirection;
     private float horizontalMovement;
     private float verticalMovement;
     public GameObject house;
@@ -571,7 +571,7 @@ public class PlayerController : MonoBehaviour
             HandleSpeed();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
-
+            
             // Mechanics
             Attack();
             Gathering();
@@ -581,13 +581,18 @@ public class PlayerController : MonoBehaviour
             {
                 AttackLunge();
             }
+
+           
         }
         else
         {
+            playerCC.Move(pushDirection * Time.deltaTime);
             horizontalMovement = 0;
             verticalMovement = 0;
             running = false;
         }
+
+        
 
         HandleEnergy();
 
@@ -1857,5 +1862,19 @@ public class PlayerController : MonoBehaviour
             enemyAmountText.color = LevelManager.global.textGradient.Evaluate(temp);
             yield return null;
         }
+    }
+
+    public IEnumerator PushPlayer(float _waitTime)
+    {
+        playerCanMove = false;
+        yield return new WaitForSeconds(_waitTime);
+        playerCanMove = true;
+        pushDirection = Vector3.zero; // Reset the push direction.
+    }
+
+    public void SetPushDirection(Vector3 _direction, float _pushForce)
+    {
+        pushDirection += _direction * _pushForce;
+        pushDirection.y = 0;
     }
 }

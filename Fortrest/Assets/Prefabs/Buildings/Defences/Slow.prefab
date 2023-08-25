@@ -1054,7 +1054,7 @@ RectTransform:
   m_GameObject: {fileID: 3181294430361836638}
   m_LocalRotation: {x: 0.0000031888478, y: -0.0000030696385, z: -0.00000079348666,
     w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 0.7582192, y: 0.86257476, z: 1.0118387}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1063,7 +1063,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1.26}
+  m_AnchoredPosition: {x: 0, y: 0.01}
   m_SizeDelta: {x: 7, y: 2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8998698533218625741
@@ -2084,7 +2084,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4568575667695550563}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3.597, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2146,8 +2146,11 @@ MonoBehaviour:
   healthBarImage: {fileID: 6847102100746607949}
   HUDHealthBar: {fileID: 0}
   playerinRange: 0
+  normalHouse: {fileID: 0}
+  destroyedHouse: {fileID: 0}
   interactText: {fileID: 0}
   textDisplayed: 0
+  DebugDestroyInstantly: 0
 --- !u!135 &8677995080148856572
 SphereCollider:
   m_ObjectHideFlags: 0
