@@ -19,6 +19,7 @@ public class CameraFollow : MonoBehaviour
     private float buildOffsetRot;
     private Vector3 initialRotation;
     private Vector3 direction;
+    private float distance;
 
     private void Awake()
     {
@@ -76,36 +77,79 @@ public class CameraFollow : MonoBehaviour
 
         if (!Boar.global.mounted)
         {
-            float distance = Vector3.Distance(PlayerController.global.transform.position, PlayerController.global.mousePos);
-            distance = Mathf.Clamp(distance, 2f, 12f);
-            distance /= 12.5f;
-
-            transform.position = Vector3.SmoothDamp(transform.position, targetPosition + PlayerController.global.transform.forward * distance, ref currentVelocity, 0.2f);
-        }
-        else
-        {
-            cameraDistance = Vector3.Distance(targetPosition, transform.position);
-
-            float i = cameraDistance / (max / (5f / 36) * (Time.deltaTime * 100));
-
-            smoothTime = Mathf.Lerp(maxSmooth, minSmooth, i);
-
-            direction = Boar.global.transform.forward;
-
-            direction.Normalize();
-            direction.y = 0;
-
-            if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || (PlayerController.global.movingCTRL))
+            if (GameManager.global.KeyboardBool)
             {
-                if (Boar.global.currentSpeed > 0)
-                {
-                    smoothTime *= 0.75f;
-                    transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 5.5f * Boar.global.currentSpeed / 90.0f, ref currentVelocity, smoothTime);
-                }
+                distance = Vector3.Distance(PlayerController.global.transform.position, PlayerController.global.mousePos);
+                distance = Mathf.Clamp(distance, 0f, 12f);
+                distance /= 12f;
             }
             else
             {
-                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
+                if (PlayerController.global.rotateCTRL.x > 0 && PlayerController.global.rotateCTRL.y > 0)
+                {
+                    if (PlayerController.global.rotateCTRL.x > PlayerController.global.rotateCTRL.y)
+                    {
+                        distance = PlayerController.global.rotateCTRL.x;
+                    }
+                    else
+                    {
+                        distance = PlayerController.global.rotateCTRL.y;
+                    }
+                }
+                else if (PlayerController.global.rotateCTRL.x > 0 && PlayerController.global.rotateCTRL.y < 0)
+                {
+                    if (PlayerController.global.rotateCTRL.x > (PlayerController.global.rotateCTRL.y * -1))
+                    {
+                        distance = PlayerController.global.rotateCTRL.x;
+                    }
+                    else
+                    {
+                        distance = PlayerController.global.rotateCTRL.y * -1;
+                    }
+                }
+                else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y > 0)
+                {
+                    if ((PlayerController.global.rotateCTRL.x * -1) > PlayerController.global.rotateCTRL.y)
+                    {
+                        distance = PlayerController.global.rotateCTRL.x * -1;
+                    }
+                    else
+                    {
+                        distance = PlayerController.global.rotateCTRL.y;
+                    }
+                }
+                else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y < 0)
+                {
+                    if ((PlayerController.global.rotateCTRL.x * -1) > (PlayerController.global.rotateCTRL.y * -1))
+                    {
+                        distance = PlayerController.global.rotateCTRL.x * -1;
+                    }
+                    else
+                    {
+                        distance = PlayerController.global.rotateCTRL.y * -1;
+                    }
+                }
+            }
+
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition + PlayerController.global.transform.forward * distance * 1.25f, ref currentVelocity, 0.2f);
+        }
+        else
+        {
+            //cameraDistance = Vector3.Distance(targetPosition, transform.position);
+            //float i = cameraDistance / (max / (5f / 36) * (Time.deltaTime * 100));
+            //smoothTime = Mathf.Lerp(maxSmooth, minSmooth, i);
+
+            direction = Boar.global.transform.forward;
+            direction.Normalize();
+            direction.y = 0;
+
+            if (((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) || (PlayerController.global.movingCTRL)) && !Boar.global.isReversing)
+            {               
+                transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 6.0f * Boar.global.currentSpeed / 90.0f, ref currentVelocity, 0.6f);
+            }
+            else
+            {
+                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, 0.75f);
             }
         }
 

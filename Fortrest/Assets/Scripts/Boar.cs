@@ -22,7 +22,7 @@ public class Boar : MonoBehaviour
 
     [HideInInspector] public bool canMove = true;
     [HideInInspector] public bool isMoving;
-    private bool isReversing;
+    public bool isReversing;
 
     public Animator animator;
     [HideInInspector] public CharacterController cc;
