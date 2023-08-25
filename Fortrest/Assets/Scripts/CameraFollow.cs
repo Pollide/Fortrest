@@ -19,7 +19,7 @@ public class CameraFollow : MonoBehaviour
     private float buildOffsetRot;
     private Vector3 initialRotation;
     private Vector3 direction;
-    private float distance;
+    public float distance;
 
     private void Awake()
     {
@@ -85,50 +85,53 @@ public class CameraFollow : MonoBehaviour
             }
             else
             {
+                distance = Mathf.Clamp(Mathf.Abs(PlayerController.global.rotateCTRL.y) + Mathf.Abs(PlayerController.global.rotateCTRL.x), 0, 1);
+                /*
                 if (PlayerController.global.rotateCTRL.x > 0 && PlayerController.global.rotateCTRL.y > 0)
-                {
-                    if (PlayerController.global.rotateCTRL.x > PlayerController.global.rotateCTRL.y)
                     {
-                        distance = PlayerController.global.rotateCTRL.x;
+                        if (PlayerController.global.rotateCTRL.x > PlayerController.global.rotateCTRL.y)
+                        {
+                            distance = PlayerController.global.rotateCTRL.x;
+                        }
+                        else
+                        {
+                            distance = PlayerController.global.rotateCTRL.y;
+                        }
                     }
-                    else
+                    else if (PlayerController.global.rotateCTRL.x > 0 && PlayerController.global.rotateCTRL.y < 0)
                     {
-                        distance = PlayerController.global.rotateCTRL.y;
+                        if (PlayerController.global.rotateCTRL.x > (PlayerController.global.rotateCTRL.y * -1))
+                        {
+                            distance = PlayerController.global.rotateCTRL.x;
+                        }
+                        else
+                        {
+                            distance = PlayerController.global.rotateCTRL.y * -1;
+                        }
                     }
-                }
-                else if (PlayerController.global.rotateCTRL.x > 0 && PlayerController.global.rotateCTRL.y < 0)
-                {
-                    if (PlayerController.global.rotateCTRL.x > (PlayerController.global.rotateCTRL.y * -1))
+                    else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y > 0)
                     {
-                        distance = PlayerController.global.rotateCTRL.x;
+                        if ((PlayerController.global.rotateCTRL.x * -1) > PlayerController.global.rotateCTRL.y)
+                        {
+                            distance = PlayerController.global.rotateCTRL.x * -1;
+                        }
+                        else
+                        {
+                            distance = PlayerController.global.rotateCTRL.y;
+                        }
                     }
-                    else
+                    else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y < 0)
                     {
-                        distance = PlayerController.global.rotateCTRL.y * -1;
+                        if ((PlayerController.global.rotateCTRL.x * -1) > (PlayerController.global.rotateCTRL.y * -1))
+                        {
+                            distance = PlayerController.global.rotateCTRL.x * -1;
+                        }
+                        else
+                        {
+                            distance = PlayerController.global.rotateCTRL.y * -1;
+                        }
                     }
-                }
-                else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y > 0)
-                {
-                    if ((PlayerController.global.rotateCTRL.x * -1) > PlayerController.global.rotateCTRL.y)
-                    {
-                        distance = PlayerController.global.rotateCTRL.x * -1;
-                    }
-                    else
-                    {
-                        distance = PlayerController.global.rotateCTRL.y;
-                    }
-                }
-                else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y < 0)
-                {
-                    if ((PlayerController.global.rotateCTRL.x * -1) > (PlayerController.global.rotateCTRL.y * -1))
-                    {
-                        distance = PlayerController.global.rotateCTRL.x * -1;
-                    }
-                    else
-                    {
-                        distance = PlayerController.global.rotateCTRL.y * -1;
-                    }
-                }
+                */
             }
 
             transform.position = Vector3.SmoothDamp(transform.position, targetPosition + PlayerController.global.transform.forward * distance * 1.25f, ref currentVelocity, 0.2f);
@@ -144,7 +147,7 @@ public class CameraFollow : MonoBehaviour
             direction.y = 0;
 
             if (((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) || (PlayerController.global.movingCTRL)) && !Boar.global.isReversing)
-            {               
+            {
                 transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 6.0f * Boar.global.currentSpeed / 90.0f, ref currentVelocity, 0.6f);
             }
             else
