@@ -4633,10 +4633,12 @@ MonoBehaviour:
   playerCC: {fileID: 5569601162832024542}
   CharacterAnimator: {fileID: 6954126482496830218}
   moveDirection: {x: 0, y: 0, z: 0}
+  mousePos: {x: 0, y: 0, z: 0}
   house: {fileID: 0}
   houseSpawnPoint: {fileID: 0}
   bodyShape: {fileID: 4232939553054584673}
   LanternLighted: 0
+  running: 0
   evading: 0
   canEvade: 1
   playerCanBeDamaged: 1
@@ -4657,6 +4659,7 @@ MonoBehaviour:
   lunge: 0
   upgradedMelee: 0
   playerCanMove: 1
+  playerisMoving: 0
   attacking: 0
   canTeleport: 0
   AxeGameObject: {fileID: 8727725965552586070}
@@ -4699,6 +4702,7 @@ MonoBehaviour:
   inventoryCTRL: 0
   swapCTRL: 0
   moveCTRL: {x: 0, y: 0}
+  rotateCTRL: {x: 0, y: 0, z: 0}
   upCTRL: 0
   downCTRL: 0
   canPressCTRL: 0
@@ -4715,6 +4719,8 @@ MonoBehaviour:
   staggered: 0
   ResourceHolderOpened: 0
   bridgeInteract: 0
+  rotationOffset: 90
+  cam: {fileID: 0}
 --- !u!143 &5569601162832024542
 CharacterController:
   m_ObjectHideFlags: 0

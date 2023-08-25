@@ -194,6 +194,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
     [HideInInspector] public Vector2 moveCTRL;
+    [HideInInspector] public Vector2 rotateCTRL;
     [HideInInspector] public bool upCTRL;
     [HideInInspector] public bool downCTRL;
     [HideInInspector] public bool canPressCTRL;
@@ -248,6 +249,10 @@ public class PlayerController : MonoBehaviour
             GameManager.global.gamepadControls.Controls.Move.canceled += context => MoveController(false);
             GameManager.global.gamepadControls.Controls.Move.performed += context => PauseSelection();
             GameManager.global.gamepadControls.Controls.Move.canceled += context => canPressCTRL = false;
+
+            // Right stick to rotate
+            GameManager.global.gamepadControls.Controls.Rotate.performed += context => rotateCTRL = context.ReadValue<Vector2>();
+            //GameManager.global.gamepadControls.Controls.Rotate.canceled += context => rotateCTRL = Vector2.zero;
 
             // A to sprint
             GameManager.global.gamepadControls.Controls.Sprint.performed += context => SprintController(true);
@@ -1283,13 +1288,22 @@ public class PlayerController : MonoBehaviour
 
     private void RotatePlayer()
     {
-        mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        if (GameManager.global.KeyboardBool)
+        {
+            mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
-        Vector2 lookDirection = mousePos - transform.position;
+            Vector3 lookDirection = mousePos - transform.position;
 
-        float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 112.5f;
+            float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
 
-        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        }
+        else
+        {
+            float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        }    
     }
 
     private void ApplyGravity()
