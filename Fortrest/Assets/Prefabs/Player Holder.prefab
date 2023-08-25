@@ -4633,10 +4633,12 @@ MonoBehaviour:
   playerCC: {fileID: 5569601162832024542}
   CharacterAnimator: {fileID: 6954126482496830218}
   moveDirection: {x: 0, y: 0, z: 0}
+  mousePos: {x: 0, y: 0, z: 0}
   house: {fileID: 0}
   houseSpawnPoint: {fileID: 0}
   bodyShape: {fileID: 4232939553054584673}
   LanternLighted: 0
+  running: 0
   evading: 0
   canEvade: 1
   playerCanBeDamaged: 1
@@ -4657,6 +4659,7 @@ MonoBehaviour:
   lunge: 0
   upgradedMelee: 0
   playerCanMove: 1
+  playerisMoving: 0
   attacking: 0
   canTeleport: 0
   AxeGameObject: {fileID: 8727725965552586070}
@@ -4684,7 +4687,7 @@ MonoBehaviour:
   DarkenGameObject: {fileID: 2127865250632510180}
   InventoryHolder: {fileID: 540465034107701847}
   pausedBool: 0
-  UIAnimation: {fileID: 8602729549476735322}
+  UIAnimation: {fileID: 0}
   redSlashes:
   - {fileID: 4361196502290701524}
   - {fileID: 881860536046848160}
@@ -4715,6 +4718,7 @@ MonoBehaviour:
   staggered: 0
   ResourceHolderOpened: 0
   bridgeInteract: 0
+  cam: {fileID: 0}
 --- !u!143 &5569601162832024542
 CharacterController:
   m_ObjectHideFlags: 0
@@ -8403,9 +8407,9 @@ GameObject:
   - component: {fileID: 5993301192131265878}
   - component: {fileID: 649326114189761709}
   - component: {fileID: 1697201644277866195}
-  - component: {fileID: 8602729549476735322}
   - component: {fileID: 6578548613371225438}
   - component: {fileID: 5340302097309727611}
+  - component: {fileID: 1434099527867369571}
   m_Layer: 5
   m_Name: Player Canvas
   m_TagString: Untagged
@@ -8571,23 +8575,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!111 &8602729549476735322
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8215368943879176228}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 7400000, guid: 22e8b1b0d653ee845a3b0cfe246ff299, type: 2}
-  m_Animations:
-  - {fileID: 7400000, guid: 22e8b1b0d653ee845a3b0cfe246ff299, type: 2}
-  - {fileID: 7400000, guid: de3236772e27752458f81c23198f02f2, type: 2}
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &6578548613371225438
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8633,6 +8620,23 @@ MonoBehaviour:
   upgradeR: {fileID: 7938197919919340785}
   repairR: {fileID: 192802672458304315}
   buildingR: {fileID: 5286780084498440221}
+--- !u!111 &1434099527867369571
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8215368943879176228}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 22e8b1b0d653ee845a3b0cfe246ff299, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 22e8b1b0d653ee845a3b0cfe246ff299, type: 2}
+  - {fileID: 7400000, guid: de3236772e27752458f81c23198f02f2, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &8288854577806871242
 GameObject:
   m_ObjectHideFlags: 0
@@ -11607,7 +11611,7 @@ PrefabInstance:
     - target: {fileID: 916877951187145491, guid: ea72d0aec2c6e4d94b9b6ba576f660f9,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200.10294
+      value: 200.59323
       objectReference: {fileID: 0}
     - target: {fileID: 916877951187145491, guid: ea72d0aec2c6e4d94b9b6ba576f660f9,
         type: 3}
@@ -11652,12 +11656,12 @@ PrefabInstance:
     - target: {fileID: 916877951187145491, guid: ea72d0aec2c6e4d94b9b6ba576f660f9,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 120.05147
+      value: 120.296616
       objectReference: {fileID: 0}
     - target: {fileID: 916877951187145491, guid: ea72d0aec2c6e4d94b9b6ba576f660f9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -549.94415
+      value: -548.72174
       objectReference: {fileID: 0}
     - target: {fileID: 916877951187145491, guid: ea72d0aec2c6e4d94b9b6ba576f660f9,
         type: 3}

@@ -327,6 +327,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ShakeResourceHolder()
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+        GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
+    }
+
     private void BuildSelectController()
     {
         if (PlayerModeHandler.global.inTheFortress)
@@ -581,7 +587,7 @@ public class PlayerController : MonoBehaviour
             ApplyMovement(horizontalMovement, verticalMovement);
             RotatePlayer();
 
-            
+
             // Mechanics
             Attack();
             Gathering();
@@ -592,7 +598,7 @@ public class PlayerController : MonoBehaviour
                 AttackLunge();
             }
 
-           
+
         }
         else
         {
@@ -602,7 +608,7 @@ public class PlayerController : MonoBehaviour
             running = false;
         }
 
-        
+
 
         HandleEnergy();
 

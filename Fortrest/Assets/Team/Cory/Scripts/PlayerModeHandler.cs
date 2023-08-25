@@ -524,8 +524,8 @@ public class PlayerModeHandler : MonoBehaviour
                     runOnce = true;
                     if (!PlayerController.global.CheckSufficientResources())
                     {
-                        GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-                        Debug.Log("Not Enough Resources");
+                        PlayerController.global.ShakeResourceHolder();
+                   
                     }
                 }
             }
@@ -565,7 +565,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer))
+        if (Physics.Raycast(ray, out RaycastHit hitData, 1000, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
             if (!turretBlueprint)
             {
@@ -607,13 +607,13 @@ public class PlayerModeHandler : MonoBehaviour
             Vector3 worldPos = hitData.point;
             Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
 
-            worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
+            worldPos = new Vector3(gridPos.x, 0, gridPos.z);
             turretBlueprint.transform.position = worldPos;
 
             if (KeyHint)
                 KeyHint.position = worldPos + HintOffset;
 
-            Collider[] collidershit = Physics.OverlapSphere(new Vector3(worldPos.x, 0f, worldPos.z), nimDistanceBetweenTurrts);
+            Collider[] collidershit = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts);
 
             if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !ReturnColiders(collidershit))
             {
