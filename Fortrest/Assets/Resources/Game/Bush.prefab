@@ -190,8 +190,11 @@ MonoBehaviour:
   healthBarImage: {fileID: 1280423068281564523}
   HUDHealthBar: {fileID: 0}
   playerinRange: 0
+  normalHouse: {fileID: 0}
+  destroyedHouse: {fileID: 0}
   interactText: {fileID: 0}
   textDisplayed: 0
+  DebugDestroyInstantly: 0
 --- !u!111 &3550765887160449743
 Animation:
   m_ObjectHideFlags: 0
@@ -313,12 +316,12 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 3.5221
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.6129
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -333,7 +336,7 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.228
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -358,12 +361,12 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.17
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.794
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
