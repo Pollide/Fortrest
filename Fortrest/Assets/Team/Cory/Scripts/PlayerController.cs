@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
     [HideInInspector] public Vector2 moveCTRL;
-    [HideInInspector] public Vector2 rotateCTRL;
+    public Vector2 rotateCTRL;
     [HideInInspector] public bool upCTRL;
     [HideInInspector] public bool downCTRL;
     [HideInInspector] public bool canPressCTRL;
@@ -1317,7 +1317,7 @@ public class PlayerController : MonoBehaviour
             float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
 
             transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
-        }    
+        }
     }
 
     private void ApplyGravity()
