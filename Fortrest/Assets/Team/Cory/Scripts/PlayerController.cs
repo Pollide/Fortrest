@@ -13,20 +13,22 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
+    public Camera cam;
 
-    // Movement
-    [HideInInspector]
-    public Vector3 moveDirection;
-    public Vector3 mousePos;
-
-    private Vector3 pushDirection;
-    private float horizontalMovement;
-    private float verticalMovement;
+    // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
     public GameObject bodyShape;
-    private GameObject respawnText;
-    [HideInInspector] public bool LanternLighted;
+
+    // Movement   
+    [HideInInspector] public Vector3 moveDirection;
+    [HideInInspector] public Vector3 mousePos;
+
+    // Player Knocked Back
+    private Vector3 pushDirection;
+    private float horizontalMovement;
+    private float verticalMovement;  
+
     // Speed
     private float playerCurrentSpeed = 0f;
     private float playerWalkSpeed = 5.0f;
@@ -39,7 +41,7 @@ public class PlayerController : MonoBehaviour
     // Gathering
     private bool gathering = false;
     private float gatherTimer = 0.0f;
-    private float resetGather = 1.10f;
+    private float resetGather = 1f;
 
     // Evade
     private float evadeTimer = 0.0f;
@@ -87,7 +89,7 @@ public class PlayerController : MonoBehaviour
     // Eating
     [HideInInspector] public int appleAmount = 0;
     private float appleHealAmount = 10.0f;
-    [HideInInspector] public int maxApple = 5;
+    [HideInInspector] public const int maxApple = 5;
 
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
@@ -106,9 +108,12 @@ public class PlayerController : MonoBehaviour
     public bool playerCanMove = true;
     public bool playerisMoving = false;
     [HideInInspector] public bool attacking = false;
+    public bool canGetInHouse;
+    public bool bridgeInteract;
 
     // Teleporter
     public bool canTeleport = false;
+    public bool teleporting;
 
     // VFXs
     private VisualEffect VFXSlash;
@@ -131,9 +136,6 @@ public class PlayerController : MonoBehaviour
     public GameObject MapResourcePrefab;
     public Animator ResourceHolderAnimator;
     public bool lastWasAxe;
-
-    private bool mapBool;
-
     [System.Serializable]
     public class ToolData
     {
@@ -159,6 +161,7 @@ public class PlayerController : MonoBehaviour
     // Inventory
     public GameObject DarkenGameObject;
     public GameObject InventoryHolder;
+
     // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
@@ -166,9 +169,17 @@ public class PlayerController : MonoBehaviour
     // Death
     private float respawnTimer = 0.0f;
     private bool textAnimated = false;
+    [HideInInspector] public bool respawning;
+    private GameObject respawnText;
 
     // Enemy UI
     private int lastAmount = 0;
+    public Image countdownBar;
+    private bool gapSet;
+    private float gap;
+    private float fraction;
+    private float newGap;
+    private bool displayAmount;
 
     // Damage Indicators    
     public Image[] redSlashes;
@@ -206,29 +217,19 @@ public class PlayerController : MonoBehaviour
     // Keyboard Controls
     private KeyCode[] keyCodes;
 
-    // Swapping
+    // Cancel
     [HideInInspector] public bool cancelAnimation;
     [HideInInspector] public bool cancelEffects;
-
-    public SkinnedMeshRenderer LanternSkinnedRenderer;
-
-    public bool canGetInHouse;
-
-    public Image countdownBar;
-    private bool gapSet;
-    private float gap;
-    private float fraction;
-    public const int MaxApples = 5;
-    private float newGap;
-    private bool displayAmount;
-    public bool teleporting;
-    [HideInInspector] public bool respawning;
     private bool cancelHit;
     [HideInInspector] public bool staggered;
-    public bool ResourceHolderOpened;
-    public bool bridgeInteract;
 
-    public Camera cam;
+    // Lantern
+    [HideInInspector] public bool LanternLighted;
+    public SkinnedMeshRenderer LanternSkinnedRenderer;
+
+    // Map
+    private bool mapBool;
+    public bool ResourceHolderOpened;
 
     // Start is called before the first frame update
     void Awake()
