@@ -134,6 +134,15 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Value"",
+                    ""id"": ""1379627b-c1ef-4723-bd7b-873f502b44e3"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -268,6 +277,17 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                     ""action"": ""Turret"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""083f213d-294a-4cd4-bdc7-fd862b628738"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -288,6 +308,7 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
         m_Controls_Evade = m_Controls.FindAction("Evade", throwIfNotFound: true);
         m_Controls_Heal = m_Controls.FindAction("Heal", throwIfNotFound: true);
         m_Controls_Turret = m_Controls.FindAction("Turret", throwIfNotFound: true);
+        m_Controls_Rotate = m_Controls.FindAction("Rotate", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -359,6 +380,7 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Controls_Evade;
     private readonly InputAction m_Controls_Heal;
     private readonly InputAction m_Controls_Turret;
+    private readonly InputAction m_Controls_Rotate;
     public struct ControlsActions
     {
         private @GamepadControls m_Wrapper;
@@ -375,6 +397,7 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
         public InputAction @Evade => m_Wrapper.m_Controls_Evade;
         public InputAction @Heal => m_Wrapper.m_Controls_Heal;
         public InputAction @Turret => m_Wrapper.m_Controls_Turret;
+        public InputAction @Rotate => m_Wrapper.m_Controls_Rotate;
         public InputActionMap Get() { return m_Wrapper.m_Controls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -420,6 +443,9 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                 @Turret.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnTurret;
                 @Turret.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnTurret;
                 @Turret.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnTurret;
+                @Rotate.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnRotate;
+                @Rotate.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnRotate;
+                @Rotate.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnRotate;
             }
             m_Wrapper.m_ControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -460,6 +486,9 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                 @Turret.started += instance.OnTurret;
                 @Turret.performed += instance.OnTurret;
                 @Turret.canceled += instance.OnTurret;
+                @Rotate.started += instance.OnRotate;
+                @Rotate.performed += instance.OnRotate;
+                @Rotate.canceled += instance.OnRotate;
             }
         }
     }
@@ -478,5 +507,6 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
         void OnEvade(InputAction.CallbackContext context);
         void OnHeal(InputAction.CallbackContext context);
         void OnTurret(InputAction.CallbackContext context);
+        void OnRotate(InputAction.CallbackContext context);
     }
 }
