@@ -602,7 +602,8 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            playerCC.Move(pushDirection * Time.deltaTime);
+            if (pushDirection != Vector3.zero)
+                playerCC.Move(pushDirection * Time.deltaTime);
             horizontalMovement = 0;
             verticalMovement = 0;
             running = false;
