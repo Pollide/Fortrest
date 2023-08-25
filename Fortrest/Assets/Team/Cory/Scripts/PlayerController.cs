@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     // Gathering
     private bool gathering = false;
     private float gatherTimer = 0.0f;
-    private float resetGather = 1.25f;
+    private float resetGather = 1.10f;
 
     // Evade
     private float evadeTimer = 0.0f;
@@ -253,11 +253,16 @@ public class PlayerController : MonoBehaviour
 
             // Right stick to rotate
             GameManager.global.gamepadControls.Controls.Rotate.performed += context => rotateCTRL = context.ReadValue<Vector2>();
-            //GameManager.global.gamepadControls.Controls.Rotate.canceled += context => rotateCTRL = Vector2.zero;
 
             // A to sprint
             GameManager.global.gamepadControls.Controls.Sprint.performed += context => SprintController(true);
             GameManager.global.gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
+            // Right Joystick click to sprint
+            GameManager.global.gamepadControls.Controls.Sprint2.performed += context => SprintController(true);
+            GameManager.global.gamepadControls.Controls.Sprint2.canceled += context => SprintController(false);
+            // Left Joystick click to sprint
+            GameManager.global.gamepadControls.Controls.Sprint3.performed += context => SprintController(true);
+            GameManager.global.gamepadControls.Controls.Sprint3.canceled += context => SprintController(false);
 
             // A to select in build mode
             GameManager.global.gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
@@ -1416,6 +1421,10 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4.0f;
             float distanceFloat = Vector3.Distance(transform.position, building.position);
             float smallestDistance = 5.0f;
+            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.Stone)
+            {
+                minDistanceFloat = 5.0f;
+            }
             if (distanceFloat < minDistanceFloat)
             {
                 if (distanceFloat <= smallestDistance)

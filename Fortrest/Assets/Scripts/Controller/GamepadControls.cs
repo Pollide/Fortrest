@@ -143,6 +143,24 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Sprint2"",
+                    ""type"": ""Button"",
+                    ""id"": ""5d386898-2845-4458-9264-59ac3a3a76dd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Sprint3"",
+                    ""type"": ""Button"",
+                    ""id"": ""3a8e3369-185c-4542-9835-f989d59ec31a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -288,6 +306,28 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                     ""action"": ""Rotate"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d2739fcb-9c4a-41db-ad8f-88058de27dce"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c3449142-7bdb-4d91-9fd6-74f7b6270f87"",
+                    ""path"": ""<Gamepad>/leftStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Sprint3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -309,6 +349,8 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
         m_Controls_Heal = m_Controls.FindAction("Heal", throwIfNotFound: true);
         m_Controls_Turret = m_Controls.FindAction("Turret", throwIfNotFound: true);
         m_Controls_Rotate = m_Controls.FindAction("Rotate", throwIfNotFound: true);
+        m_Controls_Sprint2 = m_Controls.FindAction("Sprint2", throwIfNotFound: true);
+        m_Controls_Sprint3 = m_Controls.FindAction("Sprint3", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -381,6 +423,8 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
     private readonly InputAction m_Controls_Heal;
     private readonly InputAction m_Controls_Turret;
     private readonly InputAction m_Controls_Rotate;
+    private readonly InputAction m_Controls_Sprint2;
+    private readonly InputAction m_Controls_Sprint3;
     public struct ControlsActions
     {
         private @GamepadControls m_Wrapper;
@@ -398,6 +442,8 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
         public InputAction @Heal => m_Wrapper.m_Controls_Heal;
         public InputAction @Turret => m_Wrapper.m_Controls_Turret;
         public InputAction @Rotate => m_Wrapper.m_Controls_Rotate;
+        public InputAction @Sprint2 => m_Wrapper.m_Controls_Sprint2;
+        public InputAction @Sprint3 => m_Wrapper.m_Controls_Sprint3;
         public InputActionMap Get() { return m_Wrapper.m_Controls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -446,6 +492,12 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                 @Rotate.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnRotate;
                 @Rotate.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnRotate;
                 @Rotate.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnRotate;
+                @Sprint2.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint2;
+                @Sprint2.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint2;
+                @Sprint2.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint2;
+                @Sprint3.started -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint3;
+                @Sprint3.performed -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint3;
+                @Sprint3.canceled -= m_Wrapper.m_ControlsActionsCallbackInterface.OnSprint3;
             }
             m_Wrapper.m_ControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -489,6 +541,12 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
                 @Rotate.started += instance.OnRotate;
                 @Rotate.performed += instance.OnRotate;
                 @Rotate.canceled += instance.OnRotate;
+                @Sprint2.started += instance.OnSprint2;
+                @Sprint2.performed += instance.OnSprint2;
+                @Sprint2.canceled += instance.OnSprint2;
+                @Sprint3.started += instance.OnSprint3;
+                @Sprint3.performed += instance.OnSprint3;
+                @Sprint3.canceled += instance.OnSprint3;
             }
         }
     }
@@ -508,5 +566,7 @@ public partial class @GamepadControls : IInputActionCollection2, IDisposable
         void OnHeal(InputAction.CallbackContext context);
         void OnTurret(InputAction.CallbackContext context);
         void OnRotate(InputAction.CallbackContext context);
+        void OnSprint2(InputAction.CallbackContext context);
+        void OnSprint3(InputAction.CallbackContext context);
     }
 }
