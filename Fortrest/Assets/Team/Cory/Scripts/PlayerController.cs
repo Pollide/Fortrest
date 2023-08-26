@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     // Player Knocked Back
     private Vector3 pushDirection;
     private float horizontalMovement;
-    private float verticalMovement;  
+    private float verticalMovement;
 
     // Speed
     private float playerCurrentSpeed = 0f;
@@ -230,6 +230,8 @@ public class PlayerController : MonoBehaviour
     // Map
     private bool mapBool;
     public bool ResourceHolderOpened;
+
+    public RectTransform TurretMenuHolder;
 
     // Start is called before the first frame update
     void Awake()
@@ -1306,23 +1308,38 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    float previousLookAngle;
+    float previousMoveAngle;
+    public float shift;
     private void RotatePlayer()
     {
+        float angle;
+
         if (GameManager.global.KeyboardBool)
         {
             mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
 
             Vector3 lookDirection = mousePos - transform.position;
 
-            float angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
-
-            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+            angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
         }
         else
         {
-            float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+            angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+        }
 
-            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        float angleMove = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - shift;
+
+        if (previousMoveAngle != angleMove) //face in direction of moving
+        {
+            previousMoveAngle = angleMove;
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angleMove, transform.eulerAngles.z);
+        }
+
+        if (previousLookAngle != angle) //however if player is moving cursor/Rigt joystick around, then pioritise that
+        {
+            previousLookAngle = angle;
+            // transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
         }
     }
 

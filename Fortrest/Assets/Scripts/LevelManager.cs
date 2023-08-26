@@ -567,7 +567,7 @@ public class LevelManager : MonoBehaviour
                             ogreSpawned = true;
                         }
 
-                        enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition); // 16 is the magic number for this to work                         
+                        enemySpawnPosition.y = 0; //everything is at ground zero                   
 
                         GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
                     }

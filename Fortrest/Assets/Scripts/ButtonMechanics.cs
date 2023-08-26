@@ -36,6 +36,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public bool MaxResourcesBool;
     public int TerrainTeleportInt = -1;
 
+    [Header("Build")]
+    public bool RepairBool;
+    public bool UpgradeBool;
+    public bool DestroyBool;
+
     [Header("Menu")]
     public bool PlayBool;
     public bool ExitBool;
@@ -132,6 +137,21 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         if (ResumeBool)
         {
             PlayerController.global.PauseVoid(false);
+        }
+
+        if (UpgradeBool)
+        {
+
+        }
+
+        if (DestroyBool)
+        {
+
+        }
+
+        if (RepairBool)
+        {
+
         }
 
         if (BeginingBool)
