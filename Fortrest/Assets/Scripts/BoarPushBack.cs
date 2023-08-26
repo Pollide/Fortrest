@@ -10,9 +10,34 @@ public class BoarPushBack : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-            NavMeshAgent enemyAgent = other.GetComponent<NavMeshAgent>();
-            Vector3 direction = (enemyAgent.transform.position - transform.position).normalized;
-            enemyAgent.velocity = direction * pushForce;
+            if (GetComponentInParent<Boar>().IsMoving() == true)
+            {
+               
+                NavMeshAgent enemyAgent = other.GetComponent<NavMeshAgent>();
+                EnemyController enemyController = other.GetComponent<EnemyController>();
+                float sideThreshold = 0.0f;
+                Vector3 direction = (enemyAgent.transform.position - transform.position).normalized;
+                Vector3 rightVector = transform.right;
+                float dotProduct = Vector3.Dot(direction, rightVector);
+
+                if (dotProduct > sideThreshold)
+                {
+                    direction = (-enemyAgent.transform.forward + enemyAgent.transform.right).normalized;
+                    enemyAgent.velocity = direction * pushForce;
+                    StartCoroutine(enemyController.StopAnimation(1));
+                }
+                else if (dotProduct < -sideThreshold)
+                {
+                    direction = (-enemyAgent.transform.forward - enemyAgent.transform.right).normalized;
+                    enemyAgent.velocity = direction * pushForce;
+                    StartCoroutine(enemyController.StopAnimation(1));
+                }
+                else
+                {
+                    enemyAgent.velocity = direction * pushForce;
+                    StartCoroutine(enemyController.StopAnimation(1));
+                }
+            } 
         }
     }
 }

@@ -355,4 +355,17 @@ public class Boar : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(stepSound2, 0.25f);
         }
     }
+
+    public bool IsMoving()
+    {
+        if (isMoving)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+        
+    }
 }
