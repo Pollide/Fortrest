@@ -225,25 +225,119 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void BuildMode()
     {
-        if (buildType == BuildType.Turret)
-        {
-            SpawnBuilding(turretPrefabs[0]);
+        Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
-        }
-        else if (buildType == BuildType.Slow)
+        if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
-            SpawnBuilding(turretPrefabs[1]);
-        }
-        else if (buildType == BuildType.Cannon)
-        {
-            SpawnBuilding(turretPrefabs[2]);
-        }
-        else if (buildType == BuildType.Scatter)
-        {
-            SpawnBuilding(turretPrefabs[3]);
-        }
 
-        DragBuildingBlueprint();
+
+            GameObject turretPrefab = turretPrefabs[0];
+
+            if (buildType == BuildType.Slow)
+            {
+                turretPrefab = turretPrefabs[1];
+            }
+            else if (buildType == BuildType.Cannon)
+            {
+                turretPrefab = turretPrefabs[2];
+            }
+            else if (buildType == BuildType.Scatter)
+            {
+                turretPrefab = turretPrefabs[3];
+            }
+
+            if (!turretBlueprint)
+            {
+                turretBlueprint = Instantiate(turretPrefab);
+
+                turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
+                turretBlueprint.GetComponent<Building>().enabled = false;
+                turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
+                turretBlueprint.tag = "BuildingBP";
+                turretBlueprint.layer = 0;
+                //NOT IN USE RIGHT NOW but basically it would hover over the building to say to place
+                //KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
+
+                TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
+
+                if (turretShooting)
+                {
+                    turretShooting.enabled = false;
+                    Destroy(turretShooting);
+                }
+
+            }
+
+            Vector3 worldPos = hitData.point;
+            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
+
+            worldPos = new Vector3(gridPos.x, 0, gridPos.z);
+            turretBlueprint.transform.position = worldPos;
+
+            if (KeyHint)
+                KeyHint.position = worldPos + HintOffset;
+
+            Collider[] colliders = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
+            PlayerController.global.TurretMenuHolder.gameObject.SetActive(false);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].tag == "Turret")
+                {
+                    PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+                    PlayerController.global.TurretMenuHolder.gameObject.SetActive(true);
+                    //ClearBlueprint();
+
+                    break;
+                }
+            }
+
+            bool selectBool = (Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && !MouseOverUI();
+
+            if (selectBool)
+            {
+                PlayerController.global.selectCTRL = false;
+            }
+            else
+            {
+                runOnce = false;
+            }
+            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && colliders.Length == 0)
+            {
+                BluePrintSet(turretBlueprintBlue);
+
+                if (selectBool)
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
+                    GameObject newTurret = Instantiate(turretPrefab, worldPos, Quaternion.identity);
+
+                    PlayerController.global.CheckSufficientResources(true);
+
+                    LevelManager.global.VFXSmokePuff.transform.position = newTurret.transform.position + new Vector3(0, .5f, 0);
+
+                    //!hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource")
+                    LevelManager.global.VFXSmokePuff.Play();
+                }
+            }
+            else
+            {
+                BluePrintSet(turretBlueprintRed);
+
+
+                if (selectBool)
+                {
+                    if (!runOnce)
+                    {
+                        runOnce = true;
+
+                        if (!PlayerController.global.CheckSufficientResources())
+                        {
+                            PlayerController.global.ShakeResourceHolder();
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void ScrollSwitchTurret()
@@ -467,88 +561,6 @@ public class PlayerModeHandler : MonoBehaviour
         //   Debug.Log("Upgrade");
     }
 
-    private void SpawnBuilding(GameObject _prefab)
-    {
-        if ((Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && PlayerController.global.CheckSufficientResources() && !MouseOverUI())
-        {
-            PlayerController.global.selectCTRL = false;
-
-            Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
-
-            if (Physics.Raycast(ray, out RaycastHit hitData, 1000, ~buildingLayer) && !hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource"))
-            {
-                Vector3 worldPos = hitData.point;
-
-                Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
-
-                worldPos = new Vector3(gridPos.x, 0.0f, gridPos.z);
-
-                Collider[] collidershit = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts);
-
-                if (IsInRange(worldPos) && !ReturnColiders(collidershit))
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
-                    GameObject newTurret = Instantiate(_prefab, worldPos, Quaternion.identity);
-
-                    PlayerController.global.CheckSufficientResources(true);
-
-
-                    LevelManager.global.VFXSmokePuff.transform.position = newTurret.transform.position + new Vector3(0, .5f, 0);
-
-                    LevelManager.global.VFXSmokePuff.Play();
-                    // Debug.Log("working");
-                }
-                else
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-                }
-            }
-            else if (Physics.Raycast(ray, out hitData, 1000) && hitData.transform.CompareTag("Player"))
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-                Debug.Log("Cannot Place Building Here");
-            }
-            else if (Physics.Raycast(ray, out hitData, 1000) && (hitData.transform.CompareTag("Building") || hitData.transform.CompareTag("Resource")))
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-                Debug.Log("Building Here");
-            }
-        }
-        else
-        {
-            if (Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL)
-            {
-                PlayerController.global.selectCTRL = false;
-                if (!runOnce)
-                {
-                    runOnce = true;
-                    if (!PlayerController.global.CheckSufficientResources())
-                    {
-                        PlayerController.global.ShakeResourceHolder();
-                   
-                    }
-                }
-            }
-            if (!Input.GetMouseButton(0) || !PlayerController.global.selectCTRL)
-            {
-                runOnce = false;
-            }
-        }
-    }
-
-    private bool ReturnColiders(Collider[] colliders)
-    {
-        foreach (Collider collider in colliders)
-        {
-            if (collider.CompareTag("Building") || collider.CompareTag("Resource") || collider.CompareTag("Turret"))
-            {
-                Debug.Log("true");
-                return true;
-            }
-        }
-        Debug.Log("false");
-        return false;
-    }
 
     void BluePrintSet(Material colorMaterial)
     {
@@ -560,71 +572,6 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
     public Vector3 HintOffset;
-
-    private void DragBuildingBlueprint()
-    {
-        Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hitData, 1000, GameManager.ReturnBitShift(new string[] { "Terrain" })))
-        {
-            if (!turretBlueprint)
-            {
-                if (buildType == BuildType.Slow)
-                {
-                    turretBlueprint = Instantiate(turretPrefabs[1]);
-                }
-                else if (buildType == BuildType.Cannon)
-                {
-                    turretBlueprint = Instantiate(turretPrefabs[2]);
-                }
-                else if (buildType == BuildType.Scatter)
-                {
-                    turretBlueprint = Instantiate(turretPrefabs[3]);
-                }
-                else
-                {
-                    turretBlueprint = Instantiate(turretPrefabs[0]);
-                }
-
-                turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
-                turretBlueprint.GetComponent<Building>().enabled = false;
-                turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
-                turretBlueprint.tag = "BuildingBP";
-
-                //NOT IN USE RIGHT NOW but basically it would hover over the building to say to place
-                //KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
-
-                TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
-
-                if (turretShooting)
-                {
-                    turretShooting.enabled = false;
-                    Destroy(turretShooting);
-                }
-
-            }
-
-            Vector3 worldPos = hitData.point;
-            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
-
-            worldPos = new Vector3(gridPos.x, 0, gridPos.z);
-            turretBlueprint.transform.position = worldPos;
-
-            if (KeyHint)
-                KeyHint.position = worldPos + HintOffset;
-
-            Collider[] collidershit = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts);
-
-            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !ReturnColiders(collidershit))
-            {
-                BluePrintSet(turretBlueprintBlue);
-            }
-            else
-            {
-                BluePrintSet(turretBlueprintRed);
-            }
-        }
-    }
 
     //// Check building distance
     //private void OnDrawGizmos()
