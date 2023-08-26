@@ -259,9 +259,8 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     PlayerController.global.TurretMenuTitle.text = nameof(buildType);
                     PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
-                    PlayerController.global.TurretMenuHolder.gameObject.SetActive(true);
                     ClearBlueprint();
-
+                    PlayerController.global.TurretMenuHolder.gameObject.SetActive(true);
                     return;
                 }
             }
@@ -458,7 +457,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (KeyHint)
                 Destroy(KeyHint.gameObject);
         }
-
+        PlayerController.global.TurretMenuHolder.gameObject.SetActive(false);
         PlayerController.global.UpdateResourceHolder();
     }
 
