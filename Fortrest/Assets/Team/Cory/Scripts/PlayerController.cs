@@ -594,6 +594,9 @@ public class PlayerController : MonoBehaviour
                 verticalMovement = Input.GetAxis("Vertical");
             }
 
+
+
+
             // Physics
             HandleSpeed();
             ApplyGravity();
@@ -1309,8 +1312,8 @@ public class PlayerController : MonoBehaviour
     }
 
     float previousLookAngle;
-    float previousMoveAngle;
-    public float shift;
+    Vector3 previousMoveDirection;
+
     private void RotatePlayer()
     {
         float angle;
@@ -1328,18 +1331,19 @@ public class PlayerController : MonoBehaviour
             angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
         }
 
-        float angleMove = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - shift;
-
-        if (previousMoveAngle != angleMove) //face in direction of moving
+        if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
         {
-            previousMoveAngle = angleMove;
-            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angleMove, transform.eulerAngles.z);
-        }
+            previousMoveDirection = moveDirection;
+            previousLookAngle = angle;
 
-        if (previousLookAngle != angle) //however if player is moving cursor/Rigt joystick around, then pioritise that
+            Vector3 euler = transform.eulerAngles;
+            euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
+            transform.rotation = Quaternion.Euler(euler);
+        }
+        else if (Mathf.Abs(angle - previousLookAngle) > 1.5f) //however if player is moving cursor/Rigt joystick around, then pioritise that
         {
             previousLookAngle = angle;
-            // transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
         }
     }
 
