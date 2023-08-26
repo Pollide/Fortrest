@@ -11,8 +11,8 @@ public class Boar : MonoBehaviour
     [HideInInspector] public bool mounted = false;
     [HideInInspector] public bool inRange = false;
 
-    private float maxSpeed = 90f;
-    private float acceleration = 0f;
+    public float maxSpeed = 90f;
+    public float acceleration = 0f;
     private float deceleration = 0.0f;
     public float currentSpeed;
     private float currentTurn;
@@ -21,8 +21,8 @@ public class Boar : MonoBehaviour
     private float gravity = -20.0f;
 
     [HideInInspector] public bool canMove = true;
-    private bool isMoving;
-    private bool isReversing;
+    [HideInInspector] public bool isMoving;
+    public bool isReversing;
 
     public Animator animator;
     [HideInInspector] public CharacterController cc;

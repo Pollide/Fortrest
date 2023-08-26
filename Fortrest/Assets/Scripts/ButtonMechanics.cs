@@ -36,6 +36,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public bool MaxResourcesBool;
     public int TerrainTeleportInt = -1;
 
+    [Header("Build")]
+    public bool RepairBool;
+    public bool UpgradeBool;
+    public bool DestroyBool;
+
     [Header("Menu")]
     public bool PlayBool;
     public bool ExitBool;
@@ -95,6 +100,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the pointer has exited the button
     public void OnPointerExit(PointerEventData eventData)
     {
+
         //Pause.global.SelectedList[Pause.global.ReturnIndex()] = -1;
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
     }
@@ -102,6 +108,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the pointer has entered the button
     public void OnPointerEnter(PointerEventData eventData)
     {
+
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
 
         Pause.global.SelectedList[Pause.global.ReturnIndex()] = transform.GetSiblingIndex();
@@ -130,6 +137,21 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         if (ResumeBool)
         {
             PlayerController.global.PauseVoid(false);
+        }
+
+        if (UpgradeBool)
+        {
+
+        }
+
+        if (DestroyBool)
+        {
+
+        }
+
+        if (RepairBool)
+        {
+
         }
 
         if (BeginingBool)

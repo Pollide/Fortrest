@@ -242,7 +242,6 @@ public class LevelManager : MonoBehaviour
             clockMoon.enabled = false;
             clockSun.enabled = true;
         }
-        LockCursor();
 
         PlayerController.global.EnemiesTextControl();
 
@@ -329,17 +328,6 @@ public class LevelManager : MonoBehaviour
             return;
 
         //HandleMouse();
-    }
-
-
-    void LockCursor()
-    {
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.LeftAlt))
-        {
-            PlayerModeHandler.SetMouseActive(!Cursor.visible);
-        }
-#endif
     }
 
     void HandleMouse()
@@ -579,7 +567,7 @@ public class LevelManager : MonoBehaviour
                             ogreSpawned = true;
                         }
 
-                        enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition); // 16 is the magic number for this to work                         
+                        enemySpawnPosition.y = 0; //everything is at ground zero                   
 
                         GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
                     }

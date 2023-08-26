@@ -78,7 +78,7 @@ public class BridgeBuilder : MonoBehaviour
                 }
                 else
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                    PlayerController.global.ShakeResourceHolder();
                 }
             }
         }

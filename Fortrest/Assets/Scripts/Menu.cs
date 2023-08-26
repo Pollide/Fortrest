@@ -27,9 +27,8 @@ public class Menu : MonoBehaviour
 
     private bool canGoCTRL, leftCTRL, rightCTRL, selectCTRL;
 
-    [HideInInspector]
+    //  [HideInInspector]
     public bool ArrivedAtSign;
-
     private void Awake()
     {
         global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
@@ -71,8 +70,6 @@ public class Menu : MonoBehaviour
 
     private void Update()
     {
-        PlayerModeHandler.SetMouseActive(false);
-
         bool initialBool = IntialAnimationState && IntialAnimationState.enabled;
 
         if (!initialBool)
@@ -81,7 +78,7 @@ public class Menu : MonoBehaviour
             CameraTransform.position = Vector3.Slerp(CameraTransform.position, position, 3 * Time.deltaTime);
             CameraTransform.rotation = Quaternion.RotateTowards(CameraTransform.rotation, ReturnSign().rotation, 20 * Time.deltaTime);
 
-            if (!ArrivedAtSign && Vector3.Distance(CameraTransform.position, position) < 1)
+            if (!ArrivedAtSign && Vector3.Distance(CameraTransform.position, position) < 0.5f)
             {
                 ArrivedAtSign = true;
                 GameManager.PlayAnimation(ReturnSign().GetComponent<Animation>(), "Sign Key");
@@ -97,6 +94,21 @@ public class Menu : MonoBehaviour
             {
                 rightCTRL = false;
                 Direction(1);
+            }
+        }
+
+        if (ArrivedAtSign && Input.GetMouseButtonDown(0) && Physics.Raycast(CameraTransform.GetComponent<Camera>().ScreenPointToRay(Input.mousePosition), out RaycastHit hitData))
+        {
+            if (hitData.transform.name == "Cursor Detection")
+            {
+                ButtonMechanics buttonMechanics = hitData.transform.GetComponentInParent<ButtonMechanics>();
+
+                if (buttonMechanics)
+                {
+                    int childIndex = buttonMechanics.transform.GetSiblingIndex(); //just one parent not getcomponent in parent
+
+                    Direction(childIndex - ActiveSignInt);
+                }
             }
         }
 
@@ -131,12 +143,19 @@ public class Menu : MonoBehaviour
     {
         if (GameManager.global)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
+            if (direction != 0)
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
 
-            ReturnButton().HighlightVoid(false);
-            ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);
-            ArrivedAtSign = false;
-            ReturnButton().HighlightVoid(true);
+                ReturnButton().HighlightVoid(false);
+                ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);
+                ArrivedAtSign = false;
+                ReturnButton().HighlightVoid(true);
+            }
+            else
+            {
+                ReturnButton().SelectVoid(); //mouse select
+            }
         }
     }
 }

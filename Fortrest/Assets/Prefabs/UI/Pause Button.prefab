@@ -553,6 +553,7 @@ GameObject:
   - component: {fileID: 9221087166470241892}
   - component: {fileID: 9221087166470241894}
   - component: {fileID: 4163981462012598014}
+  - component: {fileID: 276647119120274419}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -609,7 +610,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 568dfeabaf444574291967368ab4773a, type: 3}
+    m_Font: {fileID: 12800000, guid: 437dbdca27e2ff043b552b60207fa8a2, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1
@@ -622,6 +623,21 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: Hello
+--- !u!114 &276647119120274419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9221087166470241893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &9221087167834596542
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,9 +748,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ResumeBool: 0
   RestartBool: 0
+  BeginingBool: 0
   MenuBool: 0
+  CheatsBool: 0
+  BackBool: 0
+  SaveBool: 0
+  MaxResourcesBool: 0
+  TerrainTeleportInt: -1
   PlayBool: 0
   ExitBool: 0
+  VolumeBool: 0
+  MusicBool: 0
+  FullScreenBool: 0
   ResetBool: 0
   AreYouSureBool: 0
   MenuText: {fileID: 0}

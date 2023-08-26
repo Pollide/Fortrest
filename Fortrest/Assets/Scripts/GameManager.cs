@@ -24,8 +24,7 @@ public class GameManager : MonoBehaviour
 
     [HideInInspector]
     public bool KeyboardBool = true;
-    [HideInInspector]
-    public bool CursorActiveBool;
+
     // Music
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
@@ -90,8 +89,20 @@ public class GameManager : MonoBehaviour
         gamepadControls = new GamepadControls();
         gamepadControls.Controls.Enable();
         gamepadControls.Controls.Move.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Rotate.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Sprint.performed += ctx => OnGamepadInput();
         gamepadControls.Controls.Interact.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Swap.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Evade.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Attacking.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Aiming.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Turret.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Heal.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Pause.performed += ctx => OnGamepadInput();
+        gamepadControls.Controls.Map.performed += ctx => OnGamepadInput();
+
         lastMousePosition = Input.mousePosition;
+
         if (PlayerController.global)
         {
             Destroy(PlayerController.global.transform.parent.gameObject); //no players in main menu
@@ -152,7 +163,7 @@ public class GameManager : MonoBehaviour
         }
         lastMousePosition = currentMousePosition;
 
-        PlayerModeHandler.SetMouseActive(KeyboardBool && CursorActiveBool, false);
+        PlayerModeHandler.SetMouseActive(KeyboardBool);
     }
 
 

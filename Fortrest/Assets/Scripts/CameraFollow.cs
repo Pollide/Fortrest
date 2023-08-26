@@ -9,16 +9,17 @@ public class CameraFollow : MonoBehaviour
     private Vector3 currentVelocity = Vector3.zero;
     [SerializeField] private float cameraDistance;
     [SerializeField] private bool lockCamera;
-    [SerializeField] private float smoothTime;
-    [SerializeField] private float maxSmooth = 0.25f;
-    [SerializeField] private float minSmooth = 0.01f;
-    [SerializeField] private float max;
-    [SerializeField] private float buildOffsetOrthoSize;
-    [SerializeField] private float buildOffsetPosX;
-    [SerializeField] private float buildOffsetPosZ;
-    [SerializeField] private float buildOffsetRot;
+    public float smoothTime;
+    public float smoothTime2;
+    private float maxSmooth = 0.6f;
+    private float minSmooth = 0.4f;
+    private float max;
+    private float buildOffsetPosX;
+    private float buildOffsetPosZ;
+    private float buildOffsetRot;
     private Vector3 initialRotation;
-    private float initialOrthographicSize;
+    private Vector3 direction;
+    public float distance;
 
     private void Awake()
     {
@@ -28,32 +29,15 @@ public class CameraFollow : MonoBehaviour
 
     private void Start()
     {
-        initialOrthographicSize = GetComponent<Camera>().orthographicSize;
         lockCamera = true;
         max = maxSmooth - minSmooth;
-
     }
 
     public void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.CapsLock) || PlayerController.global.lockingCTRL)
-        //{
-        //    PlayerController.global.lockingCTRL = false;
-        //    GameManager.global.SoundManager.PlaySound(GameManager.global.CameraLockSound);
-        //    lockCamera = !lockCamera;
-        //}
-
         if (lockCamera)
         {
-            if (!PlayerModeHandler.global.inTheFortress)
-            {
-
-                FocusOnTarget(false, PlayerController.global.transform.position, initialRotation, PlayerController.global.moveDirection);
-            }
-            else
-            {
-                FocusOnTarget(true, ReturnBuildOffset(), new(buildOffsetRot, 0, 0), Vector3.zero);
-            }
+            FocusOnTarget(PlayerController.global.transform.position + (PlayerModeHandler.global.inTheFortress ? Vector3.up * 5 : Vector3.zero), initialRotation);
         }
     }
 
@@ -62,16 +46,115 @@ public class CameraFollow : MonoBehaviour
         return new Vector3(PlayerController.global.transform.position.x + buildOffsetPosX, PlayerController.global.transform.position.y, PlayerController.global.transform.position.z + buildOffsetPosZ);
     }
 
-    public void FocusOnTarget(bool build, Vector3 targetPosition, Vector3 offsetRotation, Vector3 direction)
+    public void FocusOnTarget(Vector3 targetPosition, Vector3 offsetRotation)
     {
-        GetComponent<Camera>().orthographicSize = build ? buildOffsetOrthoSize : initialOrthographicSize;
-        cameraDistance = Vector3.Distance(targetPosition, transform.position);
+        //if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || (PlayerController.global.movingCTRL))
+        //{
+        //    if (!Boar.global.mounted)
+        //    {
+        //        if (PlayerController.global.moveDirection != Vector3.zero)
+        //        {
+        //            if (PlayerController.global.running)
+        //            {
+        //                transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 5f, ref currentVelocity, smoothTime);
+        //            }
+        //            else
+        //            {
+        //                transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 3.5f, ref currentVelocity, smoothTime);
+        //            }
+        //        }                            
+        //    }
+        //    else if (Boar.global.currentSpeed > 0)
+        //    {
+        //        transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 5.5f * Boar.global.currentSpeed / 90.0f, ref currentVelocity, smoothTime);
+        //    }
+        //    
+        //}
+        //else
+        //{
+        //    transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
+        //}
 
-        float i = cameraDistance / (max * 50);
-        smoothTime = Mathf.Lerp(minSmooth, maxSmooth, i);
+        if (!Boar.global.mounted)
+        {
+            if (GameManager.global.KeyboardBool)
+            {
+                distance = Vector3.Distance(PlayerController.global.transform.position, PlayerController.global.mousePos);
+                distance = Mathf.Clamp(distance, 0f, 12f);
+                distance /= 12f;
+            }
+            else
+            {
+                distance = Mathf.Clamp(Mathf.Abs(PlayerController.global.rotateCTRL.y) + Mathf.Abs(PlayerController.global.rotateCTRL.x), 0, 1);
+                /*
+                if (PlayerController.global.rotateCTRL.x > 0 && PlayerController.global.rotateCTRL.y > 0)
+                    {
+                        if (PlayerController.global.rotateCTRL.x > PlayerController.global.rotateCTRL.y)
+                        {
+                            distance = PlayerController.global.rotateCTRL.x;
+                        }
+                        else
+                        {
+                            distance = PlayerController.global.rotateCTRL.y;
+                        }
+                    }
+                    else if (PlayerController.global.rotateCTRL.x > 0 && PlayerController.global.rotateCTRL.y < 0)
+                    {
+                        if (PlayerController.global.rotateCTRL.x > (PlayerController.global.rotateCTRL.y * -1))
+                        {
+                            distance = PlayerController.global.rotateCTRL.x;
+                        }
+                        else
+                        {
+                            distance = PlayerController.global.rotateCTRL.y * -1;
+                        }
+                    }
+                    else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y > 0)
+                    {
+                        if ((PlayerController.global.rotateCTRL.x * -1) > PlayerController.global.rotateCTRL.y)
+                        {
+                            distance = PlayerController.global.rotateCTRL.x * -1;
+                        }
+                        else
+                        {
+                            distance = PlayerController.global.rotateCTRL.y;
+                        }
+                    }
+                    else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y < 0)
+                    {
+                        if ((PlayerController.global.rotateCTRL.x * -1) > (PlayerController.global.rotateCTRL.y * -1))
+                        {
+                            distance = PlayerController.global.rotateCTRL.x * -1;
+                        }
+                        else
+                        {
+                            distance = PlayerController.global.rotateCTRL.y * -1;
+                        }
+                    }
+                */
+            }
 
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition + PlayerController.global.transform.forward * distance * 1.25f, ref currentVelocity, 0.2f);
+        }
+        else
+        {
+            //cameraDistance = Vector3.Distance(targetPosition, transform.position);
+            //float i = cameraDistance / (max / (5f / 36) * (Time.deltaTime * 100));
+            //smoothTime = Mathf.Lerp(maxSmooth, minSmooth, i);
 
-        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, smoothTime);
+            direction = Boar.global.transform.forward;
+            direction.Normalize();
+            direction.y = 0;
+
+            if (((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) || (PlayerController.global.movingCTRL)) && !Boar.global.isReversing)
+            {
+                transform.position = Vector3.SmoothDamp(transform.position, targetPosition + direction * 6.0f * Boar.global.currentSpeed / 90.0f, ref currentVelocity, 0.6f);
+            }
+            else
+            {
+                transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref currentVelocity, 0.75f);
+            }
+        }
 
         if (transform.eulerAngles != offsetRotation)
         {

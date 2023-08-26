@@ -13,31 +13,35 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
+    public Camera cam;
 
-    // Movement
-    [HideInInspector]
-    public Vector3 moveDirection;
-    private Vector3 pushDirection;
-    private float horizontalMovement;
-    private float verticalMovement;
+    // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
     public GameObject bodyShape;
-    private GameObject respawnText;
-    [HideInInspector] public bool LanternLighted;
+
+    // Movement   
+    [HideInInspector] public Vector3 moveDirection;
+    [HideInInspector] public Vector3 mousePos;
+
+    // Player Knocked Back
+    private Vector3 pushDirection;
+    private float horizontalMovement;
+    private float verticalMovement;
+
     // Speed
     private float playerCurrentSpeed = 0f;
     private float playerWalkSpeed = 5.0f;
     private float playerSprintSpeed = 8.0f;
     private float playerBowSpeed = 3.0f;
-    private bool running = false;
+    public bool running = false;
     private float runTimer = 0.0f;
     private bool canRun = true;
 
     // Gathering
     private bool gathering = false;
     private float gatherTimer = 0.0f;
-    private float resetGather = 1.25f;
+    private float resetGather = 1f;
 
     // Evade
     private float evadeTimer = 0.0f;
@@ -85,7 +89,7 @@ public class PlayerController : MonoBehaviour
     // Eating
     [HideInInspector] public int appleAmount = 0;
     private float appleHealAmount = 10.0f;
-    [HideInInspector] public int maxApple = 5;
+    [HideInInspector] public const int maxApple = 5;
 
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
@@ -102,11 +106,14 @@ public class PlayerController : MonoBehaviour
     // States
     [Header("Player States")]
     public bool playerCanMove = true;
-    private bool playerisMoving = false;
+    public bool playerisMoving = false;
     [HideInInspector] public bool attacking = false;
+    public bool canGetInHouse;
+    public bool bridgeInteract;
 
     // Teleporter
     public bool canTeleport = false;
+    public bool teleporting;
 
     // VFXs
     private VisualEffect VFXSlash;
@@ -129,9 +136,6 @@ public class PlayerController : MonoBehaviour
     public GameObject MapResourcePrefab;
     public Animator ResourceHolderAnimator;
     public bool lastWasAxe;
-
-    private bool mapBool;
-
     [System.Serializable]
     public class ToolData
     {
@@ -157,6 +161,7 @@ public class PlayerController : MonoBehaviour
     // Inventory
     public GameObject DarkenGameObject;
     public GameObject InventoryHolder;
+
     // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
@@ -164,9 +169,17 @@ public class PlayerController : MonoBehaviour
     // Death
     private float respawnTimer = 0.0f;
     private bool textAnimated = false;
+    [HideInInspector] public bool respawning;
+    private GameObject respawnText;
 
     // Enemy UI
     private int lastAmount = 0;
+    public Image countdownBar;
+    private bool gapSet;
+    private float gap;
+    private float fraction;
+    private float newGap;
+    private bool displayAmount;
 
     // Damage Indicators    
     public Image[] redSlashes;
@@ -193,6 +206,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
     [HideInInspector] public Vector2 moveCTRL;
+    public Vector2 rotateCTRL;
     [HideInInspector] public bool upCTRL;
     [HideInInspector] public bool downCTRL;
     [HideInInspector] public bool canPressCTRL;
@@ -203,27 +217,22 @@ public class PlayerController : MonoBehaviour
     // Keyboard Controls
     private KeyCode[] keyCodes;
 
-    // Swapping
+    // Cancel
     [HideInInspector] public bool cancelAnimation;
     [HideInInspector] public bool cancelEffects;
-
-    public SkinnedMeshRenderer LanternSkinnedRenderer;
-
-    public bool canGetInHouse;
-
-    public Image countdownBar;
-    private bool gapSet;
-    private float gap;
-    private float fraction;
-    public const int MaxApples = 5;
-    private float newGap;
-    private bool displayAmount;
-    public bool teleporting;
-    [HideInInspector] public bool respawning;
     private bool cancelHit;
     [HideInInspector] public bool staggered;
+
+    // Lantern
+    [HideInInspector] public bool LanternLighted;
+    public SkinnedMeshRenderer LanternSkinnedRenderer;
+
+    // Map
+    private bool mapBool;
     public bool ResourceHolderOpened;
-    public bool bridgeInteract;
+
+    public RectTransform TurretMenuHolder;
+    public TMP_Text TurretMenuTitle;
 
     // Start is called before the first frame update
     void Awake()
@@ -246,9 +255,18 @@ public class PlayerController : MonoBehaviour
             GameManager.global.gamepadControls.Controls.Move.performed += context => PauseSelection();
             GameManager.global.gamepadControls.Controls.Move.canceled += context => canPressCTRL = false;
 
+            // Right stick to rotate
+            GameManager.global.gamepadControls.Controls.Rotate.performed += context => rotateCTRL = context.ReadValue<Vector2>();
+
             // A to sprint
             GameManager.global.gamepadControls.Controls.Sprint.performed += context => SprintController(true);
             GameManager.global.gamepadControls.Controls.Sprint.canceled += context => SprintController(false);
+            // Right Joystick click to sprint
+            GameManager.global.gamepadControls.Controls.Sprint2.performed += context => SprintController(true);
+            GameManager.global.gamepadControls.Controls.Sprint2.canceled += context => SprintController(false);
+            // Left Joystick click to sprint
+            GameManager.global.gamepadControls.Controls.Sprint3.performed += context => SprintController(true);
+            GameManager.global.gamepadControls.Controls.Sprint3.canceled += context => SprintController(false);
 
             // A to select in build mode
             GameManager.global.gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
@@ -321,6 +339,12 @@ public class PlayerController : MonoBehaviour
             ResourceHolderOpened = open;
             GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
         }
+    }
+
+    public void ShakeResourceHolder()
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+        GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
     }
 
     private void BuildSelectController()
@@ -524,6 +548,10 @@ public class PlayerController : MonoBehaviour
         keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
 
         ChangeTool(new ToolData() { AxeBool = true });
+
+        playerCC.enabled = false;
+        RotatePlayer();
+        playerCC.enabled = true;
     }
 
     void Update()
@@ -567,11 +595,16 @@ public class PlayerController : MonoBehaviour
                 verticalMovement = Input.GetAxis("Vertical");
             }
 
+
+
+
             // Physics
             HandleSpeed();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
-            
+            RotatePlayer();
+
+
             // Mechanics
             Attack();
             Gathering();
@@ -582,17 +615,18 @@ public class PlayerController : MonoBehaviour
                 AttackLunge();
             }
 
-           
+
         }
         else
         {
-            playerCC.Move(pushDirection * Time.deltaTime);
+            if (pushDirection != Vector3.zero)
+                playerCC.Move(pushDirection * Time.deltaTime);
             horizontalMovement = 0;
             verticalMovement = 0;
             running = false;
         }
 
-        
+
 
         HandleEnergy();
 
@@ -890,8 +924,6 @@ public class PlayerController : MonoBehaviour
         }
         teleporting = true;
         StartCoroutine(RevertBool(true));
-
-        LevelManager.global.SceneCamera.transform.position = pos;
     }
 
     public void ChangeTool(ToolData toolData)
@@ -1025,7 +1057,6 @@ public class PlayerController : MonoBehaviour
                 Time.timeScale = pause ? 0 : 1;
                 playerCanMove = !pause;
                 pausedBool = pause;
-                PlayerModeHandler.SetMouseActive(pause);
             }
         }
     }
@@ -1262,10 +1293,10 @@ public class PlayerController : MonoBehaviour
 
             moveDirection = Quaternion.AngleAxis(45, Vector3.up) * moveDirection;
 
-            if (moveDirection != Vector3.zero)
-            {
-                transform.forward = moveDirection;
-            }
+            //if (moveDirection != Vector3.zero)
+            //{
+            //    transform.forward = moveDirection;
+            //}
 
             ApplyGravity();
         }
@@ -1278,6 +1309,42 @@ public class PlayerController : MonoBehaviour
         if (!playerDead)
         {
             playerCC.Move(moveDirection * Time.deltaTime);
+        }
+    }
+
+    float previousLookAngle;
+    Vector3 previousMoveDirection;
+
+    private void RotatePlayer()
+    {
+        float angle;
+
+        if (GameManager.global.KeyboardBool)
+        {
+            mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+
+            Vector3 lookDirection = mousePos - transform.position;
+
+            angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
+        }
+        else
+        {
+            angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+        }
+
+        if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
+        {
+            previousMoveDirection = moveDirection;
+            previousLookAngle = angle;
+
+            Vector3 euler = transform.eulerAngles;
+            euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
+            transform.rotation = Quaternion.Euler(euler);
+        }
+        else if (Mathf.Abs(angle - previousLookAngle) > 1.5f) //however if player is moving cursor/Rigt joystick around, then pioritise that
+        {
+            previousLookAngle = angle;
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
         }
     }
 
@@ -1377,6 +1444,10 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4.0f;
             float distanceFloat = Vector3.Distance(transform.position, building.position);
             float smallestDistance = 5.0f;
+            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.Stone)
+            {
+                minDistanceFloat = 5.0f;
+            }
             if (distanceFloat < minDistanceFloat)
             {
                 if (distanceFloat <= smallestDistance)

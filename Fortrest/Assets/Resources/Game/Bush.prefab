@@ -140,7 +140,6 @@ GameObject:
   - component: {fileID: 8707849239115483156}
   - component: {fileID: 8707849239115483157}
   - component: {fileID: 3550765887160449743}
-  - component: {fileID: 1451168190228285922}
   - component: {fileID: 4319427507330520039}
   m_Layer: 9
   m_Name: Bush
@@ -157,7 +156,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8707849239115483162}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.31, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -190,8 +189,11 @@ MonoBehaviour:
   healthBarImage: {fileID: 1280423068281564523}
   HUDHealthBar: {fileID: 0}
   playerinRange: 0
+  normalHouse: {fileID: 0}
+  destroyedHouse: {fileID: 0}
   interactText: {fileID: 0}
   textDisplayed: 0
+  DebugDestroyInstantly: 0
 --- !u!111 &3550765887160449743
 Animation:
   m_ObjectHideFlags: 0
@@ -209,19 +211,6 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!135 &1451168190228285922
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8707849239115483162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.99915993
-  m_Center: {x: 0, y: 0.49915993, z: 0}
 --- !u!208 &4319427507330520039
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -232,11 +221,11 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 1, y: 1, z: 1}
+  m_Extents: {x: 1, y: 0.9, z: 1}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.8, z: 0}
   m_TimeToStationary: 0.5
 --- !u!1001 &403687447353365103
 PrefabInstance:
@@ -313,12 +302,12 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 3.5221
+      value: 3.5
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.6129
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -333,7 +322,7 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.228
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -358,12 +347,12 @@ PrefabInstance:
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.17
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 1.794
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
@@ -490,8 +479,8 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4738890789707668172}
   m_PrefabAsset: {fileID: 0}
---- !u!65 &1164674932602694594
-BoxCollider:
+--- !u!135 &3478397562041192312
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -501,8 +490,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.38209733, y: 0.36017925, z: 0.37113652}
-  m_Center: {x: -0.029784584, y: 0.14545856, z: 0.021196349}
+  m_Radius: 0.23385382
+  m_Center: {x: 0.0023472607, y: 0.14545855, z: 0.004636787}
 --- !u!4 &7749359851512086157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3046876097462953025, guid: ffafced004e98f3459d330a03148a6b1,
