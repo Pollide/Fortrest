@@ -746,6 +746,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5118387864589921102}
   - component: {fileID: 3490497036543174675}
+  - component: {fileID: 5507671596873441979}
   m_Layer: 0
   m_Name: PushTrigger
   m_TagString: Untagged
@@ -779,8 +780,21 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.224673, y: 1.6135349, z: 2.1035614}
-  m_Center: {x: 0.09710821, y: -0.09485626, z: 0.5517807}
+  m_Size: {x: 2.0698347, y: 1.972414, z: 2.1954503}
+  m_Center: {x: -0.01240015, y: 0.08458217, z: 0.6313704}
+--- !u!114 &5507671596873441979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6333048145035977911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7dc322b24f006c4ea8e098988308895, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pushForce: 25
 --- !u!1 &7095448348226686101
 GameObject:
   m_ObjectHideFlags: 0

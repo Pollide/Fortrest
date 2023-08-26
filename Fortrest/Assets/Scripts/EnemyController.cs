@@ -650,4 +650,11 @@ public class EnemyController : MonoBehaviour
             gameObject.SetActive(false); //wolves spawn in the scene on start so they need to stay in memory
         }
     }
+
+    public IEnumerator StopAnimation(float _time)
+    {
+        ActiveAnimator.StartPlayback();
+        yield return new WaitForSeconds(_time);
+        ActiveAnimator.StopPlayback();
+    }
 }
