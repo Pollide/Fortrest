@@ -232,6 +232,7 @@ public class PlayerController : MonoBehaviour
     public bool ResourceHolderOpened;
 
     public RectTransform TurretMenuHolder;
+    public TMP_Text TurretMenuTitle;
 
     // Start is called before the first frame update
     void Awake()

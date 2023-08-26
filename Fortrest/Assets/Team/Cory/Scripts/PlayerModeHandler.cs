@@ -246,6 +246,26 @@ public class PlayerModeHandler : MonoBehaviour
                 turretPrefab = turretPrefabs[3];
             }
 
+            Vector3 worldPos = hitData.point;
+            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
+
+            worldPos = new Vector3(gridPos.x, 0, gridPos.z);
+
+            Collider[] colliders = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
+            PlayerController.global.TurretMenuHolder.gameObject.SetActive(false);
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i].tag == "Turret")
+                {
+                    PlayerController.global.TurretMenuTitle.text = nameof(buildType);
+                    PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+                    PlayerController.global.TurretMenuHolder.gameObject.SetActive(true);
+                    ClearBlueprint();
+
+                    return;
+                }
+            }
+
             if (!turretBlueprint)
             {
                 turretBlueprint = Instantiate(turretPrefab);
@@ -268,28 +288,10 @@ public class PlayerModeHandler : MonoBehaviour
 
             }
 
-            Vector3 worldPos = hitData.point;
-            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
-
-            worldPos = new Vector3(gridPos.x, 0, gridPos.z);
             turretBlueprint.transform.position = worldPos;
 
             if (KeyHint)
                 KeyHint.position = worldPos + HintOffset;
-
-            Collider[] colliders = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
-            PlayerController.global.TurretMenuHolder.gameObject.SetActive(false);
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                if (colliders[i].tag == "Turret")
-                {
-                    PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
-                    PlayerController.global.TurretMenuHolder.gameObject.SetActive(true);
-                    //ClearBlueprint();
-
-                    break;
-                }
-            }
 
             bool selectBool = (Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && !MouseOverUI();
 
