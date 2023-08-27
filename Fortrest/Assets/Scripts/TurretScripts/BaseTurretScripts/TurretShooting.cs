@@ -33,6 +33,7 @@ public class TurretShooting : MonoBehaviour
 
     private Quaternion targetRotation;
     public bool MiniTurret;
+    public Animator MiniTurretAnimator;
 
     private void Start()
     {
@@ -41,6 +42,11 @@ public class TurretShooting : MonoBehaviour
 
     public Animator ReturnAnimator()
     {
+        if (MiniTurret)
+        {
+            return MiniTurretAnimator;
+        }
+
         for (int i = 0; i < ModelHolder.childCount; i++)
         {
             ModelHolder.GetChild(i).gameObject.SetActive(CurrentLevel == i);

@@ -223,6 +223,7 @@ public class PlayerModeHandler : MonoBehaviour
         entryPosition = PlayerController.global.transform.position;
     }
 
+    public Building SelectedTurret;
     private void BuildMode()
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
@@ -252,18 +253,27 @@ public class PlayerModeHandler : MonoBehaviour
             worldPos = new Vector3(gridPos.x, 0, gridPos.z);
 
             Collider[] colliders = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
-            PlayerController.global.TurretMenuHolder.gameObject.SetActive(false);
+            PlayerController.global.TurretMenuHolder.gameObject.SetActive(SelectedTurret);
+
             for (int i = 0; i < colliders.Length; i++)
             {
                 if (colliders[i].tag == "Turret")
                 {
-                    PlayerController.global.TurretMenuTitle.text = nameof(buildType);
+                    if (!SelectedTurret)
+                    {
+
+                        PlayerController.global.TurretMenuTitle.text = buildType.ToString();
+                        PlayerController.global.TurretMenuHolder.GetComponent<Pause>().Reset();
+                        ClearBlueprint();
+                    }
+
                     PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
-                    ClearBlueprint();
-                    PlayerController.global.TurretMenuHolder.gameObject.SetActive(true);
+                    SelectedTurret = colliders[i].GetComponentInParent<Building>();
+
                     return;
                 }
             }
+            SelectedTurret = null;
 
             if (!turretBlueprint)
             {

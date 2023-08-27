@@ -18,22 +18,32 @@ using TMPro;
 public class Pause : MonoBehaviour
 {
     public static Pause global;
-
+    public bool TurretMenu;
     public Transform ButtonHolder;
 
-    [HideInInspector]
+    //[HideInInspector]
     public List<int> SelectedList = new List<int>();
     private void Awake()
     {
-        global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
+        if (!TurretMenu)
+            global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
+    }
 
+    public void Reset()
+    {
+        SelectedList = new List<int>();
 
+        for (int i = 0; i < ButtonHolder.childCount; i++)
+        {
+            SelectedList.Add(0);
+        }
     }
 
     private void Update()
     {
-        PlayerModeHandler.SetMouseActive(true);
-        ButtonInput();
+        // Debug.Log(SelectedList.Count + " > 0 && " + ButtonHolder.gameObject.activeInHierarchy);
+        if (SelectedList.Count > 0 && ButtonHolder.gameObject.activeInHierarchy)
+            ButtonInput();
     }
 
     public int ReturnIndex()
@@ -46,6 +56,23 @@ public class Pause : MonoBehaviour
             }
         }
         return 0;
+    }
+
+    public bool ChangeMenu(int open)
+    {
+        bool anotherWasOpen = false;
+        for (int i = 0; i < ButtonHolder.childCount; i++)
+        {
+            GameObject menu = ButtonHolder.GetChild(i).gameObject;
+            if (menu.activeSelf && i != open)
+            {
+                anotherWasOpen = true;
+            }
+            menu.SetActive(false);
+        }
+        ButtonHolder.GetChild(open).gameObject.SetActive(true);
+
+        return anotherWasOpen;
     }
 
     void ButtonInput()
@@ -63,6 +90,8 @@ public class Pause : MonoBehaviour
             PlayerController.global.downCTRL = false;
             SelectedList[index]++;
         }
+
+        Debug.Log(index + " " + SelectedList[index] + " -> " + ButtonHolder.GetChild(index).childCount);
 
         SelectedList[index] = (int)GameManager.ReturnThresholds(SelectedList[index], ButtonHolder.GetChild(index).childCount - 1);
 

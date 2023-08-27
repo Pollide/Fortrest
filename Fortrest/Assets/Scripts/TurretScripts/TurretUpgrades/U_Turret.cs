@@ -115,7 +115,6 @@ public class U_Turret : MonoBehaviour
     public void OpenMenu()
     {
         upgradeMenu.SetActive(true);
-        PlayerModeHandler.SetMouseActive(true);
         PlayerModeHandler.global.playerModes = PlayerModes.UpgradeMenu;
         Time.timeScale = 0f;
     }
