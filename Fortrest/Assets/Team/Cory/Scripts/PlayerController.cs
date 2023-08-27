@@ -1821,12 +1821,10 @@ public class PlayerController : MonoBehaviour
         StopCoroutine("Staggered");
         StartCoroutine("Staggered");
         if (stagger && !Boar.global.mounted)
-        {
+        {            
             CharacterAnimator.ResetTrigger("Hit1");
             CharacterAnimator.ResetTrigger("Hit2");
             CharacterAnimator.ResetTrigger("Hit3");
-
-            //CharacterAnimator.SetBool("Hit", true);
             int random = Random.Range(1, 4);
             if (random == 1)
             {
