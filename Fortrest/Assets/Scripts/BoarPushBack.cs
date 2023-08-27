@@ -20,6 +20,8 @@ public class BoarPushBack : MonoBehaviour
                 Vector3 rightVector = transform.right;
                 float dotProduct = Vector3.Dot(direction, rightVector);
 
+                enemyController.Damaged(0.2f);
+
                 if (dotProduct > sideThreshold)
                 {
                     direction = (-enemyAgent.transform.forward + enemyAgent.transform.right).normalized;
