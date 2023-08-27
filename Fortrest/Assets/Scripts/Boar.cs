@@ -197,7 +197,7 @@ public class Boar : MonoBehaviour
         if (mounted)
         {
             GameManager.global.SoundManager.PlaySound(mountSound, 1.0f);
-            PlayerController.global.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
+            PlayerController.global.transform.position = new Vector3(transform.position.x, transform.position.y + 4f, transform.position.z);
             PlayerController.global.transform.rotation = transform.rotation;
             PlayerController.global.GetComponent<CharacterController>().enabled = true;
             PlayerController.global.GetComponent<PlayerController>().playerCanMove = false;
@@ -230,9 +230,11 @@ public class Boar : MonoBehaviour
 
     void PlayerStick()
     {
-        PlayerController.global.transform.position = new Vector3(transform.position.x, transform.position.y + 4.25f, transform.position.z);
+        PlayerController.global.transform.position = new Vector3(transform.position.x, transform.position.y + 4f, transform.position.z);
         PlayerController.global.transform.rotation = transform.rotation;
         PlayerController.global.CharacterAnimator.SetBool("Sitting", true);
+        float temp = currentSpeed / 90f;
+        PlayerController.global.CharacterAnimator.SetFloat("MountSpeed", temp);
     }
 
     void Ride()
@@ -311,32 +313,32 @@ public class Boar : MonoBehaviour
             }
             animator.SetBool("Moving", isMoving);
             animator.SetBool("Reversing", isReversing);
-            if (isMoving)
-            {
-                if (bobbing > -5f && !reverse)
-                {
-                    bobbing -= Time.deltaTime * ((currentSpeed / 120.0f) * 75f);
-                }
-                else if (bobbing == -5f)
-                {
-                    reverse = true;
-                }
-                if (bobbing < 5f && reverse)
-                {
-                    bobbing += Time.deltaTime * ((currentSpeed / 120.0f) * 75f);
-                }
-                else if (bobbing == 5f)
-                {
-                    reverse = false;
-                }
-                bobbing = Mathf.Clamp(bobbing, -5f, 5f);
-                PlayerController.global.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + bobbing);
-            }
-            else
-            {
-                bobbing = 0f;
-                reverse = false;
-            }
+            //if (isMoving)
+            //{
+            //    if (bobbing > -5f && !reverse)
+            //    {
+            //        bobbing -= Time.deltaTime * ((currentSpeed / 120.0f) * 75f);
+            //    }
+            //    else if (bobbing == -5f)
+            //    {
+            //        reverse = true;
+            //    }
+            //    if (bobbing < 5f && reverse)
+            //    {
+            //        bobbing += Time.deltaTime * ((currentSpeed / 120.0f) * 75f);
+            //    }
+            //    else if (bobbing == 5f)
+            //    {
+            //        reverse = false;
+            //    }
+            //    bobbing = Mathf.Clamp(bobbing, -5f, 5f);
+            //    PlayerController.global.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + bobbing);
+            //}
+            //else
+            //{
+            //    bobbing = 0f;
+            //    reverse = false;
+            //}
         }
     }
 

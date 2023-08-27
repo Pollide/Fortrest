@@ -32,6 +32,7 @@ public class PlayerSteps : MonoBehaviour
     void Evading()
     {
         PlayerController.global.evading = false;
+        Debug.Log("yoza");
     }
 
     void LungeEnd()
