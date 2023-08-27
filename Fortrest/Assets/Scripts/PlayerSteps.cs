@@ -9,7 +9,7 @@ public class PlayerSteps : MonoBehaviour
         if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
         {
             PlayerController.global.lunge = true;
-            PlayerController.global.AttackEffects();            
+            PlayerController.global.AttackEffects();        
         }       
     }
 
