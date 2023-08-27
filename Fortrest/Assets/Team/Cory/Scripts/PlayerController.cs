@@ -572,7 +572,7 @@ public class PlayerController : MonoBehaviour
             playerCanBeDamaged = false;
             evadeTimer += Time.deltaTime;
 
-            playerCC.Move(transform.forward * 8.0f * Time.deltaTime);
+            playerCC.Move(transform.forward * 6.0f * Time.deltaTime);
             return;
         }
         else
@@ -636,7 +636,7 @@ public class PlayerController : MonoBehaviour
 
         HandleEnergy();
 
-        //CharacterAnimator.SetBool("Upgraded", upgradedMelee);
+        CharacterAnimator.SetBool("Upgraded", upgradedMelee);
         TimersFunction();
         ScreenDamage();
         CheckCurrentTool();
@@ -665,15 +665,7 @@ public class PlayerController : MonoBehaviour
             {
                 Boar.global.Mount();
             }
-            int random = Random.Range(1, 3);
-            if (random == 1)
-            {
-                //CharacterAnimator.SetTrigger("Death1");
-            }
-            else if (random == 2)
-            {
-                //CharacterAnimator.SetTrigger("Death2");
-            }
+            CharacterAnimator.SetTrigger("Death");
         }
     }
 
@@ -713,12 +705,12 @@ public class PlayerController : MonoBehaviour
 
         if (cancelAnimation)
         {
-            //CharacterAnimator.SetBool("Swapping", cancelAnimation);
+            CharacterAnimator.SetBool("Swapping", cancelAnimation);
             cancelAnimation = false;
         }
         else
         {
-            //CharacterAnimator.SetBool("Swapping", cancelAnimation);
+            CharacterAnimator.SetBool("Swapping", cancelAnimation);
         }
     }
 
@@ -920,7 +912,7 @@ public class PlayerController : MonoBehaviour
             playerCC.enabled = false;
             transform.position = pos;
             playerCC.enabled = true;
-            //CharacterAnimator.SetBool("Moving", false);
+            CharacterAnimator.SetBool("Moving", false);
         }
         interactCTRL = false;
         canTeleport = false;
@@ -965,7 +957,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot) // && CharacterAnimator.GetBool("Moving") == true
+        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot)
         {
             running = true;
         }
@@ -983,13 +975,11 @@ public class PlayerController : MonoBehaviour
             if (running)
             {
                 playerCurrentSpeed = playerSprintSpeed;
-                //CharacterAnimator.speed = 1.6f;
                 directionSaved = false;
             }
             else
             {
                 playerCurrentSpeed = playerWalkSpeed;
-                //CharacterAnimator.speed = 1.0f;
             }
         }
 
@@ -1034,8 +1024,8 @@ public class PlayerController : MonoBehaviour
         evadeTimer = 0;
         canEvade = false;
         evading = true;
-        //CharacterAnimator.ResetTrigger("Evade");
-        //CharacterAnimator.SetTrigger("Evade");
+        CharacterAnimator.ResetTrigger("Evade");
+        CharacterAnimator.SetTrigger("Evade");
         staggered = false;
 
         yield return new WaitForSeconds(evadeCoolDown);
@@ -1399,12 +1389,10 @@ public class PlayerController : MonoBehaviour
     {
         if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
-            CharacterAnimator.ResetTrigger("Attacking");
             CharacterAnimator.ResetTrigger("Swing1");
             CharacterAnimator.ResetTrigger("Swing2");
             CharacterAnimator.ResetTrigger("Swing3");
 
-            CharacterAnimator.SetTrigger("Attacking");
             attackingCTRL = false;
             attacking = true;           
             attackTimer = 0;
@@ -1821,12 +1809,10 @@ public class PlayerController : MonoBehaviour
         StopCoroutine("Staggered");
         StartCoroutine("Staggered");
         if (stagger && !Boar.global.mounted)
-        {
+        {            
             CharacterAnimator.ResetTrigger("Hit1");
             CharacterAnimator.ResetTrigger("Hit2");
             CharacterAnimator.ResetTrigger("Hit3");
-
-            //CharacterAnimator.SetBool("Hit", true);
             int random = Random.Range(1, 4);
             if (random == 1)
             {
