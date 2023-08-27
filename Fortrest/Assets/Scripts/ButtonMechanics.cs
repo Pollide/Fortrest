@@ -111,7 +111,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
 
-        Pause.global.SelectedList[Pause.global.ReturnIndex()] = transform.GetSiblingIndex();
+        Pause.global.SelectedList[GetComponentInParent<Pause>().ReturnIndex()] = transform.GetSiblingIndex();
         //ChangeColourVoid(Color.white);
     }
 
@@ -141,17 +141,23 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (UpgradeBool)
         {
+            TurretShooting turretShooting = PlayerModeHandler.global.SelectedTurret.GetComponent<TurretShooting>();
 
+            if (turretShooting && turretShooting.ModelHolder.childCount > turretShooting.CurrentLevel + 1)
+            {
+                turretShooting.CurrentLevel++;
+                turretShooting.ReturnAnimator();
+            }
         }
 
         if (DestroyBool)
         {
-
+            PlayerModeHandler.global.SelectedTurret.DestroyBuilding();
         }
 
         if (RepairBool)
         {
-
+            PlayerModeHandler.global.SelectedTurret.health = PlayerModeHandler.global.SelectedTurret.maxHealth;
         }
 
         if (BeginingBool)
@@ -185,8 +191,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (CheatsBool || BackBool)
         {
-            Pause.global.ButtonHolder.GetChild(0).gameObject.SetActive(BackBool);
-            Pause.global.ButtonHolder.GetChild(1).gameObject.SetActive(!BackBool);
+            Pause.global.ChangeMenu(BackBool ? 0 : 1);
         }
 
         if (RestartBool)

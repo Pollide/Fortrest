@@ -744,7 +744,7 @@ public class PlayerController : MonoBehaviour
         if (attacking)
         {
             if (!TickTimers(resetAttack, ref attackTimer))
-            {                
+            {
                 attacking = false;
                 damageEnemy = false;
             }
@@ -949,7 +949,7 @@ public class PlayerController : MonoBehaviour
             {
                 speedAnim -= 0.1f * Time.deltaTime * transitionSpeed;
             }
-        }  
+        }
 
         Mathf.Clamp(speedAnim, 0f, 1f);
         CharacterAnimator.SetFloat("Speed", speedAnim);
@@ -1042,27 +1042,17 @@ public class PlayerController : MonoBehaviour
             }
             else if (pause != pausedBool)
             {
-                if (!pause && Pause.global.ButtonHolder.GetChild(1).gameObject.activeSelf)
+                if (Pause.global.ChangeMenu(0))
                 {
-                    Pause.global.ButtonHolder.GetChild(0).gameObject.SetActive(true);
-                    Pause.global.ButtonHolder.GetChild(1).gameObject.SetActive(false);
-                    return;
+                    if (!pause)
+                        return;
                 }
 
                 PauseCanvasGameObject.SetActive(pause);
+
                 if (pause)
                 {
-                    for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
-                    {
-                        Pause.global.ButtonHolder.GetChild(i).gameObject.SetActive(i == 0);
-                    }
-
-                    Pause.global.SelectedList = new List<int>();
-
-                    for (int i = 0; i < Pause.global.ButtonHolder.childCount; i++)
-                    {
-                        Pause.global.SelectedList.Add(0);
-                    }
+                    Pause.global.Reset();
                 }
 
                 GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
@@ -1328,9 +1318,10 @@ public class PlayerController : MonoBehaviour
 
     float previousLookAngle;
     Vector3 previousMoveDirection;
-
+    Quaternion RotateTowards;
     private void RotatePlayer()
     {
+
         float angle;
 
         if (GameManager.global.KeyboardBool)
@@ -1346,22 +1337,28 @@ public class PlayerController : MonoBehaviour
             angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
         }
 
-        //if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
-        //{
-        //    previousMoveDirection = moveDirection;
-        //    previousLookAngle = angle;
-        //
-        //    Vector3 euler = transform.eulerAngles;
-        //    euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
-        //    transform.rotation = Quaternion.Euler(euler);
-        //}
-        //else if (Mathf.Abs(angle - previousLookAngle) > 1.5f) //however if player is moving cursor/Rigt joystick around, then pioritise that
-        //{
-        //    previousLookAngle = angle;
-        //    transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
-        //}
 
-        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
+        {
+            previousMoveDirection = moveDirection;
+            previousLookAngle = angle;
+
+            Vector3 euler = transform.eulerAngles;
+            euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
+            RotateTowards = Quaternion.Euler(euler);
+        }
+        else if (Mathf.Abs(angle - previousLookAngle) > 8.0f) //however if player is moving cursor/Rigt joystick around, then pioritise that
+        {
+            previousLookAngle = angle;
+            RotateTowards = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        }
+        else if (RotateTowards == Quaternion.identity)
+        {
+            RotateTowards = transform.rotation;
+        }
+
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, RotateTowards, 600 * Time.deltaTime);
+        //  transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
     }
 
     private void ApplyGravity()
@@ -1394,7 +1391,7 @@ public class PlayerController : MonoBehaviour
             CharacterAnimator.ResetTrigger("Swing3");
 
             attackingCTRL = false;
-            attacking = true;           
+            attacking = true;
             attackTimer = 0;
             comboTimer = 0;
             LevelManager.ProcessEnemyList((enemy) =>
@@ -1449,7 +1446,7 @@ public class PlayerController : MonoBehaviour
                     attackDamage = 1.5f;
                 }
                 CharacterAnimator.SetTrigger("Swing3");
-            }           
+            }
         }
     }
 
@@ -1543,7 +1540,6 @@ public class PlayerController : MonoBehaviour
         miniTurret = Instantiate(PlayerModeHandler.global.turretPrefabs[0], spawn, transform.rotation);
         miniTurret.transform.localScale = new Vector3(0.3f, 1, 0.3f);
         miniTurret.GetComponent<TurretShooting>().MiniTurret = true;
-        miniTurret.GetComponent<TurretShooting>().CurrentLevel = miniTurret.GetComponent<TurretShooting>().ModelHolder.childCount - 1;
         miniTurret.GetComponent<TurretShooting>().turn_speed = 10;
         miniTurret.GetComponent<TurretShooting>().damage = 0.3f;
         miniTurret.GetComponent<TurretShooting>().fireRate = 3f;
@@ -1809,7 +1805,7 @@ public class PlayerController : MonoBehaviour
         StopCoroutine("Staggered");
         StartCoroutine("Staggered");
         if (stagger && !Boar.global.mounted)
-        {            
+        {
             CharacterAnimator.ResetTrigger("Hit1");
             CharacterAnimator.ResetTrigger("Hit2");
             CharacterAnimator.ResetTrigger("Hit3");
