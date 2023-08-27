@@ -91,7 +91,7 @@ public class Pause : MonoBehaviour
             SelectedList[index]++;
         }
 
-        Debug.Log(index + " " + SelectedList[index] + " -> " + ButtonHolder.GetChild(index).childCount);
+        // Debug.Log(index + " " + SelectedList[index] + " -> " + ButtonHolder.GetChild(index).childCount);
 
         SelectedList[index] = (int)GameManager.ReturnThresholds(SelectedList[index], ButtonHolder.GetChild(index).childCount - 1);
 
