@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
     [HideInInspector] public Vector3 mousePos;
+    [HideInInspector] public Vector3 lookDirection;
 
     // Player Knocked Back
     private Vector3 pushDirection;
@@ -53,7 +54,7 @@ public class PlayerController : MonoBehaviour
     private bool canShoot;
     [HideInInspector] public float bowDamage = 1.5f;
     private float bowTimer = 0.0f;
-    private float resetBow = 1.5f;
+    private float resetBow = 1f;
     private bool shooting = false;
     private bool directionSaved = false;
     private Quaternion tempDirection;
@@ -93,9 +94,9 @@ public class PlayerController : MonoBehaviour
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
     private float attackTimer = 0.0f;
-    private float resetAttack = 0.95f;
+    private float resetAttack = 0.75f;
     private float comboTimer = 0.0f;
-    private float resetCombo = 1.20f;
+    private float resetCombo = 0.95f;
     private int attackCount = 0;
     [HideInInspector] public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
@@ -230,6 +231,7 @@ public class PlayerController : MonoBehaviour
     // Animation
     private float speedAnim;
     private float transitionSpeed = 20f;
+    public Animator bowAnimator;
 
     // Start is called before the first frame update
     void Awake()
@@ -954,7 +956,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot)
+        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot && !attacking)
         {
             running = true;
         }
@@ -1316,40 +1318,57 @@ public class PlayerController : MonoBehaviour
 
     private void RotatePlayer()
     {
-
-        float angle;
-
         if (GameManager.global.KeyboardBool)
         {
-            mousePos = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
-
-            Vector3 lookDirection = mousePos - transform.position;
-
-            angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
+            Vector3 targetPostition = new Vector3(LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).z);
+            transform.LookAt(targetPostition);
         }
         else
         {
-            angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+            //Vector3 targetPostition = new Vector3(rotateCTRL.x, transform.position.y, rotateCTRL.y);
+            //transform.LookAt(targetPostition);
         }
 
-        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        //transform.LookAt(cam.ScreenToWorldPoint(Input.mousePosition));
+        //transform.eulerAngles.x = 0f;
 
-        /*
-        for (int i = 0; i < followMovementList.Count; i++)
-        {
-            if (playerisMoving && moveDirection != Vector3.zero)
-            {
-                Vector3 euler = followMovementList[i].eulerAngles;
-                euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
-                followMovementList[i].rotation = Quaternion.Euler(euler);
-                // followMovementList[i].rotation = Quaternion.RotateTowards(followMovementList[i].rotation, Quaternion.Euler(euler), 600 * Time.deltaTime);
-            }
-        }
+        //float angle;
+        //
+        //if (GameManager.global.KeyboardBool)
+        //{
+        //    mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        //
+        //    lookDirection = mousePos - transform.position;
+        //
+        //    angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
+        //}
+        //else
+        //{
+        //    angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+        //}
 
-        */
-        //if (Mathf.Abs(angle - previousLookAngle) > 8.0f) //however if player is moving cursor/Rigt joystick around, then pioritise that
 
+        //if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
+        //{
+        //    previousMoveDirection = moveDirection;
+        //    previousLookAngle = angle;
+        //
+        //    Vector3 euler = transform.eulerAngles;
+        //    euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
+        //    RotateTowards = Quaternion.Euler(euler);
+        //}
+        //else if (Mathf.Abs(angle - previousLookAngle) > 8.0f) //however if player is moving cursor/Rigt joystick around, then pioritise that
+        //{
+        //    previousLookAngle = angle;
+        //    RotateTowards = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        //}
+        //else if (RotateTowards == Quaternion.identity)
+        //{
+        //    RotateTowards = transform.rotation;
+        //}
 
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, RotateTowards, 600 * Time.deltaTime);
+        //transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
     }
 
     private void ApplyGravity()
@@ -1390,53 +1409,41 @@ public class PlayerController : MonoBehaviour
                 enemy.canBeDamaged = true;
             });
 
-            if (attackCount == 0)
+            if (upgradedMelee)
             {
-                if (upgradedMelee)
-                {
-                    resetAttack = 0.75f;
-                    resetCombo = 1.0f;
-                    attackDamage = 1.25f;
-                }
-                else
-                {
-                    resetAttack = 0.95f;
-                    resetCombo = 1.2f;
-                    attackDamage = 1.0f;
-                }
-                CharacterAnimator.SetTrigger("Swing1");
+                resetAttack = 0.6f;
+                resetCombo = 0.75f;
+                attackDamage = 1.25f;
             }
-            else if (attackCount == 1)
+            else
             {
-                if (upgradedMelee)
-                {
-                    resetAttack = 0.7f;
-                    resetCombo = 0.95f;
-                    attackDamage = 1.25f;
-                }
-                else
-                {
-                    resetAttack = 0.9f;
-                    resetCombo = 1.15f;
-                    attackDamage = 1.0f;
-                }
-                CharacterAnimator.SetTrigger("Swing2");
+                resetAttack = 0.6f;
+                resetCombo = 0.95f;
+                attackDamage = 1f;
             }
-            else if (attackCount == 2)
+
+            switch (attackCount)
             {
-                if (upgradedMelee)
-                {
-                    resetAttack = 0.75f;
-                    resetCombo = 1.0f;
-                    attackDamage = 2.0f;
-                }
-                else
-                {
-                    resetAttack = 0.95f;
-                    resetCombo = 1.2f;
-                    attackDamage = 1.5f;
-                }
-                CharacterAnimator.SetTrigger("Swing3");
+                case 0:
+                    CharacterAnimator.SetTrigger("Swing1");
+                    break;
+                case 1:
+                    CharacterAnimator.SetTrigger("Swing2");
+                    break;
+                case 2:
+                    if (upgradedMelee)
+                    {
+                        attackDamage = 1.75f;
+                    }
+                    else
+                    {
+                        attackDamage = 1.5f;
+                    }
+                    CharacterAnimator.SetTrigger("Swing3");
+                    break;
+                default:
+                    Debug.Log("error");
+                    break;
             }
         }
     }
@@ -1479,7 +1486,9 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(1) || aimingCTRL)
             {
+                CharacterAnimator.SetBool("Aiming", true);
                 ChangeTool(new ToolData() { BowBool = true });
+                bowAnimator.SetBool("Aiming", true);
                 canShoot = true;
                 if (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL)
                 {
@@ -1498,14 +1507,18 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                CharacterAnimator.SetBool("Aiming", false);
+                bowAnimator.SetBool("Aiming", false);
                 ChangeTool(new ToolData() { SwordBool = true });
                 canShoot = false;
             }
 
             if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting)
             {
-                //CharacterAnimator.ResetTrigger("Fire");
-                //CharacterAnimator.SetTrigger("Fire");
+                CharacterAnimator.ResetTrigger("Shoot");
+                CharacterAnimator.SetTrigger("Shoot");
+                bowAnimator.ResetTrigger("Shoot");
+                bowAnimator.SetTrigger("Shoot");
                 attackingCTRL = false;
                 shooting = true;
                 bowTimer = 0;
@@ -1586,14 +1599,7 @@ public class PlayerController : MonoBehaviour
 
     private void AttackLunge()
     {
-        if (attackCount == 0)
-        {
-            playerCC.Move(transform.forward * 10f * Time.deltaTime);
-        }
-        else if (attackCount == 1 || attackCount == 2)
-        {
-            playerCC.Move(transform.forward * 7f * Time.deltaTime);
-        }
+        playerCC.Move(transform.forward * 7f * Time.deltaTime);
         VFXSlash.transform.position = transform.position;
     }
 

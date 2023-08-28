@@ -16,7 +16,10 @@ public class Bow : MonoBehaviour
 
     public void Shoot()
     {
-        GameObject arrow = Instantiate(arrowObject, transform.position - transform.right, Quaternion.Euler(90f, transform.eulerAngles.y - 90.0f, 0f));
-        arrow.GetComponent<Rigidbody>().AddForce(-transform.right * fireForce, ForceMode.Impulse);
+        Vector3 direction = PlayerController.global.lookDirection;
+        direction.Normalize();
+        direction.y = 0;
+        GameObject arrow = Instantiate(arrowObject, transform.position, Quaternion.Euler(90f, PlayerController.global.transform.eulerAngles.y, 0f));
+        arrow.GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * fireForce, ForceMode.Impulse);
     }
 }
