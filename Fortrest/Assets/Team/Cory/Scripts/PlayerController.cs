@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
+    public Camera cam;
 
     // House & Player Model
     public GameObject house;
@@ -22,7 +23,7 @@ public class PlayerController : MonoBehaviour
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
     [HideInInspector] public Vector3 mousePos;
-    [HideInInspector] public Vector3 lookDirection;
+    [HideInInspector] public Vector3 targetPostition;
 
     // Player Knocked Back
     private Vector3 pushDirection;
@@ -174,6 +175,12 @@ public class PlayerController : MonoBehaviour
 
     // Enemy UI
     private int lastAmount = 0;
+    public Image countdownBar;
+    private bool gapSet;
+    private float gap;
+    private float fraction;
+    private float newGap;
+    private bool displayAmount;
 
     // Damage Indicators    
     public Image[] redSlashes;
@@ -207,6 +214,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool pauseSelectCTRL;
     [HideInInspector] public bool releasedCTRL;
     [HideInInspector] public bool scrollCTRL;
+    private float deadZone = 0.1f;
 
     // Keyboard Controls
     private KeyCode[] keyCodes;
@@ -603,7 +611,7 @@ public class PlayerController : MonoBehaviour
             HandleSpeed();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
-
+            RotatePlayer();
             BlendTreeAnimation();
 
             // Mechanics
@@ -627,15 +635,13 @@ public class PlayerController : MonoBehaviour
             running = false;
         }
 
-
-
         HandleEnergy();
-
         CharacterAnimator.SetBool("Upgraded", upgradedMelee);
         TimersFunction();
         ScreenDamage();
         CheckCurrentTool();
         Resting();
+        BarDisappear();
 
         if (playerDead)
         {
@@ -661,11 +667,6 @@ public class PlayerController : MonoBehaviour
             }
             CharacterAnimator.SetTrigger("Death");
         }
-    }
-
-    private void LateUpdate()
-    {
-        RotatePlayer();
     }
 
     private void CheckCurrentTool()
@@ -1314,21 +1315,21 @@ public class PlayerController : MonoBehaviour
             playerCC.Move(moveDirection * Time.deltaTime);
         }
     }
-    public List<Transform> followMovementList;
 
+    float previousLookAngle;
+    Vector3 previousMoveDirection;
+    Quaternion RotateTowards;
     private void RotatePlayer()
     {
         if (GameManager.global.KeyboardBool)
         {
-            Vector3 targetPostition = new Vector3(LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).z);
-            transform.LookAt(targetPostition);
+            targetPostition = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, cam.ScreenToWorldPoint(Input.mousePosition).z);
         }
         else
         {
-            //Vector3 targetPostition = new Vector3(rotateCTRL.x, transform.position.y, rotateCTRL.y);
-            //transform.LookAt(targetPostition);
+            targetPostition = new Vector3(rotateCTRL.x, transform.position.y, rotateCTRL.y);
         }
-
+        transform.LookAt(targetPostition);
         //transform.LookAt(cam.ScreenToWorldPoint(Input.mousePosition));
         //transform.eulerAngles.x = 0f;
 
@@ -1342,10 +1343,9 @@ public class PlayerController : MonoBehaviour
         //
         //    angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
         //}
-        //else
-        //{
+
         //    angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
-        //}
+
 
 
         //if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
@@ -1422,7 +1422,7 @@ public class PlayerController : MonoBehaviour
                 attackDamage = 1f;
             }
 
-            switch (attackCount)
+            switch(attackCount)
             {
                 case 0:
                     CharacterAnimator.SetTrigger("Swing1");
@@ -1488,7 +1488,7 @@ public class PlayerController : MonoBehaviour
             {
                 CharacterAnimator.SetBool("Aiming", true);
                 ChangeTool(new ToolData() { BowBool = true });
-                bowAnimator.SetBool("Aiming", true);
+                bowAnimator.SetBool("Aiming", true);               
                 canShoot = true;
                 if (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL)
                 {
@@ -1691,8 +1691,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void DisplayEnemiesComingText()
+    {
+        GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
+        displayAmount = true;
+    }
+
     public void EnemiesTextControl()
     {
+        // Enemy remaining and enemy amount appearing
+        if (displayAmount)
+        {
+            StopCoroutine("TextDisappearing");
+            StartCoroutine(TextAppearing());
+            displayAmount = false;
+        }
+
         // Calculate enemy amount and display it
         int goblinsInt = 0;
         LevelManager.ProcessEnemyList((enemy) =>
@@ -1713,8 +1727,7 @@ public class PlayerController : MonoBehaviour
         // Enemy remaining and enemy amount disappearing
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
-            LevelManager.global.waveEnd = false;
-            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false);
+            StartCoroutine(TextDisappearing());
         }
     }
 
@@ -1874,6 +1887,62 @@ public class PlayerController : MonoBehaviour
         return color;
     }
 
+    private void BarDisappear()
+    {
+        if (enemyDirectionText.rectTransform.anchoredPosition.y == 450.0f)
+        {
+            if (!gapSet)
+            {
+                gap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat;
+                fraction = 663.0f / gap;
+                gapSet = true;
+            }
+            Debug.Log("yoza");
+            countdownBar.gameObject.SetActive(true);
+            countdownBar.rectTransform.sizeDelta = new Vector2(fraction * (LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat), 10.0f);
+        }
+        if (countdownBar.rectTransform.sizeDelta.x <= 0f)
+        {
+            enemyDirectionText.rectTransform.anchoredPosition = new Vector2(0f, 0f);
+            enemyDirectionText.rectTransform.localScale = new Vector3(0f, 0f, 0f);
+            gapSet = false;
+            gap = 0f;
+            countdownBar.gameObject.SetActive(false);
+            LevelManager.global.messageDisplayed = false;
+        }
+    }
+
+    private IEnumerator TextAppearing()
+    {
+        bool gapSet = false;
+        float fraction = 0f;
+        float gradient = 0f;
+        if (!gapSet)
+        {
+            newGap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat;
+            fraction = 1.0f / newGap;
+            gapSet = true;
+        }
+        while (gradient < 1.0f)
+        {
+            gradient = fraction * ((LevelManager.global.DaylightTimerFloat + newGap) - LevelManager.global.randomAttackTrigger);
+            enemyText.color = LevelManager.global.textGradient.Evaluate(gradient);
+            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(gradient);
+            yield return null;
+        }
+    }
+
+    private IEnumerator TextDisappearing()
+    {
+        float temp = 1.0f;
+        while (temp > 0)
+        {
+            temp -= Time.deltaTime / 2.0f;
+            enemyText.color = LevelManager.global.textGradient.Evaluate(temp);
+            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(temp);
+            yield return null;
+        }
+    }
 
     public IEnumerator PushPlayer(float _waitTime)
     {
