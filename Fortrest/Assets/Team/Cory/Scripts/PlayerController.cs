@@ -1320,7 +1320,7 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.global.KeyboardBool)
         {
-            Vector3 targetPostition = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, cam.ScreenToWorldPoint(Input.mousePosition).z);
+            Vector3 targetPostition = new Vector3(LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).z);
             transform.LookAt(targetPostition);
         }
         else
@@ -1422,7 +1422,7 @@ public class PlayerController : MonoBehaviour
                 attackDamage = 1f;
             }
 
-            switch(attackCount)
+            switch (attackCount)
             {
                 case 0:
                     CharacterAnimator.SetTrigger("Swing1");
@@ -1488,7 +1488,7 @@ public class PlayerController : MonoBehaviour
             {
                 CharacterAnimator.SetBool("Aiming", true);
                 ChangeTool(new ToolData() { BowBool = true });
-                bowAnimator.SetBool("Aiming", true);               
+                bowAnimator.SetBool("Aiming", true);
                 canShoot = true;
                 if (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL)
                 {
