@@ -1613,6 +1613,17 @@ public class PlayerController : MonoBehaviour
 
     public void NewDay()
     {
+        LevelManager.global.newDay = true;
+        DayTMP_Text.text = "DAY " + (LevelManager.global.day + 1).ToString();
+        RemaningTMP_Text.text = "Highscore: " + (PlayerPrefs.GetInt("Number of Days") + 1);
+
+        if (LevelManager.global.day > PlayerPrefs.GetInt("Number of Days"))
+        {
+            RemaningTMP_Text.text = "Highscore Beaten!";
+            PlayerPrefs.SetInt("Number of Days", LevelManager.global.day);
+        }
+
+        /*
         if (LevelManager.global.day == 1)
         {
             LevelManager.global.newDay = true;
@@ -1658,6 +1669,7 @@ public class PlayerController : MonoBehaviour
                 PlayerPrefs.SetInt("Number of Days", LevelManager.global.day);
             }
         }
+        */
     }
 
     public void EnemiesTextControl()
