@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.VFX;
 using TMPro;
 using UnityEngine.UI;
-
+using System.Linq;
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager global;
@@ -43,7 +43,7 @@ public class LevelManager : MonoBehaviour
     Vector3 lastPanPosition;
     bool OnceDetection;
 
-    // public List<Transform> EnemyList = new List<Transform>();
+    // public List<Transform> enemyList = new List<Transform>();
     private List<Transform> BuildingList = new List<Transform>(); //This list is private as now you use ProcessBuildingList((building) => . Do not reference this list any other way. dm to ask how to use
 
     public Transform ResourceHolderTransform;
@@ -52,20 +52,20 @@ public class LevelManager : MonoBehaviour
     public Material LanternGlowingMaterial;
     public Material LanternOffMaterial;
 
-    public float DaylightTimerFloat;
+    public float daylightTimer;
     public int day = 0;
-    public List<EnemyController> EnemyList = new List<EnemyController>();
-    public List<GameObject> InventoryItemList = new List<GameObject>();
-    public List<BridgeBuilder> BridgeList = new List<BridgeBuilder>();
+    public List<EnemyController> enemyList = new List<EnemyController>();
+    public List<GameObject> inventoryItemList = new List<GameObject>();
+    public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
     public float daySpeed = 1;
     public float enemyTimer;
 
     [HideInInspector]
     public float enemyThreshold;
 
-    public GameObject GoblinGameObject;
-    public GameObject OgreGameObject;
-    public GameObject SpiderGameObject;
+    public GameObject goblinPrefab;
+    public GameObject ogrePrefab;
+    public GameObject spiderPrefab;
 
     public VisualEffect VFXSmokePuff;
 
@@ -74,7 +74,8 @@ public class LevelManager : MonoBehaviour
     bool NightTimeMusic;
     public Gradient textGradient;
 
-    public List<Transform> TerrainList = new List<Transform>();
+    [HideInInspector]
+    public List<Terrain> terrainList = new List<Terrain>();
 
     public Image clockHand;
     public Image clockSun;
@@ -106,18 +107,15 @@ public class LevelManager : MonoBehaviour
     private Vector3 enemySpawnPosition;
     bool housePosObtained = false;
     private float spawnDistance = 39.0f;
-
+    AnimationState enemyIncomingState;
     [HideInInspector]
     public bool messageDisplayed;
-
-    [HideInInspector]
-    public bool runOnce;
 
     private void Awake()
     {
         global = this;
 
-        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimerFloat + 90);
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -daylightTimer + 90);
 
         if (!GameManager.global)
         {
@@ -136,7 +134,7 @@ public class LevelManager : MonoBehaviour
 
         //LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         //NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
-
+        terrainList = GameObject.FindObjectsOfType<Terrain>().ToList();
         VFXSmokePuff.Stop();
         /*
         DayTMP_Text = PlayerController.global..GetComponent<TMP_Text>();
@@ -179,11 +177,11 @@ public class LevelManager : MonoBehaviour
 
     public static void ProcessEnemyList(System.Action<EnemyController> processAction)
     {
-        for (int i = 0; i < LevelManager.global.EnemyList.Count; i++)
+        for (int i = 0; i < LevelManager.global.enemyList.Count; i++)
         {
-            if (LevelManager.global.EnemyList[i])
+            if (LevelManager.global.enemyList[i])
             {
-                processAction(LevelManager.global.EnemyList[i]);
+                processAction(LevelManager.global.enemyList[i]);
             }
         }
     }
@@ -222,7 +220,7 @@ public class LevelManager : MonoBehaviour
 
     public bool ReturnNight()
     {
-        return DaylightTimerFloat > 180;
+        return daylightTimer > 180;
     }
 
     private void Update()
@@ -263,19 +261,20 @@ public class LevelManager : MonoBehaviour
         // daySpeed = 7.0f; // FOR TESTING
 #endif
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
-        DirectionalLightTransform.eulerAngles = new Vector3(DaylightTimerFloat, 0, 0);
-        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -DaylightTimerFloat + 90);
-        DaylightTimerFloat += daySpeed * Time.deltaTime;
+        DirectionalLightTransform.eulerAngles = new Vector3(daylightTimer, 0, 0);
+        clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -daylightTimer + 90);
+        daylightTimer += daySpeed * Time.deltaTime;
 
         Light light = DirectionalLightTransform.GetComponent<Light>();
         int cycle = 360;
-        light.color = SunriseGradient.Evaluate(DaylightTimerFloat / cycle);
-        if (DaylightTimerFloat > cycle)
+        light.color = SunriseGradient.Evaluate(daylightTimer / cycle);
+        if (daylightTimer > cycle)
         {
             attackHappening = false;
             randomAttackTrigger = 0f;
             randomSet = false;
-            DaylightTimerFloat = 0;
+            messageDisplayed = false;
+            daylightTimer = 0;
             day++;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
             GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
@@ -461,32 +460,35 @@ public class LevelManager : MonoBehaviour
         }
 
         // Night attack
-        if (DaylightTimerFloat >= 150.0f && DaylightTimerFloat <= 151.0f)
+        if (daylightTimer >= 150.0f && daylightTimer <= 151.0f)
         {
             randomAttackTrigger = 180.0f;
             nightAttack = true;
         }
 
         // Message and countdown bar appear 30f before the attack
-        if ((DaylightTimerFloat >= randomAttackTrigger - 30.0f && DaylightTimerFloat <= randomAttackTrigger - 30.0f + 1.0f) && randomAttackTrigger != 0f && !messageDisplayed)
+
+        float noon = randomAttackTrigger - PlayerController.global.UIAnimation["Enemies Incoming"].length;
+
+        if (daylightTimer >= noon && randomAttackTrigger != 0f && !messageDisplayed)
         {
-            PlayerController.global.DisplayEnemiesComingText(); // Display enemies are coming a bit before an attack
+            enemyIncomingState = GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Incoming"); // Display enemies are coming a bit before an attack
             messageDisplayed = true;
-            runOnce = false;
         }
 
         // For enemy remaining text to not disappear right before the spawning starts
-        if ((DaylightTimerFloat >= randomAttackTrigger - 2.0f && DaylightTimerFloat <= randomAttackTrigger) && randomAttackTrigger != 0f)
+        if ((daylightTimer >= randomAttackTrigger - 2.0f && daylightTimer <= randomAttackTrigger) && randomAttackTrigger != 0f)
         {
             waveEnd = false;
         }
 
-        // Enemies start spawning
-        if ((DaylightTimerFloat >= randomAttackTrigger && DaylightTimerFloat <= randomAttackTrigger + 1.0f) && randomAttackTrigger != 0f && !runOnce)
+        // Enemies start spawning after enemy incoming animation is finished
+        if (!spawnEnemies && messageDisplayed && enemyIncomingState && !enemyIncomingState.enabled)
         {
+            enemyIncomingState = null;
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear");
             spawnEnemies = true; // Attack starts when the time is reached
             countSet = false;
-            runOnce = true;
         }
 
         if (spawnEnemies)
@@ -554,16 +556,16 @@ public class LevelManager : MonoBehaviour
                         enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
                         enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
 
-                        GameObject prefab = GoblinGameObject;
+                        GameObject prefab = goblinPrefab;
 
                         if (day > 1 && Random.Range(0, 3) == 0)
                         {
-                            prefab = SpiderGameObject;
+                            prefab = spiderPrefab;
                         }
 
                         if (day > 2 && Random.Range(0, 7) == 0 && !ogreSpawned)
                         {
-                            prefab = OgreGameObject;
+                            prefab = ogrePrefab;
                             ogreSpawned = true;
                         }
 
@@ -581,16 +583,16 @@ public class LevelManager : MonoBehaviour
                     enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
                     enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
 
-                    GameObject prefab = GoblinGameObject;
+                    GameObject prefab = goblinPrefab;
 
                     if (day > 1 && Random.Range(0, 3) == 0)
                     {
-                        prefab = SpiderGameObject;
+                        prefab = spiderPrefab;
                     }
 
                     if (day > 2 && Random.Range(0, 7) == 0 && !ogreSpawned)
                     {
-                        prefab = OgreGameObject;
+                        prefab = ogrePrefab;
                         ogreSpawned = true;
                     }
 
@@ -607,6 +609,7 @@ public class LevelManager : MonoBehaviour
             {
                 waveEnd = true;
                 spawnEnemies = false;
+
                 groupSpawnAmount = 0;
                 ogreSpawned = false;
                 enemiesCount = 0;
