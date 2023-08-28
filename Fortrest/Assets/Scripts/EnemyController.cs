@@ -87,7 +87,7 @@ public class EnemyController : MonoBehaviour
         SetEnemyParameters();
 
         playerPosition = PlayerController.global.transform;
-        LevelManager.global.EnemyList.Add(this); // Adding each object transform with this script attached to the enemy list
+        LevelManager.global.enemyList.Add(this); // Adding each object transform with this script attached to the enemy list
         if (agent.isOnNavMesh)
         {
             if (currentEnemyType != ENEMYTYPE.wolf) //wolves wild
@@ -642,7 +642,7 @@ public class EnemyController : MonoBehaviour
         agent.enabled = false;
         if (currentEnemyType != ENEMYTYPE.wolf)
         {
-            LevelManager.global.EnemyList.Remove(this);
+            LevelManager.global.enemyList.Remove(this);
             Destroy(gameObject);
         }
         else
