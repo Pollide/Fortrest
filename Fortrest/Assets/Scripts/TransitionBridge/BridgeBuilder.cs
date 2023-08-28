@@ -37,7 +37,7 @@ public class BridgeBuilder : MonoBehaviour
         }
 
 
-        LevelManager.global.bridgeList.Add(this);
+        LevelManager.global.BridgeList.Add(this);
     }
     void ShowResources(bool show)
     {

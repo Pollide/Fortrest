@@ -29,13 +29,13 @@ public class InventoryItem : MonoBehaviour
 
     private void Start()
     {
-        LevelManager.global.inventoryItemList.Add(gameObject);
+        LevelManager.global.InventoryItemList.Add(gameObject);
 
 
         /* I have another idea cory if your wondering why this is hidden again
         for (int i = 0; i < resourceAmount; i++)
         {
-            LevelManager.global.inventoryItemList.Add(gameObject);
+            LevelManager.global.InventoryItemList.Add(gameObject);
         }
         */
     }
@@ -94,7 +94,7 @@ public class InventoryItem : MonoBehaviour
 
         // InventoryManager.global.AddItem(this, resourceAmount);
         CollectedBool = true;
-        LevelManager.global.inventoryItemList.Remove(gameObject);
+        LevelManager.global.InventoryItemList.Remove(gameObject);
     }
 
     private void Update()

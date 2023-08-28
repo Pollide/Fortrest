@@ -356,19 +356,19 @@ MonoBehaviour:
   LanternGlowingMaterial: {fileID: 2100000, guid: b46a801104b18ed45a14292d0b923d90,
     type: 2}
   LanternOffMaterial: {fileID: 2100000, guid: b11fcb8fd98ace845ace365b5f15db7a, type: 2}
-  daylightTimer: 0
+  DaylightTimerFloat: 0
   day: 0
-  enemyList: []
-  inventoryItemList: []
-  bridgeList: []
+  EnemyList: []
+  InventoryItemList: []
+  BridgeList: []
   daySpeed: 1
   enemyTimer: 0
   enemyThreshold: 0
-  goblinPrefab: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
+  GoblinGameObject: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
     type: 3}
-  ogrePrefab: {fileID: 5633042026967272240, guid: 06cff7f448c42c24bb9eed44021c8b05,
+  OgreGameObject: {fileID: 5633042026967272240, guid: 06cff7f448c42c24bb9eed44021c8b05,
     type: 3}
-  spiderPrefab: {fileID: 5936932421964932193, guid: 7aa9da11c0a47014693eeed85fca301e,
+  SpiderGameObject: {fileID: 5936932421964932193, guid: 7aa9da11c0a47014693eeed85fca301e,
     type: 3}
   VFXSmokePuff: {fileID: 3283931038916066823}
   newDay: 0
@@ -401,7 +401,12 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  terrainList: []
+  TerrainList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   clockHand: {fileID: 0}
   clockSun: {fileID: 0}
   clockMoon: {fileID: 0}
@@ -552,8 +557,13 @@ MonoBehaviour:
   cameraDistance: 0
   lockCamera: 0
   smoothTime: 0.25
-  smoothTime2: 0
-  distance: 0
+  maxSmooth: 1
+  minSmooth: 0.5
+  max: 0
+  buildOffsetOrthoSize: 50
+  buildOffsetPosX: 65
+  buildOffsetPosZ: 20
+  buildOffsetRot: 90
 --- !u!114 &758887879952812708
 MonoBehaviour:
   m_ObjectHideFlags: 0
