@@ -111,9 +111,6 @@ public class LevelManager : MonoBehaviour
     [HideInInspector]
     public bool messageDisplayed;
 
-    [HideInInspector]
-    public bool runOnce;
-
     private void Awake()
     {
         global = this;
@@ -276,6 +273,7 @@ public class LevelManager : MonoBehaviour
             attackHappening = false;
             randomAttackTrigger = 0f;
             randomSet = false;
+            messageDisplayed = false;
             daylightTimer = 0;
             day++;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "New Day");
@@ -469,11 +467,13 @@ public class LevelManager : MonoBehaviour
         }
 
         // Message and countdown bar appear 30f before the attack
-        if ((daylightTimer >= randomAttackTrigger - 30.0f && daylightTimer <= randomAttackTrigger - 30.0f + 1.0f) && randomAttackTrigger != 0f && !messageDisplayed)
+
+        float noon = randomAttackTrigger - PlayerController.global.UIAnimation["Enemies Incoming"].length;
+
+        if (daylightTimer >= noon && randomAttackTrigger != 0f && !messageDisplayed)
         {
             enemyIncomingState = GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Incoming"); // Display enemies are coming a bit before an attack
             messageDisplayed = true;
-            runOnce = false;
         }
 
         // For enemy remaining text to not disappear right before the spawning starts
@@ -482,13 +482,13 @@ public class LevelManager : MonoBehaviour
             waveEnd = false;
         }
 
-        // Enemies start spawning
-        if ((daylightTimer >= randomAttackTrigger && daylightTimer <= randomAttackTrigger + 1.0f) && randomAttackTrigger != 0f && !runOnce && (!enemyIncomingState || !enemyIncomingState.enabled))
+        // Enemies start spawning after enemy incoming animation is finished
+        if (!spawnEnemies && messageDisplayed && enemyIncomingState && !enemyIncomingState.enabled)
         {
+            enemyIncomingState = null;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear");
             spawnEnemies = true; // Attack starts when the time is reached
             countSet = false;
-            runOnce = true;
         }
 
         if (spawnEnemies)
@@ -609,7 +609,7 @@ public class LevelManager : MonoBehaviour
             {
                 waveEnd = true;
                 spawnEnemies = false;
-          
+
                 groupSpawnAmount = 0;
                 ogreSpawned = false;
                 enemiesCount = 0;
