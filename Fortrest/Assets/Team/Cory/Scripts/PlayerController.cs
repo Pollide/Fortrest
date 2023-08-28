@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
-    public Camera cam;
 
     // House & Player Model
     public GameObject house;
@@ -174,12 +173,6 @@ public class PlayerController : MonoBehaviour
 
     // Enemy UI
     private int lastAmount = 0;
-    public Image countdownBar;
-    private bool gapSet;
-    private float gap;
-    private float fraction;
-    private float newGap;
-    private bool displayAmount;
 
     // Damage Indicators    
     public Image[] redSlashes;
@@ -608,7 +601,7 @@ public class PlayerController : MonoBehaviour
             HandleSpeed();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
-            RotatePlayer();
+
             BlendTreeAnimation();
 
             // Mechanics
@@ -641,7 +634,6 @@ public class PlayerController : MonoBehaviour
         ScreenDamage();
         CheckCurrentTool();
         Resting();
-        BarDisappear();
 
         if (playerDead)
         {
@@ -667,6 +659,11 @@ public class PlayerController : MonoBehaviour
             }
             CharacterAnimator.SetTrigger("Death");
         }
+    }
+
+    private void LateUpdate()
+    {
+        RotatePlayer();
     }
 
     private void CheckCurrentTool()
@@ -1315,10 +1312,8 @@ public class PlayerController : MonoBehaviour
             playerCC.Move(moveDirection * Time.deltaTime);
         }
     }
+    public List<Transform> followMovementList;
 
-    float previousLookAngle;
-    Vector3 previousMoveDirection;
-    Quaternion RotateTowards;
     private void RotatePlayer()
     {
 
@@ -1326,7 +1321,7 @@ public class PlayerController : MonoBehaviour
 
         if (GameManager.global.KeyboardBool)
         {
-            mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+            mousePos = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
 
             Vector3 lookDirection = mousePos - transform.position;
 
@@ -1337,28 +1332,24 @@ public class PlayerController : MonoBehaviour
             angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
         }
 
+        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
 
-        if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
+        /*
+        for (int i = 0; i < followMovementList.Count; i++)
         {
-            previousMoveDirection = moveDirection;
-            previousLookAngle = angle;
-
-            Vector3 euler = transform.eulerAngles;
-            euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
-            RotateTowards = Quaternion.Euler(euler);
-        }
-        else if (Mathf.Abs(angle - previousLookAngle) > 8.0f) //however if player is moving cursor/Rigt joystick around, then pioritise that
-        {
-            previousLookAngle = angle;
-            RotateTowards = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
-        }
-        else if (RotateTowards == Quaternion.identity)
-        {
-            RotateTowards = transform.rotation;
+            if (playerisMoving && moveDirection != Vector3.zero)
+            {
+                Vector3 euler = followMovementList[i].eulerAngles;
+                euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
+                followMovementList[i].rotation = Quaternion.Euler(euler);
+                // followMovementList[i].rotation = Quaternion.RotateTowards(followMovementList[i].rotation, Quaternion.Euler(euler), 600 * Time.deltaTime);
+            }
         }
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, RotateTowards, 600 * Time.deltaTime);
-        //  transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        */
+        //if (Mathf.Abs(angle - previousLookAngle) > 8.0f) //however if player is moving cursor/Rigt joystick around, then pioritise that
+
+
     }
 
     private void ApplyGravity()
@@ -1694,22 +1685,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void DisplayEnemiesComingText()
-    {
-        GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
-        displayAmount = true;
-    }
-
     public void EnemiesTextControl()
     {
-        // Enemy remaining and enemy amount appearing
-        if (displayAmount)
-        {
-            StopCoroutine("TextDisappearing");
-            StartCoroutine(TextAppearing());
-            displayAmount = false;
-        }
-
         // Calculate enemy amount and display it
         int goblinsInt = 0;
         LevelManager.ProcessEnemyList((enemy) =>
@@ -1730,7 +1707,7 @@ public class PlayerController : MonoBehaviour
         // Enemy remaining and enemy amount disappearing
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
-            StartCoroutine(TextDisappearing());
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false);
         }
     }
 
@@ -1890,62 +1867,6 @@ public class PlayerController : MonoBehaviour
         return color;
     }
 
-    private void BarDisappear()
-    {
-        if (enemyDirectionText.rectTransform.anchoredPosition.y == 450.0f)
-        {
-            if (!gapSet)
-            {
-                gap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat;
-                fraction = 663.0f / gap;
-                gapSet = true;
-            }
-            Debug.Log("yoza");
-            countdownBar.gameObject.SetActive(true);
-            countdownBar.rectTransform.sizeDelta = new Vector2(fraction * (LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat), 10.0f);
-        }
-        if (countdownBar.rectTransform.sizeDelta.x <= 0f)
-        {
-            enemyDirectionText.rectTransform.anchoredPosition = new Vector2(0f, 0f);
-            enemyDirectionText.rectTransform.localScale = new Vector3(0f, 0f, 0f);
-            gapSet = false;
-            gap = 0f;
-            countdownBar.gameObject.SetActive(false);
-            LevelManager.global.messageDisplayed = false;
-        }
-    }
-
-    private IEnumerator TextAppearing()
-    {
-        bool gapSet = false;
-        float fraction = 0f;
-        float gradient = 0f;
-        if (!gapSet)
-        {
-            newGap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat;
-            fraction = 1.0f / newGap;
-            gapSet = true;
-        }
-        while (gradient < 1.0f)
-        {
-            gradient = fraction * ((LevelManager.global.DaylightTimerFloat + newGap) - LevelManager.global.randomAttackTrigger);
-            enemyText.color = LevelManager.global.textGradient.Evaluate(gradient);
-            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(gradient);
-            yield return null;
-        }
-    }
-
-    private IEnumerator TextDisappearing()
-    {
-        float temp = 1.0f;
-        while (temp > 0)
-        {
-            temp -= Time.deltaTime / 2.0f;
-            enemyText.color = LevelManager.global.textGradient.Evaluate(temp);
-            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(temp);
-            yield return null;
-        }
-    }
 
     public IEnumerator PushPlayer(float _waitTime)
     {

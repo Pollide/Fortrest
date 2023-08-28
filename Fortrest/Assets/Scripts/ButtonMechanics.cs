@@ -181,7 +181,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (TerrainTeleportInt != -1)
         {
-            PlayerController.global.TeleportPlayer(LevelManager.global.TerrainList[TerrainTeleportInt].transform.position + new Vector3(0, 15, 0));
+            PlayerController.global.TeleportPlayer(LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(0, 15, 0));
         }
 
         if (SaveBool)
