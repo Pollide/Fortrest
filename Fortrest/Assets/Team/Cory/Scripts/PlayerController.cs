@@ -21,7 +21,6 @@ public class PlayerController : MonoBehaviour
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
     [HideInInspector] public Vector3 mousePos;
-    [HideInInspector] public Vector3 lookDirection;
 
     // Player Knocked Back
     private Vector3 pushDirection;
@@ -1320,12 +1319,18 @@ public class PlayerController : MonoBehaviour
 
         if (GameManager.global.KeyboardBool)
         {
+
             Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
             {
-                transform.LookAt(new Vector3(hitData.point.x, transform.position.y, hitData.point.z));
+                Vector3 pos = new Vector3(hitData.point.x, transform.position.y, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
+
+                transform.LookAt(pos);
+
+                Debug.DrawRay(pos, transform.up * 100, Color.yellow);
             }
+
         }
         else
         {
