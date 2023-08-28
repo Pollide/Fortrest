@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
     public CharacterController playerCC;
     public Animator CharacterAnimator;
     public Camera cam;
-
     // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
@@ -23,6 +22,7 @@ public class PlayerController : MonoBehaviour
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
     [HideInInspector] public Vector3 mousePos;
+    [HideInInspector] public Vector3 lookDirection;
 
     // Player Knocked Back
     private Vector3 pushDirection;
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
     private bool canShoot;
     [HideInInspector] public float bowDamage = 1.5f;
     private float bowTimer = 0.0f;
-    private float resetBow = 1.5f;
+    private float resetBow = 1f;
     private bool shooting = false;
     private bool directionSaved = false;
     private Quaternion tempDirection;
@@ -94,9 +94,9 @@ public class PlayerController : MonoBehaviour
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
     private float attackTimer = 0.0f;
-    private float resetAttack = 0.95f;
+    private float resetAttack = 0.75f;
     private float comboTimer = 0.0f;
-    private float resetCombo = 1.20f;
+    private float resetCombo = 0.95f;
     private int attackCount = 0;
     [HideInInspector] public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
@@ -174,12 +174,6 @@ public class PlayerController : MonoBehaviour
 
     // Enemy UI
     private int lastAmount = 0;
-    public Image countdownBar;
-    private bool gapSet;
-    private float gap;
-    private float fraction;
-    private float newGap;
-    private bool displayAmount;
 
     // Damage Indicators    
     public Image[] redSlashes;
@@ -237,6 +231,7 @@ public class PlayerController : MonoBehaviour
     // Animation
     private float speedAnim;
     private float transitionSpeed = 20f;
+    public Animator bowAnimator;
 
     // Start is called before the first frame update
     void Awake()
@@ -608,7 +603,7 @@ public class PlayerController : MonoBehaviour
             HandleSpeed();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
-            RotatePlayer();
+
             BlendTreeAnimation();
 
             // Mechanics
@@ -641,7 +636,6 @@ public class PlayerController : MonoBehaviour
         ScreenDamage();
         CheckCurrentTool();
         Resting();
-        BarDisappear();
 
         if (playerDead)
         {
@@ -667,6 +661,11 @@ public class PlayerController : MonoBehaviour
             }
             CharacterAnimator.SetTrigger("Death");
         }
+    }
+
+    private void LateUpdate()
+    {
+        RotatePlayer();
     }
 
     private void CheckCurrentTool()
@@ -957,7 +956,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot)
+        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot && !attacking)
         {
             running = true;
         }
@@ -1315,50 +1314,63 @@ public class PlayerController : MonoBehaviour
             playerCC.Move(moveDirection * Time.deltaTime);
         }
     }
+    public List<Transform> followMovementList;
 
-    float previousLookAngle;
-    Vector3 previousMoveDirection;
-    Quaternion RotateTowards;
     private void RotatePlayer()
     {
-
-        float angle;
-
         if (GameManager.global.KeyboardBool)
         {
-            mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 targetPostition = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, cam.ScreenToWorldPoint(Input.mousePosition).z);
 
-            Vector3 lookDirection = mousePos - transform.position;
-
-            angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
+            //  Vector3 targetPostition = new Vector3(LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).z);
+            transform.LookAt(targetPostition);
         }
         else
         {
-            angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+            //Vector3 targetPostition = new Vector3(rotateCTRL.x, transform.position.y, rotateCTRL.y);
+            //transform.LookAt(targetPostition);
         }
 
+        //transform.LookAt(cam.ScreenToWorldPoint(Input.mousePosition));
+        //transform.eulerAngles.x = 0f;
 
-        if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
-        {
-            previousMoveDirection = moveDirection;
-            previousLookAngle = angle;
+        //float angle;
+        //
+        //if (GameManager.global.KeyboardBool)
+        //{
+        //    mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
+        //
+        //    lookDirection = mousePos - transform.position;
+        //
+        //    angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
+        //}
+        //else
+        //{
+        //    angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+        //}
 
-            Vector3 euler = transform.eulerAngles;
-            euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
-            RotateTowards = Quaternion.Euler(euler);
-        }
-        else if (Mathf.Abs(angle - previousLookAngle) > 8.0f) //however if player is moving cursor/Rigt joystick around, then pioritise that
-        {
-            previousLookAngle = angle;
-            RotateTowards = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
-        }
-        else if (RotateTowards == Quaternion.identity)
-        {
-            RotateTowards = transform.rotation;
-        }
 
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, RotateTowards, 600 * Time.deltaTime);
-        //  transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        //if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
+        //{
+        //    previousMoveDirection = moveDirection;
+        //    previousLookAngle = angle;
+        //
+        //    Vector3 euler = transform.eulerAngles;
+        //    euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
+        //    RotateTowards = Quaternion.Euler(euler);
+        //}
+        //else if (Mathf.Abs(angle - previousLookAngle) > 8.0f) //however if player is moving cursor/Rigt joystick around, then pioritise that
+        //{
+        //    previousLookAngle = angle;
+        //    RotateTowards = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+        //}
+        //else if (RotateTowards == Quaternion.identity)
+        //{
+        //    RotateTowards = transform.rotation;
+        //}
+
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, RotateTowards, 600 * Time.deltaTime);
+        //transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
     }
 
     private void ApplyGravity()
@@ -1399,53 +1411,41 @@ public class PlayerController : MonoBehaviour
                 enemy.canBeDamaged = true;
             });
 
-            if (attackCount == 0)
+            if (upgradedMelee)
             {
-                if (upgradedMelee)
-                {
-                    resetAttack = 0.75f;
-                    resetCombo = 1.0f;
-                    attackDamage = 1.25f;
-                }
-                else
-                {
-                    resetAttack = 0.95f;
-                    resetCombo = 1.2f;
-                    attackDamage = 1.0f;
-                }
-                CharacterAnimator.SetTrigger("Swing1");
+                resetAttack = 0.6f;
+                resetCombo = 0.75f;
+                attackDamage = 1.25f;
             }
-            else if (attackCount == 1)
+            else
             {
-                if (upgradedMelee)
-                {
-                    resetAttack = 0.7f;
-                    resetCombo = 0.95f;
-                    attackDamage = 1.25f;
-                }
-                else
-                {
-                    resetAttack = 0.9f;
-                    resetCombo = 1.15f;
-                    attackDamage = 1.0f;
-                }
-                CharacterAnimator.SetTrigger("Swing2");
+                resetAttack = 0.6f;
+                resetCombo = 0.95f;
+                attackDamage = 1f;
             }
-            else if (attackCount == 2)
+
+            switch (attackCount)
             {
-                if (upgradedMelee)
-                {
-                    resetAttack = 0.75f;
-                    resetCombo = 1.0f;
-                    attackDamage = 2.0f;
-                }
-                else
-                {
-                    resetAttack = 0.95f;
-                    resetCombo = 1.2f;
-                    attackDamage = 1.5f;
-                }
-                CharacterAnimator.SetTrigger("Swing3");
+                case 0:
+                    CharacterAnimator.SetTrigger("Swing1");
+                    break;
+                case 1:
+                    CharacterAnimator.SetTrigger("Swing2");
+                    break;
+                case 2:
+                    if (upgradedMelee)
+                    {
+                        attackDamage = 1.75f;
+                    }
+                    else
+                    {
+                        attackDamage = 1.5f;
+                    }
+                    CharacterAnimator.SetTrigger("Swing3");
+                    break;
+                default:
+                    Debug.Log("error");
+                    break;
             }
         }
     }
@@ -1488,7 +1488,9 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(1) || aimingCTRL)
             {
+                CharacterAnimator.SetBool("Aiming", true);
                 ChangeTool(new ToolData() { BowBool = true });
+                bowAnimator.SetBool("Aiming", true);
                 canShoot = true;
                 if (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL)
                 {
@@ -1507,14 +1509,18 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                CharacterAnimator.SetBool("Aiming", false);
+                bowAnimator.SetBool("Aiming", false);
                 ChangeTool(new ToolData() { SwordBool = true });
                 canShoot = false;
             }
 
             if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting)
             {
-                //CharacterAnimator.ResetTrigger("Fire");
-                //CharacterAnimator.SetTrigger("Fire");
+                CharacterAnimator.ResetTrigger("Shoot");
+                CharacterAnimator.SetTrigger("Shoot");
+                bowAnimator.ResetTrigger("Shoot");
+                bowAnimator.SetTrigger("Shoot");
                 attackingCTRL = false;
                 shooting = true;
                 bowTimer = 0;
@@ -1595,14 +1601,7 @@ public class PlayerController : MonoBehaviour
 
     private void AttackLunge()
     {
-        if (attackCount == 0)
-        {
-            playerCC.Move(transform.forward * 10f * Time.deltaTime);
-        }
-        else if (attackCount == 1 || attackCount == 2)
-        {
-            playerCC.Move(transform.forward * 7f * Time.deltaTime);
-        }
+        playerCC.Move(transform.forward * 7f * Time.deltaTime);
         VFXSlash.transform.position = transform.position;
     }
 
@@ -1694,22 +1693,8 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void DisplayEnemiesComingText()
-    {
-        GameManager.PlayAnimation(enemyDirectionText.GetComponent<Animation>(), "EnemyDirection");
-        displayAmount = true;
-    }
-
     public void EnemiesTextControl()
     {
-        // Enemy remaining and enemy amount appearing
-        if (displayAmount)
-        {
-            StopCoroutine("TextDisappearing");
-            StartCoroutine(TextAppearing());
-            displayAmount = false;
-        }
-
         // Calculate enemy amount and display it
         int goblinsInt = 0;
         LevelManager.ProcessEnemyList((enemy) =>
@@ -1730,7 +1715,8 @@ public class PlayerController : MonoBehaviour
         // Enemy remaining and enemy amount disappearing
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
-            StartCoroutine(TextDisappearing());
+            LevelManager.global.waveEnd = false;
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false);
         }
     }
 
@@ -1890,62 +1876,6 @@ public class PlayerController : MonoBehaviour
         return color;
     }
 
-    private void BarDisappear()
-    {
-        if (enemyDirectionText.rectTransform.anchoredPosition.y == 450.0f)
-        {
-            if (!gapSet)
-            {
-                gap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat;
-                fraction = 663.0f / gap;
-                gapSet = true;
-            }
-            Debug.Log("yoza");
-            countdownBar.gameObject.SetActive(true);
-            countdownBar.rectTransform.sizeDelta = new Vector2(fraction * (LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat), 10.0f);
-        }
-        if (countdownBar.rectTransform.sizeDelta.x <= 0f)
-        {
-            enemyDirectionText.rectTransform.anchoredPosition = new Vector2(0f, 0f);
-            enemyDirectionText.rectTransform.localScale = new Vector3(0f, 0f, 0f);
-            gapSet = false;
-            gap = 0f;
-            countdownBar.gameObject.SetActive(false);
-            LevelManager.global.messageDisplayed = false;
-        }
-    }
-
-    private IEnumerator TextAppearing()
-    {
-        bool gapSet = false;
-        float fraction = 0f;
-        float gradient = 0f;
-        if (!gapSet)
-        {
-            newGap = LevelManager.global.randomAttackTrigger - LevelManager.global.DaylightTimerFloat;
-            fraction = 1.0f / newGap;
-            gapSet = true;
-        }
-        while (gradient < 1.0f)
-        {
-            gradient = fraction * ((LevelManager.global.DaylightTimerFloat + newGap) - LevelManager.global.randomAttackTrigger);
-            enemyText.color = LevelManager.global.textGradient.Evaluate(gradient);
-            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(gradient);
-            yield return null;
-        }
-    }
-
-    private IEnumerator TextDisappearing()
-    {
-        float temp = 1.0f;
-        while (temp > 0)
-        {
-            temp -= Time.deltaTime / 2.0f;
-            enemyText.color = LevelManager.global.textGradient.Evaluate(temp);
-            enemyAmountText.color = LevelManager.global.textGradient.Evaluate(temp);
-            yield return null;
-        }
-    }
 
     public IEnumerator PushPlayer(float _waitTime)
     {

@@ -32,8 +32,6 @@ public class Boar : MonoBehaviour
     public AudioClip stepSound;
     public AudioClip stepSound2;
 
-    private float bobbing = 0f;
-    private bool reverse;
     private bool midAir;
 
     public GameObject body;
@@ -127,6 +125,11 @@ public class Boar : MonoBehaviour
                 {
                     animator.SetBool("Reversing", false);
                 }
+            }
+            if (currentSpeed == 0)
+            {
+                animator.SetBool("Moving", false);
+                animator.SetBool("Reversing", false);
             }
         }
 
@@ -367,7 +370,6 @@ public class Boar : MonoBehaviour
         else
         {
             return false;
-        }
-        
+        }       
     }
 }

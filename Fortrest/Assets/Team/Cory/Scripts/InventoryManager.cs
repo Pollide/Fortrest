@@ -112,15 +112,15 @@ public class InventoryManager : MonoBehaviour
 
                 for (int i = 0; i < quantity; i++)
                 {
-                    if (LevelManager.global.InventoryItemList.Count > 0 && LevelManager.global.InventoryItemList[0].name.Contains(item))
+                    if (LevelManager.global.inventoryItemList.Count > 0 && LevelManager.global.inventoryItemList[0].name.Contains(item))
                     {
-                        InventoryItem inventoryItem = LevelManager.global.InventoryItemList[0].GetComponent<InventoryItem>();
+                        InventoryItem inventoryItem = LevelManager.global.inventoryItemList[0].GetComponent<InventoryItem>();
                         inventoryItem.resourceAmount--;
 
                         if (inventoryItem.resourceAmount <= 0)
                         {
                             Destroy(inventoryItem.gameObject);
-                            LevelManager.global.InventoryItemList.Remove(inventoryItem.gameObject); //so it doesnt save
+                            LevelManager.global.inventoryItemList.Remove(inventoryItem.gameObject); //so it doesnt save
                         }
                     }
                 }

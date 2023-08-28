@@ -478,22 +478,22 @@ public class GameManager : MonoBehaviour
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
 
-        LevelManager.global.DaylightTimerFloat = Pref("Daylight", LevelManager.global.DaylightTimerFloat, load);
+        LevelManager.global.daylightTimer = Pref("Daylight", LevelManager.global.daylightTimer, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
         LevelManager.global.enemyTimer = (int)Pref("Goblin Timer", LevelManager.global.enemyTimer, load);
 
         LevelManager.global.enemyThreshold = (int)Pref("Goblin Threshold", LevelManager.global.enemyThreshold, load);
-        int itemSize = (int)Pref("Item Size", LevelManager.global.InventoryItemList.Count, load);
+        int itemSize = (int)Pref("Item Size", LevelManager.global.inventoryItemList.Count, load);
 
         // LevelManager.global.runOnce = Pref("Run Once", LevelManager.global.runOnce ? 1 : 0, load) == 1;
         LevelManager.global.messageDisplayed = Pref("Message Display", LevelManager.global.messageDisplayed ? 1 : 0, load) == 1;
 
         for (int i = 0; i < itemSize; i++)
         {
-            string original = load ? "" : LevelManager.global.InventoryItemList[i].GetComponent<InventoryItem>().resourceObject.ToString();
+            string original = load ? "" : LevelManager.global.inventoryItemList[i].GetComponent<InventoryItem>().resourceObject.ToString();
             string resourceObject = PrefString("Item Resource" + i, original, load);
 
-            Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.InventoryItemList[i].transform;
+            Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.inventoryItemList[i].transform;
 
             // int collected = (int)Pref("Item Collected" + i, resource.GetComponent<InventoryItem>().CollectedBool ? 1 : 0, load);
 
@@ -509,19 +509,19 @@ public class GameManager : MonoBehaviour
         TierDataVoid(ref LevelManager.global.WoodTierList, load);
         TierDataVoid(ref LevelManager.global.StoneTierList, load);
 
-        for (int i = 0; i < LevelManager.global.BridgeList.Count; i++)
+        for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
         {
-            LevelManager.global.BridgeList[i].isBuilt = Pref("Bridge Built" + i, LevelManager.global.BridgeList[i].isBuilt ? 1 : 0, load) == 1;
+            LevelManager.global.bridgeList[i].isBuilt = Pref("Bridge Built" + i, LevelManager.global.bridgeList[i].isBuilt ? 1 : 0, load) == 1;
 
-            if (load && LevelManager.global.BridgeList[i].isBuilt)
+            if (load && LevelManager.global.bridgeList[i].isBuilt)
             {
-                LevelManager.global.BridgeList[i].BuildBridge();
+                LevelManager.global.bridgeList[i].BuildBridge();
             }
         }
 
         LevelManager.ProcessEnemyList((enemy) =>
         {
-            int i = LevelManager.global.EnemyList.IndexOf(enemy);
+            int i = LevelManager.global.enemyList.IndexOf(enemy);
             enemy.health = Pref("Enemy Health" + i, enemy.health, load);
             DataPositionVoid("Enemy Position" + i, enemy.transform, load);
             DataEulerVoid("Enemy Euler" + i, enemy.transform, load);
