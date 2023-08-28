@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
-
+    public Camera cam;
     // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
@@ -1320,7 +1320,9 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.global.KeyboardBool)
         {
-            Vector3 targetPostition = new Vector3(LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).z);
+            Vector3 targetPostition = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, cam.ScreenToWorldPoint(Input.mousePosition).z);
+
+            //  Vector3 targetPostition = new Vector3(LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).z);
             transform.LookAt(targetPostition);
         }
         else
