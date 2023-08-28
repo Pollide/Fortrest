@@ -18,6 +18,12 @@ public class Indicator : MonoBehaviour
     public Sprite HomeSprite;
     public Sprite MountSprite;
 
+    public int bottomRightStack;
+    public int bottomLeftStack;
+
+    public int topRightStack;
+    public int topLeftStack;
+
     [System.Serializable]
     public class IndicatorData
     {
@@ -34,7 +40,8 @@ public class Indicator : MonoBehaviour
         public bool Recent;
         public string ActiveString;
 
-        public void Refresh(int shift)
+
+        public void Refresh()
         {
             if (ActiveTarget)
             {
@@ -71,7 +78,7 @@ public class Indicator : MonoBehaviour
             bool isOutsideCanvas = leftBool || rightBool || bottomBool || topBool;
 
             // Clamp the image's position within the canvas boundaries
-            float clampedX = Mathf.Clamp(pointVector.x + (isOutsideCanvas ? -shift : 0), leftBoundary, rightBoundary);
+            float clampedX = Mathf.Clamp(pointVector.x, leftBoundary, rightBoundary);
             float clampedY = Mathf.Clamp(pointVector.y, bottomBoundary, topBoundary);
 
             Vector2 clamp = new Vector2(clampedX, clampedY);
@@ -88,6 +95,7 @@ public class Indicator : MonoBehaviour
                 //  if (!CustomSprite)
                 MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
                 transition -= Vector3.right;
+
             }
 
             if (leftBool)
@@ -161,6 +169,29 @@ public class Indicator : MonoBehaviour
                 MapData.MainRect.anchoredPosition = PlayerController.global.ConvertToMapCoordinates(WorldPosition);
 
             MainData.HolderTransform.localPosition = Vector3.Slerp(MainData.HolderTransform.localPosition, transition, Time.deltaTime);
+
+            /*
+            int shift = 0;
+
+            for (int i = 0; i < global.IndicatorList.Count; i++)
+            {
+                Transform compare = global.IndicatorList[i].MainData.HolderTransform;
+                if (compare != MainData.HolderTransform)
+                {
+                    if (Vector3.Distance(MainData.HolderTransform.localPosition, compare.localPosition) < 1.0f)
+                        shift += 12;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            Vector3 offset = new Vector3(shift, shift, 0) * (topBool ? -1 : 1);
+            shift = 0;
+            MainData.CustomImage.transform.localPosition = MainData.CustomImageLocalPosition + offset;
+            MainData.ArrowText.transform.localPosition = MainData.ArrowTextLocalPosition + offset;
+            */
         }
     }
 
@@ -177,6 +208,13 @@ public class Indicator : MonoBehaviour
         {
             return;
         }
+
+        bottomRightStack = 0;
+        bottomLeftStack = 0;
+
+        topRightStack = 0;
+        topLeftStack = 0;
+
         // GetComponent<Canvas>().enabled = !PlayerModeHandler.global.inTheFortress;
         for (int i = 0; i < IndicatorList.Count; i++)
         {
@@ -206,7 +244,7 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            IndicatorList[i].Refresh(i * 10);
+            IndicatorList[i].Refresh();
         }
     }
 
@@ -225,6 +263,8 @@ public class Indicator : MonoBehaviour
         indicatorData.Unlocked = unlocked;
         indicatorData.CustomSprite = customSprite;
 
+        indicatorData.MainData.ArrowTextLocalPosition = indicatorData.MainData.ArrowText.transform.localPosition;
+        indicatorData.MainData.CustomImageLocalPosition = indicatorData.MainData.CustomImage.transform.localPosition;
 
         IndicatorList.Add(indicatorData);
 
@@ -237,7 +277,7 @@ public class Indicator : MonoBehaviour
             indicatorData.MapData.CustomImage.gameObject.SetActive(true);
 
             indicatorData.MapData.CustomImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-            indicatorData.MapData.CustomImage.color = color;
+
 
             indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
 
