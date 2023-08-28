@@ -1333,47 +1333,6 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
             //transform.rotation = Quaternion.LookRotation(new Vector3(rotateCTRL.x, 0f, rotateCTRL.y), Vector3.up);
         }
-
-        //transform.LookAt(cam.ScreenToWorldPoint(Input.mousePosition));
-        //transform.eulerAngles.x = 0f;
-
-        //float angle;
-        //
-        //if (GameManager.global.KeyboardBool)
-        //{
-        //    mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
-        //
-        //    lookDirection = mousePos - transform.position;
-        //
-        //    angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
-        //}
-        //else
-        //{
-        //    angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
-        //}
-
-
-        //if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
-        //{
-        //    previousMoveDirection = moveDirection;
-        //    previousLookAngle = angle;
-        //
-        //    Vector3 euler = transform.eulerAngles;
-        //    euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
-        //    RotateTowards = Quaternion.Euler(euler);
-        //}
-        //else if (Mathf.Abs(angle - previousLookAngle) > 8.0f) //however if player is moving cursor/Rigt joystick around, then pioritise that
-        //{
-        //    previousLookAngle = angle;
-        //    RotateTowards = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
-        //}
-        //else if (RotateTowards == Quaternion.identity)
-        //{
-        //    RotateTowards = transform.rotation;
-        //}
-
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, RotateTowards, 600 * Time.deltaTime);
-        //transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
     }
 
     private void ApplyGravity()
