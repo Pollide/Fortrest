@@ -1324,7 +1324,7 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
             {
-                transform.LookAt(new Vector3(hitData.point.x, transform.position.y, hitData.point.x));
+                transform.LookAt(new Vector3(hitData.point.x, transform.position.y, hitData.point.z));
             }
         }
         else
