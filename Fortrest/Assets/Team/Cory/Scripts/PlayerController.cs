@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
     [HideInInspector] public Vector3 mousePos;
-    [HideInInspector] public Vector3 lookDirection;
+    [HideInInspector] public Vector3 targetPostition;
 
     // Player Knocked Back
     private Vector3 pushDirection;
@@ -214,6 +214,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool pauseSelectCTRL;
     [HideInInspector] public bool releasedCTRL;
     [HideInInspector] public bool scrollCTRL;
+    private float deadZone = 0.1f;
 
     // Keyboard Controls
     private KeyCode[] keyCodes;
@@ -634,10 +635,7 @@ public class PlayerController : MonoBehaviour
             running = false;
         }
 
-
-
         HandleEnergy();
-
         CharacterAnimator.SetBool("Upgraded", upgradedMelee);
         TimersFunction();
         ScreenDamage();
@@ -1325,15 +1323,13 @@ public class PlayerController : MonoBehaviour
     {
         if (GameManager.global.KeyboardBool)
         {
-            Vector3 targetPostition = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, cam.ScreenToWorldPoint(Input.mousePosition).z);
-            transform.LookAt(targetPostition);
+            targetPostition = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, cam.ScreenToWorldPoint(Input.mousePosition).z);
         }
         else
         {
-            //Vector3 targetPostition = new Vector3(rotateCTRL.x, transform.position.y, rotateCTRL.y);
-            //transform.LookAt(targetPostition);
+            targetPostition = new Vector3(rotateCTRL.x, transform.position.y, rotateCTRL.y);
         }
-
+        transform.LookAt(targetPostition);
         //transform.LookAt(cam.ScreenToWorldPoint(Input.mousePosition));
         //transform.eulerAngles.x = 0f;
 
@@ -1347,10 +1343,9 @@ public class PlayerController : MonoBehaviour
         //
         //    angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
         //}
-        //else
-        //{
+
         //    angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
-        //}
+
 
 
         //if (playerisMoving && moveDirection != Vector3.zero && previousMoveDirection != moveDirection)
