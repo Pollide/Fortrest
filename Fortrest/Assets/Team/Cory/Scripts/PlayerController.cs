@@ -1707,6 +1707,7 @@ public class PlayerController : MonoBehaviour
         // Enemy remaining and enemy amount disappearing
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
+            LevelManager.global.waveEnd = false;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false);
         }
     }
