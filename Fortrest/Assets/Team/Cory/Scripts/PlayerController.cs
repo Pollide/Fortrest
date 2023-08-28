@@ -231,6 +231,8 @@ public class PlayerController : MonoBehaviour
     private float transitionSpeed = 20f;
     public Animator bowAnimator;
 
+    public Camera cam;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -1321,16 +1323,16 @@ public class PlayerController : MonoBehaviour
         {
 
             Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
-
+            
             if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
             {
                 Vector3 pos = new Vector3(hitData.point.x, transform.position.y, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
-
+            
                 transform.LookAt(pos);
+                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
                 Debug.DrawRay(pos, transform.up * 100, Color.yellow);
             }
-
         }
         else
         {
@@ -1474,7 +1476,7 @@ public class PlayerController : MonoBehaviour
                     directionSaved = false;
                 }
             }
-            else
+            else if (BowGameObject.activeSelf)
             {
                 CharacterAnimator.SetBool("Aiming", false);
                 bowAnimator.SetBool("Aiming", false);
