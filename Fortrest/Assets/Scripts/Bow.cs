@@ -16,10 +16,8 @@ public class Bow : MonoBehaviour
 
     public void Shoot()
     {
-        Vector3 direction = PlayerController.global.lookDirection;
-        direction.Normalize();
-        direction.y = 0;
-        GameObject arrow = Instantiate(arrowObject, transform.position, Quaternion.Euler(90f, PlayerController.global.transform.eulerAngles.y, 0f));
+        //I made it that the arrow is instantiated on PlayerController.global.transform.position and not the bow itself as it makes the arrow perfectly land on the cursor
+        GameObject arrow = Instantiate(arrowObject, PlayerController.global.transform.position, Quaternion.Euler(90f, PlayerController.global.transform.eulerAngles.y, 0f));
         arrow.GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * fireForce, ForceMode.Impulse);
     }
 }

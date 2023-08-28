@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
-    public Camera cam;
     // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
@@ -22,7 +21,6 @@ public class PlayerController : MonoBehaviour
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
     [HideInInspector] public Vector3 mousePos;
-    [HideInInspector] public Vector3 lookDirection;
 
     // Player Knocked Back
     private Vector3 pushDirection;
@@ -1315,19 +1313,30 @@ public class PlayerController : MonoBehaviour
         }
     }
     public List<Transform> followMovementList;
-
     private void RotatePlayer()
     {
+        Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
+
         if (GameManager.global.KeyboardBool)
         {
-            Vector3 targetPostition = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, cam.ScreenToWorldPoint(Input.mousePosition).z);           
-            transform.LookAt(targetPostition);
+
+            Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+            {
+                Vector3 pos = new Vector3(hitData.point.x, transform.position.y, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
+
+                transform.LookAt(pos);
+
+                Debug.DrawRay(pos, transform.up * 100, Color.yellow);
+            }
+
         }
         else
         {
-            float angle;
-            angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+            float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135;
             transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+            //transform.rotation = Quaternion.LookRotation(new Vector3(rotateCTRL.x, 0f, rotateCTRL.y), Vector3.up);
         }
     }
 
@@ -1604,6 +1613,17 @@ public class PlayerController : MonoBehaviour
 
     public void NewDay()
     {
+        LevelManager.global.newDay = true;
+        DayTMP_Text.text = "DAY " + (LevelManager.global.day + 1).ToString();
+        RemaningTMP_Text.text = "Highscore: " + (PlayerPrefs.GetInt("Number of Days") + 1);
+
+        if (LevelManager.global.day > PlayerPrefs.GetInt("Number of Days"))
+        {
+            RemaningTMP_Text.text = "Highscore Beaten!";
+            PlayerPrefs.SetInt("Number of Days", LevelManager.global.day);
+        }
+
+        /*
         if (LevelManager.global.day == 1)
         {
             LevelManager.global.newDay = true;
@@ -1649,6 +1669,7 @@ public class PlayerController : MonoBehaviour
                 PlayerPrefs.SetInt("Number of Days", LevelManager.global.day);
             }
         }
+        */
     }
 
     public void EnemiesTextControl()
