@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
-    public Camera cam;
     // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
@@ -1315,20 +1314,24 @@ public class PlayerController : MonoBehaviour
         }
     }
     public List<Transform> followMovementList;
-
     private void RotatePlayer()
     {
+        Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
+
         if (GameManager.global.KeyboardBool)
         {
-            Vector3 targetPostition = new Vector3(cam.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, cam.ScreenToWorldPoint(Input.mousePosition).z);
+            Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
 
-            //  Vector3 targetPostition = new Vector3(LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).x, transform.position.y, LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition).z);
-            transform.LookAt(targetPostition);
+            if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+            {
+                transform.LookAt(new Vector3(hitData.point.x, transform.position.y, hitData.point.x));
+            }
         }
         else
         {
-            //Vector3 targetPostition = new Vector3(rotateCTRL.x, transform.position.y, rotateCTRL.y);
-            //transform.LookAt(targetPostition);
+            float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135;
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+            //transform.rotation = Quaternion.LookRotation(new Vector3(rotateCTRL.x, 0f, rotateCTRL.y), Vector3.up);
         }
 
         //transform.LookAt(cam.ScreenToWorldPoint(Input.mousePosition));
