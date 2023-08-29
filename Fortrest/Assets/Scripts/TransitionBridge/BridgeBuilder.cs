@@ -53,6 +53,11 @@ public class BridgeBuilder : MonoBehaviour
 
     private void Update()
     {
+        if (PlayerController.global.pausedBool || PlayerController.global.evading)
+        {
+            return;
+        }
+
         if (!isBuilt)
         {
             bool open = Vector3.Distance(transform.position, PlayerController.global.transform.position) < 15;

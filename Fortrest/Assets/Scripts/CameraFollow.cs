@@ -34,7 +34,7 @@ public class CameraFollow : MonoBehaviour
     }
 
     public void Update()
-    {
+    {       
         if (lockCamera)
         {
             FocusOnTarget(PlayerController.global.transform.position + (PlayerModeHandler.global.inTheFortress ? Vector3.up * 5 : Vector3.zero), initialRotation);
