@@ -92,14 +92,15 @@ public class PlayerController : MonoBehaviour
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
     private float attackTimer = 0.0f;
-    private float resetAttack = 0.75f;
+    private float resetAttack = 0.8f;
     private float comboTimer = 0.0f;
-    private float resetCombo = 0.95f;
+    private float resetCombo = 1.0f;
     private int attackCount = 0;
     [HideInInspector] public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
     [HideInInspector] public bool lunge = false;
     public bool upgradedMelee;
+    private bool applied;
 
     // States
     [Header("Player States")]
@@ -596,9 +597,6 @@ public class PlayerController : MonoBehaviour
                 verticalMovement = Input.GetAxis("Vertical");
             }
 
-
-
-
             // Physics
             HandleSpeed();
             ApplyGravity();
@@ -611,7 +609,7 @@ public class PlayerController : MonoBehaviour
             Gathering();
             Shoot();
             ModeChanged();
-            if (lunge && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+            if (lunge)
             {
                 AttackLunge();
             }
@@ -627,15 +625,17 @@ public class PlayerController : MonoBehaviour
             running = false;
         }
 
-
-
-        HandleEnergy();
-
-        CharacterAnimator.SetBool("Upgraded", upgradedMelee);
+        HandleEnergy();        
         TimersFunction();
         ScreenDamage();
         CheckCurrentTool();
         Resting();
+
+        if (upgradedMelee && !applied)
+        {
+            UpgradeMelee();
+            applied = true;
+        }
 
         if (playerDead)
         {
@@ -685,7 +685,7 @@ public class PlayerController : MonoBehaviour
 
     private void ModeChanged()
     {
-        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1) || cancelCTRL || cancelHit)
+        if (Input.GetKey(KeyCode.Q) || (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && Input.GetMouseButton(1)) || cancelCTRL || cancelHit)
         {
             cancelHit = false;
             cancelAnimation = true;
@@ -1363,58 +1363,64 @@ public class PlayerController : MonoBehaviour
         healthBar.SetHealth(playerHealth, false);
     }
 
+    private void UpgradeMelee()
+    {
+        CharacterAnimator.SetBool("Upgraded", true);
+        resetAttack = 0.65f;
+        resetCombo = 0.85f;
+    }
+
     private void Attack()
     {
-        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
+        if (!CharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("Swing.Swing1") || !CharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("Swing.Swing2") || !CharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("Swing.Swing3"))
         {
-            CharacterAnimator.ResetTrigger("Swing1");
-            CharacterAnimator.ResetTrigger("Swing2");
-            CharacterAnimator.ResetTrigger("Swing3");
+            if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
+            {
+                attackingCTRL = false;
+                attacking = true;
+                attackTimer = 0;
+                comboTimer = 0;
 
-            attackingCTRL = false;
-            attacking = true;
-            attackTimer = 0;
-            comboTimer = 0;
-            LevelManager.ProcessEnemyList((enemy) =>
-            {
-                enemy.canBeDamaged = true;
-            });
+                LevelManager.ProcessEnemyList((enemy) =>
+                {
+                    enemy.canBeDamaged = true;
+                });
 
-            if (upgradedMelee)
-            {
-                resetAttack = 0.6f;
-                resetCombo = 0.75f;
-                attackDamage = 1.25f;
-            }
-            else
-            {
-                resetAttack = 0.6f;
-                resetCombo = 0.95f;
-                attackDamage = 1f;
-            }
+                if (upgradedMelee)
+                {
+                    attackDamage = 1.25f;
+                }
+                else
+                {
+                    attackDamage = 1f;
+                }
 
-            switch (attackCount)
-            {
-                case 0:
-                    CharacterAnimator.SetTrigger("Swing1");
-                    break;
-                case 1:
-                    CharacterAnimator.SetTrigger("Swing2");
-                    break;
-                case 2:
-                    if (upgradedMelee)
-                    {
-                        attackDamage = 1.75f;
-                    }
-                    else
-                    {
-                        attackDamage = 1.5f;
-                    }
-                    CharacterAnimator.SetTrigger("Swing3");
-                    break;
-                default:
-                    Debug.Log("error");
-                    break;
+                switch (attackCount)
+                {
+                    case 0:
+                        CharacterAnimator.ResetTrigger("Swing1");
+                        CharacterAnimator.SetTrigger("Swing1");
+                        break;
+                    case 1:
+                        CharacterAnimator.ResetTrigger("Swing2");
+                        CharacterAnimator.SetTrigger("Swing2");
+                        break;
+                    case 2:
+                        if (upgradedMelee)
+                        {
+                            attackDamage = 1.75f;
+                        }
+                        else
+                        {
+                            attackDamage = 1.5f;
+                        }
+                        CharacterAnimator.ResetTrigger("Swing3");
+                        CharacterAnimator.SetTrigger("Swing3");
+                        break;
+                    default:
+                        Debug.Log("error");
+                        break;
+                }
             }
         }
     }
@@ -1444,8 +1450,22 @@ public class PlayerController : MonoBehaviour
                 gatherTimer = 0;
                 currentResource = building.GetComponent<Building>();
                 ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
-                CharacterAnimator.ResetTrigger("Swing1");
-                CharacterAnimator.SetTrigger("Swing1");
+
+                if (currentResource.ReturnWood())
+                {
+                    CharacterAnimator.ResetTrigger("Wood");
+                    CharacterAnimator.SetTrigger("Wood");
+                }
+                else if (currentResource.ReturnStone())
+                {
+                    CharacterAnimator.ResetTrigger("Stone");
+                    CharacterAnimator.SetTrigger("Stone");
+                }
+                if (currentResource.resourceObject == Building.BuildingType.Bush)
+                {
+                    CharacterAnimator.ResetTrigger("Bush");
+                    CharacterAnimator.SetTrigger("Bush");
+                }
             }
 
         }, true); //true means natural
@@ -1555,16 +1575,13 @@ public class PlayerController : MonoBehaviour
         }
         VFXSlash.Play();
 
-        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
-        {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
-            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
+        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
 
-            attackCount++;
-            if (attackCount > 2)
-            {
-                attackCount = 0;
-            }
+        attackCount++;
+        if (attackCount > 2)
+        {
+            attackCount = 0;
         }
     }
 
@@ -1578,7 +1595,6 @@ public class PlayerController : MonoBehaviour
     {
         if (currentResource)
         {
-
             if (PickaxeGameObject.activeSelf)
             {
                 GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
