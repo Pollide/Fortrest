@@ -1,28 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
-    [SerializeField] private float radius = 5f;
-
-    private void FixedUpdate()
+    private enum Boss
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
-
-        foreach (var hit in colliders)
-        {
-            if (hit.CompareTag("Player"))
-            {
-                Debug.Log("SpawnBoss");
-            }
-        }
+        Cheiften,
+        Basalisk,
+        Spider,
+        Tier4,
+        Tier5,
+        Tier6
     }
 
+    [SerializeField] Boss currentBoss;
+    [SerializeField] private float distance = 5f;
+    [SerializeField] private bool hasRun = false;
+
+    private void Start()
+    {
+      
+    }
+    private void Update()
+    {
+        if (CheckPlayerDistance())
+        {
+
+        }
+    }
+    private bool CheckPlayerDistance()
+    {
+        return Vector3.Distance(PlayerController.global.transform.position, transform.position) <= distance;
+    }
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
 
-        Gizmos.DrawWireSphere(transform.position, radius);
+        Gizmos.DrawWireSphere(transform.position, distance);
     }
 }

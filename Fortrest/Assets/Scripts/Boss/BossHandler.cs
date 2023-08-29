@@ -26,7 +26,9 @@ public class BossHandler : MonoBehaviour
     // Holds start position
     [SerializeField] private Transform initialSpawn;
     // Agent current speed
-    [SerializeField] float speed;
+    [SerializeField] private float speed;
+    [SerializeField] private float maxHealth;
+    [SerializeField] private float currentHealth;
     // Agent charge speed
     [SerializeField] private float chargeSpeed = 10f;
     [SerializeField] private float chargeDistance = 1;
@@ -34,12 +36,13 @@ public class BossHandler : MonoBehaviour
     [SerializeField] private float chargeMaxTimer = 5;
     [SerializeField] private float chargePushForce = 5;
     [SerializeField] private float chargePushDuration = 5;
+    // Charge radius
+    [SerializeField] private float chargeRadius;
     // Duration of the wind-up phase
     [SerializeField] private float windUpDuration = 5f;
     // Arena radius
     [SerializeField] private float arenaRadius;
-    // Charge radius
-    [SerializeField] private float chargeRadius;
+
     // Distance for agent to stop before destination
     [SerializeField] private float stoppingDist;
     // Holds wheather the boss has been activated
