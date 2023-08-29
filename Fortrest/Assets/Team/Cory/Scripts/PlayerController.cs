@@ -92,9 +92,9 @@ public class PlayerController : MonoBehaviour
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
     private float attackTimer = 0.0f;
-    private float resetAttack = 0.8f;
+    private float resetAttack = 0.75f;
     private float comboTimer = 0.0f;
-    private float resetCombo = 1.0f;
+    private float resetCombo = 0.95f;
     private int attackCount = 0;
     [HideInInspector] public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
@@ -231,8 +231,6 @@ public class PlayerController : MonoBehaviour
     private float speedAnim;
     private float transitionSpeed = 20f;
     public Animator bowAnimator;
-
-    public Camera cam;
 
     // Start is called before the first frame update
     void Awake()
@@ -1366,61 +1364,58 @@ public class PlayerController : MonoBehaviour
     private void UpgradeMelee()
     {
         CharacterAnimator.SetBool("Upgraded", true);
-        resetAttack = 0.65f;
-        resetCombo = 0.85f;
+        resetAttack = 0.6f;
+        resetCombo = 0.8f;
     }
 
     private void Attack()
     {
-        if (!CharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("Swing.Swing1") || !CharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("Swing.Swing2") || !CharacterAnimator.GetCurrentAnimatorStateInfo(0).IsName("Swing.Swing3"))
+        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
-            if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
+            attackingCTRL = false;
+            attacking = true;
+            attackTimer = 0;
+            comboTimer = 0;
+
+            LevelManager.ProcessEnemyList((enemy) =>
             {
-                attackingCTRL = false;
-                attacking = true;
-                attackTimer = 0;
-                comboTimer = 0;
+                enemy.canBeDamaged = true;
+            });
 
-                LevelManager.ProcessEnemyList((enemy) =>
-                {
-                    enemy.canBeDamaged = true;
-                });
+            if (upgradedMelee)
+            {
+                attackDamage = 1.25f;
+            }
+            else
+            {
+                attackDamage = 1f;
+            }
 
-                if (upgradedMelee)
-                {
-                    attackDamage = 1.25f;
-                }
-                else
-                {
-                    attackDamage = 1f;
-                }
-
-                switch (attackCount)
-                {
-                    case 0:
-                        CharacterAnimator.ResetTrigger("Swing1");
-                        CharacterAnimator.SetTrigger("Swing1");
-                        break;
-                    case 1:
-                        CharacterAnimator.ResetTrigger("Swing2");
-                        CharacterAnimator.SetTrigger("Swing2");
-                        break;
-                    case 2:
-                        if (upgradedMelee)
-                        {
-                            attackDamage = 1.75f;
-                        }
-                        else
-                        {
-                            attackDamage = 1.5f;
-                        }
-                        CharacterAnimator.ResetTrigger("Swing3");
-                        CharacterAnimator.SetTrigger("Swing3");
-                        break;
-                    default:
-                        Debug.Log("error");
-                        break;
-                }
+            switch (attackCount)
+            {
+                case 0:
+                    CharacterAnimator.ResetTrigger("Swing1");
+                    CharacterAnimator.SetTrigger("Swing1");
+                    break;
+                case 1:
+                    CharacterAnimator.ResetTrigger("Swing2");
+                    CharacterAnimator.SetTrigger("Swing2");
+                    break;
+                case 2:
+                    if (upgradedMelee)
+                    {
+                        attackDamage = 1.75f;
+                    }
+                    else
+                    {
+                        attackDamage = 1.5f;
+                    }
+                    CharacterAnimator.ResetTrigger("Swing3");
+                    CharacterAnimator.SetTrigger("Swing3");
+                    break;
+                default:
+                    Debug.Log("error");
+                    break;
             }
         }
     }
