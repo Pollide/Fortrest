@@ -607,7 +607,7 @@ public class PlayerController : MonoBehaviour
             Gathering();
             Shoot();
             ModeChanged();
-            if (lunge)
+            if (lunge && !playerisMoving)
             {
                 AttackLunge();
             }
@@ -663,7 +663,10 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        RotatePlayer();
+        if (!pausedBool && !evading)
+        {
+            RotatePlayer();
+        }
     }
 
     private void CheckCurrentTool()

@@ -57,7 +57,7 @@ public class Boar : MonoBehaviour
 
     void Update()
     {
-        if (PlayerController.global.pausedBool)
+        if (PlayerController.global.pausedBool || PlayerController.global.evading)
         {
             return;
         }
