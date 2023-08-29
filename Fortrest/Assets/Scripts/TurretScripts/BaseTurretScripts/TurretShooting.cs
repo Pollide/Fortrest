@@ -9,7 +9,7 @@ public class TurretShooting : MonoBehaviour
     public LayerMask targetLayer;
 
     private Transform target;
-    private float fireCountdown = 0f;
+    float fireCountdown = 0f;
     float nextRotationChangeTime;
     public bool attackStarted;
 
@@ -42,17 +42,18 @@ public class TurretShooting : MonoBehaviour
 
     public Animator ReturnAnimator()
     {
-        if (MiniTurret)
-        {
-            return MiniTurretAnimator;
-        }
-
         for (int i = 0; i < ModelHolder.childCount; i++)
         {
-            ModelHolder.GetChild(i).gameObject.SetActive(CurrentLevel == i);
+            ModelHolder.GetChild(i).gameObject.SetActive(!MiniTurret && CurrentLevel == i);
         }
 
+
         Animator animator = ModelHolder.GetChild(CurrentLevel).GetComponent<Animator>();
+        if (MiniTurret)
+        {
+            animator = MiniTurretAnimator;
+            MiniTurretAnimator.gameObject.SetActive(true);
+        }
 
         if (animator)
         {
@@ -179,6 +180,7 @@ public class TurretShooting : MonoBehaviour
             {
                 projectile.transform.localScale *= 2.5f;
             }
+            Debug.Log(projectile);
             GameManager.global.SoundManager.PlaySound(GameManager.global.BallistaShootSound, 0.3f, true, 0, false, transform);
             U_Turret uTurret = GetComponent<U_Turret>();
 

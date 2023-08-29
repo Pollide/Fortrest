@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
-
     // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
@@ -53,7 +52,7 @@ public class PlayerController : MonoBehaviour
     private bool canShoot;
     [HideInInspector] public float bowDamage = 1.5f;
     private float bowTimer = 0.0f;
-    private float resetBow = 1.5f;
+    private float resetBow = 1f;
     private bool shooting = false;
     private bool directionSaved = false;
     private Quaternion tempDirection;
@@ -93,14 +92,15 @@ public class PlayerController : MonoBehaviour
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
     private float attackTimer = 0.0f;
-    private float resetAttack = 0.95f;
+    private float resetAttack = 0.75f;
     private float comboTimer = 0.0f;
-    private float resetCombo = 1.20f;
+    private float resetCombo = 0.95f;
     private int attackCount = 0;
     [HideInInspector] public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
     [HideInInspector] public bool lunge = false;
     public bool upgradedMelee;
+    private bool applied;
 
     // States
     [Header("Player States")]
@@ -230,6 +230,7 @@ public class PlayerController : MonoBehaviour
     // Animation
     private float speedAnim;
     private float transitionSpeed = 20f;
+    public Animator bowAnimator;
 
     // Start is called before the first frame update
     void Awake()
@@ -594,9 +595,6 @@ public class PlayerController : MonoBehaviour
                 verticalMovement = Input.GetAxis("Vertical");
             }
 
-
-
-
             // Physics
             HandleSpeed();
             ApplyGravity();
@@ -609,7 +607,7 @@ public class PlayerController : MonoBehaviour
             Gathering();
             Shoot();
             ModeChanged();
-            if (lunge && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+            if (lunge && !playerisMoving)
             {
                 AttackLunge();
             }
@@ -625,15 +623,17 @@ public class PlayerController : MonoBehaviour
             running = false;
         }
 
-
-
         HandleEnergy();
-
-        CharacterAnimator.SetBool("Upgraded", upgradedMelee);
         TimersFunction();
         ScreenDamage();
         CheckCurrentTool();
         Resting();
+
+        if (upgradedMelee && !applied)
+        {
+            UpgradeMelee();
+            applied = true;
+        }
 
         if (playerDead)
         {
@@ -663,7 +663,10 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        RotatePlayer();
+        if (!pausedBool && !evading)
+        {
+            RotatePlayer();
+        }
     }
 
     private void CheckCurrentTool()
@@ -683,7 +686,7 @@ public class PlayerController : MonoBehaviour
 
     private void ModeChanged()
     {
-        if (Input.GetKey(KeyCode.Q) || Input.GetMouseButton(1) || cancelCTRL || cancelHit)
+        if (Input.GetKey(KeyCode.Q) || (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && Input.GetMouseButton(1)) || cancelCTRL || cancelHit)
         {
             cancelHit = false;
             cancelAnimation = true;
@@ -954,7 +957,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot)
+        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot && !attacking)
         {
             running = true;
         }
@@ -1311,44 +1314,39 @@ public class PlayerController : MonoBehaviour
             playerCC.Move(moveDirection * Time.deltaTime);
         }
     }
-    public List<Transform> followMovementList;
-
+    public Transform SpinTransform;
     private void RotatePlayer()
     {
-
-        float angle;
+        Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
 
         if (GameManager.global.KeyboardBool)
         {
-            mousePos = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
 
-            Vector3 lookDirection = mousePos - transform.position;
+            Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
 
-            angle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg - 105.5429f;
+            Vector3 targetPostition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
+
+
+            if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+            {
+                targetPostition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
+            }
+
+            targetPostition.y = transform.position.y;
+
+            transform.LookAt(targetPostition);
+
+            // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         }
         else
         {
-            angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135.0f;
+            float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135;
+            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+            //transform.rotation = Quaternion.LookRotation(new Vector3(rotateCTRL.x, 0f, rotateCTRL.y), Vector3.up);
         }
 
-        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
-
-        /*
-        for (int i = 0; i < followMovementList.Count; i++)
-        {
-            if (playerisMoving && moveDirection != Vector3.zero)
-            {
-                Vector3 euler = followMovementList[i].eulerAngles;
-                euler.y = Quaternion.LookRotation(moveDirection).eulerAngles.y;
-                followMovementList[i].rotation = Quaternion.Euler(euler);
-                // followMovementList[i].rotation = Quaternion.RotateTowards(followMovementList[i].rotation, Quaternion.Euler(euler), 600 * Time.deltaTime);
-            }
-        }
-
-        */
-        //if (Mathf.Abs(angle - previousLookAngle) > 8.0f) //however if player is moving cursor/Rigt joystick around, then pioritise that
-
-
+        //   float angleMove = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 135;
+        //  SpinTransform.rotation = Quaternion.Euler(SpinTransform.eulerAngles.x, -angleMove, SpinTransform.eulerAngles.z);
     }
 
     private void ApplyGravity()
@@ -1372,70 +1370,61 @@ public class PlayerController : MonoBehaviour
         healthBar.SetHealth(playerHealth, maxHealth);
     }
 
+    private void UpgradeMelee()
+    {
+        CharacterAnimator.SetBool("Upgraded", true);
+        resetAttack = 0.6f;
+        resetCombo = 0.8f;
+    }
+
     private void Attack()
     {
         if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
         {
-            CharacterAnimator.ResetTrigger("Swing1");
-            CharacterAnimator.ResetTrigger("Swing2");
-            CharacterAnimator.ResetTrigger("Swing3");
-
             attackingCTRL = false;
             attacking = true;
             attackTimer = 0;
             comboTimer = 0;
+
             LevelManager.ProcessEnemyList((enemy) =>
             {
                 enemy.canBeDamaged = true;
             });
 
-            if (attackCount == 0)
+            if (upgradedMelee)
             {
-                if (upgradedMelee)
-                {
-                    resetAttack = 0.75f;
-                    resetCombo = 1.0f;
-                    attackDamage = 1.25f;
-                }
-                else
-                {
-                    resetAttack = 0.95f;
-                    resetCombo = 1.2f;
-                    attackDamage = 1.0f;
-                }
-                CharacterAnimator.SetTrigger("Swing1");
+                attackDamage = 1.25f;
             }
-            else if (attackCount == 1)
+            else
             {
-                if (upgradedMelee)
-                {
-                    resetAttack = 0.7f;
-                    resetCombo = 0.95f;
-                    attackDamage = 1.25f;
-                }
-                else
-                {
-                    resetAttack = 0.9f;
-                    resetCombo = 1.15f;
-                    attackDamage = 1.0f;
-                }
-                CharacterAnimator.SetTrigger("Swing2");
+                attackDamage = 1f;
             }
-            else if (attackCount == 2)
+
+            switch (attackCount)
             {
-                if (upgradedMelee)
-                {
-                    resetAttack = 0.75f;
-                    resetCombo = 1.0f;
-                    attackDamage = 2.0f;
-                }
-                else
-                {
-                    resetAttack = 0.95f;
-                    resetCombo = 1.2f;
-                    attackDamage = 1.5f;
-                }
-                CharacterAnimator.SetTrigger("Swing3");
+                case 0:
+                    CharacterAnimator.ResetTrigger("Swing1");
+                    CharacterAnimator.SetTrigger("Swing1");
+                    break;
+                case 1:
+                    CharacterAnimator.ResetTrigger("Swing2");
+                    CharacterAnimator.SetTrigger("Swing2");
+                    break;
+                case 2:
+                    if (upgradedMelee)
+                    {
+                        attackDamage = 1.75f;
+                    }
+                    else
+                    {
+                        attackDamage = 1.5f;
+                    }
+                    CharacterAnimator.ResetTrigger("Swing3");
+                    CharacterAnimator.SetTrigger("Swing3");
+                    break;
+                default:
+                    Debug.Log("error");
+                    break;
             }
         }
     }
@@ -1465,8 +1454,22 @@ public class PlayerController : MonoBehaviour
                 gatherTimer = 0;
                 currentResource = building.GetComponent<Building>();
                 ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
-                CharacterAnimator.ResetTrigger("Swing1");
-                CharacterAnimator.SetTrigger("Swing1");
+
+                if (currentResource.ReturnWood())
+                {
+                    CharacterAnimator.ResetTrigger("Wood");
+                    CharacterAnimator.SetTrigger("Wood");
+                }
+                else if (currentResource.ReturnStone())
+                {
+                    CharacterAnimator.ResetTrigger("Stone");
+                    CharacterAnimator.SetTrigger("Stone");
+                }
+                if (currentResource.resourceObject == Building.BuildingType.Bush)
+                {
+                    CharacterAnimator.ResetTrigger("Bush");
+                    CharacterAnimator.SetTrigger("Bush");
+                }
             }
 
         }, true); //true means natural
@@ -1478,7 +1481,9 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(1) || aimingCTRL)
             {
+                CharacterAnimator.SetBool("Aiming", true);
                 ChangeTool(new ToolData() { BowBool = true });
+                bowAnimator.SetBool("Aiming", true);
                 canShoot = true;
                 if (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL)
                 {
@@ -1495,16 +1500,20 @@ public class PlayerController : MonoBehaviour
                     directionSaved = false;
                 }
             }
-            else
+            else if (BowGameObject.activeSelf)
             {
+                CharacterAnimator.SetBool("Aiming", false);
+                bowAnimator.SetBool("Aiming", false);
                 ChangeTool(new ToolData() { SwordBool = true });
                 canShoot = false;
             }
 
             if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting)
             {
-                //CharacterAnimator.ResetTrigger("Fire");
-                //CharacterAnimator.SetTrigger("Fire");
+                CharacterAnimator.ResetTrigger("Shoot");
+                CharacterAnimator.SetTrigger("Shoot");
+                bowAnimator.ResetTrigger("Shoot");
+                bowAnimator.SetTrigger("Shoot");
                 attackingCTRL = false;
                 shooting = true;
                 bowTimer = 0;
@@ -1570,29 +1579,19 @@ public class PlayerController : MonoBehaviour
         }
         VFXSlash.Play();
 
-        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
-        {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
-            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
+        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
 
-            attackCount++;
-            if (attackCount > 2)
-            {
-                attackCount = 0;
-            }
+        attackCount++;
+        if (attackCount > 2)
+        {
+            attackCount = 0;
         }
     }
 
     private void AttackLunge()
     {
-        if (attackCount == 0)
-        {
-            playerCC.Move(transform.forward * 10f * Time.deltaTime);
-        }
-        else if (attackCount == 1 || attackCount == 2)
-        {
-            playerCC.Move(transform.forward * 7f * Time.deltaTime);
-        }
+        playerCC.Move(transform.forward * 7f * Time.deltaTime);
         VFXSlash.transform.position = transform.position;
     }
 
@@ -1600,7 +1599,6 @@ public class PlayerController : MonoBehaviour
     {
         if (currentResource)
         {
-
             if (PickaxeGameObject.activeSelf)
             {
                 GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
@@ -1637,6 +1635,17 @@ public class PlayerController : MonoBehaviour
 
     public void NewDay()
     {
+        LevelManager.global.newDay = true;
+        DayTMP_Text.text = "DAY " + (LevelManager.global.day + 1).ToString();
+        RemaningTMP_Text.text = "Highscore: " + (PlayerPrefs.GetInt("Number of Days") + 1);
+
+        if (LevelManager.global.day > PlayerPrefs.GetInt("Number of Days"))
+        {
+            RemaningTMP_Text.text = "Highscore Beaten!";
+            PlayerPrefs.SetInt("Number of Days", LevelManager.global.day);
+        }
+
+        /*
         if (LevelManager.global.day == 1)
         {
             LevelManager.global.newDay = true;
@@ -1682,6 +1691,7 @@ public class PlayerController : MonoBehaviour
                 PlayerPrefs.SetInt("Number of Days", LevelManager.global.day);
             }
         }
+        */
     }
 
     public void EnemiesTextControl()
@@ -1706,6 +1716,7 @@ public class PlayerController : MonoBehaviour
         // Enemy remaining and enemy amount disappearing
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
+            LevelManager.global.waveEnd = false;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false);
         }
     }

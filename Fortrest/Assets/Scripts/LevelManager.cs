@@ -468,19 +468,16 @@ public class LevelManager : MonoBehaviour
 
         // Message and countdown bar appear 30f before the attack
 
-        float noon = randomAttackTrigger - PlayerController.global.UIAnimation["Enemies Incoming"].length;
+        float enemiesIncoming = randomAttackTrigger - PlayerController.global.UIAnimation["Enemies Incoming"].length;
 
-        if (daylightTimer >= noon && randomAttackTrigger != 0f && !messageDisplayed)
+        //Debug.Log(daylightTimer + " >= " + noon);
+
+        if (daylightTimer >= enemiesIncoming && randomAttackTrigger != 0f && !messageDisplayed)
         {
             enemyIncomingState = GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Incoming"); // Display enemies are coming a bit before an attack
             messageDisplayed = true;
         }
 
-        // For enemy remaining text to not disappear right before the spawning starts
-        if ((daylightTimer >= randomAttackTrigger - 2.0f && daylightTimer <= randomAttackTrigger) && randomAttackTrigger != 0f)
-        {
-            waveEnd = false;
-        }
 
         // Enemies start spawning after enemy incoming animation is finished
         if (!spawnEnemies && messageDisplayed && enemyIncomingState && !enemyIncomingState.enabled)
@@ -582,6 +579,7 @@ public class LevelManager : MonoBehaviour
                 {
                     enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
                     enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
+                    enemySpawnPosition.y = 0; //everything is at ground zero        
 
                     GameObject prefab = goblinPrefab;
 
@@ -595,8 +593,6 @@ public class LevelManager : MonoBehaviour
                         prefab = ogrePrefab;
                         ogreSpawned = true;
                     }
-
-                    enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition); // 16 is the magic number for this to work                         
 
                     GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
 
