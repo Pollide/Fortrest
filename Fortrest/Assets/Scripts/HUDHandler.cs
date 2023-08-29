@@ -133,8 +133,6 @@ public class HUDHandler : MonoBehaviour
 
     private void BuildHUD()
     {
-
-
         if (PlayerModeHandler.global.buildType == BuildType.Turret)
         {
             if (!isBalista)
@@ -149,7 +147,6 @@ public class HUDHandler : MonoBehaviour
         {
             if (!isCannon)
             {
-                ActivateObjects(false);
                 cannonIcon.GetComponentInChildren<RectTransform>().localScale = cannonIcon.rectTransform.localScale / 2;
                 ResetIcons();
                 isCannon = true;
@@ -159,7 +156,6 @@ public class HUDHandler : MonoBehaviour
         {
             if (!isGlyph)
             {
-
                 glyphIcon.GetComponentInChildren<RectTransform>().localScale = glyphIcon.rectTransform.localScale / 2;
                 ResetIcons();
                 isGlyph = true;
