@@ -5,37 +5,13 @@ using UnityEngine.UI;
 
 public class HealthBar : MonoBehaviour
 {
-    public Slider slider;
-    public Image playerHealthBarImage;
+    public Image healthBarImage;
 
-    public void SetMaxHealth(float health, bool house)
+    public void SetHealth(float health, float maxHealth)
     {
-        if (house)
+        if (healthBarImage)
         {
-            slider.maxValue = health;
-            slider.value = health;
-        }
-        else
-        {
-            if (playerHealthBarImage)
-            {
-                playerHealthBarImage.fillAmount = Mathf.Lerp(0.0f, 0.5f, health / PlayerController.global.maxHealth);
-            }                
-        }      
-    }
-
-    public void SetHealth(float health, bool house)
-    {
-        if (house)
-        {
-            slider.value = health;
-        }
-        else
-        {
-            if (playerHealthBarImage)
-            {
-                playerHealthBarImage.fillAmount = Mathf.Lerp(0.0f, 0.5f, health / PlayerController.global.maxHealth);
-            }                   
-        }        
+            healthBarImage.fillAmount = Mathf.Lerp(0.0f, 1f, health / maxHealth);
+        }                         
     }
 }

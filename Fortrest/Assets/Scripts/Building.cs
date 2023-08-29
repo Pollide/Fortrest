@@ -90,7 +90,7 @@ public class Building : MonoBehaviour
             SetLastHealth();
             if (HUDHealthBar != null)
             {
-                HUDHealthBar.SetMaxHealth(maxHealth, true);
+                HUDHealthBar.SetHealth(health, maxHealth);
             }
         }
         else if (resourceObject != BuildingType.DefenseBP) //the house itself is not part of the buildings list
@@ -141,12 +141,11 @@ public class Building : MonoBehaviour
             health -= amount;
             if (HUDHealthBar && resourceObject == BuildingType.House)
             {
-                HUDHealthBar.SetHealth(health, true);
+                HUDHealthBar.SetHealth(health, maxHealth);
             }
-            else if (healthBarImage)
+            if (healthBarImage)
             {
                 healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
-                // Debug.Log(health + " / " + maxHealth + " " + amount);
             }
 
             if (amount != 0)
@@ -193,8 +192,6 @@ public class Building : MonoBehaviour
                 PlayerController.global.enabled = false;
                 PlayerModeHandler.global.enabled = false;
                 Invoke(nameof(RestartGame), GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Gameover").length);
-
-
 
                 PlayerController.global.SurvivedTMP_Text.text = "Survived " + (LevelManager.global.day + 1) + " day" + (LevelManager.global.day > 1 ? "s" : "");
                 return;

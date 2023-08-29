@@ -531,7 +531,7 @@ public class PlayerController : MonoBehaviour
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         playerHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth, false);
+        healthBar.SetHealth(playerHealth, maxHealth);
 
         // Adding timers to array
         timers[0] = timer1;
@@ -576,7 +576,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             playerHealth = 0;
-            healthBar.SetHealth(playerHealth, false);
+            healthBar.SetHealth(playerHealth, maxHealth);
         }
 #endif
         if (playerCanMove)
@@ -732,7 +732,7 @@ public class PlayerController : MonoBehaviour
                 playerHealth = maxHealth;
             }
             playerHealth += Time.deltaTime * 2.0f;
-            healthBar.SetHealth(playerHealth, false);
+            healthBar.SetHealth(playerHealth, maxHealth);
         }
     }
 
@@ -1002,12 +1002,11 @@ public class PlayerController : MonoBehaviour
             playerEnergy += energySpeed * Time.deltaTime;
         }
 
-        playerEnergyBarImage.fillAmount = Mathf.Lerp(0.0f, 0.5f, playerEnergy / maxPlayerEnergy);
+        playerEnergyBarImage.fillAmount = Mathf.Lerp(0.0f, 1f, playerEnergy / maxPlayerEnergy);
 
         if (playerEnergy >= maxPlayerEnergy)
         {
             playerEnergy = maxPlayerEnergy;
-            playerEnergyBarImage.fillAmount = 0.5f;
         }
         else if (playerEnergy <= 0)
         {
@@ -1370,7 +1369,7 @@ public class PlayerController : MonoBehaviour
     public void HealthRestore(float amount)
     {
         playerHealth += amount;
-        healthBar.SetHealth(playerHealth, false);
+        healthBar.SetHealth(playerHealth, maxHealth);
     }
 
     private void Attack()
@@ -1728,7 +1727,7 @@ public class PlayerController : MonoBehaviour
         {
             respawnTimer += Time.deltaTime;
             playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
-            healthBar.SetHealth(playerHealth, false);
+            healthBar.SetHealth(playerHealth, maxHealth);
             if (respawnTimer >= 15.0f)
             {
                 needInteraction = true;
@@ -1801,7 +1800,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         playerHealth -= damage;
-        healthBar.SetHealth(playerHealth, false);
+        healthBar.SetHealth(playerHealth, maxHealth);
         displaySlash = true;
     }
 
