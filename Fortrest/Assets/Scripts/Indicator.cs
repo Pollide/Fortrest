@@ -11,8 +11,6 @@ public class Indicator : MonoBehaviour
 
     public List<IndicatorData> IndicatorList = new List<IndicatorData>();
 
-    public Vector3 offsets = Vector3.zero;
-
     public Sprite RemovedSprite;
 
     public Sprite HomeSprite;
@@ -35,12 +33,15 @@ public class Indicator : MonoBehaviour
         public float DestroyedTimerFloat = -1;
 
         public Vector3 WorldPosition;
-
+        public Vector3 Offset;
         public bool Unlocked;
         public bool Recent;
         public string ActiveString;
 
-
+        public bool leftBool;
+        public bool rightBool;
+        public bool topBool;
+        public bool bottomBool;
         public void Refresh()
         {
             if (ActiveTarget)
@@ -69,10 +70,10 @@ public class Indicator : MonoBehaviour
 
             float closeFloat = 0.1f;
 
-            bool leftBool = imagePosition.x <= leftBoundary + closeFloat;
-            bool rightBool = imagePosition.x >= rightBoundary - closeFloat;
-            bool topBool = imagePosition.y >= topBoundary - closeFloat;
-            bool bottomBool = imagePosition.y <= bottomBoundary + closeFloat;
+            leftBool = imagePosition.x <= leftBoundary + closeFloat;
+            rightBool = imagePosition.x >= rightBoundary - closeFloat;
+            topBool = imagePosition.y >= topBoundary - closeFloat;
+            bottomBool = imagePosition.y <= bottomBoundary + closeFloat;
 
             // Check if the image is outside the canvas boundaries
             bool isOutsideCanvas = leftBool || rightBool || bottomBool || topBool;
@@ -170,16 +171,17 @@ public class Indicator : MonoBehaviour
 
             MainData.HolderTransform.localPosition = Vector3.Slerp(MainData.HolderTransform.localPosition, transition, Time.deltaTime);
 
-            /*
+
             int shift = 0;
 
             for (int i = 0; i < global.IndicatorList.Count; i++)
             {
-                Transform compare = global.IndicatorList[i].MainData.HolderTransform;
-                if (compare != MainData.HolderTransform)
+                IndicatorData data = global.IndicatorList[i];
+
+                if (data != this)
                 {
-                    if (Vector3.Distance(MainData.HolderTransform.localPosition, compare.localPosition) < 1.0f)
-                        shift += 12;
+                    if (AppearBool && data.AppearBool && topBool == data.topBool && bottomBool == data.bottomBool && leftBool == data.leftBool && rightBool == data.rightBool)
+                        shift += 13;
                 }
                 else
                 {
@@ -187,11 +189,11 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            Vector3 offset = new Vector3(shift, shift, 0) * (topBool ? -1 : 1);
-            shift = 0;
-            MainData.CustomImage.transform.localPosition = MainData.CustomImageLocalPosition + offset;
-            MainData.ArrowText.transform.localPosition = MainData.ArrowTextLocalPosition + offset;
-            */
+            Offset = new Vector3(shift, shift, 0);
+            // shift = 0;
+
+            MainData.CustomImage.transform.localPosition = MainData.CustomImageLocalPosition + Offset;
+            MainData.ArrowText.transform.localPosition = MainData.ArrowTextLocalPosition + Offset;
         }
     }
 

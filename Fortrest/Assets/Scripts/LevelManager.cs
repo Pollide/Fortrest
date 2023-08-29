@@ -477,7 +477,7 @@ public class LevelManager : MonoBehaviour
             enemyIncomingState = GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Incoming"); // Display enemies are coming a bit before an attack
             messageDisplayed = true;
         }
-       
+
 
         // Enemies start spawning after enemy incoming animation is finished
         if (!spawnEnemies && messageDisplayed && enemyIncomingState && !enemyIncomingState.enabled)
@@ -579,6 +579,7 @@ public class LevelManager : MonoBehaviour
                 {
                     enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
                     enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
+                    enemySpawnPosition.y = 0; //everything is at ground zero        
 
                     GameObject prefab = goblinPrefab;
 
@@ -592,8 +593,6 @@ public class LevelManager : MonoBehaviour
                         prefab = ogrePrefab;
                         ogreSpawned = true;
                     }
-
-                    enemySpawnPosition.y = Terrain.activeTerrain.SampleHeight(enemySpawnPosition); // 16 is the magic number for this to work                         
 
                     GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
 
