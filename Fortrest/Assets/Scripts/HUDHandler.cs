@@ -188,7 +188,7 @@ public class HUDHandler : MonoBehaviour
         Vector3 a = flip ? downScale : Vector3.one;
         Vector3 b = flip ? Vector3.one : downScale;
 
-        if (Mathf.Abs(rectTransform.localScale.x - b.x) > 0.1f)
+        if (Mathf.Abs(rectTransform.localScale.x - b.x) > 0.1f) //prevents icons that are already small from being shrinked again
             rectTransform.localScale = Vector3.Lerp(a, b, time / duration);
     }
 
