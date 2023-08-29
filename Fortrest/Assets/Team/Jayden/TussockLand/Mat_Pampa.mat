@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7476013577973251025
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -7,13 +20,12 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mat_TussockPlaceholder
+  m_Name: Mat_Pampa
   m_Shader: {fileID: -6465566751694194690, guid: b98908b31ddac1f49a1bc5fb88be449b,
     type: 3}
   m_ValidKeywords:
   - _ADDITIONAL_LIGHTS
   - _ADDITIONAL_LIGHT_SHADOWS
-  - _ALPHATEST_ON
   - _MAIN_LIGHT_SHADOWS
   - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
@@ -21,21 +33,20 @@ Material:
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 1
-  m_CustomRenderQueue: -1
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
   stringTagMap:
     RenderType: Transparent
-  disabledShaderPasses:
-  - SHADOWCASTER
+  disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
     - _Albedo:
-        m_Texture: {fileID: 2800000, guid: 6914dc0001bd4f3429d80efbb0ae1a0f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 51ea4ddbb85fc5f40b0d77d9f346fca5, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Alpha:
-        m_Texture: {fileID: 2800000, guid: 1ce5740b11a70dd489db4a4948b59f9f, type: 3}
+        m_Texture: {fileID: 2800000, guid: f288c5a9d25ce30448bfedd9f1b62be8, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
@@ -47,10 +58,6 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _CalculateLightingRamp_8662413df2b8439a886fe529431083e6_ToonRamp_255809187:
-        m_Texture: {fileID: 2800000, guid: ccda879d80f360b45a8d401d444c2e4e, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _CalculateLightingRamp_abdf794e0d3c486896b9aa3403833f47_ToonRamp_255809187:
         m_Texture: {fileID: 2800000, guid: ccda879d80f360b45a8d401d444c2e4e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -75,7 +82,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Metallic:
-        m_Texture: {fileID: 2800000, guid: 61b59933f9d2a0043a6dff156e0d8423, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9a2204f7cdee3a64c9fde7140ff42ae6, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -114,12 +121,12 @@ Material:
     m_Floats:
     - _ADDITIONAL_LIGHTS: 1
     - _ADDITIONAL_LIGHT_SHADOWS: 1
-    - _AlphaClip: 1
+    - _AlphaClip: 0
     - _Alpha_Clip_Threshold: 0.5
     - _Ambience_Multiplier: 0
     - _Blend: 0
     - _BumpScale: 1
-    - _CastShadows: 0
+    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 0
@@ -140,8 +147,7 @@ Material:
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _IsTree: 0
-    - _Is_Foliage: 1
+    - _Is_Foliage: 0
     - _MAIN_LIGHT_SHADOWS: 1
     - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metallic: 0
@@ -150,11 +156,11 @@ Material:
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _RadiansRotation: 0.39
+    - _RadiansRotation: 0.53
     - _ReceiveShadows: 1
     - _RimThreshold: 0
     - _SHADOWS_SOFT: 1
-    - _SamplerScale: 0.3
+    - _SamplerScale: 0.56
     - _SamplerTileSpeed: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
@@ -167,38 +173,20 @@ Material:
     - _Use_Vertex_Colours: 0
     - _VertexColourGrowth: 0
     - _VerticalWindEffect: 5
-    - _WindEffectScale: 0.02
-    - _WindEffectScaleX: 1
-    - _WindEffectScaleZ: 1
-    - _WindSpeed: 7.5
-    - _Wind_Strength: 0
+    - _WindSpeed: -3.23
+    - _Wind_Strength: 0.5
     - _WorkflowMode: 1
-    - _WorldPositionInfluenceModifier: 0
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 1
     m_Colors:
     - _Ambient_Color: {r: 0.745283, g: 0.745283, b: 0.745283, a: 0}
-    - _BaseColor: {r: 0.9245283, g: 0.62934536, b: 0.36196154, a: 1}
-    - _Color: {r: 0.9245283, g: 0.6293453, b: 0.3619615, a: 1}
+    - _BaseColor: {r: 0.89411765, g: 0.64573485, b: 0.36122358, a: 1}
+    - _Color: {r: 0.89411765, g: 0.64573485, b: 0.36122355, a: 1}
     - _CutoutPosition: {r: 0.5, g: 0.25, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _WindEffectScale: {r: 0.05, g: 1, b: 0.05, a: 0}
-    - _WindNoiseTilingScale: {r: 1, g: 1, b: 0, a: 0}
+    - _WindEffectScale: {r: -0.76, g: 0.1, b: 0.05, a: 0}
     - _Wind_Movement: {r: 2, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &4984530461780079074
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 5
