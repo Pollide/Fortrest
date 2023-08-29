@@ -84,7 +84,7 @@ public class HUDHandler : MonoBehaviour
         {
             gatherIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
             combatIcon.rectTransform.localScale = Vector3.Lerp(downScale, Vector3.one, time / duration);
-           
+
             time += Time.deltaTime;
         }
     }
@@ -119,31 +119,30 @@ public class HUDHandler : MonoBehaviour
         }
     }
 
+    void ResetIcons()
+    {
+        ActivateObjects(false);
+        isGather = false;
+        isCombat = false;
+        isBalista = false;
+        isGlyph = false;
+        isCannon = false;
+        isScatter = false;
+        time = 0f;
+    }
+
     private void BuildHUD()
     {
+
+
         if (PlayerModeHandler.global.buildType == BuildType.Turret)
         {
             if (!isBalista)
             {
-                ActivateObjects(false);
                 balistaIcon.GetComponentInChildren<RectTransform>().localScale = balistaIcon.rectTransform.localScale / 2;
-                isGather = false;
-                isCombat = false;
+                ResetIcons();
                 isBalista = true;
-                isGlyph = false;
-                isCannon = false;
-                isScatter = false;
-                time = 0f;
-            }
 
-            if (time < duration)
-            {
-                glyphIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                cannonIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                scatterIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                balistaIcon.rectTransform.localScale = Vector3.Lerp(downScale, Vector3.one, time / duration);
-
-                time += Time.deltaTime;
             }
         }
         else if (PlayerModeHandler.global.buildType == BuildType.Cannon)
@@ -152,75 +151,49 @@ public class HUDHandler : MonoBehaviour
             {
                 ActivateObjects(false);
                 cannonIcon.GetComponentInChildren<RectTransform>().localScale = cannonIcon.rectTransform.localScale / 2;
-                isGather = false;
-                isCombat = false;
-                isBalista = false;
-                isGlyph = false;
+                ResetIcons();
                 isCannon = true;
-                isScatter = false;
-                time = 0f;
-            }
-
-            if (time < duration)
-            {
-                glyphIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                balistaIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                scatterIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                cannonIcon.rectTransform.localScale = Vector3.Lerp(downScale, Vector3.one, time / duration);
-
-                time += Time.deltaTime;
             }
         }
         else if (PlayerModeHandler.global.buildType == BuildType.Slow)
         {
             if (!isGlyph)
             {
-                ActivateObjects(false);
+
                 glyphIcon.GetComponentInChildren<RectTransform>().localScale = glyphIcon.rectTransform.localScale / 2;
-                isGather = false;
-                isCombat = false;
-                isBalista = false;
+                ResetIcons();
                 isGlyph = true;
-                isCannon = false;
-                isScatter = false;
-                time = 0f;
-            }
-
-            if (time < duration)
-            {
-                balistaIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                cannonIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                scatterIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                glyphIcon.rectTransform.localScale = Vector3.Lerp(downScale, Vector3.one, time / duration);
-
-                time += Time.deltaTime;
             }
         }
         else if (PlayerModeHandler.global.buildType == BuildType.Scatter)
         {
             if (!isScatter)
             {
-                ActivateObjects(false);
                 scatterIcon.GetComponentInChildren<RectTransform>().localScale = scatterIcon.rectTransform.localScale / 2;
-                isGather = false;
-                isCombat = false;
-                isBalista = false;
-                isGlyph = false;
-                isCannon = false;
+                ResetIcons();
                 isScatter = true;
-                time = 0f;
-            }
-
-            if (time < duration)
-            {
-                glyphIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                cannonIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                balistaIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-                scatterIcon.rectTransform.localScale = Vector3.Lerp(downScale, Vector3.one, time / duration);
-
-                time += Time.deltaTime;
             }
         }
+
+
+        if (time < duration)
+        {
+            LerpRectScale(glyphIcon.rectTransform, isGlyph);
+            LerpRectScale(cannonIcon.rectTransform, isCannon);
+            LerpRectScale(balistaIcon.rectTransform, isBalista);
+            LerpRectScale(scatterIcon.rectTransform, isScatter);
+
+            time += Time.deltaTime;
+        }
+    }
+
+    void LerpRectScale(RectTransform rectTransform, bool flip = false)
+    {
+        Vector3 a = flip ? downScale : Vector3.one;
+        Vector3 b = flip ? Vector3.one : downScale;
+
+        if (Mathf.Abs(rectTransform.localScale.x - b.x) > 0.1f)
+            rectTransform.localScale = Vector3.Lerp(a, b, time / duration);
     }
 
     private void ActivateObjects(bool _active)
@@ -231,7 +204,7 @@ public class HUDHandler : MonoBehaviour
             {
                 objectsToDisableBuild[i].SetActive(_active);
             }
-            
+
         }
 
         for (int i = 0; i < objectsToDisableNonBuild.Length; i++)
