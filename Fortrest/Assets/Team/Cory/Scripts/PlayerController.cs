@@ -623,7 +623,7 @@ public class PlayerController : MonoBehaviour
             running = false;
         }
 
-        HandleEnergy();        
+        HandleEnergy();
         TimersFunction();
         ScreenDamage();
         CheckCurrentTool();
@@ -1315,7 +1315,7 @@ public class PlayerController : MonoBehaviour
             playerCC.Move(moveDirection * Time.deltaTime);
         }
     }
-    public List<Transform> followMovementList;
+    public Transform SpinTransform;
     private void RotatePlayer()
     {
         Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
@@ -1324,16 +1324,20 @@ public class PlayerController : MonoBehaviour
         {
 
             Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
-            
+
+            Vector3 targetPostition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
+
+
             if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
             {
-                Vector3 pos = new Vector3(hitData.point.x, transform.position.y, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
-            
-                transform.LookAt(pos);
-                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-
-                Debug.DrawRay(pos, transform.up * 100, Color.yellow);
+                targetPostition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
             }
+
+            targetPostition.y = transform.position.y;
+
+            transform.LookAt(targetPostition);
+
+            // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
         }
         else
         {
@@ -1341,6 +1345,9 @@ public class PlayerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
             //transform.rotation = Quaternion.LookRotation(new Vector3(rotateCTRL.x, 0f, rotateCTRL.y), Vector3.up);
         }
+
+        //   float angleMove = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 135;
+        //  SpinTransform.rotation = Quaternion.Euler(SpinTransform.eulerAngles.x, -angleMove, SpinTransform.eulerAngles.z);
     }
 
     private void ApplyGravity()
