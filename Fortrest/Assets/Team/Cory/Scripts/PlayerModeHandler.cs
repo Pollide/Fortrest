@@ -503,8 +503,6 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.UpdateResourceHolder();
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
 
-            HUD.BuildModeHUD();
-
             // Debug.Log("Build");
         }
         else
@@ -522,8 +520,6 @@ public class PlayerModeHandler : MonoBehaviour
         ClearBlueprint();
 
         playerModes = PlayerModes.RepairMode;
-
-        HUD.RepairModeHUD();
 
         //  Debug.Log("Repair");
     }
@@ -550,14 +546,12 @@ public class PlayerModeHandler : MonoBehaviour
     {
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
         playerModes = PlayerModes.ResourceMode;
-        HUD.ResourceModeHUD();
     }
 
     public void SwitchToCombatMode()
     {
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = true });
         playerModes = PlayerModes.CombatMode;
-        HUD.CombatModeHUD();
     }
 
     public void SwitchToUpgradeMode()
@@ -567,8 +561,6 @@ public class PlayerModeHandler : MonoBehaviour
         ClearBlueprint();
 
         playerModes = PlayerModes.UpgradeMenu;
-
-        HUD.UpgradeModeHUD();
         //   Debug.Log("Upgrade");
     }
 

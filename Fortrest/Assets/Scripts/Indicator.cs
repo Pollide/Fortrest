@@ -279,19 +279,18 @@ public class Indicator : MonoBehaviour
             indicatorData.MapData.CustomImage.gameObject.SetActive(true);
 
             indicatorData.MapData.CustomImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-
+            indicatorData.MapData.CustomImage.color = color;
 
             indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
 
             if (customSprite)
             {
                 indicatorData.MainData.CustomImage.gameObject.SetActive(true);
+
                 indicatorData.MainData.CustomImage.sprite = customSprite;
-                indicatorData.MainData.CustomImage.color = color;
+                indicatorData.MapData.CustomImage.sprite = customSprite;
 
                 indicatorData.MainData.ArrowText.text = "";
-
-                indicatorData.MapData.CustomImage.sprite = customSprite;
                 indicatorData.MapData.ArrowText.text = "";
             }
         }
