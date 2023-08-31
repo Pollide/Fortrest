@@ -89,6 +89,14 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public bool upCTRL;
     [HideInInspector] public bool downCTRL;
 
+    public Texture2D pointerGeneric;
+    public Texture2D pointerDoubleSword;
+    public Texture2D pointerSword;
+    public Texture2D pointerAim;
+    public Texture2D pointerPickaxe;
+    public Texture2D pointerAxe;
+    public Texture2D pointerSickle;
+
     //runs on the frame it was awake on
     void Awake()
     {
@@ -206,6 +214,36 @@ public class GameManager : MonoBehaviour
         lastMousePosition = currentMousePosition;
 
         PlayerModeHandler.SetMouseActive(KeyboardBool);
+
+        Texture2D cursorTexture = pointerGeneric;
+
+        if (PlayerModeHandler.global && PlayerController.global.playerCanMove)
+        {
+
+            if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+            {
+                cursorTexture = PlayerController.global.canShoot ? pointerAim : pointerSword;
+
+                if (PlayerController.global.cursorNearEnemy)
+                    cursorTexture = pointerDoubleSword;
+            }
+
+            if (!PlayerController.global.attacking)
+                PlayerController.global.cursorNearEnemy = false;
+
+            if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && PlayerController.global.currentResource)
+            {
+                cursorTexture = pointerSickle;
+
+                if (PlayerController.global.currentResource.ReturnStone())
+                    cursorTexture = pointerPickaxe;
+
+                if (PlayerController.global.currentResource.ReturnWood())
+                    cursorTexture = pointerAxe;
+            }
+        }
+
+        Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
     }
 
 
