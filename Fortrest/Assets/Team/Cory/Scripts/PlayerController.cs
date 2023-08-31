@@ -898,6 +898,7 @@ public class PlayerController : MonoBehaviour
             needInteraction = false;
         }
         teleporting = true;
+        CameraFollow.global.transform.position = pos;
         StartCoroutine(RevertBool(true));
     }
 
