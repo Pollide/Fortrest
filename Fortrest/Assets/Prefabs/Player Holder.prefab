@@ -4960,6 +4960,7 @@ MonoBehaviour:
   evading: 0
   canEvade: 1
   playerCanBeDamaged: 1
+  canShoot: 0
   bowDamage: 1.5
   playerEnergy: 0
   playerEnergyBarImage: {fileID: 9199062799191684324}
@@ -4975,6 +4976,7 @@ MonoBehaviour:
   damageEnemy: 0
   lunge: 0
   upgradedMelee: 0
+  cursorNearEnemy: 0
   playerCanMove: 1
   playerisMoving: 0
   attacking: 0
@@ -5018,16 +5020,13 @@ MonoBehaviour:
   redBorders: {fileID: 8434126252054330500}
   movingCTRL: 0
   selectCTRL: 0
+  aimingCTRL: 0
   interactCTRL: 0
   needInteraction: 0
   lockingCTRL: 0
   inventoryCTRL: 0
   swapCTRL: 0
-  moveCTRL: {x: 0, y: 0}
   rotateCTRL: {x: 0, y: 0}
-  upCTRL: 0
-  downCTRL: 0
-  canPressCTRL: 0
   pauseSelectCTRL: 0
   releasedCTRL: 0
   scrollCTRL: 0
@@ -5040,7 +5039,6 @@ MonoBehaviour:
   TurretMenuHolder: {fileID: 6577643289762036005}
   TurretMenuTitle: {fileID: 1413848136156042208}
   bowAnimator: {fileID: 7495716635062900607}
-  SpinTransform: {fileID: 0}
 --- !u!143 &5569601162832024542
 CharacterController:
   m_ObjectHideFlags: 0
@@ -10043,6 +10041,16 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -3
       objectReference: {fileID: 0}
+    - target: {fileID: 3706027831380795626, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+        type: 3}
+      propertyPath: BackBool
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3706027831380795626, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+        type: 3}
+      propertyPath: SecondMenuBool
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5177055175858039307, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -10309,6 +10317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonHolder: {fileID: 6974018705703928330}
+  SelectorBool: 1
   SelectedList: 
 --- !u!114 &9199062799191684324 stripped
 MonoBehaviour:

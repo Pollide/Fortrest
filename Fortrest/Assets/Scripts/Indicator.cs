@@ -42,6 +42,7 @@ public class Indicator : MonoBehaviour
         public bool rightBool;
         public bool topBool;
         public bool bottomBool;
+        public bool isOutsideCanvas;
         public void Refresh()
         {
             if (ActiveTarget)
@@ -76,7 +77,7 @@ public class Indicator : MonoBehaviour
             bottomBool = imagePosition.y <= bottomBoundary + closeFloat;
 
             // Check if the image is outside the canvas boundaries
-            bool isOutsideCanvas = leftBool || rightBool || bottomBool || topBool;
+            isOutsideCanvas = leftBool || rightBool || bottomBool || topBool;
 
             // Clamp the image's position within the canvas boundaries
             float clampedX = Mathf.Clamp(pointVector.x, leftBoundary, rightBoundary);
@@ -180,7 +181,7 @@ public class Indicator : MonoBehaviour
 
                 if (data != this)
                 {
-                    if (isOutsideCanvas && AppearBool && data.AppearBool && topBool == data.topBool && bottomBool == data.bottomBool && leftBool == data.leftBool && rightBool == data.rightBool)
+                    if (isOutsideCanvas && data.isOutsideCanvas && AppearBool && data.AppearBool && topBool == data.topBool && bottomBool == data.bottomBool && leftBool == data.leftBool && rightBool == data.rightBool)
                         shift += 13;
                 }
                 else
