@@ -20,6 +20,7 @@ using TMPro;
 public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
 
+
     [Header("Pause")]
 
     [Tooltip("quits the exe, does not work in editor")]
@@ -30,8 +31,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     [Space(10)] //creates a gap in the inspector
 
     [Header("Cheats")]
-    public bool CheatsBool;
-    public bool BackBool;
     public bool SaveBool;
     public bool MaxResourcesBool;
     public int TerrainTeleportInt = -1;
@@ -49,15 +48,20 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public bool MusicBool;
     public bool FullScreenBool;
     public bool ResetBool;
-    [Space(10)]
+
+    [Header("Addictives")]
+
+    public bool SecondMenuBool;
+    public bool BackBool;
     public bool AreYouSureBool;
     bool ToggleBool;
     [Space(10)]
-    public TMP_Text MenuText;
-    public string TextString;
-    void Start()
+    public Text ButtonText;
+    string TextString;
+
+   public void Start()
     {
-        if (!MenuText)
+        if (!ButtonText)
         {
             //this finds all images in the button and makes sure only the top is raycastable so the button clicks properly
             List<Image> ImageList = GameManager.FindComponent<Image>(transform);
@@ -75,11 +79,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             {
                 if ((int)GameManager.Pref("Has Started", 0, true) == 1)
                 {
-                    MenuText.text = "Continue\n" + "Day " + (int)GameManager.Pref("Day", 0, true);
+                    ButtonText.text = "Continue on " + "Day " + (int)GameManager.Pref("Day", 0, true);
                 }
                 else
                 {
-                    MenuText.text = "New Game";
+                    ButtonText.text = "New Game";
                 }
             }
 
@@ -88,19 +92,19 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
                 //transform.GetChild(0).GetComponent<TMP_Text>().text = "%" + ((int)(PlayerPrefs.GetFloat(ReturnSFXManager().AudioName) * 100)) + " " + ReturnSFXManager().AudioName;
 
 
-                MenuText.text = (VolumeBool ? "Sound\n" : "Music\n") + (PlayerPrefs.GetFloat(ReturnSFXManager().AudioName) * 100).ToString("N0") + "%";
+                ButtonText.text = (VolumeBool ? "Sound " : "Music ") + (PlayerPrefs.GetFloat(ReturnSFXManager().AudioName) * 100).ToString("N0") + "%";
 
                 // transform.GetChild(2).GetComponent<Slider>().onValueChanged += OnPointerClick(null);
             }
 
-            TextString = MenuText.text;
+            TextString = ButtonText.text;
         }
     }
 
     //checks to see if the pointer has exited the button
     public void OnPointerExit(PointerEventData eventData)
     {
-
+        SizeVoid();
         //Pause.global.SelectedList[Pause.global.ReturnIndex()] = -1;
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
     }
@@ -108,16 +112,17 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the pointer has entered the button
     public void OnPointerEnter(PointerEventData eventData)
     {
-
+        SizeVoid(1.1f);
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
-
-        Pause.global.SelectedList[GetComponentInParent<Pause>().ReturnIndex()] = transform.GetSiblingIndex();
+        Buttons buttons = GetComponentInParent<Buttons>();
+        buttons.SelectedList[buttons.ReturnIndex()] = transform.GetSiblingIndex();
         //ChangeColourVoid(Color.white);
     }
 
     //checks to see if the mouse was clicked ontop of the button
     public void OnPointerDown(PointerEventData eventData)
     {
+        SizeVoid(0.9f);
         SelectVoid();
     }
 
@@ -125,7 +130,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public void OnPointerClick(PointerEventData eventData)
     {
         //  OnPointerEnter(eventData);
-
+        SizeVoid();
         //  SelectVoid();
 
 
@@ -189,9 +194,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             GameManager.global.DataSetVoid(false);
         }
 
-        if (CheatsBool || BackBool)
+        if (SecondMenuBool || BackBool)
         {
-            Pause.global.ChangeMenu(BackBool ? 0 : 1);
+            GetComponentInParent<Buttons>().ChangeMenu(BackBool ? 0 : 1);
         }
 
         if (RestartBool)
@@ -230,7 +235,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
                 Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
 
 #if UNITY_EDITOR
-            MenuText.text = "Won't work\nin editor";
+            ButtonText.text = "Won't work\nin editor";
 #endif
         }
 
@@ -240,7 +245,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
             if (ToggleBool)
             {
-                MenuText.text = "Are You Sure?";
+                ButtonText.text = "Are You Sure?";
                 return;
             }
         }
@@ -248,7 +253,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         if (PlayBool)
         {
             GameManager.global.NextScene(1);
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
+            //GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
         }
 
         if (ResetBool)
@@ -258,14 +263,14 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             GameManager.global.NextScene(0);
             GameManager.global.transform.SetParent(transform);
             GameManager.global = null;
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
+            //  GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
         }
 
         if (ExitBool)
         {
             Application.Quit();
             GameManager.global.NextScene(0);
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
+            // GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
         }
     }
 
@@ -275,6 +280,10 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         return VolumeBool ? GameManager.global.SoundManager : GameManager.global.MusicManager;
     }
 
+    void SizeVoid(float size = 1)
+    {
+        transform.localScale = new Vector3(size, size, size);
+    }
 
     public void HighlightVoid(bool highlight)
     {
@@ -287,7 +296,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         }
         else
         {
-            MenuText.text = TextString;
+            ButtonText.text = TextString;
             ToggleBool = false;
             GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Stop");
 

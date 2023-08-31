@@ -14,6 +14,12 @@ public class ShrineActivate : MonoBehaviour
 
     private void Start()
     {
+        if (GameManager.ReturnInMainMenu())
+        {
+            enabled = false;
+            return;
+        }
+
         Indicator.global.AddIndicator(transform, Color.cyan, "Shrine", false);
     }
     private void OnTriggerEnter(Collider other)

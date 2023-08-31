@@ -49,6 +49,14 @@ public class Boar : MonoBehaviour
 
     void Start()
     {
+        if (GameManager.ReturnInMainMenu())
+        {
+            enabled = false;
+            GetComponent<BoxCollider>().enabled = false;
+            GetComponent<SphereCollider>().enabled = false;
+            return;
+        }
+
         text = transform.GetChild(0).gameObject;
         cc = GetComponent<CharacterController>();
         Indicator.global.AddIndicator(transform, Color.green, "Mount", false, Indicator.global.MountSprite);
@@ -57,6 +65,7 @@ public class Boar : MonoBehaviour
 
     void Update()
     {
+
         if (PlayerController.global.pausedBool || PlayerController.global.evading)
         {
             return;
@@ -177,7 +186,7 @@ public class Boar : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject == PlayerController.global.gameObject)
+        if (PlayerController.global && other.gameObject == PlayerController.global.gameObject)
         {
             inRange = true;
         }
@@ -185,7 +194,7 @@ public class Boar : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == PlayerController.global.gameObject)
+        if (PlayerController.global && other.gameObject == PlayerController.global.gameObject)
         {
             inRange = false;
         }
@@ -246,7 +255,7 @@ public class Boar : MonoBehaviour
         Lerping(100f, 300f, ref deceleration, 20 / 9f); // Deceleration
         Lerping(50f, 70f, ref turnAnglePerSec, 2 / 9f); // Turn
 
-        if (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0)
+        if (Input.GetKey(KeyCode.W) || GameManager.global.moveCTRL.y > 0)
         {
             currentSpeed += acceleration * Time.deltaTime;
             currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
@@ -257,16 +266,16 @@ public class Boar : MonoBehaviour
             currentSpeed = Mathf.Max(currentSpeed, 0.0f);
         }
 
-        if (Input.GetKey(KeyCode.A) || PlayerController.global.moveCTRL.x < -0.35f)
+        if (Input.GetKey(KeyCode.A) || GameManager.global.moveCTRL.x < -0.35f)
         {
             currentTurn = -turnAnglePerSec * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.D) || PlayerController.global.moveCTRL.x > 0.35f)
+        if (Input.GetKey(KeyCode.D) || GameManager.global.moveCTRL.x > 0.35f)
         {
             currentTurn = turnAnglePerSec * Time.deltaTime;
         }
 
-        if (Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y < 0)
+        if (Input.GetKey(KeyCode.S) || GameManager.global.moveCTRL.y < 0)
         {
             currentSpeed -= acceleration * Time.deltaTime;
             currentSpeed = Mathf.Max(-45.0f, currentSpeed);
@@ -304,8 +313,8 @@ public class Boar : MonoBehaviour
     {
         if (canMove)
         {
-            isMoving = (Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0) || (currentSpeed >= 0.5f && (!Input.GetKey(KeyCode.W) || PlayerController.global.moveCTRL.y > 0));
-            isReversing = (Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y < 0) || (currentSpeed <= -0.5f && (!Input.GetKey(KeyCode.S) || PlayerController.global.moveCTRL.y < 0));
+            isMoving = (Input.GetKey(KeyCode.W) || GameManager.global.moveCTRL.y > 0) || (currentSpeed >= 0.5f && (!Input.GetKey(KeyCode.W) || GameManager.global.moveCTRL.y > 0));
+            isReversing = (Input.GetKey(KeyCode.S) || GameManager.global.moveCTRL.y < 0) || (currentSpeed <= -0.5f && (!Input.GetKey(KeyCode.S) || GameManager.global.moveCTRL.y < 0));
             if (isMoving)
             {
                 animator.speed = Mathf.Clamp(1 * ((currentSpeed / 120.0f) * 2.0f), 0.5f, 1.5f);
@@ -370,6 +379,6 @@ public class Boar : MonoBehaviour
         else
         {
             return false;
-        }       
+        }
     }
 }

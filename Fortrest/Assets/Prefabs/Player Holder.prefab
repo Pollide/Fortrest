@@ -5004,6 +5004,7 @@ MonoBehaviour:
   enemyDirectionText: {fileID: 0}
   appleText: {fileID: 3384334614856854404}
   turretText: {fileID: 1465993835901230492}
+  pauseButtons: {fileID: 3631431921527110908}
   DarkenGameObject: {fileID: 3068825275599399422}
   InventoryHolder: {fileID: 0}
   pausedBool: 0
@@ -10052,7 +10053,8 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 141.2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 391667540266882019, guid: 3dc6b70a22c61f9489be8f4f4eb795d6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3dc6b70a22c61f9489be8f4f4eb795d6, type: 3}
 --- !u!224 &161434391228851676 stripped
 RectTransform:
@@ -10216,6 +10218,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5559967730861656307}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &6974018705703928330 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3305721434718685945, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7010330484311132464 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3197920084417954243, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
@@ -10288,6 +10296,20 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5559967730861656307}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3631431921527110908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9179028025567538216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de3f74c7bd8a194fb268d09033e4c35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ButtonHolder: {fileID: 6974018705703928330}
+  SelectedList: 
 --- !u!114 &9199062799191684324 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3639290931207765015, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,

@@ -2672,7 +2672,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3703217356332620120
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3304,6 +3304,7 @@ MonoBehaviour:
   ModelHolder: {fileID: 4688316038822747148}
   CurrentLevel: 0
   MiniTurret: 0
+  MiniTurretAnimator: {fileID: 0}
 --- !u!114 &8741814616103344503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3327,8 +3328,11 @@ MonoBehaviour:
   healthBarImage: {fileID: 3201380864256198149}
   HUDHealthBar: {fileID: 0}
   playerinRange: 0
+  normalHouse: {fileID: 0}
+  destroyedHouse: {fileID: 0}
   interactText: {fileID: 0}
   textDisplayed: 0
+  DebugDestroyInstantly: 0
 --- !u!114 &4725232762020171120
 MonoBehaviour:
   m_ObjectHideFlags: 0

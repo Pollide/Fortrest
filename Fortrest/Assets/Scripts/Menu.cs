@@ -75,8 +75,8 @@ public class Menu : MonoBehaviour
         if (!initialBool)
         {
             Vector3 position = ReturnSign().position + (ReturnSign().forward * -10) + Vector3.up;
-            CameraTransform.position = Vector3.Slerp(CameraTransform.position, position, 3 * Time.deltaTime);
-            CameraTransform.rotation = Quaternion.RotateTowards(CameraTransform.rotation, ReturnSign().rotation, 20 * Time.deltaTime);
+            //  CameraTransform.position = Vector3.Slerp(CameraTransform.position, position, 3 * Time.deltaTime);
+            //  CameraTransform.rotation = Quaternion.RotateTowards(CameraTransform.rotation, ReturnSign().rotation, 20 * Time.deltaTime);
 
             if (!ArrivedAtSign && Vector3.Distance(CameraTransform.position, position) < 0.5f)
             {

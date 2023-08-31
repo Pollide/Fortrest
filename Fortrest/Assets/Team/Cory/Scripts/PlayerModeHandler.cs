@@ -94,9 +94,9 @@ public class PlayerModeHandler : MonoBehaviour
                 cursorPosition = new Vector2(Screen.width / 2, Screen.height / 2);
                 centerMouse = true;
             }
-            if (PlayerController.global.moveCTRL.x != 0 || PlayerController.global.moveCTRL.y != 0)
+            if (GameManager.global.moveCTRL.x != 0 || GameManager.global.moveCTRL.y != 0)
             {
-                cursorPosition += PlayerController.global.moveCTRL * 1.25f;
+                cursorPosition += GameManager.global.moveCTRL * 1.25f;
 
                 if (GameManager.global.KeyboardBool)
                     Mouse.current.WarpCursorPosition(cursorPosition);
@@ -263,7 +263,6 @@ public class PlayerModeHandler : MonoBehaviour
                     {
 
                         PlayerController.global.TurretMenuTitle.text = buildType.ToString();
-                        PlayerController.global.TurretMenuHolder.GetComponent<Pause>().Reset();
                         ClearBlueprint();
                     }
 
