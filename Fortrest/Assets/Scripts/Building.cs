@@ -66,6 +66,13 @@ public class Building : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (GameManager.ReturnInMainMenu())
+        {
+            enabled = false;
+            if (GetComponent<BoxCollider>())
+                GetComponent<BoxCollider>().enabled = false;
+            return;
+        }
         health = maxHealth;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
 
@@ -302,7 +309,7 @@ public class Building : MonoBehaviour
             if (health != lastHealth)
             {
                 SetLastHealth();
-                   timerText = 0.0f;
+                timerText = 0.0f;
                 if (!underAttack)
                 {
                     underAttack = true;

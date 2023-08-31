@@ -157,6 +157,8 @@ public class PlayerController : MonoBehaviour
     public TMP_Text appleText;
     public TMP_Text turretText;
 
+    public Buttons pauseButtons;
+
     // Inventory
     public GameObject DarkenGameObject;
     public GameObject InventoryHolder;
@@ -198,11 +200,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool lockingCTRL = false;
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
-    [HideInInspector] public Vector2 moveCTRL;
     public Vector2 rotateCTRL;
-    [HideInInspector] public bool upCTRL;
-    [HideInInspector] public bool downCTRL;
-    [HideInInspector] public bool canPressCTRL;
     [HideInInspector] public bool pauseSelectCTRL;
     [HideInInspector] public bool releasedCTRL;
     [HideInInspector] public bool scrollCTRL;
@@ -246,12 +244,8 @@ public class PlayerController : MonoBehaviour
             // Controller stuff
 
             // Left stick to move
-            GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
-            GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
             GameManager.global.gamepadControls.Controls.Move.performed += context => MoveController(true);
             GameManager.global.gamepadControls.Controls.Move.canceled += context => MoveController(false);
-            GameManager.global.gamepadControls.Controls.Move.performed += context => PauseSelection();
-            GameManager.global.gamepadControls.Controls.Move.canceled += context => canPressCTRL = false;
 
             // Right stick to rotate
             GameManager.global.gamepadControls.Controls.Rotate.performed += context => rotateCTRL = context.ReadValue<Vector2>();
@@ -376,23 +370,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             movingCTRL = false;
-        }
-    }
-
-    private void PauseSelection()
-    {
-        if (pausedBool)
-        {
-            if (moveCTRL.y > 0f && !canPressCTRL)
-            {
-                upCTRL = true;
-                canPressCTRL = true;
-            }
-            else if (moveCTRL.y < 0f && !canPressCTRL)
-            {
-                downCTRL = true;
-                canPressCTRL = true;
-            }
         }
     }
 
@@ -583,10 +560,10 @@ public class PlayerController : MonoBehaviour
         if (playerCanMove)
         {
             // Controller
-            if (moveCTRL.x != 0 || moveCTRL.y != 0)
+            if (GameManager.global.moveCTRL.x != 0 || GameManager.global.moveCTRL.y != 0)
             {
-                horizontalMovement = moveCTRL.x;
-                verticalMovement = moveCTRL.y;
+                horizontalMovement = GameManager.global.moveCTRL.x;
+                verticalMovement = GameManager.global.moveCTRL.y;
             }
             // Keyboard
             else if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
@@ -1041,18 +1018,13 @@ public class PlayerController : MonoBehaviour
             }
             else if (pause != pausedBool)
             {
-                if (Pause.global.ChangeMenu(0))
+                if (pauseButtons.ChangeMenu(0))
                 {
                     if (!pause)
                         return;
                 }
 
                 PauseCanvasGameObject.SetActive(pause);
-
-                if (pause)
-                {
-                    Pause.global.Reset();
-                }
 
                 GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
                 GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);

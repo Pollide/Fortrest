@@ -15,21 +15,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class Pause : MonoBehaviour
+public class Buttons : MonoBehaviour
 {
-    public static Pause global;
-    public bool TurretMenu;
     public Transform ButtonHolder;
-
+    public bool SelectorBool = true;
     //[HideInInspector]
     public List<int> SelectedList = new List<int>();
-    private void Awake()
+
+    private void OnEnable()
     {
-        if (!TurretMenu)
-            global = this; //set the only menu to this. No need to destroy any old ones as the menu isnt under DoNotDestroy
+        Start();
     }
 
-    public void Reset()
+    private void Start()
     {
         SelectedList = new List<int>();
 
@@ -75,19 +73,24 @@ public class Pause : MonoBehaviour
         return anotherWasOpen;
     }
 
+    void DirectionVoid(int shift)
+    {
+        SelectedList[ReturnIndex()] += shift;
+    }
+
     void ButtonInput()
     {
         int index = ReturnIndex();
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || PlayerController.global.upCTRL)
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || GameManager.global.upCTRL)
         {
-            PlayerController.global.upCTRL = false;
+            GameManager.global.upCTRL = false;
             SelectedList[index]--;
         }
 
-        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || PlayerController.global.downCTRL)
+        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || GameManager.global.downCTRL)
         {
-            PlayerController.global.downCTRL = false;
+            GameManager.global.downCTRL = false;
             SelectedList[index]++;
         }
 
@@ -100,16 +103,18 @@ public class Pause : MonoBehaviour
             Transform button = ButtonHolder.GetChild(index).GetChild(i);
 
             bool selected = SelectedList[index] == i;
-            button.GetChild(1).gameObject.SetActive(selected);
+
+            if (SelectorBool)
+                button.GetChild(1).gameObject.SetActive(selected);
 
             float shrinkScale = selected ? 1.1f : 1;
 
             button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || PlayerController.global.pauseSelectCTRL)
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)
         {
-            PlayerController.global.pauseSelectCTRL = false;
+            GameManager.global.selectCTRL = false;
             ButtonHolder.GetChild(index).GetChild(SelectedList[index]).GetComponent<ButtonMechanics>().SelectVoid();
         }
     }

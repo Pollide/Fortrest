@@ -77,10 +77,18 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
-        noiseTimerMax = 2.5f;
-        chaseTimerMax = 10.0f;
+        if (GameManager.ReturnInMainMenu())
+        {
+            gameObject.SetActive(false);
+            // Destroy(agent);
+            //  enabled = false;
+            return;
+        }
 
         agent = GetComponent<NavMeshAgent>();
+
+        noiseTimerMax = 2.5f;
+        chaseTimerMax = 10.0f;
         agent.angularSpeed *= 2;
         knockBackScript = GetComponent<KnockBack>();
 

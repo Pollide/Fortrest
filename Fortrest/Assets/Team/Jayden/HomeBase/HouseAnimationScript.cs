@@ -8,7 +8,7 @@ public class HouseAnimationScript : MonoBehaviour
 
     //Components
     public Animator HouseAnimator; //Get the chosen animator of the target
-    
+
     //Animation Clips
     public AnimationClip ActivateAnimation; //Request an activate animation clip
     public AnimationClip DeactivateAnimation; //Request a deactivate clip
@@ -19,6 +19,11 @@ public class HouseAnimationScript : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.ReturnInMainMenu())
+        {
+            enabled = false;
+            return;
+        }
         if (PlayerModeHandler.global.canInteractWithHouse)
         {
             HouseAnimator.SetBool("activateHouse", true);

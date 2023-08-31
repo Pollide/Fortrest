@@ -82,13 +82,28 @@ public class GameManager : MonoBehaviour
     public AnimationClip PopupAnimation;
     public GamepadControls gamepadControls;
 
+    [HideInInspector] public Vector2 moveCTRL;
+
+    [HideInInspector] public bool canPressCTRL;
+    [HideInInspector] public bool selectCTRL;
+    [HideInInspector] public bool upCTRL;
+    [HideInInspector] public bool downCTRL;
+
     //runs on the frame it was awake on
     void Awake()
     {
         //checks if itself exists, as they can only be one
         gamepadControls = new GamepadControls();
         gamepadControls.Controls.Enable();
-        gamepadControls.Controls.Move.performed += ctx => OnGamepadInput();
+
+        // Left stick to move
+        gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
+        gamepadControls.Controls.Move.performed += context => ButtonSelection(); //for button navigation
+        gamepadControls.Controls.Move.performed += ctx => OnGamepadInput(); //for detection
+
+        gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
+        gamepadControls.Controls.Move.canceled += context => canPressCTRL = false;
+
         gamepadControls.Controls.Rotate.performed += ctx => OnGamepadInput();
         gamepadControls.Controls.Sprint.performed += ctx => OnGamepadInput();
         gamepadControls.Controls.Interact.performed += ctx => OnGamepadInput();
@@ -100,6 +115,10 @@ public class GameManager : MonoBehaviour
         gamepadControls.Controls.Heal.performed += ctx => OnGamepadInput();
         gamepadControls.Controls.Pause.performed += ctx => OnGamepadInput();
         gamepadControls.Controls.Map.performed += ctx => OnGamepadInput();
+
+        // A to select in pause mode
+        gamepadControls.Controls.Sprint.performed += context => canPressCTRL = true;
+        gamepadControls.Controls.Sprint.performed += context => selectCTRL = true;
 
         lastMousePosition = Input.mousePosition;
 
@@ -151,6 +170,29 @@ public class GameManager : MonoBehaviour
             NextScene(quickLoadInt, quickLoadInt == 0); //go to that next scene
         }
 
+    }
+
+    public static bool ReturnInMainMenu()
+    {
+        return SceneManager.GetActiveScene().buildIndex == 0;
+    }
+
+    private void ButtonSelection()
+    {
+        if (!canPressCTRL)
+        {
+            if (moveCTRL.y > 0f)
+            {
+                upCTRL = true;
+                canPressCTRL = true;
+
+            }
+            else if (moveCTRL.y < 0f)
+            {
+                downCTRL = true;
+                canPressCTRL = true;
+            }
+        }
     }
 
     private void Update()
