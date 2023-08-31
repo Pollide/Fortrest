@@ -551,6 +551,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = true });
         playerModes = PlayerModes.CombatMode;
+
     }
 
     public void SwitchToUpgradeMode()

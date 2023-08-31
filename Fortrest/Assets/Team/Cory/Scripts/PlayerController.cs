@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool playerCanBeDamaged = true;
 
     // Shooting
-    private bool canShoot;
+    [HideInInspector] public bool canShoot;
     [HideInInspector] public float bowDamage = 1.5f;
     private float bowTimer = 0.0f;
     private float resetBow = 1f;
@@ -96,12 +96,12 @@ public class PlayerController : MonoBehaviour
     private float comboTimer = 0.0f;
     private float resetCombo = 0.95f;
     private int attackCount = 0;
-    [HideInInspector] public Building currentResource;
+    public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
     [HideInInspector] public bool lunge = false;
     public bool upgradedMelee;
     private bool applied;
-
+    [HideInInspector] public bool cursorNearEnemy;
     // States
     [Header("Player States")]
     public bool playerCanMove = true;
@@ -190,7 +190,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool selectCTRL;
     private bool gatheringCTRL;
     private bool attackingCTRL;
-    private bool aimingCTRL;
+    [HideInInspector] public bool aimingCTRL;
     private bool evadeCTRL;
     private bool cancelCTRL;
     private bool turretCTRL;
@@ -1286,7 +1286,7 @@ public class PlayerController : MonoBehaviour
             playerCC.Move(moveDirection * Time.deltaTime);
         }
     }
-    public Transform SpinTransform;
+
     private void RotatePlayer()
     {
         // Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
@@ -1422,28 +1422,36 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            if (Facing(building.position, 75.0f) && !gathering && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && distanceFloat == smallestDistance && (Input.GetMouseButton(0) || gatheringCTRL) && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+            if (Facing(building.position, 75.0f) && building.GetComponent<Building>().health > 0 && distanceFloat < minDistanceFloat && distanceFloat == smallestDistance && PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
             {
-                gathering = true;
-                gatherTimer = 0;
-                currentResource = building.GetComponent<Building>();
-                ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+                currentResource = building.GetComponent<Building>(); //keep outside so cursor knows
 
-                if (currentResource.ReturnWood())
+                if (!gathering && (Input.GetMouseButton(0) || gatheringCTRL))
                 {
-                    CharacterAnimator.ResetTrigger("Wood");
-                    CharacterAnimator.SetTrigger("Wood");
+                    gathering = true;
+                    gatherTimer = 0;
+                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+
+                    if (currentResource.ReturnWood())
+                    {
+                        CharacterAnimator.ResetTrigger("Wood");
+                        CharacterAnimator.SetTrigger("Wood");
+                    }
+                    else if (currentResource.ReturnStone())
+                    {
+                        CharacterAnimator.ResetTrigger("Stone");
+                        CharacterAnimator.SetTrigger("Stone");
+                    }
+                    if (currentResource.resourceObject == Building.BuildingType.Bush)
+                    {
+                        CharacterAnimator.ResetTrigger("Bush");
+                        CharacterAnimator.SetTrigger("Bush");
+                    }
                 }
-                else if (currentResource.ReturnStone())
-                {
-                    CharacterAnimator.ResetTrigger("Stone");
-                    CharacterAnimator.SetTrigger("Stone");
-                }
-                if (currentResource.resourceObject == Building.BuildingType.Bush)
-                {
-                    CharacterAnimator.ResetTrigger("Bush");
-                    CharacterAnimator.SetTrigger("Bush");
-                }
+            }
+            else if (currentResource && building == currentResource.transform)
+            {
+                currentResource = null;
             }
 
         }, true); //true means natural
