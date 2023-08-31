@@ -58,7 +58,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     [Space(10)]
     public Text ButtonText;
     string TextString;
-    void Start()
+
+   public void Start()
     {
         if (!ButtonText)
         {

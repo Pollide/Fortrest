@@ -110,6 +110,7 @@ public class Buttons : MonoBehaviour
             float shrinkScale = selected ? 1.1f : 1;
 
             button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
+            button.GetComponent<ButtonMechanics>().Start(); //refreshes text
         }
 
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)

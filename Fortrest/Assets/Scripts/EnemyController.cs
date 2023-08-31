@@ -74,8 +74,7 @@ public class EnemyController : MonoBehaviour
     public Animation flashingAnimation;
     public bool flashing;
     private bool dead;
-
-    void Start()
+    private void Awake()
     {
         if (GameManager.ReturnInMainMenu())
         {
@@ -84,6 +83,10 @@ public class EnemyController : MonoBehaviour
             //  enabled = false;
             return;
         }
+    }
+    void Start()
+    {
+
 
         agent = GetComponent<NavMeshAgent>();
 
