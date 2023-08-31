@@ -1289,34 +1289,36 @@ public class PlayerController : MonoBehaviour
     public Transform SpinTransform;
     private void RotatePlayer()
     {
-        Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
+        // Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
 
-        if (GameManager.global.KeyboardBool)
+        if (!Boar.global.mounted)
         {
-
-            Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
-
-            Vector3 targetPostition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
-
-
-            if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+            if (GameManager.global.KeyboardBool)
             {
-                targetPostition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
+
+                Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
+
+                Vector3 targetPostition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
+
+
+                if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+                {
+                    targetPostition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
+                }
+
+                targetPostition.y = transform.position.y;
+
+                transform.LookAt(targetPostition);
+
+                // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
             }
-
-            targetPostition.y = transform.position.y;
-
-            transform.LookAt(targetPostition);
-
-            // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+            else
+            {
+                float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135;
+                transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
+                //transform.rotation = Quaternion.LookRotation(new Vector3(rotateCTRL.x, 0f, rotateCTRL.y), Vector3.up);
+            }
         }
-        else
-        {
-            float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135;
-            transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
-            //transform.rotation = Quaternion.LookRotation(new Vector3(rotateCTRL.x, 0f, rotateCTRL.y), Vector3.up);
-        }
-
         //   float angleMove = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 135;
         //  SpinTransform.rotation = Quaternion.Euler(SpinTransform.eulerAngles.x, -angleMove, SpinTransform.eulerAngles.z);
     }
