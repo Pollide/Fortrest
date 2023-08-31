@@ -180,7 +180,7 @@ public class Indicator : MonoBehaviour
 
                 if (data != this)
                 {
-                    if (AppearBool && data.AppearBool && topBool == data.topBool && bottomBool == data.bottomBool && leftBool == data.leftBool && rightBool == data.rightBool)
+                    if (isOutsideCanvas && AppearBool && data.AppearBool && topBool == data.topBool && bottomBool == data.bottomBool && leftBool == data.leftBool && rightBool == data.rightBool)
                         shift += 13;
                 }
                 else
