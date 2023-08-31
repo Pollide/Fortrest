@@ -74,7 +74,7 @@ public class LevelManager : MonoBehaviour
     bool NightTimeMusic;
     public Gradient textGradient;
 
-    [HideInInspector]
+    // [HideInInspector]
     public List<Terrain> terrainList = new List<Terrain>();
 
     public Image clockHand;
@@ -134,7 +134,7 @@ public class LevelManager : MonoBehaviour
 
         //LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         //NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
-        terrainList = GameObject.FindObjectsOfType<Terrain>().ToList();
+        //terrainList = GameObject.FindObjectsOfType<Terrain>().ToList();
         VFXSmokePuff.Stop();
         /*
         DayTMP_Text = PlayerController.global..GetComponent<TMP_Text>();

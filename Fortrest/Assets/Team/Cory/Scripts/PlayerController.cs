@@ -1013,11 +1013,13 @@ public class PlayerController : MonoBehaviour
     {
         if (!mapBool)
         {
+            /*
             if (!pausedBool && PlayerModeHandler.global.inTheFortress)
             {
                 interactCTRL = true;
             }
-            else if (pause != pausedBool)
+            */
+            if (pause != pausedBool)
             {
                 if (pauseButtons.ChangeMenu(0))
                 {
