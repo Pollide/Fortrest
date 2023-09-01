@@ -172,7 +172,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3, y: 144}
+  m_AnchoredPosition: {x: 3, y: 213.2}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5873713465657156429
@@ -1252,7 +1252,6 @@ GameObject:
   - component: {fileID: 2960440420326346431}
   - component: {fileID: 8303298403136182084}
   - component: {fileID: 7628836783462892426}
-  - component: {fileID: 391667540266882019}
   - component: {fileID: 5236978533286785311}
   m_Layer: 5
   m_Name: Player Canvas
@@ -1412,21 +1411,6 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &391667540266882019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593131314368711629}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7de3f74c7bd8a194fb268d09033e4c35, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ButtonHolder: {fileID: 3305721434718685945}
-  SelectorBool: 1
-  SelectedList: 
 --- !u!95 &5236978533286785311
 Animator:
   serializedVersion: 4
@@ -1482,7 +1466,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -1506, y: 68}
+  m_AnchoredPosition: {x: -37, y: 68}
   m_SizeDelta: {x: 100, y: 71.601}
   m_Pivot: {x: 1, y: 0}
 --- !u!1 &754608077699479692
@@ -2819,7 +2803,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3, y: 215}
+  m_AnchoredPosition: {x: 3, y: -3}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &233520195968135723
@@ -3386,7 +3370,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 3, y: 2}
+  m_AnchoredPosition: {x: 3, y: 141.2}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7087858079613115349
@@ -4035,6 +4019,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7458558370507179072}
+  - component: {fileID: 3631431921527110908}
   m_Layer: 5
   m_Name: Pause Canvas
   m_TagString: Untagged
@@ -4065,6 +4050,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -0.000061035156, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3631431921527110908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3623863238005499099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7de3f74c7bd8a194fb268d09033e4c35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ButtonHolder: {fileID: 3305721434718685945}
+  SelectorBool: 1
+  SelectedList: 
 --- !u!1 &3766977748952588974
 GameObject:
   m_ObjectHideFlags: 0
@@ -4488,7 +4488,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -1589, y: 69.00003}
+  m_AnchoredPosition: {x: -119.99988, y: 69.00006}
   m_SizeDelta: {x: 100, y: 71.601}
   m_Pivot: {x: 1, y: 0}
 --- !u!1 &5183820180507054368
@@ -9992,6 +9992,11 @@ PrefabInstance:
         type: 3}
       propertyPath: RestartBool
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8712985155001428014, guid: a909df8efd2989d4b8dfac4c7527e533,
+        type: 3}
+      propertyPath: SecondMenuBool
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9221087167834596537, guid: a909df8efd2989d4b8dfac4c7527e533,
         type: 3}
