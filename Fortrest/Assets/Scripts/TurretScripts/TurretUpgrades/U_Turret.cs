@@ -112,13 +112,6 @@ public class U_Turret : MonoBehaviour
         turretScript.damage += turretScript.damage * (upgradeDamagePercent / 100f);
     }
 
-    public void OpenMenu()
-    {
-        upgradeMenu.SetActive(true);
-        PlayerModeHandler.global.playerModes = PlayerModes.UpgradeMenu;
-        Time.timeScale = 0f;
-    }
-
     public bool IsOpen()
     {
         return upgradeMenu.activeSelf;

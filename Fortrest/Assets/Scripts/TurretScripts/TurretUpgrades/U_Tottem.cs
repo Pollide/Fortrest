@@ -104,7 +104,7 @@ public class U_Tottem : MonoBehaviour
         if (distanceFromPlayer < detectionRange && canUpgrade)
         {
             upgradeTextObject.enabled = true;
-
+            /*
             if (Input.GetKeyDown(KeyCode.F) && !PlayerController.global.pausedBool)
             {
                 // Run Upgerade screen
@@ -121,6 +121,7 @@ public class U_Tottem : MonoBehaviour
                     Time.timeScale = 0f;
                 }
             }
+            */
         }
         else
         {
