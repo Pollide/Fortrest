@@ -179,9 +179,9 @@ public class Indicator : MonoBehaviour
             {
                 IndicatorData data = global.IndicatorList[i];
 
-                if (data != this)
+                if (data != this && isOutsideCanvas && (leftBool || rightBool)) //needs to be in the corner
                 {
-                    if (isOutsideCanvas && data.isOutsideCanvas && AppearBool && data.AppearBool && topBool == data.topBool && bottomBool == data.bottomBool && leftBool == data.leftBool && rightBool == data.rightBool)
+                    if (data.isOutsideCanvas && AppearBool && data.AppearBool && topBool == data.topBool && bottomBool == data.bottomBool && leftBool == data.leftBool && rightBool == data.rightBool)
                         shift += 13;
                 }
                 else
