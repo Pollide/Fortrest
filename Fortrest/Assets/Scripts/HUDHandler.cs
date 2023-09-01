@@ -56,7 +56,7 @@ public class HUDHandler : MonoBehaviour
 
     public void ResourceAndCombatHUD(bool gather)
     {
-        if (!combatIcon.enabled || !gatherIcon.enabled)
+        if (!isGather && gather || !isCombat && !gather)
         {
             combatIcon.enabled = true;
             gatherIcon.enabled = true;
