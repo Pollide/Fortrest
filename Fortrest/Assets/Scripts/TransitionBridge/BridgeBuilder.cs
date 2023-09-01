@@ -53,14 +53,14 @@ public class BridgeBuilder : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerController.global.pausedBool || PlayerController.global.evading)
+        if (PlayerController.global.pausedBool || PlayerController.global.mapBool)
         {
             return;
         }
 
         if (!isBuilt)
         {
-            bool open = Vector3.Distance(transform.position, PlayerController.global.transform.position) < 15;
+            bool open = Vector3.Distance(transform.position, PlayerController.global.transform.position) < 20;
 
             if (triggered != open)
             {
@@ -72,7 +72,7 @@ public class BridgeBuilder : MonoBehaviour
             if (triggered && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
             {
                 PlayerController.global.interactCTRL = false;
-
+                PlayerController.global.evading = false;
                 if (PlayerController.global.CheckSufficientResources(true))
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound);

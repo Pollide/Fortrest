@@ -219,7 +219,7 @@ public class PlayerController : MonoBehaviour
     public SkinnedMeshRenderer LanternSkinnedRenderer;
 
     // Map
-    private bool mapBool;
+    [HideInInspector] public bool mapBool;
     public bool ResourceHolderOpened;
 
     public RectTransform TurretMenuHolder;
@@ -447,7 +447,7 @@ public class PlayerController : MonoBehaviour
 
     private void EvadeController()
     {
-        if (!evadeCTRL && canEvade && !Boar.global.mounted && !pausedBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
+        if (!evadeCTRL && canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
         {
             evadeCTRL = true;
         }
@@ -533,7 +533,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (pausedBool && !Input.GetKeyDown(KeyCode.Escape))
+        if (pausedBool && !Input.GetKeyDown(KeyCode.Escape) || (mapBool && !Input.GetKeyDown(KeyCode.Tab) && !Input.GetKeyDown(KeyCode.Escape)))
         {
             return;
         }
@@ -550,13 +550,7 @@ public class PlayerController : MonoBehaviour
         {
             playerCanBeDamaged = true;
         }
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            playerHealth = 0;
-            healthBar.SetHealth(playerHealth, maxHealth);
-        }
-#endif
+
         if (playerCanMove)
         {
             // Controller
@@ -588,8 +582,6 @@ public class PlayerController : MonoBehaviour
             {
                 AttackLunge();
             }
-
-
         }
         else
         {
@@ -640,7 +632,7 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!pausedBool && !evading)
+        if (!pausedBool && !mapBool && !evading)
         {
             RotatePlayer();
         }
@@ -825,7 +817,7 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case KeyCode.Space:
-                    if (canEvade && playerCanMove)
+                    if (playerCanMove && canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
                     {
                         StartCoroutine(Evade());
                     }
@@ -998,6 +990,10 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator Evade()
     {
+        canShoot = false;
+        //CharacterAnimator.SetBool("Aiming", false);
+        bowAnimator.SetBool("Aiming", false);
+        lunge = false;
         evadeTimer = 0;
         canEvade = false;
         evading = true;
@@ -1011,37 +1007,36 @@ public class PlayerController : MonoBehaviour
 
     public void PauseVoid(bool pause)
     {
-        if (!mapBool)
+        if (pause != pausedBool)
         {
-            /*
-            if (!pausedBool && PlayerModeHandler.global.inTheFortress)
+            if (pauseButtons.ChangeMenu(0))
             {
-                interactCTRL = true;
+                if (!pause)
+                    return;
             }
-            */
-            if (pause != pausedBool)
+
+            PauseCanvasGameObject.SetActive(pause);
+
+            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
+            GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+
+            if (!mapBool)
             {
-                if (pauseButtons.ChangeMenu(0))
-                {
-                    if (!pause)
-                        return;
-                }
-
-                PauseCanvasGameObject.SetActive(pause);
-
-                GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
-                GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
-
                 Time.timeScale = pause ? 0 : 1;
-                playerCanMove = !pause;
-                pausedBool = pause;
             }
+            else
+            {
+                mapBool = false;
+            }
+            
+            playerCanMove = !pause;
+            pausedBool = pause;
         }
     }
 
     public void MapVoid(bool map)
     {
-        if (!pausedBool && !PlayerModeHandler.global.inTheFortress)
+        if (!pausedBool)
         {
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
             GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
@@ -1050,7 +1045,6 @@ public class PlayerController : MonoBehaviour
 
             if (mapBool)
             {
-
                 MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
 
                 MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
@@ -1862,7 +1856,6 @@ public class PlayerController : MonoBehaviour
         return color;
     }
 
-
     public IEnumerator PushPlayer(float _waitTime)
     {
         playerCanMove = false;
@@ -1875,5 +1868,14 @@ public class PlayerController : MonoBehaviour
     {
         pushDirection += _direction * _pushForce;
         pushDirection.y = 0;
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Wall"))
+        {
+            Vector3 direction = Boar.global.transform.position - transform.position;
+            playerCC.Move(direction * Time.deltaTime * 2.0f);
+        }
     }
 }
