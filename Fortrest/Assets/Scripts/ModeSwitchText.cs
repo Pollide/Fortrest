@@ -54,14 +54,8 @@ public class ModeSwitchText : MonoBehaviour
             case PlayerModes.CombatMode:
                 GetComponent<TMP_Text>().text = "Combat Mode";
                 break;
-            case PlayerModes.RepairMode:
-                GetComponent<TMP_Text>().text = "Repair Mode";
-                break;
             case PlayerModes.Paused:
                 GetComponent<TMP_Text>().text = "Paused Mode";
-                break;
-            case PlayerModes.UpgradeMenu:
-                GetComponent<TMP_Text>().text = "Upgrade Mode";
                 break;
             default:
                 break;

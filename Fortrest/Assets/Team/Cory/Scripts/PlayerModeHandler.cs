@@ -10,9 +10,7 @@ public enum PlayerModes
     BuildMode,
     ResourceMode,
     CombatMode,
-    RepairMode,
     Paused,
-    UpgradeMenu,
 }
 
 public enum BuildType
@@ -56,6 +54,11 @@ public class PlayerModeHandler : MonoBehaviour
     public float nimDistanceBetweenTurrts = 3;
 
     bool runOnce;
+
+    public Vector3 HintOffset;
+
+
+    public Building SelectedTurret;
     private void Awake()
     {
         if (global)
@@ -78,7 +81,7 @@ public class PlayerModeHandler : MonoBehaviour
             return;
         }
 
-        inTheFortress = playerModes == PlayerModes.BuildMode || playerModes == PlayerModes.RepairMode || playerModes == PlayerModes.UpgradeMenu;
+        inTheFortress = playerModes == PlayerModes.BuildMode;
 
         if (inTheFortress)
         {
@@ -110,35 +113,10 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 BuildMode();
 
-                if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
-                {
-                    PlayerController.global.swapCTRL = false;
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                    SwitchToBuildRepairMode();
-                }
+                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
+                SwitchToBuildMode();
             }
-            else if (playerModes == PlayerModes.RepairMode)
-            {
-                RepairMode();
 
-                if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
-                {
-                    PlayerController.global.swapCTRL = false;
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                    SwitchToUpgradeMode();
-                }
-            }
-            else if (playerModes == PlayerModes.UpgradeMenu)
-            {
-                UpgradeMode();
-
-                if (Input.GetKeyDown(KeyCode.Q) || PlayerController.global.swapCTRL)
-                {
-                    PlayerController.global.swapCTRL = false;
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                    SwitchToBuildMode();
-                }
-            }
             ScrollSwitchTurret();
         }
         else
@@ -223,7 +201,6 @@ public class PlayerModeHandler : MonoBehaviour
         entryPosition = PlayerController.global.transform.position;
     }
 
-    public Building SelectedTurret;
     private void BuildMode()
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
@@ -478,6 +455,24 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
+    public void ExitHouseCleanUp()
+    {
+        ModeSwitchText.global.ResetText();
+        ClearSelectionGrid();
+        ClearBlueprint();
+        SwitchToBuildMode(false);
+        StartCoroutine(PlayerAwake());
+        PlayerController.global.TeleportPlayer(entryPosition);
+        if (lastMode == PlayerModes.ResourceMode)
+        {
+            SwitchToResourceMode();
+        }
+        else if (lastMode == PlayerModes.CombatMode)
+        {
+            SwitchToCombatMode();
+        }
+    }
+
     public void SwitchToBuildMode(bool active = true)
     {
         buildGrid.gameObject.SetActive(active);
@@ -512,35 +507,6 @@ public class PlayerModeHandler : MonoBehaviour
         CameraFollow.global.Update(); //refreshes it instantly
     }
 
-    public void SwitchToBuildRepairMode()
-    {
-        ModeSwitchText.global.ResetText();
-        ClearSelectionGrid();
-        ClearBlueprint();
-
-        playerModes = PlayerModes.RepairMode;
-
-        //  Debug.Log("Repair");
-    }
-
-    public void ExitHouseCleanUp()
-    {
-        ModeSwitchText.global.ResetText();
-        ClearSelectionGrid();
-        ClearBlueprint();
-        SwitchToBuildMode(false);
-        StartCoroutine(PlayerAwake());
-        PlayerController.global.TeleportPlayer(entryPosition);
-        if (lastMode == PlayerModes.ResourceMode)
-        {
-            SwitchToResourceMode();
-        }
-        else if (lastMode == PlayerModes.CombatMode)
-        {
-            SwitchToCombatMode();
-        }
-    }
-
     public void SwitchToResourceMode()
     {
         PlayerController.global.ChangeTool(new PlayerController.ToolData() { AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
@@ -554,16 +520,6 @@ public class PlayerModeHandler : MonoBehaviour
 
     }
 
-    public void SwitchToUpgradeMode()
-    {
-        ModeSwitchText.global.ResetText();
-        ClearSelectionGrid();
-        ClearBlueprint();
-
-        playerModes = PlayerModes.UpgradeMenu;
-        //   Debug.Log("Upgrade");
-    }
-
 
     void BluePrintSet(Material colorMaterial)
     {
@@ -574,7 +530,6 @@ public class PlayerModeHandler : MonoBehaviour
             meshRenderers[i].material = colorMaterial;
         }
     }
-    public Vector3 HintOffset;
 
     //// Check building distance
     //private void OnDrawGizmos()

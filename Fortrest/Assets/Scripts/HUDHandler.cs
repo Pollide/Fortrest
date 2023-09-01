@@ -36,11 +36,11 @@ public class HUDHandler : MonoBehaviour
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
-            CombatHUD();
+            ResourceAndCombatHUD(false);
         }
         else if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
         {
-            GatherHUD();
+            ResourceAndCombatHUD(true);
         }
         else if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
         {
@@ -50,70 +50,27 @@ public class HUDHandler : MonoBehaviour
         {
             combatIcon.enabled = false;
             gatherIcon.enabled = false;
-            isGather = false;
-            isCombat = false;
-            isBalista = false;
-            isGlyph = false;
-            isCannon = false;
-            isScatter = false;
+            ResetIcons();
         }
     }
 
-    public void CombatHUD()
+    public void ResourceAndCombatHUD(bool gather)
     {
         if (!combatIcon.enabled || !gatherIcon.enabled)
         {
             combatIcon.enabled = true;
             gatherIcon.enabled = true;
-        }
 
-        if (!isCombat)
-        {
+            ResetIcons();
             ActivateObjects(true);
-
-            isGather = false;
-            isCombat = true;
-            isBalista = false;
-            isGlyph = false;
-            isCannon = false;
-            isScatter = false;
-            time = 0f;
+            isGather = gather;
+            isCombat = !gather;
         }
 
         if (time < duration)
         {
-            gatherIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-            combatIcon.rectTransform.localScale = Vector3.Lerp(downScale, Vector3.one, time / duration);
-
-            time += Time.deltaTime;
-        }
-    }
-
-    public void GatherHUD()
-    {
-        if (!combatIcon.enabled || !gatherIcon.enabled)
-        {
-            combatIcon.enabled = true;
-            gatherIcon.enabled = true;
-        }
-
-        if (!isGather)
-        {
-            ActivateObjects(true);
-
-            isGather = true;
-            isCombat = false;
-            isBalista = false;
-            isGlyph = false;
-            isCannon = false;
-            isScatter = false;
-            time = 0f;
-        }
-
-        if (time < duration)
-        {
-            combatIcon.rectTransform.localScale = Vector3.Lerp(Vector3.one, downScale, time / duration);
-            gatherIcon.rectTransform.localScale = Vector3.Lerp(downScale, Vector3.one, time / duration);
+            LerpRectScale(gatherIcon.rectTransform, gather);
+            LerpRectScale(combatIcon.rectTransform, !gather);
 
             time += Time.deltaTime;
         }
