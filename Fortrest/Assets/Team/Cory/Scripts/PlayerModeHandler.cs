@@ -76,7 +76,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void Update()
     {
-        if (PlayerController.global.pausedBool || PlayerController.global.evading)
+        if (PlayerController.global.pausedBool || PlayerController.global.mapBool)
         {
             return;
         }
@@ -132,6 +132,9 @@ public class PlayerModeHandler : MonoBehaviour
                 switch (playerModes)
                 {
                     case PlayerModes.CombatMode:
+                        PlayerController.global.canShoot = false;
+                        PlayerController.global.CharacterAnimator.SetBool("Aiming", false);
+                        PlayerController.global.lunge = false;
                         SwitchToResourceMode();
                         break;
                     case PlayerModes.ResourceMode:
@@ -160,8 +163,9 @@ public class PlayerModeHandler : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
-            if (!PlayerModeHandler.global.inTheFortress)
+            if (!inTheFortress)
             {
+                PlayerController.global.evading = false;
                 lastMode = playerModes;
                 entryPosition = PlayerController.global.transform.position;
                 if (House.GetComponent<Building>().textDisplayed)
