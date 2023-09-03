@@ -157,7 +157,7 @@ public class PlayerModeHandler : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
-            Debug.Log(inTheFortress);
+
             if (!inTheFortress)
             {
                 PlayerController.global.evading = false;
