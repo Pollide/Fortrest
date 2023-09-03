@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 3729575595119265688}
   - component: {fileID: 6822048792657873526}
   - component: {fileID: 1068052423881659464}
+  - component: {fileID: 5555381642555727378}
   m_Layer: 0
   m_Name: SM_SkyIslands_StraightLong
-  m_TagString: JustForEvade
+  m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -124,6 +125,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -8642822316678221299, guid: 5e1f83049a62d524690eae25ef9918c2, type: 3}
+--- !u!65 &5555381642555727378
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2937157633878222413}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.897086, y: 30, z: 20.000008}
+  m_Center: {x: -2.5151913, y: 0.12217045, z: 0}
 --- !u!1001 &3452125143521546485
 PrefabInstance:
   m_ObjectHideFlags: 0

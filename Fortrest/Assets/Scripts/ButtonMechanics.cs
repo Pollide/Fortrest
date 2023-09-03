@@ -59,7 +59,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public Text ButtonText;
     string TextString;
 
-   public void Start()
+    public void Start()
     {
         if (!ButtonText)
         {
@@ -186,7 +186,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (TerrainTeleportInt != -1)
         {
-            PlayerController.global.TeleportPlayer(LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(0, 15, 0));
+            PlayerController.global.TeleportPlayer(LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(10, 1, 10));
         }
 
         if (SaveBool)

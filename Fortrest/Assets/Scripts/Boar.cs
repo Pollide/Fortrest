@@ -38,6 +38,7 @@ public class Boar : MonoBehaviour
     GameObject house;
     [HideInInspector] public bool closerToHouse;
     public bool canInteractWithBoar;
+    private bool dismountRight;
 
     private void Awake()
     {
@@ -66,8 +67,9 @@ public class Boar : MonoBehaviour
     void Update()
     {
 
-        if (PlayerController.global.pausedBool || PlayerController.global.evading)
+        if (PlayerController.global.pausedBool || PlayerController.global.mapBool)
         {
+            PlayerStick();
             return;
         }
 
@@ -190,6 +192,14 @@ public class Boar : MonoBehaviour
         {
             inRange = true;
         }
+        if (Vector3.Distance(transform.right, other.transform.position) > Vector3.Distance(-transform.right, other.transform.position))
+        {
+            dismountRight = true;
+        }
+        else
+        {
+            dismountRight = false;
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -208,6 +218,7 @@ public class Boar : MonoBehaviour
 
         if (mounted)
         {
+            PlayerController.global.evading = false;
             GameManager.global.SoundManager.PlaySound(mountSound, 1.0f);
             PlayerController.global.transform.position = new Vector3(transform.position.x, transform.position.y + 4f, transform.position.z);
             PlayerController.global.transform.rotation = transform.rotation;
@@ -220,7 +231,14 @@ public class Boar : MonoBehaviour
         else
         {
             GameManager.global.SoundManager.PlaySound(dismountSound, 1.0f);
-            PlayerController.global.transform.position += transform.right * 2;
+            if (dismountRight)
+            {
+                PlayerController.global.transform.position += transform.right * 2;
+            }
+            else
+            {
+                PlayerController.global.transform.position += -transform.right * 2;
+            }
             PlayerController.global.transform.rotation = transform.rotation;
             PlayerController.global.GetComponent<CharacterController>().enabled = true;
             PlayerController.global.GetComponent<PlayerController>().playerCanMove = true;

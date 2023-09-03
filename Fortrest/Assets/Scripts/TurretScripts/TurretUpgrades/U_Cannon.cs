@@ -107,6 +107,7 @@ public class U_Cannon : MonoBehaviour
         {
             upgradeTextObject.enabled = true;
 
+            /*
             if (Input.GetKeyDown(KeyCode.F) && !PlayerController.global.pausedBool)
             {
                 // Run Upgerade screen
@@ -123,6 +124,7 @@ public class U_Cannon : MonoBehaviour
                     Time.timeScale = 0f;
                 }
             }
+            */
         }
         else
         {
