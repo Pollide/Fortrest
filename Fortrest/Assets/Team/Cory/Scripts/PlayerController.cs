@@ -441,6 +441,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!interactCTRL && (needInteraction))
         {
+
             interactCTRL = true;
         }
     }
@@ -1018,6 +1019,7 @@ public class PlayerController : MonoBehaviour
                     return;
             }
 
+
             PauseCanvasGameObject.SetActive(pause);
 
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
@@ -1032,7 +1034,7 @@ public class PlayerController : MonoBehaviour
                 mapBool = false;
             }
 
-            playerCanMove = !pause;
+            //  playerCanMove = !pause;
             pausedBool = pause;
         }
     }

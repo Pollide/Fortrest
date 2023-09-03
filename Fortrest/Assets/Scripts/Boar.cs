@@ -66,12 +66,13 @@ public class Boar : MonoBehaviour
 
     void Update()
     {
-
+        /*
         if (PlayerController.global.pausedBool || PlayerController.global.mapBool)
         {
             PlayerStick();
             return;
         }
+        */
 
         if (Time.timeScale == 0)
             return;
@@ -212,6 +213,7 @@ public class Boar : MonoBehaviour
 
     public void Mount()
     {
+
         mounted = !mounted;
         PlayerController.global.interactCTRL = false;
         PlayerController.global.GetComponent<CharacterController>().enabled = false;
