@@ -109,13 +109,7 @@ public class PlayerModeHandler : MonoBehaviour
                 cursorPosition = Input.mousePosition;
             }
 
-            if (playerModes == PlayerModes.BuildMode)
-            {
-                BuildMode();
-
-                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                SwitchToBuildMode();
-            }
+            BuildMode();
 
             ScrollSwitchTurret();
         }
@@ -163,6 +157,7 @@ public class PlayerModeHandler : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
+            Debug.Log(inTheFortress);
             if (!inTheFortress)
             {
                 PlayerController.global.evading = false;

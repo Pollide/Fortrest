@@ -890,7 +890,10 @@ public class PlayerController : MonoBehaviour
             needInteraction = false;
         }
         teleporting = true;
-        CameraFollow.global.transform.position = pos;
+
+        if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
+            CameraFollow.global.transform.position = pos;
+
         StartCoroutine(RevertBool(true));
     }
 
@@ -1028,7 +1031,7 @@ public class PlayerController : MonoBehaviour
             {
                 mapBool = false;
             }
-            
+
             playerCanMove = !pause;
             pausedBool = pause;
         }
