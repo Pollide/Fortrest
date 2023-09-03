@@ -71,6 +71,8 @@ public class BossHandler : MonoBehaviour
         target = PlayerController.global.transform;
         // Turn off charge damage trigger
         chargeDMGTrigger.enabled = false;
+
+        initialSpawn = gameObject.transform.parent;
     }
 
     private void Update()
@@ -283,11 +285,14 @@ public class BossHandler : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-
-        Gizmos.DrawWireSphere(initialSpawn.position, arenaRadius);
-
+        if (initialSpawn != null)
+        {
+            Gizmos.DrawWireSphere(initialSpawn.position, arenaRadius);
+        }
+       
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, chargeRadius);
     }
     #endregion
 }
+ 

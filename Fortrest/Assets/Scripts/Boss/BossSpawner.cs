@@ -2,35 +2,34 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
-    private enum Boss
+    private enum Bosses
     {
         Cheiften,
-        Basalisk,
-        Spider,
-        Tier4,
-        Tier5,
-        Tier6
+        Snake,
     }
 
-    [SerializeField] Boss currentBoss;
+    [SerializeField] private Bosses bossName;
     [SerializeField] private float distance = 5f;
-    [SerializeField] private bool hasRun = false;
+    [SerializeField] private Transform spawnPos;
+    [SerializeField] private GameObject bossPrefab;
 
     private void Start()
     {
-      
+        
     }
+
     private void Update()
     {
-        if (CheckPlayerDistance())
+        if (CheckPlayerDistance() && Input.GetKeyDown(KeyCode.B))
         {
-
+            Instantiate(bossPrefab, spawnPos);
         }
     }
     private bool CheckPlayerDistance()
     {
         return Vector3.Distance(PlayerController.global.transform.position, transform.position) <= distance;
     }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

@@ -105,6 +105,8 @@ public class Building : MonoBehaviour
             if (!GetComponent<TurretShooting>() || !GetComponent<TurretShooting>().MiniTurret)
                 LevelManager.global.AddBuildingVoid(transform);
         }
+
+
     }
 
     public void SetLastHealth()
