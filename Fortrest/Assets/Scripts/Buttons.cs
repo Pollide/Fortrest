@@ -82,13 +82,13 @@ public class Buttons : MonoBehaviour
     {
         int index = ReturnIndex();
 
-        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || GameManager.global.upCTRL)
+        if (GameManager.global.upCTRL)
         {
             GameManager.global.upCTRL = false;
             SelectedList[index]--;
         }
 
-        if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || GameManager.global.downCTRL)
+        if (GameManager.global.downCTRL)
         {
             GameManager.global.downCTRL = false;
             SelectedList[index]++;
