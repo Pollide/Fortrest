@@ -50,5 +50,11 @@ public class BossStateMachine : MonoBehaviour
         currentState.EnterState();
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, GetArenaSize());
+    }
+
     public float GetArenaSize() { return arenaRadius; }
 }

@@ -19,7 +19,6 @@ public abstract class BossState : MonoBehaviour
         initialSpawn = gameObject.transform.parent;
     }
 
-
     public bool PlayerInArena(float _radius)
     {
         return Vector3.Distance(initialSpawn.position, target.position) < _radius;
