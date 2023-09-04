@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private bool shooting = false;
     private bool directionSaved = false;
     private Quaternion tempDirection;
+    public bool initialShot;
 
     // Spawn Turret
     private bool turretSpawned;
@@ -1472,6 +1473,12 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(1) || aimingCTRL)
             {
+                if (!initialShot)
+                {
+                    shooting = true;
+                    bowTimer = 0.45f;
+                    initialShot = true;
+                }
                 CharacterAnimator.SetBool("Aiming", true);
                 ChangeTool(new ToolData() { BowBool = true });
                 bowAnimator.SetBool("Aiming", true);
@@ -1496,7 +1503,11 @@ public class PlayerController : MonoBehaviour
                 CharacterAnimator.SetBool("Aiming", false);
                 bowAnimator.SetBool("Aiming", false);
                 ChangeTool(new ToolData() { SwordBool = true });
-                canShoot = false;
+                canShoot = false;               
+            }
+            else
+            {
+                initialShot = false;
             }
 
             if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting)
