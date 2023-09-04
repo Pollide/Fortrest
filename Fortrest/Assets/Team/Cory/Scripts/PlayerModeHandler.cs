@@ -159,7 +159,7 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.interactCTRL = false;
 
             if (!inTheFortress)
-            {
+            {                
                 PlayerController.global.evading = false;
                 lastMode = playerModes;
                 entryPosition = PlayerController.global.transform.position;
@@ -461,7 +461,7 @@ public class PlayerModeHandler : MonoBehaviour
         ClearBlueprint();
         SwitchToBuildMode(false);
         StartCoroutine(PlayerAwake());
-        PlayerController.global.TeleportPlayer(entryPosition);
+        PlayerController.global.TeleportPlayer(entryPosition, true);
         if (lastMode == PlayerModes.ResourceMode)
         {
             SwitchToResourceMode();
@@ -482,7 +482,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
-            PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position);
+            PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position, true);
             if (Boar.global.mounted)
             {
                 Boar.global.canMove = false;
