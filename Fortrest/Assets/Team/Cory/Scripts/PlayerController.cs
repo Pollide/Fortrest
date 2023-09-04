@@ -534,11 +534,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.L))
         {
             playerHealth = 0.0f;
             healthBar.SetHealth(playerHealth, maxHealth);
         }
+#endif
         if (pausedBool && !Input.GetKeyDown(KeyCode.Escape) || (mapBool && !Input.GetKeyDown(KeyCode.Tab) && !Input.GetKeyDown(KeyCode.Escape)))
         {
             return;
@@ -898,7 +900,7 @@ public class PlayerController : MonoBehaviour
         if (!houseInteract)
         {
             teleporting = true;
-        }      
+        }
 
         if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
             CameraFollow.global.transform.position = pos;
@@ -1299,26 +1301,29 @@ public class PlayerController : MonoBehaviour
 
     private void RotatePlayer()
     {
-        // Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
+        Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
 
         if (!Boar.global.mounted)
         {
             if (GameManager.global.KeyboardBool)
             {
 
+                //Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
+
                 Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
 
-                Vector3 targetPostition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
-
+                Vector3 targetPosition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
                 {
-                    targetPostition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
+                    float angle = Vector3.Angle(hitData.point - transform.position, transform.forward);
+                    Debug.Log(angle);
+                    targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 6;
                 }
 
-                targetPostition.y = transform.position.y;
+                targetPosition.y = transform.position.y;
 
-                transform.LookAt(targetPostition);
+                transform.LookAt(targetPosition);
 
                 // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
             }
@@ -1503,7 +1508,7 @@ public class PlayerController : MonoBehaviour
                 CharacterAnimator.SetBool("Aiming", false);
                 bowAnimator.SetBool("Aiming", false);
                 ChangeTool(new ToolData() { SwordBool = true });
-                canShoot = false;               
+                canShoot = false;
             }
             else
             {
@@ -1719,14 +1724,14 @@ public class PlayerController : MonoBehaviour
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
             LevelManager.global.waveEnd = false;
-            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false);
+            GameManager.PlayAnimation(UIAnimation, "Enemies Appear", false);
         }
     }
 
     public void Death()
     {
         if (!deathEffects)
-        {         
+        {
             CharacterAnimator.gameObject.SetActive(false);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
@@ -1737,7 +1742,7 @@ public class PlayerController : MonoBehaviour
             deathEffects = true;
         }
         if (!playerRespawned)
-        {           
+        {
             respawnTimer += Time.deltaTime;
             playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
             healthBar.SetHealth(playerHealth, maxHealth);
@@ -1770,7 +1775,7 @@ public class PlayerController : MonoBehaviour
                     }
                     interactCTRL = false;
                     houseDisplay = true; // Used to reanimate house and make text appear once player respawns
-                    respawning = true;                    
+                    respawning = true;
                     StartCoroutine(RevertBool(false));
                 }
             }

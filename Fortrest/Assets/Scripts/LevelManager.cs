@@ -92,7 +92,7 @@ public class LevelManager : MonoBehaviour
 
     public SPAWNLANE lane;
 
-    private int campsCount;
+    public int campsCount;
     public int enemiesCount;
     public bool spawnEnemies;
     private bool nightAttack;
