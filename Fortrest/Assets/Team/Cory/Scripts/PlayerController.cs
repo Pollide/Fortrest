@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
-    public GameObject bodyShape;
 
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
@@ -534,6 +533,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            playerHealth = 0.0f;
+            healthBar.SetHealth(playerHealth, maxHealth);
+        }
         if (pausedBool && !Input.GetKeyDown(KeyCode.Escape) || (mapBool && !Input.GetKeyDown(KeyCode.Tab) && !Input.GetKeyDown(KeyCode.Escape)))
         {
             return;
@@ -813,7 +817,7 @@ public class PlayerController : MonoBehaviour
                 case KeyCode.E:
                     if (canTeleport)
                     {
-                        TeleportPlayer(houseSpawnPoint.transform.position);
+                        TeleportPlayer(houseSpawnPoint.transform.position, false);
                     }
                     break;
 
@@ -858,12 +862,12 @@ public class PlayerController : MonoBehaviour
             }
             if (canTeleport && interactCTRL)
             {
-                TeleportPlayer(houseSpawnPoint.transform.position);
+                TeleportPlayer(houseSpawnPoint.transform.position, false);
             }
         }
     }
 
-    public void TeleportPlayer(Vector3 pos)
+    public void TeleportPlayer(Vector3 pos, bool houseInteract)
     {
         if (pos == Vector3.zero)
         {
@@ -890,7 +894,10 @@ public class PlayerController : MonoBehaviour
         {
             needInteraction = false;
         }
-        teleporting = true;
+        if (!houseInteract)
+        {
+            teleporting = true;
+        }      
 
         if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
             CameraFollow.global.transform.position = pos;
@@ -1708,18 +1715,18 @@ public class PlayerController : MonoBehaviour
     public void Death()
     {
         if (!deathEffects)
-        {
+        {         
+            CharacterAnimator.gameObject.SetActive(false);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
-            TeleportPlayer(house.transform.position);
+            TeleportPlayer(house.transform.position, true);
             redBorders.gameObject.SetActive(false);
             playerCC.enabled = false;
-            bodyShape.SetActive(false);
             playerRespawned = false;
             deathEffects = true;
         }
         if (!playerRespawned)
-        {
+        {           
             respawnTimer += Time.deltaTime;
             playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
             healthBar.SetHealth(playerHealth, maxHealth);
@@ -1733,11 +1740,13 @@ public class PlayerController : MonoBehaviour
                 }
                 if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
                 {
+                    CharacterAnimator.gameObject.SetActive(true);
+                    CharacterAnimator.ResetTrigger("Death");
+                    CharacterAnimator.SetTrigger("Respawn");
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                     VFXSleeping.Stop();
-                    TeleportPlayer(houseSpawnPoint.transform.position);
+                    TeleportPlayer(houseSpawnPoint.transform.position, true);
                     playerCanMove = true;
-                    bodyShape.SetActive(true);
                     playerDead = false;
                     deathEffects = false;
                     playerRespawned = true;
@@ -1750,7 +1759,7 @@ public class PlayerController : MonoBehaviour
                     }
                     interactCTRL = false;
                     houseDisplay = true; // Used to reanimate house and make text appear once player respawns
-                    respawning = true;
+                    respawning = true;                    
                     StartCoroutine(RevertBool(false));
                 }
             }

@@ -41,12 +41,34 @@ public class PlayerSteps : MonoBehaviour
 
     void StepOne()
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound, 0.05f);
+        if (!PlayerController.global.running)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound, 0.05f);
+        }       
     }
 
     void StepTwo()
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound2, 0.05f);
+        if (!PlayerController.global.running)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound2, 0.05f);
+        }       
+    }
+
+    void RunningStepOne()
+    {
+        if (PlayerController.global.running)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound, 0.05f);
+        }        
+    }
+
+    void RunningStepTwo()
+    {
+        if (PlayerController.global.running)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound2, 0.05f);
+        }        
     }
 
     void Death()

@@ -737,7 +737,7 @@ public class GameManager : MonoBehaviour
         if (value.GetComponent<PlayerController>())
         {
             if (load)
-                value.GetComponent<PlayerController>().TeleportPlayer(new Vector3(x, y, z));
+                value.GetComponent<PlayerController>().TeleportPlayer(new Vector3(x, y, z), false);
 
             return;
         }
