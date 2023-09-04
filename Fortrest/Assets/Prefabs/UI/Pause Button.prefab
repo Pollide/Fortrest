@@ -578,8 +578,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -11.028503}
+  m_SizeDelta: {x: 0, y: -22.057}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &9221087166470241894
 CanvasRenderer:
@@ -610,7 +610,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: c3e6af7e8096ed441938fc2e112eccc2, type: 3}
+    m_Font: {fileID: 12800000, guid: 58fdea1cc93be1f41a6747e88aa5c530, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1
@@ -746,24 +746,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 337d67536eba71f45a2203678c5f0056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SelectedGameObject: {fileID: 0}
   ResumeBool: 0
   RestartBool: 0
   BeginingBool: 0
   MenuBool: 0
-  SecondMenuBool: 0
   SaveBool: 0
   MaxResourcesBool: 0
   TerrainTeleportInt: -1
   RepairBool: 0
   UpgradeBool: 0
   DestroyBool: 0
+  ContinueBool: 0
   PlayBool: 0
-  SettingsBool: 0
   ExitBool: 0
   VolumeBool: 0
   MusicBool: 0
   FullScreenBool: 0
   ResetBool: 0
+  SecondMenuBool: 0
   BackBool: 0
   AreYouSureBool: 0
   ButtonText: {fileID: 4163981462012598014}

@@ -159,7 +159,7 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.interactCTRL = false;
 
             if (!inTheFortress)
-            {                
+            {
                 PlayerController.global.evading = false;
                 lastMode = playerModes;
                 entryPosition = PlayerController.global.transform.position;
@@ -383,56 +383,6 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    public void RepairMode()
-    {
-        Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hitData, 1000))
-        {
-            Vector3 worldPos = hitData.point;
-
-            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
-
-            worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
-
-            if (IsInRange(worldPos))
-            {
-
-                if ((Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && hitData.transform.CompareTag("Turret"))
-                {
-                    PlayerController.global.selectCTRL = false;
-                }
-
-                if (!newSelectionGrid)
-                {
-                    newSelectionGrid = Instantiate(selectionGrid, worldPos, Quaternion.Euler(90, 0, 0));
-                }
-
-                if (hitData.transform.CompareTag("Turret"))
-                {
-                    newSelectionGrid.GetComponentInChildren<Image>().color = Color.green;
-                }
-                else
-                {
-                    newSelectionGrid.GetComponentInChildren<Image>().color = Color.red;
-                }
-
-                newSelectionGrid.transform.position = worldPos;
-            }
-            else
-            {
-                ClearSelectionGrid();
-            }
-
-        }
-
-    }
-
-    public void UpgradeMode()
-    {
-
-    }
-
     void ClearBlueprint()
     {
         if (turretBlueprint)
@@ -502,8 +452,6 @@ public class PlayerModeHandler : MonoBehaviour
         {
 
         }
-
-        CameraFollow.global.Update(); //refreshes it instantly
     }
 
     public void SwitchToResourceMode()
