@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BossStateMachine : MonoBehaviour
 {
@@ -10,11 +11,14 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private BossState initialState;
     // Arena radius
     [SerializeField] private float arenaRadius;
+    // Agent current speed
+    [SerializeField] private float speed;
 
     // Start is called before the first frame update
     void Start()
     {
         InitializeStateMachine();
+        SetAgentStats();
     }
 
     // Update is called once per frame
@@ -37,6 +41,13 @@ public class BossStateMachine : MonoBehaviour
             Debug.LogError("Initial state not set in BossStateMachine.");
         }
     }
+
+    public void SetAgentStats()
+    {
+        NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        agent.speed = speed;
+    }
+
 
     public void ChangeState(BossState newState)
     {
