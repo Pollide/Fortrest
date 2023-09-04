@@ -18,7 +18,6 @@ using TMPro;
 public class Buttons : MonoBehaviour
 {
     public Transform ButtonHolder;
-    public bool SelectorBool = true;
     //[HideInInspector]
     public List<int> SelectedList = new List<int>();
 
@@ -101,16 +100,17 @@ public class Buttons : MonoBehaviour
         for (int i = 0; i < ButtonHolder.GetChild(index).childCount; i++)
         {
             Transform button = ButtonHolder.GetChild(index).GetChild(i);
+            ButtonMechanics buttonMechanics = button.GetComponent<ButtonMechanics>();
 
             bool selected = SelectedList[index] == i;
 
-            if (SelectorBool)
-                button.GetChild(1).gameObject.SetActive(selected);
+            if (buttonMechanics.SelectedGameObject)
+                buttonMechanics.SelectedGameObject.SetActive(selected);
 
             float shrinkScale = selected ? 1.1f : 1;
 
             button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
-            button.GetComponent<ButtonMechanics>().Start(); //refreshes text
+            buttonMechanics.Start(); //refreshes text
         }
 
         if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)
