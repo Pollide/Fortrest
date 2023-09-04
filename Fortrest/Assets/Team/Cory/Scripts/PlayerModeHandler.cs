@@ -51,7 +51,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public bool canInteractWithHouse;
 
-    public float nimDistanceBetweenTurrts = 3;
+    public float minDistanceBetweenTurrets = 3;
 
     bool runOnce;
 
@@ -206,8 +206,6 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
-
-
             GameObject turretPrefab = turretPrefabs[0];
 
             if (buildType == BuildType.Slow)
@@ -228,7 +226,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             worldPos = new Vector3(gridPos.x, 0, gridPos.z);
 
-            Collider[] colliders = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
+            Collider[] colliders = Physics.OverlapSphere(worldPos, minDistanceBetweenTurrets, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
             PlayerController.global.TurretMenuHolder.gameObject.SetActive(SelectedTurret);
 
             for (int i = 0; i < colliders.Length; i++)
