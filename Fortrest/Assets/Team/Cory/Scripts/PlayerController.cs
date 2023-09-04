@@ -534,11 +534,13 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.L))
         {
             playerHealth = 0.0f;
             healthBar.SetHealth(playerHealth, maxHealth);
         }
+#endif
         if (pausedBool && !Input.GetKeyDown(KeyCode.Escape) || (mapBool && !Input.GetKeyDown(KeyCode.Tab) && !Input.GetKeyDown(KeyCode.Escape)))
         {
             return;
@@ -1719,7 +1721,7 @@ public class PlayerController : MonoBehaviour
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
             LevelManager.global.waveEnd = false;
-            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false);
+            GameManager.PlayAnimation(UIAnimation, "Enemies Appear", false);
         }
     }
 
