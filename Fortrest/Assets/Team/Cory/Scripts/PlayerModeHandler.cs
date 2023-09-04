@@ -109,13 +109,7 @@ public class PlayerModeHandler : MonoBehaviour
                 cursorPosition = Input.mousePosition;
             }
 
-            if (playerModes == PlayerModes.BuildMode)
-            {
-                BuildMode();
-
-                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                SwitchToBuildMode();
-            }
+            BuildMode();
 
             ScrollSwitchTurret();
         }
@@ -163,8 +157,9 @@ public class PlayerModeHandler : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
+
             if (!inTheFortress)
-            {
+            {                
                 PlayerController.global.evading = false;
                 lastMode = playerModes;
                 entryPosition = PlayerController.global.transform.position;
@@ -466,7 +461,7 @@ public class PlayerModeHandler : MonoBehaviour
         ClearBlueprint();
         SwitchToBuildMode(false);
         StartCoroutine(PlayerAwake());
-        PlayerController.global.TeleportPlayer(entryPosition);
+        PlayerController.global.TeleportPlayer(entryPosition, true);
         if (lastMode == PlayerModes.ResourceMode)
         {
             SwitchToResourceMode();
@@ -487,7 +482,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
-            PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position);
+            PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position, true);
             if (Boar.global.mounted)
             {
                 Boar.global.canMove = false;

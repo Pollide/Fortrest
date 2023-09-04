@@ -34,16 +34,11 @@ public class CameraFollow : MonoBehaviour
     }
 
     public void Update()
-    {       
+    {
         if (lockCamera)
         {
             FocusOnTarget(PlayerController.global.transform.position + (PlayerModeHandler.global.inTheFortress ? Vector3.up * 5 : Vector3.zero), initialRotation);
         }
-    }
-
-    public Vector3 ReturnBuildOffset()
-    {
-        return new Vector3(PlayerController.global.transform.position.x + buildOffsetPosX, PlayerController.global.transform.position.y, PlayerController.global.transform.position.z + buildOffsetPosZ);
     }
 
     public void FocusOnTarget(Vector3 targetPosition, Vector3 offsetRotation)
@@ -79,62 +74,18 @@ public class CameraFollow : MonoBehaviour
         {
             if (GameManager.global.KeyboardBool)
             {
-                distance = Vector3.Distance(PlayerController.global.transform.position, PlayerController.global.mousePos);
+                distance = Vector3.Distance(targetPosition, PlayerController.global.mousePos);
                 distance = Mathf.Clamp(distance, 0f, 12f);
                 distance /= 12f;
             }
             else
             {
                 distance = Mathf.Clamp(Mathf.Abs(PlayerController.global.rotateCTRL.y) + Mathf.Abs(PlayerController.global.rotateCTRL.x), 0, 1);
-                /*
-                if (PlayerController.global.rotateCTRL.x > 0 && PlayerController.global.rotateCTRL.y > 0)
-                    {
-                        if (PlayerController.global.rotateCTRL.x > PlayerController.global.rotateCTRL.y)
-                        {
-                            distance = PlayerController.global.rotateCTRL.x;
-                        }
-                        else
-                        {
-                            distance = PlayerController.global.rotateCTRL.y;
-                        }
-                    }
-                    else if (PlayerController.global.rotateCTRL.x > 0 && PlayerController.global.rotateCTRL.y < 0)
-                    {
-                        if (PlayerController.global.rotateCTRL.x > (PlayerController.global.rotateCTRL.y * -1))
-                        {
-                            distance = PlayerController.global.rotateCTRL.x;
-                        }
-                        else
-                        {
-                            distance = PlayerController.global.rotateCTRL.y * -1;
-                        }
-                    }
-                    else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y > 0)
-                    {
-                        if ((PlayerController.global.rotateCTRL.x * -1) > PlayerController.global.rotateCTRL.y)
-                        {
-                            distance = PlayerController.global.rotateCTRL.x * -1;
-                        }
-                        else
-                        {
-                            distance = PlayerController.global.rotateCTRL.y;
-                        }
-                    }
-                    else if (PlayerController.global.rotateCTRL.x < 0 && PlayerController.global.rotateCTRL.y < 0)
-                    {
-                        if ((PlayerController.global.rotateCTRL.x * -1) > (PlayerController.global.rotateCTRL.y * -1))
-                        {
-                            distance = PlayerController.global.rotateCTRL.x * -1;
-                        }
-                        else
-                        {
-                            distance = PlayerController.global.rotateCTRL.y * -1;
-                        }
-                    }
-                */
             }
+            //            transform.position = Vector3.SmoothDamp(transform.position, targetPosition + (PlayerModeHandler.global.inTheFortress ? Vector3.zero : (PlayerController.global.transform.forward * distance * 1.25f)), ref currentVelocity, 0.2f);
 
-            transform.position = Vector3.SmoothDamp(transform.position, targetPosition + PlayerController.global.transform.forward * distance * 1.25f, ref currentVelocity, 0.2f);
+
+            transform.position = Vector3.SmoothDamp(transform.position, targetPosition + PlayerController.global.transform.forward, ref currentVelocity, 0.2f);
         }
         else
         {
