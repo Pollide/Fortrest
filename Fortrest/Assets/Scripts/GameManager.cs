@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
 
         Texture2D cursorTexture = pointerGeneric;
 
-        if (PlayerModeHandler.global && PlayerController.global.playerCanMove)
+        if (PlayerModeHandler.global && Time.timeScale == 1)
         {
 
             if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
@@ -243,7 +243,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.ForceSoftware);
+        if (Application.isFocused)
+            Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.ForceSoftware);
     }
 
 
