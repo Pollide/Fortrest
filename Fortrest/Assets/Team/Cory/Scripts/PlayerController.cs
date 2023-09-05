@@ -1298,7 +1298,7 @@ public class PlayerController : MonoBehaviour
             playerCC.Move(moveDirection * Time.deltaTime);
         }
     }
-
+    public float division = 1;
     private void RotatePlayer()
     {
         Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
@@ -1316,9 +1316,13 @@ public class PlayerController : MonoBehaviour
 
                 if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
                 {
-                    float angle = Vector3.Angle(hitData.point - transform.position, transform.forward);
-                    Debug.Log(angle);
-                    targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 6;
+                    targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 4;
+
+                    targetPosition.y = transform.position.y;
+
+                    Debug.DrawRay(targetPosition, -LevelManager.global.SceneCamera.transform.right * 100, Color.yellow);
+
+                    Debug.DrawRay(targetPosition, -LevelManager.global.SceneCamera.transform.up * 100, Color.green);
                 }
 
                 targetPosition.y = transform.position.y;
