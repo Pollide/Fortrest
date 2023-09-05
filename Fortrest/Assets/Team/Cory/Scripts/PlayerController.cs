@@ -221,6 +221,8 @@ public class PlayerController : MonoBehaviour
     // Map
     [HideInInspector] public bool mapBool;
     public bool ResourceHolderOpened;
+    Vector3 MapPanPosition;
+    private Vector3 mapMousePosition;
 
     public RectTransform TurretMenuHolder;
     public TMP_Text TurretMenuTitle;
@@ -541,6 +543,12 @@ public class PlayerController : MonoBehaviour
             healthBar.SetHealth(playerHealth, maxHealth);
         }
 #endif
+
+        if (mapBool)
+        {
+            UpdateMap();
+        }
+
         if (pausedBool && !Input.GetKeyDown(KeyCode.Escape) || (mapBool && !Input.GetKeyDown(KeyCode.Tab) && !Input.GetKeyDown(KeyCode.Escape)))
         {
             return;
@@ -1060,19 +1068,42 @@ public class PlayerController : MonoBehaviour
 
             if (mapBool)
             {
-                MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
-
-                MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
-
-                MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
-                MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
-
+                UpdateMap();
+                MapPanPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
                 if (!ResourceHolderOpened)
                     UpdateResourceHolder();
             }
 
             OpenResourceHolder(map);
         }
+    }
+
+    void UpdateMap()
+    {
+        MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
+
+        float speed = 800 * Time.unscaledDeltaTime;
+
+        if (GameManager.global.KeyboardBool)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
+                mapMousePosition = Input.mousePosition;
+                MapPanPosition += dragDirection * speed;
+            }
+
+        }
+        else
+        {
+            MapPanPosition -= new Vector3(GameManager.global.moveCTRL.x, GameManager.global.moveCTRL.y) * speed;
+        }
+
+        MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = MapPanPosition;
+
+        MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
+        MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
+
     }
 
     public void UpdateResourceHolder(int bridgeTypeInt = 0)
