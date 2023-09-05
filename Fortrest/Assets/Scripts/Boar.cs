@@ -66,39 +66,32 @@ public class Boar : MonoBehaviour
 
     void Update()
     {
-        /*
-        if (PlayerController.global.pausedBool || PlayerController.global.mapBool)
+        if (Time.timeScale != 0)
         {
-            PlayerStick();
-            return;
-        }
-        */
+            closerToHouse = Vector3.Distance(PlayerController.global.transform.position, house.transform.position) < Vector3.Distance(PlayerController.global.transform.position, transform.position) ? true : false;
 
-        if (Time.timeScale == 0)
-            return;
+            DisplayText();
 
-        closerToHouse = Vector3.Distance(PlayerController.global.transform.position, house.transform.position) < Vector3.Distance(PlayerController.global.transform.position, transform.position) ? true : false;
-
-        DisplayText();
-
-        if (!midAir && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && (mounted || (!mounted && !closerToHouse)) && !PlayerController.global.teleporting && !PlayerController.global.bridgeInteract)
-        {
-            canInteractWithBoar = true;
-            PlayerController.global.needInteraction = true;
-        }
-        else
-        {
-            canInteractWithBoar = false;
-            if (!PlayerModeHandler.global.canInteractWithHouse && !PlayerController.global.canTeleport && PlayerController.global.playerRespawned && !PlayerController.global.bridgeInteract)
+            if (!midAir && inRange && !PlayerController.global.playerDead && !PlayerController.global.canTeleport && (mounted || (!mounted && !closerToHouse)) && !PlayerController.global.teleporting && !PlayerController.global.bridgeInteract)
             {
-                PlayerController.global.needInteraction = false;
+                canInteractWithBoar = true;
+                PlayerController.global.needInteraction = true;
+            }
+            else
+            {
+                canInteractWithBoar = false;
+                if (!PlayerModeHandler.global.canInteractWithHouse && !PlayerController.global.canTeleport && PlayerController.global.playerRespawned && !PlayerController.global.bridgeInteract)
+                {
+                    PlayerController.global.needInteraction = false;
+                }
+            }
+
+            if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithBoar)
+            {
+                Mount();
             }
         }
 
-        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithBoar)
-        {
-            Mount();
-        }
         if (mounted)
         {
             PlayerStick();
