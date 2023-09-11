@@ -86,8 +86,6 @@ public class EnemyController : MonoBehaviour
     }
     void Start()
     {
-
-
         agent = GetComponent<NavMeshAgent>();
 
         noiseTimerMax = 2.5f;

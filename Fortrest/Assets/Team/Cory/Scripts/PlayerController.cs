@@ -49,7 +49,7 @@ public class PlayerController : MonoBehaviour
 
     // Shooting
     [HideInInspector] public bool canShoot;
-    [HideInInspector] public float bowDamage = 1.5f;
+    [HideInInspector] public float bowDamage = 1.25f;
     private float bowTimer = 0.0f;
     private float resetBow = 1f;
     private bool shooting = false;
@@ -1396,6 +1396,10 @@ public class PlayerController : MonoBehaviour
             LevelManager.ProcessEnemyList((enemy) =>
             {
                 enemy.canBeDamaged = true;
+            });
+            LevelManager.ProcessCampList((camp) =>
+            {
+                camp.canBeDamaged = true;
             });
 
             if (upgradedMelee)
