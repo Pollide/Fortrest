@@ -244,6 +244,7 @@ GameObject:
   m_Component:
   - component: {fileID: 927623175018942828}
   - component: {fileID: 927623175018942829}
+  - component: {fileID: 7386932472633630464}
   m_Layer: 0
   m_Name: Level Manager
   m_TagString: LevelManager
@@ -407,11 +408,29 @@ MonoBehaviour:
   clockMoon: {fileID: 0}
   waveEnd: 0
   lane: 0
+  campsCount: 0
   enemiesCount: 0
   spawnEnemies: 0
   randomAttackTrigger: 0
   messageDisplayed: 0
   ActiveBiomeMusic: {fileID: 0}
+--- !u!114 &7386932472633630464
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927623175018942830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9989ff1f5903f694eac10b15188f3766, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  campPrefab: {fileID: 1285012206302860940, guid: 6f112fb65cf7af84fa7dabf857eb2607,
+    type: 3}
+  mesh: {fileID: 5960873131632778912, guid: 6f112fb65cf7af84fa7dabf857eb2607, type: 3}
+  campUI: {fileID: 0}
+  campText: {fileID: 0}
 --- !u!1 &975559097986637665
 GameObject:
   m_ObjectHideFlags: 0
@@ -973,10 +992,13 @@ MonoBehaviour:
   arrowPrefab: {fileID: 7895357987787577966, guid: 04ac95d9f49a847429176a2dd4e6fae0,
     type: 3}
   IndicatorList: []
-  offsets: {x: 1, y: 1, z: 1}
   RemovedSprite: {fileID: 21300000, guid: fedb542a4d1265545a84526c3578a2d9, type: 3}
   HomeSprite: {fileID: 21300000, guid: f1095d3a51e7c6a4497b254ef38e0037, type: 3}
   MountSprite: {fileID: 21300000, guid: 7be8bb784ea9adb429814eb08616eeed, type: 3}
+  bottomRightStack: 0
+  bottomLeftStack: 0
+  topRightStack: 0
+  topLeftStack: 0
 --- !u!1 &5903244205017672140
 GameObject:
   m_ObjectHideFlags: 0

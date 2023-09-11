@@ -51,7 +51,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public bool canInteractWithHouse;
 
-    public float nimDistanceBetweenTurrts = 3;
+    public float minDistanceBetweenTurrets = 3;
 
     bool runOnce;
 
@@ -109,13 +109,7 @@ public class PlayerModeHandler : MonoBehaviour
                 cursorPosition = Input.mousePosition;
             }
 
-            if (playerModes == PlayerModes.BuildMode)
-            {
-                BuildMode();
-
-                GameManager.global.SoundManager.PlaySound(GameManager.global.ModeChangeClickSound);
-                SwitchToBuildMode();
-            }
+            BuildMode();
 
             ScrollSwitchTurret();
         }
@@ -163,6 +157,7 @@ public class PlayerModeHandler : MonoBehaviour
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
+
             if (!inTheFortress)
             {
                 PlayerController.global.evading = false;
@@ -211,8 +206,6 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
-
-
             GameObject turretPrefab = turretPrefabs[0];
 
             if (buildType == BuildType.Slow)
@@ -233,7 +226,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             worldPos = new Vector3(gridPos.x, 0, gridPos.z);
 
-            Collider[] colliders = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
+            Collider[] colliders = Physics.OverlapSphere(worldPos, minDistanceBetweenTurrets, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
             PlayerController.global.TurretMenuHolder.gameObject.SetActive(SelectedTurret);
 
             for (int i = 0; i < colliders.Length; i++)
@@ -388,56 +381,6 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    public void RepairMode()
-    {
-        Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
-
-        if (Physics.Raycast(ray, out RaycastHit hitData, 1000))
-        {
-            Vector3 worldPos = hitData.point;
-
-            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
-
-            worldPos = new Vector3(gridPos.x, worldPos.y, gridPos.z);
-
-            if (IsInRange(worldPos))
-            {
-
-                if ((Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && hitData.transform.CompareTag("Turret"))
-                {
-                    PlayerController.global.selectCTRL = false;
-                }
-
-                if (!newSelectionGrid)
-                {
-                    newSelectionGrid = Instantiate(selectionGrid, worldPos, Quaternion.Euler(90, 0, 0));
-                }
-
-                if (hitData.transform.CompareTag("Turret"))
-                {
-                    newSelectionGrid.GetComponentInChildren<Image>().color = Color.green;
-                }
-                else
-                {
-                    newSelectionGrid.GetComponentInChildren<Image>().color = Color.red;
-                }
-
-                newSelectionGrid.transform.position = worldPos;
-            }
-            else
-            {
-                ClearSelectionGrid();
-            }
-
-        }
-
-    }
-
-    public void UpgradeMode()
-    {
-
-    }
-
     void ClearBlueprint()
     {
         if (turretBlueprint)
@@ -466,7 +409,7 @@ public class PlayerModeHandler : MonoBehaviour
         ClearBlueprint();
         SwitchToBuildMode(false);
         StartCoroutine(PlayerAwake());
-        PlayerController.global.TeleportPlayer(entryPosition);
+        PlayerController.global.TeleportPlayer(entryPosition, true);
         if (lastMode == PlayerModes.ResourceMode)
         {
             SwitchToResourceMode();
@@ -487,7 +430,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
-            PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position);
+            PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position, true);
             if (Boar.global.mounted)
             {
                 Boar.global.canMove = false;
@@ -507,8 +450,6 @@ public class PlayerModeHandler : MonoBehaviour
         {
 
         }
-
-        CameraFollow.global.Update(); //refreshes it instantly
     }
 
     public void SwitchToResourceMode()

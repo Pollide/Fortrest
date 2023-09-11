@@ -216,13 +216,19 @@ public class GameManager : MonoBehaviour
         PlayerModeHandler.SetMouseActive(KeyboardBool);
 
         Texture2D cursorTexture = pointerGeneric;
+        Vector2 hotSpot = new Vector2((float)cursorTexture.width / 2, (float)cursorTexture.height / 2);
 
-        if (PlayerModeHandler.global && PlayerController.global.playerCanMove)
+        if (PlayerModeHandler.global && Time.timeScale == 1)
         {
-
             if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
             {
-                cursorTexture = PlayerController.global.canShoot ? pointerAim : pointerSword;
+                cursorTexture = pointerSword;
+
+                if (PlayerController.global.canShoot)
+                {
+                    cursorTexture = pointerAim;
+                    hotSpot.y -= 5;
+                }
 
                 if (PlayerController.global.cursorNearEnemy)
                     cursorTexture = pointerDoubleSword;
@@ -243,7 +249,8 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+        if (Application.isFocused)
+            Cursor.SetCursor(cursorTexture, cursorTexture == pointerGeneric ? Vector2.zero : hotSpot, CursorMode.ForceSoftware);
     }
 
 
@@ -737,7 +744,7 @@ public class GameManager : MonoBehaviour
         if (value.GetComponent<PlayerController>())
         {
             if (load)
-                value.GetComponent<PlayerController>().TeleportPlayer(new Vector3(x, y, z));
+                value.GetComponent<PlayerController>().TeleportPlayer(new Vector3(x, y, z), false);
 
             return;
         }

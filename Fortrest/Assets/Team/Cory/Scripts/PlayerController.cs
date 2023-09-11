@@ -16,7 +16,6 @@ public class PlayerController : MonoBehaviour
     // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
-    public GameObject bodyShape;
 
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
@@ -56,6 +55,7 @@ public class PlayerController : MonoBehaviour
     private bool shooting = false;
     private bool directionSaved = false;
     private Quaternion tempDirection;
+    public bool initialShot;
 
     // Spawn Turret
     private bool turretSpawned;
@@ -221,6 +221,8 @@ public class PlayerController : MonoBehaviour
     // Map
     [HideInInspector] public bool mapBool;
     public bool ResourceHolderOpened;
+    Vector3 MapPanPosition;
+    private Vector3 mapMousePosition;
 
     public RectTransform TurretMenuHolder;
     public TMP_Text TurretMenuTitle;
@@ -441,6 +443,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!interactCTRL && (needInteraction))
         {
+
             interactCTRL = true;
         }
     }
@@ -533,6 +536,19 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            playerHealth = 0.0f;
+            healthBar.SetHealth(playerHealth, maxHealth);
+        }
+#endif
+
+        if (mapBool)
+        {
+            UpdateMap();
+        }
+
         if (pausedBool && !Input.GetKeyDown(KeyCode.Escape) || (mapBool && !Input.GetKeyDown(KeyCode.Tab) && !Input.GetKeyDown(KeyCode.Escape)))
         {
             return;
@@ -812,7 +828,7 @@ public class PlayerController : MonoBehaviour
                 case KeyCode.E:
                     if (canTeleport)
                     {
-                        TeleportPlayer(houseSpawnPoint.transform.position);
+                        TeleportPlayer(houseSpawnPoint.transform.position, false);
                     }
                     break;
 
@@ -857,12 +873,12 @@ public class PlayerController : MonoBehaviour
             }
             if (canTeleport && interactCTRL)
             {
-                TeleportPlayer(houseSpawnPoint.transform.position);
+                TeleportPlayer(houseSpawnPoint.transform.position, false);
             }
         }
     }
 
-    public void TeleportPlayer(Vector3 pos)
+    public void TeleportPlayer(Vector3 pos, bool houseInteract)
     {
         if (pos == Vector3.zero)
         {
@@ -889,8 +905,14 @@ public class PlayerController : MonoBehaviour
         {
             needInteraction = false;
         }
-        teleporting = true;
-        CameraFollow.global.transform.position = pos;
+        if (!houseInteract)
+        {
+            teleporting = true;
+        }
+
+        if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
+            CameraFollow.global.transform.position = pos;
+
         StartCoroutine(RevertBool(true));
     }
 
@@ -1015,6 +1037,7 @@ public class PlayerController : MonoBehaviour
                     return;
             }
 
+
             PauseCanvasGameObject.SetActive(pause);
 
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
@@ -1028,8 +1051,8 @@ public class PlayerController : MonoBehaviour
             {
                 mapBool = false;
             }
-            
-            playerCanMove = !pause;
+
+            //  playerCanMove = !pause;
             pausedBool = pause;
         }
     }
@@ -1045,19 +1068,42 @@ public class PlayerController : MonoBehaviour
 
             if (mapBool)
             {
-                MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
-
-                MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
-
-                MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
-                MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
-
+                UpdateMap();
+                MapPanPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
                 if (!ResourceHolderOpened)
                     UpdateResourceHolder();
             }
 
             OpenResourceHolder(map);
         }
+    }
+
+    void UpdateMap()
+    {
+        MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
+
+        float speed = 800 * Time.unscaledDeltaTime;
+
+        if (GameManager.global.KeyboardBool)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
+                mapMousePosition = Input.mousePosition;
+                MapPanPosition += dragDirection * speed;
+            }
+
+        }
+        else
+        {
+            MapPanPosition -= new Vector3(GameManager.global.moveCTRL.x, GameManager.global.moveCTRL.y) * speed;
+        }
+
+        MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = MapPanPosition;
+
+        MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
+        MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
+
     }
 
     public void UpdateResourceHolder(int bridgeTypeInt = 0)
@@ -1283,41 +1329,31 @@ public class PlayerController : MonoBehaviour
             playerCC.Move(moveDirection * Time.deltaTime);
         }
     }
-
+    public float division = 1;
     private void RotatePlayer()
     {
-        // Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
+        //  Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
 
         if (!Boar.global.mounted)
         {
             if (GameManager.global.KeyboardBool)
             {
-
                 Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
 
-                Vector3 targetPostition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
-
+                Vector3 targetPosition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
-                {
-                    targetPostition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
-                }
+                    targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 4;
 
-                targetPostition.y = transform.position.y;
-
-                transform.LookAt(targetPostition);
-
-                // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+                targetPosition.y = transform.position.y;
+                transform.LookAt(targetPosition);
             }
             else
             {
                 float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135;
                 transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
-                //transform.rotation = Quaternion.LookRotation(new Vector3(rotateCTRL.x, 0f, rotateCTRL.y), Vector3.up);
             }
         }
-        //   float angleMove = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 135;
-        //  SpinTransform.rotation = Quaternion.Euler(SpinTransform.eulerAngles.x, -angleMove, SpinTransform.eulerAngles.z);
     }
 
     private void ApplyGravity()
@@ -1460,6 +1496,12 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(1) || aimingCTRL)
             {
+                if (!initialShot)
+                {
+                    shooting = true;
+                    bowTimer = 0.45f;
+                    initialShot = true;
+                }
                 CharacterAnimator.SetBool("Aiming", true);
                 ChangeTool(new ToolData() { BowBool = true });
                 bowAnimator.SetBool("Aiming", true);
@@ -1485,6 +1527,10 @@ public class PlayerController : MonoBehaviour
                 bowAnimator.SetBool("Aiming", false);
                 ChangeTool(new ToolData() { SwordBool = true });
                 canShoot = false;
+            }
+            else
+            {
+                initialShot = false;
             }
 
             if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting)
@@ -1696,7 +1742,7 @@ public class PlayerController : MonoBehaviour
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
             LevelManager.global.waveEnd = false;
-            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false);
+            GameManager.PlayAnimation(UIAnimation, "Enemies Appear", false);
         }
     }
 
@@ -1704,12 +1750,12 @@ public class PlayerController : MonoBehaviour
     {
         if (!deathEffects)
         {
+            CharacterAnimator.gameObject.SetActive(false);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
-            TeleportPlayer(house.transform.position);
+            TeleportPlayer(house.transform.position, true);
             redBorders.gameObject.SetActive(false);
             playerCC.enabled = false;
-            bodyShape.SetActive(false);
             playerRespawned = false;
             deathEffects = true;
         }
@@ -1728,11 +1774,13 @@ public class PlayerController : MonoBehaviour
                 }
                 if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
                 {
+                    CharacterAnimator.gameObject.SetActive(true);
+                    CharacterAnimator.ResetTrigger("Death");
+                    CharacterAnimator.SetTrigger("Respawn");
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                     VFXSleeping.Stop();
-                    TeleportPlayer(houseSpawnPoint.transform.position);
+                    TeleportPlayer(houseSpawnPoint.transform.position, true);
                     playerCanMove = true;
-                    bodyShape.SetActive(true);
                     playerDead = false;
                     deathEffects = false;
                     playerRespawned = true;

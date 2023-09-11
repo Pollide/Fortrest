@@ -19,7 +19,7 @@ using TMPro;
 
 public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
-
+    public GameObject SelectedGameObject;
 
     [Header("Pause")]
 
@@ -41,6 +41,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     public bool DestroyBool;
 
     [Header("Menu")]
+    public bool ContinueBool;
     public bool PlayBool;
     public bool ExitBool;
     [Space(10)]
@@ -75,15 +76,15 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
         else
         {
 
-            if (PlayBool)
+            if (ContinueBool)
             {
                 if ((int)GameManager.Pref("Has Started", 0, true) == 1)
                 {
-                    ButtonText.text = "Continue on " + "Day " + (int)GameManager.Pref("Day", 0, true);
+                    ButtonText.text = "Continue Day " + (int)GameManager.Pref("Day", 0, true);
                 }
                 else
                 {
-                    ButtonText.text = "New Game";
+                    gameObject.SetActive(false);
                 }
             }
 
@@ -165,7 +166,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             PlayerModeHandler.global.SelectedTurret.health = PlayerModeHandler.global.SelectedTurret.maxHealth;
         }
 
-        if (BeginingBool)
+        if (BeginingBool || PlayBool)
         {
             GameManager.Pref("Has Started", 0, false); //restart game
 
@@ -186,7 +187,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (TerrainTeleportInt != -1)
         {
-            PlayerController.global.TeleportPlayer(LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(10, 1, 10));
+            PlayerController.global.TeleportPlayer(LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(10, 1, 10), false);
         }
 
         if (SaveBool)
@@ -199,7 +200,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
             GetComponentInParent<Buttons>().ChangeMenu(BackBool ? 0 : 1);
         }
 
-        if (RestartBool)
+        if (ContinueBool || RestartBool)
         {
             Time.timeScale = 1f;
             GameManager.global.NextScene(1);
@@ -248,12 +249,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
                 ButtonText.text = "Are You Sure?";
                 return;
             }
-        }
-
-        if (PlayBool)
-        {
-            GameManager.global.NextScene(1);
-            //GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
         }
 
         if (ResetBool)
