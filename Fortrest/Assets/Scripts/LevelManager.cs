@@ -57,6 +57,7 @@ public class LevelManager : MonoBehaviour
     public List<EnemyController> enemyList = new List<EnemyController>();
     public List<GameObject> inventoryItemList = new List<GameObject>();
     public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
+    public List<Camp> campList = new List<Camp>();
     public float daySpeed = 1;
     public float enemyTimer;
 
@@ -175,6 +176,17 @@ public class LevelManager : MonoBehaviour
         return BuildingList.IndexOf(requestedTransform);
     }
 
+    public static void ProcessCampList(System.Action<Camp> processAction)
+    {
+        for (int i = 0; i < LevelManager.global.campList.Count; i++)
+        {
+            if (LevelManager.global.campList[i])
+            {
+                processAction(LevelManager.global.campList[i]);
+            }
+        }
+    }
+
     public static void ProcessEnemyList(System.Action<EnemyController> processAction)
     {
         for (int i = 0; i < LevelManager.global.enemyList.Count; i++)
@@ -221,6 +233,15 @@ public class LevelManager : MonoBehaviour
     public bool ReturnNight()
     {
         return daylightTimer > 180;
+    }
+
+    private void CalculateCamps()
+    {
+        campsCount = 0;
+        ProcessCampList((camp) =>
+        {
+            campsCount++;
+        });
     }
 
     private void Update()
@@ -282,6 +303,7 @@ public class LevelManager : MonoBehaviour
             GameManager.global.DataSetVoid(false);
         }
 
+        CalculateCamps();
         EnemyWaves();
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();

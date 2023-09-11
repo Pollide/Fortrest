@@ -17,14 +17,21 @@ public class CampSpawner : MonoBehaviour
     private float buildZone = 85.0f;
     public GameObject campUI;
     public TMP_Text campText;
+    int lastAmount;
 
     private void Start()
     {
         currentDay = LevelManager.global.day;
+        lastAmount = 0;
     }
 
     void Update()
     {
+        if (lastAmount != LevelManager.global.campsCount)
+        {
+            GameManager.PlayAnimation(campText.GetComponent<Animation>(), "EnemyAmount");
+            lastAmount = LevelManager.global.campsCount;
+        }
         campText.text = LevelManager.global.campsCount.ToString();
 
         if (LevelManager.global.campsCount > 0 && !campUI.activeSelf)
@@ -36,7 +43,7 @@ public class CampSpawner : MonoBehaviour
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Camps Appear", false);
         }
 
-        if (LevelManager.global.campsCount <= 30)
+        if (LevelManager.global.campsCount < 30)
         {
             if (currentDay != LevelManager.global.day)
             {
@@ -57,14 +64,12 @@ public class CampSpawner : MonoBehaviour
                 spawnCamp = false;
             }
 
+#if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.M))
             {
                 spawnCamp = false;
             }
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                LevelManager.global.campsCount -= 1;
-            }
+#endif
 
             if (!spawnCamp)
             {
@@ -85,7 +90,7 @@ public class CampSpawner : MonoBehaviour
 
                 if (distance > 40.0f)
                 {
-                    Collider[] colliders = Physics.OverlapSphere(spawnPosition, mesh.bounds.size.x / 2.0f, GameManager.ReturnBitShift(new string[] { "Resource", "MountShrine", "Camp" }));
+                    Collider[] colliders = Physics.OverlapSphere(spawnPosition, mesh.bounds.size.x / 2.0f, GameManager.ReturnBitShift(new string[] { "Resource", "Building" }));
 
                     for (int i = 0; i < colliders.Length; i++)
                     {
@@ -99,7 +104,6 @@ public class CampSpawner : MonoBehaviour
                         }
                     }
                     GameObject camp = Instantiate(campPrefab, spawnPosition, Quaternion.identity);
-                    LevelManager.global.campsCount++;
                     spawnCamp = true;
                 }
                 else
