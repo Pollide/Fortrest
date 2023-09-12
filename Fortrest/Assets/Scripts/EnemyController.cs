@@ -228,7 +228,7 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                if (!bestTarget || bestTarget == playerPosition || bestTarget == Boar.global.transform) // If the enemy does not have a current target
+                if (!bestTarget || bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform)) // If the enemy does not have a current target
                 {
                     LevelManager.ProcessBuildingList((building) =>
                     {
@@ -251,14 +251,14 @@ public class EnemyController : MonoBehaviour
         {
             if (bestTarget == playerPosition)
             {
-                if (Boar.global.mounted == true && currentEnemyType == ENEMYTYPE.wolf)
+                if ((Boar.global && Boar.global.mounted == true) && currentEnemyType == ENEMYTYPE.wolf)
                 {
                     bestTarget = Boar.global.transform;
                 }
                 agent.stoppingDistance = stoppingDist;
                 distanceAdjusted = false;
             }
-            if (bestTarget == Boar.global.transform)
+            if (Boar.global && bestTarget == Boar.global.transform)
             {
                 agent.stoppingDistance = stoppingDist + 1.0f;
                 if (Boar.global.mounted == false)
@@ -266,7 +266,7 @@ public class EnemyController : MonoBehaviour
                     bestTarget = playerPosition;
                 }
             }
-            if (bestTarget != playerPosition && bestTarget != Boar.global.transform && bestTarget != house.transform)
+            if (bestTarget != playerPosition && (Boar.global && bestTarget != Boar.global.transform) && bestTarget != house.transform)
             {
                 if (distanceAdjusted == false)
                 {
@@ -469,7 +469,7 @@ public class EnemyController : MonoBehaviour
         }
         if (other.gameObject.tag == "Arrow")
         {
-            if (!other.GetComponent<Arrow>().singleHit)
+            if (!other.GetComponent<Arrow>().singleHit || other.GetComponent<Arrow>().secondHit)
             {
                 other.GetComponent<Arrow>().singleHit = true;
                 if (currentEnemyType == ENEMYTYPE.goblin)
@@ -483,8 +483,19 @@ public class EnemyController : MonoBehaviour
                 }
                 Damaged(PlayerController.global.bowDamage);
                 PickSound(hitSound, hitSound2, 1.0f);
-                Destroy(other.gameObject);
+                if (!PlayerController.global.upgradedBow || other.GetComponent<Arrow>().secondHit)
+                {
+                    Destroy(other.gameObject);
+                }
             }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Arrow")
+        {
+            other.GetComponent<Arrow>().secondHit = true;
         }
     }
 

@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
     private bool directionSaved = false;
     private Quaternion tempDirection;
     public bool initialShot;
+    [HideInInspector] public bool upgradedBow;
 
     // Spawn Turret
     private bool turretSpawned;
@@ -101,6 +102,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool lunge = false;
     [HideInInspector] public bool upgradedMelee;
     [HideInInspector] public bool cursorNearEnemy;
+
     // States
     [Header("Player States")]
     public bool playerCanMove = true;
@@ -575,8 +577,12 @@ public class PlayerController : MonoBehaviour
 
         if (Unlocks.global.upgradedMeleeUnlocked)
         {
-            UpgradeMelee();
-            Unlocks.global.upgradedMeleeUnlocked = false;
+            UpgradeMelee();            
+        }
+
+        if (Unlocks.global.upgradedBowUnlocked)
+        {
+            UpgradeBow();          
         }
 
         if (playerCanMove)
@@ -1389,6 +1395,15 @@ public class PlayerController : MonoBehaviour
         resetAttack = 0.6f;
         resetCombo = 0.8f;
         upgradedMelee = true;
+        Unlocks.global.upgradedMeleeUnlocked = false;
+    }
+
+    private void UpgradeBow()
+    {
+        Bow.global.fireForce = 60.0f;
+        bowDamage = 1.5f;
+        upgradedBow = true;
+        Unlocks.global.upgradedBowUnlocked = false;
     }
 
     private void Attack()
