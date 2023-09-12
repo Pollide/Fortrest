@@ -24,7 +24,7 @@ public class ShrineActivate : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == Boar.global.gameObject && !Boar.global.mounted)
+        if (Boar.global && other.gameObject == Boar.global.gameObject && !Boar.global.mounted)
         {
             PlayerController.global.canTeleport = false;
             notGood = true;
@@ -46,7 +46,7 @@ public class ShrineActivate : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject == Boar.global.gameObject && !Boar.global.mounted)
+        if (Boar.global && other.gameObject == Boar.global.gameObject && !Boar.global.mounted)
         {
             PlayerController.global.canTeleport = false;
             notGood = true;

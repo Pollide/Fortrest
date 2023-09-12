@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
-    private enum Boss
+    public enum Boss
     {
-        Cheiften,
-        Basalisk,
+        Chieftain,
+        Basilisk,
         Spider,
-        Tier4,
+        SpiderQueen,
         Tier5,
         Tier6
     }
 
-    [SerializeField] Boss currentBoss;
+    public Boss currentBoss;
     [SerializeField] private float distance = 5f;
     [SerializeField] private bool hasRun = false;
 
