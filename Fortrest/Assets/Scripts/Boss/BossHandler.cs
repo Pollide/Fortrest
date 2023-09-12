@@ -13,10 +13,21 @@ public class BossHandler : MonoBehaviour
         Attack,
         Charge,
         Idle,
-        Start
+        Start,
+        Dead
     }
     // Holds the current boss atate
-    [SerializeField] private BossStates states;
+    [SerializeField] public BossStates states;
+    public enum TYPE
+    {
+        Chieftain,
+        Basilisk,
+        SpiderQueen,
+        Tier4,
+        Tier5,
+        Tier6
+    }
+    public TYPE bossType;
     // Nav mesh agent component
     [SerializeField] private NavMeshAgent agent;
     // Holds target transform
@@ -52,6 +63,7 @@ public class BossHandler : MonoBehaviour
     // Holds Wheather the boss is charging
     [SerializeField] private bool isCharging = false;
     [SerializeField] private bool playerHit = false;
+    public bool dead = false;
     #endregion
 
     #region Main
@@ -65,6 +77,7 @@ public class BossHandler : MonoBehaviour
 
     private void Start()
     {
+        LevelManager.global.bossList.Add(this);
         // Switch states to start
         SwitchState(BossStates.Start);
         // Populate target transform for targeting
@@ -75,6 +88,12 @@ public class BossHandler : MonoBehaviour
 
     private void Update()
     {
+        if (currentHealth <= 0)
+        {
+            stateSwitchable = true;
+            SwitchState(BossStates.Dead);
+        }
+
         // Run through current state and execute
         switch (states)
         {
@@ -92,6 +111,9 @@ public class BossHandler : MonoBehaviour
                 break;
             case BossStates.Start:
                 StartState();
+                break;
+            case BossStates.Dead:
+                DeadState();
                 break;
             default:
                 break;
@@ -205,6 +227,19 @@ public class BossHandler : MonoBehaviour
                 isCharging = false;
             }
         }
+    }
+
+    private void DeadState()
+    {
+        dead = true;
+        //agent.SetDestination(transform.position);
+        //healthAnimation.gameObject.SetActive(false); // To make healthbar disappear once / if implemented the same way
+        //animator.setTrigger("Death"); // For death animation
+        // Then make the animation call the stuff below
+        //GameManager.global.SoundManager.PlaySound(deathSound, 1.0f);
+        //agent.enabled = false;
+        LevelManager.global.bossList.Remove(this);
+        Destroy(gameObject);
     }
     #endregion
 

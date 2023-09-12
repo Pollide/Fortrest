@@ -58,6 +58,7 @@ public class LevelManager : MonoBehaviour
     public List<GameObject> inventoryItemList = new List<GameObject>();
     public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
     public List<Camp> campList = new List<Camp>();
+    public List<BossHandler> bossList = new List<BossHandler>();
     public float daySpeed = 1;
     public float enemyTimer;
 
@@ -67,6 +68,7 @@ public class LevelManager : MonoBehaviour
     public GameObject goblinPrefab;
     public GameObject ogrePrefab;
     public GameObject spiderPrefab;
+    public GameObject mountPrefab;
 
     public VisualEffect VFXSmokePuff;
 
@@ -174,6 +176,17 @@ public class LevelManager : MonoBehaviour
     public int ReturnIndex(Transform requestedTransform)
     {
         return BuildingList.IndexOf(requestedTransform);
+    }
+
+    public static void ProcessBossList(System.Action<BossHandler> processAction)
+    {
+        for (int i = 0; i < LevelManager.global.bossList.Count; i++)
+        {
+            if (LevelManager.global.bossList[i])
+            {
+                processAction(LevelManager.global.bossList[i]);
+            }
+        }
     }
 
     public static void ProcessCampList(System.Action<Camp> processAction)
@@ -303,7 +316,13 @@ public class LevelManager : MonoBehaviour
             GameManager.global.DataSetVoid(false);
         }
 
+        if (Unlocks.global.mountUnlocked)
+        {
+            Instantiate(mountPrefab, new Vector3(-30f, 0f, -120f), Quaternion.identity);
+        }
+
         CalculateCamps();
+
         EnemyWaves();
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();

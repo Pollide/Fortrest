@@ -87,7 +87,7 @@ public class PlayerController : MonoBehaviour
     // Eating
     [HideInInspector] public int appleAmount = 0;
     private float appleHealAmount = 10.0f;
-    [HideInInspector] public const int maxApple = 5;
+    [HideInInspector] public int maxApple = 5;
 
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
@@ -99,8 +99,7 @@ public class PlayerController : MonoBehaviour
     public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
     [HideInInspector] public bool lunge = false;
-    public bool upgradedMelee;
-    private bool applied;
+    [HideInInspector] public bool upgradedMelee;
     [HideInInspector] public bool cursorNearEnemy;
     // States
     [Header("Player States")]
@@ -467,7 +466,7 @@ public class PlayerController : MonoBehaviour
 
     private void TurretController()
     {
-        if (!turretCTRL && !turretSpawned)
+        if (Unlocks.global.miniTurretUnlocked && !turretCTRL && !turretSpawned)
         {
             turretCTRL = true;
         }
@@ -567,6 +566,19 @@ public class PlayerController : MonoBehaviour
             playerCanBeDamaged = true;
         }
 
+        if (Unlocks.global.extraApplesUnlocked)
+        {
+            maxApple = 10;
+            UpdateAppleText();          
+            Unlocks.global.extraApplesUnlocked = false;
+        }
+
+        if (Unlocks.global.upgradedMeleeUnlocked)
+        {
+            UpgradeMelee();
+            Unlocks.global.upgradedMeleeUnlocked = false;
+        }
+
         if (playerCanMove)
         {
             // Controller
@@ -592,7 +604,12 @@ public class PlayerController : MonoBehaviour
             // Mechanics
             Attack();
             Gathering();
-            Shoot();
+
+            if (Unlocks.global.bowUnlocked)
+            {
+                Shoot();
+            }
+            
             ModeChanged();
             if (lunge && !playerisMoving)
             {
@@ -614,20 +631,9 @@ public class PlayerController : MonoBehaviour
         CheckCurrentTool();
         Resting();
 
-        if (upgradedMelee && !applied)
-        {
-            UpgradeMelee();
-            applied = true;
-        }
-
         if (playerDead)
         {
             Death();
-        }
-
-        if (Input.GetKeyDown(KeyCode.U)) // TEMPORARY
-        {
-            upgradedMelee = !upgradedMelee;
         }
 
         foreach (KeyCode keyCode in keyCodes)
@@ -819,7 +825,7 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case KeyCode.T:
-                    if (!turretSpawned && playerCanMove)
+                    if (Unlocks.global.miniTurretUnlocked && !turretSpawned && playerCanMove)
                     {
                         SpawnTurret();
                     }
@@ -1382,6 +1388,7 @@ public class PlayerController : MonoBehaviour
         CharacterAnimator.SetBool("Upgraded", true);
         resetAttack = 0.6f;
         resetCombo = 0.8f;
+        upgradedMelee = true;
     }
 
     private void Attack()
