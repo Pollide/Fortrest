@@ -5,9 +5,10 @@ using UnityEngine;
 public class Bow : MonoBehaviour
 {
     public static Bow global;
-    public GameObject arrowObject;
-    private float fireForce = 40.0f;
+
+    public GameObject arrowObject;   
     public GameObject bowMeshObject;
+    [HideInInspector] public float fireForce = 40.0f;
 
     private void Start()
     {

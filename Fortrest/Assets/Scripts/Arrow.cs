@@ -5,6 +5,7 @@ using UnityEngine;
 public class Arrow : MonoBehaviour
 {
     [HideInInspector] public bool singleHit;
+    [HideInInspector] public bool secondHit;
 
     private void OnCollisionEnter(Collision collision)
     {
