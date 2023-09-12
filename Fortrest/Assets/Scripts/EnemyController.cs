@@ -469,9 +469,9 @@ public class EnemyController : MonoBehaviour
         }
         if (other.gameObject.tag == "Arrow")
         {
-            if (!other.GetComponent<Arrow>().singleHit || other.GetComponent<Arrow>().secondHit)
+            if (!other.GetComponent<ArrowTrigger>().singleHit)
             {
-                other.GetComponent<Arrow>().singleHit = true;
+                other.GetComponent<ArrowTrigger>().singleHit = true;
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chaseTimer = 0;
@@ -483,19 +483,11 @@ public class EnemyController : MonoBehaviour
                 }
                 Damaged(PlayerController.global.bowDamage);
                 PickSound(hitSound, hitSound2, 1.0f);
-                if (!PlayerController.global.upgradedBow || other.GetComponent<Arrow>().secondHit)
+                if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
                 {
-                    Destroy(other.gameObject);
+                    Destroy(other.gameObject.transform.parent.gameObject);
                 }
             }
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.tag == "Arrow")
-        {
-            other.GetComponent<Arrow>().secondHit = true;
         }
     }
 
@@ -580,7 +572,7 @@ public class EnemyController : MonoBehaviour
             PickSound(attackSound, attackSound2, 1.0f);
         }
 
-        if (bestTarget == playerPosition || bestTarget == Boar.global.transform)
+        if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
             if (PlayerController.global.playerCanBeDamaged)

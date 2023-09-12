@@ -75,9 +75,9 @@ public class Camp : MonoBehaviour
         }
         if (other.gameObject.tag == "Arrow")
         {
-            if (!other.GetComponent<Arrow>().singleHit)
+            if (!other.GetComponent<ArrowTrigger>().singleHit)
             {
-                other.GetComponent<Arrow>().singleHit = true;
+                other.GetComponent<ArrowTrigger>().singleHit = true;
                 TakeDamage(PlayerController.global.bowDamage);
                 Destroy(other.gameObject);
             }
