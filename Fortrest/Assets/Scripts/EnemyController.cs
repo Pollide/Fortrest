@@ -232,15 +232,16 @@ public class EnemyController : MonoBehaviour
                 {
                     LevelManager.ProcessBuildingList((building) =>
                     {
-
-                        float compare = Vector3.Distance(transform.position, building.position); // Distance from enemy to each target
-
-                        if (compare < shortestDistance) // Only true if a new shorter distance is found
+                        if (building.transform.localScale == Vector3.one) // To avoid targeting turrets spawning
                         {
-                            shortestDistance = compare; // New shortest distance is assigned
-                            bestTarget = building; // Enemy's target is now the closest item in the list
-                        }
+                            float compare = Vector3.Distance(transform.position, building.position); // Distance from enemy to each target
 
+                            if (compare < shortestDistance) // Only true if a new shorter distance is found
+                            {
+                                shortestDistance = compare; // New shortest distance is assigned
+                                bestTarget = building; // Enemy's target is now the closest item in the list
+                            }
+                        }                       
                     });
                 }
             }

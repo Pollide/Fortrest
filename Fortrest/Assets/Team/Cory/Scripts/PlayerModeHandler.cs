@@ -234,13 +234,15 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     if (!SelectedTurret)
                     {
-
                         PlayerController.global.TurretMenuTitle.text = buildType.ToString();
                         ClearBlueprint();
                     }
 
-                    PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
-                    SelectedTurret = colliders[i].GetComponentInParent<Building>();
+                    if (colliders[i].gameObject.transform.localScale == Vector3.one)
+                    {
+                        PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+                        SelectedTurret = colliders[i].GetComponentInParent<Building>();
+                    }                  
 
                     return;
                 }
@@ -337,11 +339,36 @@ public class PlayerModeHandler : MonoBehaviour
     private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position)
     {
         PlayerController.global.CheckSufficientResources(true);
-
-        yield return new WaitForSeconds(turretTimer);
-
-        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
         GameObject newTurret = Instantiate(prefab, position, Quaternion.identity);
+        newTurret.transform.localScale = Vector3.zero;
+
+        if (prefab == turretPrefabs[3])
+        {
+            newTurret.transform.GetChild(1).GetComponent<ScatterShot>().enabled = false;
+        }
+        else
+        {
+            newTurret.GetComponent<TurretShooting>().enabled = false;
+        }
+
+        float timer = 0f;
+        while (timer < 1.0f)
+        {
+            timer += Time.deltaTime / turretTimer;
+            newTurret.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, timer);
+            yield return null;
+        }
+
+        if (prefab == turretPrefabs[3])
+        {
+            newTurret.transform.GetChild(1).GetComponent<ScatterShot>().enabled = true;
+        }
+        else
+        {
+            newTurret.GetComponent<TurretShooting>().enabled = true;
+        }
+
+        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);       
         GameObject tempVFX = Instantiate(LevelManager.global.VFXSmokePuff.gameObject, newTurret.transform.position + new Vector3(0, .5f, 0), Quaternion.identity);
         tempVFX.GetComponent<VisualEffect>().Play();
         Destroy(tempVFX, 2.0f);
