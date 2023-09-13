@@ -319,6 +319,7 @@ public class LevelManager : MonoBehaviour
         if (Unlocks.global.mountUnlocked)
         {
             Instantiate(mountPrefab, new Vector3(-30f, 0f, -120f), Quaternion.identity);
+            Unlocks.global.mountUnlocked = false;
         }
 
         CalculateCamps();
