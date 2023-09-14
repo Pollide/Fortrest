@@ -3,15 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Arrow : MonoBehaviour
-{
-    [HideInInspector] public bool singleHit;
-
+{  
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject != PlayerController.global.gameObject)
-        {
-            Destroy(gameObject);
-        }       
+        Destroy(gameObject);
     }
 
     private void Start()
@@ -23,5 +18,5 @@ public class Arrow : MonoBehaviour
     {      
         yield return new WaitForSeconds(1.6f);
         Destroy(gameObject);
-    }
+    }  
 }

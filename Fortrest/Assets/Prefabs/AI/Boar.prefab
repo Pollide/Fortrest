@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4719565043046625720}
   - component: {fileID: 8724333916506198658}
   - component: {fileID: 3364648268988267333}
-  m_Layer: 5
+  m_Layer: 7
   m_Name: Floating Text Mount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -214,7 +214,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3656701987589825811}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Backleg.R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -245,7 +245,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1403343785806253082}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Spine2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,7 +281,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4406730756283737347}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: nose_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +312,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 876174495606898870}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Backleg.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2040162565274911655}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Spin1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,7 +376,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3125711405221351885}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Backleg.L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,7 +413,7 @@ GameObject:
   - component: {fileID: 7383631925837582762}
   - component: {fileID: 1273095432}
   - component: {fileID: 933261420}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Boar
   m_TagString: Boar
   m_Icon: {fileID: 0}
@@ -558,7 +558,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5884261022382941031}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Frontleg.R_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -589,7 +589,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1464095819847013406}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Frontleg.L_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -620,7 +620,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6465277451862893658}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Armature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -652,7 +652,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 146664803521510529}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Frontleg.R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -684,7 +684,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5355997583162299769}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Frontleg.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -716,7 +716,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4178764598730922053}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: nose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -750,7 +750,7 @@ GameObject:
   - component: {fileID: 5118387864589921102}
   - component: {fileID: 3490497036543174675}
   - component: {fileID: 5507671596873441979}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: PushTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -808,7 +808,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3727909734668766739}
   - component: {fileID: 4118909020878408506}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Boar2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -899,7 +899,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1838597124355811127}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Backleg.L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -929,6 +929,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6389752864692844930}
     m_Modifications:
+    - target: {fileID: 1543338511763222955, guid: cd1c06720b68b1b46b71ac0dd1ba0c2b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 2009263659144313577, guid: cd1c06720b68b1b46b71ac0dd1ba0c2b,
         type: 3}
       propertyPath: GamepadSprite
@@ -1014,6 +1019,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Key 3D
+      objectReference: {fileID: 0}
+    - target: {fileID: 7500103264856882018, guid: cd1c06720b68b1b46b71ac0dd1ba0c2b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cd1c06720b68b1b46b71ac0dd1ba0c2b, type: 3}

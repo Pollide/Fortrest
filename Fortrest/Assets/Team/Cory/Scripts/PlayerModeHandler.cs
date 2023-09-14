@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.VFX;
 
 public enum PlayerModes
 {
@@ -51,14 +52,14 @@ public class PlayerModeHandler : MonoBehaviour
 
     public bool canInteractWithHouse;
 
-    public float nimDistanceBetweenTurrts = 3;
+    public float minDistanceBetweenTurrets = 3;
 
     bool runOnce;
 
     public Vector3 HintOffset;
 
-
     public Building SelectedTurret;
+
     private void Awake()
     {
         if (global)
@@ -72,6 +73,16 @@ public class PlayerModeHandler : MonoBehaviour
             //itself doesnt exist so set it
             global = this;
         }
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        buildType = BuildType.Turret;
+        HUD = HUDHandler.global;
+        SwitchToBuildMode(false);
+        SwitchToResourceMode();
+        entryPosition = PlayerController.global.transform.position;
     }
 
     private void Update()
@@ -169,7 +180,6 @@ public class PlayerModeHandler : MonoBehaviour
                     House.GetComponent<Building>().textDisplayed = false;
                 }
                 centerMouse = false;
-                Boar.global.body.SetActive(false);
                 SwitchToBuildMode();
             }
             else
@@ -179,7 +189,6 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
                     House.GetComponent<Building>().textDisplayed = true;
                 }
-                Boar.global.body.SetActive(true);
                 ExitHouseCleanUp();
             }
         }
@@ -190,24 +199,12 @@ public class PlayerModeHandler : MonoBehaviour
         return EventSystem.current.IsPointerOverGameObject();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        buildType = BuildType.Turret;
-        HUD = HUDHandler.global;
-        SwitchToBuildMode(false);
-        SwitchToResourceMode();
-        entryPosition = PlayerController.global.transform.position;
-    }
-
     private void BuildMode()
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
         if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
-
-
             GameObject turretPrefab = turretPrefabs[0];
 
             if (buildType == BuildType.Slow)
@@ -228,7 +225,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             worldPos = new Vector3(gridPos.x, 0, gridPos.z);
 
-            Collider[] colliders = Physics.OverlapSphere(worldPos, nimDistanceBetweenTurrts, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
+            Collider[] colliders = Physics.OverlapSphere(worldPos, minDistanceBetweenTurrets, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
             PlayerController.global.TurretMenuHolder.gameObject.SetActive(SelectedTurret);
 
             for (int i = 0; i < colliders.Length; i++)
@@ -237,13 +234,15 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     if (!SelectedTurret)
                     {
-
                         PlayerController.global.TurretMenuTitle.text = buildType.ToString();
                         ClearBlueprint();
                     }
 
-                    PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
-                    SelectedTurret = colliders[i].GetComponentInParent<Building>();
+                    if (colliders[i].gameObject.transform.localScale == Vector3.one)
+                    {
+                        PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+                        SelectedTurret = colliders[i].GetComponentInParent<Building>();
+                    }                  
 
                     return;
                 }
@@ -293,15 +292,26 @@ public class PlayerModeHandler : MonoBehaviour
 
                 if (selectBool)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);
-                    GameObject newTurret = Instantiate(turretPrefab, worldPos, Quaternion.identity);
-
-                    PlayerController.global.CheckSufficientResources(true);
-
-                    LevelManager.global.VFXSmokePuff.transform.position = newTurret.transform.position + new Vector3(0, .5f, 0);
-
-                    //!hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource")
-                    LevelManager.global.VFXSmokePuff.Play();
+                    float timer = 0f;
+                    switch(buildType)
+                    {
+                        case BuildType.Turret:
+                            timer = 5.0f;
+                            break;
+                        case BuildType.Cannon:
+                            timer = 10.0f;
+                            break;
+                        case BuildType.Slow:
+                            timer = 15.0f;
+                            break;
+                        case BuildType.Scatter:
+                            timer = 10.0f;
+                            break;
+                        default:
+                            timer = 0f;
+                            break;
+                    }
+                    StartCoroutine(TurretConstructing(timer, turretPrefab, worldPos));
                 }
             }
             else
@@ -324,6 +334,45 @@ public class PlayerModeHandler : MonoBehaviour
                 }
             }
         }
+    }
+
+    private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position)
+    {
+        PlayerController.global.CheckSufficientResources(true);
+        GameObject newTurret = Instantiate(prefab, position, Quaternion.identity);
+        newTurret.transform.localScale = Vector3.zero;
+
+        if (prefab == turretPrefabs[3])
+        {
+            newTurret.transform.GetChild(1).GetComponent<ScatterShot>().enabled = false;
+        }
+        else
+        {
+            newTurret.GetComponent<TurretShooting>().enabled = false;
+        }
+
+        float timer = 0f;
+        while (timer < 1.0f)
+        {
+            timer += Time.deltaTime / turretTimer;
+            newTurret.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, timer);
+            yield return null;
+        }
+
+        if (prefab == turretPrefabs[3])
+        {
+            newTurret.transform.GetChild(1).GetComponent<ScatterShot>().enabled = true;
+        }
+        else
+        {
+            newTurret.GetComponent<TurretShooting>().enabled = true;
+        }
+
+        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);       
+        GameObject tempVFX = Instantiate(LevelManager.global.VFXSmokePuff.gameObject, newTurret.transform.position + new Vector3(0, .5f, 0), Quaternion.identity);
+        tempVFX.GetComponent<VisualEffect>().Play();
+        Destroy(tempVFX, 2.0f);
+        //!hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource")        
     }
 
     private void ScrollSwitchTurret()
@@ -373,14 +422,7 @@ public class PlayerModeHandler : MonoBehaviour
     IEnumerator PlayerAwake()
     {
         yield return new WaitForSeconds(0.1f);
-        if (Boar.global.mounted)
-        {
-            Boar.global.canMove = true;
-        }
-        else
-        {
-            PlayerController.global.playerCanMove = true;
-        }
+        PlayerController.global.playerCanMove = true;
     }
 
     void ClearBlueprint()
@@ -433,14 +475,7 @@ public class PlayerModeHandler : MonoBehaviour
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
             PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position, true);
-            if (Boar.global.mounted)
-            {
-                Boar.global.canMove = false;
-            }
-            else
-            {
-                PlayerController.global.playerCanMove = false;
-            }
+            PlayerController.global.playerCanMove = false;
 
             playerModes = PlayerModes.BuildMode;
             PlayerController.global.UpdateResourceHolder();

@@ -86,8 +86,6 @@ public class EnemyController : MonoBehaviour
     }
     void Start()
     {
-
-
         agent = GetComponent<NavMeshAgent>();
 
         noiseTimerMax = 2.5f;
@@ -230,19 +228,20 @@ public class EnemyController : MonoBehaviour
             }
             else
             {
-                if (!bestTarget || bestTarget == playerPosition || bestTarget == Boar.global.transform) // If the enemy does not have a current target
+                if (!bestTarget || bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform)) // If the enemy does not have a current target
                 {
                     LevelManager.ProcessBuildingList((building) =>
                     {
-
-                        float compare = Vector3.Distance(transform.position, building.position); // Distance from enemy to each target
-
-                        if (compare < shortestDistance) // Only true if a new shorter distance is found
+                        if (building.transform.localScale == Vector3.one) // To avoid targeting turrets spawning
                         {
-                            shortestDistance = compare; // New shortest distance is assigned
-                            bestTarget = building; // Enemy's target is now the closest item in the list
-                        }
+                            float compare = Vector3.Distance(transform.position, building.position); // Distance from enemy to each target
 
+                            if (compare < shortestDistance) // Only true if a new shorter distance is found
+                            {
+                                shortestDistance = compare; // New shortest distance is assigned
+                                bestTarget = building; // Enemy's target is now the closest item in the list
+                            }
+                        }                       
                     });
                 }
             }
@@ -253,14 +252,14 @@ public class EnemyController : MonoBehaviour
         {
             if (bestTarget == playerPosition)
             {
-                if (Boar.global.mounted == true && currentEnemyType == ENEMYTYPE.wolf)
+                if ((Boar.global && Boar.global.mounted == true) && currentEnemyType == ENEMYTYPE.wolf)
                 {
                     bestTarget = Boar.global.transform;
                 }
                 agent.stoppingDistance = stoppingDist;
                 distanceAdjusted = false;
             }
-            if (bestTarget == Boar.global.transform)
+            if (Boar.global && bestTarget == Boar.global.transform)
             {
                 agent.stoppingDistance = stoppingDist + 1.0f;
                 if (Boar.global.mounted == false)
@@ -268,7 +267,7 @@ public class EnemyController : MonoBehaviour
                     bestTarget = playerPosition;
                 }
             }
-            if (bestTarget != playerPosition && bestTarget != Boar.global.transform && bestTarget != house.transform)
+            if (bestTarget != playerPosition && (Boar.global && bestTarget != Boar.global.transform) && bestTarget != house.transform)
             {
                 if (distanceAdjusted == false)
                 {
@@ -471,9 +470,9 @@ public class EnemyController : MonoBehaviour
         }
         if (other.gameObject.tag == "Arrow")
         {
-            if (!other.GetComponent<Arrow>().singleHit)
+            if (!other.GetComponent<ArrowTrigger>().singleHit)
             {
-                other.GetComponent<Arrow>().singleHit = true;
+                other.GetComponent<ArrowTrigger>().singleHit = true;
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chaseTimer = 0;
@@ -485,7 +484,10 @@ public class EnemyController : MonoBehaviour
                 }
                 Damaged(PlayerController.global.bowDamage);
                 PickSound(hitSound, hitSound2, 1.0f);
-                Destroy(other.gameObject);
+                if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
+                {
+                    Destroy(other.gameObject.transform.parent.gameObject);
+                }
             }
         }
     }
@@ -571,7 +573,7 @@ public class EnemyController : MonoBehaviour
             PickSound(attackSound, attackSound2, 1.0f);
         }
 
-        if (bestTarget == playerPosition || bestTarget == Boar.global.transform)
+        if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
             if (PlayerController.global.playerCanBeDamaged)

@@ -46,7 +46,7 @@ public class InventoryItem : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                if (name == "Apple" && PlayerController.global.appleAmount >= PlayerController.maxApple)
+                if (name == "Apple" && PlayerController.global.appleAmount >= PlayerController.global.maxApple)
                 {
                     Vector3 direction = (transform.position - PlayerController.global.transform.position).normalized;
                     direction.y = 0.4f;

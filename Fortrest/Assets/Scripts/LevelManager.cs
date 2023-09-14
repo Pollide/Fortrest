@@ -57,6 +57,8 @@ public class LevelManager : MonoBehaviour
     public List<EnemyController> enemyList = new List<EnemyController>();
     public List<GameObject> inventoryItemList = new List<GameObject>();
     public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
+    public List<Camp> campList = new List<Camp>();
+    public List<BossHandler> bossList = new List<BossHandler>();
     public float daySpeed = 1;
     public float enemyTimer;
 
@@ -66,6 +68,7 @@ public class LevelManager : MonoBehaviour
     public GameObject goblinPrefab;
     public GameObject ogrePrefab;
     public GameObject spiderPrefab;
+    public GameObject mountPrefab;
 
     public VisualEffect VFXSmokePuff;
 
@@ -92,7 +95,7 @@ public class LevelManager : MonoBehaviour
 
     public SPAWNLANE lane;
 
-    private int campsCount;
+    public int campsCount;
     public int enemiesCount;
     public bool spawnEnemies;
     private bool nightAttack;
@@ -175,6 +178,28 @@ public class LevelManager : MonoBehaviour
         return BuildingList.IndexOf(requestedTransform);
     }
 
+    public static void ProcessBossList(System.Action<BossHandler> processAction)
+    {
+        for (int i = 0; i < LevelManager.global.bossList.Count; i++)
+        {
+            if (LevelManager.global.bossList[i])
+            {
+                processAction(LevelManager.global.bossList[i]);
+            }
+        }
+    }
+
+    public static void ProcessCampList(System.Action<Camp> processAction)
+    {
+        for (int i = 0; i < LevelManager.global.campList.Count; i++)
+        {
+            if (LevelManager.global.campList[i])
+            {
+                processAction(LevelManager.global.campList[i]);
+            }
+        }
+    }
+
     public static void ProcessEnemyList(System.Action<EnemyController> processAction)
     {
         for (int i = 0; i < LevelManager.global.enemyList.Count; i++)
@@ -221,6 +246,15 @@ public class LevelManager : MonoBehaviour
     public bool ReturnNight()
     {
         return daylightTimer > 180;
+    }
+
+    private void CalculateCamps()
+    {
+        campsCount = 0;
+        ProcessCampList((camp) =>
+        {
+            campsCount++;
+        });
     }
 
     private void Update()
@@ -281,6 +315,14 @@ public class LevelManager : MonoBehaviour
             PlayerController.global.NewDay();
             GameManager.global.DataSetVoid(false);
         }
+
+        if (Unlocks.global.mountUnlocked)
+        {
+            Instantiate(mountPrefab, new Vector3(-30f, 0f, -120f), Quaternion.identity);
+            Unlocks.global.mountUnlocked = false;
+        }
+
+        CalculateCamps();
 
         EnemyWaves();
 

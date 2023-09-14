@@ -49,13 +49,14 @@ public class PlayerController : MonoBehaviour
 
     // Shooting
     [HideInInspector] public bool canShoot;
-    [HideInInspector] public float bowDamage = 1.5f;
+    [HideInInspector] public float bowDamage = 1.25f;
     private float bowTimer = 0.0f;
     private float resetBow = 1f;
     private bool shooting = false;
     private bool directionSaved = false;
     private Quaternion tempDirection;
     public bool initialShot;
+    [HideInInspector] public bool upgradedBow;
 
     // Spawn Turret
     private bool turretSpawned;
@@ -87,7 +88,7 @@ public class PlayerController : MonoBehaviour
     // Eating
     [HideInInspector] public int appleAmount = 0;
     private float appleHealAmount = 10.0f;
-    [HideInInspector] public const int maxApple = 5;
+    [HideInInspector] public int maxApple = 5;
 
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f;
@@ -99,9 +100,9 @@ public class PlayerController : MonoBehaviour
     public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
     [HideInInspector] public bool lunge = false;
-    public bool upgradedMelee;
-    private bool applied;
+    [HideInInspector] public bool upgradedMelee;
     [HideInInspector] public bool cursorNearEnemy;
+
     // States
     [Header("Player States")]
     public bool playerCanMove = true;
@@ -221,6 +222,8 @@ public class PlayerController : MonoBehaviour
     // Map
     [HideInInspector] public bool mapBool;
     public bool ResourceHolderOpened;
+    Vector3 MapPanPosition;
+    private Vector3 mapMousePosition;
 
     public RectTransform TurretMenuHolder;
     public TMP_Text TurretMenuTitle;
@@ -465,7 +468,7 @@ public class PlayerController : MonoBehaviour
 
     private void TurretController()
     {
-        if (!turretCTRL && !turretSpawned)
+        if (Unlocks.global.miniTurretUnlocked && !turretCTRL && !turretSpawned)
         {
             turretCTRL = true;
         }
@@ -534,11 +537,19 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.L))
         {
             playerHealth = 0.0f;
             healthBar.SetHealth(playerHealth, maxHealth);
         }
+#endif
+
+        if (mapBool)
+        {
+            UpdateMap();
+        }
+
         if (pausedBool && !Input.GetKeyDown(KeyCode.Escape) || (mapBool && !Input.GetKeyDown(KeyCode.Tab) && !Input.GetKeyDown(KeyCode.Escape)))
         {
             return;
@@ -555,6 +566,23 @@ public class PlayerController : MonoBehaviour
         else
         {
             playerCanBeDamaged = true;
+        }
+
+        if (Unlocks.global.extraApplesUnlocked)
+        {
+            maxApple = 10;
+            UpdateAppleText();          
+            Unlocks.global.extraApplesUnlocked = false;
+        }
+
+        if (Unlocks.global.upgradedMeleeUnlocked)
+        {
+            UpgradeMelee();            
+        }
+
+        if (Unlocks.global.upgradedBowUnlocked)
+        {
+            UpgradeBow();          
         }
 
         if (playerCanMove)
@@ -582,7 +610,12 @@ public class PlayerController : MonoBehaviour
             // Mechanics
             Attack();
             Gathering();
-            Shoot();
+
+            if (Unlocks.global.bowUnlocked)
+            {
+                Shoot();
+            }
+            
             ModeChanged();
             if (lunge && !playerisMoving)
             {
@@ -604,20 +637,9 @@ public class PlayerController : MonoBehaviour
         CheckCurrentTool();
         Resting();
 
-        if (upgradedMelee && !applied)
-        {
-            UpgradeMelee();
-            applied = true;
-        }
-
         if (playerDead)
         {
             Death();
-        }
-
-        if (Input.GetKeyDown(KeyCode.U)) // TEMPORARY
-        {
-            upgradedMelee = !upgradedMelee;
         }
 
         foreach (KeyCode keyCode in keyCodes)
@@ -809,7 +831,7 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case KeyCode.T:
-                    if (!turretSpawned && playerCanMove)
+                    if (Unlocks.global.miniTurretUnlocked && !turretSpawned && playerCanMove)
                     {
                         SpawnTurret();
                     }
@@ -898,7 +920,7 @@ public class PlayerController : MonoBehaviour
         if (!houseInteract)
         {
             teleporting = true;
-        }      
+        }
 
         if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
             CameraFollow.global.transform.position = pos;
@@ -1058,19 +1080,42 @@ public class PlayerController : MonoBehaviour
 
             if (mapBool)
             {
-                MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
-
-                MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
-
-                MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
-                MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
-
+                UpdateMap();
+                MapPanPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
                 if (!ResourceHolderOpened)
                     UpdateResourceHolder();
             }
 
             OpenResourceHolder(map);
         }
+    }
+
+    void UpdateMap()
+    {
+        MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
+
+        float speed = 800 * Time.unscaledDeltaTime;
+
+        if (GameManager.global.KeyboardBool)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
+                mapMousePosition = Input.mousePosition;
+                MapPanPosition += dragDirection * speed;
+            }
+
+        }
+        else
+        {
+            MapPanPosition -= new Vector3(GameManager.global.moveCTRL.x, GameManager.global.moveCTRL.y) * speed;
+        }
+
+        MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = MapPanPosition;
+
+        MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
+        MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop
+
     }
 
     public void UpdateResourceHolder(int bridgeTypeInt = 0)
@@ -1296,41 +1341,31 @@ public class PlayerController : MonoBehaviour
             playerCC.Move(moveDirection * Time.deltaTime);
         }
     }
-
+    public float division = 1;
     private void RotatePlayer()
     {
-        // Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
+        //  Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
 
         if (!Boar.global.mounted)
         {
             if (GameManager.global.KeyboardBool)
             {
-
                 Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
 
-                Vector3 targetPostition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
-
+                Vector3 targetPosition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
 
                 if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
-                {
-                    targetPostition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up;
-                }
+                    targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 4;
 
-                targetPostition.y = transform.position.y;
-
-                transform.LookAt(targetPostition);
-
-                // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+                targetPosition.y = transform.position.y;
+                transform.LookAt(targetPosition);
             }
             else
             {
                 float angle = Mathf.Atan2(rotateCTRL.y, rotateCTRL.x) * Mathf.Rad2Deg - 135;
                 transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
-                //transform.rotation = Quaternion.LookRotation(new Vector3(rotateCTRL.x, 0f, rotateCTRL.y), Vector3.up);
             }
         }
-        //   float angleMove = Mathf.Atan2(moveDirection.y, moveDirection.x) * Mathf.Rad2Deg - 135;
-        //  SpinTransform.rotation = Quaternion.Euler(SpinTransform.eulerAngles.x, -angleMove, SpinTransform.eulerAngles.z);
     }
 
     private void ApplyGravity()
@@ -1359,6 +1394,16 @@ public class PlayerController : MonoBehaviour
         CharacterAnimator.SetBool("Upgraded", true);
         resetAttack = 0.6f;
         resetCombo = 0.8f;
+        upgradedMelee = true;
+        Unlocks.global.upgradedMeleeUnlocked = false;
+    }
+
+    private void UpgradeBow()
+    {
+        Bow.global.fireForce = 60.0f;
+        bowDamage = 1.5f;
+        upgradedBow = true;
+        Unlocks.global.upgradedBowUnlocked = false;
     }
 
     private void Attack()
@@ -1373,6 +1418,10 @@ public class PlayerController : MonoBehaviour
             LevelManager.ProcessEnemyList((enemy) =>
             {
                 enemy.canBeDamaged = true;
+            });
+            LevelManager.ProcessCampList((camp) =>
+            {
+                camp.canBeDamaged = true;
             });
 
             if (upgradedMelee)
@@ -1503,7 +1552,7 @@ public class PlayerController : MonoBehaviour
                 CharacterAnimator.SetBool("Aiming", false);
                 bowAnimator.SetBool("Aiming", false);
                 ChangeTool(new ToolData() { SwordBool = true });
-                canShoot = false;               
+                canShoot = false;
             }
             else
             {
@@ -1719,14 +1768,14 @@ public class PlayerController : MonoBehaviour
         if (LevelManager.global.waveEnd && remaining <= 0)
         {
             LevelManager.global.waveEnd = false;
-            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false);
+            GameManager.PlayAnimation(UIAnimation, "Enemies Appear", false);
         }
     }
 
     public void Death()
     {
         if (!deathEffects)
-        {         
+        {
             CharacterAnimator.gameObject.SetActive(false);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             VFXSleeping.Play();
@@ -1737,7 +1786,7 @@ public class PlayerController : MonoBehaviour
             deathEffects = true;
         }
         if (!playerRespawned)
-        {           
+        {
             respawnTimer += Time.deltaTime;
             playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
             healthBar.SetHealth(playerHealth, maxHealth);
@@ -1770,7 +1819,7 @@ public class PlayerController : MonoBehaviour
                     }
                     interactCTRL = false;
                     houseDisplay = true; // Used to reanimate house and make text appear once player respawns
-                    respawning = true;                    
+                    respawning = true;
                     StartCoroutine(RevertBool(false));
                 }
             }
