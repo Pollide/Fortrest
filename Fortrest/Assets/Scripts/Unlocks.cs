@@ -32,26 +32,26 @@ public class Unlocks : MonoBehaviour
     {
         LevelManager.ProcessBossList((boss) =>
         {           
-            if (boss.dead)
+            if (boss.IsDead)
             {
-                switch (boss.bossType)
+                switch (boss.BossType)
                 {
-                    case BossHandler.TYPE.Chieftain:
+                    case BossStateMachine.TYPE.Chieftain:
                         mountUnlocked = true;
                         break;
-                    case BossHandler.TYPE.Basilisk:
+                    case BossStateMachine.TYPE.Basilisk:
                         bowUnlocked = true;
                         break;
-                    case BossHandler.TYPE.SpiderQueen:
+                    case BossStateMachine.TYPE.SpiderQueen:
                         miniTurretUnlocked = true;
                         break;
-                    case BossHandler.TYPE.Tier4:
+                    case BossStateMachine.TYPE.Tier4:
                         extraApplesUnlocked = true;
                         break;
-                    case BossHandler.TYPE.Tier5:
+                    case BossStateMachine.TYPE.Tier5:
                         upgradedMeleeUnlocked = true;
                         break;
-                    case BossHandler.TYPE.Tier6:
+                    case BossStateMachine.TYPE.Tier6:
                         upgradedBowUnlocked = true;
                         break;
                     default:
