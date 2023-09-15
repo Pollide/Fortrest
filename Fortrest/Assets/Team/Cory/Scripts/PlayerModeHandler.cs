@@ -171,6 +171,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (!inTheFortress)
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.EnterHouseSound);
                 PlayerController.global.evading = false;
                 lastMode = playerModes;
                 entryPosition = PlayerController.global.transform.position;
@@ -184,6 +185,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
             else
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.ExitHouseSound);
                 if (!House.GetComponent<Building>().textDisplayed)
                 {
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
@@ -368,7 +370,23 @@ public class PlayerModeHandler : MonoBehaviour
             newTurret.GetComponent<TurretShooting>().enabled = true;
         }
 
-        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound);       
+        if (prefab == turretPrefabs[0])
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
+        }
+        else if (prefab == turretPrefabs[1])
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SlowTurretSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
+        }
+        else if (prefab == turretPrefabs[2])
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.CannonTurretSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
+        }
+        else if (prefab == turretPrefabs[3])
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.ScatterTurretSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
+        }
+
         GameObject tempVFX = Instantiate(LevelManager.global.VFXSmokePuff.gameObject, newTurret.transform.position + new Vector3(0, .5f, 0), Quaternion.identity);
         tempVFX.GetComponent<VisualEffect>().Play();
         Destroy(tempVFX, 2.0f);

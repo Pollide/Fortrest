@@ -162,7 +162,18 @@ public class Building : MonoBehaviour
 
             if (health <= 0)
             {
-
+                if (resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood || resourceObject == BuildingType.HardWood)
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.TreeBreakingSound, 1.0f, true, 0, false, transform);
+                }
+                else if (resourceObject == BuildingType.Stone || resourceObject == BuildingType.MossyStone || resourceObject == BuildingType.SlateStone)
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound, 1.0f, true, 0, false, transform);
+                }
+                else if (resourceObject == BuildingType.Bush)
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f, true, 0, false, transform);
+                }
                 DestroyBuilding();
             }
         }

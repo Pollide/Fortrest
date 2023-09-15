@@ -6,6 +6,7 @@ public class Arrow : MonoBehaviour
 {  
     private void OnCollisionEnter(Collision collision)
     {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.ArrowHitBuildingSound, 1.0f, true, 0, false, transform);
         Destroy(gameObject);
     }
 
