@@ -451,7 +451,7 @@ public class PlayerController : MonoBehaviour
 
     private void EvadeController()
     {
-        if (!evadeCTRL && canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
+        if (!evadeCTRL)
         {
             evadeCTRL = true;
         }
@@ -476,7 +476,7 @@ public class PlayerController : MonoBehaviour
 
     private void HealController()
     {
-        if (!healCTRL && appleAmount > 0)
+        if (!healCTRL)
         {
             healCTRL = true;
         }
@@ -828,6 +828,10 @@ public class PlayerController : MonoBehaviour
                     {
                         EatApple();
                     }
+                    else
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
+                    }
                     break;
 
                 case KeyCode.T:
@@ -870,7 +874,10 @@ public class PlayerController : MonoBehaviour
                 if (evadeCTRL)
                 {
                     evadeCTRL = false;
-                    StartCoroutine(Evade());
+                    if (canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
+                    {
+                        StartCoroutine(Evade());
+                    }             
                 }
                 if (turretCTRL)
                 {
@@ -880,7 +887,14 @@ public class PlayerController : MonoBehaviour
                 if (healCTRL)
                 {
                     healCTRL = false;
-                    EatApple();
+                    if (appleAmount > 0)
+                    {
+                        EatApple();
+                    }
+                    else
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
+                    }
                 }
             }
             if (canTeleport && interactCTRL)
@@ -1034,6 +1048,7 @@ public class PlayerController : MonoBehaviour
         CharacterAnimator.ResetTrigger("Evade");
         CharacterAnimator.SetTrigger("Evade");
         staggered = false;
+        GameManager.global.SoundManager.PlaySound(GameManager.global.EvadeSound);
 
         yield return new WaitForSeconds(evadeCoolDown);
         canEvade = true;
@@ -1606,6 +1621,10 @@ public class PlayerController : MonoBehaviour
             appleAmount -= 1;
             GameManager.PlayAnimation(appleText.GetComponent<Animation>(), "EnemyAmount");
             UpdateAppleText();
+        }
+        else
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
         }
     }
 

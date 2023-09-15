@@ -85,7 +85,6 @@ public class GameManager : MonoBehaviour
     public AudioClip BowAimSound;
     public AudioClip BowFireSound;
     public AudioClip BushBreakingSound;
-    public AudioClip CannonSpawnedSound;
     public AudioClip CantEatSound;
     public AudioClip ClockSound;
     public AudioClip EnterHouseSound;
