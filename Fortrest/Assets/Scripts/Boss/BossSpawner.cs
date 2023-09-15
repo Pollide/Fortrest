@@ -2,29 +2,22 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
-    public enum Boss
-    {
-        Chieftain,
-        Basilisk,
-        Spider,
-        SpiderQueen,
-        Tier5,
-        Tier6
-    }
-
-    public Boss currentBoss;
     [SerializeField] private float distance = 5f;
     [SerializeField] private bool hasRun = false;
+    [SerializeField] private GameObject boss;
+    [SerializeField] private Transform spawnPosition;
 
     private void Start()
     {
       
     }
+
     private void Update()
     {
-        if (CheckPlayerDistance())
+        if (CheckPlayerDistance() && hasRun == false)
         {
-
+            Instantiate(boss, spawnPosition);
+            hasRun = true;
         }
     }
     private bool CheckPlayerDistance()
