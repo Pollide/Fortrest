@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     public AudioClip GameMusic;
     public AudioClip PauseMusic;
     public AudioClip NightMusic;
+
     // SFX
     public AudioClip CollectSound;
     public AudioClip MenuClick1Sound; // NOT USED
@@ -76,6 +77,45 @@ public class GameManager : MonoBehaviour
     public AudioClip BallistaShootSound;
     public AudioClip CannonShootSound;
     public AudioClip SlowShootSound; // NEED BETTER SOUND
+
+    [Header("New SFX")]
+    // New SFX
+    public AudioClip ArrowHitBuildingSound;
+    public AudioClip BoulderBreakingSound;
+    public AudioClip BowAimSound;
+    public AudioClip BowFireSound;
+    public AudioClip BushBreakingSound;
+    public AudioClip CannonSpawnedSound;
+    public AudioClip CantEatSound;
+    public AudioClip ClockSound;
+    public AudioClip EnterHouseSound;
+    public AudioClip ExitHouseSound;
+    public AudioClip EvadeSound;
+    public AudioClip HouseCloseSound;
+    public AudioClip HouseOpenSound;
+    public AudioClip MapCloseSound;
+    public AudioClip MapOpenSound;
+    public AudioClip MiniTurretDisappearSound;
+    public AudioClip MiniTurretAppearSound;
+    public AudioClip PauseMenuSound;
+    public AudioClip PlayerAttack1Sound;
+    public AudioClip PlayerAttack2Sound;
+    public AudioClip PlayerAttack3Sound;
+    public AudioClip PlayerDeath1Sound;
+    public AudioClip PlayerDeath2Sound;
+    public AudioClip PlayerHit1Sound;
+    public AudioClip PlayerHit2Sound;
+    public AudioClip ScatterTurretSpawnedSound;
+    public AudioClip CannonTurretSpawnedSound;
+    public AudioClip SlowTurretSpawnedSound;
+    public AudioClip SlowTurretShootSound;
+    public AudioClip SwapTurretSound;
+    public AudioClip TeleportSound;
+    public AudioClip TeleporterEnterSound;
+    public AudioClip TreeBreakingSound;
+    public AudioClip TurretConstructingSound;
+    public AudioClip UpgradeMenuClickSound;
+
     private Vector3 lastMousePosition;
     public bool CheatInfiniteBuilding;
 
