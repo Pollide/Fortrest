@@ -80,7 +80,6 @@ public class TurretShooting : MonoBehaviour
 
                 if (IsSlow)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound, 0.3f, true, 0, false, transform);
                     target.GetComponent<EnemyController>().ApplySlow(enemySpeedPercentage);
                 }
                 else

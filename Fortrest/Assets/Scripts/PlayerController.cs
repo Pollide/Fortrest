@@ -233,6 +233,8 @@ public class PlayerController : MonoBehaviour
     private float transitionSpeed = 20f;
     public Animator bowAnimator;
 
+    private bool playSoundOnce;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -649,6 +651,11 @@ public class PlayerController : MonoBehaviour
 
         if (playerHealth <= 0)
         {
+            if (!playSoundOnce)
+            {
+                GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.PlayerDeath1Sound : GameManager.global.PlayerDeath2Sound);
+                playSoundOnce = true;
+            }         
             playerCanMove = false;
             if (Boar.global.mounted)
             {
@@ -789,6 +796,7 @@ public class PlayerController : MonoBehaviour
 
                 if (miniTurret)
                 {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretDisappearSound);
                     miniTurret.GetComponent<TurretShooting>().enabled = false; //stops it shooting
                     Destroy(miniTurret, GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn", false).length);
                 }
@@ -934,6 +942,7 @@ public class PlayerController : MonoBehaviour
         if (!houseInteract)
         {
             teleporting = true;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.TeleportSound);
         }
 
         if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
@@ -1069,6 +1078,7 @@ public class PlayerController : MonoBehaviour
 
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PauseMenuSound);
 
             if (!mapBool)
             {
@@ -1090,6 +1100,7 @@ public class PlayerController : MonoBehaviour
         {
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
             GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
 
@@ -1599,6 +1610,8 @@ public class PlayerController : MonoBehaviour
         turretTimer = 0;
         turretSpawned = true;
 
+        GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretAppearSound);
+
         Vector3 spawn = transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f));
         spawn.y = 0;
 
@@ -1641,16 +1654,24 @@ public class PlayerController : MonoBehaviour
         VFXSlash.transform.eulerAngles = transform.eulerAngles;
         if (attackCount == 0 || attackCount == 2)
         {
+            if (attackCount == 0)
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack1Sound, 0.4f);
+            }
+            else
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.4f);
+            }
             VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y - 15.0f, transform.eulerAngles.z + 180.0f);
         }
         else if (attackCount == 1)
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.4f);
             VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
         }
-        VFXSlash.Play();
-
-        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttackSound);
-        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound);
+        VFXSlash.Play();       
+        
+        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound, 0.5f);
 
         attackCount++;
         if (attackCount > 2)
@@ -1819,6 +1840,7 @@ public class PlayerController : MonoBehaviour
                 }
                 if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
                 {
+                    playSoundOnce = false;
                     CharacterAnimator.gameObject.SetActive(true);
                     CharacterAnimator.ResetTrigger("Death");
                     CharacterAnimator.SetTrigger("Respawn");

@@ -5,7 +5,6 @@ using TMPro;
 
 public class ShrineActivate : MonoBehaviour
 {
-
     public Animator PropAnimator;
     public string AnimationTriggerName;
     public TMP_Text interactText;
@@ -39,6 +38,7 @@ public class ShrineActivate : MonoBehaviour
             }
             PropAnimator.ResetTrigger(AnimationTriggerName);
             PropAnimator.SetTrigger(AnimationTriggerName);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.TeleporterEnterSound);
             PlayerController.global.canTeleport = true;
             PlayerController.global.needInteraction = true;
         }
