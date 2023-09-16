@@ -23,17 +23,11 @@ public class ChargeState : BossState
     // Damage for attack
     [SerializeField] private float damage = 0f;
     // Holds charge trigger
-    private BoxCollider chargeDMGTrigger;
+    [SerializeField] private BoxCollider chargeDMGTrigger;
 
     public override void EnterState()
     {
         chargeTimer = 0f;
-
-        if (chargeDMGTrigger == null)
-        {
-            // Get box charge trigger
-            chargeDMGTrigger = GetComponent<BoxCollider>();
-        }
         // Checks if the state is null
         if (idleState == null)
         {
@@ -50,19 +44,6 @@ public class ChargeState : BossState
 
     public override void ExitState()
     {
-        // Checks if state is populated
-        if (idleState != null)
-        {
-            // Sets state to null
-            idleState = null;
-        }
-        // Checks if state is populated
-        if (attackState != null)
-        {
-            // Sets state to null
-            attackState = null;
-        }
-
         // Turn off charge damage trigger
         chargeDMGTrigger.enabled = false;
     }
@@ -122,18 +103,24 @@ public class ChargeState : BossState
         Debug.Log("Charging!");
     }
 
-    private void OnTriggerEnter(Collider other)
+    public float Damage
     {
-        if (other.CompareTag("Player") && !playerHit)
-        {
-            playerHit = true;
-            PlayerController player = other.GetComponent<PlayerController>();
-            player.TakeDamage(damage, true);
-            Vector3 pushDirection = playerTransform.position - transform.position;
-            float angle = Vector3.Angle(pushDirection, player.transform.position - transform.position);
-            pushDirection = Quaternion.Euler(0f, angle, 0f) * pushDirection;
-            player.SetPushDirection(pushDirection, chargePushForce);
-            StartCoroutine(player.PushPlayer(chargePushDuration));
-        }
+        get { return damage; }
+    }
+
+    public float ChargePushForce
+    {
+        get { return chargePushForce; }
+    }
+
+    public float ChargePushDuration
+    {
+        get { return chargePushDuration; }
+    }
+
+    public bool PlayerHit
+    {
+        get { return playerHit; }
+        set { playerHit = value; }
     }
 }

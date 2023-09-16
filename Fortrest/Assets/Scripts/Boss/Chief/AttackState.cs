@@ -7,7 +7,7 @@ public class AttackState : BossState
     // Timer for attacks
     private float attackTimer = 0f;
     // Timer for checking the random number to decide attack states
-    private float randomCheckTimer = 0f;
+    [SerializeField] private float randomCheckTimer = 0f;
     [SerializeField] private float randomCheckDuration = 5f;
     // Damage for attack
     [SerializeField] private float damage = 0f;
@@ -51,24 +51,24 @@ public class AttackState : BossState
 
     public override void ExitState()
     {
-        // Checks if state is populated
-        if (idleState != null)
-        {
-            // Sets state to null
-            idleState = null;
-        }
-        // Checks if state is populated
-        if (chargeState != null)
-        {
-            // Sets state to null
-            chargeState = null;
-        }
-        // Checks if state is populated
-        if (slamState != null)
-        {
-            // Sets state to null
-            slamState = null;
-        }
+        //// Checks if state is populated
+        //if (idleState != null)
+        //{
+        //    // Sets state to null
+        //    idleState = null;
+        //}
+        //// Checks if state is populated
+        //if (chargeState != null)
+        //{
+        //    // Sets state to null
+        //    chargeState = null;
+        //}
+        //// Checks if state is populated
+        //if (slamState != null)
+        //{
+        //    // Sets state to null
+        //    slamState = null;
+        //}
     }
 
     public override void UpdateState()

@@ -19,17 +19,19 @@ public class IdleState : BossState
             attackState = GetComponent<AttackState>();
         }
 
+        stateMachine.HealthBar.SetActive(true);
+
         resetTimer = resetTimerDuration;
     }
 
     public override void ExitState()
     {
-        // Checks if attacks state is populated
-        if (attackState != null)
-        {
-            // Sets state to null
-            attackState = null;
-        }
+        //// Checks if attacks state is populated
+        //if (attackState != null)
+        //{
+        //    // Sets state to null
+        //    attackState = null;
+        //}
     }
 
     public override void UpdateState()
@@ -45,6 +47,7 @@ public class IdleState : BossState
             if (resetTimer <= 0f)
             {
                 stateMachine.CurrentHealth = stateMachine.MaxHealth;
+                stateMachine.HealthBar.SetActive(false);
             }
 
             WalkTo(initialSpawn.position);

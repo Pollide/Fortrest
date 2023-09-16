@@ -10,7 +10,11 @@ public class SlamState : BossState
     // Slam wait time
     private float slamWaitTime = 0f;
     [SerializeField] private float slamDuration = 5f;
+    [SerializeField] private float slamRadius = 5f;
+    [SerializeField] private float damage = 5f;
     [SerializeField] private GameObject telegraph;
+    private bool damageDone = false;
+
 
     public override void EnterState()
     {
@@ -26,22 +30,26 @@ public class SlamState : BossState
             // Gets the connected state
             attackState = GetComponent<AttackState>();
         }
+
+        telegraph.SetActive(true);
+        agent.isStopped = true;
     }
 
     public override void ExitState()
     {
-        // Checks if state is populated
-        if (idleState != null)
-        {
-            // Sets state to null
-            idleState = null;
-        }
-        // Checks if state is populated
-        if (attackState != null)
-        {
-            // Sets state to null
-            attackState = null;
-        }
+        //// Checks if state is populated
+        //if (idleState != null)
+        //{
+        //    // Sets state to null
+        //    idleState = null;
+        //}
+        //// Checks if state is populated
+        //if (attackState != null)
+        //{
+        //    // Sets state to null
+        //    attackState = null;
+        //}
+        telegraph.SetActive(false);
     }
 
     public override void UpdateState()
@@ -54,12 +62,30 @@ public class SlamState : BossState
         if (slamWaitTime < slamDuration)
         {
             slamWaitTime += Time.deltaTime;
+
+            telegraph.transform.position = playerTransform.position;
+        }
+
+        if (slamWaitTime >= slamDuration && !damageDone)
+        {
+            telegraph.GetComponent<BossTelegraph>().DoSlamDamage();
+            damageDone = true;
         }
     }
 
     public float SlamDuration
     {
         get { return slamDuration; }
+    }
+
+    public float SlamRadius
+    {
+        get { return slamRadius; }
+    }
+
+    public float Damage
+    {
+        get { return damage; }
     }
 
     public float SlamWaitTime

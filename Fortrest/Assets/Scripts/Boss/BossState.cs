@@ -65,4 +65,9 @@ public abstract class BossState : MonoBehaviour
     
     // Run on exit to do cleanup
     public abstract void ExitState();
+
+    public Transform PlayerTransform
+    {
+        get { return playerTransform; }
+    }
 }
