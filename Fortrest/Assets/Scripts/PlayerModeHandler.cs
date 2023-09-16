@@ -301,10 +301,10 @@ public class PlayerModeHandler : MonoBehaviour
                             timer = 5.0f;
                             break;
                         case BuildType.Cannon:
-                            timer = 10.0f;
+                            timer = 5.0f;
                             break;
                         case BuildType.Slow:
-                            timer = 15.0f;
+                            timer = 5.0f;
                             break;
                         case BuildType.Scatter:
                             timer = 10.0f;
@@ -340,6 +340,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position)
     {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretConstructingSound);
         PlayerController.global.CheckSufficientResources(true);
         GameObject newTurret = Instantiate(prefab, position, Quaternion.identity);
         newTurret.transform.localScale = Vector3.zero;
@@ -398,6 +399,7 @@ public class PlayerModeHandler : MonoBehaviour
         if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
             PlayerController.global.scrollCTRL = false;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SwapTurretSound);
             if (buildType == BuildType.Turret)
             {
                 SwitchBuildTypeCannon();
@@ -418,6 +420,7 @@ public class PlayerModeHandler : MonoBehaviour
         if ((Input.mouseScrollDelta.y < 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
             PlayerController.global.scrollCTRL = false;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SwapTurretSound);
             if (buildType == BuildType.Turret)
             {
                 SwitchBuildTypeScatter();

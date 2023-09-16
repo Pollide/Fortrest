@@ -363,7 +363,10 @@ public class EnemyController : MonoBehaviour
         if (health <= 0)
         {
             dead = true;
-            agent.SetDestination(transform.position);
+            if (agent)
+            {
+                agent.SetDestination(transform.position);
+            }            
             healthAnimation.gameObject.SetActive(false);
             if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin) // remove once we got anims
             {
@@ -575,7 +578,7 @@ public class EnemyController : MonoBehaviour
 
         if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerHitSound, 0.2f, true, 0, false, playerPosition);
+            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.PlayerHit1Sound : GameManager.global.PlayerHit2Sound);
             if (PlayerController.global.playerCanBeDamaged)
             {
                 if (currentEnemyType == ENEMYTYPE.goblin)
