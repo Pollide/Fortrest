@@ -28,13 +28,13 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private TYPE bossType;
     // Holds the bosses current phase
     [SerializeField] private BossPhase currentPhase;
-    
+
     // Holds the current state
     [SerializeField] private BossState currentState;
     // Holds the initial state the boss starts with
     [SerializeField] private BossState initialState;
-    [SerializeField] private Image healthImage;
-    
+    [SerializeField] private GameObject healthBar;
+
     // Holds the bosses health
     [SerializeField] private float currentHealth;
     // Holds the bosses max health
@@ -43,7 +43,7 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private float arenaRadius;
     // Agent current speed
     [SerializeField] private float speed;
-    
+
     // Bool to see if in defensive state
     [SerializeField] private bool inDefence = false;
     // Bool to see if in death state
@@ -133,7 +133,7 @@ public class BossStateMachine : MonoBehaviour
 
     private void UpdateHealth()
     {
-        healthImage.fillAmount = Mathf.Clamp(currentHealth / maxHealth, 0f, 1f);
+        healthBar.GetComponentInChildren<HealthBar>().SetHealth(currentHealth, maxHealth);
     }
 
     private void DeadState()
@@ -155,7 +155,12 @@ public class BossStateMachine : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, arenaRadius);
     }
 
-    public float ArenaSize 
+    public GameObject HealthBar
+    {
+        get { return healthBar; }
+    }
+
+    public float ArenaSize
     {
         get { return arenaRadius; }
         set { arenaRadius = value; }
@@ -172,10 +177,10 @@ public class BossStateMachine : MonoBehaviour
         set { maxHealth = value; }
     }
 
-    public BossPhase CurrentPhase 
+    public BossPhase CurrentPhase
     {
-       get { return currentPhase; } 
-       set { currentPhase = value; } 
+        get { return currentPhase; }
+        set { currentPhase = value; }
     }
 
     public TYPE BossType
