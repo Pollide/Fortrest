@@ -5,20 +5,19 @@ using UnityEngine.UI;
 
 public class BossTelegraph : MonoBehaviour
 {
-    [SerializeField] private Image telegraphImage;
     [SerializeField] private SlamState state;
 
     // Start is called before the first frame update
     void Start()
     {
-        telegraphImage.rectTransform.localScale = Vector3.zero;
         gameObject.transform.SetParent(null);
+        transform.localScale = Vector3.zero;       
     }
 
     // Update is called once per frame
     void Update()
     {
-        telegraphImage.rectTransform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, state.SlamWaitTime / state.SlamDuration);
+        transform.localScale = Vector3.Lerp(Vector3.zero, new Vector3(state.SlamRadius * 2, state.SlamRadius * 2, 1), state.SlamWaitTime / state.SlamDuration);
     }
 
     public void DoSlamDamage()
@@ -32,6 +31,8 @@ public class BossTelegraph : MonoBehaviour
                 collider.GetComponent<PlayerController>().TakeDamage(state.Damage, true);
             }
         }
+
+        ScreenShake.global.shake = true;
     }
 
     private void OnDrawGizmosSelected()

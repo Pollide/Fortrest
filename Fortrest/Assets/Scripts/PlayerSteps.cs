@@ -4,16 +4,6 @@ using UnityEngine;
 
 public class PlayerSteps : MonoBehaviour
 {
-    void ActivateSwordCollider()
-    {
-        PlayerController.global.SwordGameObject.GetComponent<BoxCollider>().enabled = true;
-    }
-
-    void DeactivateSwordCollider()
-    {
-        PlayerController.global.SwordGameObject.GetComponent<BoxCollider>().enabled = false;
-    }
-
     void Attack()
     {
         if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
