@@ -48,6 +48,7 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private bool inDefence = false;
     // Bool to see if in death state
     [SerializeField] private bool isDead = false;
+    private bool canBeDamaged = false;
 
     // Start is called before the first frame update
     void Start()
@@ -198,6 +199,12 @@ public class BossStateMachine : MonoBehaviour
     {
         get { return inDefence; }
         set { inDefence = value; }
+    }
+
+    public bool CanBeDamaged
+    {
+        get { return canBeDamaged; }
+        set { canBeDamaged = value; }
     }
 
     public bool IsDead

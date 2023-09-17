@@ -307,7 +307,6 @@ public class PlayerController : MonoBehaviour
             //gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
             // X to open / close inventory
             //gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
-            SwordGameObject.GetComponent<BoxCollider>().enabled = false;
         }
     }
 
@@ -1438,7 +1437,10 @@ public class PlayerController : MonoBehaviour
             {
                 camp.canBeDamaged = true;
             });
-
+            LevelManager.ProcessBossList((boss) =>
+            {
+                boss.CanBeDamaged = true;
+            });
             if (upgradedMelee)
             {
                 attackDamage = 1.25f;

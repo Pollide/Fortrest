@@ -4,11 +4,27 @@ using UnityEngine;
 
 public class TakeDamageTrigger : MonoBehaviour
 {
-    private void  OnTriggerEnter(Collider other)
+    private PlayerController player;
+    private BossStateMachine stateMachine;
+
+    private void Start()
     {
-        if (other.gameObject == PlayerController.global.SwordGameObject)
+        player = PlayerController.global;
+        stateMachine = transform.parent.GetComponent<BossStateMachine>();
+    }
+
+    private void  OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == player.SwordGameObject)
         {
-            transform.parent.GetComponent<BossStateMachine>().TakeDamage(PlayerController.global.attackDamage * 10);
+            player.cursorNearEnemy = true;
+
+            if (player.attacking && stateMachine.CanBeDamaged && player.damageEnemy)
+            {
+
+                stateMachine.TakeDamage(player.attackDamage * 10);
+            }
+            
         }
     }
 }
