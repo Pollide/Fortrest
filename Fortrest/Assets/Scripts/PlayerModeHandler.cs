@@ -317,7 +317,7 @@ public class PlayerModeHandler : MonoBehaviour
                 }
             }
             else
-            {
+            {                
                 BluePrintSet(turretBlueprintRed);
 
 
@@ -325,12 +325,12 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     if (!runOnce)
                     {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                         runOnce = true;
 
                         if (!PlayerController.global.CheckSufficientResources())
                         {
                             PlayerController.global.ShakeResourceHolder();
-
                         }
                     }
                 }
@@ -339,10 +339,10 @@ public class PlayerModeHandler : MonoBehaviour
     }
 
     private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position)
-    {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretConstructingSound);
+    {        
         PlayerController.global.CheckSufficientResources(true);
         GameObject newTurret = Instantiate(prefab, position, Quaternion.identity);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretConstructingSound);
         newTurret.transform.localScale = Vector3.zero;
 
         if (prefab == turretPrefabs[3])
@@ -373,19 +373,19 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (prefab == turretPrefabs[0])
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.TurretPlaceSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.BallistaSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
         }
         else if (prefab == turretPrefabs[1])
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.SlowTurretSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SlowSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
         }
         else if (prefab == turretPrefabs[2])
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.CannonTurretSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.CannonSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
         }
         else if (prefab == turretPrefabs[3])
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.ScatterTurretSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.ScatterSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
         }
 
         GameObject tempVFX = Instantiate(LevelManager.global.VFXSmokePuff.gameObject, newTurret.transform.position + new Vector3(0, .5f, 0), Quaternion.identity);
@@ -399,6 +399,7 @@ public class PlayerModeHandler : MonoBehaviour
         if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
             PlayerController.global.scrollCTRL = false;
+            GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SwapTurretSound);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SwapTurretSound);
             if (buildType == BuildType.Turret)
             {

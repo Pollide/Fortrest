@@ -145,7 +145,7 @@ public class Menu : MonoBehaviour
         {
             if (direction != 0)
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
+                //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuSwooshSound);
 
                 ReturnButton().HighlightVoid(false);
                 ActiveSignInt = (int)GameManager.ReturnThresholds(ActiveSignInt + direction, SignHolderTransform.childCount - 1);

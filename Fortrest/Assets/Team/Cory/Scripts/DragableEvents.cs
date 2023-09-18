@@ -8,7 +8,7 @@ public class DragableEvents : MonoBehaviour
     public void DeleteItem()
     {
         DragableItem drag = GetComponent<DragableItem>();
-        GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
+        //GameManager.global.SoundManager.PlaySound(GameManager.global.SpeedButtonClickSound);
         InventoryManager inv = InventoryManager.global;
 
         inv.RemoveItem(drag.name, inv.GetItemQuantity(drag.name));

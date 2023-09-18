@@ -183,7 +183,6 @@ public class TurretShooting : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.BallistaShootSound, 0.3f, true, 0, false, transform);
             U_Turret uTurret = GetComponent<U_Turret>();
 
-
             if (uTurret && uTurret.isMultiShotActive)
             {
                 float range = Random.Range(0f, 101);

@@ -483,7 +483,14 @@ public class EnemyController : MonoBehaviour
                     bestTarget = playerPosition;
                 }
                 Damaged(PlayerController.global.bowDamage);
-                PickSound(hitSound, hitSound2, 1.0f);
+                if (currentEnemyType == ENEMYTYPE.goblin)
+                {
+                    PickSound(hitSound, hitSound2, 0.6f);
+                }
+                else
+                {
+                    PickSound(hitSound, hitSound2, 1.0f);
+                }
                 if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
                 {
                     Destroy(other.gameObject.transform.parent.gameObject);
@@ -570,12 +577,35 @@ public class EnemyController : MonoBehaviour
     {
         if (currentEnemyType != ENEMYTYPE.ogre)
         {
-            PickSound(attackSound, attackSound2, 1.0f);
+            if (currentEnemyType == ENEMYTYPE.goblin)
+            {
+                PickSound(attackSound, attackSound2, 0.6f);
+            }
+            else
+            {
+                PickSound(attackSound, attackSound2, 1.0f);
+            }           
         }
 
         if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
         {
-            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.PlayerHit1Sound : GameManager.global.PlayerHit2Sound);
+            int randomInt = Random.Range(0, 3);
+            AudioClip temp = null;
+            switch (randomInt)
+            {
+                case 0:
+                    temp = GameManager.global.PlayerHit1Sound;
+                    break;
+                case 1:
+                    temp = GameManager.global.PlayerHit2Sound;
+                    break;
+                case 2:
+                    temp = GameManager.global.PlayerHit3Sound;
+                    break;
+                default:
+                    break;
+            }
+            GameManager.global.SoundManager.PlaySound(temp, 0.9f);
             if (PlayerController.global.playerCanBeDamaged)
             {
                 if (currentEnemyType == ENEMYTYPE.goblin)

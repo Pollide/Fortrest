@@ -25,95 +25,84 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public bool KeyboardBool = true;
 
-    // Music
+    [Header ("Music")]
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
     public AudioClip PauseMusic;
     public AudioClip NightMusic;
 
-    // SFX
-    public AudioClip CollectSound;
-    public AudioClip MenuClick1Sound; // NOT USED
-    public AudioClip MenuClick2Sound; // NOT USED
-    public AudioClip TurretPlaceSound;
-    public AudioClip EatingSound;
-    public AudioClip CameraLockSound; // NOT USED
-    public AudioClip MenuSwooshSound;
-    public AudioClip SpeedButtonClickSound; // NOT USED
-    public AudioClip ModeChangeClickSound;
-    public AudioClip HouseBuiltNoiseSound;
-    public AudioClip HouseBuiltSound;
-    public AudioClip SnoringSound;
-    public AudioClip CantPlaceSound;
-    public AudioClip WhistlingSound; // NOT USED
-    public AudioClip HouseDestroySound;
-    public AudioClip InventoryClickSound; // NOT USED
-    public AudioClip NewDaySound;
-    public AudioClip WaterSound;
-    // Tools
-    public AudioClip Pickaxe1Sound; // NOT USED
-    public AudioClip Pickaxe2Sound;
-    public AudioClip Pickaxe3Sound;
-    public AudioClip SwordSwing1Sound;
-    public AudioClip SwordSwing2Sound;
-    public AudioClip SwordSwing3Sound; // NOT USED
-    public AudioClip TreeChop1Sound;
-    public AudioClip TreeChop2Sound;
-    public AudioClip TreeChop3Sound; // NOT USED
-    public AudioClip BushSound;
-    // Player
-    public AudioClip PlayerHitSound;
-    public AudioClip PlayerHitSound2; // TO BE ASSIGNED
-    public AudioClip PlayerAttackSound;
-    public AudioClip PlayerAttackSound2; // TO BE ASSIGNED
-    public AudioClip PlayerDeathSound; // TO BE ASSIGNED
-    public AudioClip PlayerDeathSound2; // TO BE ASSIGNED
-    public AudioClip PlayerNoiseSound; // TO BE ASSIGNED
-    public AudioClip PlayerNoiseSound2; // TO BE ASSIGNED
-    public AudioClip PlayerJumpSound; // NOT USED
-    public AudioClip PlayerStepSound;
-    public AudioClip PlayerStepSound2;
-    // Turret
-    public AudioClip BallistaShootSound;
-    public AudioClip CannonShootSound;
-    public AudioClip SlowShootSound; // NEED BETTER SOUND
-
-    [Header("New SFX")]
-    // New SFX
-    public AudioClip ArrowHitBuildingSound;
-    public AudioClip BoulderBreakingSound;
-    public AudioClip BowAimSound;
-    public AudioClip BowFireSound;
-    public AudioClip BushBreakingSound;
-    public AudioClip CantEatSound;
-    public AudioClip ClockSound;
-    public AudioClip EnterHouseSound;
-    public AudioClip ExitHouseSound;
-    public AudioClip EvadeSound;
-    public AudioClip HouseCloseSound;
-    public AudioClip HouseOpenSound;
-    public AudioClip MapCloseSound;
-    public AudioClip MapOpenSound;
-    public AudioClip MiniTurretDisappearSound;
-    public AudioClip MiniTurretAppearSound;
-    public AudioClip PauseMenuSound;
+    [Header ("Player Sounds")]
+    public AudioClip PlayerEvadeSound;
+    public AudioClip PlayerHit1Sound;
+    public AudioClip PlayerHit2Sound;
+    public AudioClip PlayerHit3Sound;
     public AudioClip PlayerAttack1Sound;
     public AudioClip PlayerAttack2Sound;
     public AudioClip PlayerAttack3Sound;
     public AudioClip PlayerDeath1Sound;
     public AudioClip PlayerDeath2Sound;
-    public AudioClip PlayerHit1Sound;
-    public AudioClip PlayerHit2Sound;
-    public AudioClip ScatterTurretSpawnedSound;
-    public AudioClip CannonTurretSpawnedSound;
-    public AudioClip SlowTurretSpawnedSound;
-    public AudioClip SlowTurretShootSound;
-    public AudioClip SwapTurretSound;
-    public AudioClip TeleportSound;
-    public AudioClip TeleporterEnterSound;
+    public AudioClip PlayerStepSound;
+    public AudioClip PlayerStep2Sound;
+
+    [Header ("Resources Sounds")]
+    public AudioClip CollectSound;
+    public AudioClip BoulderBreakingSound;
+    public AudioClip BushBreakingSound;
     public AudioClip TreeBreakingSound;
+
+    [Header ("Tools Sounds")]
+    public AudioClip AxeSound;
+    public AudioClip PickaxeSound;
+    public AudioClip BushSound;
+    public AudioClip SwordSwing1Sound;
+    public AudioClip SwordSwing2Sound;
+    public AudioClip SwordSwing3Sound;
+
+    [Header ("Turret Sounds")]
+    public AudioClip BallistaSpawnedSound;
+    public AudioClip BallistaShootSound;
+    public AudioClip CannonSpawnedSound;
+    public AudioClip CannonShootSound;    
+    public AudioClip SlowSpawnedSound;
+    public AudioClip SlowShootSound; // Not Implemented
+    public AudioClip ScatterSpawnedSound;
+    public AudioClip ScatterShootSound; // Not Implemented & Not imported
+    public AudioClip MiniTurretAppearSound;
+    public AudioClip MiniTurretDisappearSound;
+
+    [Header ("House Sounds")]
+    public AudioClip EnterHouseSound;
+    public AudioClip ExitHouseSound;
+    public AudioClip HouseOpenSound;
+    public AudioClip HouseCloseSound;
+    public AudioClip HouseDestroyedSound;
+
+    [Header ("Bow Sounds")]
+    public AudioClip BowAimSound;
+    public AudioClip BowFireSound;
+    public AudioClip ArrowHitBuildingSound;
+    public AudioClip ArrowHitEnemySound; // Not Implemented & Not imported
+
+    [Header ("SFX")]
+    public AudioClip EatingSound;
+    public AudioClip CantEatSound;
+    public AudioClip BridgeBuiltSound;
+    public AudioClip BridgeBuiltNoiseSound;
     public AudioClip TurretConstructingSound;
-    public AudioClip UpgradeMenuClickSound;
+    public AudioClip SwapTurretSound;
+    public AudioClip CantPlaceSound;
+    public AudioClip SnoringSound;
+    public AudioClip NewDaySound;
+    public AudioClip WaterSound;
+    public AudioClip ClockSound; // Not Implemented
+    public AudioClip MenuClickSound; // Not Implemented
+    public AudioClip UpgradeMenuClickSound; // Not Implemented
+    public AudioClip ModeChangeClickSound;
+    public AudioClip MapCloseSound;
+    public AudioClip MapOpenSound;    
+    public AudioClip PauseMenuSound;
+    public AudioClip TeleportSound;
+    public AudioClip TeleporterEnterSound;      
 
     private Vector3 lastMousePosition;
     public bool CheatInfiniteBuilding;
