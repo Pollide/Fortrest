@@ -47,28 +47,13 @@ public class AttackState : BossState
             // Gets the connected state
             slamState = GetComponent<SlamState>();
         }
+        randomCheckTimer = randomCheckDuration;
+
     }
 
     public override void ExitState()
     {
-        //// Checks if state is populated
-        //if (idleState != null)
-        //{
-        //    // Sets state to null
-        //    idleState = null;
-        //}
-        //// Checks if state is populated
-        //if (chargeState != null)
-        //{
-        //    // Sets state to null
-        //    chargeState = null;
-        //}
-        //// Checks if state is populated
-        //if (slamState != null)
-        //{
-        //    // Sets state to null
-        //    slamState = null;
-        //}
+    
     }
 
     public override void UpdateState()

@@ -11,6 +11,7 @@ public class SlamState : BossState
     private float slamWaitTime = 0f;
     [SerializeField] private float slamDuration = 5f;
     [SerializeField] private float slamRadius = 5f;
+    [SerializeField] private float slamWaitAfterIndicator = 2f;
     [SerializeField] private float damage = 5f;
     [SerializeField] private GameObject telegraph;
     private bool damageDone = false;
@@ -37,18 +38,6 @@ public class SlamState : BossState
 
     public override void ExitState()
     {
-        //// Checks if state is populated
-        //if (idleState != null)
-        //{
-        //    // Sets state to null
-        //    idleState = null;
-        //}
-        //// Checks if state is populated
-        //if (attackState != null)
-        //{
-        //    // Sets state to null
-        //    attackState = null;
-        //}
         telegraph.SetActive(false);
     }
 
@@ -68,9 +57,12 @@ public class SlamState : BossState
 
         if (slamWaitTime >= slamDuration && !damageDone)
         {
-            telegraph.GetComponent<BossTelegraph>().DoSlamDamage();
+            StartCoroutine(telegraph.GetComponent<BossTelegraph>().DoSlamDamage(slamWaitAfterIndicator));
+            stateMachine.ChangeState(attackState);
             damageDone = true;
         }
+
+
     }
 
     public float SlamDuration
