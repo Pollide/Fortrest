@@ -26,12 +26,6 @@ public class IdleState : BossState
 
     public override void ExitState()
     {
-        //// Checks if attacks state is populated
-        //if (attackState != null)
-        //{
-        //    // Sets state to null
-        //    attackState = null;
-        //}
     }
 
     public override void UpdateState()

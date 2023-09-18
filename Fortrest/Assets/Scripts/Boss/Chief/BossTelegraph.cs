@@ -20,8 +20,11 @@ public class BossTelegraph : MonoBehaviour
         transform.localScale = Vector3.Lerp(Vector3.zero, new Vector3(state.SlamRadius * 2, state.SlamRadius * 2, 1), state.SlamWaitTime / state.SlamDuration);
     }
 
-    public void DoSlamDamage()
+
+    public IEnumerator DoSlamDamage(float waitTime)
     {
+        yield return new WaitForSeconds(waitTime);
+        
         Collider[] colliders = Physics.OverlapSphere(transform.position, state.SlamRadius);
 
         foreach (var collider in colliders)
