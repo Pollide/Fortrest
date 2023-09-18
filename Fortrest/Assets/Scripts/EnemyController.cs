@@ -362,14 +362,11 @@ public class EnemyController : MonoBehaviour
 
         if (health <= 0)
         {
-            dead = true;
-            if (agent)
-            {
-                agent.SetDestination(transform.position);
-            }            
+            dead = true;         
             healthAnimation.gameObject.SetActive(false);
             if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin) // remove once we got anims
             {
+                agent.SetDestination(transform.position);
                 ActiveAnimator.SetTrigger("Death");
             }
             else
