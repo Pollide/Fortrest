@@ -21,6 +21,7 @@ public class CameraFollow : MonoBehaviour
     public float distance;
     public bool canMoveCamera;
     public bool cameraMoving;
+    public bool bossCam;
 
     private void Awake()
     {
