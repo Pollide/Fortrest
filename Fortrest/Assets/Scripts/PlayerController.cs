@@ -1388,7 +1388,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 targetPosition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+                if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "RotationRaycast" })))
                     targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 4;
 
                 targetPosition.y = transform.position.y;
@@ -1661,7 +1661,7 @@ public class PlayerController : MonoBehaviour
     public void AttackEffects()
     {
         VFXSlash.transform.position = transform.position;
-        VFXSlash.transform.eulerAngles = transform.eulerAngles;
+        VFXSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
 
         int randomInt = Random.Range(0, 3);
 
@@ -1679,14 +1679,14 @@ public class PlayerController : MonoBehaviour
                     GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.9f);
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing3Sound);
             }
-            VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y - 15.0f, transform.eulerAngles.z + 180.0f);
+            //VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y - 15.0f, transform.eulerAngles.z + 180.0f);
         }
         else if (attackCount == 1)
         {
             if (randomInt == 1 || randomInt == 2)
                 GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.9f);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);
-            VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
+            //VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
         }
         VFXSlash.Play();       
 
@@ -1898,12 +1898,12 @@ public class PlayerController : MonoBehaviour
     }
 
     public void TakeDamage(float damage, bool stagger)
-    {
-        cancelHit = true;
-        StopCoroutine("Staggered");
-        StartCoroutine("Staggered");
+    {       
         if (stagger && !Boar.global.mounted)
         {
+            cancelHit = true;
+            StopCoroutine("Staggered");
+            StartCoroutine("Staggered");
             CharacterAnimator.ResetTrigger("Hit1");
             CharacterAnimator.ResetTrigger("Hit2");
             CharacterAnimator.ResetTrigger("Hit3");

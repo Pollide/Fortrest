@@ -38,6 +38,7 @@ public class EnemyController : MonoBehaviour
     public bool canBeDamaged = true;
     private bool distanceAdjusted = false;
     private bool attacking = false;
+    public bool canBeDamagedByBoar = true;
 
     // Others
     public Animator ActiveAnimator;
@@ -699,10 +700,13 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public IEnumerator StopAnimation(float _time)
+    public IEnumerator BoarKnockEffects()
     {
+        float temp = agent.angularSpeed;
+        agent.angularSpeed = 0;
         ActiveAnimator.StartPlayback();
-        yield return new WaitForSeconds(_time);
+        yield return new WaitForSeconds(0.75f);
+        agent.angularSpeed = temp;
         ActiveAnimator.StopPlayback();
     }
 }
