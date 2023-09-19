@@ -61,7 +61,7 @@ public class PlayerController : MonoBehaviour
     // Spawn Turret
     private bool turretSpawned;
     private float turretTimer = 0.0f;
-    private float resetTurret = 30.0f;
+    private float resetTurret = 60.0f;
     private float turretDuration = 20.0f;
     GameObject miniTurret;
 
@@ -233,7 +233,7 @@ public class PlayerController : MonoBehaviour
     private float transitionSpeed = 20f;
     public Animator bowAnimator;
 
-    private bool playSoundOnce;
+    private bool playSoundOnce, playSoundOnce2;
 
     // Start is called before the first frame update
     void Awake()
@@ -781,20 +781,26 @@ public class PlayerController : MonoBehaviour
 
             turretSpawned = TickTimers(resetTurret, ref turretTimer);
 
-            int seconds = 30 - (int)turretTimer % 60;
+            int seconds = (int)resetTurret - (int)turretTimer % 60;
 
-            if (seconds != 0)
+            if (seconds > 0)
             {
                 turretText.text = seconds.ToString();
+            }
+            else
+            {
+                turretSpawned = false;
             }
 
             if (turretTimer >= turretDuration)
             {
-                turretSpawned = false;
-
                 if (miniTurret)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretDisappearSound, 1.0f, true, 0, false, miniTurret.transform);
+                    if (!playSoundOnce2)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretDisappearSound, 1.0f, true, 0, false, miniTurret.transform);
+                        playSoundOnce2 = true;
+                    }                   
                     miniTurret.GetComponent<TurretShooting>().enabled = false; //stops it shooting
                     Destroy(miniTurret, GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn", false).length);
                 }
@@ -802,6 +808,10 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (playSoundOnce2)
+            {
+                playSoundOnce2 = false;
+            }
             if (turretText.gameObject.activeSelf)
             {
                 turretText.gameObject.SetActive(false);

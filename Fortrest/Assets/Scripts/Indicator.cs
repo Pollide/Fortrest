@@ -227,7 +227,7 @@ public class Indicator : MonoBehaviour
                 {
                     IndicatorList[i].MainData.ArrowImage.sprite = RemovedSprite;
 
-                    IndicatorList[i].DestroyedTimerFloat = 10;
+                    IndicatorList[i].DestroyedTimerFloat = 5;
 
                     if (IndicatorList[i].AppearBool)
                         GameManager.PlayAnimation(IndicatorList[i].MainData.GetComponent<Animation>(), "Arrow Appear", false);

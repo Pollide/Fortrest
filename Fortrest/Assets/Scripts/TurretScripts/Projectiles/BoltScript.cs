@@ -41,7 +41,6 @@ public class BoltScript : MonoBehaviour
 
             if (other.CompareTag("Enemy"))
             {
-                Debug.Log("yoza");
                 // Retrieve the Enemy component from the collided object
                 EnemyController enemy = other.GetComponent<EnemyController>();
                 NavMeshAgent enemyAgent = other.GetComponent<NavMeshAgent>();
