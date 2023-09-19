@@ -34,11 +34,16 @@ public class SlamState : BossState
 
         telegraph.SetActive(true);
         agent.isStopped = true;
+        stateMachine.BossAnimator.SetBool("attacking", false);
+        stateMachine.BossAnimator.SetBool("isJumping", true);
     }
 
     public override void ExitState()
     {
+        damageDone = true;
+        slamWaitTime = 0f;
         telegraph.SetActive(false);
+        stateMachine.BossAnimator.SetBool("isJumping", false);
     }
 
     public override void UpdateState()
@@ -57,9 +62,10 @@ public class SlamState : BossState
 
         if (slamWaitTime >= slamDuration && !damageDone)
         {
+            stateMachine.BossAnimator.SetBool("isJumping", false);
+            stateMachine.BossAnimator.SetBool("isDiving", true);
+            transform.position = telegraph.transform.position;
             StartCoroutine(telegraph.GetComponent<BossTelegraph>().DoSlamDamage(slamWaitAfterIndicator));
-            stateMachine.ChangeState(attackState);
-            damageDone = true;
         }
 
 
@@ -83,5 +89,10 @@ public class SlamState : BossState
     public float SlamWaitTime
     {
         get { return slamWaitTime; }
+    }
+
+    public AttackState StateAttack
+    {
+        get { return attackState; }
     }
 }
