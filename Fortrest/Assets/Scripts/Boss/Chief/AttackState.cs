@@ -75,8 +75,19 @@ public class AttackState : BossState
     // Run checks to see if the attack can be called
     private bool CanAttack()
     {
-        // Return true if the distance between the player and boss is less then or equal to the attack distance
-        return Vector3.Distance(transform.position, playerTransform.position) <= attackDistance;
+        Vector3 directionToTarget = (playerTransform.position - transform.position).normalized;
+
+        float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
+
+        float threshold = 0.9f; // You can adjust this value depending on the accuracy you need.
+        if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     // Run the normal attack logic 
