@@ -350,20 +350,11 @@ public class EnemyController : MonoBehaviour
     public void Damaged(float amount)
     {
         health -= amount;
-        if (HealthAppearTimer == -1)
-        {
-            GameManager.PlayAnimation(healthAnimation, "Health Appear");
-        }
-
-        HealthAppearTimer = 0;
-
-        GameManager.PlayAnimation(healthAnimation, "Health Hit");
-        healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
 
         if (health <= 0)
         {
-            dead = true;         
             healthAnimation.gameObject.SetActive(false);
+            dead = true;                     
             if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin) // remove once we got anims
             {
                 agent.SetDestination(transform.position);
@@ -384,6 +375,18 @@ public class EnemyController : MonoBehaviour
             }
 
             Time.timeScale = 1;
+        }
+        else
+        {
+            if (HealthAppearTimer == -1)
+            {
+                GameManager.PlayAnimation(healthAnimation, "Health Appear");
+            }
+
+            HealthAppearTimer = 0;
+
+            GameManager.PlayAnimation(healthAnimation, "Health Hit");
+            healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
         }
     }
 
