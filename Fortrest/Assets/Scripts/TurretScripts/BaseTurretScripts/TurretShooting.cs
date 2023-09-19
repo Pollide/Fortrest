@@ -125,7 +125,6 @@ public class TurretShooting : MonoBehaviour
             if (target.GetComponent<EnemyController>().health - damage <= 0)
             {
                 target.gameObject.layer = 0; //so it doesnt get detected
-
             }
         }
         Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
@@ -182,7 +181,6 @@ public class TurretShooting : MonoBehaviour
             Debug.Log(projectile);
             GameManager.global.SoundManager.PlaySound(GameManager.global.BallistaShootSound, 0.3f, true, 0, false, transform);
             U_Turret uTurret = GetComponent<U_Turret>();
-
 
             if (uTurret && uTurret.isMultiShotActive)
             {
