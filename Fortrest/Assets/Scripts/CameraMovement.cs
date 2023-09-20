@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {  
     private float timer;
-    public bool up, down, left, right;
+    private bool up, down, left, right;
     private float upF, downF, leftF, rightF;
     private bool moveUp, moveDown, moveLeft, moveRight;
     private float[] times;
