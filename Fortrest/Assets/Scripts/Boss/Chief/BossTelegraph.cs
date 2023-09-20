@@ -35,9 +35,9 @@ public class BossTelegraph : MonoBehaviour
             }
         }
 
-        state.StateMachine.ChangeState(state.StateAttack);
-
         ScreenShake.global.shake = true;
+
+        state.StateMachine.ChangeState(state.StateAttack);
     }
 
     private void OnDrawGizmosSelected()

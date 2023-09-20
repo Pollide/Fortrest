@@ -133,7 +133,7 @@ public class BossStateMachine : MonoBehaviour
         }
     }
 
-    private void UpdateHealth()
+    public void UpdateHealth()
     {
         healthBar.GetComponentInChildren<HealthBar>().SetHealth(currentHealth, maxHealth);
     }
