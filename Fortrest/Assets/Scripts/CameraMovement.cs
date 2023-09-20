@@ -3,32 +3,153 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
-{
-    // Update is called once per frame
+{  
+    private float timer;
+    public bool up, down, left, right;
+    private float upF, downF, leftF, rightF;
+    private bool moveUp, moveDown, moveLeft, moveRight;
+    private float[] times;
+    private float biggest;
+    private KeyCode[] keyCodes;
+
+    private void Start()
+    {
+        times = new float[4];
+        keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
+    }
+
     void Update()
     {
         if (CameraFollow.global.canMoveCamera)
         {
-            if (Input.GetKey(KeyCode.W))
+            timer += Time.deltaTime;           
+
+            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
             {
-                CameraFollow.global.cameraMoving = true;
-                transform.position += new Vector3(0.125f, 0.0f, 0.125f);
+                timer = 0f;             
             }
-            else if (Input.GetKey(KeyCode.S))
+            else
             {
-                CameraFollow.global.cameraMoving = true;
-                transform.position += new Vector3(-0.125f, 0.0f, -0.125f);
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                CameraFollow.global.cameraMoving = true;
-                transform.position += new Vector3(-0.125f, 0.0f, 0.125f);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                CameraFollow.global.cameraMoving = true;
-                transform.position += new Vector3(0.125f, 0.0f, -0.125f);
-            }
+                foreach (KeyCode keyCode in keyCodes)
+                {
+                    BigBrainMode(keyCode);
+                }              
+
+                for (int i = 0; i < times.Length; i++)
+                {
+                    if (times[i] > biggest)
+                    {
+                        biggest = times[i];
+                        switch (i)
+                        {
+                            case 0:
+                                SetBoolean(ref moveUp);
+                                break;
+                            case 1:
+                                SetBoolean(ref moveDown);
+                                break;
+                            case 2:
+                                SetBoolean(ref moveLeft);
+                                break;
+                            case 3:
+                                SetBoolean(ref moveRight);
+                                break;
+                        }
+                    }
+                }
+
+                if (moveUp)
+                {
+                    Move(0.125f, 0.125f);
+                }
+                if (moveDown)
+                {
+                    Move(-0.125f, -0.125f);
+                }
+                if (moveLeft)
+                {
+                    Move(-0.125f, 0.125f);
+                }
+                if (moveRight)
+                {
+                    Move(0.125f, -0.125f);
+                }
+            }                                                                        
         }
+    }
+
+    private void BigBrainMode(KeyCode letter)
+    {
+        if (Input.GetKey(letter))
+        {
+            switch (letter)
+            {
+                case KeyCode.W:
+                    Process(ref up, ref upF, 0);
+                    break;
+                case KeyCode.S:
+                    Process(ref down, ref downF, 1);
+                    break;
+                case KeyCode.A:
+                    Process(ref left, ref leftF, 2);
+                    break;
+                case KeyCode.D:
+                    Process(ref right, ref rightF, 3);
+                    break;
+            }
+        }       
+        else
+        {
+            switch (letter)
+            {
+                case KeyCode.W:
+                    Reset(ref up, 0);
+                    break;
+                case KeyCode.S:
+                    Reset(ref down, 1);
+                    break;
+                case KeyCode.A:
+                    Reset(ref left, 2);
+                    break;
+                case KeyCode.D:
+                    Reset(ref right, 3);
+                    break;
+            }
+        }      
+    }
+
+    private void Process(ref bool direction, ref float time, int i)
+    {
+        if (!direction)
+        {
+            time = timer;
+            times[i] = time;
+            direction = true;
+        }
+    }
+
+    private void Reset(ref bool direction, int i)
+    {
+        if (biggest == times[i])
+        {
+            biggest = 0f;
+        }
+        times[i] = 0f;
+        direction = false;
+    }
+
+    private void SetBoolean(ref bool boolean)
+    {
+        moveUp = false;
+        moveDown = false;
+        moveLeft = false;
+        moveRight = false;
+        boolean = true;
+    }
+
+    private void Move(float x, float y)
+    {
+        CameraFollow.global.cameraMoving = true;
+        transform.position += new Vector3(x, 0.0f, y);
     }
 }
