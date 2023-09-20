@@ -150,6 +150,6 @@ public class CameraMovement : MonoBehaviour
     private void Move(float x, float y)
     {
         CameraFollow.global.cameraMoving = true;
-        transform.position += new Vector3(x, 0.0f, y);
+        transform.position += new Vector3(x, 0.0f, y) * Time.deltaTime * 100.0f;
     }
 }
