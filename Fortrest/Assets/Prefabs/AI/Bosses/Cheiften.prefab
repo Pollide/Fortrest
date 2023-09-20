@@ -121,13 +121,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stoppingDistance: 3
   randomCheckTimer: 0
-  randomCheckDuration: 5
+  randomCheckDuration: 10
   damage: 7
   attackSpeed: 0.5
   attackDistance: 5
-  attackChance: 0.2
-  chargeChance: 0.2
-  slamChance: 0.6
+  attackChance: 0.1
+  chargeChance: 0.5
+  slamChance: 0.4
 --- !u!114 &-4260576750701210383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,6 +196,7 @@ MonoBehaviour:
   chargePushDuration: 0.5
   damage: 15
   chargeDMGTrigger: {fileID: 6793321651510773346}
+  moveDirection: {x: 0, y: 0, z: 1}
 --- !u!65 &7788129227239646016
 BoxCollider:
   m_ObjectHideFlags: 0

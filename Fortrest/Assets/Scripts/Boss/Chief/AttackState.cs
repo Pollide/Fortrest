@@ -47,14 +47,16 @@ public class AttackState : BossState
             // Gets the connected state
             slamState = GetComponent<SlamState>();
         }
-        CheckAttackState();
+
+        randValue = 0f;
+
         randomCheckTimer = randomCheckDuration;
 
     }
 
     public override void ExitState()
     {
-    
+        stateMachine.BossAnimator.SetBool("attacking", true);
     }
 
     public override void UpdateState()
@@ -93,6 +95,12 @@ public class AttackState : BossState
     // Run the normal attack logic 
     private void Attack()
     {
+        // Countdown for random number 
+        if (randomCheckTimer > 0f)
+        {
+            randomCheckTimer -= Time.deltaTime;
+        }
+
         if (!isAttacking)
         {
             // Check if the enemy can attack
@@ -108,17 +116,14 @@ public class AttackState : BossState
             }
             else
             {
-                // Countdown for random number 
-                if (randomCheckTimer > 0f)
-                {
-                    randomCheckTimer -= Time.deltaTime;
-                }
+                stateMachine.BossAnimator.SetBool("attacking", false);
             }
         }
         else
         {
             // Count down the attack timer
             attackTimer -= Time.deltaTime;
+
             if (attackTimer <= 0)
             {
                 // Reset the attack timer
@@ -126,7 +131,6 @@ public class AttackState : BossState
                 // Start agent
                 agent.isStopped = false;
             }
-            //stateMachine.BossAnimator.SetBool("attacking", false);
         }
       
     }

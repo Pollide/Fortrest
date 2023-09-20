@@ -43,6 +43,7 @@ public class IdleState : BossState
             {
                 stateMachine.CurrentHealth = stateMachine.MaxHealth;
                 stateMachine.HealthBar.SetActive(false);
+                stateMachine.UpdateHealth();
             }
 
             WalkTo(initialSpawn.position);

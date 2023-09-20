@@ -23,9 +23,12 @@ public class ChargeState : BossState
     [SerializeField] private float damage = 0f;
     // Holds charge trigger
     [SerializeField] private BoxCollider chargeDMGTrigger;
+    [SerializeField] private Vector3 moveDirection = Vector3.forward; // Adjust this direction as needed.
+
 
     public override void EnterState()
     {
+        stateMachine.BossAnimator.SetBool("attacking", false);
         // Checks if the state is null
         if (idleState == null)
         {
@@ -88,7 +91,9 @@ public class ChargeState : BossState
         chargeDMGTrigger.enabled = true;
         agent.isStopped = false;
         isCharging = true;
-        WalkTo(playerTransform.position);
+
+        Vector3 newTarget = new(playerTransform.position.x * 100f, playerTransform.position.y, playerTransform.position.z * 100f);
+        WalkTo(newTarget);
     }
 
     public float Damage

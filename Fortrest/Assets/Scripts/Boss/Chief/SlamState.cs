@@ -36,6 +36,8 @@ public class SlamState : BossState
         agent.isStopped = true;
         stateMachine.BossAnimator.SetBool("attacking", false);
         stateMachine.BossAnimator.SetBool("isJumping", true);
+        slamWaitTime = 0f;
+        damageDone = false;
     }
 
     public override void ExitState()
@@ -44,6 +46,7 @@ public class SlamState : BossState
         slamWaitTime = 0f;
         telegraph.SetActive(false);
         stateMachine.BossAnimator.SetBool("isJumping", false);
+        stateMachine.BossAnimator.SetBool("isDiving", false);
     }
 
     public override void UpdateState()
