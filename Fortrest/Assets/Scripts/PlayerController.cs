@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
+
     // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
@@ -83,6 +84,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool houseDisplay;
     [HideInInspector] public float playerHealth = 0.0f;
     [HideInInspector] public float maxHealth = 100.0f;
+    [HideInInspector] public float newHealth;
     public HealthBar healthBar;
 
     // Eating
@@ -513,7 +515,8 @@ public class PlayerController : MonoBehaviour
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         playerHealth = maxHealth;
-        healthBar.SetHealth(playerHealth, maxHealth);
+        newHealth = playerHealth;
+        //healthBar.SetHealth(playerHealth, maxHealth);
 
         // Adding timers to array
         timers[0] = timer1;
@@ -540,8 +543,8 @@ public class PlayerController : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.L))
         {
-            playerHealth = 0.0f;
-            healthBar.SetHealth(playerHealth, maxHealth);
+            playerHealth = 0f;
+            //healthBar.SetHealth(playerHealth, maxHealth);
         }
 #endif
 
@@ -631,6 +634,7 @@ public class PlayerController : MonoBehaviour
             running = false;
         }
 
+        UpdateHealth();
         HandleEnergy();
         TimersFunction();
         ScreenDamage();
@@ -668,6 +672,15 @@ public class PlayerController : MonoBehaviour
         if (!pausedBool && !mapBool && !evading)
         {
             RotatePlayer();
+        }
+    }
+
+    private void UpdateHealth()
+    {
+        if (newHealth != playerHealth)
+        {
+            healthBar.SetHealth(playerHealth, maxHealth);
+            newHealth = playerHealth;
         }
     }
 
@@ -737,7 +750,7 @@ public class PlayerController : MonoBehaviour
                 playerHealth = maxHealth;
             }
             playerHealth += Time.deltaTime * 2.0f;
-            healthBar.SetHealth(playerHealth, maxHealth);
+            //healthBar.SetHealth(playerHealth, maxHealth);
         }
     }
 
@@ -1420,7 +1433,7 @@ public class PlayerController : MonoBehaviour
     public void HealthRestore(float amount)
     {
         playerHealth += amount;
-        healthBar.SetHealth(playerHealth, maxHealth);
+        //healthBar.SetHealth(playerHealth, maxHealth);
     }
 
     private void UpgradeMelee()
@@ -1846,7 +1859,7 @@ public class PlayerController : MonoBehaviour
         {
             respawnTimer += Time.deltaTime;
             playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
-            healthBar.SetHealth(playerHealth, maxHealth);
+            //healthBar.SetHealth(playerHealth, maxHealth);
             if (respawnTimer >= 15.0f)
             {
                 needInteraction = true;
@@ -1922,7 +1935,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         playerHealth -= damage;
-        healthBar.SetHealth(playerHealth, maxHealth);
+        //healthBar.SetHealth(playerHealth, maxHealth);
         displaySlash = true;
     }
 
