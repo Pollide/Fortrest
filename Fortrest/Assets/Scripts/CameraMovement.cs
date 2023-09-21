@@ -12,9 +12,14 @@ public class CameraMovement : MonoBehaviour
     private float biggest;
     private KeyCode[] keyCodes;
     public Renderer gridRenderer;
+    private float xMove, yMove, xMin, yMin, xMax, yMax;
 
     private void Start()
     {
+        xMin = -4.4f;
+        xMax = 4.6f;
+        yMin = -2.15f;
+        yMax = 6.5f;
         times = new float[4];
         keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
     }
@@ -58,30 +63,38 @@ public class CameraMovement : MonoBehaviour
                         }
                     }
                 }
-                if (gridRenderer.isVisible)
+
+                xMin = -4.4f;
+                xMax = 4.6f;
+                float offsetX = Mathf.Abs(2f - yMove);
+                xMin = xMin + (offsetX / 1.6f);
+                xMax = xMax - (offsetX / 1.6f);
+
+                yMin = -2.15f;
+                yMax = 6.5f;
+                float offsetY = Mathf.Abs(0.01f - xMove);
+                yMin = yMin + (offsetY / 1.6f);
+                yMax = yMax - (offsetY / 1.6f);
+
+                if (moveUp && yMove < yMax)
                 {
-                    if (moveUp)
-                    {
-                        Move(0.125f, 0.125f);
-                    }
-                    if (moveDown)
-                    {
-                        Move(-0.125f, -0.125f);
-                    }
-                    if (moveLeft)
-                    {
-                        Move(-0.125f, 0.125f);
-                    }
-                    if (moveRight)
-                    {
-                        Move(0.125f, -0.125f);
-                    }
+                    Move(0.125f, 0.125f);
+                    yMove += Time.deltaTime;
                 }
-                else
+                if (moveDown && yMove > yMin)
                 {
-                    Vector3 direction = (PlayerController.global.house.transform.position - transform.position);
-                    direction.Normalize();
-                    Move(direction.x, direction.z);
+                    Move(-0.125f, -0.125f);
+                    yMove -= Time.deltaTime;
+                }
+                if (moveLeft && xMove > xMin)
+                {
+                    Move(-0.125f, 0.125f);
+                    xMove -= Time.deltaTime;
+                }
+                if (moveRight && xMove < xMax)
+                {
+                    Move(0.125f, -0.125f);
+                    xMove += Time.deltaTime;
                 }
             }                                                                        
         }
