@@ -5,12 +5,13 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {  
     private float timer;
-    public bool up, down, left, right;
+    private bool up, down, left, right;
     private float upF, downF, leftF, rightF;
     private bool moveUp, moveDown, moveLeft, moveRight;
     private float[] times;
     private float biggest;
     private KeyCode[] keyCodes;
+    public Renderer gridRenderer;
 
     private void Start()
     {
@@ -57,22 +58,30 @@ public class CameraMovement : MonoBehaviour
                         }
                     }
                 }
-
-                if (moveUp)
+                if (gridRenderer.isVisible)
                 {
-                    Move(0.125f, 0.125f);
+                    if (moveUp)
+                    {
+                        Move(0.125f, 0.125f);
+                    }
+                    if (moveDown)
+                    {
+                        Move(-0.125f, -0.125f);
+                    }
+                    if (moveLeft)
+                    {
+                        Move(-0.125f, 0.125f);
+                    }
+                    if (moveRight)
+                    {
+                        Move(0.125f, -0.125f);
+                    }
                 }
-                if (moveDown)
+                else
                 {
-                    Move(-0.125f, -0.125f);
-                }
-                if (moveLeft)
-                {
-                    Move(-0.125f, 0.125f);
-                }
-                if (moveRight)
-                {
-                    Move(0.125f, -0.125f);
+                    Vector3 direction = (PlayerController.global.house.transform.position - transform.position);
+                    direction.Normalize();
+                    Move(direction.x, direction.z);
                 }
             }                                                                        
         }
@@ -147,9 +156,9 @@ public class CameraMovement : MonoBehaviour
         boolean = true;
     }
 
-    private void Move(float x, float y)
+    private void Move(float x, float z)
     {
         CameraFollow.global.cameraMoving = true;
-        transform.position += new Vector3(x, 0.0f, y) * Time.deltaTime * 100.0f;
+        transform.position += new Vector3(x, 0.0f, z) * Time.deltaTime * 100.0f;
     }
 }

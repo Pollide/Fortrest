@@ -1442,7 +1442,7 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
+        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode) //  && !PlayerModeHandler.global.MouseOverUI()
         {
             attackingCTRL = false;
             attacking = true;
