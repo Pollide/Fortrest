@@ -63,6 +63,9 @@ public class Building : MonoBehaviour
     [HideInInspector] public bool textDisplayed;
 
     public bool DebugDestroyInstantly;
+
+    public Vector2 gridLocation;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -105,8 +108,6 @@ public class Building : MonoBehaviour
             if (!GetComponent<TurretShooting>() || !GetComponent<TurretShooting>().MiniTurret)
                 LevelManager.global.AddBuildingVoid(transform);
         }
-
-
     }
 
     public void SetLastHealth()
@@ -228,6 +229,7 @@ public class Building : MonoBehaviour
 
             if (resourceObject == BuildingType.Defense)
             {
+                PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
                 LevelManager.global.RemoveBuildingVoid(transform);
 
                 Destroy(gameObject);

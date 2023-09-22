@@ -52,13 +52,16 @@ public class PlayerModeHandler : MonoBehaviour
 
     public bool canInteractWithHouse;
 
-    public float minDistanceBetweenTurrets = 3;
+    private float minDistanceBetweenTurrets = 1.0f;
 
     bool runOnce;
 
     public Vector3 HintOffset;
 
     public Building SelectedTurret;
+
+    public bool[,] occupied;
+    private bool cantPlace;
 
     private void Awake()
     {
@@ -83,6 +86,7 @@ public class PlayerModeHandler : MonoBehaviour
         SwitchToBuildMode(false);
         SwitchToResourceMode();
         entryPosition = PlayerController.global.transform.position;
+        occupied = new bool[20, 20];
     }
 
     private void Update()
@@ -205,7 +209,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+        if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })))
         {
             GameObject turretPrefab = turretPrefabs[0];
 
@@ -223,12 +227,17 @@ public class PlayerModeHandler : MonoBehaviour
             }
 
             Vector3 worldPos = hitData.point;
-            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
-
+            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));            
             worldPos = new Vector3(gridPos.x, 0, gridPos.z);
+            Vector2 gridNumber = new Vector2();
+            gridNumber.x = (worldPos.x + 57.20f) / 4.0f;
+            gridNumber.y = (worldPos.z + 145.30f) / 4.0f;
 
-            Collider[] colliders = Physics.OverlapSphere(worldPos, minDistanceBetweenTurrets, GameManager.ReturnBitShift(new string[] { "Building", "Resource" }));
+            Collider[] colliders = Physics.OverlapSphere(worldPos, minDistanceBetweenTurrets, GameManager.ReturnBitShift(new string[] { "Building", "Resource", "Boar"}));
+
             PlayerController.global.TurretMenuHolder.gameObject.SetActive(SelectedTurret);
+
+            cantPlace = false;
 
             for (int i = 0; i < colliders.Length; i++)
             {
@@ -248,18 +257,21 @@ public class PlayerModeHandler : MonoBehaviour
 
                     return;
                 }
+                if (colliders[i].tag == "Resource" || colliders[i].tag == "BoarTurret")
+                {                  
+                    cantPlace = true;
+                }
             }
             SelectedTurret = null;
 
             if (!turretBlueprint)
-            {
-                turretBlueprint = Instantiate(turretPrefab);
-
+            {              
+                turretBlueprint = Instantiate(turretPrefab);             
                 turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
                 turretBlueprint.GetComponent<Building>().enabled = false;
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
                 turretBlueprint.tag = "BuildingBP";
-                turretBlueprint.layer = 0;
+                turretBlueprint.layer = LayerMask.NameToLayer("BuildingBP");
                 //NOT IN USE RIGHT NOW but basically it would hover over the building to say to place
                 //KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
 
@@ -270,7 +282,6 @@ public class PlayerModeHandler : MonoBehaviour
                     turretShooting.enabled = false;
                     Destroy(turretShooting);
                 }
-
             }
 
             turretBlueprint.transform.position = worldPos;
@@ -288,7 +299,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 runOnce = false;
             }
-            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && colliders.Length == 0)
+            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !occupied[(int)gridNumber.x, (int)gridNumber.y] && !cantPlace)
             {
                 BluePrintSet(turretBlueprintBlue);
 
@@ -313,13 +324,13 @@ public class PlayerModeHandler : MonoBehaviour
                             timer = 0f;
                             break;
                     }
-                    StartCoroutine(TurretConstructing(timer, turretPrefab, worldPos));
+                    occupied[(int)gridNumber.x, (int)gridNumber.y] = true;
+                    StartCoroutine(TurretConstructing(timer, turretPrefab, worldPos, new Vector2((int)gridNumber.x, (int)gridNumber.y)));
                 }
             }
             else
-            {                
+            {
                 BluePrintSet(turretBlueprintRed);
-
 
                 if (selectBool)
                 {
@@ -338,12 +349,13 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position)
+    private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position, Vector2 gridPos)
     {        
         PlayerController.global.CheckSufficientResources(true);
         GameObject newTurret = Instantiate(prefab, position, Quaternion.identity);
         GameManager.global.SoundManager.PlaySound(GameManager.global.TurretConstructingSound);
         newTurret.transform.localScale = Vector3.zero;
+        newTurret.GetComponent<Building>().gridLocation = gridPos;
 
         if (prefab == turretPrefabs[3])
         {
