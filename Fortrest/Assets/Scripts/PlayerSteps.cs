@@ -4,16 +4,6 @@ using UnityEngine;
 
 public class PlayerSteps : MonoBehaviour
 {
-    void ActivateSwordCollider()
-    {
-        PlayerController.global.SwordGameObject.GetComponent<BoxCollider>().enabled = true;
-    }
-
-    void DeactivateSwordCollider()
-    {
-        PlayerController.global.SwordGameObject.GetComponent<BoxCollider>().enabled = false;
-    }
-
     void Attack()
     {
         if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
@@ -61,7 +51,7 @@ public class PlayerSteps : MonoBehaviour
     {
         if (!PlayerController.global.running)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound2, 0.05f);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStep2Sound, 0.05f);
         }       
     }
 
@@ -77,7 +67,7 @@ public class PlayerSteps : MonoBehaviour
     {
         if (PlayerController.global.running)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound2, 0.05f);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStep2Sound, 0.05f);
         }        
     }
 

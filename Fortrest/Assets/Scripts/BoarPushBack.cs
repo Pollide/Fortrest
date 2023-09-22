@@ -5,41 +5,31 @@ using UnityEngine.AI;
 
 public class BoarPushBack : MonoBehaviour
 {
-    public float pushForce = 5f;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {
-            if (GetComponentInParent<Boar>().IsMoving() == true)
-            {
-               
+            if (GetComponentInParent<Boar>().currentSpeed > 60.0f)
+            {              
                 NavMeshAgent enemyAgent = other.GetComponent<NavMeshAgent>();
                 EnemyController enemyController = other.GetComponent<EnemyController>();
-                float sideThreshold = 0.0f;
                 Vector3 direction = (enemyAgent.transform.position - transform.position).normalized;
-                Vector3 rightVector = transform.right;
-                float dotProduct = Vector3.Dot(direction, rightVector);
-
-                enemyController.Damaged(0.2f);
-
-                if (dotProduct > sideThreshold)
+                float angle = Vector3.Angle(Boar.global.transform.forward, direction);
+                if (enemyController.canBeDamagedByBoar)
                 {
-                    direction = (-enemyAgent.transform.forward + enemyAgent.transform.right).normalized;
-                    enemyAgent.velocity = direction * pushForce;
-                    StartCoroutine(enemyController.StopAnimation(1));
-                }
-                else if (dotProduct < -sideThreshold)
-                {
-                    direction = (-enemyAgent.transform.forward - enemyAgent.transform.right).normalized;
-                    enemyAgent.velocity = direction * pushForce;
-                    StartCoroutine(enemyController.StopAnimation(1));
-                }
-                else
-                {
-                    enemyAgent.velocity = direction * pushForce;
-                    StartCoroutine(enemyController.StopAnimation(1));
-                }
+                    enemyController.Damaged(GetComponentInParent<Boar>().currentSpeed / 300.0f);
+                    enemyController.canBeDamagedByBoar = false;
+                    StartCoroutine(ResetBoarDamage(enemyController));
+                }              
+                enemyAgent.velocity = (direction + (Boar.global.transform.right * (angle / 60.0f))) * (Boar.global.currentSpeed / 5.0f);
+                StartCoroutine(enemyController.BoarKnockEffects());
             } 
         }
+    }
+
+    public IEnumerator ResetBoarDamage(EnemyController enemy)
+    {
+        yield return new WaitForSeconds(2.0f);
+        enemy.canBeDamagedByBoar = true;
     }
 }

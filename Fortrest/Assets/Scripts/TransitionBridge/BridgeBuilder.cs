@@ -75,8 +75,8 @@ public class BridgeBuilder : MonoBehaviour
                 PlayerController.global.evading = false;
                 if (PlayerController.global.CheckSufficientResources(true))
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltNoiseSound);
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.HouseBuiltSound);
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltNoiseSound);
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
                     isBuilt = true;
                     ShowResources(false);
                     BuildBridge();

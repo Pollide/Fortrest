@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public Bow bowScript;
     public CharacterController playerCC;
     public Animator CharacterAnimator;
+
     // House & Player Model
     public GameObject house;
     [HideInInspector] public GameObject houseSpawnPoint;
@@ -61,7 +62,7 @@ public class PlayerController : MonoBehaviour
     // Spawn Turret
     private bool turretSpawned;
     private float turretTimer = 0.0f;
-    private float resetTurret = 30.0f;
+    private float resetTurret = 60.0f;
     private float turretDuration = 20.0f;
     GameObject miniTurret;
 
@@ -83,6 +84,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool houseDisplay;
     [HideInInspector] public float playerHealth = 0.0f;
     [HideInInspector] public float maxHealth = 100.0f;
+    [HideInInspector] public float newHealth;
     public HealthBar healthBar;
 
     // Eating
@@ -233,7 +235,7 @@ public class PlayerController : MonoBehaviour
     private float transitionSpeed = 20f;
     public Animator bowAnimator;
 
-    private bool playSoundOnce;
+    private bool playSoundOnce, playSoundOnce2;
 
     // Start is called before the first frame update
     void Awake()
@@ -309,7 +311,6 @@ public class PlayerController : MonoBehaviour
             //gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
             // X to open / close inventory
             //gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
-            SwordGameObject.GetComponent<BoxCollider>().enabled = false;
         }
     }
 
@@ -340,7 +341,6 @@ public class PlayerController : MonoBehaviour
 
     public void ShakeResourceHolder()
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
         GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
     }
 
@@ -515,7 +515,8 @@ public class PlayerController : MonoBehaviour
         playerEnergy = maxPlayerEnergy;
         playerEnergyBarImage.fillAmount = 0.935f;
         playerHealth = maxHealth;
-        healthBar.SetHealth(playerHealth, maxHealth);
+        newHealth = playerHealth;
+        //healthBar.SetHealth(playerHealth, maxHealth);
 
         // Adding timers to array
         timers[0] = timer1;
@@ -542,8 +543,8 @@ public class PlayerController : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.L))
         {
-            playerHealth = 0.0f;
-            healthBar.SetHealth(playerHealth, maxHealth);
+            playerHealth = 0f;
+            //healthBar.SetHealth(playerHealth, maxHealth);
         }
 #endif
 
@@ -633,6 +634,7 @@ public class PlayerController : MonoBehaviour
             running = false;
         }
 
+        UpdateHealth();
         HandleEnergy();
         TimersFunction();
         ScreenDamage();
@@ -670,6 +672,15 @@ public class PlayerController : MonoBehaviour
         if (!pausedBool && !mapBool && !evading)
         {
             RotatePlayer();
+        }
+    }
+
+    private void UpdateHealth()
+    {
+        if (newHealth != playerHealth)
+        {
+            healthBar.SetHealth(playerHealth, maxHealth);
+            newHealth = playerHealth;
         }
     }
 
@@ -739,7 +750,7 @@ public class PlayerController : MonoBehaviour
                 playerHealth = maxHealth;
             }
             playerHealth += Time.deltaTime * 2.0f;
-            healthBar.SetHealth(playerHealth, maxHealth);
+            //healthBar.SetHealth(playerHealth, maxHealth);
         }
     }
 
@@ -783,20 +794,26 @@ public class PlayerController : MonoBehaviour
 
             turretSpawned = TickTimers(resetTurret, ref turretTimer);
 
-            int seconds = 30 - (int)turretTimer % 60;
+            int seconds = (int)resetTurret - (int)turretTimer % 60;
 
-            if (seconds != 0)
+            if (seconds > 0)
             {
                 turretText.text = seconds.ToString();
+            }
+            else
+            {
+                turretSpawned = false;
             }
 
             if (turretTimer >= turretDuration)
             {
-                turretSpawned = false;
-
                 if (miniTurret)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretDisappearSound);
+                    if (!playSoundOnce2)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretDisappearSound, 1.0f, true, 0, false, miniTurret.transform);
+                        playSoundOnce2 = true;
+                    }                   
                     miniTurret.GetComponent<TurretShooting>().enabled = false; //stops it shooting
                     Destroy(miniTurret, GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn", false).length);
                 }
@@ -804,6 +821,10 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            if (playSoundOnce2)
+            {
+                playSoundOnce2 = false;
+            }
             if (turretText.gameObject.activeSelf)
             {
                 turretText.gameObject.SetActive(false);
@@ -942,7 +963,7 @@ public class PlayerController : MonoBehaviour
         if (!houseInteract)
         {
             teleporting = true;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.TeleportSound);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.TeleportSound, 0.7f);
         }
 
         if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
@@ -1057,7 +1078,7 @@ public class PlayerController : MonoBehaviour
         CharacterAnimator.ResetTrigger("Evade");
         CharacterAnimator.SetTrigger("Evade");
         staggered = false;
-        GameManager.global.SoundManager.PlaySound(GameManager.global.EvadeSound);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerEvadeSound);
 
         yield return new WaitForSeconds(evadeCoolDown);
         canEvade = true;
@@ -1380,7 +1401,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 targetPosition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+                if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "RotationRaycast" })))
                     targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 4;
 
                 targetPosition.y = transform.position.y;
@@ -1412,7 +1433,7 @@ public class PlayerController : MonoBehaviour
     public void HealthRestore(float amount)
     {
         playerHealth += amount;
-        healthBar.SetHealth(playerHealth, maxHealth);
+        //healthBar.SetHealth(playerHealth, maxHealth);
     }
 
     private void UpgradeMelee()
@@ -1434,7 +1455,7 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !PlayerModeHandler.global.MouseOverUI())
+        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode) //  && !PlayerModeHandler.global.MouseOverUI()
         {
             attackingCTRL = false;
             attacking = true;
@@ -1449,7 +1470,10 @@ public class PlayerController : MonoBehaviour
             {
                 camp.canBeDamaged = true;
             });
-
+            LevelManager.ProcessBossList((boss) =>
+            {
+                boss.CanBeDamaged = true;
+            });
             if (upgradedMelee)
             {
                 attackDamage = 1.25f;
@@ -1608,9 +1632,7 @@ public class PlayerController : MonoBehaviour
     private void SpawnTurret()
     {
         turretTimer = 0;
-        turretSpawned = true;
-
-        GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretAppearSound);
+        turretSpawned = true;      
 
         Vector3 spawn = transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f));
         spawn.y = 0;
@@ -1623,6 +1645,7 @@ public class PlayerController : MonoBehaviour
         miniTurret.GetComponent<TurretShooting>().fireRate = 3f;
         miniTurret.GetComponent<TurretShooting>().shootingRange = 10;
         GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
+        GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretAppearSound, 1.0f, true, 0, false, miniTurret.transform);
     }
 
     private void EatApple()
@@ -1651,27 +1674,34 @@ public class PlayerController : MonoBehaviour
     public void AttackEffects()
     {
         VFXSlash.transform.position = transform.position;
-        VFXSlash.transform.eulerAngles = transform.eulerAngles;
+        VFXSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
+
+        int randomInt = Random.Range(0, 3);
+
         if (attackCount == 0 || attackCount == 2)
         {
             if (attackCount == 0)
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack1Sound, 0.4f);
+                if (randomInt == 1 || randomInt == 2)
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack1Sound, 0.9f);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing1Sound);
             }
             else
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.4f);
+                if (randomInt == 1 || randomInt == 2)
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.9f);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing3Sound);
             }
-            VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y - 15.0f, transform.eulerAngles.z + 180.0f);
+            //VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y - 15.0f, transform.eulerAngles.z + 180.0f);
         }
         else if (attackCount == 1)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.4f);
-            VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
+            if (randomInt == 1 || randomInt == 2)
+                GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.9f);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);
+            //VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
         }
         VFXSlash.Play();       
-        
-        GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.SwordSwing1Sound : GameManager.global.SwordSwing2Sound, 0.5f);
 
         attackCount++;
         if (attackCount > 2)
@@ -1692,7 +1722,7 @@ public class PlayerController : MonoBehaviour
         {
             if (PickaxeGameObject.activeSelf)
             {
-                GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.Pickaxe2Sound : GameManager.global.Pickaxe3Sound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.PickaxeSound);
 
                 VFXSparks.transform.position = currentResource.transform.position;
                 VFXSparks.Play();
@@ -1703,11 +1733,11 @@ public class PlayerController : MonoBehaviour
             {
                 StopCoroutine("ToolAppear");
                 StartCoroutine("ToolAppear");
-                GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.BushSound, 0.5f);
             }
             else if (AxeGameObject.activeSelf)
             {
-                GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.TreeChop1Sound : GameManager.global.TreeChop2Sound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.AxeSound);
 
                 VFXWoodChip.transform.position = currentResource.transform.position;
                 VFXWoodChip.Play();
@@ -1829,7 +1859,7 @@ public class PlayerController : MonoBehaviour
         {
             respawnTimer += Time.deltaTime;
             playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
-            healthBar.SetHealth(playerHealth, maxHealth);
+            //healthBar.SetHealth(playerHealth, maxHealth);
             if (respawnTimer >= 15.0f)
             {
                 needInteraction = true;
@@ -1881,12 +1911,12 @@ public class PlayerController : MonoBehaviour
     }
 
     public void TakeDamage(float damage, bool stagger)
-    {
-        cancelHit = true;
-        StopCoroutine("Staggered");
-        StartCoroutine("Staggered");
+    {       
         if (stagger && !Boar.global.mounted)
         {
+            cancelHit = true;
+            StopCoroutine("Staggered");
+            StartCoroutine("Staggered");
             CharacterAnimator.ResetTrigger("Hit1");
             CharacterAnimator.ResetTrigger("Hit2");
             CharacterAnimator.ResetTrigger("Hit3");
@@ -1905,7 +1935,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         playerHealth -= damage;
-        healthBar.SetHealth(playerHealth, maxHealth);
+        //healthBar.SetHealth(playerHealth, maxHealth);
         displaySlash = true;
     }
 

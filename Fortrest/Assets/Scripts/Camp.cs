@@ -39,7 +39,7 @@ public class Camp : MonoBehaviour
         }
     }
 
-    private void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         health -= damage;
 
@@ -70,16 +70,6 @@ public class Camp : MonoBehaviour
             {
                 canBeDamaged = false;
                 TakeDamage(PlayerController.global.attackDamage);
-                Debug.Log("yoxa");
-            }
-        }
-        if (other.gameObject.tag == "Arrow")
-        {
-            if (!other.GetComponent<ArrowTrigger>().singleHit)
-            {
-                other.GetComponent<ArrowTrigger>().singleHit = true;
-                TakeDamage(PlayerController.global.bowDamage);
-                Destroy(other.gameObject);
             }
         }
     }
