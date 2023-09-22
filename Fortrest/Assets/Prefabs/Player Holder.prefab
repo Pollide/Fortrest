@@ -3182,6 +3182,7 @@ MonoBehaviour:
   canShoot: 0
   bowDamage: 1.5
   initialShot: 0
+  upgradedBow: 0
   playerEnergy: 0
   playerEnergyBarImage: {fileID: 9199062799191684324}
   playerDead: 0
@@ -3189,8 +3190,10 @@ MonoBehaviour:
   houseDisplay: 0
   playerHealth: 0
   maxHealth: 100
+  newHealth: 0
   healthBar: {fileID: 9022719424525659477}
   appleAmount: 0
+  maxApple: 5
   attackDamage: 1
   currentResource: {fileID: 0}
   damageEnemy: 0
@@ -3376,7 +3379,7 @@ MonoBehaviour:
   turretBlueprintRed: {fileID: 2100000, guid: 8d763678d7123e347b760cbd1313f174, type: 2}
   turretBlueprintBlue: {fileID: 2100000, guid: 1d0c9c39a2f4f764081420e60614ab27, type: 2}
   distanceAwayFromPlayerX: {x: 68.7, y: 11.3}
-  distanceAwayFromPlayerZ: {x: 65.5, y: 14.5}
+  distanceAwayFromPlayerZ: {x: 68.7, y: 14.5}
   buildingLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -3387,7 +3390,6 @@ MonoBehaviour:
   KeyBlueprintHintPrefab: {fileID: 0}
   inTheFortress: 0
   canInteractWithHouse: 0
-  minDistanceBetweenTurrets: 3
   HintOffset: {x: 0, y: 0, z: 0}
   SelectedTurret: {fileID: 0}
 --- !u!1 &5629966036032299004

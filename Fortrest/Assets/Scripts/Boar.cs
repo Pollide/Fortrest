@@ -206,7 +206,6 @@ public class Boar : MonoBehaviour
 
     public void Mount()
     {
-
         mounted = !mounted;
         PlayerController.global.interactCTRL = false;
         PlayerController.global.GetComponent<CharacterController>().enabled = false;
