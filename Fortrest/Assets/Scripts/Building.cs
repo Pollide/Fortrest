@@ -161,23 +161,23 @@ public class Building : MonoBehaviour
             if (amount != 0)
             {
                 HealthAnimation();
-            }
 
-            if (health <= 0)
-            {
-                if (resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood || resourceObject == BuildingType.HardWood)
+                if (health <= 0)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.TreeBreakingSound);
+                    if (resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood || resourceObject == BuildingType.HardWood)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.TreeBreakingSound);
+                    }
+                    else if (resourceObject == BuildingType.Stone || resourceObject == BuildingType.MossyStone || resourceObject == BuildingType.SlateStone)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound);
+                    }
+                    else if (resourceObject == BuildingType.Bush)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound);
+                    }
+                    DestroyBuilding();
                 }
-                else if (resourceObject == BuildingType.Stone || resourceObject == BuildingType.MossyStone || resourceObject == BuildingType.SlateStone)
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound);
-                }
-                else if (resourceObject == BuildingType.Bush)
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound);
-                }
-                DestroyBuilding();
             }
         }
     }
