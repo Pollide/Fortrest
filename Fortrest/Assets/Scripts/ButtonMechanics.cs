@@ -186,7 +186,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (TerrainTeleportInt != -1)
         {
-            PlayerController.global.TeleportPlayer(LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(10, 1, 10), false);
+            Vector3 pos = LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(50, 2, 50);
+            pos.y = 2;
+            PlayerController.global.TeleportPlayer(pos, false);
         }
 
         if (SaveBool)
@@ -256,7 +258,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
             GameManager.global.NextScene(0);
             GameManager.global.transform.SetParent(transform);
-            GameManager.global = null;
+
             //  GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
         }
 

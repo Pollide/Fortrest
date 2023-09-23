@@ -21,6 +21,7 @@ public class Camp : MonoBehaviour
     void Start()
     {
         LevelManager.global.campList.Add(this);
+        //Indicator.global.AddIndicator(transform)
         maxHealth = 15.0f;
         health = maxHealth;
     }

@@ -1147,10 +1147,12 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                Vector3 dragDirection = (Input.mousePosition - mapMousePosition);
+                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
                 mapMousePosition = Input.mousePosition;
                 MapPanPosition += dragDirection * speed;
+                // MapPanPosition = Vector3.Slerp(MapPanPosition, MapPanPosition + dragDirection, speed);
             }
+
         }
         else
         {
@@ -1187,29 +1189,29 @@ public class PlayerController : MonoBehaviour
         if (bridgeTypeInt == 1)
         {
             woodCostList[0].ResourceCost = -30;
-            stoneCostList[0].ResourceCost = -30;
+            stoneCostList[0].ResourceCost = -10;
         }
 
         if (bridgeTypeInt == 2)
         {
             woodCostList[1].ResourceCost = -30;
-            stoneCostList[1].ResourceCost = -30;
+            stoneCostList[1].ResourceCost = -10;
         }
 
         if (bridgeTypeInt == 3)
         {
             woodCostList[2].ResourceCost = -30;
-            stoneCostList[2].ResourceCost = -30;
+            stoneCostList[2].ResourceCost = -10;
         }
 
         if (bridgeTypeInt == 4)
         {
-            woodCostList[0].ResourceCost = -30;
-            stoneCostList[0].ResourceCost = -30;
-            woodCostList[1].ResourceCost = -30;
-            stoneCostList[1].ResourceCost = -30;
-            woodCostList[2].ResourceCost = -30;
-            stoneCostList[2].ResourceCost = -30;
+            woodCostList[0].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -10;
+            woodCostList[1].ResourceCost = -10;
+            stoneCostList[1].ResourceCost = -10;
+            woodCostList[2].ResourceCost = -10;
+            stoneCostList[2].ResourceCost = -10;
         }
 
         if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)

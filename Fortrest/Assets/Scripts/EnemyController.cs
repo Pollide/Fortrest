@@ -102,7 +102,7 @@ public class EnemyController : MonoBehaviour
         {
             if (currentEnemyType != ENEMYTYPE.wolf) //wolves wild
             {
-                Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
+                Indicator.global.AddIndicator(transform, Color.red, LevelManager.global.enemiesCount < 10 ? currentEnemyType.ToString() : "");
             }
         }
 
@@ -242,7 +242,7 @@ public class EnemyController : MonoBehaviour
                                 shortestDistance = compare; // New shortest distance is assigned
                                 bestTarget = building; // Enemy's target is now the closest item in the list
                             }
-                        }                       
+                        }
                     });
                 }
             }
@@ -355,7 +355,7 @@ public class EnemyController : MonoBehaviour
         if (health <= 0)
         {
             healthAnimation.gameObject.SetActive(false);
-            dead = true;                     
+            dead = true;
             if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin) // remove once we got anims
             {
                 agent.SetDestination(transform.position);
@@ -588,7 +588,7 @@ public class EnemyController : MonoBehaviour
             else
             {
                 PickSound(attackSound, attackSound2, 1.0f);
-            }           
+            }
         }
 
         if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
