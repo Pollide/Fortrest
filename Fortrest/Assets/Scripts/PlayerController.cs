@@ -1151,7 +1151,6 @@ public class PlayerController : MonoBehaviour
                 mapMousePosition = Input.mousePosition;
                 MapPanPosition += dragDirection * speed;
             }
-
         }
         else
         {

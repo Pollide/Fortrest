@@ -178,7 +178,7 @@ public class Indicator : MonoBehaviour
             MainData.HolderTransform.localPosition = Vector3.Slerp(MainData.HolderTransform.localPosition, transition, Time.deltaTime);
 
 
-            int shift = global.ShiftAmount;
+            int shift = 0;
 
             for (int i = 0; i < global.IndicatorList.Count; i++)
             {
