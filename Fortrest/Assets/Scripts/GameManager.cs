@@ -25,13 +25,13 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public bool KeyboardBool = true;
 
-    [Header ("Music")]
+    [Header("Music")]
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
     public AudioClip PauseMusic;
     public AudioClip NightMusic;
 
-    [Header ("Player Sounds")]
+    [Header("Player Sounds")]
     public AudioClip PlayerEvadeSound;
     public AudioClip PlayerHit1Sound;
     public AudioClip PlayerHit2Sound;
@@ -44,13 +44,13 @@ public class GameManager : MonoBehaviour
     public AudioClip PlayerStepSound;
     public AudioClip PlayerStep2Sound;
 
-    [Header ("Resources Sounds")]
+    [Header("Resources Sounds")]
     public AudioClip CollectSound;
     public AudioClip BoulderBreakingSound;
     public AudioClip BushBreakingSound;
     public AudioClip TreeBreakingSound;
 
-    [Header ("Tools Sounds")]
+    [Header("Tools Sounds")]
     public AudioClip AxeSound;
     public AudioClip PickaxeSound;
     public AudioClip BushSound;
@@ -58,11 +58,11 @@ public class GameManager : MonoBehaviour
     public AudioClip SwordSwing2Sound;
     public AudioClip SwordSwing3Sound;
 
-    [Header ("Turret Sounds")]
+    [Header("Turret Sounds")]
     public AudioClip BallistaSpawnedSound;
     public AudioClip BallistaShootSound;
     public AudioClip CannonSpawnedSound;
-    public AudioClip CannonShootSound;    
+    public AudioClip CannonShootSound;
     public AudioClip SlowSpawnedSound;
     public AudioClip SlowShootSound; // Not Implemented
     public AudioClip ScatterSpawnedSound;
@@ -70,20 +70,20 @@ public class GameManager : MonoBehaviour
     public AudioClip MiniTurretAppearSound;
     public AudioClip MiniTurretDisappearSound;
 
-    [Header ("House Sounds")]
+    [Header("House Sounds")]
     public AudioClip EnterHouseSound;
     public AudioClip ExitHouseSound;
     public AudioClip HouseOpenSound;
     public AudioClip HouseCloseSound;
     public AudioClip HouseDestroyedSound;
 
-    [Header ("Bow Sounds")]
+    [Header("Bow Sounds")]
     public AudioClip BowAimSound;
     public AudioClip BowFireSound;
     public AudioClip ArrowHitBuildingSound;
     public AudioClip ArrowHitEnemySound; // Not Implemented & Not imported
 
-    [Header ("SFX")]
+    [Header("SFX")]
     public AudioClip EatingSound;
     public AudioClip CantEatSound;
     public AudioClip BridgeBuiltSound;
@@ -99,10 +99,10 @@ public class GameManager : MonoBehaviour
     public AudioClip UpgradeMenuClickSound; // Not Implemented
     public AudioClip ModeChangeClickSound;
     public AudioClip MapCloseSound;
-    public AudioClip MapOpenSound;    
+    public AudioClip MapOpenSound;
     public AudioClip PauseMenuSound;
     public AudioClip TeleportSound;
-    public AudioClip TeleporterEnterSound;      
+    public AudioClip TeleporterEnterSound;
 
     private Vector3 lastMousePosition;
     public bool CheatInfiniteBuilding;
@@ -751,7 +751,9 @@ public class GameManager : MonoBehaviour
 
             DataPositionVoid("Turret Position" + turretSize, building.transform, false);
             DataEulerVoid("Turret Euler" + turretSize, building.transform, false);
-            building.GetComponent<TurretShooting>().CurrentLevel = (int)Pref("Turret Level" + turretSize, building.GetComponent<TurretShooting>().CurrentLevel, load);
+
+            if (building.GetComponent<TurretShooting>())
+                building.GetComponent<TurretShooting>().CurrentLevel = (int)Pref("Turret Level" + turretSize, building.GetComponent<TurretShooting>().CurrentLevel, load);
             Pref("Turret Size", turretSize + 1, false);
         }
 

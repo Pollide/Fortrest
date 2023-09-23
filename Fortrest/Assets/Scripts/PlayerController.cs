@@ -574,18 +574,18 @@ public class PlayerController : MonoBehaviour
         if (Unlocks.global.extraApplesUnlocked)
         {
             maxApple = 10;
-            UpdateAppleText();          
+            UpdateAppleText();
             Unlocks.global.extraApplesUnlocked = false;
         }
 
         if (Unlocks.global.upgradedMeleeUnlocked)
         {
-            UpgradeMelee();            
+            UpgradeMelee();
         }
 
         if (Unlocks.global.upgradedBowUnlocked)
         {
-            UpgradeBow();          
+            UpgradeBow();
         }
 
         if (playerCanMove)
@@ -618,7 +618,7 @@ public class PlayerController : MonoBehaviour
             {
                 Shoot();
             }
-            
+
             ModeChanged();
             if (lunge && !playerisMoving)
             {
@@ -657,7 +657,7 @@ public class PlayerController : MonoBehaviour
             {
                 GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.PlayerDeath1Sound : GameManager.global.PlayerDeath2Sound);
                 playSoundOnce = true;
-            }         
+            }
             playerCanMove = false;
             if (Boar.global.mounted)
             {
@@ -813,7 +813,7 @@ public class PlayerController : MonoBehaviour
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretDisappearSound, 1.0f, true, 0, false, miniTurret.transform);
                         playSoundOnce2 = true;
-                    }                   
+                    }
                     miniTurret.GetComponent<TurretShooting>().enabled = false; //stops it shooting
                     Destroy(miniTurret, GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn", false).length);
                 }
@@ -906,7 +906,7 @@ public class PlayerController : MonoBehaviour
                     if (canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
                     {
                         StartCoroutine(Evade());
-                    }             
+                    }
                 }
                 if (turretCTRL)
                 {
@@ -1130,7 +1130,7 @@ public class PlayerController : MonoBehaviour
                 UpdateMap();
                 MapPanPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
                 if (!ResourceHolderOpened)
-                    UpdateResourceHolder();
+                    UpdateResourceHolder(showCosts: false);
             }
 
             OpenResourceHolder(map);
@@ -1147,7 +1147,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
+                Vector3 dragDirection = (Input.mousePosition - mapMousePosition);
                 mapMousePosition = Input.mousePosition;
                 MapPanPosition += dragDirection * speed;
             }
@@ -1165,7 +1165,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void UpdateResourceHolder(int bridgeTypeInt = 0)
+    public void UpdateResourceHolder(int bridgeTypeInt = 0, bool showCosts = true)
     {
         for (int i = 0; i < MapResourceHolder.childCount; i++)
         {
@@ -1245,37 +1245,20 @@ public class PlayerController : MonoBehaviour
 
         //      Debug.Log("UPDATE");
 
-        ResourceGenerate(LevelManager.global.WoodTierList, woodCostList);
-        ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList);
+        ResourceGenerate(LevelManager.global.WoodTierList, woodCostList, showCosts);
+        ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList, showCosts);
     }
 
-    void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
+    void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList, bool showCosts = true)
     {
-        bool cost = false;
 
         for (int i = 0; i < tierList.Count; i++)
         {
-            if (costList[i].ResourceCost != 0)
-            {
-                cost = true;
-                break;
-            }
-        }
+            tierList[i].ResourceCost = costList[i].ResourceCost;
 
-        for (int i = 0; i < tierList.Count; i++)
-        {
-            if (cost)
+            if (showCosts && costList[i].ResourceCost == 0)
             {
-                tierList[i].ResourceCost = costList[i].ResourceCost;
-
-                if (costList[i].ResourceCost == 0)
-                {
-                    continue;
-                }
-            }
-            else
-            {
-                tierList[i].ResourceCost = 0;
+                continue;
             }
 
             // Debug.Log(tierList[i].ResourceAmount + "> 0 || " + tierList[i].ResourceCost + "> 0");
@@ -1632,7 +1615,7 @@ public class PlayerController : MonoBehaviour
     private void SpawnTurret()
     {
         turretTimer = 0;
-        turretSpawned = true;      
+        turretSpawned = true;
 
         Vector3 spawn = transform.position + (transform.forward * 2) - (Vector3.up * (transform.position.y - 0.48f));
         spawn.y = 0;
@@ -1701,7 +1684,7 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);
             //VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
         }
-        VFXSlash.Play();       
+        VFXSlash.Play();
 
         attackCount++;
         if (attackCount > 2)
@@ -1911,7 +1894,7 @@ public class PlayerController : MonoBehaviour
     }
 
     public void TakeDamage(float damage, bool stagger)
-    {       
+    {
         if (stagger && !Boar.global.mounted)
         {
             cancelHit = true;

@@ -21,7 +21,8 @@ public class Indicator : MonoBehaviour
 
     public int topRightStack;
     public int topLeftStack;
-
+    public int ShiftAmount = 13;
+    public int multi = 2;
     [System.Serializable]
     public class IndicatorData
     {
@@ -97,14 +98,18 @@ public class Indicator : MonoBehaviour
                 //  if (!CustomSprite)
                 MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
                 transition -= Vector3.right;
-
+                MainData.ArrowText.alignment = TextAnchor.MiddleRight;
             }
-
-            if (leftBool)
+            else if (leftBool)
             {
                 //if (!CustomSprite)
                 MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
                 transition += Vector3.right;
+                MainData.ArrowText.alignment = TextAnchor.MiddleLeft;
+            }
+            else
+            {
+                MainData.ArrowText.alignment = TextAnchor.MiddleCenter;
             }
 
             if (topBool)
@@ -173,7 +178,7 @@ public class Indicator : MonoBehaviour
             MainData.HolderTransform.localPosition = Vector3.Slerp(MainData.HolderTransform.localPosition, transition, Time.deltaTime);
 
 
-            int shift = 0;
+            int shift = global.ShiftAmount;
 
             for (int i = 0; i < global.IndicatorList.Count; i++)
             {
@@ -182,7 +187,7 @@ public class Indicator : MonoBehaviour
                 if (data != this && isOutsideCanvas && (leftBool || rightBool)) //needs to be in the corner
                 {
                     if (data.isOutsideCanvas && AppearBool && data.AppearBool && topBool == data.topBool && bottomBool == data.bottomBool && leftBool == data.leftBool && rightBool == data.rightBool)
-                        shift += 13;
+                        shift += global.ShiftAmount;
                 }
                 else
                 {
@@ -190,13 +195,15 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            Offset = new Vector3(shift, shift, 0);
+            Offset = new Vector3(shift, shift, 0) + transition * -25;
             // shift = 0;
 
             MainData.CustomImage.transform.localPosition = MainData.CustomImageLocalPosition + Offset;
             MainData.ArrowText.transform.localPosition = MainData.ArrowTextLocalPosition + Offset;
         }
     }
+
+
 
     void Awake()
     {
