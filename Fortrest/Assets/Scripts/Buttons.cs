@@ -20,7 +20,7 @@ public class Buttons : MonoBehaviour
     public Transform ButtonHolder;
     //[HideInInspector]
     public List<int> SelectedList = new List<int>();
-
+    public bool pressingDown;
     private void OnEnable()
     {
         Start();
@@ -107,7 +107,7 @@ public class Buttons : MonoBehaviour
             if (buttonMechanics.SelectedGameObject)
                 buttonMechanics.SelectedGameObject.SetActive(selected);
 
-            float shrinkScale = selected ? 1.1f : 1;
+            float shrinkScale = selected ? (pressingDown ? 0.95f : 1.05f) : 1;
 
             button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
             buttonMechanics.Start(); //refreshes text
