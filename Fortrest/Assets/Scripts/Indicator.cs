@@ -21,6 +21,9 @@ public class Indicator : MonoBehaviour
 
     public int topRightStack;
     public int topLeftStack;
+    public int ShiftAmount = 13;
+    public int TextMulti = -25;
+
 
     [System.Serializable]
     public class IndicatorData
@@ -34,8 +37,8 @@ public class Indicator : MonoBehaviour
 
         public Vector3 WorldPosition;
         public Vector3 Offset;
+        public bool Permenant;
         public bool Unlocked;
-        public bool Recent;
         public string ActiveString;
 
         public bool leftBool;
@@ -43,6 +46,9 @@ public class Indicator : MonoBehaviour
         public bool topBool;
         public bool bottomBool;
         public bool isOutsideCanvas;
+
+        public float ignoreX;
+        public float ignoreY;
         public void Refresh()
         {
             if (ActiveTarget)
@@ -97,14 +103,18 @@ public class Indicator : MonoBehaviour
                 //  if (!CustomSprite)
                 MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
                 transition -= Vector3.right;
-
+                MainData.ArrowText.alignment = TextAnchor.MiddleRight;
             }
-
-            if (leftBool)
+            else if (leftBool)
             {
                 //if (!CustomSprite)
                 MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
                 transition += Vector3.right;
+                MainData.ArrowText.alignment = TextAnchor.MiddleLeft;
+            }
+            else
+            {
+                MainData.ArrowText.alignment = TextAnchor.MiddleCenter;
             }
 
             if (topBool)
@@ -128,23 +138,9 @@ public class Indicator : MonoBehaviour
 
             float distance = Vector3.Distance(PlayerController.global.transform.position, WorldPosition);
 
-            bool close = distance < 22;
-
-            if (close)
+            if ((distance < 22 || Unlocked) && !CustomSprite)
             {
-                if (!Unlocked)
-                    Recent = true;
-
                 Unlocked = true;
-
-            }
-            else
-            {
-                Recent = false;
-            }
-
-            if (Unlocked && !CustomSprite)
-            {
                 MainData.ArrowText.text = ActiveString;
 
                 if (MapData)
@@ -153,7 +149,7 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            bool active = (Unlocked || distance < 240) && (Recent || !close);
+            bool active = (Permenant || distance < 240);
 
             if (active != AppearBool)
             {
@@ -179,10 +175,10 @@ public class Indicator : MonoBehaviour
             {
                 IndicatorData data = global.IndicatorList[i];
 
-                if (data != this && isOutsideCanvas && (leftBool || rightBool)) //needs to be in the corner
+                if (data != this && isOutsideCanvas && (leftBool || rightBool) && (bottomBool || topBool)) //needs to be in the corner
                 {
                     if (data.isOutsideCanvas && AppearBool && data.AppearBool && topBool == data.topBool && bottomBool == data.bottomBool && leftBool == data.leftBool && rightBool == data.rightBool)
-                        shift += 13;
+                        shift += global.ShiftAmount;
                 }
                 else
                 {
@@ -190,13 +186,17 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            Offset = new Vector3(shift, shift, 0);
+            float flip = (bottomBool && leftBool ? -1 : 1);
+
+            Offset = new Vector3(ignoreX != 0 ? ignoreX : shift * flip, ignoreY != 0 ? ignoreY : shift, 0) + (leftBool || rightBool ? transition * global.TextMulti * flip : Vector3.zero);
             // shift = 0;
 
             MainData.CustomImage.transform.localPosition = MainData.CustomImageLocalPosition + Offset;
             MainData.ArrowText.transform.localPosition = MainData.ArrowTextLocalPosition + Offset;
         }
     }
+
+
 
     void Awake()
     {
@@ -221,13 +221,13 @@ public class Indicator : MonoBehaviour
         // GetComponent<Canvas>().enabled = !PlayerModeHandler.global.inTheFortress;
         for (int i = 0; i < IndicatorList.Count; i++)
         {
-            if (!IndicatorList[i].ActiveTarget)
+            if (!IndicatorList[i].ActiveTarget || IndicatorList[i].ActiveTarget.GetComponent<EnemyController>() && IndicatorList[i].ActiveTarget.GetComponent<EnemyController>().health <= 0)
             {
                 if (IndicatorList[i].DestroyedTimerFloat == -1)
                 {
                     IndicatorList[i].MainData.ArrowImage.sprite = RemovedSprite;
 
-                    IndicatorList[i].DestroyedTimerFloat = 10;
+                    IndicatorList[i].DestroyedTimerFloat = 5;
 
                     if (IndicatorList[i].AppearBool)
                         GameManager.PlayAnimation(IndicatorList[i].MainData.GetComponent<Animation>(), "Arrow Appear", false);
@@ -251,7 +251,7 @@ public class Indicator : MonoBehaviour
         }
     }
 
-    public void AddIndicator(Transform activeTarget, Color color, string nameString, bool unlocked = true, Sprite customSprite = null)
+    public void AddIndicator(Transform activeTarget, Color color, string nameString, bool permenant = true, Sprite customSprite = null)
     {
         IndicatorData indicatorData = new IndicatorData();
 
@@ -263,7 +263,8 @@ public class Indicator : MonoBehaviour
         indicatorData.MainData.ArrowText.text = "?";
 
         indicatorData.ActiveString = nameString;
-        indicatorData.Unlocked = unlocked;
+        indicatorData.Permenant = permenant;
+        indicatorData.Unlocked = permenant;
         indicatorData.CustomSprite = customSprite;
 
         indicatorData.MainData.ArrowTextLocalPosition = indicatorData.MainData.ArrowText.transform.localPosition;
@@ -271,7 +272,7 @@ public class Indicator : MonoBehaviour
 
         IndicatorList.Add(indicatorData);
 
-        if (!unlocked || customSprite)
+        if (!permenant || customSprite)
         {
             indicatorData.MapData = Instantiate(arrowPrefab, PlayerController.global.MapSpotHolder).GetComponent<ArrowData>();
             indicatorData.MapData.GetComponent<Animation>().enabled = false;

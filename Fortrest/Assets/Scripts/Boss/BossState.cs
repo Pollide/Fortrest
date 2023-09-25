@@ -35,10 +35,21 @@ public abstract class BossState : MonoBehaviour
         }
 
         agent.SetDestination(targetPos);
+
+        if (agent.velocity != Vector3.zero)
+        {
+            stateMachine.BossAnimator.SetBool("isMoving", true);
+            stateMachine.BossAnimator.SetBool("isIdle", false);
+        }
+        else
+        {
+            stateMachine.BossAnimator.SetBool("isMoving", false);
+            stateMachine.BossAnimator.SetBool("isIdle", true);
+        }
     }
 
     // Takes the player and applies damage
-    protected void ApplyDamageToTarget(float damage)
+    public void ApplyDamageToTarget(float damage)
     {
         PlayerController playerScript = playerTransform.GetComponent<PlayerController>();
 
@@ -69,5 +80,15 @@ public abstract class BossState : MonoBehaviour
     public Transform PlayerTransform
     {
         get { return playerTransform; }
+    } 
+    
+    public Transform InitialSpawn
+    {
+        get { return initialSpawn; }
+    }
+
+    public BossStateMachine StateMachine
+    {
+        get { return stateMachine; }
     }
 }

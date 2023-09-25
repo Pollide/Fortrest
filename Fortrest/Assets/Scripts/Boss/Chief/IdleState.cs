@@ -26,12 +26,6 @@ public class IdleState : BossState
 
     public override void ExitState()
     {
-        //// Checks if attacks state is populated
-        //if (attackState != null)
-        //{
-        //    // Sets state to null
-        //    attackState = null;
-        //}
     }
 
     public override void UpdateState()
@@ -39,6 +33,7 @@ public class IdleState : BossState
         // checks if player is in the arena 
         if (PlayerInArena(stateMachine.ArenaSize))
         {
+            stateMachine.HealthBar.SetActive(true);
             // changes to attack state
             stateMachine.ChangeState(attackState);
         }
@@ -48,6 +43,7 @@ public class IdleState : BossState
             {
                 stateMachine.CurrentHealth = stateMachine.MaxHealth;
                 stateMachine.HealthBar.SetActive(false);
+                stateMachine.UpdateHealth();
             }
 
             WalkTo(initialSpawn.position);

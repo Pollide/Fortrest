@@ -20,7 +20,7 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
+        //GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
         parentAfterDrag = transform.parent;
         transform.SetParent(transform.parent.parent, false);
         transform.SetAsLastSibling();
@@ -38,7 +38,7 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
+        //GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
         GetComponent<Animator>().enabled = false;
         transform.localScale = Vector3.one;
         transform.SetParent(parentAfterDrag);
@@ -48,7 +48,7 @@ public class DragableItem : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
+        //GameManager.global.SoundManager.PlaySound(GameManager.global.InventoryClickSound);
 
         if (eventData.button == PointerEventData.InputButton.Right && rightClick != null)
             rightClick.Invoke();

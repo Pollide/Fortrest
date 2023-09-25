@@ -63,6 +63,9 @@ public class Building : MonoBehaviour
     [HideInInspector] public bool textDisplayed;
 
     public bool DebugDestroyInstantly;
+
+    public Vector2 gridLocation;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -105,8 +108,6 @@ public class Building : MonoBehaviour
             if (!GetComponent<TurretShooting>() || !GetComponent<TurretShooting>().MiniTurret)
                 LevelManager.global.AddBuildingVoid(transform);
         }
-
-
     }
 
     public void SetLastHealth()
@@ -160,23 +161,23 @@ public class Building : MonoBehaviour
             if (amount != 0)
             {
                 HealthAnimation();
-            }
 
-            if (health <= 0)
-            {
-                if (resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood || resourceObject == BuildingType.HardWood)
+                if (health <= 0)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.TreeBreakingSound, 1.0f, true, 0, false, transform);
+                    if (resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood || resourceObject == BuildingType.HardWood)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.TreeBreakingSound);
+                    }
+                    else if (resourceObject == BuildingType.Stone || resourceObject == BuildingType.MossyStone || resourceObject == BuildingType.SlateStone)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound);
+                    }
+                    else if (resourceObject == BuildingType.Bush)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound);
+                    }
+                    DestroyBuilding();
                 }
-                else if (resourceObject == BuildingType.Stone || resourceObject == BuildingType.MossyStone || resourceObject == BuildingType.SlateStone)
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound, 1.0f, true, 0, false, transform);
-                }
-                else if (resourceObject == BuildingType.Bush)
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f, true, 0, false, transform);
-                }
-                DestroyBuilding();
             }
         }
     }
@@ -201,7 +202,7 @@ public class Building : MonoBehaviour
             if (resourceObject == BuildingType.House)
             {
                 GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseDestroySound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseDestroyedSound);
                 normalHouse.SetActive(false);
                 destroyedHouse.SetActive(true);
                 PlayerController.global.playerCanMove = false;
@@ -228,6 +229,7 @@ public class Building : MonoBehaviour
 
             if (resourceObject == BuildingType.Defense)
             {
+                PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
                 LevelManager.global.RemoveBuildingVoid(transform);
 
                 Destroy(gameObject);

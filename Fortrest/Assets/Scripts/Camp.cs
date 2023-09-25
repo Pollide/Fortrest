@@ -21,6 +21,7 @@ public class Camp : MonoBehaviour
     void Start()
     {
         LevelManager.global.campList.Add(this);
+        //Indicator.global.AddIndicator(transform)
         maxHealth = 15.0f;
         health = maxHealth;
     }
@@ -39,7 +40,7 @@ public class Camp : MonoBehaviour
         }
     }
 
-    private void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         health -= damage;
 
@@ -70,16 +71,6 @@ public class Camp : MonoBehaviour
             {
                 canBeDamaged = false;
                 TakeDamage(PlayerController.global.attackDamage);
-                Debug.Log("yoxa");
-            }
-        }
-        if (other.gameObject.tag == "Arrow")
-        {
-            if (!other.GetComponent<ArrowTrigger>().singleHit)
-            {
-                other.GetComponent<ArrowTrigger>().singleHit = true;
-                TakeDamage(PlayerController.global.bowDamage);
-                Destroy(other.gameObject);
             }
         }
     }

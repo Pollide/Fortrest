@@ -17,7 +17,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TMPro;
 
-public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
+public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
 {
     public GameObject SelectedGameObject;
 
@@ -105,7 +105,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the pointer has exited the button
     public void OnPointerExit(PointerEventData eventData)
     {
-        SizeVoid();
         //Pause.global.SelectedList[Pause.global.ReturnIndex()] = -1;
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
     }
@@ -113,7 +112,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the pointer has entered the button
     public void OnPointerEnter(PointerEventData eventData)
     {
-        SizeVoid(1.1f);
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
         Buttons buttons = GetComponentInParent<Buttons>();
         buttons.SelectedList[buttons.ReturnIndex()] = transform.GetSiblingIndex();
@@ -123,15 +121,16 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     //checks to see if the mouse was clicked ontop of the button
     public void OnPointerDown(PointerEventData eventData)
     {
-        SizeVoid(0.9f);
+        GetComponentInParent<Buttons>().pressingDown = true;
         SelectVoid();
     }
 
+
     //checks to see if the mouse was let go ontop of the button
-    public void OnPointerClick(PointerEventData eventData)
+    public void OnPointerUp(PointerEventData eventData)
     {
         //  OnPointerEnter(eventData);
-        SizeVoid();
+        GetComponentInParent<Buttons>().pressingDown = false;
         //  SelectVoid();
 
 
@@ -187,7 +186,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
         if (TerrainTeleportInt != -1)
         {
-            PlayerController.global.TeleportPlayer(LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(10, 1, 10), false);
+            Vector3 pos = LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(50, 2, 50);
+            pos.y = 2;
+            PlayerController.global.TeleportPlayer(pos, false);
         }
 
         if (SaveBool)
@@ -257,7 +258,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
 
             GameManager.global.NextScene(0);
             GameManager.global.transform.SetParent(transform);
-            GameManager.global = null;
+
             //  GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Accepted");
         }
 
@@ -273,11 +274,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerClickHandler, IPointerDown
     SFXManager ReturnSFXManager()
     {
         return VolumeBool ? GameManager.global.SoundManager : GameManager.global.MusicManager;
-    }
-
-    void SizeVoid(float size = 1)
-    {
-        transform.localScale = new Vector3(size, size, size);
     }
 
     public void HighlightVoid(bool highlight)

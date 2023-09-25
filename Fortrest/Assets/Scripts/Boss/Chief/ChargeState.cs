@@ -13,21 +13,22 @@ public class ChargeState : BossState
     // Holds Wheather the boss is charging
     [SerializeField] private bool isCharging = false;
     [SerializeField] private bool playerHit = false;
+    [SerializeField] private bool hasRun = false;
     // Agent charge speed
     [SerializeField] private float chargeSpeed = 10f;
     [SerializeField] private float maxDistFromPlayer = 3f;
-    [SerializeField] private float chargeTimer = 0f;
-    [SerializeField] private float chargeMaxTimer = 5f;
     [SerializeField] private float chargePushForce = 5f;
     [SerializeField] private float chargePushDuration = 1f;
     // Damage for attack
     [SerializeField] private float damage = 0f;
     // Holds charge trigger
     [SerializeField] private BoxCollider chargeDMGTrigger;
+    [SerializeField] private Vector3 moveDirection = Vector3.forward; // Adjust this direction as needed.
+
 
     public override void EnterState()
     {
-        chargeTimer = 0f;
+        stateMachine.BossAnimator.SetBool("attacking", false);
         // Checks if the state is null
         if (idleState == null)
         {
@@ -45,7 +46,12 @@ public class ChargeState : BossState
     public override void ExitState()
     {
         // Turn off charge damage trigger
+        stateMachine.BossAnimator.SetBool("isCharging", false);
+        isCharging = false;
+        agent.speed = stateMachine.BossSpeed;
+        playerHit = false;
         chargeDMGTrigger.enabled = false;
+        hasRun = false;
     }
 
     public override void UpdateState()
@@ -55,35 +61,20 @@ public class ChargeState : BossState
             stateMachine.ChangeState(idleState);
         }
 
-        if (!isCharging)
+        if (!isCharging && !hasRun)
         {
             StartCoroutine(WindUpAndCharge());
+            hasRun = true;
         }
-        else
-        {
-            chargeTimer += Time.deltaTime;
-        }
-
-        if (isCharging && chargeTimer >= chargeMaxTimer)
-        {
-            StartCoroutine(StopCharging());
-        }
-        if (isCharging && Vector3.Distance(transform.position, playerTransform.position) <= maxDistFromPlayer)
-        {
-            // Stop charging when close to the target
-            StartCoroutine(StopCharging());
-        }
-
     }
 
 
-    IEnumerator StopCharging()
+    public IEnumerator StopCharging()
     {
-        Debug.Log("Stopping");
         isCharging = false;
         agent.isStopped = true;
         chargeDMGTrigger.enabled = false;
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(1);
         agent.isStopped = false;
         agent.speed = stateMachine.BossSpeed;
         playerHit = false;
@@ -92,15 +83,17 @@ public class ChargeState : BossState
 
     IEnumerator WindUpAndCharge()
     {
-        Debug.Log("Wind-up phase");
         agent.isStopped = true;
         agent.speed = chargeSpeed;
+        stateMachine.BossAnimator.SetBool("isCharging", true);
+        stateMachine.BossAnimator.SetBool("attacking", false);
         yield return new WaitForSeconds(windUpDuration);
         chargeDMGTrigger.enabled = true;
         agent.isStopped = false;
-        WalkTo(playerTransform.position);
         isCharging = true;
-        Debug.Log("Charging!");
+
+        Vector3 newTarget = new(playerTransform.position.x * 100f, playerTransform.position.y, playerTransform.position.z * 100f);
+        WalkTo(newTarget);
     }
 
     public float Damage

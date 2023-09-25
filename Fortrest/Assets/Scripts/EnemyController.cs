@@ -38,6 +38,7 @@ public class EnemyController : MonoBehaviour
     public bool canBeDamaged = true;
     private bool distanceAdjusted = false;
     private bool attacking = false;
+    public bool canBeDamagedByBoar = true;
 
     // Others
     public Animator ActiveAnimator;
@@ -101,7 +102,7 @@ public class EnemyController : MonoBehaviour
         {
             if (currentEnemyType != ENEMYTYPE.wolf) //wolves wild
             {
-                Indicator.global.AddIndicator(transform, Color.red, currentEnemyType.ToString());
+                Indicator.global.AddIndicator(transform, Color.red, LevelManager.global.enemiesCount < 10 ? currentEnemyType.ToString() : "");
             }
         }
 
@@ -241,7 +242,7 @@ public class EnemyController : MonoBehaviour
                                 shortestDistance = compare; // New shortest distance is assigned
                                 bestTarget = building; // Enemy's target is now the closest item in the list
                             }
-                        }                       
+                        }
                     });
                 }
             }
@@ -350,26 +351,14 @@ public class EnemyController : MonoBehaviour
     public void Damaged(float amount)
     {
         health -= amount;
-        if (HealthAppearTimer == -1)
-        {
-            GameManager.PlayAnimation(healthAnimation, "Health Appear");
-        }
-
-        HealthAppearTimer = 0;
-
-        GameManager.PlayAnimation(healthAnimation, "Health Hit");
-        healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
 
         if (health <= 0)
         {
-            dead = true;
-            if (agent)
-            {
-                agent.SetDestination(transform.position);
-            }            
             healthAnimation.gameObject.SetActive(false);
+            dead = true;
             if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin) // remove once we got anims
             {
+                agent.SetDestination(transform.position);
                 ActiveAnimator.SetTrigger("Death");
             }
             else
@@ -387,6 +376,18 @@ public class EnemyController : MonoBehaviour
             }
 
             Time.timeScale = 1;
+        }
+        else
+        {
+            if (HealthAppearTimer == -1)
+            {
+                GameManager.PlayAnimation(healthAnimation, "Health Appear");
+            }
+
+            HealthAppearTimer = 0;
+
+            GameManager.PlayAnimation(healthAnimation, "Health Hit");
+            healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
         }
     }
 
@@ -486,7 +487,14 @@ public class EnemyController : MonoBehaviour
                     bestTarget = playerPosition;
                 }
                 Damaged(PlayerController.global.bowDamage);
-                PickSound(hitSound, hitSound2, 1.0f);
+                if (currentEnemyType == ENEMYTYPE.goblin)
+                {
+                    PickSound(hitSound, hitSound2, 0.6f);
+                }
+                else
+                {
+                    PickSound(hitSound, hitSound2, 1.0f);
+                }
                 if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
                 {
                     Destroy(other.gameObject.transform.parent.gameObject);
@@ -573,12 +581,35 @@ public class EnemyController : MonoBehaviour
     {
         if (currentEnemyType != ENEMYTYPE.ogre)
         {
-            PickSound(attackSound, attackSound2, 1.0f);
+            if (currentEnemyType == ENEMYTYPE.goblin)
+            {
+                PickSound(attackSound, attackSound2, 0.6f);
+            }
+            else
+            {
+                PickSound(attackSound, attackSound2, 1.0f);
+            }
         }
 
         if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
         {
-            GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? GameManager.global.PlayerHit1Sound : GameManager.global.PlayerHit2Sound);
+            int randomInt = Random.Range(0, 3);
+            AudioClip temp = null;
+            switch (randomInt)
+            {
+                case 0:
+                    temp = GameManager.global.PlayerHit1Sound;
+                    break;
+                case 1:
+                    temp = GameManager.global.PlayerHit2Sound;
+                    break;
+                case 2:
+                    temp = GameManager.global.PlayerHit3Sound;
+                    break;
+                default:
+                    break;
+            }
+            GameManager.global.SoundManager.PlaySound(temp, 0.9f);
             if (PlayerController.global.playerCanBeDamaged)
             {
                 if (currentEnemyType == ENEMYTYPE.goblin)
@@ -669,10 +700,13 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public IEnumerator StopAnimation(float _time)
+    public IEnumerator BoarKnockEffects()
     {
+        float temp = agent.angularSpeed;
+        agent.angularSpeed = 0;
         ActiveAnimator.StartPlayback();
-        yield return new WaitForSeconds(_time);
+        yield return new WaitForSeconds(0.75f);
+        agent.angularSpeed = temp;
         ActiveAnimator.StopPlayback();
     }
 }

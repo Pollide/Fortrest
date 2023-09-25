@@ -556,6 +556,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 617982879}
     m_Modifications:
+    - target: {fileID: 2862344167934180277, guid: 9d23d8d0247aaa74088dcd01511ff10c,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2990112280252214884, guid: 9d23d8d0247aaa74088dcd01511ff10c,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -5052,6 +5057,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 617982879}
     m_Modifications:
+    - target: {fileID: 2862344167934180277, guid: 9d23d8d0247aaa74088dcd01511ff10c,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 20.29
+      objectReference: {fileID: 0}
     - target: {fileID: 4398537559589429613, guid: 9d23d8d0247aaa74088dcd01511ff10c,
         type: 3}
       propertyPath: m_Text
@@ -5604,96 +5614,74 @@ MonoBehaviour:
   GameMusic: {fileID: 8300000, guid: c50b6cb3da380aa4197d5ed9034052b3, type: 3}
   PauseMusic: {fileID: 8300000, guid: 58e0cb57ccbc8da4abb1384fd4c5fd64, type: 3}
   NightMusic: {fileID: 8300000, guid: 350b22cce443b324b9f750369ee5c9e3, type: 3}
-  CollectSound: {fileID: 8300000, guid: 59a32af7f52361b48be7dbf09cbf6956, type: 3}
-  MenuClick1Sound: {fileID: 8300000, guid: 58aeaf1e6b14ced418b753dbd463c14e, type: 3}
-  MenuClick2Sound: {fileID: 8300000, guid: 784e3ff17f60f924ab5d70284b6e28b9, type: 3}
-  TurretPlaceSound: {fileID: 8300000, guid: 60a06551529701f4e81fd7506268ed60, type: 3}
-  EatingSound: {fileID: 8300000, guid: df049d2389f9cf94b9ba0bb6110bcabb, type: 3}
-  CameraLockSound: {fileID: 8300000, guid: 7ef8532fdf3a4fc478336c7979bb1793, type: 3}
-  MenuSwooshSound: {fileID: 8300000, guid: 97508d4560eb4c542b733dc05058e217, type: 3}
-  SpeedButtonClickSound: {fileID: 8300000, guid: 4d8f22c821bbb404fa90cacdbaaf5048,
-    type: 3}
-  ModeChangeClickSound: {fileID: 8300000, guid: af394d48668418c4684fcc2883a2b7ae,
-    type: 3}
-  HouseBuiltNoiseSound: {fileID: 8300000, guid: 72a4722e7143c07419da9b169a7059f1,
-    type: 3}
-  HouseBuiltSound: {fileID: 8300000, guid: 732eb3ba2af280c45af2d500956611e7, type: 3}
-  SnoringSound: {fileID: 8300000, guid: 1ccd47c083677de459ee809cf3013e4c, type: 3}
-  CantPlaceSound: {fileID: 8300000, guid: 4303c2d0b6338b74fa97670b29a1c4c8, type: 3}
-  WhistlingSound: {fileID: 8300000, guid: e2445af3ea6e3834398e1294e0e3dc41, type: 3}
-  HouseDestroySound: {fileID: 8300000, guid: 7de76083e1bc0c948bc1617c635b9ad4, type: 3}
-  InventoryClickSound: {fileID: 8300000, guid: c84d6098d6dfa1e4f98bed0d0f97a0da, type: 3}
-  NewDaySound: {fileID: 8300000, guid: 3a29677cb4dedcb498ed7b80304111d3, type: 3}
-  WaterSound: {fileID: 8300000, guid: 0af4bc6659813e747a7cd9b436522961, type: 3}
-  Pickaxe1Sound: {fileID: 8300000, guid: b8ab2406649727d4aa04b5130b39d7ae, type: 3}
-  Pickaxe2Sound: {fileID: 8300000, guid: e5c8c6755ddd153429d0da7350d3a20d, type: 3}
-  Pickaxe3Sound: {fileID: 8300000, guid: c395ca5944f4f5747b1f9e2be53ad477, type: 3}
-  SwordSwing1Sound: {fileID: 8300000, guid: 00d4b24cf22522943bf60b847c426f6a, type: 3}
-  SwordSwing2Sound: {fileID: 8300000, guid: 5b2137e4ca7add34fafe00788fb9b1f6, type: 3}
-  SwordSwing3Sound: {fileID: 8300000, guid: f521c647e4439cf4b9466492ecca33ad, type: 3}
-  TreeChop1Sound: {fileID: 8300000, guid: d13603a3dc9436b4baca340503849d80, type: 3}
-  TreeChop2Sound: {fileID: 8300000, guid: 1f3f9a8557c7bd740aafeba0d7633e5f, type: 3}
-  TreeChop3Sound: {fileID: 8300000, guid: 1bbe017bd8e40ae4e97287d447b8a96d, type: 3}
-  BushSound: {fileID: 8300000, guid: c488c34081b127b48bc5548ca826e1fb, type: 3}
-  PlayerHitSound: {fileID: 8300000, guid: 25a7f489ddf2bb24aa60676889277adf, type: 3}
-  PlayerHitSound2: {fileID: 0}
-  PlayerAttackSound: {fileID: 8300000, guid: 55cc9c5a1d9f6d84daf6c0600a983135, type: 3}
-  PlayerAttackSound2: {fileID: 0}
-  PlayerDeathSound: {fileID: 0}
-  PlayerDeathSound2: {fileID: 0}
-  PlayerNoiseSound: {fileID: 0}
-  PlayerNoiseSound2: {fileID: 0}
-  PlayerJumpSound: {fileID: 8300000, guid: 37af2d8f68badfd4dabc673a263246e5, type: 3}
-  PlayerStepSound: {fileID: 8300000, guid: 4eb71cc586743b54f946150e1845dfd6, type: 3}
-  PlayerStepSound2: {fileID: 8300000, guid: 27061644bb9b7514d93babd508235741, type: 3}
-  BallistaShootSound: {fileID: 8300000, guid: 4aaf775bd3612c94b8ff849f8a94f1b5, type: 3}
-  CannonShootSound: {fileID: 8300000, guid: d2c46aa47d1451341bb12071d627f025, type: 3}
-  SlowShootSound: {fileID: 8300000, guid: ce534cda3055f2d45af1f9e94d53bb77, type: 3}
-  ArrowHitBuildingSound: {fileID: 8300000, guid: df50b4aac89716546b6611ab750b65e2,
-    type: 3}
-  BoulderBreakingSound: {fileID: 8300000, guid: 2dbff79c09b62434bb279637ac59f12b,
-    type: 3}
-  BowAimSound: {fileID: 8300000, guid: 32e7b4f6007a34c43887937ef5c840bc, type: 3}
-  BowFireSound: {fileID: 8300000, guid: 1f68502314c4e7e48b7009892fca252b, type: 3}
-  BushBreakingSound: {fileID: 8300000, guid: 8442e3370b85ab545ab86d5078875743, type: 3}
-  CannonSpawnedSound: {fileID: 8300000, guid: 1b1e6f0073d05804caeb7a093675784d, type: 3}
-  CantEatSound: {fileID: 8300000, guid: 9e56a7ac4c534dc48b720dcd70b6297d, type: 3}
-  ClockSound: {fileID: 8300000, guid: 8038b09edb78e454fa980c8d0584b1f6, type: 3}
-  EnterHouseSound: {fileID: 8300000, guid: 5016e322ca3995a44aad85d78e822a3b, type: 3}
-  ExitHouseSound: {fileID: 8300000, guid: 1996880d6fb43314ab8f1d4f5537a212, type: 3}
-  EvadeSound: {fileID: 8300000, guid: d4f26655aa5bd6440bd6cd4899197bd8, type: 3}
-  HouseCloseSound: {fileID: 8300000, guid: 2d749536bf154eb4aaa2e86ed35a2fdf, type: 3}
-  HouseOpenSound: {fileID: 8300000, guid: a6bd2711f24f15443912c195224bece7, type: 3}
-  MapCloseSound: {fileID: 8300000, guid: f931ba674becdab42b3a376c7c010ea2, type: 3}
-  MapOpenSound: {fileID: 8300000, guid: 54e8aa544e0b3164dbad345ed10ae353, type: 3}
-  MiniTurretDisappearSound: {fileID: 8300000, guid: fb86fe1b88b295748bd5ebc7c6147cfb,
-    type: 3}
-  MiniTurretAppearSound: {fileID: 8300000, guid: 045ead4c6e221484785b495d7fd14b77,
-    type: 3}
-  PauseMenuSound: {fileID: 8300000, guid: 2257e31a71f334f4f8885d18520c8377, type: 3}
+  PlayerEvadeSound: {fileID: 8300000, guid: d4f26655aa5bd6440bd6cd4899197bd8, type: 3}
+  PlayerHit1Sound: {fileID: 8300000, guid: 999be10cb9a5184479681a32232ce9b8, type: 3}
+  PlayerHit2Sound: {fileID: 8300000, guid: 8c50ad0ba0f97334a8f788d1c52863e4, type: 3}
+  PlayerHit3Sound: {fileID: 8300000, guid: d9398d33db3ebe44393530531260ea27, type: 3}
   PlayerAttack1Sound: {fileID: 8300000, guid: 0992f4ed772e6e14aafe3cb888c27c48, type: 3}
   PlayerAttack2Sound: {fileID: 8300000, guid: 9ffdc7cd86b79144cad5cb48decc0cf7, type: 3}
   PlayerAttack3Sound: {fileID: 8300000, guid: 69031ce08cc63844c90db156f75775f4, type: 3}
   PlayerDeath1Sound: {fileID: 8300000, guid: f85a33a415bf3874fac7638d6d5db0a7, type: 3}
   PlayerDeath2Sound: {fileID: 8300000, guid: 5d070fd24d3990c4fb2bc0a112c51ca5, type: 3}
-  PlayerHit1Sound: {fileID: 8300000, guid: 999be10cb9a5184479681a32232ce9b8, type: 3}
-  PlayerHit2Sound: {fileID: 8300000, guid: 8c50ad0ba0f97334a8f788d1c52863e4, type: 3}
-  ScatterTurretSpawnedSound: {fileID: 8300000, guid: 90fd2b32777a2f44d9ec325e419f5938,
+  PlayerStepSound: {fileID: 8300000, guid: 4eb71cc586743b54f946150e1845dfd6, type: 3}
+  PlayerStep2Sound: {fileID: 8300000, guid: 27061644bb9b7514d93babd508235741, type: 3}
+  CollectSound: {fileID: 8300000, guid: 59a32af7f52361b48be7dbf09cbf6956, type: 3}
+  BoulderBreakingSound: {fileID: 8300000, guid: 2dbff79c09b62434bb279637ac59f12b,
     type: 3}
-  CannonTurretSpawnedSound: {fileID: 8300000, guid: 1b1e6f0073d05804caeb7a093675784d,
-    type: 3}
-  SlowTurretSpawnedSound: {fileID: 8300000, guid: 6c76ae40b4966744a993475650d64e01,
-    type: 3}
-  SlowTurretShootSound: {fileID: 8300000, guid: 3145dcefb6df8eb46b86df1d6b3751b9,
-    type: 3}
-  SwapTurretSound: {fileID: 8300000, guid: 28462307d995eb5469f799c54024476e, type: 3}
-  TeleportSound: {fileID: 8300000, guid: 5d5ad814873a8764cb41d38842d22c25, type: 3}
-  TeleporterEnterSound: {fileID: 8300000, guid: 841b0420cf4ac2a4ca942531ca70280c,
-    type: 3}
+  BushBreakingSound: {fileID: 8300000, guid: d390d24d968de7c40bcd9388f45b694d, type: 3}
   TreeBreakingSound: {fileID: 8300000, guid: eb81af948de59a543906b9db6f4298ec, type: 3}
+  AxeSound: {fileID: 8300000, guid: d13603a3dc9436b4baca340503849d80, type: 3}
+  PickaxeSound: {fileID: 8300000, guid: e5c8c6755ddd153429d0da7350d3a20d, type: 3}
+  BushSound: {fileID: 8300000, guid: c488c34081b127b48bc5548ca826e1fb, type: 3}
+  SwordSwing1Sound: {fileID: 8300000, guid: 833af3fc3a6e71746a53964d178c0b74, type: 3}
+  SwordSwing2Sound: {fileID: 8300000, guid: cea18bf06b34e824aa69d17dffe23397, type: 3}
+  SwordSwing3Sound: {fileID: 8300000, guid: f60e77738f06eea4c9127579893c8cdc, type: 3}
+  BallistaSpawnedSound: {fileID: 8300000, guid: 60a06551529701f4e81fd7506268ed60,
+    type: 3}
+  BallistaShootSound: {fileID: 8300000, guid: 4aaf775bd3612c94b8ff849f8a94f1b5, type: 3}
+  CannonSpawnedSound: {fileID: 8300000, guid: 1b1e6f0073d05804caeb7a093675784d, type: 3}
+  CannonShootSound: {fileID: 8300000, guid: d2c46aa47d1451341bb12071d627f025, type: 3}
+  SlowSpawnedSound: {fileID: 8300000, guid: 6c76ae40b4966744a993475650d64e01, type: 3}
+  SlowShootSound: {fileID: 8300000, guid: f4349b3515020eb40857b5c0938868ff, type: 3}
+  ScatterSpawnedSound: {fileID: 8300000, guid: 90fd2b32777a2f44d9ec325e419f5938, type: 3}
+  ScatterShootSound: {fileID: 0}
+  MiniTurretAppearSound: {fileID: 8300000, guid: c84da8a685ff34b438b31c8794328cbf,
+    type: 3}
+  MiniTurretDisappearSound: {fileID: 8300000, guid: 49a1692be5647cf468dbc5b5576bd165,
+    type: 3}
+  EnterHouseSound: {fileID: 8300000, guid: 4a957ce1dd462d749989c6f81676080f, type: 3}
+  ExitHouseSound: {fileID: 8300000, guid: e2d9b1bde509b8f4180cda34458e5471, type: 3}
+  HouseOpenSound: {fileID: 8300000, guid: a6bd2711f24f15443912c195224bece7, type: 3}
+  HouseCloseSound: {fileID: 8300000, guid: 2d749536bf154eb4aaa2e86ed35a2fdf, type: 3}
+  HouseDestroyedSound: {fileID: 8300000, guid: 7de76083e1bc0c948bc1617c635b9ad4, type: 3}
+  BowAimSound: {fileID: 8300000, guid: 32e7b4f6007a34c43887937ef5c840bc, type: 3}
+  BowFireSound: {fileID: 8300000, guid: 1f68502314c4e7e48b7009892fca252b, type: 3}
+  ArrowHitBuildingSound: {fileID: 8300000, guid: df50b4aac89716546b6611ab750b65e2,
+    type: 3}
+  ArrowHitEnemySound: {fileID: 0}
+  EatingSound: {fileID: 8300000, guid: df049d2389f9cf94b9ba0bb6110bcabb, type: 3}
+  CantEatSound: {fileID: 8300000, guid: 7122628909aca664086c443dba204c83, type: 3}
+  BridgeBuiltSound: {fileID: 8300000, guid: 732eb3ba2af280c45af2d500956611e7, type: 3}
+  BridgeBuiltNoiseSound: {fileID: 8300000, guid: 72a4722e7143c07419da9b169a7059f1,
+    type: 3}
   TurretConstructingSound: {fileID: 8300000, guid: 775f3801f6547c049befd92e5a78f31f,
     type: 3}
+  SwapTurretSound: {fileID: 8300000, guid: 28462307d995eb5469f799c54024476e, type: 3}
+  CantPlaceSound: {fileID: 8300000, guid: 2f5b990b0ae01a640b7d2b885431d35b, type: 3}
+  SnoringSound: {fileID: 8300000, guid: 1ccd47c083677de459ee809cf3013e4c, type: 3}
+  NewDaySound: {fileID: 8300000, guid: 3a29677cb4dedcb498ed7b80304111d3, type: 3}
+  WaterSound: {fileID: 8300000, guid: 0af4bc6659813e747a7cd9b436522961, type: 3}
+  ClockSound: {fileID: 8300000, guid: 8038b09edb78e454fa980c8d0584b1f6, type: 3}
+  MenuClickSound: {fileID: 8300000, guid: 67ede88df6f315d48bf5e019371fcfb9, type: 3}
   UpgradeMenuClickSound: {fileID: 8300000, guid: 8793666ee773efb4a8c591a9f846b029,
+    type: 3}
+  ModeChangeClickSound: {fileID: 8300000, guid: af394d48668418c4684fcc2883a2b7ae,
+    type: 3}
+  MapCloseSound: {fileID: 8300000, guid: d095dd49a6f2bc34b91710642b68fa7c, type: 3}
+  MapOpenSound: {fileID: 8300000, guid: eadf37725afe0674bada30395aedd820, type: 3}
+  PauseMenuSound: {fileID: 8300000, guid: 2257e31a71f334f4f8885d18520c8377, type: 3}
+  TeleportSound: {fileID: 8300000, guid: 5d5ad814873a8764cb41d38842d22c25, type: 3}
+  TeleporterEnterSound: {fileID: 8300000, guid: a647b5c82db4f8d45b1534d6b971244b,
     type: 3}
   CheatInfiniteBuilding: 0
   PopupAnimation: {fileID: 7400000, guid: 8106279ddc6f94303964dac26543aa99, type: 2}
@@ -8794,6 +8782,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ButtonHolder: {fileID: 1553931058}
   SelectedList: 
+  pressingDown: 0
 --- !u!1001 &1964540071
 PrefabInstance:
   m_ObjectHideFlags: 0

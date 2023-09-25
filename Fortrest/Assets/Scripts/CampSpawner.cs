@@ -90,7 +90,7 @@ public class CampSpawner : MonoBehaviour
 
                 if (distance > 40.0f)
                 {
-                    Collider[] colliders = Physics.OverlapSphere(spawnPosition, mesh.bounds.size.x / 2.0f, GameManager.ReturnBitShift(new string[] { "Resource", "Building" }));
+                    Collider[] colliders = Physics.OverlapSphere(spawnPosition, mesh.bounds.size.x / 2.0f, GameManager.ReturnBitShift(new string[] { "Resource", "Building", "Boar" }));
 
                     for (int i = 0; i < colliders.Length; i++)
                     {

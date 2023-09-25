@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 public class Boar : MonoBehaviour
 {
@@ -39,6 +40,8 @@ public class Boar : MonoBehaviour
     [HideInInspector] public bool closerToHouse;
     public bool canInteractWithBoar;
     private bool dismountRight;
+
+    private float timer = 0f;
 
     private void Awake()
     {
@@ -104,6 +107,7 @@ public class Boar : MonoBehaviour
         {
             if (canMove)
             {
+                SmokeTrail();
                 Ride();
             }
         }
@@ -206,7 +210,6 @@ public class Boar : MonoBehaviour
 
     public void Mount()
     {
-
         mounted = !mounted;
         PlayerController.global.interactCTRL = false;
         PlayerController.global.GetComponent<CharacterController>().enabled = false;
@@ -338,32 +341,6 @@ public class Boar : MonoBehaviour
             }
             animator.SetBool("Moving", isMoving);
             animator.SetBool("Reversing", isReversing);
-            //if (isMoving)
-            //{
-            //    if (bobbing > -5f && !reverse)
-            //    {
-            //        bobbing -= Time.deltaTime * ((currentSpeed / 120.0f) * 75f);
-            //    }
-            //    else if (bobbing == -5f)
-            //    {
-            //        reverse = true;
-            //    }
-            //    if (bobbing < 5f && reverse)
-            //    {
-            //        bobbing += Time.deltaTime * ((currentSpeed / 120.0f) * 75f);
-            //    }
-            //    else if (bobbing == 5f)
-            //    {
-            //        reverse = false;
-            //    }
-            //    bobbing = Mathf.Clamp(bobbing, -5f, 5f);
-            //    PlayerController.global.transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z + bobbing);
-            //}
-            //else
-            //{
-            //    bobbing = 0f;
-            //    reverse = false;
-            //}
         }
     }
 
@@ -393,5 +370,20 @@ public class Boar : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private void SmokeTrail()
+    {
+        timer += Time.deltaTime;
+        if (isMoving && timer > 0.08f)
+        {
+            timer = 0f;
+            GameObject SmokeVFXRight = Instantiate(LevelManager.global.VFXSmoke.gameObject, transform.position + new Vector3(0f, 0.5f, 0f) - (Vector3.forward * 1.25f) - Vector3.right, Quaternion.identity);
+            float randomeFloat = Random.Range(0.2f, 0.275f);
+            SmokeVFXRight.transform.localScale = new Vector3(randomeFloat * 2f, randomeFloat, randomeFloat * 2f);
+            SmokeVFXRight.GetComponent<VisualEffect>().Play();
+            Destroy(SmokeVFXRight, 1.5f);
+        }
+        
     }
 }

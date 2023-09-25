@@ -48,6 +48,8 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private bool inDefence = false;
     // Bool to see if in death state
     [SerializeField] private bool isDead = false;
+    [SerializeField] private Animator bossAnimator;
+    private bool canBeDamaged = false;
 
     // Start is called before the first frame update
     void Start()
@@ -131,7 +133,7 @@ public class BossStateMachine : MonoBehaviour
         }
     }
 
-    private void UpdateHealth()
+    public void UpdateHealth()
     {
         healthBar.GetComponentInChildren<HealthBar>().SetHealth(currentHealth, maxHealth);
     }
@@ -200,9 +202,20 @@ public class BossStateMachine : MonoBehaviour
         set { inDefence = value; }
     }
 
+    public bool CanBeDamaged
+    {
+        get { return canBeDamaged; }
+        set { canBeDamaged = value; }
+    }
+
     public bool IsDead
     {
         get { return isDead; }
         set { isDead = value; }
+    }
+
+    public Animator BossAnimator
+    {
+        get { return bossAnimator; }
     }
 }

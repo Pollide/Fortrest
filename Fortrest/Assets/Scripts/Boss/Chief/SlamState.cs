@@ -11,6 +11,7 @@ public class SlamState : BossState
     private float slamWaitTime = 0f;
     [SerializeField] private float slamDuration = 5f;
     [SerializeField] private float slamRadius = 5f;
+    [SerializeField] private float slamWaitAfterIndicator = 2f;
     [SerializeField] private float damage = 5f;
     [SerializeField] private GameObject telegraph;
     private bool damageDone = false;
@@ -33,23 +34,19 @@ public class SlamState : BossState
 
         telegraph.SetActive(true);
         agent.isStopped = true;
+        stateMachine.BossAnimator.SetBool("attacking", false);
+        stateMachine.BossAnimator.SetBool("isJumping", true);
+        slamWaitTime = 0f;
+        damageDone = false;
     }
 
     public override void ExitState()
     {
-        //// Checks if state is populated
-        //if (idleState != null)
-        //{
-        //    // Sets state to null
-        //    idleState = null;
-        //}
-        //// Checks if state is populated
-        //if (attackState != null)
-        //{
-        //    // Sets state to null
-        //    attackState = null;
-        //}
+        damageDone = true;
+        slamWaitTime = 0f;
         telegraph.SetActive(false);
+        stateMachine.BossAnimator.SetBool("isJumping", false);
+        stateMachine.BossAnimator.SetBool("isDiving", false);
     }
 
     public override void UpdateState()
@@ -68,9 +65,13 @@ public class SlamState : BossState
 
         if (slamWaitTime >= slamDuration && !damageDone)
         {
-            telegraph.GetComponent<BossTelegraph>().DoSlamDamage();
-            damageDone = true;
+            stateMachine.BossAnimator.SetBool("isJumping", false);
+            stateMachine.BossAnimator.SetBool("isDiving", true);
+            transform.position = telegraph.transform.position;
+            StartCoroutine(telegraph.GetComponent<BossTelegraph>().DoSlamDamage(slamWaitAfterIndicator));
         }
+
+
     }
 
     public float SlamDuration
@@ -91,5 +92,10 @@ public class SlamState : BossState
     public float SlamWaitTime
     {
         get { return slamWaitTime; }
+    }
+
+    public AttackState StateAttack
+    {
+        get { return attackState; }
     }
 }

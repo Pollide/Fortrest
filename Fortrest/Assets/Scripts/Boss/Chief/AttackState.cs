@@ -47,62 +47,66 @@ public class AttackState : BossState
             // Gets the connected state
             slamState = GetComponent<SlamState>();
         }
+
+        randValue = 0f;
+
+        randomCheckTimer = randomCheckDuration;
+
     }
 
     public override void ExitState()
     {
-        //// Checks if state is populated
-        //if (idleState != null)
-        //{
-        //    // Sets state to null
-        //    idleState = null;
-        //}
-        //// Checks if state is populated
-        //if (chargeState != null)
-        //{
-        //    // Sets state to null
-        //    chargeState = null;
-        //}
-        //// Checks if state is populated
-        //if (slamState != null)
-        //{
-        //    // Sets state to null
-        //    slamState = null;
-        //}
+        stateMachine.BossAnimator.SetBool("attacking", true);
     }
 
     public override void UpdateState()
     {
+        // Switch to Idle if player is outside of arena
+        if (!PlayerInArena(stateMachine.ArenaSize))
+        {
+            stateMachine.ChangeState(idleState);
+        }
         // Set agent destination
         WalkTo(playerTransform.position);
         // Boss phasses
         PhaseOne();
         PhaseTwo();
         PhaseThree();
-        // Switch to Idle if player is outside of arena
-        if (!PlayerInArena(stateMachine.ArenaSize))
-        {
-            stateMachine.ChangeState(idleState);
-        }
     }
 
     // Run checks to see if the attack can be called
     private bool CanAttack()
     {
-        // Return true if the distance between the player and boss is less then or equal to the attack distance
-        return Vector3.Distance(transform.position, playerTransform.position) <= attackDistance;
+        Vector3 directionToTarget = (playerTransform.position - transform.position).normalized;
+
+        float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
+
+        float threshold = 0.9f; // You can adjust this value depending on the accuracy you need.
+        if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     // Run the normal attack logic 
     private void Attack()
     {
+        // Countdown for random number 
+        if (randomCheckTimer > 0f)
+        {
+            randomCheckTimer -= Time.deltaTime;
+        }
+
         if (!isAttacking)
         {
             // Check if the enemy can attack
             if (CanAttack())
             {
-                // Apply damage to the player or target
-                ApplyDamageToTarget(damage);
+                stateMachine.BossAnimator.SetBool("attacking", true);
                 // Set the attack timer to control attack speed
                 attackTimer = 1f / attackSpeed;
                 // Stop agent
@@ -112,17 +116,14 @@ public class AttackState : BossState
             }
             else
             {
-                // Countdown for random number 
-                if (randomCheckTimer > 0f)
-                {
-                    randomCheckTimer -= Time.deltaTime;
-                }
+                stateMachine.BossAnimator.SetBool("attacking", false);
             }
         }
         else
         {
             // Count down the attack timer
             attackTimer -= Time.deltaTime;
+
             if (attackTimer <= 0)
             {
                 // Reset the attack timer
@@ -192,5 +193,17 @@ public class AttackState : BossState
     private void CheckAttackState()
     {
         randValue = Random.Range(0f, 1f);
+    }
+
+    public float Damage
+    {
+        get { return damage; }
+        set { damage = value; }
+    }
+
+    public bool IsAttacking
+    {
+        get { return isAttacking; }
+        set { isAttacking = value; }
     }
 }
