@@ -351,11 +351,14 @@ public class PlayerModeHandler : MonoBehaviour
 
     private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position, Vector2 gridPos)
     {        
-        PlayerController.global.CheckSufficientResources(true);
+        PlayerController.global.CheckSufficientResources(true);       
         GameObject newTurret = Instantiate(prefab, position, Quaternion.identity);
         GameManager.global.SoundManager.PlaySound(GameManager.global.TurretConstructingSound);
         newTurret.transform.localScale = Vector3.zero;
         newTurret.GetComponent<Building>().gridLocation = gridPos;
+        GameObject tempVFX1 = Instantiate(LevelManager.global.VFXBuilding.gameObject, newTurret.transform.position + new Vector3(0f, 0.7f, 0f), Quaternion.Euler(new Vector3(0f, Random.Range(0f, 360f), 0f)));
+        tempVFX1.GetComponent<VisualEffect>().Play();
+        Destroy(tempVFX1, turretTimer);
 
         if (prefab == turretPrefabs[3])
         {
@@ -400,9 +403,9 @@ public class PlayerModeHandler : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.ScatterSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
         }
 
-        GameObject tempVFX = Instantiate(LevelManager.global.VFXSmokeRing.gameObject, newTurret.transform.position + new Vector3(0, .5f, 0), Quaternion.identity);
-        tempVFX.GetComponent<VisualEffect>().Play();
-        Destroy(tempVFX, 2.0f);
+        GameObject tempVFX2 = Instantiate(LevelManager.global.VFXSmokeRing.gameObject, newTurret.transform.position + new Vector3(0, .5f, 0), Quaternion.identity);
+        tempVFX2.GetComponent<VisualEffect>().Play();
+        Destroy(tempVFX2, 2.0f);
         //!hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource")        
     }
 

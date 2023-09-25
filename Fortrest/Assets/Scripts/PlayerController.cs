@@ -1638,36 +1638,42 @@ public class PlayerController : MonoBehaviour
 
     public void AttackEffects()
     {
-        LevelManager.global.VFXSlash.transform.position = transform.position;
-        LevelManager.global.VFXSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
-
         int randomInt = Random.Range(0, 3);
 
         if (attackCount == 0 || attackCount == 2)
         {
+            LevelManager.global.VFXSlash.transform.position = transform.position;
+            LevelManager.global.VFXSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
+            LevelManager.global.VFXSlash.Play();
             if (attackCount == 0)
             {
                 if (randomInt == 1 || randomInt == 2)
+                {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack1Sound, 0.9f);
+                }                  
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing1Sound);
             }
             else
             {
                 if (randomInt == 1 || randomInt == 2)
+                {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.9f);
+                }                  
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing3Sound);
-            }
-            //VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y - 15.0f, transform.eulerAngles.z + 180.0f);
+            }            
         }
         else if (attackCount == 1)
         {
+            LevelManager.global.VFXSlashReversed.transform.position = transform.position;
+            LevelManager.global.VFXSlashReversed.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + 90.0f, transform.eulerAngles.z);
+            LevelManager.global.VFXSlashReversed.Play();
             if (randomInt == 1 || randomInt == 2)
+            {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.9f);
-            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);
-            //VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
+            }              
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);           
         }
-        LevelManager.global.VFXSlash.Play();
-
+        
         attackCount++;
         if (attackCount > 2)
         {
@@ -1679,6 +1685,7 @@ public class PlayerController : MonoBehaviour
     {
         playerCC.Move(transform.forward * 7f * Time.deltaTime);
         LevelManager.global.VFXSlash.transform.position = transform.position;
+        LevelManager.global.VFXSlashReversed.transform.position = transform.position;
     }
 
     public void GatheringEffects()
