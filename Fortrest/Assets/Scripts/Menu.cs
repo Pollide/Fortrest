@@ -36,7 +36,6 @@ public class Menu : MonoBehaviour
 
     private void Start()
     {
-        // Left stick to move
         GameManager.global.gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
         GameManager.global.gamepadControls.Controls.Move.performed += context => ControllerSelection();
         GameManager.global.gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;

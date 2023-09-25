@@ -197,7 +197,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
     public Vector2 rotateCTRL;
-    [HideInInspector] public bool pauseSelectCTRL;
     [HideInInspector] public bool releasedCTRL;
     [HideInInspector] public bool scrollCTRL;
 
@@ -262,9 +261,6 @@ public class PlayerController : MonoBehaviour
 
             // A to select in build mode
             GameManager.global.gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
-
-            // A to select in pause mode
-            GameManager.global.gamepadControls.Controls.Sprint.performed += context => PauseEnter();
 
             // X to interact
             GameManager.global.gamepadControls.Controls.Interact.performed += context => InteractController();
@@ -371,17 +367,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void PauseEnter()
-    {
-        if (pausedBool)
-        {
-            if (!pauseSelectCTRL)
-            {
-                pauseSelectCTRL = true;
-            }
-        }
-    }
-
     private void PauseController()
     {
         PauseVoid(!pausedBool);
@@ -394,7 +379,7 @@ public class PlayerController : MonoBehaviour
 
     private void GatheringController(bool pressed)
     {
-        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && !pausedBool && !mapBool)
         {
             if (pressed)
             {
@@ -409,7 +394,7 @@ public class PlayerController : MonoBehaviour
 
     private void AttackingController()
     {
-        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !pausedBool && !mapBool)
         {
             if (!attackingCTRL && !attacking)
             {
@@ -420,7 +405,7 @@ public class PlayerController : MonoBehaviour
 
     private void AimingController(bool pressed)
     {
-        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !pausedBool && !mapBool)
         {
             if (pressed)
             {
@@ -437,16 +422,15 @@ public class PlayerController : MonoBehaviour
 
     private void InteractController()
     {
-        if (!interactCTRL && (needInteraction))
+        if (!interactCTRL && needInteraction && !pausedBool && !mapBool)
         {
-
             interactCTRL = true;
         }
     }
 
     private void EvadeController()
     {
-        if (!evadeCTRL)
+        if (!evadeCTRL && !pausedBool && !mapBool)
         {
             evadeCTRL = true;
         }
@@ -454,7 +438,7 @@ public class PlayerController : MonoBehaviour
 
     private void SwappingController()
     {
-        if (!swapCTRL)
+        if (!swapCTRL && !pausedBool && !mapBool)
         {
             swapCTRL = true;
             cancelCTRL = true;
@@ -463,7 +447,7 @@ public class PlayerController : MonoBehaviour
 
     private void TurretController()
     {
-        if (Unlocks.global.miniTurretUnlocked && !turretCTRL && !turretSpawned)
+        if (Unlocks.global.miniTurretUnlocked && !turretCTRL && !turretSpawned && !pausedBool && !mapBool)
         {
             turretCTRL = true;
         }
@@ -471,7 +455,7 @@ public class PlayerController : MonoBehaviour
 
     private void HealController()
     {
-        if (!healCTRL)
+        if (!healCTRL && !pausedBool && !mapBool)
         {
             healCTRL = true;
         }
@@ -859,7 +843,7 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case KeyCode.Space:
-                    if (playerCanMove && canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
+                    if (playerCanMove && canEvade)
                     {
                         StartCoroutine(Evade());
                     }
@@ -882,7 +866,7 @@ public class PlayerController : MonoBehaviour
             if (evadeCTRL)
             {
                 evadeCTRL = false;
-                if (playerCanMove && canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
+                if (playerCanMove && canEvade)
                 {
                     StartCoroutine(Evade());
                 }
@@ -1091,7 +1075,6 @@ public class PlayerController : MonoBehaviour
                 mapBool = false;
             }
             pausedBool = pause;
-            playerCanMove = !pause;
         }
     }
 
@@ -1104,7 +1087,6 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
-            playerCanMove = !map;
             if (mapBool)
             {
                 UpdateMap();
