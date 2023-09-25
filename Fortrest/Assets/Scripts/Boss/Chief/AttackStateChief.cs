@@ -59,8 +59,10 @@ public class AttackStateChief : BossState
     private bool CanAttack()
     {
 
-        Vector3 directionToTarget = (playerTransform.position - transform.position).normalized;
-        directionToTarget.y = transform.forward.y;
+        Vector3 directionToTarget = (playerTransform.position - transform.position);
+        directionToTarget.y = 0; // Set the Y component to 0
+        directionToTarget.Normalize(); // Normalize the vector to make it so player can get close
+
         float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
 
         float threshold = 0.9f; // You can adjust this value depending on the accuracy you need.
