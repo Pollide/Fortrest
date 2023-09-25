@@ -5,8 +5,8 @@ using UnityEngine;
 public class SlamStateChief : BossState
 {
     // Holds states
-    private IdleStateChief idleState;
-    private AttackStateChief attackState;
+    private IdleState idleState;
+    private AttackState attackState;
     // Slam wait time
     private float slamWaitTime = 0f;
     [SerializeField] private float slamDuration = 5f;
@@ -23,13 +23,13 @@ public class SlamStateChief : BossState
         if (idleState == null)
         {
             // Gets the connected state
-            idleState = GetComponent<IdleStateChief>();
+            idleState = GetComponent<IdleState>();
         }
         // Checks if the state is null
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<AttackStateChief>();
+            attackState = GetComponent<AttackState>();
         }
 
         telegraph.SetActive(true);
@@ -94,7 +94,7 @@ public class SlamStateChief : BossState
         get { return slamWaitTime; }
     }
 
-    public AttackStateChief StateAttack
+    public AttackState StateAttack
     {
         get { return attackState; }
     }

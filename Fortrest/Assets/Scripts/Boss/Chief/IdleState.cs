@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleStateChief : BossState
+public class IdleState : BossState
 {
     // Holds next state
-    private AttackStateChief attackState;
+    private AttackState attackState;
     private float resetTimer = 0f;
     [SerializeField] private float resetTimerDuration;
 
@@ -16,7 +16,7 @@ public class IdleStateChief : BossState
         if (attackState == null)
         {
             // Gets the connected attack state
-            attackState = GetComponent<AttackStateChief>();
+            attackState = GetComponent<AttackState>();
         }
 
         stateMachine.HealthBar.SetActive(true);
