@@ -400,7 +400,7 @@ public class PlayerModeHandler : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.ScatterSpawnedSound, 1.0f, true, 0, false, inTheFortress ? null : newTurret.transform);
         }
 
-        GameObject tempVFX = Instantiate(LevelManager.global.VFXSmokePuff.gameObject, newTurret.transform.position + new Vector3(0, .5f, 0), Quaternion.identity);
+        GameObject tempVFX = Instantiate(LevelManager.global.VFXSmokeRing.gameObject, newTurret.transform.position + new Vector3(0, .5f, 0), Quaternion.identity);
         tempVFX.GetComponent<VisualEffect>().Play();
         Destroy(tempVFX, 2.0f);
         //!hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource")        
