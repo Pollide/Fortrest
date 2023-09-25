@@ -102,6 +102,7 @@ public class AttackStateChief : BossState
             }
             else
             {
+                transform.LookAt(playerTransform);
                 stateMachine.BossAnimator.SetBool("attacking", false);
             }
         }
