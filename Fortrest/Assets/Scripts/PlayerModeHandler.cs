@@ -134,6 +134,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
+            buildingWithController = false;
             if (!Weather.global.gameObject.activeSelf)
             {
                 Weather.global.gameObject.SetActive(true);

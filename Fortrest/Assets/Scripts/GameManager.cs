@@ -110,11 +110,10 @@ public class GameManager : MonoBehaviour
     public GamepadControls gamepadControls;
 
     [HideInInspector] public Vector2 moveCTRL;
-
-    [HideInInspector] public bool canPressCTRL;
     [HideInInspector] public bool selectCTRL;
     [HideInInspector] public bool upCTRL;
     [HideInInspector] public bool downCTRL;
+    private bool once;
 
     public Texture2D pointerGeneric;
     public Texture2D pointerDoubleSword;
@@ -133,12 +132,10 @@ public class GameManager : MonoBehaviour
 
         // Left stick to move
         gamepadControls.Controls.Move.performed += context => moveCTRL = context.ReadValue<Vector2>();
-        gamepadControls.Controls.Move.performed += context => ButtonSelection(); //for button navigation
-        gamepadControls.Controls.Move.performed += ctx => OnGamepadInput(); //for detection
-
         gamepadControls.Controls.Move.canceled += context => moveCTRL = Vector2.zero;
-        gamepadControls.Controls.Move.canceled += context => canPressCTRL = false;
+        gamepadControls.Controls.Move.performed += context => ButtonSelection();
 
+        gamepadControls.Controls.Move.performed += ctx => OnGamepadInput(); //for detection 
         gamepadControls.Controls.Rotate.performed += ctx => OnGamepadInput();
         gamepadControls.Controls.Sprint.performed += ctx => OnGamepadInput();
         gamepadControls.Controls.Interact.performed += ctx => OnGamepadInput();
@@ -152,7 +149,6 @@ public class GameManager : MonoBehaviour
         gamepadControls.Controls.Map.performed += ctx => OnGamepadInput();
 
         // A to select in pause mode
-        gamepadControls.Controls.Sprint.performed += context => canPressCTRL = true;
         gamepadControls.Controls.Sprint.performed += context => selectCTRL = true;
 
         lastMousePosition = Input.mousePosition;
@@ -214,33 +210,39 @@ public class GameManager : MonoBehaviour
 
     private void ButtonSelection()
     {
-        if (!canPressCTRL)
+        if (!once)
         {
-            if (moveCTRL.y > 0f)
+            if (moveCTRL.y > 0.1f)
             {
                 upCTRL = true;
-                canPressCTRL = true;
-
             }
-            else if (moveCTRL.y < 0f)
+            else if (moveCTRL.y < -0.1f)
             {
                 downCTRL = true;
-                canPressCTRL = true;
             }
-        }
+            once = true;
+        }   
     }
 
     private void Update()
     {
+        if (moveCTRL.y >= -0.1f && moveCTRL.y <= 0.1f)
+        {
+            once = false;
+        }
+
         Vector3 currentMousePosition = Input.mousePosition;
 
-        if ((!PlayerModeHandler.global.buildingWithController && currentMousePosition != lastMousePosition) || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        if ((PlayerModeHandler.global && !PlayerModeHandler.global.buildingWithController && currentMousePosition != lastMousePosition) || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             KeyboardBool = true;
         }
         lastMousePosition = currentMousePosition;
 
-        PlayerModeHandler.SetMouseActive(KeyboardBool, PlayerModeHandler.global.inTheFortress);
+        if (PlayerModeHandler.global)
+        {
+            PlayerModeHandler.SetMouseActive(KeyboardBool, PlayerModeHandler.global.inTheFortress);
+        }      
 
         Texture2D cursorTexture = pointerGeneric;
         Vector2 hotSpot = new Vector2((float)cursorTexture.width / 2, (float)cursorTexture.height / 2);
