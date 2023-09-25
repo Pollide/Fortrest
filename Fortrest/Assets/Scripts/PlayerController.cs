@@ -879,32 +879,32 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (playerCanMove)
+            if (evadeCTRL)
             {
-                if (evadeCTRL)
+                evadeCTRL = false;
+                if (playerCanMove && canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
                 {
-                    evadeCTRL = false;
-                    if (canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
-                    {
-                        StartCoroutine(Evade());
-                    }
+                    StartCoroutine(Evade());
                 }
-                if (turretCTRL)
+            }
+            if (turretCTRL)
+            {
+                turretCTRL = false;
+                if (playerCanMove)
                 {
-                    turretCTRL = false;
                     SpawnTurret();
-                }
-                if (healCTRL)
+                }               
+            }
+            if (healCTRL)
+            {
+                healCTRL = false;
+                if (playerCanMove && appleAmount > 0)
                 {
-                    healCTRL = false;
-                    if (appleAmount > 0)
-                    {
-                        EatApple();
-                    }
-                    else
-                    {
-                        GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
-                    }
+                    EatApple();
+                }
+                else
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
                 }
             }
             if (canTeleport && interactCTRL)
@@ -1090,9 +1090,8 @@ public class PlayerController : MonoBehaviour
             {
                 mapBool = false;
             }
-
-            //  playerCanMove = !pause;
             pausedBool = pause;
+            playerCanMove = !pause;
         }
     }
 
@@ -1105,7 +1104,7 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
-
+            playerCanMove = !map;
             if (mapBool)
             {
                 UpdateMap();
@@ -1356,8 +1355,6 @@ public class PlayerController : MonoBehaviour
     public float division = 1;
     private void RotatePlayer()
     {
-        //  Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
-
         if (!Boar.global.mounted)
         {
             if (GameManager.global.KeyboardBool)

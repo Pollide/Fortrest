@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
     public SFXManager SoundManager; //manages all sound effects
     public SFXManager MusicManager; //manages all music
 
-    [HideInInspector]
     public bool KeyboardBool = true;
 
     [Header("Music")]
@@ -235,13 +234,13 @@ public class GameManager : MonoBehaviour
     {
         Vector3 currentMousePosition = Input.mousePosition;
 
-        if (currentMousePosition != lastMousePosition || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        if ((!PlayerModeHandler.global.buildingWithController && currentMousePosition != lastMousePosition) || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             KeyboardBool = true;
         }
         lastMousePosition = currentMousePosition;
 
-        PlayerModeHandler.SetMouseActive(KeyboardBool);
+        PlayerModeHandler.SetMouseActive(KeyboardBool, PlayerModeHandler.global.inTheFortress);
 
         Texture2D cursorTexture = pointerGeneric;
         Vector2 hotSpot = new Vector2((float)cursorTexture.width / 2, (float)cursorTexture.height / 2);

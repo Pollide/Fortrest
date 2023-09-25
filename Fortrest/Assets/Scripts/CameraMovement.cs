@@ -13,6 +13,7 @@ public class CameraMovement : MonoBehaviour
     private KeyCode[] keyCodes;
     public Renderer gridRenderer;
     private float xMove, yMove, xMin, yMin, xMax, yMax;
+    private Vector2 cameraCTRL;
 
     private void Start()
     {
@@ -22,81 +23,116 @@ public class CameraMovement : MonoBehaviour
         yMax = 6.5f;
         times = new float[4];
         keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
+
+        GameManager.global.gamepadControls.Controls.Rotate.performed += context => cameraCTRL = context.ReadValue<Vector2>();
+        GameManager.global.gamepadControls.Controls.Rotate.canceled += context => cameraCTRL = Vector2.zero;
     }
 
     void Update()
     {
         if (CameraFollow.global.canMoveCamera)
         {
-            timer += Time.deltaTime;           
+            timer += Time.deltaTime;
 
-            if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
-            {
-                timer = 0f;             
-            }
-            else
-            {
-                foreach (KeyCode keyCode in keyCodes)
-                {
-                    BigBrainMode(keyCode);
-                }              
+            xMin = -4.4f;
+            xMax = 4.6f;
+            float offsetX = Mathf.Abs(2f - yMove);
+            xMin = xMin + (offsetX / 1.6f);
+            xMax = xMax - (offsetX / 1.6f);
 
-                for (int i = 0; i < times.Length; i++)
+            yMin = -2.15f;
+            yMax = 6.5f;
+            float offsetY = Mathf.Abs(0.01f - xMove);
+            yMin = yMin + (offsetY / 1.6f);
+            yMax = yMax - (offsetY / 1.6f);
+
+            if (GameManager.global.KeyboardBool)
+            {
+                if (!Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
                 {
-                    if (times[i] > biggest)
+                    timer = 0f;
+                }
+                else
+                {
+                    foreach (KeyCode keyCode in keyCodes)
                     {
-                        biggest = times[i];
-                        switch (i)
+                        BigBrainMode(keyCode);
+                    }
+
+                    for (int i = 0; i < times.Length; i++)
+                    {
+                        if (times[i] > biggest)
                         {
-                            case 0:
-                                SetBoolean(ref moveUp);
-                                break;
-                            case 1:
-                                SetBoolean(ref moveDown);
-                                break;
-                            case 2:
-                                SetBoolean(ref moveLeft);
-                                break;
-                            case 3:
-                                SetBoolean(ref moveRight);
-                                break;
+                            biggest = times[i];
+                            switch (i)
+                            {
+                                case 0:
+                                    SetBoolean(ref moveUp);
+                                    break;
+                                case 1:
+                                    SetBoolean(ref moveDown);
+                                    break;
+                                case 2:
+                                    SetBoolean(ref moveLeft);
+                                    break;
+                                case 3:
+                                    SetBoolean(ref moveRight);
+                                    break;
+                            }
                         }
                     }
+                    
+                    if (moveUp && yMove < yMax)
+                    {
+                        Move(0.125f, 0.125f);
+                        yMove += Time.deltaTime;
+                    }
+                    if (moveDown && yMove > yMin)
+                    {
+                        Move(-0.125f, -0.125f);
+                        yMove -= Time.deltaTime;
+                    }
+                    if (moveLeft && xMove > xMin)
+                    {
+                        Move(-0.125f, 0.125f);
+                        xMove -= Time.deltaTime;
+                    }
+                    if (moveRight && xMove < xMax)
+                    {
+                        Move(0.125f, -0.125f);
+                        xMove += Time.deltaTime;
+                    }
                 }
-
-                xMin = -4.4f;
-                xMax = 4.6f;
-                float offsetX = Mathf.Abs(2f - yMove);
-                xMin = xMin + (offsetX / 1.6f);
-                xMax = xMax - (offsetX / 1.6f);
-
-                yMin = -2.15f;
-                yMax = 6.5f;
-                float offsetY = Mathf.Abs(0.01f - xMove);
-                yMin = yMin + (offsetY / 1.6f);
-                yMax = yMax - (offsetY / 1.6f);
-
-                if (moveUp && yMove < yMax)
+            } 
+            else
+            {
+                if (Mathf.Abs(cameraCTRL.y) > Mathf.Abs(cameraCTRL.x))
                 {
-                    Move(0.125f, 0.125f);
-                    yMove += Time.deltaTime;
+                    if (cameraCTRL.y > 0.1f && yMove < yMax)
+                    {
+                        Move(0.125f, 0.125f);
+                        yMove += Time.deltaTime;
+                    }
+                    else if (cameraCTRL.y < -0.1f && yMove > yMin)
+                    {
+                        Move(-0.125f, -0.125f);
+                        yMove -= Time.deltaTime;
+                    }
                 }
-                if (moveDown && yMove > yMin)
+                else
                 {
-                    Move(-0.125f, -0.125f);
-                    yMove -= Time.deltaTime;
+                    if (cameraCTRL.x < -0.1f && xMove > xMin)
+                    {
+                        Move(-0.125f, 0.125f);
+                        xMove -= Time.deltaTime;
+                    }
+                    else if (cameraCTRL.x > 0.1f && xMove < xMax)
+                    {
+                        Move(0.125f, -0.125f);
+                        xMove += Time.deltaTime;
+                    }
                 }
-                if (moveLeft && xMove > xMin)
-                {
-                    Move(-0.125f, 0.125f);
-                    xMove -= Time.deltaTime;
-                }
-                if (moveRight && xMove < xMax)
-                {
-                    Move(0.125f, -0.125f);
-                    xMove += Time.deltaTime;
-                }
-            }                                                                        
+            }
         }
     }
 

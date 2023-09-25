@@ -62,6 +62,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public bool[,] occupied;
     private bool cantPlace;
+    public bool buildingWithController;
 
     private void Awake()
     {
@@ -105,22 +106,25 @@ public class PlayerModeHandler : MonoBehaviour
                 Weather.global.gameObject.SetActive(false);
             }
             if (!centerMouse)
-            {
-                if (GameManager.global.KeyboardBool)
-                    Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
-
+            {               
+                Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));              
                 cursorPosition = new Vector2(Screen.width / 2, Screen.height / 2);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
                 centerMouse = true;
             }
             if (GameManager.global.moveCTRL.x != 0 || GameManager.global.moveCTRL.y != 0)
             {
-                cursorPosition += GameManager.global.moveCTRL * 1.25f;
-
-                if (GameManager.global.KeyboardBool)
-                    Mouse.current.WarpCursorPosition(cursorPosition);
+                buildingWithController = true;
+                cursorPosition += GameManager.global.moveCTRL * 4.0f;                
+                Mouse.current.WarpCursorPosition(cursorPosition);
             }
-            else if (GameManager.global.KeyboardBool)
+            else
             {
+                buildingWithController = false;
+            }
+            if (GameManager.global.KeyboardBool)
+            {               
                 cursorPosition = Input.mousePosition;
             }
 
@@ -590,7 +594,7 @@ public class PlayerModeHandler : MonoBehaviour
     }
 
 
-    public static void SetMouseActive(bool isActive)
+    public static void SetMouseActive(bool isActive, bool buildMode)
     {
         //  Debug.Log("Cursor " + isActive);
 
@@ -608,9 +612,11 @@ public class PlayerModeHandler : MonoBehaviour
         {
             if (Cursor.visible)
             {
-
-                Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.Locked;
+                if (!buildMode)
+                {
+                    Cursor.visible = false;
+                    Cursor.lockState = CursorLockMode.Locked;
+                }              
             }
         }
     }
