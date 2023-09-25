@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AnimEventChief : MonoBehaviour
 {
-    [SerializeField] private ChargeState state;
+    [SerializeField] private ChargeStateChief state;
     [SerializeField] private BossStateMachine stateMachine;
     [SerializeField] private BoxCollider bossCollider;
 
