@@ -62,7 +62,7 @@ public class AttackStateChief : BossState
 
         float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
 
-        float threshold = 0.9f; // You can adjust this value depending on the accuracy you need.
+        float threshold = 0.45f; // You can adjust this value depending on the accuracy you need.
         if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
         {
             return true;
