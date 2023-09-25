@@ -84,8 +84,11 @@ public class BossStateMachine : MonoBehaviour
 
     public void SetAgentStats()
     {
-        NavMeshAgent agent = GetComponent<NavMeshAgent>();
-        agent.speed = speed;
+        if (GetComponent<NavMeshAgent>())
+        {
+            NavMeshAgent agent = GetComponent<NavMeshAgent>();
+            agent.speed = speed;
+        }
     }
 
 
