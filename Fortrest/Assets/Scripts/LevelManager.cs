@@ -9,6 +9,17 @@ using UnityEngine.UI;
 using System.Linq;
 public class LevelManager : MonoBehaviour
 {
+    // VFXs
+    public VisualEffect VFXSlash;
+    public VisualEffect VFXSlashReversed;
+    public VisualEffect VFXSleeping;
+    public VisualEffect VFXSparks;
+    public VisualEffect VFXPebble;
+    public VisualEffect VFXWoodChip;
+    public VisualEffect VFXSmokeRing;
+    public VisualEffect VFXBuilding;
+    public VisualEffect VFXSmoke;
+
     public static LevelManager global;
     public Camera SceneCamera;
     public GameObject PlayerPrefab;
@@ -69,8 +80,6 @@ public class LevelManager : MonoBehaviour
     public GameObject ogrePrefab;
     public GameObject spiderPrefab;
     public GameObject mountPrefab;
-
-    public VisualEffect VFXSmokePuff;
 
     [HideInInspector]
     public bool newDay = false;
@@ -135,10 +144,20 @@ public class LevelManager : MonoBehaviour
         ActiveBiomeMusic = GameManager.global.GameMusic;
         newDay = true;
 
+        VFXSlash.Stop();
+        VFXSlashReversed.Stop();
+        VFXSleeping.Stop();
+        VFXSparks.Stop();
+        VFXPebble.Stop();
+        VFXWoodChip.Stop();
+        VFXSmokeRing.Stop();
+        VFXBuilding.Stop();
+        VFXSmoke.Stop();
+
         //LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         //NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
         //terrainList = GameObject.FindObjectsOfType<Terrain>().ToList();
-        VFXSmokePuff.Stop();
+
         /*
         DayTMP_Text = PlayerController.global..GetComponent<TMP_Text>();
         RemaningTMP_Text = GameObject.Find("Player_Holder").transform.Find("Player Canvas").Find("New Day").Find("Remaining Text").GetComponent<TMP_Text>();

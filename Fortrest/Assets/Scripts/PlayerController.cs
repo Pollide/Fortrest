@@ -115,14 +115,7 @@ public class PlayerController : MonoBehaviour
 
     // Teleporter
     public bool canTeleport = false;
-    public bool teleporting;
-
-    // VFXs
-    private VisualEffect VFXSlash;
-    private VisualEffect VFXSleeping;
-    private VisualEffect VFXSparks;
-    private VisualEffect VFXPebble;
-    private VisualEffect VFXWoodChip;
+    public bool teleporting;   
 
     // Tools
     public GameObject AxeGameObject;
@@ -488,19 +481,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        LevelManager manager = LevelManager.global;
-
-        // VFXs
-        VFXSlash = manager.transform.Find("VFX").Find("VFX_Slash").GetComponent<VisualEffect>();
-        VFXSleeping = manager.transform.Find("VFX").Find("VFX_Sleeping").GetComponent<VisualEffect>();
-        VFXSparks = manager.transform.Find("VFX").Find("VFX_Sparks").GetComponent<VisualEffect>();
-        VFXPebble = manager.transform.Find("VFX").Find("VFX_Pebble").GetComponent<VisualEffect>();
-        VFXWoodChip = manager.transform.Find("VFX").Find("VFX_Woodchips").GetComponent<VisualEffect>();
-        VFXSlash.Stop();
-        VFXSleeping.Stop();
-        VFXSparks.Stop();
-        VFXPebble.Stop();
-        VFXWoodChip.Stop();
+        LevelManager manager = LevelManager.global;        
 
         // Game Objects
         if (GameObject.Find("Radius Camera"))
@@ -1657,36 +1638,42 @@ public class PlayerController : MonoBehaviour
 
     public void AttackEffects()
     {
-        VFXSlash.transform.position = transform.position;
-        VFXSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
-
         int randomInt = Random.Range(0, 3);
 
         if (attackCount == 0 || attackCount == 2)
         {
+            LevelManager.global.VFXSlash.transform.position = transform.position;
+            LevelManager.global.VFXSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
+            LevelManager.global.VFXSlash.Play();
             if (attackCount == 0)
             {
                 if (randomInt == 1 || randomInt == 2)
+                {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack1Sound, 0.9f);
+                }                  
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing1Sound);
             }
             else
             {
                 if (randomInt == 1 || randomInt == 2)
+                {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.9f);
+                }                  
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing3Sound);
-            }
-            //VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y - 15.0f, transform.eulerAngles.z + 180.0f);
+            }            
         }
         else if (attackCount == 1)
         {
+            LevelManager.global.VFXSlashReversed.transform.position = transform.position;
+            LevelManager.global.VFXSlashReversed.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + 90.0f, transform.eulerAngles.z);
+            LevelManager.global.VFXSlashReversed.Play();
             if (randomInt == 1 || randomInt == 2)
+            {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.9f);
-            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);
-            //VFXSlash.transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
+            }              
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);           
         }
-        VFXSlash.Play();
-
+        
         attackCount++;
         if (attackCount > 2)
         {
@@ -1697,7 +1684,8 @@ public class PlayerController : MonoBehaviour
     private void AttackLunge()
     {
         playerCC.Move(transform.forward * 7f * Time.deltaTime);
-        VFXSlash.transform.position = transform.position;
+        LevelManager.global.VFXSlash.transform.position = transform.position;
+        LevelManager.global.VFXSlashReversed.transform.position = transform.position;
     }
 
     public void GatheringEffects()
@@ -1708,10 +1696,10 @@ public class PlayerController : MonoBehaviour
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.PickaxeSound);
 
-                VFXSparks.transform.position = currentResource.transform.position;
-                VFXSparks.Play();
-                VFXPebble.transform.position = currentResource.transform.position;
-                VFXPebble.Play();
+                LevelManager.global.VFXSparks.transform.position = currentResource.transform.position;
+                LevelManager.global.VFXSparks.Play();
+                LevelManager.global.VFXPebble.transform.position = currentResource.transform.position;
+                LevelManager.global.VFXPebble.Play();
             }
             if (currentResource.resourceObject == Building.BuildingType.Bush)
             {
@@ -1723,8 +1711,8 @@ public class PlayerController : MonoBehaviour
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.AxeSound);
 
-                VFXWoodChip.transform.position = currentResource.transform.position;
-                VFXWoodChip.Play();
+                LevelManager.global.VFXWoodChip.transform.position = currentResource.transform.position;
+                LevelManager.global.VFXWoodChip.Play();
             }
 
             currentResource.TakeDamage(1);
@@ -1832,7 +1820,7 @@ public class PlayerController : MonoBehaviour
         {
             CharacterAnimator.gameObject.SetActive(false);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
-            VFXSleeping.Play();
+            LevelManager.global.VFXSleeping.Play();
             TeleportPlayer(house.transform.position, true);
             redBorders.gameObject.SetActive(false);
             playerCC.enabled = false;
@@ -1859,7 +1847,7 @@ public class PlayerController : MonoBehaviour
                     CharacterAnimator.ResetTrigger("Death");
                     CharacterAnimator.SetTrigger("Respawn");
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                    VFXSleeping.Stop();
+                    LevelManager.global.VFXSleeping.Stop();
                     TeleportPlayer(houseSpawnPoint.transform.position, true);
                     playerCanMove = true;
                     playerDead = false;
