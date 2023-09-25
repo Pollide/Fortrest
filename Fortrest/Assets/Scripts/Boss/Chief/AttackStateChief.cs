@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackState : BossState
+public class AttackStateChief : BossState
 {
     // Timer for attacks
     private float attackTimer = 0f;
@@ -23,31 +23,12 @@ public class AttackState : BossState
     // The attack state
     private bool isAttacking = false;
     // Holds states
-    private IdleState idleState;
-    private ChargeState chargeState;
-    private SlamState slamState;
+    [SerializeField] private IdleStateChief idleState;
+    [SerializeField] private ChargeStateChief chargeState;
+    [SerializeField] private SlamStateChief slamState;
 
     public override void EnterState()
     {
-        // Checks if the state is null
-        if (idleState == null)
-        {
-            // Gets the connected state
-            idleState = GetComponent<IdleState>();
-        }
-        // Checks if the state is null
-        if (chargeState == null)
-        {
-            // Gets the connected state
-            chargeState = GetComponent<ChargeState>();
-        }
-        // Checks if the state is null
-        if (slamState == null)
-        {
-            // Gets the connected state
-            slamState = GetComponent<SlamState>();
-        }
-
         randValue = 0f;
 
         randomCheckTimer = randomCheckDuration;

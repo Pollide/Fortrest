@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChargeState : BossState
+public class ChargeStateChief : BossState
 {
     // Holds states
-    private IdleState idleState;
-    private AttackState attackState;
+    private IdleStateChief idleState;
+    private AttackStateChief attackState;
 
     // Duration of the wind-up phase
     [SerializeField] private float windUpDuration = 5f;
@@ -33,13 +33,13 @@ public class ChargeState : BossState
         if (idleState == null)
         {
             // Gets the connected state
-            idleState = GetComponent<IdleState>();
+            idleState = GetComponent<IdleStateChief>();
         }
         // Checks if the state is null
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<AttackState>();
+            attackState = GetComponent<AttackStateChief>();
         }
     }
 

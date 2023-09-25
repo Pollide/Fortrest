@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlamState : BossState
+public class SlamStateChief : BossState
 {
     // Holds states
-    private IdleState idleState;
-    private AttackState attackState;
+    private IdleStateChief idleState;
+    private AttackStateChief attackState;
     // Slam wait time
     private float slamWaitTime = 0f;
     [SerializeField] private float slamDuration = 5f;
@@ -23,13 +23,13 @@ public class SlamState : BossState
         if (idleState == null)
         {
             // Gets the connected state
-            idleState = GetComponent<IdleState>();
+            idleState = GetComponent<IdleStateChief>();
         }
         // Checks if the state is null
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<AttackState>();
+            attackState = GetComponent<AttackStateChief>();
         }
 
         telegraph.SetActive(true);
@@ -94,7 +94,7 @@ public class SlamState : BossState
         get { return slamWaitTime; }
     }
 
-    public AttackState StateAttack
+    public AttackStateChief StateAttack
     {
         get { return attackState; }
     }

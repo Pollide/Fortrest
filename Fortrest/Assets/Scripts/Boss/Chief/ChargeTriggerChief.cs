@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChargeTrigger : MonoBehaviour
+public class ChargeTriggerChief : MonoBehaviour
 {
-    private ChargeState state;
+    private ChargeStateChief state;
 
     private void Start()
     {
-        state = transform.parent.GetComponent<ChargeState>();
+        state = transform.parent.GetComponent<ChargeStateChief>();
         GetComponent<BoxCollider>().enabled = false;
     }
 
