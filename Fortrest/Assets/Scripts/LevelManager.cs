@@ -11,6 +11,7 @@ public class LevelManager : MonoBehaviour
 {
     // VFXs
     public VisualEffect VFXSlash;
+    public VisualEffect VFXSlashReversed;
     public VisualEffect VFXSleeping;
     public VisualEffect VFXSparks;
     public VisualEffect VFXPebble;
@@ -144,6 +145,7 @@ public class LevelManager : MonoBehaviour
         newDay = true;
 
         VFXSlash.Stop();
+        VFXSlashReversed.Stop();
         VFXSleeping.Stop();
         VFXSparks.Stop();
         VFXPebble.Stop();
