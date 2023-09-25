@@ -58,11 +58,14 @@ public class AttackStateChief : BossState
     // Run checks to see if the attack can be called
     private bool CanAttack()
     {
-        Vector3 directionToTarget = (playerTransform.position - transform.position).normalized;
 
+        Vector3 directionToTarget = (playerTransform.position - transform.position).normalized;
+        directionToTarget.y = transform.forward.y;
         float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
 
         float threshold = 0.9f; // You can adjust this value depending on the accuracy you need.
+
+        Debug.Log(dotProduct + " > " + threshold + " && " + Vector3.Distance(transform.position, playerTransform.position) + " <= " + attackDistance);
         if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
         {
             return true;
@@ -113,7 +116,7 @@ public class AttackStateChief : BossState
                 agent.isStopped = false;
             }
         }
-      
+
     }
 
     private void PhaseOne()
@@ -163,7 +166,7 @@ public class AttackStateChief : BossState
             {
                 stateMachine.ChangeState(chargeState);
             }
-            else 
+            else
             {
                 stateMachine.ChangeState(slamState);
             }
