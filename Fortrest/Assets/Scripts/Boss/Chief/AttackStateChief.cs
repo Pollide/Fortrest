@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttackStateChief : BossState
 {
     // Timer for attacks
-    private float attackTimer = 0f;
+    [SerializeField] private float attackTimer = 0f;
     // Timer for checking the random number to decide attack states
     [SerializeField] private float randomCheckTimer = 0f;
     [SerializeField] private float randomCheckDuration = 5f;
@@ -21,7 +21,7 @@ public class AttackStateChief : BossState
     [SerializeField] private float slamChance = 0.2f;
     private float randValue = 0f;
     // The attack state
-    private bool isAttacking = false;
+    [SerializeField] private bool isAttacking = false;
     // Holds states
     [SerializeField] private IdleStateChief idleState;
     [SerializeField] private ChargeStateChief chargeState;
@@ -37,7 +37,7 @@ public class AttackStateChief : BossState
 
     public override void ExitState()
     {
-        stateMachine.BossAnimator.SetBool("attacking", true);
+        stateMachine.BossAnimator.SetBool("attacking", false);
     }
 
     public override void UpdateState()
@@ -58,11 +58,16 @@ public class AttackStateChief : BossState
     // Run checks to see if the attack can be called
     private bool CanAttack()
     {
-        Vector3 directionToTarget = (playerTransform.position - transform.position).normalized;
+
+        Vector3 directionToTarget = (playerTransform.position - transform.position);
+        directionToTarget.y = 0; // Set the Y component to 0
+        directionToTarget.Normalize(); // Normalize the vector to make it so player can get close
 
         float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
 
-        float threshold = 0.45f; // You can adjust this value depending on the accuracy you need.
+        float threshold = 0.9f; // You can adjust this value depending on the accuracy you need.
+
+        Debug.Log(dotProduct + " > " + threshold + " && " + Vector3.Distance(transform.position, playerTransform.position) + " <= " + attackDistance);
         if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
         {
             return true;
@@ -87,17 +92,14 @@ public class AttackStateChief : BossState
             // Check if the enemy can attack
             if (CanAttack())
             {
-                stateMachine.BossAnimator.SetBool("attacking", true);
+                stateMachine.BossAnimator.ResetTrigger("attacking");
+                stateMachine.BossAnimator.SetTrigger("attacking");
+                isAttacking = true;
                 // Set the attack timer to control attack speed
                 attackTimer = 1f / attackSpeed;
                 // Stop agent
                 agent.isStopped = true;
                 // Set attack state to true to prevent calling multiple times
-                isAttacking = true;
-            }
-            else
-            {
-                stateMachine.BossAnimator.SetBool("attacking", false);
             }
         }
         else
@@ -108,12 +110,13 @@ public class AttackStateChief : BossState
             if (attackTimer <= 0)
             {
                 // Reset the attack timer
+                stateMachine.BossAnimator.ResetTrigger("attacking");
                 isAttacking = false;
                 // Start agent
                 agent.isStopped = false;
             }
         }
-      
+
     }
 
     private void PhaseOne()
@@ -163,7 +166,7 @@ public class AttackStateChief : BossState
             {
                 stateMachine.ChangeState(chargeState);
             }
-            else 
+            else
             {
                 stateMachine.ChangeState(slamState);
             }
