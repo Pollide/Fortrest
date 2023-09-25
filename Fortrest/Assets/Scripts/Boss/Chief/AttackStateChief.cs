@@ -58,11 +58,12 @@ public class AttackStateChief : BossState
     // Run checks to see if the attack can be called
     private bool CanAttack()
     {
+        // Calculate the direction to the target and normalize
         Vector3 directionToTarget = (playerTransform.position - transform.position).normalized;
-
+        // Calculate the dot product between the forward direction and the direction to player
         float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
-
-        float threshold = 0.45f; // You can adjust this value depending on the accuracy you need.
+        // Holds the angle thresh hold the player can attack
+        float threshold = 0.45f;
         if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
         {
             return true;
@@ -97,6 +98,7 @@ public class AttackStateChief : BossState
             }
             else
             {
+                transform.LookAt(playerTransform);
                 stateMachine.BossAnimator.SetBool("attacking", false);
             }
         }
