@@ -2,37 +2,46 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackState : BossState
+public class FirstAttackState : BossState
 {
     // Timer for attacks
     [SerializeField] private float attackTimer = 0f;
+    
+    // The speed of attacks 
+    [SerializeField] private float attackSpeed = 0f;
+    [SerializeField] private float stoppingDistance = 3f;
+
     // Timer for checking the random number to decide attack states
     [SerializeField] private float randomCheckTimer = 0f;
     [SerializeField] private float randomCheckDuration = 5f;
+    
     // Damage for attack
     [SerializeField] private float damage = 0f;
-    // The speed of attacks 
-    [SerializeField] private float attackSpeed = 0f;
+    
     // The distance the enemy can attack from
     [SerializeField] private float attackDistance = 0f;
+    
     // Attack percentages
-    [SerializeField] private float attackChance = 0.6f;
-    [SerializeField] private float chargeChance = 0.2f;
-    [SerializeField] private float slamChance = 0.2f;
+    [SerializeField] private float firstAttackChance = 0.6f;
+    [SerializeField] private float secondAttackChance = 0.2f;
+    [SerializeField] private float thirdAttackChance = 0.2f;
+    
+    // The value to determine the attack used
     private float randValue = 0f;
-    // The attack state
+    
+    // Holds the attack 
     [SerializeField] private bool isAttacking = false;
+    
     // Holds states
     [SerializeField] private IdleState idleState;
-    [SerializeField] private ChargeState chargeState;
-    [SerializeField] private SlamStateChief slamState;
+    [SerializeField] private SecondAttackState attackState2;
+    [SerializeField] private ThirdAttackState attackState3;
 
     public override void EnterState()
     {
         randValue = 0f;
 
         randomCheckTimer = randomCheckDuration;
-
     }
 
     public override void ExitState()
@@ -48,7 +57,7 @@ public class AttackState : BossState
             stateMachine.ChangeState(idleState);
         }
         // Set agent destination
-        WalkTo(playerTransform.position);
+        WalkTo(playerTransform.position, stoppingDistance);
         // Boss phasses
         PhaseOne();
         PhaseTwo();
@@ -65,9 +74,7 @@ public class AttackState : BossState
 
         float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
 
-        float threshold = 0.9f; // You can adjust this value depending on the accuracy you need.
-
-        Debug.Log(dotProduct + " > " + threshold + " && " + Vector3.Distance(transform.position, playerTransform.position) + " <= " + attackDistance);
+        float threshold = 0.9f;
         if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
         {
             return true;
@@ -119,6 +126,22 @@ public class AttackState : BossState
 
     }
 
+    public void PlaySlash(int _index)
+    {
+        if (_index == 0)
+        {
+            LevelManager.global.VFXBossSlash.transform.position = transform.position;
+            LevelManager.global.VFXBossSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
+            LevelManager.global.VFXBossSlash.Play();
+        }
+        if (_index == 1)
+        {
+            LevelManager.global.VFXBossSlashReversed.transform.position = transform.position;
+            LevelManager.global.VFXBossSlashReversed.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
+            LevelManager.global.VFXBossSlashReversed.Play();
+        }
+    }
+
     private void PhaseOne()
     {
         if (stateMachine.CurrentPhase == BossStateMachine.BossPhase.One)
@@ -137,13 +160,13 @@ public class AttackState : BossState
                 randomCheckTimer = randomCheckDuration;
             }
 
-            if (randValue < attackChance + slamChance)
+            if (randValue < firstAttackChance + thirdAttackChance)
             {
                 Attack();
             }
             else
             {
-                stateMachine.ChangeState(chargeState);
+                stateMachine.ChangeState(attackState2);
             }
         }
     }
@@ -158,17 +181,17 @@ public class AttackState : BossState
                 randomCheckTimer = randomCheckDuration;
             }
 
-            if (randValue <= attackChance)
+            if (randValue <= firstAttackChance)
             {
                 Attack();
             }
-            else if (randValue <= attackChance + chargeChance)
+            else if (randValue <= firstAttackChance + secondAttackChance)
             {
-                stateMachine.ChangeState(chargeState);
+                stateMachine.ChangeState(attackState2);
             }
             else
             {
-                stateMachine.ChangeState(slamState);
+                stateMachine.ChangeState(attackState3);
             }
         }
     }

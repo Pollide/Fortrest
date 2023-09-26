@@ -13,8 +13,6 @@ public abstract class BossState : MonoBehaviour
     protected Transform initialSpawn;
     // Nav mesh agent component
     protected NavMeshAgent agent;
-    // The distance that the agent will stop
-    [SerializeField] protected float stoppingDistance = 0.2f;
 
     private void Start()
     {
@@ -27,11 +25,11 @@ public abstract class BossState : MonoBehaviour
     }
 
     // Sets agent destination and stopping distance
-    protected void WalkTo(Vector3 targetPos)
+    protected void WalkTo(Vector3 targetPos, float stoppingDist)
     {
-        if (agent.stoppingDistance != stoppingDistance)
+        if (agent.stoppingDistance != stoppingDist)
         {
-            agent.stoppingDistance = stoppingDistance;
+            agent.stoppingDistance = stoppingDist;
         }
 
         agent.SetDestination(targetPos);

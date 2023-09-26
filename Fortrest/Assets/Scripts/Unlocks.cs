@@ -45,13 +45,13 @@ public class Unlocks : MonoBehaviour
                     case BossStateMachine.TYPE.SpiderQueen:
                         miniTurretUnlocked = true;
                         break;
-                    case BossStateMachine.TYPE.Tier4:
+                    case BossStateMachine.TYPE.Bird:
                         extraApplesUnlocked = true;
                         break;
-                    case BossStateMachine.TYPE.Tier5:
+                    case BossStateMachine.TYPE.Werewolf:
                         upgradedMeleeUnlocked = true;
                         break;
-                    case BossStateMachine.TYPE.Tier6:
+                    case BossStateMachine.TYPE.Fire:
                         upgradedBowUnlocked = true;
                         break;
                     default:

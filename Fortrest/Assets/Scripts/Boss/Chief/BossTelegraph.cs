@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class BossTelegraph : MonoBehaviour
 {
-    [SerializeField] private SlamStateChief state;
+    [SerializeField] private ThirdAttackState state;
 
     // Start is called before the first frame update
     void Start()
