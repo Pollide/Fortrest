@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChargeTriggerChief : MonoBehaviour
+public class ChargeTrigger : MonoBehaviour
 {
     private SecondAttackState state;
 

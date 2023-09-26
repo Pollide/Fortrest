@@ -36,13 +36,22 @@ public class IdleState : BossState
             stateMachine.HealthBar.SetActive(true);
             // changes to attack state
             stateMachine.ChangeState(attackState);
+            if (!LevelManager.global.dayPaused)
+            {
+                LevelManager.global.dayPaused = true;
+            }
         }
         else
         {
             if (resetTimer <= 0f)
             {
                 stateMachine.CurrentHealth = stateMachine.MaxHealth;
-                stateMachine.HealthBar.SetActive(false);
+                if (stateMachine.HealthBar.activeSelf)
+                {
+                    LevelManager.global.dayPaused = false;
+                    stateMachine.HealthBar.SetActive(false);
+                }
+                
                 stateMachine.UpdateHealth();
             }
 
