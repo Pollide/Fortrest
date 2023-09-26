@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AttackTrigger : MonoBehaviour
 {
-    [SerializeField] private AttackStateChief attackState;
+    [SerializeField] private AttackState attackState;
     
     private void OnTriggerEnter(Collider other)
     {

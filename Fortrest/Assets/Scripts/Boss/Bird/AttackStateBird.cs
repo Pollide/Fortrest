@@ -23,8 +23,8 @@ public class AttackStateBird : BossState
     // The attack state
     private bool isAttacking = false;
     // Holds states
-    private IdleStateChief idleState;
-    private ChargeStateChief chargeState;
+    private IdleState idleState;
+    private ChargeState chargeState;
     private SlamStateChief slamState;
 
     public override void EnterState()

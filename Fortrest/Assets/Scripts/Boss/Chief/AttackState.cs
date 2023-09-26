@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackStateChief : BossState
+public class AttackState : BossState
 {
     // Timer for attacks
     [SerializeField] private float attackTimer = 0f;
@@ -23,8 +23,8 @@ public class AttackStateChief : BossState
     // The attack state
     [SerializeField] private bool isAttacking = false;
     // Holds states
-    [SerializeField] private IdleStateChief idleState;
-    [SerializeField] private ChargeStateChief chargeState;
+    [SerializeField] private IdleState idleState;
+    [SerializeField] private ChargeState chargeState;
     [SerializeField] private SlamStateChief slamState;
 
     public override void EnterState()

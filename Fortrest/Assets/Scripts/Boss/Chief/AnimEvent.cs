@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimEventChief : MonoBehaviour
+public class AnimEvent : MonoBehaviour
 {
-    [SerializeField] private ChargeStateChief state;
+    [SerializeField] private ChargeState state;
     [SerializeField] private BossStateMachine stateMachine;
     [SerializeField] private BoxCollider bossCollider;
 
