@@ -10,6 +10,7 @@ public class FirstAttackState : BossState
     // The speed of attacks 
     [SerializeField] private float attackSpeed = 0f;
     [SerializeField] private float stoppingDistance = 3f;
+    [SerializeField] private float rotationSpeed = 5.0f;
 
     // Timer for checking the random number to decide attack states
     [SerializeField] private float randomCheckTimer = 0f;
@@ -56,6 +57,18 @@ public class FirstAttackState : BossState
         {
             stateMachine.ChangeState(idleState);
         }
+
+        if (!stateMachine.Phase2Ran && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Two)
+        {
+            stateMachine.Phase2Ran = true;
+            stateMachine.ChangeState(attackState2);
+        }
+        if (!stateMachine.Phase3Ran && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Three)
+        {
+            stateMachine.Phase3Ran = true;
+            stateMachine.ChangeState(attackState3);
+        }
+
         // Set agent destination
         WalkTo(playerTransform.position, stoppingDistance);
         // Boss phasses
@@ -108,6 +121,17 @@ public class FirstAttackState : BossState
                 agent.isStopped = true;
                 // Set attack state to true to prevent calling multiple times
             }
+            else
+            {
+                // Calculate the direction to the target
+                Vector3 targetDirection = playerTransform.position - transform.position;
+
+                // Calculate the rotation needed to face the target
+                Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+
+                // Smoothly interpolate the current rotation to the target rotation
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
         }
         else
         {
@@ -132,12 +156,22 @@ public class FirstAttackState : BossState
         {
             LevelManager.global.VFXBossSlash.transform.position = transform.position;
             LevelManager.global.VFXBossSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
+            LevelManager.global.VFXBossSlashReversed.transform.localScale = new Vector3(1.25f, 0.65f, 1.25f);
             LevelManager.global.VFXBossSlash.Play();
         }
         if (_index == 1)
         {
             LevelManager.global.VFXBossSlashReversed.transform.position = transform.position;
             LevelManager.global.VFXBossSlashReversed.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
+            LevelManager.global.VFXBossSlashReversed.transform.localScale = new Vector3(1.25f, 0.65f, 1.25f);
+            LevelManager.global.VFXBossSlashReversed.Play();
+            
+        }
+        if (_index == 2)
+        {
+            LevelManager.global.VFXBossSlashReversed.transform.position = transform.position;
+            LevelManager.global.VFXBossSlashReversed.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z - 90.0f);
+            LevelManager.global.VFXBossSlashReversed.transform.localScale = new Vector3(0.8f, 0.65f, 0.8f);
             LevelManager.global.VFXBossSlashReversed.Play();
         }
     }

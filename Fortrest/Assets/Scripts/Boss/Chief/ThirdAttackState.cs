@@ -15,6 +15,7 @@ public class ThirdAttackState : BossState
     [SerializeField] private float damage = 5f;
     [SerializeField] private GameObject telegraph;
     [SerializeField] private bool damageDone = false;
+    [SerializeField] private bool hasJumped = false;
 
 
     public override void EnterState()
@@ -47,6 +48,7 @@ public class ThirdAttackState : BossState
         telegraph.SetActive(false);
         stateMachine.BossAnimator.SetBool("isJumping", false);
         stateMachine.BossAnimator.SetBool("isDiving", false);
+        hasJumped = false;
     }
 
     public override void UpdateState()
@@ -63,15 +65,17 @@ public class ThirdAttackState : BossState
             telegraph.transform.position = playerTransform.position;
         }
 
+        if (hasJumped)
+        {
+            transform.position = telegraph.transform.position;
+        }
+
         if (slamWaitTime >= slamDuration && !damageDone)
         {
             stateMachine.BossAnimator.SetBool("isJumping", false);
             stateMachine.BossAnimator.SetBool("isDiving", true);
-            transform.position = telegraph.transform.position;
             StartCoroutine(telegraph.GetComponent<BossTelegraph>().DoSlamDamage(slamWaitAfterIndicator));
         }
-
-
     }
 
     public float SlamDuration
@@ -97,5 +101,11 @@ public class ThirdAttackState : BossState
     public FirstAttackState StateAttack
     {
         get { return attackState; }
+    }
+
+    public bool HasJumped
+    {
+        get { return hasJumped; }
+        set { hasJumped = value; }
     }
 }

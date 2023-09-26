@@ -16,7 +16,6 @@ public class SecondAttackState : BossState
     [SerializeField] private bool hasRun = false;
     // Agent charge speed
     [SerializeField] private float chargeSpeed = 10f;
-    [SerializeField] private float maxDistFromPlayer = 3f;
     [SerializeField] private float chargeDistance = 10f;
     [SerializeField] private float chargePushForce = 5f;
     [SerializeField] private float chargePushDuration = 1f;
@@ -25,7 +24,6 @@ public class SecondAttackState : BossState
     [SerializeField] private float damage = 0f;
     // Holds charge trigger
     [SerializeField] private BoxCollider chargeDMGTrigger;
-    [SerializeField] private Vector3 moveDirection = Vector3.forward; 
 
     public override void EnterState()
     {
@@ -92,7 +90,7 @@ public class SecondAttackState : BossState
         chargeDMGTrigger.enabled = true;
         agent.isStopped = false;
         isCharging = true;
-        Vector3 newTarget = transform.position + transform.forward * chargeDistance;
+        Vector3 newTarget = playerTransform.position + (playerTransform.position - transform.position) * chargeDistance;
         WalkTo(newTarget, stoppingDistance);
     }
 
