@@ -10,7 +10,7 @@ public class FirstAttackState : BossState
     // The speed of attacks 
     [SerializeField] private float attackSpeed = 0f;
     [SerializeField] private float stoppingDistance = 3f;
-    [SerializeField] private float rotationSpeed = 5.0f;
+    [SerializeField] private  float rotationSpeed = 5.0f;
 
     // Timer for checking the random number to decide attack states
     [SerializeField] private float randomCheckTimer = 0f;
@@ -107,6 +107,35 @@ public class FirstAttackState : BossState
             randomCheckTimer -= Time.deltaTime;
         }
 
+        switch (stateMachine.BossType)
+        {
+            case BossStateMachine.TYPE.Chieftain:
+                AttackChief();
+                break;
+            case BossStateMachine.TYPE.Basilisk:
+                AttackSnake();
+                break;
+            case BossStateMachine.TYPE.SpiderQueen:
+                AttackSpider();
+                break;
+            case BossStateMachine.TYPE.Bird:
+                AttackBird();
+                break;
+            case BossStateMachine.TYPE.Werewolf:
+                AttackWarewolf();
+                break;
+            case BossStateMachine.TYPE.Fire:
+                AttackFire();
+                break;
+            default:
+                break;
+        }
+      
+
+    }
+
+    private void AttackChief()
+    {
         if (!isAttacking)
         {
             // Check if the enemy can attack
@@ -147,7 +176,96 @@ public class FirstAttackState : BossState
                 agent.isStopped = false;
             }
         }
+    }
 
+    private void AttackSnake()
+    {
+        if (!isAttacking)
+        {
+          
+        }
+        else
+        {
+            // Count down the attack timer
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer <= 0)
+            {
+                isAttacking = false;
+            }
+        }
+    }
+
+    private void AttackSpider()
+    {
+        if (!isAttacking)
+        {
+
+        }
+        else
+        {
+            // Count down the attack timer
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer <= 0)
+            {
+                isAttacking = false;
+            }
+        }
+    }
+
+    private void AttackBird()
+    {
+        if (!isAttacking)
+        {
+
+        }
+        else
+        {
+            // Count down the attack timer
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer <= 0)
+            {
+                isAttacking = false;
+            }
+        }
+    }
+
+    private void AttackWarewolf()
+    {
+        if (!isAttacking)
+        {
+
+        }
+        else
+        {
+            // Count down the attack timer
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer <= 0)
+            {
+                isAttacking = false;
+            }
+        }
+    }
+
+    private void AttackFire()
+    {
+        if (!isAttacking)
+        {
+
+        }
+        else
+        {
+            // Count down the attack timer
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer <= 0)
+            {
+                isAttacking = false;
+            }
+        }
     }
 
     public void PlaySlash(int _index)

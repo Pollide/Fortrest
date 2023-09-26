@@ -115,6 +115,7 @@ public class LevelManager : MonoBehaviour
     private bool countSet;
     private bool ogreSpawned;
     private bool attackHappening;
+    public bool dayPaused;
     private int groupSpawnAmount;
     private int laneInt;
     private Transform houseTransform;
@@ -310,7 +311,15 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = ReturnNight() ? 2 : 1;
+        if (dayPaused)
+        {
+            daySpeed = 0;
+        }
+        else
+        {
+            daySpeed = ReturnNight() ? 2 : 1;
+        }
+       
 
 #if UNITY_EDITOR
         // daySpeed = 7.0f; // FOR TESTING
