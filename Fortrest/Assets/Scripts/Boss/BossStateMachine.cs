@@ -12,10 +12,11 @@ public class BossStateMachine : MonoBehaviour
         Chieftain,
         Basilisk,
         SpiderQueen,
-        Tier4,
-        Tier5,
-        Tier6
+        Bird,
+        Werewolf,
+        Fire
     }
+
     // Enum for boss phases
     public enum BossPhase
     {

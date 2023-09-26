@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChargeStateChief : BossState
+public class ChargeState : BossState
 {
     // Holds states
-    private IdleStateChief idleState;
-    private AttackStateChief attackState;
+    private IdleState idleState;
+    private AttackState attackState;
 
     // Duration of the wind-up phase
     [SerializeField] private float windUpDuration = 5f;
@@ -17,14 +17,14 @@ public class ChargeStateChief : BossState
     // Agent charge speed
     [SerializeField] private float chargeSpeed = 10f;
     [SerializeField] private float maxDistFromPlayer = 3f;
+    [SerializeField] private float chargeDistance = 10f;
     [SerializeField] private float chargePushForce = 5f;
     [SerializeField] private float chargePushDuration = 1f;
     // Damage for attack
     [SerializeField] private float damage = 0f;
     // Holds charge trigger
     [SerializeField] private BoxCollider chargeDMGTrigger;
-    [SerializeField] private Vector3 moveDirection = Vector3.forward; // Adjust this direction as needed.
-
+    [SerializeField] private Vector3 moveDirection = Vector3.forward; 
 
     public override void EnterState()
     {
@@ -33,13 +33,13 @@ public class ChargeStateChief : BossState
         if (idleState == null)
         {
             // Gets the connected state
-            idleState = GetComponent<IdleStateChief>();
+            idleState = GetComponent<IdleState>();
         }
         // Checks if the state is null
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<AttackStateChief>();
+            attackState = GetComponent<AttackState>();
         }
     }
 
@@ -91,8 +91,7 @@ public class ChargeStateChief : BossState
         chargeDMGTrigger.enabled = true;
         agent.isStopped = false;
         isCharging = true;
-
-        Vector3 newTarget = new(playerTransform.position.x * 100f, playerTransform.position.y, playerTransform.position.z * 100f);
+        Vector3 newTarget = transform.position + transform.forward * chargeDistance;
         WalkTo(newTarget);
     }
 
