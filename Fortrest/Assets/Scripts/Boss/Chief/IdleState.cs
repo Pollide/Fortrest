@@ -5,10 +5,10 @@ using UnityEngine;
 public class IdleState : BossState
 {
     // Holds next state
-    private AttackState attackState;
+    private FirstAttackState attackState;
     private float resetTimer = 0f;
     [SerializeField] private float resetTimerDuration;
-
+    [SerializeField] private float stoppingDistance = 3f;
 
     public override void EnterState()
     {
@@ -16,7 +16,7 @@ public class IdleState : BossState
         if (attackState == null)
         {
             // Gets the connected attack state
-            attackState = GetComponent<AttackState>();
+            attackState = GetComponent<FirstAttackState>();
         }
 
         stateMachine.HealthBar.SetActive(true);
@@ -46,7 +46,7 @@ public class IdleState : BossState
                 stateMachine.UpdateHealth();
             }
 
-            WalkTo(initialSpawn.position);
+            WalkTo(initialSpawn.position, stoppingDistance);
 
             resetTimer -= Time.deltaTime;
         }

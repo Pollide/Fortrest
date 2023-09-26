@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChargeState : BossState
+public class SecondAttackState : BossState
 {
     // Holds states
     private IdleState idleState;
-    private AttackState attackState;
+    private FirstAttackState attackState;
 
     // Duration of the wind-up phase
     [SerializeField] private float windUpDuration = 5f;
@@ -20,6 +20,7 @@ public class ChargeState : BossState
     [SerializeField] private float chargeDistance = 10f;
     [SerializeField] private float chargePushForce = 5f;
     [SerializeField] private float chargePushDuration = 1f;
+    [SerializeField] private float stoppingDistance = 3f;
     // Damage for attack
     [SerializeField] private float damage = 0f;
     // Holds charge trigger
@@ -39,7 +40,7 @@ public class ChargeState : BossState
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<AttackState>();
+            attackState = GetComponent<FirstAttackState>();
         }
     }
 
@@ -92,7 +93,7 @@ public class ChargeState : BossState
         agent.isStopped = false;
         isCharging = true;
         Vector3 newTarget = transform.position + transform.forward * chargeDistance;
-        WalkTo(newTarget);
+        WalkTo(newTarget, stoppingDistance);
     }
 
     public float Damage

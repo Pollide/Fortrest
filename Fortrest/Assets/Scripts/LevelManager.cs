@@ -19,6 +19,8 @@ public class LevelManager : MonoBehaviour
     public VisualEffect VFXSmokeRing;
     public VisualEffect VFXBuilding;
     public VisualEffect VFXSmoke;
+    public VisualEffect VFXBossSlash;
+    public VisualEffect VFXBossSlashReversed;
 
     public static LevelManager global;
     public Camera SceneCamera;
