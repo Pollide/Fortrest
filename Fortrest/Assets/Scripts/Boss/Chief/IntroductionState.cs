@@ -44,8 +44,6 @@ public class IntroductionState : BossState
 
     public override void UpdateState()
     {
-     
-
         if (!introCompleted)
         {
             introTimer += Time.deltaTime;
@@ -79,6 +77,7 @@ public class IntroductionState : BossState
         
         yield return new WaitForSeconds(0.2f);
         stateMachine.BossAnimator.speed = 0;
+        transform.position = initialSpawn.position;
         yield return new WaitForSeconds(1);
         stateMachine.BossAnimator.speed = 1;
     }
