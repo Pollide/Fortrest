@@ -251,8 +251,6 @@ public class PlayerModeHandler : MonoBehaviour
                     if (!SelectedTurret)
                     {
                         PlayerController.global.turretMenuTitle.text = buildType.ToString();
-                        Defence selected = SelectedTurret.GetComponent<Defence>();
-                        PlayerController.global.turretImageIcon.sprite = selected.spriteTierList[selected.CurrentLevel];
 
                         ClearBlueprint();
                     }
@@ -261,6 +259,9 @@ public class PlayerModeHandler : MonoBehaviour
                     {
                         PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
                         SelectedTurret = colliders[i].GetComponentInParent<Building>();
+
+                        Defence selected = SelectedTurret.GetComponent<Defence>();
+                        PlayerController.global.turretImageIcon.sprite = selected.spriteTierList[selected.CurrentLevel];
                     }
 
                     return;
