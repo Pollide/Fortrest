@@ -18,6 +18,6 @@ public class AnimatEvents : MonoBehaviour
 
     public void SpawnBolt()
     {
-        transform.GetComponentInParent<TurretShooting>().ProjectileEvent();
+        transform.GetComponentInParent<Defence>().ProjectileEvent();
     }
 }

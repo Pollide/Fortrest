@@ -146,12 +146,12 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (UpgradeBool)
         {
-            TurretShooting turretShooting = PlayerModeHandler.global.SelectedTurret.GetComponent<TurretShooting>();
+            Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
 
-            if (turretShooting && turretShooting.ModelHolder.childCount > turretShooting.CurrentLevel + 1)
+            if (defence && defence.ModelHolder.childCount > defence.CurrentLevel + 1)
             {
-                turretShooting.CurrentLevel++;
-                turretShooting.ReturnAnimator();
+                defence.CurrentLevel++;
+                defence.ReturnAnimator();
             }
         }
 

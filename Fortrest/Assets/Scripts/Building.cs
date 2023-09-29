@@ -75,7 +75,6 @@ public class Building : MonoBehaviour
     public bool DebugDestroyInstantly;
 
     public Vector2 gridLocation;
-    public bool defenseBuilding;
 
     // Start is called before the first frame update
     void Start()
@@ -116,15 +115,10 @@ public class Building : MonoBehaviour
         }
         else // the house itself is not part of the buildings list
         {
-            if (!GetComponent<TurretShooting>() || !GetComponent<TurretShooting>().MiniTurret)
+            if (!GetComponent<Defence>() || !GetComponent<Defence>().MiniTurret)
             {
                 LevelManager.global.AddBuildingVoid(transform);
-            }                
-        }
-
-        if (buildingObject == BuildingType.Ballista || buildingObject == BuildingType.Cannon || buildingObject == BuildingType.Slow || buildingObject == BuildingType.Scatter)
-        {
-            defenseBuilding = true;
+            }
         }
     }
 
@@ -245,7 +239,7 @@ public class Building : MonoBehaviour
                 GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
             }
 
-            if (defenseBuilding)
+            if (GetComponent<Defence>())
             {
                 PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
                 LevelManager.global.RemoveBuildingVoid(transform);

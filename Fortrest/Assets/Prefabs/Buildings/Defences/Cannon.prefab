@@ -3286,6 +3286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3bf85e0fc37b649ba1cd25eaacd137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteTierList: []
   turn_speed: 5
   shootingRange: 10
   fireRate: 0.5
@@ -3294,10 +3295,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8192
   attackStarted: 0
-  IsCannon: 1
   explosionRadius: 5
-  IsSlow: 0
   enemySpeedPercentage: 0.5
+  bulletSpeed: 10
+  bulletLifetime: 3
+  bulletDamage: 0.2
+  spawnPositions: []
+  cooldownTime: 0.5
   ProjectilePrefab: {fileID: 4323165861798559352, guid: dfceddfeeb12b034982500f2856e062f,
     type: 3}
   FirePoint: {fileID: 6449580918687686612}
@@ -3319,7 +3323,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NaturalBool: 0
   DestroyedBool: 0
-  resourceObject: 0
+  resourceObject: 7
+  buildingObject: 1
   health: 0
   maxHealth: 5
   resourceAmount: 5
@@ -3333,6 +3338,8 @@ MonoBehaviour:
   interactText: {fileID: 0}
   textDisplayed: 0
   DebugDestroyInstantly: 0
+  gridLocation: {x: 0, y: 0}
+  defenseBuilding: 0
 --- !u!114 &4725232762020171120
 MonoBehaviour:
   m_ObjectHideFlags: 0
