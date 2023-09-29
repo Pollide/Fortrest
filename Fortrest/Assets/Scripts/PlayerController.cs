@@ -1463,7 +1463,7 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4.0f;
             float distanceFloat = Vector3.Distance(transform.position, building.position);
             float smallestDistance = 5.0f;
-            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.Stone)
+            if (building.GetComponent<Building>().resourceObject == Building.ResourceType.Stone)
             {
                 minDistanceFloat = 5.0f;
             }
@@ -1483,7 +1483,7 @@ public class PlayerController : MonoBehaviour
                 {
                     gathering = true;
                     gatherTimer = 0;
-                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.ResourceType.Bush });
 
                     if (currentResource.ReturnWood())
                     {
@@ -1495,7 +1495,7 @@ public class PlayerController : MonoBehaviour
                         CharacterAnimator.ResetTrigger("Stone");
                         CharacterAnimator.SetTrigger("Stone");
                     }
-                    if (currentResource.resourceObject == Building.BuildingType.Bush)
+                    if (currentResource.resourceObject == Building.ResourceType.Bush)
                     {
                         CharacterAnimator.ResetTrigger("Bush");
                         CharacterAnimator.SetTrigger("Bush");
@@ -1680,7 +1680,7 @@ public class PlayerController : MonoBehaviour
                 LevelManager.global.VFXPebble.transform.position = currentResource.transform.position;
                 LevelManager.global.VFXPebble.Play();
             }
-            if (currentResource.resourceObject == Building.BuildingType.Bush)
+            if (currentResource.resourceObject == Building.ResourceType.Bush)
             {
                 StopCoroutine("ToolAppear");
                 StartCoroutine("ToolAppear");

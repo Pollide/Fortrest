@@ -8,14 +8,17 @@ public class EnemyController : MonoBehaviour
 {
     // Agent components
     private NavMeshAgent agent; // Nav mesh agent component
-    public Transform bestTarget; // Target that the enemy will go towards
+
+    // Transforms
+    private Transform bestTarget; // Target that the enemy will go towards
     private Transform playerPosition;
-    GameObject house;
+    private GameObject house;
 
     // Parameters
     private float offset;
     private float speed;
     private float stoppingDist;
+    private float enemyDamage;
 
     // Timers
     private float attackTimer;
@@ -32,19 +35,19 @@ public class EnemyController : MonoBehaviour
     public Image healthBarImage;
     private float HealthAppearTimer = -1;
     public Animation healthAnimation;
+    private bool dead;
 
     // Booleans
     public bool chasing = false;
     public bool canBeDamaged = true;
-    private bool distanceAdjusted = false;
     private bool attacking = false;
     public bool canBeDamagedByBoar = true;
+    private bool knockbackIncreased;
+    private bool waveEnemy;
 
     // Others
     public Animator ActiveAnimator;
-    [HideInInspector] public KnockBack knockBackScript;
-
-    private float enemyDamage;
+    [HideInInspector] public KnockBack knockBackScript;   
 
     public enum ENEMYTYPE
     {
@@ -53,6 +56,15 @@ public class EnemyController : MonoBehaviour
         wolf,
         ogre
     };
+    public ENEMYTYPE currentEnemyType;
+
+    public enum ENEMYSTATE
+    {
+        IDLE = 1,
+        PATROL,
+        CHASING
+    };
+    private ENEMYSTATE currentEnemyState;
 
     // Audio
     public AudioClip hitSound;
@@ -68,52 +80,57 @@ public class EnemyController : MonoBehaviour
     public AudioClip ogreSpawnSound;
     public AudioClip ogreAttackSound;
 
-    public ENEMYTYPE currentEnemyType;
-
-    private bool knockbackIncreased;
-
+    // Stagger
     public Animation flashingAnimation;
     public bool flashing;
-    private bool dead;
+    
+    // Patrol
+    private Vector3 startPosition;
+    public Vector3 destination;
+    public bool newDestination = true;
+    public bool isInPosition = true;
+
     private void Awake()
     {
         if (GameManager.ReturnInMainMenu())
         {
             gameObject.SetActive(false);
-            // Destroy(agent);
-            //  enabled = false;
             return;
         }
     }
-    void Start()
-    {
-        agent = GetComponent<NavMeshAgent>();
 
+    void Start()
+    {       
         noiseTimerMax = 2.5f;
         chaseTimerMax = 10.0f;
-        agent.angularSpeed *= 2;
+        agent = GetComponent<NavMeshAgent>();
         knockBackScript = GetComponent<KnockBack>();
-
-        SetEnemyParameters();
-
         playerPosition = PlayerController.global.transform;
+        startPosition = transform.position;
+        SetEnemyParameters();        
+
         LevelManager.global.enemyList.Add(this); // Adding each object transform with this script attached to the enemy list
         if (agent.isOnNavMesh)
         {
-            if (currentEnemyType != ENEMYTYPE.wolf) //wolves wild
+            if (currentEnemyType != ENEMYTYPE.wolf)
             {
                 Indicator.global.AddIndicator(transform, Color.red, LevelManager.global.enemiesCount < 10 ? currentEnemyType.ToString() : "");
             }
         }
-
         if (currentEnemyType == ENEMYTYPE.ogre)
         {
             GameManager.global.SoundManager.PlaySound(ogreSpawnSound, 1.0f);
+        }
+
+        if (currentEnemyType == ENEMYTYPE.goblin)
+        {
+            waveEnemy = true;
         }
     }
 
     void Update()
     {
+        Checks();
         CheckHouse();
         if (house.transform.parent.GetComponent<Building>().DestroyedBool)
         {
@@ -121,18 +138,17 @@ public class EnemyController : MonoBehaviour
             agent.SetDestination(transform.position);
         }
         else
-        {
-            Checks();
+        {            
             MakeNoise();
             Process();
             ResetAttack();
         }
+
         if (PlayerController.global.upgradedMelee && !knockbackIncreased)
         {
             knockBackScript.strength *= 1.25f;
             knockbackIncreased = true;
         }
-
         if (HealthAppearTimer != -1)
         {
             HealthAppearTimer += Time.deltaTime;
@@ -151,7 +167,7 @@ public class EnemyController : MonoBehaviour
 
         LevelManager.ProcessBuildingList((building) =>
          {
-             if (building.GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+             if (building.GetComponent<Building>().buildingObject == Building.BuildingType.HouseNode)
              {
                  float distance = Vector3.Distance(transform.position, building.position);
 
@@ -177,11 +193,13 @@ public class EnemyController : MonoBehaviour
                 bestTarget = house.transform;
             }
         }
-        // Wolf goes for the player if they get close and stops chasing if they get too far or in the house
-        else if (currentEnemyType == ENEMYTYPE.wolf)
+
+        // Wolf goes for the player if they get too close, and stops chasing if they get too far or go in the house
+        if (currentEnemyType == ENEMYTYPE.wolf)
         {
             if (bestTarget == null)
             {
+                Patrol();
                 if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 17.5f)
                 {
                     bestTarget = playerPosition;
@@ -192,74 +210,96 @@ public class EnemyController : MonoBehaviour
                 if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 35.0f || PlayerModeHandler.global.inTheFortress)
                 {
                     bestTarget = null;
+                    isInPosition = false;
                 }
             }
         }
-        // Spider goes for the player if they are not mounted, goblin goes for the player if it gets attacked by them
-        else if (currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.goblin)
+
+        // Spiders roam their biome and target the player when they get too close. Wave spiders target the player if they are reachable.
+        if (currentEnemyType == ENEMYTYPE.spider)
         {
-            if (Boar.global.mounted == true || PlayerModeHandler.global.inTheFortress)
+            if (waveEnemy) // Spiders that spawn during waves
             {
-                bestTarget = null;
-                chasing = false;
-            }
-            else if (currentEnemyType == ENEMYTYPE.spider)
-            {
-                chasing = true;
-            }
-
-            if (chasing)
-            {
-                bestTarget = playerPosition; // Player set as target           
-
-                if (currentEnemyType == ENEMYTYPE.goblin)
+                if (Boar.global.mounted == true || PlayerModeHandler.global.inTheFortress || Vector3.Distance(transform.position, PlayerController.global.transform.position) > 30f) // If the player is unreachable
                 {
-                    // Distance between enemy and player
-                    float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
-
-                    chaseTimer += Time.deltaTime; // Goblin stops chasing the player after 10s or when the player gets too far
-
-                    if (chaseTimer >= chaseTimerMax || distance >= 10.0f)
+                    bestTarget = null;
+                }
+                else
+                {
+                    bestTarget = playerPosition;
+                }
+            }
+            else // Spiders that roam their biome
+            {
+                if (bestTarget == null)
+                {
+                    Patrol();
+                    if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 15f)
+                    {
+                        bestTarget = playerPosition;
+                    }
+                }
+                else
+                {
+                    if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 50.0f)
                     {
                         bestTarget = null;
-                        chasing = false;
-                        chaseTimer = 0;
+                        isInPosition = false;
                     }
                 }
             }
-            else
+        }
+            // Goblin goes for the player if it gets attacked by them
+        if (currentEnemyType == ENEMYTYPE.goblin)
+        {                
+            if (chasing)
             {
-                if (!bestTarget || bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform)) // If the enemy does not have a current target
-                {
-                    LevelManager.ProcessBuildingList((building) =>
-                    {
-                        if (building.transform.localScale == Vector3.one) // To avoid targeting turrets spawning
-                        {
-                            float compare = Vector3.Distance(transform.position, building.position); // Distance from enemy to each target
+                bestTarget = playerPosition;
 
-                            if (compare < shortestDistance) // Only true if a new shorter distance is found
-                            {
-                                shortestDistance = compare; // New shortest distance is assigned
-                                bestTarget = building; // Enemy's target is now the closest item in the list
-                            }
-                        }
-                    });
+                // Goblin stops chasing the player after 10s or when the player gets too far or when the player is mounted or when the player is in the fortress
+                float distance = Vector3.Distance(PlayerController.global.transform.position, transform.position);
+                chaseTimer += Time.deltaTime;
+                if (chaseTimer >= chaseTimerMax || distance >= 10.0f || Boar.global.mounted == true || PlayerModeHandler.global.inTheFortress)
+                {
+                    bestTarget = null;
+                    chasing = false;
+                    chaseTimer = 0;
                 }
             }
         }
+
+        if (bestTarget == null && waveEnemy) // If the enemy does not have a current target
+        {
+            LevelManager.ProcessBuildingList((building) =>
+            {
+                if (building.transform.localScale == Vector3.one) // To avoid targeting turrets spawning
+                {
+                    float compare = Vector3.Distance(transform.position, building.position); // Distance from enemy to each target
+
+                    if (compare < shortestDistance) // Only true if a new shorter distance is found
+                    {
+                        shortestDistance = compare; // New shortest distance is assigned
+                        bestTarget = building; // Enemy's target is now the closest item in the list
+                    }
+                }
+            });
+        }        
 
         // Once a target is set, adjust stopping distance, check distance, attack when reaching target
         if (bestTarget)
         {
+            // If the player mounts while being targeted
             if (bestTarget == playerPosition)
             {
-                if ((Boar.global && Boar.global.mounted == true) && currentEnemyType == ENEMYTYPE.wolf)
+                agent.stoppingDistance = stoppingDist;
+                // Boar becomes the target
+                if (Boar.global && Boar.global.mounted == true)
                 {
                     bestTarget = Boar.global.transform;
-                }
-                agent.stoppingDistance = stoppingDist;
-                distanceAdjusted = false;
+                }              
             }
+
+            // Adjust stopping distance to mount, and reverse to player if they dismount
             if (Boar.global && bestTarget == Boar.global.transform)
             {
                 agent.stoppingDistance = stoppingDist + 1.0f;
@@ -268,15 +308,21 @@ public class EnemyController : MonoBehaviour
                     bestTarget = playerPosition;
                 }
             }
-            if (bestTarget != playerPosition && (Boar.global && bestTarget != Boar.global.transform) && bestTarget != house.transform)
+
+            // Stopping distance for turret
+            if (bestTarget.gameObject.GetComponent<Building>())
             {
-                if (distanceAdjusted == false)
+                if (bestTarget.gameObject.GetComponent<Building>().buildingObject == Building.BuildingType.Ballista || bestTarget.gameObject.GetComponent<Building>().buildingObject == Building.BuildingType.Slow)
                 {
                     agent.stoppingDistance = stoppingDist + 2.5f;
-                    distanceAdjusted = true;
+                }
+                else if (bestTarget.gameObject.GetComponent<Building>().buildingObject == Building.BuildingType.Scatter || bestTarget.gameObject.GetComponent<Building>().buildingObject == Building.BuildingType.Cannon)
+                {
+                    agent.stoppingDistance = stoppingDist + 2.0f;
                 }
             }
 
+            // Enemy Attacks (works differently for the house
             if (bestTarget != house.transform)
             {
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + offset) // Checks if enemy reached target
@@ -299,24 +345,44 @@ public class EnemyController : MonoBehaviour
                 {
                     agent.SetDestination(transform.position); // Avoids them moving while dead
                 }
-            }
-            if (agent.velocity != Vector3.zero)
+            }            
+        }
+
+        if (agent.velocity != Vector3.zero)
+        {
+            ActiveAnimator.SetBool("Moving", true);
+        }
+        else
+        {
+            ActiveAnimator.SetBool("Moving", false);
+        }
+    }
+
+    void Patrol()
+    {
+        if (!isInPosition)
+        {
+            agent.SetDestination(startPosition);
+            if (Vector3.Distance(transform.position, destination) < 1.0f)
             {
-                ActiveAnimator.SetBool("Moving", true);
-            }
-            else
-            {
-                ActiveAnimator.SetBool("Moving", false);
+                isInPosition = true;
             }
         }
         else
         {
-            if (currentEnemyType == ENEMYTYPE.wolf)
+            if (newDestination)
             {
-                agent.SetDestination(transform.position);
-                ActiveAnimator.SetBool("Moving", false);
+                float x = Random.Range(-20f, 20f);
+                float z = Random.Range(-20f, 20f);
+                destination = transform.position + new Vector3(x, 0f, z);
+                newDestination = false;
             }
-        }
+            agent.SetDestination(destination);
+            if (Vector3.Distance(transform.position, startPosition) > 50.0f || Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), destination) < 1.0f)
+            {
+                newDestination = true;
+            }
+        }      
     }
 
     void Checks()
@@ -632,15 +698,11 @@ public class EnemyController : MonoBehaviour
             Building building = bestTarget.GetComponent<Building>();
             if (building)
             {
-                if (building.resourceObject == Building.BuildingType.HouseNode)
+                if (building.buildingObject == Building.BuildingType.HouseNode)
                 {
                     building = building.transform.parent.GetComponent<Building>();
                 }
-
-
                 building.TakeDamage(1f);
-
-
             }
         }
     }

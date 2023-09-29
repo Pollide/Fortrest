@@ -122,6 +122,7 @@ public class GameManager : MonoBehaviour
     public Texture2D pointerPickaxe;
     public Texture2D pointerAxe;
     public Texture2D pointerSickle;
+    public Texture2D pointerUpgrade;
 
     //runs on the frame it was awake on
     void Awake()
@@ -247,7 +248,7 @@ public class GameManager : MonoBehaviour
         Texture2D cursorTexture = pointerGeneric;
         Vector2 hotSpot = new Vector2((float)cursorTexture.width / 2, (float)cursorTexture.height / 2);
 
-        if (PlayerModeHandler.global && PlayerController.global.playerCanMove)
+        if (PlayerModeHandler.global && Time.timeScale != 0)
         {
             if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
             {
@@ -275,6 +276,11 @@ public class GameManager : MonoBehaviour
 
                 if (PlayerController.global.currentResource.ReturnWood())
                     cursorTexture = pointerAxe;
+            }
+
+            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode && PlayerController.global.currentResource)
+            {
+                // cursorTexture = pointerUpgrade;
             }
         }
 
@@ -673,7 +679,7 @@ public class GameManager : MonoBehaviour
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
-        bool house = building.resourceObject == Building.BuildingType.HouseNode;
+        bool house = building.buildingObject == Building.BuildingType.HouseNode;
         if (house)
         {
             building = building.transform.parent.GetComponent<Building>();
@@ -695,7 +701,7 @@ public class GameManager : MonoBehaviour
                 building.DisableInvoke();
         }
 
-        else if (building.resourceObject == Building.BuildingType.Defense)
+        else if (building.defenseBuilding)
         {
             int turretSize = (int)Pref("Turret Size", 0, true);
 
