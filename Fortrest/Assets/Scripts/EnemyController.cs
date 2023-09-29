@@ -47,7 +47,7 @@ public class EnemyController : MonoBehaviour
 
     // Others
     public Animator ActiveAnimator;
-    [HideInInspector] public KnockBack knockBackScript;   
+    [HideInInspector] public KnockBack knockBackScript;
 
     public enum ENEMYTYPE
     {
@@ -83,7 +83,7 @@ public class EnemyController : MonoBehaviour
     // Stagger
     public Animation flashingAnimation;
     public bool flashing;
-    
+
     // Patrol
     private Vector3 startPosition;
     public Vector3 destination;
@@ -100,14 +100,14 @@ public class EnemyController : MonoBehaviour
     }
 
     void Start()
-    {       
+    {
         noiseTimerMax = 2.5f;
         chaseTimerMax = 10.0f;
         agent = GetComponent<NavMeshAgent>();
         knockBackScript = GetComponent<KnockBack>();
         playerPosition = PlayerController.global.transform;
         startPosition = transform.position;
-        SetEnemyParameters();        
+        SetEnemyParameters();
 
         LevelManager.global.enemyList.Add(this); // Adding each object transform with this script attached to the enemy list
         if (agent.isOnNavMesh)
@@ -138,7 +138,7 @@ public class EnemyController : MonoBehaviour
             agent.SetDestination(transform.position);
         }
         else
-        {            
+        {
             MakeNoise();
             Process();
             ResetAttack();
@@ -249,9 +249,9 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
-            // Goblin goes for the player if it gets attacked by them
+        // Goblin goes for the player if it gets attacked by them
         if (currentEnemyType == ENEMYTYPE.goblin)
-        {                
+        {
             if (chasing)
             {
                 bestTarget = playerPosition;
@@ -283,7 +283,7 @@ public class EnemyController : MonoBehaviour
                     }
                 }
             });
-        }        
+        }
 
         // Once a target is set, adjust stopping distance, check distance, attack when reaching target
         if (bestTarget)
@@ -296,7 +296,7 @@ public class EnemyController : MonoBehaviour
                 if (Boar.global && Boar.global.mounted == true)
                 {
                     bestTarget = Boar.global.transform;
-                }              
+                }
             }
 
             // Adjust stopping distance to mount, and reverse to player if they dismount
@@ -345,7 +345,7 @@ public class EnemyController : MonoBehaviour
                 {
                     agent.SetDestination(transform.position); // Avoids them moving while dead
                 }
-            }            
+            }
         }
 
         if (agent.velocity != Vector3.zero)
@@ -357,32 +357,53 @@ public class EnemyController : MonoBehaviour
             ActiveAnimator.SetBool("Moving", false);
         }
     }
-
+    float previousDistance;
+    float patrolCooldown;
+    float patrolThreshold;
     void Patrol()
     {
-        if (!isInPosition)
+        patrolCooldown += Time.deltaTime;
+
+        if (patrolCooldown > patrolThreshold) //prevents wolves jittering and gives them time to move properly
         {
-            agent.SetDestination(startPosition);
-            if (Vector3.Distance(transform.position, destination) < 1.0f)
+            patrolCooldown = 0;
+            patrolThreshold = Random.Range(1, 3);
+
+
+            float distance = Vector3.Distance(transform.position, destination);
+
+            if (previousDistance != 0 && previousDistance == distance) //prevents wolf getting stuck and standing still
             {
-                isInPosition = true;
-            }
-        }
-        else
-        {
-            if (newDestination)
-            {
-                float x = Random.Range(-20f, 20f);
-                float z = Random.Range(-20f, 20f);
-                destination = transform.position + new Vector3(x, 0f, z);
-                newDestination = false;
-            }
-            agent.SetDestination(destination);
-            if (Vector3.Distance(transform.position, startPosition) > 50.0f || Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), destination) < 1.0f)
-            {
+                Debug.Log("Cant reach, finding new");
                 newDestination = true;
             }
-        }      
+            previousDistance = distance;
+
+            if (!isInPosition)
+            {
+                agent.SetDestination(startPosition);
+                if (distance < 1.0f)
+                {
+                    isInPosition = true;
+                }
+            }
+            else
+            {
+                if (newDestination)
+                {
+                    float x = Random.Range(-20f, 20f);
+                    float z = Random.Range(-20f, 20f);
+                    destination = transform.position + new Vector3(x, 0f, z);
+                    newDestination = false;
+                }
+                agent.SetDestination(destination);
+
+                if (Vector3.Distance(transform.position, startPosition) > 50.0f || Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), destination) < 1.0f)
+                {
+                    newDestination = true;
+                }
+            }
+        }
     }
 
     void Checks()
