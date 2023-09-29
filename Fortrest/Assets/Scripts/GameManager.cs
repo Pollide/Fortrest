@@ -122,6 +122,7 @@ public class GameManager : MonoBehaviour
     public Texture2D pointerPickaxe;
     public Texture2D pointerAxe;
     public Texture2D pointerSickle;
+    public Texture2D pointerUpgrade;
 
     //runs on the frame it was awake on
     void Awake()
@@ -275,6 +276,11 @@ public class GameManager : MonoBehaviour
 
                 if (PlayerController.global.currentResource.ReturnWood())
                     cursorTexture = pointerAxe;
+            }
+
+            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode && PlayerController.global.currentResource)
+            {
+                cursorTexture = pointerUpgrade;
             }
         }
 
