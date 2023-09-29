@@ -86,9 +86,12 @@ public class EnemyController : MonoBehaviour
 
     // Patrol
     private Vector3 startPosition;
-    public Vector3 destination;
-    public bool newDestination = true;
-    public bool isInPosition = true;
+    private Vector3 destination;
+    private bool newDestination = true;
+    private bool isInPosition = true;
+    private float previousDistance;
+    private float patrolCooldown;
+    private float patrolThreshold;
 
     private void Awake()
     {
@@ -357,9 +360,7 @@ public class EnemyController : MonoBehaviour
             ActiveAnimator.SetBool("Moving", false);
         }
     }
-    float previousDistance;
-    float patrolCooldown;
-    float patrolThreshold;
+    
     void Patrol()
     {
         patrolCooldown += Time.deltaTime;
@@ -368,7 +369,6 @@ public class EnemyController : MonoBehaviour
         {
             patrolCooldown = 0;
             patrolThreshold = Random.Range(1, 3);
-
 
             float distance = Vector3.Distance(transform.position, destination);
 
