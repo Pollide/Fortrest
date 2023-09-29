@@ -48,6 +48,11 @@ public class AnimEvent : MonoBehaviour
     void SetAttackFalse()
     {
         GetComponentInParent<Animator>().SetBool("attacking", false);
+    } 
+    
+    void SetDiveFalse()
+    {
+        stateMachine.BossAnimator.SetBool("isDiving", false);
     }
 
     void EndCharge()
