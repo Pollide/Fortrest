@@ -280,7 +280,7 @@ public class GameManager : MonoBehaviour
 
             if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode && PlayerController.global.currentResource)
             {
-                cursorTexture = pointerUpgrade;
+                // cursorTexture = pointerUpgrade;
             }
         }
 
