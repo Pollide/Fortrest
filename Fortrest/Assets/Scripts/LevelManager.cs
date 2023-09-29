@@ -185,6 +185,7 @@ public class LevelManager : MonoBehaviour
         });
     }
 
+
     public void AddBuildingVoid(Transform addTransform)
     {
         BuildingList.Add(addTransform);
@@ -319,7 +320,7 @@ public class LevelManager : MonoBehaviour
         {
             daySpeed = ReturnNight() ? 2 : 1;
         }
-       
+
 
 #if UNITY_EDITOR
         // daySpeed = 7.0f; // FOR TESTING

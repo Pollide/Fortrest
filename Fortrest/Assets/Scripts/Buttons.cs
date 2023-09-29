@@ -19,7 +19,7 @@ public class Buttons : MonoBehaviour
 {
     public Transform ButtonHolder;
     //[HideInInspector]
-    public List<int> SelectedList = new List<int>();
+    public List<int> MenuList = new List<int>();
     public bool pressingDown;
     private void OnEnable()
     {
@@ -28,18 +28,17 @@ public class Buttons : MonoBehaviour
 
     private void Start()
     {
-        SelectedList = new List<int>();
+        MenuList = new List<int>();
 
         for (int i = 0; i < ButtonHolder.childCount; i++)
         {
-            SelectedList.Add(0);
+            MenuList.Add(0);
         }
     }
 
     private void Update()
     {
-        // Debug.Log(SelectedList.Count + " > 0 && " + ButtonHolder.gameObject.activeInHierarchy);
-        if (SelectedList.Count > 0 && ButtonHolder.gameObject.activeInHierarchy)
+        if (MenuList.Count > 0 && ButtonHolder.gameObject.activeInHierarchy)
             ButtonInput();
     }
 
@@ -72,37 +71,43 @@ public class Buttons : MonoBehaviour
         return anotherWasOpen;
     }
 
-    void DirectionVoid(int shift)
-    {
-        SelectedList[ReturnIndex()] += shift;
-    }
-
     void ButtonInput()
     {
-        int index = ReturnIndex();
+        int menu = ReturnIndex();
+
+        int direction = 0;
 
         if (GameManager.global.upCTRL)
         {
             GameManager.global.upCTRL = false;
-            SelectedList[index]--;
+            direction = -1;
         }
 
         if (GameManager.global.downCTRL)
         {
             GameManager.global.downCTRL = false;
-            SelectedList[index]++;
+            direction = 1;
         }
+        MenuList[menu] += direction;
 
-        // Debug.Log(index + " " + SelectedList[index] + " -> " + ButtonHolder.GetChild(index).childCount);
+        MenuList[menu] = (int)GameManager.ReturnThresholds(MenuList[menu], ButtonHolder.GetChild(menu).childCount - 1);
 
-        SelectedList[index] = (int)GameManager.ReturnThresholds(SelectedList[index], ButtonHolder.GetChild(index).childCount - 1);
-
-        for (int i = 0; i < ButtonHolder.GetChild(index).childCount; i++)
+        for (int i = 0; i < ButtonHolder.GetChild(menu).childCount; i++)
         {
-            Transform button = ButtonHolder.GetChild(index).GetChild(i);
+            Transform button = ButtonHolder.GetChild(menu).GetChild(i);
+
+
             ButtonMechanics buttonMechanics = button.GetComponent<ButtonMechanics>();
 
-            bool selected = SelectedList[index] == i;
+            bool selected = MenuList[menu] == i;
+
+            if (!button.gameObject.activeSelf && selected) //skips inactive
+            {
+                // Debug.Log(MenuList[menu] + "direction: " + direction);
+                MenuList[menu] += direction != 0 ? direction : 1;
+                ButtonInput();
+                return;
+            }
 
             if (buttonMechanics.SelectedGameObject)
                 buttonMechanics.SelectedGameObject.SetActive(selected);
@@ -116,7 +121,7 @@ public class Buttons : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)
         {
             GameManager.global.selectCTRL = false;
-            ButtonHolder.GetChild(index).GetChild(SelectedList[index]).GetComponent<ButtonMechanics>().SelectVoid();
+            ButtonHolder.GetChild(menu).GetChild(MenuList[menu]).GetComponent<ButtonMechanics>().SelectVoid();
         }
     }
 }
