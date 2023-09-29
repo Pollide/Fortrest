@@ -247,7 +247,7 @@ public class GameManager : MonoBehaviour
         Texture2D cursorTexture = pointerGeneric;
         Vector2 hotSpot = new Vector2((float)cursorTexture.width / 2, (float)cursorTexture.height / 2);
 
-        if (PlayerModeHandler.global && PlayerController.global.playerCanMove)
+        if (PlayerModeHandler.global && Time.timeScale != 0)
         {
             if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
             {
