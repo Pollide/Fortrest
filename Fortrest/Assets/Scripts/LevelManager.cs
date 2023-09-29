@@ -176,7 +176,7 @@ public class LevelManager : MonoBehaviour
     {
         ProcessBuildingList((building) =>
         {
-            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+            if (building.GetComponent<Building>().buildingObject == Building.BuildingType.HouseNode)
             {
                 houseTransform = building.parent.transform;
                 housePosObtained = true;

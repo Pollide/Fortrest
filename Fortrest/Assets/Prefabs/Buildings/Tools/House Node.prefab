@@ -46,14 +46,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 0
-  resourceObject: 10
+  DestroyedBool: 0
+  resourceObject: 7
+  buildingObject: 5
   health: 0
   maxHealth: 5
-  energyConsumptionPerClick: 2
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
   healthBarImage: {fileID: 0}
+  HUDHealthBar: {fileID: 0}
+  playerinRange: 0
+  normalHouse: {fileID: 0}
+  destroyedHouse: {fileID: 0}
+  interactText: {fileID: 0}
+  textDisplayed: 0
+  DebugDestroyInstantly: 0
+  gridLocation: {x: 0, y: 0}
+  defenseBuilding: 0
 --- !u!65 &3871156764619998223
 BoxCollider:
   m_ObjectHideFlags: 0

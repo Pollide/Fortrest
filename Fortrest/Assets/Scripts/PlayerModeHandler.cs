@@ -272,7 +272,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (!turretBlueprint)
             {              
                 turretBlueprint = Instantiate(turretPrefab);             
-                turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
+                //turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
                 turretBlueprint.GetComponent<Building>().enabled = false;
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
                 turretBlueprint.tag = "BuildingBP";

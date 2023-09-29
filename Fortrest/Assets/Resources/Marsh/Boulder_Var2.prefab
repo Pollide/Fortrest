@@ -182,7 +182,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NaturalBool: 1
   DestroyedBool: 0
-  resourceObject: 9
+  resourceObject: 6
+  buildingObject: 6
   health: 0
   maxHealth: 5
   resourceAmount: 5
@@ -191,8 +192,13 @@ MonoBehaviour:
   healthBarImage: {fileID: 873409708450261229}
   HUDHealthBar: {fileID: 0}
   playerinRange: 0
+  normalHouse: {fileID: 0}
+  destroyedHouse: {fileID: 0}
   interactText: {fileID: 0}
   textDisplayed: 0
+  DebugDestroyInstantly: 0
+  gridLocation: {x: 0, y: 0}
+  defenseBuilding: 0
 --- !u!111 &1345044777623596542
 Animation:
   m_ObjectHideFlags: 0

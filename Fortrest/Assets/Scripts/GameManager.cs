@@ -714,7 +714,7 @@ public class GameManager : MonoBehaviour
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
-        bool house = building.resourceObject == Building.BuildingType.HouseNode;
+        bool house = building.buildingObject == Building.BuildingType.HouseNode;
         if (house)
         {
             building = building.transform.parent.GetComponent<Building>();
@@ -736,7 +736,7 @@ public class GameManager : MonoBehaviour
                 building.DisableInvoke();
         }
 
-        else if (building.resourceObject == Building.BuildingType.Defense)
+        else if (building.defenseBuilding)
         {
             int turretSize = (int)Pref("Turret Size", 0, true);
 
