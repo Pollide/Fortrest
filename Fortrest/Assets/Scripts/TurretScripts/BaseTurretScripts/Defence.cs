@@ -1,7 +1,9 @@
 using UnityEngine;
+using System.Collections.Generic;
 
-public class TurretShooting : MonoBehaviour
+public class Defence : MonoBehaviour
 {
+    public List<Sprite> spriteTierList = new List<Sprite>();
     public float turn_speed;
     public float shootingRange = 10f;
     public float fireRate = 1f;
@@ -13,13 +15,19 @@ public class TurretShooting : MonoBehaviour
     float nextRotationChangeTime;
     public bool attackStarted;
 
-    [Header("Cannon Defense")]
-    public bool IsCannon;
+    [Header("Cannon")]
     public float explosionRadius = 5;
 
-    [Header("Slow Defense")]
-    public bool IsSlow;
+    [Header("Slow")]
     public float enemySpeedPercentage = 0.5f; // Amount to slow down enemies (0.5 represents 50% slower)
+
+    [Header("Scatter Shot")]
+    public float bulletSpeed = 10f;
+    public float bulletLifetime = 3f; // Bullet lifetime in seconds
+    public float bulletDamage = 0.2f; // Bullet Damage
+    public Transform[] spawnPositions; // Array of designated spawn positions
+    public float cooldownTime = 0.5f; // Cooldown time in seconds
+    private float cooldownTimer = 0f;
 
     [Header("Projectile")]
     public GameObject ProjectilePrefab;
@@ -34,9 +42,10 @@ public class TurretShooting : MonoBehaviour
     private Quaternion targetRotation;
     public bool MiniTurret;
     public Animator MiniTurretAnimator;
-
+    Building building;
     private void Start()
     {
+        building = GetComponent<Building>();
         ReturnAnimator();
     }
 
@@ -65,7 +74,22 @@ public class TurretShooting : MonoBehaviour
 
     private void Update()
     {
-        if (target != null)
+        if (building.buildingObject == Building.BuildingType.Scatter)
+        {
+            // Rotate the GameObject around its up axis
+            transform.Rotate(turn_speed * Time.deltaTime * Vector3.up);
+
+            // Update the cooldown timer
+            cooldownTimer -= Time.deltaTime;
+
+            if (cooldownTimer <= 0f)
+            {
+                ShootBulletFromNextSpawnPoint();
+                cooldownTimer = cooldownTime;
+            }
+
+        }
+        else if (target != null)
         {
             Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
 
@@ -78,7 +102,7 @@ public class TurretShooting : MonoBehaviour
             if (Vector3.Distance(transform.position, target.transform.position) <= shootingRange)
             {
 
-                if (IsSlow)
+                if (building.buildingObject == Building.BuildingType.Slow)
                 {
                     target.GetComponent<EnemyController>().ApplySlow(enemySpeedPercentage);
                 }
@@ -90,7 +114,7 @@ public class TurretShooting : MonoBehaviour
 
             if (Vector3.Distance(transform.position, target.position) > shootingRange && !attackStarted || target.GetComponent<EnemyController>().health <= 0f)
             {
-                if (IsSlow)
+                if (building.buildingObject == Building.BuildingType.Slow)
                 {
                     target.GetComponent<EnemyController>().RemoveSlow();
                 }
@@ -118,6 +142,31 @@ public class TurretShooting : MonoBehaviour
         }
     }
 
+    private void ShootBulletFromNextSpawnPoint()
+    {
+        for (int i = 0; i < spawnPositions.Length; i++)
+        {
+            // Get the next designated spawn position
+            Vector3 spawnPosition = spawnPositions[i].position;
+
+            // Instantiate the bullet at the designated spawn position
+            GameObject bullet = Instantiate(ProjectilePrefab, spawnPosition, Quaternion.identity);
+
+            // Calculate the direction for the bullet to travel
+            Vector3 spawnDirection = (spawnPosition - transform.position).normalized;
+
+            // Shoot the bullet in the spawn direction
+            bullet.GetComponent<Rigidbody>().velocity = spawnDirection * bulletSpeed;
+
+            bullet.transform.localScale = new(0.3f, 0.3f, 0.3f);
+
+            bullet.GetComponent<ScattershotBullet>().SetParent(transform.gameObject);
+            bullet.GetComponent<ScattershotBullet>().SetDamage(bulletDamage);
+
+            // Destroy the bullet after the specified lifetime
+            Destroy(bullet, bulletLifetime);
+        }
+    }
     private void Attack()
     {
         if (target.GetComponent<EnemyController>())
@@ -161,7 +210,7 @@ public class TurretShooting : MonoBehaviour
             boltScript.SetDamage(damage);
         }
 
-        if (IsCannon)
+        if (building.buildingObject == Building.BuildingType.Cannon)
         {
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.CannonShootSound, 0.3f, true, 0, false, transform);

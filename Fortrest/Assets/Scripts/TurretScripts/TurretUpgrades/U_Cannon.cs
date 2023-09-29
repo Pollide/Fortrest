@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class U_Cannon : MonoBehaviour
 {
     // Reference to shooting script 
-    private TurretShooting turretScript;
+    private Defence turretScript;
     // Reference to player transform 
     private Transform playerTransform;
 
@@ -62,7 +62,7 @@ public class U_Cannon : MonoBehaviour
     private void Awake()
     {
         // Get shooting script
-        turretScript = GetComponent<TurretShooting>();
+        turretScript = GetComponent<Defence>();
         // Get player transform
         playerTransform = PlayerController.global.transform;
 

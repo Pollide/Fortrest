@@ -701,7 +701,7 @@ public class GameManager : MonoBehaviour
                 building.DisableInvoke();
         }
 
-        else if (building.defenseBuilding)
+        else if (building.GetComponent<Defence>())
         {
             int turretSize = (int)Pref("Turret Size", 0, true);
 
@@ -718,8 +718,7 @@ public class GameManager : MonoBehaviour
             DataPositionVoid("Turret Position" + turretSize, building.transform, false);
             DataEulerVoid("Turret Euler" + turretSize, building.transform, false);
 
-            if (building.GetComponent<TurretShooting>())
-                building.GetComponent<TurretShooting>().CurrentLevel = (int)Pref("Turret Level" + turretSize, building.GetComponent<TurretShooting>().CurrentLevel, load);
+            building.GetComponent<Defence>().CurrentLevel = (int)Pref("Turret Level" + turretSize, building.GetComponent<Defence>().CurrentLevel, load);
             Pref("Turret Size", turretSize + 1, false);
         }
 

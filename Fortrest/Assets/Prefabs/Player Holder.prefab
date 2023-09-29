@@ -3177,6 +3177,7 @@ MonoBehaviour:
   moveDirection: {x: 0, y: 0, z: 0}
   mousePos: {x: 0, y: 0, z: 0}
   running: 0
+  evadeCoolDown: 2.5
   evading: 0
   canEvade: 1
   playerCanBeDamaged: 1
@@ -3251,7 +3252,6 @@ MonoBehaviour:
   inventoryCTRL: 0
   swapCTRL: 0
   rotateCTRL: {x: 0, y: 0}
-  pauseSelectCTRL: 0
   releasedCTRL: 0
   scrollCTRL: 0
   cancelAnimation: 0
@@ -3261,8 +3261,9 @@ MonoBehaviour:
   LanternSkinnedRenderer: {fileID: 799317915277383869}
   mapBool: 0
   ResourceHolderOpened: 0
-  TurretMenuHolder: {fileID: 6577643289762036005}
-  TurretMenuTitle: {fileID: 1413848136156042208}
+  turretMenuHolder: {fileID: 6577643289762036005}
+  turretMenuTitle: {fileID: 1413848136156042208}
+  turretImageIcon: {fileID: 6222562049863200850}
   bowAnimator: {fileID: 7495716635062900607}
   division: 1
 --- !u!143 &5569601162832024542
@@ -3393,6 +3394,7 @@ MonoBehaviour:
   canInteractWithHouse: 0
   HintOffset: {x: 0, y: 0, z: 0}
   SelectedTurret: {fileID: 0}
+  buildingWithController: 0
 --- !u!1 &5601085607544240354
 GameObject:
   m_ObjectHideFlags: 0
@@ -7156,6 +7158,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6222562049863200850 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1977645412341315745, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!95 &6438107111315258853 stripped

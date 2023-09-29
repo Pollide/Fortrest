@@ -106,8 +106,8 @@ public class PlayerModeHandler : MonoBehaviour
                 Weather.global.gameObject.SetActive(false);
             }
             if (!centerMouse)
-            {               
-                Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));              
+            {
+                Mouse.current.WarpCursorPosition(new Vector2(Screen.width / 2, Screen.height / 2));
                 cursorPosition = new Vector2(Screen.width / 2, Screen.height / 2);
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
@@ -116,7 +116,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (GameManager.global.moveCTRL.x != 0 || GameManager.global.moveCTRL.y != 0)
             {
                 buildingWithController = true;
-                cursorPosition += GameManager.global.moveCTRL * 4.0f;                
+                cursorPosition += GameManager.global.moveCTRL * 4.0f;
                 Mouse.current.WarpCursorPosition(cursorPosition);
             }
             else
@@ -124,7 +124,7 @@ public class PlayerModeHandler : MonoBehaviour
                 buildingWithController = false;
             }
             if (GameManager.global.KeyboardBool)
-            {               
+            {
                 cursorPosition = Input.mousePosition;
             }
 
@@ -232,15 +232,15 @@ public class PlayerModeHandler : MonoBehaviour
             }
 
             Vector3 worldPos = hitData.point;
-            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));            
+            Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
             worldPos = new Vector3(gridPos.x, 0, gridPos.z);
             Vector2 gridNumber = new Vector2();
             gridNumber.x = (worldPos.x + 57.20f) / 4.0f;
             gridNumber.y = (worldPos.z + 145.30f) / 4.0f;
 
-            Collider[] colliders = Physics.OverlapSphere(worldPos, minDistanceBetweenTurrets, GameManager.ReturnBitShift(new string[] { "Building", "Resource", "Boar"}));
+            Collider[] colliders = Physics.OverlapSphere(worldPos, minDistanceBetweenTurrets, GameManager.ReturnBitShift(new string[] { "Building", "Resource", "Boar" }));
 
-            PlayerController.global.TurretMenuHolder.gameObject.SetActive(SelectedTurret);
+            PlayerController.global.turretMenuHolder.gameObject.SetActive(SelectedTurret);
 
             cantPlace = false;
 
@@ -250,28 +250,32 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     if (!SelectedTurret)
                     {
-                        PlayerController.global.TurretMenuTitle.text = buildType.ToString();
+                        PlayerController.global.turretMenuTitle.text = buildType.ToString();
+
                         ClearBlueprint();
                     }
 
                     if (colliders[i].gameObject.transform.localScale == Vector3.one)
                     {
-                        PlayerController.global.TurretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+                        PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
                         SelectedTurret = colliders[i].GetComponentInParent<Building>();
-                    }                  
+
+                        Defence selected = SelectedTurret.GetComponent<Defence>();
+                        PlayerController.global.turretImageIcon.sprite = selected.spriteTierList[selected.CurrentLevel];
+                    }
 
                     return;
                 }
                 if (colliders[i].tag == "Resource" || colliders[i].tag == "BoarTurret")
-                {                  
+                {
                     cantPlace = true;
                 }
             }
             SelectedTurret = null;
 
             if (!turretBlueprint)
-            {              
-                turretBlueprint = Instantiate(turretPrefab);             
+            {
+                turretBlueprint = Instantiate(turretPrefab);
                 //turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
                 turretBlueprint.GetComponent<Building>().enabled = false;
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
@@ -280,13 +284,10 @@ public class PlayerModeHandler : MonoBehaviour
                 //NOT IN USE RIGHT NOW but basically it would hover over the building to say to place
                 //KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
 
-                TurretShooting turretShooting = turretBlueprint.GetComponent<TurretShooting>();
+                Defence defence = turretBlueprint.GetComponent<Defence>();
+                defence.enabled = false;
+                Destroy(defence);
 
-                if (turretShooting)
-                {
-                    turretShooting.enabled = false;
-                    Destroy(turretShooting);
-                }
             }
 
             turretBlueprint.transform.position = worldPos;
@@ -311,7 +312,7 @@ public class PlayerModeHandler : MonoBehaviour
                 if (selectBool)
                 {
                     float timer = 0f;
-                    switch(buildType)
+                    switch (buildType)
                     {
                         case BuildType.Turret:
                             timer = 5.0f;
@@ -355,8 +356,8 @@ public class PlayerModeHandler : MonoBehaviour
     }
 
     private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position, Vector2 gridPos)
-    {        
-        PlayerController.global.CheckSufficientResources(true);       
+    {
+        PlayerController.global.CheckSufficientResources(true);
         GameObject newTurret = Instantiate(prefab, position, Quaternion.identity);
         GameManager.global.SoundManager.PlaySound(GameManager.global.TurretConstructingSound);
         newTurret.transform.localScale = Vector3.zero;
@@ -371,7 +372,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
-            newTurret.GetComponent<TurretShooting>().enabled = false;
+            newTurret.GetComponent<Defence>().enabled = false;
         }
 
         float timer = 0f;
@@ -388,7 +389,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
-            newTurret.GetComponent<TurretShooting>().enabled = true;
+            newTurret.GetComponent<Defence>().enabled = true;
         }
 
         if (prefab == turretPrefabs[0])
@@ -476,7 +477,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (KeyHint)
                 Destroy(KeyHint.gameObject);
         }
-        PlayerController.global.TurretMenuHolder.gameObject.SetActive(false);
+        PlayerController.global.turretMenuHolder.gameObject.SetActive(false);
         PlayerController.global.UpdateResourceHolder();
     }
 
@@ -617,7 +618,7 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     Cursor.visible = false;
                     Cursor.lockState = CursorLockMode.Locked;
-                }              
+                }
             }
         }
     }
