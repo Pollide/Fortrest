@@ -114,7 +114,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
         Buttons buttons = GetComponentInParent<Buttons>();
-        buttons.SelectedList[buttons.ReturnIndex()] = transform.GetSiblingIndex();
+        buttons.MenuList[buttons.ReturnIndex()] = transform.GetSiblingIndex();
         //ChangeColourVoid(Color.white);
     }
 

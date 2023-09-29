@@ -221,7 +221,7 @@ public class GameManager : MonoBehaviour
                 downCTRL = true;
             }
             once = true;
-        }   
+        }
     }
 
     private void Update()
@@ -242,12 +242,12 @@ public class GameManager : MonoBehaviour
         if (PlayerModeHandler.global)
         {
             PlayerModeHandler.SetMouseActive(KeyboardBool, PlayerModeHandler.global.inTheFortress);
-        }      
+        }
 
         Texture2D cursorTexture = pointerGeneric;
         Vector2 hotSpot = new Vector2((float)cursorTexture.width / 2, (float)cursorTexture.height / 2);
 
-        if (PlayerModeHandler.global && Time.timeScale == 1)
+        if (PlayerModeHandler.global && PlayerController.global.playerCanMove)
         {
             if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
             {
@@ -307,58 +307,17 @@ public class GameManager : MonoBehaviour
     */
 
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
-    public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
+    public static float ReturnThresholds(float valueFloat, float maxFloat, float minFloat = 0, bool wrapBool = true)
     {
-
-        if (minValue == maxValue)
-            return valueInt;
-        //will run this once or if i = -1
-
-        int stackOverflow = 0;
-
-        for (int i = 0; i < 1; i++)
+        if (wrapBool)
         {
-            stackOverflow++;
-
-            if (stackOverflow > 100)
-            {
-                Debug.LogWarning("stack overflow");
-                return valueInt;
-            }
-            if (valueInt < minValue)
-            {
-                if (wrap)
-                {
-                    //sets the valueInt back to the min as it went above the max
-                    valueInt = maxValue + (minValue + valueInt) + 1;
-                    i = -1; //loop runs again
-                }
-                else
-                {
-                    valueInt = minValue;
-                }
-
-                continue; //continues loop
-            }
-
-            if (valueInt > maxValue)
-            {
-                if (wrap)
-                {
-                    //sets the valueInt to the max as it went below the min
-                    valueInt = minValue + (valueInt - maxValue) - 1;
-                    i = -1; //setting i as -1 means that the next loop will ++ and make it i = 0, which is default
-                }
-                else
-                {
-                    valueInt = maxValue;
-                }
-
-                continue; //continues loop
-            }
+            float range = maxFloat - minFloat + 1; // +1 to include the max value
+            return ((valueFloat - minFloat) % range + range) % range + minFloat;
         }
-
-        return valueInt; //return the valueInt with new changes
+        else
+        {
+            return Mathf.Clamp(valueFloat, minFloat, maxFloat);
+        }
     }
 
     //searches through childs infinetly and finds the component requested (T is not assigned until the function is called)
