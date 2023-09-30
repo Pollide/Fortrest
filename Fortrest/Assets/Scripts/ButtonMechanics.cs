@@ -80,6 +80,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             {
                 if (GameManager.Pref("Has Started", 0, true) == 1)
                 {
+                    gameObject.SetActive(true);
                     ButtonText.text = "Continue Day " + (int)GameManager.Pref("Day", 0, true);
                 }
                 else

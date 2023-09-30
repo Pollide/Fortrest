@@ -214,7 +214,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })))
+        if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid", "UI" })))
         {
             GameObject turretPrefab = turretPrefabs[0];
 
