@@ -160,7 +160,7 @@ public class Defence : MonoBehaviour
 
             bullet.transform.localScale = new(0.3f, 0.3f, 0.3f);
 
-            bullet.GetComponent<ScattershotBullet>().SetParent(transform.gameObject);
+            bullet.transform.SetParent(transform);
             bullet.GetComponent<ScattershotBullet>().SetDamage(bulletDamage);
 
             // Destroy the bullet after the specified lifetime

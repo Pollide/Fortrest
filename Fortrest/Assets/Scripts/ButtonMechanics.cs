@@ -282,24 +282,4 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         return VolumeBool ? GameManager.global.SoundManager : GameManager.global.MusicManager;
     }
-
-    public void HighlightVoid(bool highlight)
-    {
-        GetComponent<Animation>().Stop();
-
-        if (highlight)
-        {
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Selected");
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Loop");
-        }
-        else
-        {
-            ButtonText.text = TextString;
-            ToggleBool = false;
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Stop");
-
-            if (Menu.global.ArrivedAtSign)
-                GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Key", false);
-        }
-    }
 }

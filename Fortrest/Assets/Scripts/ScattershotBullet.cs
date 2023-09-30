@@ -5,7 +5,6 @@ using UnityEngine;
 public class ScattershotBullet : MonoBehaviour
 {
     private float damage = 0f;      // Amount of damage the bullet applies to enemies
-    private GameObject parent = null;
 
     void OnTriggerEnter(Collider other)
     {
@@ -19,7 +18,7 @@ public class ScattershotBullet : MonoBehaviour
             }
         }
 
-        if (other.gameObject != parent && other.isTrigger == false)
+        if (other.isTrigger == false)
         {
             Destroy(gameObject); // Destroy the bullet
         }
@@ -31,8 +30,4 @@ public class ScattershotBullet : MonoBehaviour
         damage = _damageValue;
     }
 
-    public void SetParent(GameObject _parent)
-    {
-        parent = _parent;
-    }
 }
