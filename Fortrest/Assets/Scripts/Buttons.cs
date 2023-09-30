@@ -21,6 +21,7 @@ public class Buttons : MonoBehaviour
     //[HideInInspector]
     public List<int> MenuList = new List<int>();
     public bool pressingDown;
+    public bool AllowControllerToNavigate = true;
     private void OnEnable()
     {
         Start();
@@ -77,17 +78,21 @@ public class Buttons : MonoBehaviour
 
         int direction = 0;
 
-        if (GameManager.global.upCTRL)
+        if (AllowControllerToNavigate)
         {
-            GameManager.global.upCTRL = false;
-            direction = -1;
+            if (GameManager.global.upCTRL)
+            {
+                GameManager.global.upCTRL = false;
+                direction = -1;
+            }
+
+            if (GameManager.global.downCTRL)
+            {
+                GameManager.global.downCTRL = false;
+                direction = 1;
+            }
         }
 
-        if (GameManager.global.downCTRL)
-        {
-            GameManager.global.downCTRL = false;
-            direction = 1;
-        }
         MenuList[menu] += direction;
 
         MenuList[menu] = (int)GameManager.ReturnThresholds(MenuList[menu], ButtonHolder.GetChild(menu).childCount - 1);

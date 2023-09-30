@@ -278,9 +278,9 @@ public class GameManager : MonoBehaviour
                     cursorTexture = pointerAxe;
             }
 
-            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode && PlayerController.global.currentResource)
+            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode && PlayerModeHandler.global.hoveringTurret)
             {
-                // cursorTexture = pointerUpgrade;
+                cursorTexture = pointerUpgrade;
             }
         }
 
@@ -523,7 +523,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if ((int)Pref("Has Started", 0, true) == 1)
+            if (Pref("Has Started", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
