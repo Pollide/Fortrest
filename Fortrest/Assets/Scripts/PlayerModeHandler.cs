@@ -250,19 +250,29 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     if (!SelectedTurret)
                     {
-                        PlayerController.global.turretMenuTitle.text = buildType.ToString();
-
                         ClearBlueprint();
+
+                        if (colliders[i].gameObject.transform.localScale == Vector3.one)
+                        {
+
+                            PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+
+                            SelectedTurret = colliders[i].GetComponentInParent<Building>();
+
+                            Defence selected = SelectedTurret.GetComponent<Defence>();
+                            PlayerController.global.turretImageIcon.sprite = selected.spriteTierList[selected.CurrentLevel];
+                            PlayerController.global.turretMenuTitle.text = SelectedTurret.buildingObject.ToString();
+
+                            List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
+
+                            for (int j = 0; j < turretStats.Count; j++)
+                            {
+                                turretStats[j].fillImage.fillAmount = Random.Range(0.0f, 1f);
+                                Debug.Log(turretStats[j].fillImage.fillAmount);
+                            }
+                        }
                     }
 
-                    if (colliders[i].gameObject.transform.localScale == Vector3.one)
-                    {
-                        PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
-                        SelectedTurret = colliders[i].GetComponentInParent<Building>();
-
-                        Defence selected = SelectedTurret.GetComponent<Defence>();
-                        PlayerController.global.turretImageIcon.sprite = selected.spriteTierList[selected.CurrentLevel];
-                    }
 
                     return;
                 }
