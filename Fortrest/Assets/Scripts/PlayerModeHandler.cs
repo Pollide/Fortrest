@@ -210,9 +210,12 @@ public class PlayerModeHandler : MonoBehaviour
         return EventSystem.current.IsPointerOverGameObject();
     }
 
+
     private void BuildMode()
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
+
+        PlayerController.global.turretMenuHolder.gameObject.SetActive(SelectedTurret);
 
         if (!MouseOverUI() && Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })))
         {
@@ -239,8 +242,6 @@ public class PlayerModeHandler : MonoBehaviour
             gridNumber.y = (worldPos.z + 145.30f) / 4.0f;
 
             Collider[] colliders = Physics.OverlapSphere(worldPos, minDistanceBetweenTurrets, GameManager.ReturnBitShift(new string[] { "Building", "Resource", "Boar" }));
-
-            PlayerController.global.turretMenuHolder.gameObject.SetActive(SelectedTurret);
 
             cantPlace = false;
             hoveringTurret = false;

@@ -147,6 +147,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (UpgradeBool)
         {
+            TurretStats turretStats = GetComponent<TurretStats>();
+
+
             Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
 
             if (defence && defence.ModelHolder.childCount > defence.CurrentLevel + 1)
@@ -164,6 +167,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         if (RepairBool)
         {
             PlayerModeHandler.global.SelectedTurret.health = PlayerModeHandler.global.SelectedTurret.maxHealth;
+            PlayerModeHandler.global.SelectedTurret.TakeDamage(0);
         }
 
         if (BeginingBool || PlayBool)
