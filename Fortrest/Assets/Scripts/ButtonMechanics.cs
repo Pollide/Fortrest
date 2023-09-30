@@ -161,11 +161,13 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (DestroyBool)
         {
+            PlayerModeHandler.global.ReturnVFXBuilding(transform);
             PlayerModeHandler.global.SelectedTurret.DestroyBuilding();
         }
 
         if (RepairBool)
         {
+            PlayerModeHandler.global.ReturnVFXBuilding(transform);
             PlayerModeHandler.global.SelectedTurret.health = PlayerModeHandler.global.SelectedTurret.maxHealth;
             PlayerModeHandler.global.SelectedTurret.TakeDamage(0);
         }
