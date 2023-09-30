@@ -247,7 +247,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             for (int i = 0; i < colliders.Length; i++)
             {
-                if (colliders[i].tag == "Turret")
+                if (colliders[i].tag == "Turret" && colliders[i].gameObject.transform.localScale == Vector3.one)
                 {
                     hoveringTurret = true;
 
@@ -258,25 +258,21 @@ public class PlayerModeHandler : MonoBehaviour
                     {
                         ClearBlueprint();
 
+                        PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
 
-                        if (colliders[i].gameObject.transform.localScale == Vector3.one)
+                        SelectedTurret = colliders[i].GetComponentInParent<Building>();
+
+                        Defence selected = SelectedTurret.GetComponent<Defence>();
+                        PlayerController.global.turretImageIcon.sprite = selected.spriteTierList[selected.CurrentLevel];
+                        PlayerController.global.turretMenuTitle.text = SelectedTurret.buildingObject.ToString();
+
+                        List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
+
+                        for (int j = 0; j < turretStats.Count; j++)
                         {
-
-                            PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
-
-                            SelectedTurret = colliders[i].GetComponentInParent<Building>();
-
-                            Defence selected = SelectedTurret.GetComponent<Defence>();
-                            PlayerController.global.turretImageIcon.sprite = selected.spriteTierList[selected.CurrentLevel];
-                            PlayerController.global.turretMenuTitle.text = SelectedTurret.buildingObject.ToString();
-
-                            List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
-
-                            for (int j = 0; j < turretStats.Count; j++)
-                            {
-                                turretStats[j].fillImage.fillAmount = Random.Range(0.0f, 1f);
-                            }
+                            turretStats[j].fillImage.fillAmount = Random.Range(0.0f, 1f);
                         }
+
                     }
 
 
