@@ -368,6 +368,15 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
+    public GameObject ReturnVFXBuilding(Transform turret, float destroy = 2)
+    {
+        GameObject tempVFX1 = Instantiate(LevelManager.global.VFXBuilding.gameObject, turret.position + new Vector3(0f, 0.7f, 0f), Quaternion.Euler(new Vector3(0f, Random.Range(0f, 360f), 0f)));
+        tempVFX1.GetComponent<VisualEffect>().Play();
+        Destroy(tempVFX1, destroy);
+
+        return tempVFX1;
+    }
+
     private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position, Vector2 gridPos)
     {
         PlayerController.global.CheckSufficientResources(true);
@@ -375,9 +384,9 @@ public class PlayerModeHandler : MonoBehaviour
         GameManager.global.SoundManager.PlaySound(GameManager.global.TurretConstructingSound);
         newTurret.transform.localScale = Vector3.zero;
         newTurret.GetComponent<Building>().gridLocation = gridPos;
-        GameObject tempVFX1 = Instantiate(LevelManager.global.VFXBuilding.gameObject, newTurret.transform.position + new Vector3(0f, 0.7f, 0f), Quaternion.Euler(new Vector3(0f, Random.Range(0f, 360f), 0f)));
-        tempVFX1.GetComponent<VisualEffect>().Play();
-        Destroy(tempVFX1, turretTimer);
+
+        ReturnVFXBuilding(newTurret.transform, turretTimer);
+
 
         newTurret.GetComponent<Defence>().enabled = false;
 
