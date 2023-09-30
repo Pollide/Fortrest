@@ -278,9 +278,9 @@ public class GameManager : MonoBehaviour
                     cursorTexture = pointerAxe;
             }
 
-            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode && PlayerController.global.currentResource)
+            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode && PlayerModeHandler.global.hoveringTurret)
             {
-                // cursorTexture = pointerUpgrade;
+                cursorTexture = pointerUpgrade;
             }
         }
 

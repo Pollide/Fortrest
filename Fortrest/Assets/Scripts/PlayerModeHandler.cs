@@ -59,7 +59,7 @@ public class PlayerModeHandler : MonoBehaviour
     public Vector3 HintOffset;
 
     public Building SelectedTurret;
-
+    public bool hoveringTurret;
     public bool[,] occupied;
     private bool cantPlace;
     public bool buildingWithController;
@@ -214,7 +214,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid", "UI" })))
+        if (!MouseOverUI() && Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })))
         {
             GameObject turretPrefab = turretPrefabs[0];
 
@@ -243,14 +243,21 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.turretMenuHolder.gameObject.SetActive(SelectedTurret);
 
             cantPlace = false;
+            hoveringTurret = false;
 
             for (int i = 0; i < colliders.Length; i++)
             {
                 if (colliders[i].tag == "Turret")
                 {
-                    if (!SelectedTurret)
+                    hoveringTurret = true;
+
+                    bool enter = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL;
+
+
+                    if (!SelectedTurret && enter)
                     {
                         ClearBlueprint();
+
 
                         if (colliders[i].gameObject.transform.localScale == Vector3.one)
                         {
@@ -304,7 +311,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (KeyHint)
                 KeyHint.position = worldPos + HintOffset;
 
-            bool selectBool = (Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL) && !MouseOverUI();
+            bool selectBool = Input.GetMouseButtonDown(0) || PlayerController.global.selectCTRL;
 
             if (selectBool)
             {
