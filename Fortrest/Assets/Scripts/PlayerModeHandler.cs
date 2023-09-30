@@ -268,7 +268,6 @@ public class PlayerModeHandler : MonoBehaviour
                             for (int j = 0; j < turretStats.Count; j++)
                             {
                                 turretStats[j].fillImage.fillAmount = Random.Range(0.0f, 1f);
-                                Debug.Log(turretStats[j].fillImage.fillAmount);
                             }
                         }
                     }
@@ -376,14 +375,7 @@ public class PlayerModeHandler : MonoBehaviour
         tempVFX1.GetComponent<VisualEffect>().Play();
         Destroy(tempVFX1, turretTimer);
 
-        if (prefab == turretPrefabs[3])
-        {
-            newTurret.transform.GetChild(1).GetComponent<ScatterShot>().enabled = false;
-        }
-        else
-        {
-            newTurret.GetComponent<Defence>().enabled = false;
-        }
+        newTurret.GetComponent<Defence>().enabled = false;
 
         float timer = 0f;
         while (timer < 1.0f)
@@ -393,14 +385,7 @@ public class PlayerModeHandler : MonoBehaviour
             yield return null;
         }
 
-        if (prefab == turretPrefabs[3])
-        {
-            newTurret.transform.GetChild(1).GetComponent<ScatterShot>().enabled = true;
-        }
-        else
-        {
-            newTurret.GetComponent<Defence>().enabled = true;
-        }
+        newTurret.GetComponent<Defence>().enabled = true;
 
         if (prefab == turretPrefabs[0])
         {
