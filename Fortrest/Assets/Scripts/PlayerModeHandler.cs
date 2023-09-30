@@ -368,8 +368,9 @@ public class PlayerModeHandler : MonoBehaviour
         }
     }
 
-    public GameObject ReturnVFXBuilding(Transform turret, float destroy = 2)
+    public GameObject ReturnVFXBuilding(Transform turret, float destroy = 3)
     {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretConstructingSound);
         GameObject tempVFX1 = Instantiate(LevelManager.global.VFXBuilding.gameObject, turret.position + new Vector3(0f, 0.7f, 0f), Quaternion.Euler(new Vector3(0f, Random.Range(0f, 360f), 0f)));
         tempVFX1.GetComponent<VisualEffect>().Play();
         Destroy(tempVFX1, destroy);
@@ -381,7 +382,7 @@ public class PlayerModeHandler : MonoBehaviour
     {
         PlayerController.global.CheckSufficientResources(true);
         GameObject newTurret = Instantiate(prefab, position, Quaternion.identity);
-        GameManager.global.SoundManager.PlaySound(GameManager.global.TurretConstructingSound);
+
         newTurret.transform.localScale = Vector3.zero;
         newTurret.GetComponent<Building>().gridLocation = gridPos;
 
