@@ -76,57 +76,60 @@ public class Buttons : MonoBehaviour
     {
         int menu = ReturnIndex();
 
-        int direction = 0;
-
-        if (AllowControllerToNavigate)
+        if (ButtonHolder.GetChild(menu).gameObject.activeInHierarchy)
         {
-            if (GameManager.global.upCTRL)
+            int direction = 0;
+
+            if (AllowControllerToNavigate)
             {
-                GameManager.global.upCTRL = false;
-                direction = -1;
+                if (GameManager.global.upCTRL)
+                {
+                    GameManager.global.upCTRL = false;
+                    direction = -1;
+                }
+
+                if (GameManager.global.downCTRL)
+                {
+                    GameManager.global.downCTRL = false;
+                    direction = 1;
+                }
             }
 
-            if (GameManager.global.downCTRL)
+            MenuList[menu] += direction;
+
+            MenuList[menu] = (int)GameManager.ReturnThresholds(MenuList[menu], ButtonHolder.GetChild(menu).childCount - 1);
+
+            for (int i = 0; i < ButtonHolder.GetChild(menu).childCount; i++)
             {
-                GameManager.global.downCTRL = false;
-                direction = 1;
+                Transform button = ButtonHolder.GetChild(menu).GetChild(i);
+
+
+                ButtonMechanics buttonMechanics = button.GetComponent<ButtonMechanics>();
+
+                bool selected = MenuList[menu] == i;
+
+                if (!button.gameObject.activeSelf && selected) //skips inactive
+                {
+                    // Debug.Log(MenuList[menu] + "direction: " + direction);
+                    MenuList[menu] += direction != 0 ? direction : 1;
+                    ButtonInput();
+                    return;
+                }
+
+                if (buttonMechanics.SelectedGameObject)
+                    buttonMechanics.SelectedGameObject.SetActive(selected);
+
+                float shrinkScale = selected ? (pressingDown ? 0.95f : 1.05f) : 1;
+
+                button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
+                buttonMechanics.Start(); //refreshes text
             }
-        }
 
-        MenuList[menu] += direction;
-
-        MenuList[menu] = (int)GameManager.ReturnThresholds(MenuList[menu], ButtonHolder.GetChild(menu).childCount - 1);
-
-        for (int i = 0; i < ButtonHolder.GetChild(menu).childCount; i++)
-        {
-            Transform button = ButtonHolder.GetChild(menu).GetChild(i);
-
-
-            ButtonMechanics buttonMechanics = button.GetComponent<ButtonMechanics>();
-
-            bool selected = MenuList[menu] == i;
-
-            if (!button.gameObject.activeSelf && selected) //skips inactive
+            if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)
             {
-                // Debug.Log(MenuList[menu] + "direction: " + direction);
-                MenuList[menu] += direction != 0 ? direction : 1;
-                ButtonInput();
-                return;
+                GameManager.global.selectCTRL = false;
+                ButtonHolder.GetChild(menu).GetChild(MenuList[menu]).GetComponent<ButtonMechanics>().SelectVoid();
             }
-
-            if (buttonMechanics.SelectedGameObject)
-                buttonMechanics.SelectedGameObject.SetActive(selected);
-
-            float shrinkScale = selected ? (pressingDown ? 0.95f : 1.05f) : 1;
-
-            button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
-            buttonMechanics.Start(); //refreshes text
-        }
-
-        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)
-        {
-            GameManager.global.selectCTRL = false;
-            ButtonHolder.GetChild(menu).GetChild(MenuList[menu]).GetComponent<ButtonMechanics>().SelectVoid();
         }
     }
 }

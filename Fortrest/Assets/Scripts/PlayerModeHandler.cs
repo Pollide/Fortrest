@@ -200,6 +200,7 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
                     House.GetComponent<Building>().textDisplayed = true;
                 }
+                PlayerModeHandler.global.TurretMenuSet(false);
                 ExitHouseCleanUp();
             }
         }
@@ -210,12 +211,19 @@ public class PlayerModeHandler : MonoBehaviour
         return EventSystem.current.IsPointerOverGameObject();
     }
 
+    public void TurretMenuSet(bool open)
+    {
+        PlayerController.global.turretMenuHolder.gameObject.SetActive(open);
+
+        if (!open)
+            SelectedTurret = null;
+    }
 
     private void BuildMode()
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
-        PlayerController.global.turretMenuHolder.gameObject.SetActive(SelectedTurret);
+        TurretMenuSet(SelectedTurret);
 
         if (!MouseOverUI() && Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })))
         {
@@ -486,7 +494,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (KeyHint)
                 Destroy(KeyHint.gameObject);
         }
-        PlayerController.global.turretMenuHolder.gameObject.SetActive(false);
+        PlayerModeHandler.global.TurretMenuSet(false);
         PlayerController.global.UpdateResourceHolder();
     }
 
