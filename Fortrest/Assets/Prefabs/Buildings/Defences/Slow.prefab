@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &563257758324773561
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2064,14 +2064,13 @@ GameObject:
   - component: {fileID: 6440064812605483419}
   - component: {fileID: -4194129225788264529}
   - component: {fileID: 9042061743958791025}
-  - component: {fileID: 8677995080148856572}
   - component: {fileID: 8458094183806817661}
   - component: {fileID: 8614547827603314935}
   - component: {fileID: 1291244798047708635}
   - component: {fileID: 5759019112172937666}
   m_Layer: 7
   m_Name: Slow
-  m_TagString: Building
+  m_TagString: Turret
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2106,6 +2105,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3bf85e0fc37b649ba1cd25eaacd137, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteTierList:
+  - {fileID: 21300000, guid: 9020a2d8776f91b4bae940764fb7657a, type: 3}
+  - {fileID: 21300000, guid: af4b85b0bea20b146bfc3c7ebff00834, type: 3}
   turn_speed: 0
   shootingRange: 10
   fireRate: 1
@@ -2114,15 +2116,19 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8192
   attackStarted: 0
-  IsCannon: 0
   explosionRadius: 5
-  IsSlow: 0
   enemySpeedPercentage: 0.5
+  bulletSpeed: 10
+  bulletLifetime: 3
+  bulletDamage: 0.2
+  spawnPositions: []
+  cooldownTime: 0.5
   ProjectilePrefab: {fileID: 0}
   FirePoint: {fileID: 0}
   ModelHolder: {fileID: 1769365946679612515}
   CurrentLevel: 0
   MiniTurret: 0
+  MiniTurretAnimator: {fileID: 0}
 --- !u!114 &9042061743958791025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2137,7 +2143,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NaturalBool: 0
   DestroyedBool: 0
-  resourceObject: 0
+  resourceObject: 7
+  buildingObject: 2
   health: 0
   maxHealth: 5
   resourceAmount: 5
@@ -2151,19 +2158,7 @@ MonoBehaviour:
   interactText: {fileID: 0}
   textDisplayed: 0
   DebugDestroyInstantly: 0
---- !u!135 &8677995080148856572
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4568575667695550563}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  gridLocation: {x: 0, y: 0}
 --- !u!111 &8458094183806817661
 Animation:
   m_ObjectHideFlags: 0

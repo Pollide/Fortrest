@@ -176,7 +176,7 @@ public class LevelManager : MonoBehaviour
     {
         ProcessBuildingList((building) =>
         {
-            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+            if (building.GetComponent<Building>().buildingObject == Building.BuildingType.HouseNode)
             {
                 houseTransform = building.parent.transform;
                 housePosObtained = true;
@@ -184,6 +184,7 @@ public class LevelManager : MonoBehaviour
             }
         });
     }
+
 
     public void AddBuildingVoid(Transform addTransform)
     {
@@ -319,7 +320,7 @@ public class LevelManager : MonoBehaviour
         {
             daySpeed = ReturnNight() ? 2 : 1;
         }
-       
+
 
 #if UNITY_EDITOR
         // daySpeed = 7.0f; // FOR TESTING

@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
 
     // Teleporter
     public bool canTeleport = false;
-    public bool teleporting;   
+    public bool teleporting;
 
     // Tools
     public GameObject AxeGameObject;
@@ -219,8 +219,9 @@ public class PlayerController : MonoBehaviour
     Vector3 MapPanPosition;
     private Vector3 mapMousePosition;
 
-    public RectTransform TurretMenuHolder;
-    public TMP_Text TurretMenuTitle;
+    public RectTransform turretMenuHolder;
+    public TMP_Text turretMenuTitle;
+    public Image turretImageIcon;
 
     // Animation
     private float speedAnim;
@@ -465,7 +466,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        LevelManager manager = LevelManager.global;        
+        LevelManager manager = LevelManager.global;
 
         // Game Objects
         if (GameObject.Find("Radius Camera"))
@@ -779,7 +780,7 @@ public class PlayerController : MonoBehaviour
                         GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretDisappearSound, 1.0f, true, 0, false, miniTurret.transform);
                         playSoundOnce2 = true;
                     }
-                    miniTurret.GetComponent<TurretShooting>().enabled = false; //stops it shooting
+                    miniTurret.GetComponent<Defence>().enabled = false; //stops it shooting
                     Destroy(miniTurret, GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn", false).length);
                 }
             }
@@ -877,7 +878,7 @@ public class PlayerController : MonoBehaviour
                 if (playerCanMove)
                 {
                     SpawnTurret();
-                }               
+                }
             }
             if (healCTRL)
             {
@@ -1463,7 +1464,7 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4.0f;
             float distanceFloat = Vector3.Distance(transform.position, building.position);
             float smallestDistance = 5.0f;
-            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.Stone)
+            if (building.GetComponent<Building>().resourceObject == Building.ResourceType.Stone)
             {
                 minDistanceFloat = 5.0f;
             }
@@ -1483,7 +1484,7 @@ public class PlayerController : MonoBehaviour
                 {
                     gathering = true;
                     gatherTimer = 0;
-                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.ResourceType.Bush });
 
                     if (currentResource.ReturnWood())
                     {
@@ -1495,7 +1496,7 @@ public class PlayerController : MonoBehaviour
                         CharacterAnimator.ResetTrigger("Stone");
                         CharacterAnimator.SetTrigger("Stone");
                     }
-                    if (currentResource.resourceObject == Building.BuildingType.Bush)
+                    if (currentResource.resourceObject == Building.ResourceType.Bush)
                     {
                         CharacterAnimator.ResetTrigger("Bush");
                         CharacterAnimator.SetTrigger("Bush");
@@ -1583,11 +1584,11 @@ public class PlayerController : MonoBehaviour
 
         miniTurret = Instantiate(PlayerModeHandler.global.turretPrefabs[0], spawn, transform.rotation);
         miniTurret.transform.localScale = new Vector3(0.3f, 1, 0.3f);
-        miniTurret.GetComponent<TurretShooting>().MiniTurret = true;
-        miniTurret.GetComponent<TurretShooting>().turn_speed = 10;
-        miniTurret.GetComponent<TurretShooting>().damage = 0.3f;
-        miniTurret.GetComponent<TurretShooting>().fireRate = 3f;
-        miniTurret.GetComponent<TurretShooting>().shootingRange = 10;
+        miniTurret.GetComponent<Defence>().MiniTurret = true;
+        miniTurret.GetComponent<Defence>().turn_speed = 10;
+        miniTurret.GetComponent<Defence>().damage = 0.3f;
+        miniTurret.GetComponent<Defence>().fireRate = 3f;
+        miniTurret.GetComponent<Defence>().shootingRange = 10;
         GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
         GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretAppearSound, 1.0f, true, 0, false, miniTurret.transform);
     }
@@ -1629,7 +1630,7 @@ public class PlayerController : MonoBehaviour
                 if (randomInt == 1 || randomInt == 2)
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack1Sound, 0.9f);
-                }                  
+                }
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing1Sound);
             }
             else
@@ -1637,9 +1638,9 @@ public class PlayerController : MonoBehaviour
                 if (randomInt == 1 || randomInt == 2)
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.9f);
-                }                  
+                }
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing3Sound);
-            }            
+            }
         }
         else if (attackCount == 1)
         {
@@ -1649,10 +1650,10 @@ public class PlayerController : MonoBehaviour
             if (randomInt == 1 || randomInt == 2)
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.9f);
-            }              
-            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);           
+            }
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);
         }
-        
+
         attackCount++;
         if (attackCount > 2)
         {
@@ -1680,7 +1681,7 @@ public class PlayerController : MonoBehaviour
                 LevelManager.global.VFXPebble.transform.position = currentResource.transform.position;
                 LevelManager.global.VFXPebble.Play();
             }
-            if (currentResource.resourceObject == Building.BuildingType.Bush)
+            if (currentResource.resourceObject == Building.ResourceType.Bush)
             {
                 StopCoroutine("ToolAppear");
                 StartCoroutine("ToolAppear");

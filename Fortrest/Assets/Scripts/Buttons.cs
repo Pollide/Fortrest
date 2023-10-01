@@ -19,8 +19,9 @@ public class Buttons : MonoBehaviour
 {
     public Transform ButtonHolder;
     //[HideInInspector]
-    public List<int> SelectedList = new List<int>();
+    public List<int> MenuList = new List<int>();
     public bool pressingDown;
+    public bool AllowControllerToNavigate = true;
     private void OnEnable()
     {
         Start();
@@ -28,18 +29,17 @@ public class Buttons : MonoBehaviour
 
     private void Start()
     {
-        SelectedList = new List<int>();
+        MenuList = new List<int>();
 
         for (int i = 0; i < ButtonHolder.childCount; i++)
         {
-            SelectedList.Add(0);
+            MenuList.Add(0);
         }
     }
 
     private void Update()
     {
-        // Debug.Log(SelectedList.Count + " > 0 && " + ButtonHolder.gameObject.activeInHierarchy);
-        if (SelectedList.Count > 0 && ButtonHolder.gameObject.activeInHierarchy)
+        if (MenuList.Count > 0 && ButtonHolder.gameObject.activeInHierarchy)
             ButtonInput();
     }
 
@@ -72,51 +72,64 @@ public class Buttons : MonoBehaviour
         return anotherWasOpen;
     }
 
-    void DirectionVoid(int shift)
-    {
-        SelectedList[ReturnIndex()] += shift;
-    }
-
     void ButtonInput()
     {
-        int index = ReturnIndex();
+        int menu = ReturnIndex();
 
-        if (GameManager.global.upCTRL)
+        if (ButtonHolder.GetChild(menu).gameObject.activeInHierarchy)
         {
-            GameManager.global.upCTRL = false;
-            SelectedList[index]--;
-        }
+            int direction = 0;
 
-        if (GameManager.global.downCTRL)
-        {
-            GameManager.global.downCTRL = false;
-            SelectedList[index]++;
-        }
+            if (AllowControllerToNavigate)
+            {
+                if (GameManager.global.upCTRL)
+                {
+                    GameManager.global.upCTRL = false;
+                    direction = -1;
+                }
 
-        // Debug.Log(index + " " + SelectedList[index] + " -> " + ButtonHolder.GetChild(index).childCount);
+                if (GameManager.global.downCTRL)
+                {
+                    GameManager.global.downCTRL = false;
+                    direction = 1;
+                }
+            }
 
-        SelectedList[index] = (int)GameManager.ReturnThresholds(SelectedList[index], ButtonHolder.GetChild(index).childCount - 1);
+            MenuList[menu] += direction;
 
-        for (int i = 0; i < ButtonHolder.GetChild(index).childCount; i++)
-        {
-            Transform button = ButtonHolder.GetChild(index).GetChild(i);
-            ButtonMechanics buttonMechanics = button.GetComponent<ButtonMechanics>();
+            MenuList[menu] = (int)GameManager.ReturnThresholds(MenuList[menu], ButtonHolder.GetChild(menu).childCount - 1);
 
-            bool selected = SelectedList[index] == i;
+            for (int i = 0; i < ButtonHolder.GetChild(menu).childCount; i++)
+            {
+                Transform button = ButtonHolder.GetChild(menu).GetChild(i);
 
-            if (buttonMechanics.SelectedGameObject)
-                buttonMechanics.SelectedGameObject.SetActive(selected);
 
-            float shrinkScale = selected ? (pressingDown ? 0.95f : 1.05f) : 1;
+                ButtonMechanics buttonMechanics = button.GetComponent<ButtonMechanics>();
 
-            button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
-            buttonMechanics.Start(); //refreshes text
-        }
+                bool selected = MenuList[menu] == i;
 
-        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)
-        {
-            GameManager.global.selectCTRL = false;
-            ButtonHolder.GetChild(index).GetChild(SelectedList[index]).GetComponent<ButtonMechanics>().SelectVoid();
+                if (!button.gameObject.activeSelf && selected) //skips inactive
+                {
+                    // Debug.Log(MenuList[menu] + "direction: " + direction);
+                    MenuList[menu] += direction != 0 ? direction : 1;
+                    ButtonInput();
+                    return;
+                }
+
+                if (buttonMechanics.SelectedGameObject)
+                    buttonMechanics.SelectedGameObject.SetActive(selected);
+
+                float shrinkScale = selected ? (pressingDown ? 0.95f : 1.05f) : 1;
+
+                button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
+                buttonMechanics.Start(); //refreshes text
+            }
+
+            if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)
+            {
+                GameManager.global.selectCTRL = false;
+                ButtonHolder.GetChild(menu).GetChild(MenuList[menu]).GetComponent<ButtonMechanics>().SelectVoid();
+            }
         }
     }
 }

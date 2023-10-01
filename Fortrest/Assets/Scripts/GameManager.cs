@@ -122,6 +122,7 @@ public class GameManager : MonoBehaviour
     public Texture2D pointerPickaxe;
     public Texture2D pointerAxe;
     public Texture2D pointerSickle;
+    public Texture2D pointerUpgrade;
 
     //runs on the frame it was awake on
     void Awake()
@@ -221,7 +222,7 @@ public class GameManager : MonoBehaviour
                 downCTRL = true;
             }
             once = true;
-        }   
+        }
     }
 
     private void Update()
@@ -242,12 +243,12 @@ public class GameManager : MonoBehaviour
         if (PlayerModeHandler.global)
         {
             PlayerModeHandler.SetMouseActive(KeyboardBool, PlayerModeHandler.global.inTheFortress);
-        }      
+        }
 
         Texture2D cursorTexture = pointerGeneric;
         Vector2 hotSpot = new Vector2((float)cursorTexture.width / 2, (float)cursorTexture.height / 2);
 
-        if (PlayerModeHandler.global && Time.timeScale == 1)
+        if (PlayerModeHandler.global && Time.timeScale != 0)
         {
             if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
             {
@@ -275,6 +276,11 @@ public class GameManager : MonoBehaviour
 
                 if (PlayerController.global.currentResource.ReturnWood())
                     cursorTexture = pointerAxe;
+            }
+
+            if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode && PlayerModeHandler.global.hoveringTurret)
+            {
+                cursorTexture = pointerUpgrade;
             }
         }
 
@@ -307,58 +313,17 @@ public class GameManager : MonoBehaviour
     */
 
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
-    public static float ReturnThresholds(float valueInt, float maxValue, float minValue = 0, bool wrap = true)
+    public static float ReturnThresholds(float valueFloat, float maxFloat, float minFloat = 0, bool wrapBool = true)
     {
-
-        if (minValue == maxValue)
-            return valueInt;
-        //will run this once or if i = -1
-
-        int stackOverflow = 0;
-
-        for (int i = 0; i < 1; i++)
+        if (wrapBool)
         {
-            stackOverflow++;
-
-            if (stackOverflow > 100)
-            {
-                Debug.LogWarning("stack overflow");
-                return valueInt;
-            }
-            if (valueInt < minValue)
-            {
-                if (wrap)
-                {
-                    //sets the valueInt back to the min as it went above the max
-                    valueInt = maxValue + (minValue + valueInt) + 1;
-                    i = -1; //loop runs again
-                }
-                else
-                {
-                    valueInt = minValue;
-                }
-
-                continue; //continues loop
-            }
-
-            if (valueInt > maxValue)
-            {
-                if (wrap)
-                {
-                    //sets the valueInt to the max as it went below the min
-                    valueInt = minValue + (valueInt - maxValue) - 1;
-                    i = -1; //setting i as -1 means that the next loop will ++ and make it i = 0, which is default
-                }
-                else
-                {
-                    valueInt = maxValue;
-                }
-
-                continue; //continues loop
-            }
+            float range = maxFloat - minFloat + 1; // +1 to include the max value
+            return ((valueFloat - minFloat) % range + range) % range + minFloat;
         }
-
-        return valueInt; //return the valueInt with new changes
+        else
+        {
+            return Mathf.Clamp(valueFloat, minFloat, maxFloat);
+        }
     }
 
     //searches through childs infinetly and finds the component requested (T is not assigned until the function is called)
@@ -558,7 +523,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if ((int)Pref("Has Started", 0, true) == 1)
+            if (Pref("Has Started", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
@@ -588,7 +553,9 @@ public class GameManager : MonoBehaviour
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
         ///  DataEulerVoid("Player", PlayerController.global.transform, load);
-        DataPositionVoid("Mount", Boar.global.transform, load);
+        ///  
+        if (Boar.global)
+            DataPositionVoid("Mount", Boar.global.transform, load);
         //  DataEulerVoid("Mount", Boar.global.transform, load);
 
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
@@ -714,7 +681,7 @@ public class GameManager : MonoBehaviour
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
-        bool house = building.resourceObject == Building.BuildingType.HouseNode;
+        bool house = building.buildingObject == Building.BuildingType.HouseNode;
         if (house)
         {
             building = building.transform.parent.GetComponent<Building>();
@@ -736,7 +703,7 @@ public class GameManager : MonoBehaviour
                 building.DisableInvoke();
         }
 
-        else if (building.resourceObject == Building.BuildingType.Defense)
+        else if (building.GetComponent<Defence>())
         {
             int turretSize = (int)Pref("Turret Size", 0, true);
 
@@ -753,8 +720,7 @@ public class GameManager : MonoBehaviour
             DataPositionVoid("Turret Position" + turretSize, building.transform, false);
             DataEulerVoid("Turret Euler" + turretSize, building.transform, false);
 
-            if (building.GetComponent<TurretShooting>())
-                building.GetComponent<TurretShooting>().CurrentLevel = (int)Pref("Turret Level" + turretSize, building.GetComponent<TurretShooting>().CurrentLevel, load);
+            building.GetComponent<Defence>().CurrentLevel = (int)Pref("Turret Level" + turretSize, building.GetComponent<Defence>().CurrentLevel, load);
             Pref("Turret Size", turretSize + 1, false);
         }
 
