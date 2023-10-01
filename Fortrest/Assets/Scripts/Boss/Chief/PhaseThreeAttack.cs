@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThirdAttackState : BossState
+public class PhaseThreeAttack : BossState
 {
     // Holds states
     private IdleState idleState;
-    private FirstAttackState attackState;
+    private AttackManagerState attackState;
     // Slam wait time
     private float slamWaitTime = 0f;
     [SerializeField] private float slamDuration = 5f;
@@ -30,7 +30,7 @@ public class ThirdAttackState : BossState
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<FirstAttackState>();
+            attackState = GetComponent<AttackManagerState>();
         }
 
         telegraph.SetActive(true);
@@ -62,7 +62,7 @@ public class ThirdAttackState : BossState
         {
             slamWaitTime += Time.deltaTime;
 
-            telegraph.transform.position = playerTransform.position;
+            telegraph.transform.position = new(playerTransform.position.x, playerTransform.position.y - 1, playerTransform.position.z);
         }
 
         if (hasJumped)
@@ -74,7 +74,7 @@ public class ThirdAttackState : BossState
         {
             stateMachine.BossAnimator.SetBool("isJumping", false);
             stateMachine.BossAnimator.SetBool("isDiving", true);
-            StartCoroutine(telegraph.GetComponent<BossTelegraph>().DoSlamDamage(slamWaitAfterIndicator));
+            StartCoroutine(telegraph.GetComponent<BossTelegraphSlam>().DoSlamDamage(slamWaitAfterIndicator));
         }
     }
 
@@ -98,7 +98,7 @@ public class ThirdAttackState : BossState
         get { return slamWaitTime; }
     }
 
-    public FirstAttackState StateAttack
+    public AttackManagerState StateAttack
     {
         get { return attackState; }
     }
