@@ -553,7 +553,9 @@ public class GameManager : MonoBehaviour
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
         ///  DataEulerVoid("Player", PlayerController.global.transform, load);
-        DataPositionVoid("Mount", Boar.global.transform, load);
+        ///  
+        if (Boar.global)
+            DataPositionVoid("Mount", Boar.global.transform, load);
         //  DataEulerVoid("Mount", Boar.global.transform, load);
 
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
