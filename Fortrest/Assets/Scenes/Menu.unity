@@ -2147,6 +2147,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 367700936748622585, guid: fbe951531c8e83d40a5417560192c756,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 478256116518443612, guid: fbe951531c8e83d40a5417560192c756,
         type: 3}
       propertyPath: m_Name
@@ -2177,7 +2182,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: -120.782
       objectReference: {fileID: 0}
+    - target: {fileID: 3293386376534452030, guid: fbe951531c8e83d40a5417560192c756,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4048296132410573482, guid: fbe951531c8e83d40a5417560192c756,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5611438188067376157, guid: fbe951531c8e83d40a5417560192c756,
         type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2592,17 +2607,17 @@ PrefabInstance:
     - target: {fileID: 2668825626618279108, guid: 4c7f0939d26439b44be8f3e4c51cebd3,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 66.419495
+      value: -49.51
       objectReference: {fileID: 0}
     - target: {fileID: 2668825626618279108, guid: 4c7f0939d26439b44be8f3e4c51cebd3,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 6.26
       objectReference: {fileID: 0}
     - target: {fileID: 2668825626618279108, guid: 4c7f0939d26439b44be8f3e4c51cebd3,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -61.65168
+      value: -133.59167
       objectReference: {fileID: 0}
     - target: {fileID: 2668825626618279108, guid: 4c7f0939d26439b44be8f3e4c51cebd3,
         type: 3}
@@ -4382,7 +4397,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 915790552}
   m_LocalRotation: {x: -0, y: -0.12974556, z: -0, w: 0.99154735}
-  m_LocalPosition: {x: 66.72669, y: 0.00999999, z: -63.998024}
+  m_LocalPosition: {x: -50.273304, y: 6.26, z: -135.93802}
   m_LocalScale: {x: 2.75, y: 2.75, z: 2.75}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5686,7 +5701,6 @@ MonoBehaviour:
   CheatInfiniteBuilding: 0
   PopupAnimation: {fileID: 7400000, guid: 8106279ddc6f94303964dac26543aa99, type: 2}
   moveCTRL: {x: 0, y: 0}
-  canPressCTRL: 0
   selectCTRL: 0
   upCTRL: 0
   downCTRL: 0
@@ -5697,6 +5711,7 @@ MonoBehaviour:
   pointerPickaxe: {fileID: 2800000, guid: fe8de86715e2dd94590c6dd8802032e1, type: 3}
   pointerAxe: {fileID: 2800000, guid: e0156c419d4eb3a4aaa49edc8db81492, type: 3}
   pointerSickle: {fileID: 2800000, guid: 0787399a429255d4a88cd5d44c00e7a7, type: 3}
+  pointerUpgrade: {fileID: 2800000, guid: ea8df81186049c849bb1a5c4d4284c36, type: 3}
 --- !u!4 &1246486524
 Transform:
   m_ObjectHideFlags: 0
@@ -8781,8 +8796,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ButtonHolder: {fileID: 1553931058}
-  SelectedList: 
+  MenuList: 
   pressingDown: 0
+  AllowControllerToNavigate: 1
 --- !u!1001 &1964540071
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8838,17 +8854,17 @@ PrefabInstance:
     - target: {fileID: 7699820106381733139, guid: b05c4957b7656f94992f61085552d85b,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 74.6
+      value: -42.4
       objectReference: {fileID: 0}
     - target: {fileID: 7699820106381733139, guid: b05c4957b7656f94992f61085552d85b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 6.26
       objectReference: {fileID: 0}
     - target: {fileID: 7699820106381733139, guid: b05c4957b7656f94992f61085552d85b,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -55.2
+      value: -127.14
       objectReference: {fileID: 0}
     - target: {fileID: 7699820106381733139, guid: b05c4957b7656f94992f61085552d85b,
         type: 3}
@@ -9041,7 +9057,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2017356544}
   m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 80.6, y: 24.99, z: -98.16}
+  m_LocalPosition: {x: -34.8, y: 15.16, z: -143.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

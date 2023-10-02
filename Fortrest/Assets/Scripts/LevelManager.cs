@@ -19,6 +19,8 @@ public class LevelManager : MonoBehaviour
     public VisualEffect VFXSmokeRing;
     public VisualEffect VFXBuilding;
     public VisualEffect VFXSmoke;
+    public VisualEffect VFXBossSlash;
+    public VisualEffect VFXBossSlashReversed;
 
     public static LevelManager global;
     public Camera SceneCamera;
@@ -113,6 +115,7 @@ public class LevelManager : MonoBehaviour
     private bool countSet;
     private bool ogreSpawned;
     private bool attackHappening;
+    public bool dayPaused;
     private int groupSpawnAmount;
     private int laneInt;
     private Transform houseTransform;
@@ -173,7 +176,7 @@ public class LevelManager : MonoBehaviour
     {
         ProcessBuildingList((building) =>
         {
-            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.HouseNode)
+            if (building.GetComponent<Building>().buildingObject == Building.BuildingType.HouseNode)
             {
                 houseTransform = building.parent.transform;
                 housePosObtained = true;
@@ -181,6 +184,7 @@ public class LevelManager : MonoBehaviour
             }
         });
     }
+
 
     public void AddBuildingVoid(Transform addTransform)
     {
@@ -308,7 +312,15 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
         }
 
-        daySpeed = ReturnNight() ? 2 : 1;
+        if (dayPaused)
+        {
+            daySpeed = 0;
+        }
+        else
+        {
+            daySpeed = ReturnNight() ? 2 : 1;
+        }
+
 
 #if UNITY_EDITOR
         // daySpeed = 7.0f; // FOR TESTING

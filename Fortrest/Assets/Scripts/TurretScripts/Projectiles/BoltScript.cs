@@ -10,7 +10,7 @@ public class BoltScript : MonoBehaviour
     private float damage = 0f;      // Amount of damage the bullet applies to enemies
 
     [HideInInspector]
-    public TurretShooting turretShootingScript;
+    public Defence turretShootingScript;
 
     [HideInInspector]
     public Transform ActiveTarget;

@@ -43,7 +43,7 @@ public class PlayerController : MonoBehaviour
 
     // Evade
     private float evadeTimer = 0.0f;
-    private float evadeCoolDown = 2.5f;
+    [SerializeField] private float evadeCoolDown = 2.5f;
     [HideInInspector] public bool evading = false;
     [HideInInspector] public bool canEvade = true;
     [HideInInspector] public bool playerCanBeDamaged = true;
@@ -115,7 +115,7 @@ public class PlayerController : MonoBehaviour
 
     // Teleporter
     public bool canTeleport = false;
-    public bool teleporting;   
+    public bool teleporting;
 
     // Tools
     public GameObject AxeGameObject;
@@ -197,7 +197,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool inventoryCTRL = false;
     [HideInInspector] public bool swapCTRL = false;
     public Vector2 rotateCTRL;
-    [HideInInspector] public bool pauseSelectCTRL;
     [HideInInspector] public bool releasedCTRL;
     [HideInInspector] public bool scrollCTRL;
 
@@ -220,8 +219,9 @@ public class PlayerController : MonoBehaviour
     Vector3 MapPanPosition;
     private Vector3 mapMousePosition;
 
-    public RectTransform TurretMenuHolder;
-    public TMP_Text TurretMenuTitle;
+    public RectTransform turretMenuHolder;
+    public TMP_Text turretMenuTitle;
+    public Image turretImageIcon;
 
     // Animation
     private float speedAnim;
@@ -262,9 +262,6 @@ public class PlayerController : MonoBehaviour
 
             // A to select in build mode
             GameManager.global.gamepadControls.Controls.Sprint.performed += context => BuildSelectController();
-
-            // A to select in pause mode
-            GameManager.global.gamepadControls.Controls.Sprint.performed += context => PauseEnter();
 
             // X to interact
             GameManager.global.gamepadControls.Controls.Interact.performed += context => InteractController();
@@ -371,17 +368,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void PauseEnter()
-    {
-        if (pausedBool)
-        {
-            if (!pauseSelectCTRL)
-            {
-                pauseSelectCTRL = true;
-            }
-        }
-    }
-
     private void PauseController()
     {
         PauseVoid(!pausedBool);
@@ -394,7 +380,7 @@ public class PlayerController : MonoBehaviour
 
     private void GatheringController(bool pressed)
     {
-        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && !pausedBool && !mapBool)
         {
             if (pressed)
             {
@@ -409,7 +395,7 @@ public class PlayerController : MonoBehaviour
 
     private void AttackingController()
     {
-        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !pausedBool && !mapBool)
         {
             if (!attackingCTRL && !attacking)
             {
@@ -420,7 +406,7 @@ public class PlayerController : MonoBehaviour
 
     private void AimingController(bool pressed)
     {
-        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+        if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode && !pausedBool && !mapBool)
         {
             if (pressed)
             {
@@ -437,16 +423,15 @@ public class PlayerController : MonoBehaviour
 
     private void InteractController()
     {
-        if (!interactCTRL && (needInteraction))
+        if (!interactCTRL && needInteraction && !pausedBool && !mapBool)
         {
-
             interactCTRL = true;
         }
     }
 
     private void EvadeController()
     {
-        if (!evadeCTRL)
+        if (!evadeCTRL && !pausedBool && !mapBool)
         {
             evadeCTRL = true;
         }
@@ -454,7 +439,7 @@ public class PlayerController : MonoBehaviour
 
     private void SwappingController()
     {
-        if (!swapCTRL)
+        if (!swapCTRL && !pausedBool && !mapBool)
         {
             swapCTRL = true;
             cancelCTRL = true;
@@ -463,7 +448,7 @@ public class PlayerController : MonoBehaviour
 
     private void TurretController()
     {
-        if (Unlocks.global.miniTurretUnlocked && !turretCTRL && !turretSpawned)
+        if (Unlocks.global.miniTurretUnlocked && !turretCTRL && !turretSpawned && !pausedBool && !mapBool)
         {
             turretCTRL = true;
         }
@@ -471,7 +456,7 @@ public class PlayerController : MonoBehaviour
 
     private void HealController()
     {
-        if (!healCTRL)
+        if (!healCTRL && !pausedBool && !mapBool)
         {
             healCTRL = true;
         }
@@ -481,7 +466,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        LevelManager manager = LevelManager.global;        
+        LevelManager manager = LevelManager.global;
 
         // Game Objects
         if (GameObject.Find("Radius Camera"))
@@ -795,7 +780,7 @@ public class PlayerController : MonoBehaviour
                         GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretDisappearSound, 1.0f, true, 0, false, miniTurret.transform);
                         playSoundOnce2 = true;
                     }
-                    miniTurret.GetComponent<TurretShooting>().enabled = false; //stops it shooting
+                    miniTurret.GetComponent<Defence>().enabled = false; //stops it shooting
                     Destroy(miniTurret, GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn", false).length);
                 }
             }
@@ -859,7 +844,7 @@ public class PlayerController : MonoBehaviour
                     break;
 
                 case KeyCode.Space:
-                    if (playerCanMove && canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
+                    if (playerCanMove && canEvade)
                     {
                         StartCoroutine(Evade());
                     }
@@ -879,32 +864,32 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            if (playerCanMove)
+            if (evadeCTRL)
             {
-                if (evadeCTRL)
+                evadeCTRL = false;
+                if (playerCanMove && canEvade)
                 {
-                    evadeCTRL = false;
-                    if (canEvade && !Boar.global.mounted && !pausedBool && !mapBool && !PlayerModeHandler.global.inTheFortress && !playerDead)
-                    {
-                        StartCoroutine(Evade());
-                    }
+                    StartCoroutine(Evade());
                 }
-                if (turretCTRL)
+            }
+            if (turretCTRL)
+            {
+                turretCTRL = false;
+                if (playerCanMove)
                 {
-                    turretCTRL = false;
                     SpawnTurret();
                 }
-                if (healCTRL)
+            }
+            if (healCTRL)
+            {
+                healCTRL = false;
+                if (playerCanMove && appleAmount > 0)
                 {
-                    healCTRL = false;
-                    if (appleAmount > 0)
-                    {
-                        EatApple();
-                    }
-                    else
-                    {
-                        GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
-                    }
+                    EatApple();
+                }
+                else
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
                 }
             }
             if (canTeleport && interactCTRL)
@@ -1090,8 +1075,6 @@ public class PlayerController : MonoBehaviour
             {
                 mapBool = false;
             }
-
-            //  playerCanMove = !pause;
             pausedBool = pause;
         }
     }
@@ -1105,7 +1088,6 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
-
             if (mapBool)
             {
                 UpdateMap();
@@ -1356,8 +1338,6 @@ public class PlayerController : MonoBehaviour
     public float division = 1;
     private void RotatePlayer()
     {
-        //  Debug.DrawRay(transform.position, transform.forward * 100, Color.red);
-
         if (!Boar.global.mounted)
         {
             if (GameManager.global.KeyboardBool)
@@ -1484,7 +1464,7 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4.0f;
             float distanceFloat = Vector3.Distance(transform.position, building.position);
             float smallestDistance = 5.0f;
-            if (building.GetComponent<Building>().resourceObject == Building.BuildingType.Stone)
+            if (building.GetComponent<Building>().resourceObject == Building.ResourceType.Stone)
             {
                 minDistanceFloat = 5.0f;
             }
@@ -1504,7 +1484,7 @@ public class PlayerController : MonoBehaviour
                 {
                     gathering = true;
                     gatherTimer = 0;
-                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.BuildingType.Bush });
+                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.ResourceType.Bush });
 
                     if (currentResource.ReturnWood())
                     {
@@ -1516,7 +1496,7 @@ public class PlayerController : MonoBehaviour
                         CharacterAnimator.ResetTrigger("Stone");
                         CharacterAnimator.SetTrigger("Stone");
                     }
-                    if (currentResource.resourceObject == Building.BuildingType.Bush)
+                    if (currentResource.resourceObject == Building.ResourceType.Bush)
                     {
                         CharacterAnimator.ResetTrigger("Bush");
                         CharacterAnimator.SetTrigger("Bush");
@@ -1604,11 +1584,11 @@ public class PlayerController : MonoBehaviour
 
         miniTurret = Instantiate(PlayerModeHandler.global.turretPrefabs[0], spawn, transform.rotation);
         miniTurret.transform.localScale = new Vector3(0.3f, 1, 0.3f);
-        miniTurret.GetComponent<TurretShooting>().MiniTurret = true;
-        miniTurret.GetComponent<TurretShooting>().turn_speed = 10;
-        miniTurret.GetComponent<TurretShooting>().damage = 0.3f;
-        miniTurret.GetComponent<TurretShooting>().fireRate = 3f;
-        miniTurret.GetComponent<TurretShooting>().shootingRange = 10;
+        miniTurret.GetComponent<Defence>().MiniTurret = true;
+        miniTurret.GetComponent<Defence>().turn_speed = 10;
+        miniTurret.GetComponent<Defence>().damage = 0.3f;
+        miniTurret.GetComponent<Defence>().fireRate = 3f;
+        miniTurret.GetComponent<Defence>().shootingRange = 10;
         GameManager.PlayAnimation(miniTurret.GetComponent<Animation>(), "MiniTurretSpawn");
         GameManager.global.SoundManager.PlaySound(GameManager.global.MiniTurretAppearSound, 1.0f, true, 0, false, miniTurret.transform);
     }
@@ -1650,7 +1630,7 @@ public class PlayerController : MonoBehaviour
                 if (randomInt == 1 || randomInt == 2)
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack1Sound, 0.9f);
-                }                  
+                }
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing1Sound);
             }
             else
@@ -1658,9 +1638,9 @@ public class PlayerController : MonoBehaviour
                 if (randomInt == 1 || randomInt == 2)
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.9f);
-                }                  
+                }
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing3Sound);
-            }            
+            }
         }
         else if (attackCount == 1)
         {
@@ -1670,10 +1650,10 @@ public class PlayerController : MonoBehaviour
             if (randomInt == 1 || randomInt == 2)
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.9f);
-            }              
-            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);           
+            }
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);
         }
-        
+
         attackCount++;
         if (attackCount > 2)
         {
@@ -1701,7 +1681,7 @@ public class PlayerController : MonoBehaviour
                 LevelManager.global.VFXPebble.transform.position = currentResource.transform.position;
                 LevelManager.global.VFXPebble.Play();
             }
-            if (currentResource.resourceObject == Building.BuildingType.Bush)
+            if (currentResource.resourceObject == Building.ResourceType.Bush)
             {
                 StopCoroutine("ToolAppear");
                 StartCoroutine("ToolAppear");

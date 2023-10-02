@@ -12,10 +12,11 @@ public class BossStateMachine : MonoBehaviour
         Chieftain,
         Basilisk,
         SpiderQueen,
-        Tier4,
-        Tier5,
-        Tier6
+        Bird,
+        Werewolf,
+        Fire
     }
+
     // Enum for boss phases
     public enum BossPhase
     {
@@ -46,6 +47,9 @@ public class BossStateMachine : MonoBehaviour
 
     // Bool to see if in defensive state
     [SerializeField] private bool inDefence = false;
+    [SerializeField] private bool phase2Ran = false;
+    [SerializeField] private bool phase3Ran = false;
+   
     // Bool to see if in death state
     [SerializeField] private bool isDead = false;
     [SerializeField] private Animator bossAnimator;
@@ -84,8 +88,11 @@ public class BossStateMachine : MonoBehaviour
 
     public void SetAgentStats()
     {
-        NavMeshAgent agent = GetComponent<NavMeshAgent>();
-        agent.speed = speed;
+        if (GetComponent<NavMeshAgent>())
+        {
+            NavMeshAgent agent = GetComponent<NavMeshAgent>();
+            agent.speed = speed;
+        }
     }
 
 
@@ -206,6 +213,16 @@ public class BossStateMachine : MonoBehaviour
     {
         get { return canBeDamaged; }
         set { canBeDamaged = value; }
+    }
+    public bool Phase2Ran
+    {
+        get { return phase2Ran; }
+        set { phase2Ran = value; }
+    }
+    public bool Phase3Ran
+    {
+        get { return phase3Ran; }
+        set { phase3Ran = value; }
     }
 
     public bool IsDead

@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class ChargeTrigger : MonoBehaviour
 {
-    private ChargeState state;
+    private SecondAttackState state;
 
     private void Start()
     {
-        state = transform.parent.GetComponent<ChargeState>();
+        state = transform.parent.GetComponent<SecondAttackState>();
         GetComponent<BoxCollider>().enabled = false;
     }
 

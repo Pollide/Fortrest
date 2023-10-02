@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class BossTelegraph : MonoBehaviour
 {
-    [SerializeField] private SlamState state;
+    [SerializeField] private ThirdAttackState attackState;
+    [SerializeField] private Sprite sprite;
 
     // Start is called before the first frame update
     void Start()
@@ -17,7 +18,7 @@ public class BossTelegraph : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.localScale = Vector3.Lerp(Vector3.zero, new Vector3(state.SlamRadius * 2, state.SlamRadius * 2, 1), state.SlamWaitTime / state.SlamDuration);
+        transform.localScale = Vector3.Lerp(Vector3.zero, new Vector3(attackState.SlamRadius * 2, attackState.SlamRadius * 2, 1), attackState.SlamWaitTime / attackState.SlamDuration);
     }
 
 
@@ -25,24 +26,24 @@ public class BossTelegraph : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         
-        Collider[] colliders = Physics.OverlapSphere(transform.position, state.SlamRadius);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, attackState.SlamRadius);
 
         foreach (var collider in colliders)
         {
             if (collider.GetComponent<PlayerController>())
             {
-                collider.GetComponent<PlayerController>().TakeDamage(state.Damage, true);
+                collider.GetComponent<PlayerController>().TakeDamage(attackState.Damage, true);
             }
         }
 
         ScreenShake.global.shake = true;
 
-        state.StateMachine.ChangeState(state.StateAttack);
+        attackState.StateMachine.ChangeState(attackState.StateAttack);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, state.SlamRadius);
+        Gizmos.DrawWireSphere(transform.position, attackState.SlamRadius);
     }
 }

@@ -21,22 +21,32 @@ public class Building : MonoBehaviour
     public bool NaturalBool;
     public bool DestroyedBool;
 
-    public enum BuildingType
+    public enum ResourceType
     {
-        Defense,
-        DefenseBP,
         Wood,
         Stone,
         Bush,
-        House,
         HardWood,
         CoarseWood,
         SlateStone,
         MossyStone,
-        HouseNode,
+        none
     }
 
-    public BuildingType resourceObject;
+    public ResourceType resourceObject;
+
+    public enum BuildingType
+    {
+        Ballista,
+        Cannon,
+        Slow,
+        Scatter,
+        House,
+        HouseNode,
+        none
+    }
+
+    public BuildingType buildingObject;
 
     [HideInInspector]
     public float health;
@@ -94,7 +104,7 @@ public class Building : MonoBehaviour
         //        transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
         //}
 
-        if (resourceObject == BuildingType.House)
+        if (buildingObject == BuildingType.House)
         {
             Indicator.global.AddIndicator(transform, Color.yellow, "Home", customSprite: Indicator.global.HomeSprite);
             SetLastHealth();
@@ -103,10 +113,12 @@ public class Building : MonoBehaviour
                 HUDHealthBar.SetHealth(health, maxHealth);
             }
         }
-        else if (resourceObject != BuildingType.DefenseBP) //the house itself is not part of the buildings list
+        else // the house itself is not part of the buildings list
         {
-            if (!GetComponent<TurretShooting>() || !GetComponent<TurretShooting>().MiniTurret)
+            if (!GetComponent<Defence>() || !GetComponent<Defence>().MiniTurret)
+            {
                 LevelManager.global.AddBuildingVoid(transform);
+            }
         }
     }
 
@@ -149,7 +161,7 @@ public class Building : MonoBehaviour
         if (!DestroyedBool)
         {
             health -= amount;
-            if (HUDHealthBar && resourceObject == BuildingType.House)
+            if (HUDHealthBar && buildingObject == BuildingType.House)
             {
                 HUDHealthBar.SetHealth(health, maxHealth);
             }
@@ -164,15 +176,15 @@ public class Building : MonoBehaviour
 
                 if (health <= 0)
                 {
-                    if (resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood || resourceObject == BuildingType.HardWood)
+                    if (resourceObject == ResourceType.Wood || resourceObject == ResourceType.CoarseWood || resourceObject == ResourceType.HardWood)
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.TreeBreakingSound);
                     }
-                    else if (resourceObject == BuildingType.Stone || resourceObject == BuildingType.MossyStone || resourceObject == BuildingType.SlateStone)
+                    else if (resourceObject == ResourceType.Stone || resourceObject == ResourceType.MossyStone || resourceObject == ResourceType.SlateStone)
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound);
                     }
-                    else if (resourceObject == BuildingType.Bush)
+                    else if (resourceObject == ResourceType.Bush)
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound);
                     }
@@ -199,7 +211,7 @@ public class Building : MonoBehaviour
         {
             DestroyedBool = true;
             HealthAppearTimer = 999;//so it fades away
-            if (resourceObject == BuildingType.House)
+            if (buildingObject == BuildingType.House)
             {
                 GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseDestroyedSound);
@@ -227,7 +239,7 @@ public class Building : MonoBehaviour
                 GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
             }
 
-            if (resourceObject == BuildingType.Defense)
+            if (GetComponent<Defence>())
             {
                 PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
                 LevelManager.global.RemoveBuildingVoid(transform);
@@ -274,12 +286,12 @@ public class Building : MonoBehaviour
 
     public bool ReturnWood()
     {
-        return resourceObject == BuildingType.HardWood || resourceObject == BuildingType.Wood || resourceObject == BuildingType.CoarseWood;
+        return resourceObject == ResourceType.HardWood || resourceObject == ResourceType.Wood || resourceObject == ResourceType.CoarseWood;
     }
 
     public bool ReturnStone()
     {
-        return resourceObject == BuildingType.Stone || resourceObject == BuildingType.MossyStone || resourceObject == BuildingType.SlateStone;
+        return resourceObject == ResourceType.Stone || resourceObject == ResourceType.MossyStone || resourceObject == ResourceType.SlateStone;
     }
 
     private void Update()
@@ -292,7 +304,7 @@ public class Building : MonoBehaviour
         }
 #endif
 
-        if (resourceObject == BuildingType.House)
+        if (buildingObject == BuildingType.House)
         {
             float distanceToPlayer = Vector3.Distance(transform.position, PlayerController.global.transform.position);
             if (distanceToPlayer < 12.5f)

@@ -78,8 +78,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
             if (ContinueBool)
             {
-                if ((int)GameManager.Pref("Has Started", 0, true) == 1)
+                if (GameManager.Pref("Has Started", 0, true) == 1)
                 {
+                    gameObject.SetActive(true);
                     ButtonText.text = "Continue Day " + (int)GameManager.Pref("Day", 0, true);
                 }
                 else
@@ -114,7 +115,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
         Buttons buttons = GetComponentInParent<Buttons>();
-        buttons.SelectedList[buttons.ReturnIndex()] = transform.GetSiblingIndex();
+        buttons.MenuList[buttons.ReturnIndex()] = transform.GetSiblingIndex();
         //ChangeColourVoid(Color.white);
     }
 
@@ -146,23 +147,29 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (UpgradeBool)
         {
-            TurretShooting turretShooting = PlayerModeHandler.global.SelectedTurret.GetComponent<TurretShooting>();
+            TurretStats turretStats = GetComponent<TurretStats>();
 
-            if (turretShooting && turretShooting.ModelHolder.childCount > turretShooting.CurrentLevel + 1)
+
+            Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
+
+            if (defence && defence.ModelHolder.childCount > defence.CurrentLevel + 1)
             {
-                turretShooting.CurrentLevel++;
-                turretShooting.ReturnAnimator();
+                defence.CurrentLevel++;
+                defence.ReturnAnimator();
             }
         }
 
         if (DestroyBool)
         {
+            PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
             PlayerModeHandler.global.SelectedTurret.DestroyBuilding();
         }
 
         if (RepairBool)
         {
+            PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
             PlayerModeHandler.global.SelectedTurret.health = PlayerModeHandler.global.SelectedTurret.maxHealth;
+            PlayerModeHandler.global.SelectedTurret.TakeDamage(0);
         }
 
         if (BeginingBool || PlayBool)
@@ -274,25 +281,5 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     SFXManager ReturnSFXManager()
     {
         return VolumeBool ? GameManager.global.SoundManager : GameManager.global.MusicManager;
-    }
-
-    public void HighlightVoid(bool highlight)
-    {
-        GetComponent<Animation>().Stop();
-
-        if (highlight)
-        {
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Selected");
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Loop");
-        }
-        else
-        {
-            ButtonText.text = TextString;
-            ToggleBool = false;
-            GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Stop");
-
-            if (Menu.global.ArrivedAtSign)
-                GameManager.PlayAnimation(GetComponent<Animation>(), "Sign Key", false);
-        }
     }
 }

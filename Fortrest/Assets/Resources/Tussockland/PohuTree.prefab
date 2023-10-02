@@ -83,7 +83,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NaturalBool: 1
   DestroyedBool: 0
-  resourceObject: 7
+  resourceObject: 4
+  buildingObject: 6
   health: 0
   maxHealth: 5
   resourceAmount: 6
@@ -97,6 +98,8 @@ MonoBehaviour:
   interactText: {fileID: 0}
   textDisplayed: 0
   DebugDestroyInstantly: 0
+  gridLocation: {x: 0, y: 0}
+  defenseBuilding: 0
 --- !u!111 &-6799876280890107172
 Animation:
   m_ObjectHideFlags: 0
@@ -321,7 +324,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: f8a9ac0ad6eb75c46a33536a7ea846f2, type: 2}
+      objectReference: {fileID: 2100000, guid: 8c5a5c46ca8c9e542b5e5d6ab5994e0f, type: 2}
     - target: {fileID: 5020325937464689298, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_Mesh
