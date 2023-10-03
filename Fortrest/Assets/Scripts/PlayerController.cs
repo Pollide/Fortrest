@@ -1060,6 +1060,8 @@ public class PlayerController : MonoBehaviour
                     return;
             }
 
+            if (GameManager.global.GetComponent<Animation>().IsPlaying("Load Out"))
+                GameManager.PlayAnimation(GameManager.global.GetComponent<Animation>(), "Load Out", true, true);
 
             PauseCanvasGameObject.SetActive(pause);
 
