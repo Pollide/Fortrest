@@ -5,6 +5,8 @@ using UnityEngine.AI;
 
 public class SpiderBoss : MonoBehaviour
 {
+    public static SpiderBoss global;
+
     private Transform playerTransform;
     private float awakeRange;
     private Animator animator;
@@ -14,6 +16,21 @@ public class SpiderBoss : MonoBehaviour
     public bool retreating;
     private NavMeshAgent agent;
     private float damage;
+    private float health;
+    private float maxHealth;
+    private bool canBeDamaged;
+    public bool dead;
+    public GameObject healthCanvas;
+    public GameObject healthBar;
+    private float speed;
+    private float stoppingDistance;
+    private float angularSpeed;
+    private float acceleration;
+
+    private void Awake()
+    {
+        global = this;
+    }
 
     void Start()
     {
@@ -26,6 +43,21 @@ public class SpiderBoss : MonoBehaviour
         retreating = false;
         agent = animator.GetComponent<NavMeshAgent>();
         damage = 5.0f;
+        health = 200.0f;
+        maxHealth = health;
+        speed = 4.0f;
+        stoppingDistance = 3.5f;
+        angularSpeed = 180.0f;
+        acceleration = 10.0f;
+        SetAgentParameters(speed, acceleration, angularSpeed, stoppingDistance);
+    }
+
+    void SetAgentParameters(float _speed, float _acceleration, float _angular, float _stopping)
+    {
+        agent.speed = _speed;
+        agent.acceleration = _acceleration;
+        agent.angularSpeed = _angular;
+        agent.stoppingDistance = _stopping;
     }
 
     // Update is called once per frame
@@ -36,6 +68,7 @@ public class SpiderBoss : MonoBehaviour
         {
             animator.SetTrigger("Awaking");
             awoken = true;
+            healthCanvas.SetActive(true);
         }
 
         // Spider moves at all times
@@ -54,6 +87,11 @@ public class SpiderBoss : MonoBehaviour
             retreating = false;
         }
 
+        // Death state
+        if (dead)
+        {
+            animator.SetTrigger("Death");
+        }
     }
   
     public void LookAt(Transform target)
@@ -93,5 +131,54 @@ public class SpiderBoss : MonoBehaviour
         {
             PlayerController.global.TakeDamage(damage, true);
         }
+    }
+
+    private void Damaged(float amount)
+    {
+        health -= amount;
+        UpdateHealth();
+
+        if (health <= 0)
+        {
+            StopAllCoroutines();
+            dead = true;
+            Time.timeScale = 1;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == PlayerController.global.SwordGameObject)
+        {
+            Debug.Log("yoza");
+            PlayerController.global.cursorNearEnemy = true;
+
+            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
+            {
+                canBeDamaged = false;
+                StopAllCoroutines();
+                //PickSound(hitSound, hitSound2, 1.0f);
+                ScreenShake.global.shake = true;
+                Damaged(PlayerController.global.attackDamage);
+                PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
+            }
+        }       
+        if (other.gameObject.tag == "Arrow")
+        {
+            if (!other.GetComponent<ArrowTrigger>().singleHit)
+            {
+                other.GetComponent<ArrowTrigger>().singleHit = true;
+                Damaged(PlayerController.global.bowDamage);
+                if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
+                {
+                    Destroy(other.gameObject.transform.parent.gameObject);
+                }
+            }
+        }
+    }
+
+    private void UpdateHealth()
+    {
+        healthBar.GetComponent<HealthBar>().SetHealth(health, maxHealth);
     }
 }

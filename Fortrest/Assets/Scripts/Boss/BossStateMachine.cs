@@ -11,7 +11,6 @@ public class BossStateMachine : MonoBehaviour
     {
         Chieftain,
         Basilisk,
-        SpiderQueen,
         Bird,
         Werewolf,
         Fire
