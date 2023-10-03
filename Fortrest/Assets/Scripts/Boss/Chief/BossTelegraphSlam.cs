@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BossTelegraph : MonoBehaviour
+public class BossTelegraphSlam : MonoBehaviour
 {
-    [SerializeField] private ThirdAttackState attackState;
-    [SerializeField] private Sprite sprite;
+    [SerializeField] private PhaseThreeAttack slamState;
 
     // Start is called before the first frame update
     void Start()
@@ -18,7 +17,7 @@ public class BossTelegraph : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.localScale = Vector3.Lerp(Vector3.zero, new Vector3(attackState.SlamRadius * 2, attackState.SlamRadius * 2, 1), attackState.SlamWaitTime / attackState.SlamDuration);
+        transform.localScale = Vector3.Lerp(Vector3.zero, new Vector3(slamState.SlamRadius * 2, slamState.SlamRadius * 2, 1), slamState.SlamWaitTime / slamState.SlamDuration);
     }
 
 
@@ -26,24 +25,24 @@ public class BossTelegraph : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         
-        Collider[] colliders = Physics.OverlapSphere(transform.position, attackState.SlamRadius);
+        Collider[] colliders = Physics.OverlapSphere(transform.position, slamState.SlamRadius);
 
         foreach (var collider in colliders)
         {
             if (collider.GetComponent<PlayerController>())
             {
-                collider.GetComponent<PlayerController>().TakeDamage(attackState.Damage, true);
+                collider.GetComponent<PlayerController>().TakeDamage(slamState.Damage, true);
             }
         }
 
         ScreenShake.global.shake = true;
 
-        attackState.StateMachine.ChangeState(attackState.StateAttack);
+        slamState.StateMachine.ChangeState(slamState.StateAttack);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackState.SlamRadius);
+        Gizmos.DrawWireSphere(transform.position, slamState.SlamRadius);
     }
 }

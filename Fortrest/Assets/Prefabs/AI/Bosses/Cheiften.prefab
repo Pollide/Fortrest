@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 8860127450049526509}
   - component: {fileID: 3651742728835903311}
   - component: {fileID: -4260576750701210383}
+  - component: {fileID: 9094052015298210235}
   - component: {fileID: 7004052578520432879}
   - component: {fileID: 8740668045474777165}
-  - component: {fileID: 9094052015298210235}
   - component: {fileID: 7788129227239646016}
   m_Layer: 0
   m_Name: Cheiften
@@ -103,7 +103,7 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 200
   arenaRadius: 50
-  speed: 4
+  speed: 5
   inDefence: 0
   phase2Ran: 0
   phase3Ran: 0
@@ -140,56 +140,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resetTimerDuration: 3
   stoppingDistance: 0.2
---- !u!114 &7004052578520432879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bad4632ca638bea4792ae9d6226c7d8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackTimer: 0
-  attackSpeed: 0.5
-  stoppingDistance: 3
-  rotationSpeed: 3
-  randomCheckTimer: 0
-  randomCheckDuration: 2
-  damage: 5
-  attackDistance: 3
-  firstAttackChance: 0.6
-  secondAttackChance: 0.2
-  thirdAttackChance: 0.2
-  isAttacking: 0
-  idleState: {fileID: -4260576750701210383}
-  attackState2: {fileID: 8740668045474777165}
-  attackState3: {fileID: 9094052015298210235}
---- !u!114 &8740668045474777165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b74317b801b02634ba6db4b10ca2749a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  windUpDuration: 2
-  isCharging: 0
-  playerHit: 0
-  hasRun: 0
-  chargeSpeed: 15
-  chargeDistance: 5
-  chargePushForce: 3
-  chargePushDuration: 1
-  stoppingDistance: 0.2
-  damage: 10
-  chargeDMGTrigger: {fileID: 6793321651510773346}
 --- !u!114 &9094052015298210235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,13 +149,60 @@ MonoBehaviour:
   m_GameObject: {fileID: 1612966261804245062}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7f6d6f5c1a97f847a86b615e5b3aeaa, type: 3}
+  m_Script: {fileID: 11500000, guid: 89ef28e57aa23d4468a3dbc23b971b99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackTimer: 0
+  attackSpeed: 0.5
+  stoppingDistance: 3
+  rotationSpeed: 5
+  randomCheckTimer: 0
+  randomCheckDuration: 2
+  damage: 5
+  attackDistance: 5
+  firstAttackChance: 0.1
+  secondAttackChance: 0.5
+  thirdAttackChance: 0.4
+  isAttacking: 0
+--- !u!114 &7004052578520432879
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612966261804245062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d466e0f2120000b4f8700d66f0465845, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windUpDuration: 1.8
+  isCharging: 0
+  playerHit: 0
+  hasRun: 0
+  chargeSpeed: 15
+  chargeDistance: 2
+  chargePushForce: 1
+  chargePushDuration: 0.3
+  stoppingDistance: 3
+  damage: 10
+  chargeDMGTrigger: {fileID: 6793321651510773346}
+--- !u!114 &8740668045474777165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612966261804245062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 799cfd510f7943547b5f8028a35bae70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slamDuration: 5
-  slamRadius: 8
-  slamWaitAfterIndicator: 1
-  damage: 20
+  slamRadius: 5
+  slamWaitAfterIndicator: 2
+  damage: 5
   telegraph: {fileID: 7556151477208924013}
   damageDone: 0
   hasJumped: 0
@@ -722,8 +719,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a74425afa2f627c4983e38b8d329d521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackState: {fileID: 9094052015298210235}
-  sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
+  slamState: {fileID: 8740668045474777165}
 --- !u!1 &7856948370217906509
 GameObject:
   m_ObjectHideFlags: 0
@@ -1738,9 +1734,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0255624b6f956944b18e61a1b48c05d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackState1: {fileID: 7004052578520432879}
-  attackState2: {fileID: 8740668045474777165}
-  attackState3: {fileID: 9094052015298210235}
+  attackState1: {fileID: 9094052015298210235}
+  attackState2: {fileID: 7004052578520432879}
+  attackState3: {fileID: 8740668045474777165}
   stateMachine: {fileID: 8860127450049526509}
   bossCollider: {fileID: 7788129227239646016}
   slamAudio: {fileID: 8300000, guid: 708a0dc6ef2b29a439691a89a05da232, type: 3}
@@ -1775,4 +1771,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a726638f1b11447866ec9f1894fa0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackState: {fileID: 7004052578520432879}
+  attackState: {fileID: 9094052015298210235}

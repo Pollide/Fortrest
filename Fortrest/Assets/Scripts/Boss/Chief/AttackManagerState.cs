@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FirstAttackState : BossState
+public class AttackManagerState : BossState
 {
     // Timer for attacks
     [SerializeField] private float attackTimer = 0f;
@@ -34,12 +34,29 @@ public class FirstAttackState : BossState
     [SerializeField] private bool isAttacking = false;
     
     // Holds states
-    [SerializeField] private IdleState idleState;
-    [SerializeField] private SecondAttackState attackState2;
-    [SerializeField] private ThirdAttackState attackState3;
+    private IdleState idleState;
+    private PhaseTwoAttack phaseTwoAttack;
+    private PhaseThreeAttack phaseThreeAttack;
 
     public override void EnterState()
     {
+        if (idleState == null)
+        {
+            // Gets the connected state
+            idleState = GetComponent<IdleState>();
+        }
+        // Checks if the state is null
+        if (phaseTwoAttack == null)
+        {
+            // Gets the connected state
+            phaseTwoAttack = GetComponent<PhaseTwoAttack>();
+        }
+        if (phaseThreeAttack == null)
+        {
+            // Gets the connected state
+            phaseThreeAttack = GetComponent<PhaseThreeAttack>();
+        }
+
         randValue = 0f;
 
         randomCheckTimer = randomCheckDuration;
@@ -58,15 +75,15 @@ public class FirstAttackState : BossState
             stateMachine.ChangeState(idleState);
         }
 
-        if (!stateMachine.Phase2Ran && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Two)
+        if (!stateMachine.PhaseTwoRan && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Two)
         {
-            stateMachine.Phase2Ran = true;
-            stateMachine.ChangeState(attackState2);
+            stateMachine.PhaseTwoRan = true;
+            stateMachine.ChangeState(phaseTwoAttack);
         }
-        if (!stateMachine.Phase3Ran && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Three)
+        if (!stateMachine.PhaseThreeRan && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Three)
         {
-            stateMachine.Phase3Ran = true;
-            stateMachine.ChangeState(attackState3);
+            stateMachine.PhaseThreeRan = true;
+            stateMachine.ChangeState(phaseThreeAttack);
         }
 
         // Set agent destination
@@ -80,7 +97,6 @@ public class FirstAttackState : BossState
     // Run checks to see if the attack can be called
     private bool CanAttack()
     {
-
         Vector3 directionToTarget = (playerTransform.position - transform.position);
         directionToTarget.y = 0; // Set the Y component to 0
         directionToTarget.Normalize(); // Normalize the vector to make it so player can get close
@@ -319,7 +335,7 @@ public class FirstAttackState : BossState
             }
             else
             {
-                stateMachine.ChangeState(attackState2);
+                stateMachine.ChangeState(phaseTwoAttack);
             }
         }
     }
@@ -340,11 +356,11 @@ public class FirstAttackState : BossState
             }
             else if (randValue <= firstAttackChance + secondAttackChance)
             {
-                stateMachine.ChangeState(attackState2);
+                stateMachine.ChangeState(phaseTwoAttack);
             }
             else
             {
-                stateMachine.ChangeState(attackState3);
+                stateMachine.ChangeState(phaseThreeAttack);
             }
         }
     }
