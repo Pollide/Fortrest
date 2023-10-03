@@ -131,9 +131,10 @@ public class AttackManagerState : BossState
             case BossStateMachine.TYPE.Basilisk:
                 AttackSnake();
                 break;
-            case BossStateMachine.TYPE.SpiderQueen:
-                AttackSpider();
-                break;
+            // Spider boss is not using the script being stored in that list
+            //case BossStateMachine.TYPE.SpiderQueen:
+            //  AttackSpider();
+            //  break;
             case BossStateMachine.TYPE.Bird:
                 AttackBird();
                 break;

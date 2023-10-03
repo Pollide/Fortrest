@@ -29,7 +29,7 @@ public class Unlocks : MonoBehaviour
     }
 
     void Update()
-    {
+    {       
         LevelManager.ProcessBossList((boss) =>
         {           
             if (boss.IsDead)
@@ -42,9 +42,10 @@ public class Unlocks : MonoBehaviour
                     case BossStateMachine.TYPE.Basilisk:
                         bowUnlocked = true;
                         break;
-                    case BossStateMachine.TYPE.SpiderQueen:
-                        miniTurretUnlocked = true;
-                        break;
+                    // Spider boss is not using the script being stored in that list
+                    //case BossStateMachine.TYPE.SpiderQueen:
+                    //    miniTurretUnlocked = true;
+                    //    break;
                     case BossStateMachine.TYPE.Bird:
                         extraApplesUnlocked = true;
                         break;
@@ -59,5 +60,10 @@ public class Unlocks : MonoBehaviour
                 }
             }           
         });
+
+        if (SpiderBoss.global.dead)
+        {
+            miniTurretUnlocked = true;
+        }
     }
 }
