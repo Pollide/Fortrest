@@ -1419,6 +1419,7 @@ public class PlayerController : MonoBehaviour
             {
                 boss.CanBeDamaged = true;
             });
+            SpiderBoss.global.canBeDamaged = true;
             if (upgradedMelee)
             {
                 attackDamage = 1.25f;
