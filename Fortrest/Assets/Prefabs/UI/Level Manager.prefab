@@ -386,6 +386,7 @@ MonoBehaviour:
     type: 3}
   mountPrefab: {fileID: 3333299692556185214, guid: 4c7f0939d26439b44be8f3e4c51cebd3,
     type: 3}
+  HUD: {fileID: 0}
   newDay: 0
   textGradient:
     serializedVersion: 2
@@ -426,6 +427,7 @@ MonoBehaviour:
   enemiesCount: 0
   spawnEnemies: 0
   randomAttackTrigger: 0
+  dayPaused: 0
   messageDisplayed: 0
   ActiveBiomeMusic: {fileID: 0}
 --- !u!114 &7386932472633630464
@@ -559,7 +561,7 @@ MonoBehaviour:
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1
-  m_Antialiasing: 2
+  m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
   m_Dithering: 0
