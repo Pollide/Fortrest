@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AnimEvent : MonoBehaviour
+public class BossAnimationEvents : MonoBehaviour
 {
-    [SerializeField] private FirstAttackState attackState1;
-    [SerializeField] private SecondAttackState attackState2;
-    [SerializeField] private ThirdAttackState attackState3;
+    [SerializeField] private AttackManagerState attackState1;
+    [SerializeField] private PhaseTwoAttack attackState2;
+    [SerializeField] private PhaseThreeAttack attackState3;
     [SerializeField] private BossStateMachine stateMachine;
     [SerializeField] private BoxCollider bossCollider;
     [SerializeField] private AudioClip slamAudio;

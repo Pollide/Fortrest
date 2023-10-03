@@ -20,10 +20,12 @@ public class BossSpawner : MonoBehaviour
             hasRun = true;
         }
     }
+
     private bool CheckPlayerDistance()
     {
         return Vector3.Distance(PlayerController.global.transform.position, transform.position) <= distance;
     }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
