@@ -82,6 +82,7 @@ public class LevelManager : MonoBehaviour
     public GameObject ogrePrefab;
     public GameObject spiderPrefab;
     public GameObject mountPrefab;
+    public GameObject HUD;
 
     [HideInInspector]
     public bool newDay = false;

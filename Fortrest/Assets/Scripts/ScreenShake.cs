@@ -19,7 +19,7 @@ public class ScreenShake : MonoBehaviour
     {
         if (shake)
         {
-            shake = false;
+            
             StartCoroutine(Shaking());
         }
     }
@@ -35,7 +35,7 @@ public class ScreenShake : MonoBehaviour
             transform.position = startPosition + Random.insideUnitSphere * strength;
             yield return null;
         }
-
+        shake = false;
         transform.position = startPosition;
     }
 }

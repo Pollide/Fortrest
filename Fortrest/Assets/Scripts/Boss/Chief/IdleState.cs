@@ -20,8 +20,7 @@ public class IdleState : BossState
         }
 
         stateMachine.HealthBar.SetActive(true);
-        stateMachine.BossAnimator.Rebind();
-        stateMachine.BossAnimator.Update(0f);
+
         resetTimer = resetTimerDuration;
     }
 

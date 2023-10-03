@@ -6,11 +6,14 @@ public class AttackManagerState : BossState
 {
     // Timer for attacks
     [SerializeField] private float attackTimer = 0f;
+    public float attackTime = 0f;
+    public float attackDuration = 5f;
     
     // The speed of attacks 
-    [SerializeField] private float attackSpeed = 0f;
     [SerializeField] private float stoppingDistance = 3f;
     [SerializeField] private  float rotationSpeed = 5.0f;
+    public int attackCounter = 0;
+    public float attackRadius = 10f;
 
     // Timer for checking the random number to decide attack states
     [SerializeField] private float randomCheckTimer = 0f;
@@ -32,7 +35,9 @@ public class AttackManagerState : BossState
     
     // Holds the attack 
     [SerializeField] private bool isAttacking = false;
-    
+    public bool attackStarted = false;
+    [SerializeField] private GameObject telegraph;
+
     // Holds states
     private IdleState idleState;
     private PhaseTwoAttack phaseTwoAttack;
@@ -64,7 +69,7 @@ public class AttackManagerState : BossState
 
     public override void ExitState()
     {
-        stateMachine.BossAnimator.SetBool("attacking", false);
+        stateMachine.BossAnimator.ResetTrigger("attacking");
     }
 
     public override void UpdateState()
@@ -153,6 +158,12 @@ public class AttackManagerState : BossState
 
     private void AttackChief()
     {
+        if (stateMachine.BossAnimator.GetBool("isTired"))
+        {
+            telegraph.SetActive(false);
+            telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
+        }
+
         if (!isAttacking)
         {
             // Check if the enemy can attack
@@ -161,14 +172,15 @@ public class AttackManagerState : BossState
                 stateMachine.BossAnimator.ResetTrigger("attacking");
                 stateMachine.BossAnimator.SetTrigger("attacking");
                 isAttacking = true;
-                // Set the attack timer to control attack speed
-                attackTimer = 1f / attackSpeed;
                 // Stop agent
                 agent.isStopped = true;
-                // Set attack state to true to prevent calling multiple times
+                telegraph.SetActive(false);
+                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
             }
             else
             {
+                telegraph.SetActive(false);
+                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
                 // Calculate the direction to the target
                 Vector3 targetDirection = playerTransform.position - transform.position;
 
@@ -181,16 +193,23 @@ public class AttackManagerState : BossState
         }
         else
         {
-            // Count down the attack timer
-            attackTimer -= Time.deltaTime;
-
-            if (attackTimer <= 0)
+            if (attackTime < attackDuration && !stateMachine.BossAnimator.GetBool("isTired"))
             {
-                // Reset the attack timer
-                stateMachine.BossAnimator.ResetTrigger("attacking");
-                isAttacking = false;
-                // Start agent
-                agent.isStopped = false;
+                telegraph.SetActive(true);
+                telegraph.GetComponent<BossTelegraphSlam>().attack = true;
+                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(true);
+                attackTime += Time.deltaTime;
+
+                telegraph.transform.position = transform.position;
+            }
+
+            if (attackTime >= attackDuration)
+            {
+                telegraph.SetActive(false);
+                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
+                stateMachine.BossAnimator.speed = 1f;
+                attackTime = 0f;
+                StartCoroutine(telegraph.GetComponent<BossTelegraphSlam>().DoSlamDamage(0.1f, Damage, attackRadius));
             }
         }
     }
@@ -381,5 +400,10 @@ public class AttackManagerState : BossState
     {
         get { return isAttacking; }
         set { isAttacking = value; }
+    }
+
+    public GameObject Telegraph
+    {
+        get { return telegraph; }
     }
 }
