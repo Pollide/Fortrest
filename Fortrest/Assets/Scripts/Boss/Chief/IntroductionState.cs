@@ -7,10 +7,12 @@ public class IntroductionState : BossState
     public Transform targetEnemy; // The enemy you want to focus on
     public float introDuration = 3.0f; // Duration of the intro animation
     public float cameraDistance = 5.0f; // Distance between the camera and the enemy
-    public Vector3 introPositionOffset = new Vector3(0, 2, -2); // Offset from the enemy's position during intro
+    public Vector3 introPositionOffset = new(0, 2, -2); // Offset from the enemy's position during intro
 
     private Transform initialCameraTransform;
+    [SerializeField] private GameObject HUD;
     private float introTimer = 0.0f;
+    private float waitBeforeStart = 3.0f;
     private bool introCompleted = false;
     private bool introStarted = false;
     [SerializeField] private IdleState idleState;
@@ -24,11 +26,16 @@ public class IntroductionState : BossState
             idleState = GetComponent<IdleState>();
         }
 
+        LevelManager.global.HUD.SetActive(false);
+
+        PlayerController.global.playerCanMove = false;
+        PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+
         initialCameraTransform = Camera.main.transform;
 
         CameraFollow.global.bossCam = true;
 
-        stateMachine.BossAnimator.SetBool("isDiving", true);
+        ScreenShake.global.duration = 3f;
 
         if (!introStarted)
         {
@@ -38,13 +45,14 @@ public class IntroductionState : BossState
 
     public override void ExitState()
     {
-        stateMachine.BossAnimator.SetBool("isDiving", false);
         CameraFollow.global.bossCam = false;
+        PlayerController.global.playerCanMove = true;
+        LevelManager.global.HUD.SetActive(true);
     }
 
     public override void UpdateState()
     {
-        if (!introCompleted)
+        if (!introCompleted && !ScreenShake.global.shake)
         {
             introTimer += Time.deltaTime;
 
@@ -54,10 +62,7 @@ public class IntroductionState : BossState
             // Perform the intro animation
             Vector3 targetPosition = targetEnemy.position + introPositionOffset;
             Vector3 cameraPosition = Vector3.Lerp(initialCameraTransform.position, targetPosition - initialCameraTransform.forward, introProgress);
-            Camera.main.transform.position = targetPosition;
-
-            // Look at the target enemy
-            Camera.main.transform.LookAt(targetEnemy);
+            Camera.main.transform.position = cameraPosition;
 
             if (introProgress >= 1.0f)
             {
@@ -74,11 +79,10 @@ public class IntroductionState : BossState
 
     public IEnumerator Intro()
     {
-        
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.005f);
         stateMachine.BossAnimator.speed = 0;
         transform.position = initialSpawn.position;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(waitBeforeStart);
         stateMachine.BossAnimator.speed = 1;
     }
 }

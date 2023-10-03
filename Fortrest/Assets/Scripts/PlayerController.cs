@@ -635,7 +635,7 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!pausedBool && !mapBool && !evading)
+        if (!pausedBool && !mapBool && !evading && !CameraFollow.global.bossCam)
         {
             RotatePlayer();
         }

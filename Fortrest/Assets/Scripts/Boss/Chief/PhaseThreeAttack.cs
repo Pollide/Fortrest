@@ -74,7 +74,7 @@ public class PhaseThreeAttack : BossState
         {
             stateMachine.BossAnimator.SetBool("isJumping", false);
             stateMachine.BossAnimator.SetBool("isDiving", true);
-            StartCoroutine(telegraph.GetComponent<BossTelegraphSlam>().DoSlamDamage(slamWaitAfterIndicator));
+            StartCoroutine(telegraph.GetComponent<BossTelegraphSlam>().DoSlamDamage(slamWaitAfterIndicator, Damage, SlamRadius));
         }
     }
 

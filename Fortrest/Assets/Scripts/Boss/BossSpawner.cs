@@ -7,11 +7,6 @@ public class BossSpawner : MonoBehaviour
     [SerializeField] private GameObject boss;
     [SerializeField] private Transform spawnPosition;
 
-    private void Start()
-    {
-      
-    }
-
     private void Update()
     {
         if (CheckPlayerDistance() && hasRun == false)
