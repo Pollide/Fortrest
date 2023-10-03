@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SecondAttackState : BossState
+public class PhaseTwoAttack : BossState
 {
     // Holds states
     private IdleState idleState;
-    private FirstAttackState attackState;
+    private AttackManagerState attackState;
 
     // Duration of the wind-up phase
     [SerializeField] private float windUpDuration = 5f;
+    [SerializeField] private float waitDuration = 3f;
     // Holds Wheather the boss is charging
     [SerializeField] private bool isCharging = false;
     [SerializeField] private bool playerHit = false;
@@ -38,7 +39,7 @@ public class SecondAttackState : BossState
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<FirstAttackState>();
+            attackState = GetComponent<AttackManagerState>();
         }
     }
 
@@ -46,6 +47,7 @@ public class SecondAttackState : BossState
     {
         // Turn off charge damage trigger
         stateMachine.BossAnimator.SetBool("isCharging", false);
+        stateMachine.BossAnimator.SetBool("isIdle", true);
         isCharging = false;
         agent.speed = stateMachine.BossSpeed;
         playerHit = false;
@@ -73,7 +75,7 @@ public class SecondAttackState : BossState
         isCharging = false;
         agent.isStopped = true;
         chargeDMGTrigger.enabled = false;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(waitDuration);
         agent.isStopped = false;
         agent.speed = stateMachine.BossSpeed;
         playerHit = false;
