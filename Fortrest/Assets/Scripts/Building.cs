@@ -75,7 +75,11 @@ public class Building : MonoBehaviour
     public bool DebugDestroyInstantly;
 
     public Vector2 gridLocation;
+    Vector3 treeFallingDirection;
 
+    [HideInInspector]
+    public bool regenerateBool;
+    Quaternion startingRotation;
     // Start is called before the first frame update
     void Start()
     {
@@ -87,6 +91,7 @@ public class Building : MonoBehaviour
             return;
         }
         health = maxHealth;
+        startingRotation = transform.rotation;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
 
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
@@ -234,27 +239,39 @@ public class Building : MonoBehaviour
 
             if (ReturnWood())
             {
+                /*
                 GetComponent<Rigidbody>().isKinematic = false;
                 GetComponent<Rigidbody>().useGravity = true;
                 GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
-            }
+                */
 
-            if (GetComponent<Defence>())
-            {
-                PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
-                LevelManager.global.RemoveBuildingVoid(transform);
+                treeFallingDirection = PlayerController.global.transform.position - transform.position;
 
-                Destroy(gameObject);
             }
             else
             {
-                Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
+                if (GetComponent<Defence>())
+                {
+                    PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
+                    LevelManager.global.RemoveBuildingVoid(transform);
 
-                if (PlayerController.global.currentResource == this)
-                    GiveResources();
+                    Destroy(gameObject);
+                }
+                else
+                {
+                    ResourceRegenerate();
+                }
             }
         }
         PlayerController.global.currentResource = null;
+    }
+
+    void ResourceRegenerate()
+    {
+        Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
+
+        GiveResources();
+        regenerateBool = true;
     }
 
     public void DisableInvoke()
@@ -280,8 +297,10 @@ public class Building : MonoBehaviour
         HealthAppearTimer = 0;
 
         GameManager.PlayAnimation(animation, "Health Hit");
+        transform.rotation = startingRotation;
 
-        GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Shake");
+        if (health > 0)
+            GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Shake");
     }
 
     public bool ReturnWood()
@@ -358,6 +377,20 @@ public class Building : MonoBehaviour
             }
         }
 
+        if (regenerateBool)
+        {
+            /*
+            transform.localScale = Vector3.Slerp(transform.localScale, Vector3.one, Time.deltaTime);
+
+            if (transform.localScale.x > 0.9f)
+            {
+                transform.localScale = Vector3.one;
+                regenerateBool = false;
+
+            }
+            */
+        }
+
         if (HealthAppearTimer != -1)
         {
             HealthAppearTimer += Time.deltaTime;
@@ -367,6 +400,31 @@ public class Building : MonoBehaviour
                 HealthAppearTimer = -1;
                 GameManager.PlayAnimation(healthBarImage.GetComponentInParent<Animation>(), "Health Appear", false);
             }
+        }
+
+        if (treeFallingDirection != Vector3.zero)
+        {
+            Debug.DrawRay(transform.position, treeFallingDirection * 10, Color.red);
+
+            // Use LookRotation to orient the tree towards the player
+            Quaternion targetRotation = Quaternion.LookRotation(-treeFallingDirection);
+
+
+            // Calculate the angle between the tree's current rotation and the target rotation
+            float angleDifference = Vector3.Angle(transform.forward, treeFallingDirection);
+            float maxRotationAngle = 90.0f;
+
+            if (angleDifference > maxRotationAngle)
+            {
+                // If the angle exceeds the maximum allowed angle, set the rotation to the maximum angle
+                //   targetRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotationAngle);
+                //  treeFallingDirection = Vector3.zero; //Stop falling once it reaches the maximum angle
+                Debug.Log("REACHED" + maxRotationAngle);
+                // ResourceRegenerate();
+
+            }
+
+            transform.Rotate(treeFallingDirection * 20 * Time.deltaTime);
         }
     }
 }
