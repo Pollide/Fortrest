@@ -19,6 +19,7 @@ public class TakeDamageTrigger : MonoBehaviour
         {
             if (player.attacking && stateMachine.CanBeDamaged && player.damageEnemy)
             {
+                stateMachine.CanBeDamaged = false;
                 stateMachine.TakeDamage(player.attackDamage);
             }
 
