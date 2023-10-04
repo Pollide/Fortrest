@@ -33,7 +33,9 @@ public class SpiderBoss : MonoBehaviour
     private float poisonAttackChance;
     private float webAttackChance;
     public GameObject poisonProjectile;
-    public float projectileSpeed;
+    private float poisonSpeed;
+    private Rigidbody rb;
+    private bool jump;
 
     private void Awake()
     {
@@ -57,9 +59,11 @@ public class SpiderBoss : MonoBehaviour
         stage = 1;
         specialAttackCD = 10.0f;
         poisonAttackChance = 0.5f;
-        webAttackChance = 0.3f;        
+        webAttackChance = 0.3f;
+        poisonSpeed = 20.0f;
+        rb = GetComponent<Rigidbody>();
 
-        speed = 4.0f;
+        speed = 5.0f;
         stoppingDistance = 3.5f;
         angularSpeed = 180.0f;
         acceleration = 10.0f;
@@ -121,6 +125,11 @@ public class SpiderBoss : MonoBehaviour
             SpecialAttack();
         }     
 
+        if (jump)
+        {
+            agent.Move(-transform.forward * (Time.deltaTime * 10.0f));
+        }
+
         // Death state
         if (dead)
         {
@@ -169,8 +178,38 @@ public class SpiderBoss : MonoBehaviour
 
     private void PoisonAttackAnimEvent()
     {
-        GameObject projectile = Instantiate(poisonProjectile, transform.position, Quaternion.identity);
-        projectile.GetComponent<Rigidbody>().AddForce(transform.forward * projectileSpeed, ForceMode.Impulse);
+        for (int i = 0; i < 3; i++)
+        {
+            Quaternion rotation = Quaternion.identity;
+            Vector3 spawnPosition = transform.position + (transform.forward);
+            if (i == 1)
+            {
+                rotation = Quaternion.Euler(0f, 90f, 0f);
+            }
+            else if (i == 2)
+            {
+                rotation = Quaternion.Euler(0f, -90f, 0f);
+            }
+            GameObject projectile = Instantiate(poisonProjectile, spawnPosition, rotation);
+            projectile.GetComponent<Rigidbody>().AddForce(transform.forward * poisonSpeed, ForceMode.Impulse);
+        }        
+    }
+
+    private void WebAttackAnimEvent()
+    {
+        
+    }
+
+    private void StartJumpAnimEvent()
+    {
+        jump = true;
+        animator.speed = 0.75f;
+    }
+
+    private void EndJumpAnimEvent()
+    {
+        jump = false;
+        animator.speed = 1.0f;
     }
 
     private void Damaged(float amount)
