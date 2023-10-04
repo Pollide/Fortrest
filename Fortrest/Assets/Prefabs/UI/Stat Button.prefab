@@ -73,9 +73,7 @@ MonoBehaviour:
   SaveBool: 0
   MaxResourcesBool: 0
   TerrainTeleportInt: -1
-  RepairBool: 0
-  UpgradeBool: 1
-  DestroyBool: 0
+  UpgradeInt: 0
   ContinueBool: 0
   PlayBool: 0
   ExitBool: 0
@@ -99,10 +97,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f98f89451ccfbdb4cb45004dd73c32bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteList: []
   fillImage: {fileID: 3219991455604919353}
   selectImage: {fileID: 6838340557256899557}
   iconImage: {fileID: 8516051044347498499}
+  changeTier:
+    damageTier: 0
+    healthTier: 0
+    rangeTier: 0
+    rateTier: 0
 --- !u!114 &3186483083796546926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,6 +147,7 @@ Animation:
   m_Animation: {fileID: 7400000, guid: 64a7d1c7bb8fbd04eb6c727279821c14, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: 64a7d1c7bb8fbd04eb6c727279821c14, type: 2}
+  - {fileID: 7400000, guid: e745a36395d2c9c45b2c3270ce38df55, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
