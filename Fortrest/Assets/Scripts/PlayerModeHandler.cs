@@ -203,8 +203,6 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void TurretMenuSet(bool open)
     {
-        PlayerController.global.turretMenuHolder.gameObject.SetActive(open);
-
         if (!open)
         {
 
@@ -213,6 +211,9 @@ public class PlayerModeHandler : MonoBehaviour
 
             SelectedTurret = null;
         }
+
+        PlayerController.global.turretMenuHolder.gameObject.SetActive(open);
+
     }
 
     private void BuildMode()

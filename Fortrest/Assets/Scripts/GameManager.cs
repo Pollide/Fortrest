@@ -711,12 +711,12 @@ public class GameManager : MonoBehaviour
         building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
         building.destroyedTimer = (int)Pref("Building Regenerate" + LevelManager.global.ReturnIndex(value), building.destroyedTimer, load);
 
-        /*
+
         if (building.destroyedTimer != 0 && load)
         {
-            building.transform.localScale = Vector3.zero;
+            building.SetModel(false);
         }
-        */
+
 
         building.SetLastHealth();
 

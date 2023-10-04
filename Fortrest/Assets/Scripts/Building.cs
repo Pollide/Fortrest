@@ -357,15 +357,16 @@ public class Building : MonoBehaviour
         if (destroyedTimer != 0)
         {
             bool appear = destroyedTimer > 120;
-            transform.GetChild(0).gameObject.SetActive(appear); //hide model
 
             if (appear)
             {
                 transform.rotation = startingRotation;
                 transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f * Time.deltaTime);
+                SetModel(true);
 
                 if (transform.localScale.x > 0.99f)
                 {
+              
                     transform.localScale = Vector3.one;
                     health = maxHealth;
                     destroyedTimer = 0;
@@ -424,5 +425,10 @@ public class Building : MonoBehaviour
             //  transform.Rotate(treeFallingDirection * 20 * Time.deltaTime);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 100 * Time.deltaTime);
         }
+    }
+
+    public void SetModel(bool active)
+    {
+
     }
 }
