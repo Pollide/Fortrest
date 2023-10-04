@@ -714,7 +714,7 @@ public class GameManager : MonoBehaviour
 
         if (building.destroyedTimer != 0 && load)
         {
-            building.SetModel(false);
+            GameManager.PlayAnimation(building.GetComponent<Animation>(), "Nature Destroy", true, true); //hides model quickly
         }
 
 
