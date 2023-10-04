@@ -82,6 +82,7 @@ public class LevelManager : MonoBehaviour
     public GameObject ogrePrefab;
     public GameObject spiderPrefab;
     public GameObject mountPrefab;
+    public GameObject HUD;
 
     [HideInInspector]
     public bool newDay = false;
@@ -326,7 +327,8 @@ public class LevelManager : MonoBehaviour
         // daySpeed = 7.0f; // FOR TESTING
 #endif
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
-        DirectionalLightTransform.eulerAngles = new Vector3(daylightTimer, 0, 0);
+        DirectionalLightTransform.eulerAngles = new Vector3(90, 0, 0);
+        //        DirectionalLightTransform.eulerAngles = new Vector3(daylightTimer, 0, 0);
         clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -daylightTimer + 90);
         daylightTimer += daySpeed * Time.deltaTime;
 
@@ -359,7 +361,7 @@ public class LevelManager : MonoBehaviour
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
 
-        light.intensity = Mathf.Lerp(light.intensity, ReturnNight() ? 0.25f : 1 - Weather.global.DecreaseDayLightIntensity, 0.4f * Time.deltaTime);
+        light.intensity = Mathf.Lerp(light.intensity, 1 - Weather.global.DecreaseDayLightIntensity, 0.4f * Time.deltaTime);
 
 
 

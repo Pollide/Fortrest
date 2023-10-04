@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
-public class AnimEvent : MonoBehaviour
+public class BossAnimationEvents : MonoBehaviour
 {
-    [SerializeField] private FirstAttackState attackState1;
-    [SerializeField] private SecondAttackState attackState2;
-    [SerializeField] private ThirdAttackState attackState3;
+    [SerializeField] private AttackManagerState attackState1;
+    [SerializeField] private PhaseTwoAttack attackState2;
+    [SerializeField] private PhaseThreeAttack attackState3;
     [SerializeField] private BossStateMachine stateMachine;
     [SerializeField] private BoxCollider bossCollider;
     [SerializeField] private AudioClip slamAudio;
+    [SerializeField] private AudioClip enrageAudio;
 
 
     void PlaySlashOne()
@@ -39,6 +41,48 @@ public class AnimEvent : MonoBehaviour
     {
         GameManager.global.SoundManager.PlaySound(slamAudio);
     }
+    void PlayEnrageSound()
+    {
+        GameManager.global.SoundManager.PlaySound(enrageAudio);
+    }
+    void AttackPlusPlus()
+    {
+        attackState1.attackCounter++;
+    }
+
+    void Attack3()
+    {
+        if (attackState1.attackCounter >= 2)
+        {
+            stateMachine.BossAnimator.SetBool("isTired", true);
+        }
+        else
+        {
+            attackState1.GetComponent<NavMeshAgent>().isStopped = false;
+        }
+    }
+
+    void DeactivateAgent()
+    {
+        attackState1.GetComponent<NavMeshAgent>().isStopped = false;
+    }
+
+    void DeactivateAttacking()
+    {
+        attackState1.IsAttacking = false;
+    }
+
+    void SetTiredFalse()
+    {
+
+        stateMachine.BossAnimator.SetBool("isTired", false);
+
+    }
+
+    void PlayScreenShake()
+    {
+        ScreenShake.global.shake = true;
+    }
 
     void SetHasJumped()
     {
@@ -48,6 +92,11 @@ public class AnimEvent : MonoBehaviour
     void SetAttackFalse()
     {
         GetComponentInParent<Animator>().SetBool("attacking", false);
+    }  
+    
+    void PauseAnimater()
+    {
+        GetComponentInParent<Animator>().speed = 0f;
     } 
     
     void SetDiveFalse()

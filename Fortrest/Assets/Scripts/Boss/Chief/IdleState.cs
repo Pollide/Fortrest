@@ -5,7 +5,7 @@ using UnityEngine;
 public class IdleState : BossState
 {
     // Holds next state
-    private FirstAttackState attackState;
+    private AttackManagerState attackState;
     private float resetTimer = 0f;
     [SerializeField] private float resetTimerDuration;
     [SerializeField] private float stoppingDistance = 3f;
@@ -16,7 +16,7 @@ public class IdleState : BossState
         if (attackState == null)
         {
             // Gets the connected attack state
-            attackState = GetComponent<FirstAttackState>();
+            attackState = GetComponent<AttackManagerState>();
         }
 
         stateMachine.HealthBar.SetActive(true);

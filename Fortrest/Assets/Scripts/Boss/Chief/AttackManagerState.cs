@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FirstAttackState : BossState
+public class AttackManagerState : BossState
 {
     // Timer for attacks
     [SerializeField] private float attackTimer = 0f;
+    public float attackTime = 0f;
+    public float attackDuration = 5f;
     
     // The speed of attacks 
-    [SerializeField] private float attackSpeed = 0f;
     [SerializeField] private float stoppingDistance = 3f;
     [SerializeField] private  float rotationSpeed = 5.0f;
+    public int attackCounter = 0;
+    public float attackRadius = 10f;
 
     // Timer for checking the random number to decide attack states
     [SerializeField] private float randomCheckTimer = 0f;
@@ -32,14 +35,33 @@ public class FirstAttackState : BossState
     
     // Holds the attack 
     [SerializeField] private bool isAttacking = false;
-    
+    public bool attackStarted = false;
+    [SerializeField] private GameObject telegraph;
+
     // Holds states
-    [SerializeField] private IdleState idleState;
-    [SerializeField] private SecondAttackState attackState2;
-    [SerializeField] private ThirdAttackState attackState3;
+    private IdleState idleState;
+    private PhaseTwoAttack phaseTwoAttack;
+    private PhaseThreeAttack phaseThreeAttack;
 
     public override void EnterState()
     {
+        if (idleState == null)
+        {
+            // Gets the connected state
+            idleState = GetComponent<IdleState>();
+        }
+        // Checks if the state is null
+        if (phaseTwoAttack == null)
+        {
+            // Gets the connected state
+            phaseTwoAttack = GetComponent<PhaseTwoAttack>();
+        }
+        if (phaseThreeAttack == null)
+        {
+            // Gets the connected state
+            phaseThreeAttack = GetComponent<PhaseThreeAttack>();
+        }
+
         randValue = 0f;
 
         randomCheckTimer = randomCheckDuration;
@@ -47,7 +69,7 @@ public class FirstAttackState : BossState
 
     public override void ExitState()
     {
-        stateMachine.BossAnimator.SetBool("attacking", false);
+        stateMachine.BossAnimator.ResetTrigger("attacking");
     }
 
     public override void UpdateState()
@@ -58,15 +80,15 @@ public class FirstAttackState : BossState
             stateMachine.ChangeState(idleState);
         }
 
-        if (!stateMachine.Phase2Ran && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Two)
+        if (!stateMachine.PhaseTwoRan && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Two)
         {
-            stateMachine.Phase2Ran = true;
-            stateMachine.ChangeState(attackState2);
+            stateMachine.PhaseTwoRan = true;
+            stateMachine.ChangeState(phaseTwoAttack);
         }
-        if (!stateMachine.Phase3Ran && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Three)
+        if (!stateMachine.PhaseThreeRan && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Three)
         {
-            stateMachine.Phase3Ran = true;
-            stateMachine.ChangeState(attackState3);
+            stateMachine.PhaseThreeRan = true;
+            stateMachine.ChangeState(phaseThreeAttack);
         }
 
         // Set agent destination
@@ -80,7 +102,6 @@ public class FirstAttackState : BossState
     // Run checks to see if the attack can be called
     private bool CanAttack()
     {
-
         Vector3 directionToTarget = (playerTransform.position - transform.position);
         directionToTarget.y = 0; // Set the Y component to 0
         directionToTarget.Normalize(); // Normalize the vector to make it so player can get close
@@ -115,9 +136,10 @@ public class FirstAttackState : BossState
             case BossStateMachine.TYPE.Basilisk:
                 AttackSnake();
                 break;
-            case BossStateMachine.TYPE.SpiderQueen:
-                AttackSpider();
-                break;
+            // Spider boss is not using the script being stored in that list
+            //case BossStateMachine.TYPE.SpiderQueen:
+            //  AttackSpider();
+            //  break;
             case BossStateMachine.TYPE.Bird:
                 AttackBird();
                 break;
@@ -136,6 +158,12 @@ public class FirstAttackState : BossState
 
     private void AttackChief()
     {
+        if (stateMachine.BossAnimator.GetBool("isTired"))
+        {
+            telegraph.SetActive(false);
+            telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
+        }
+
         if (!isAttacking)
         {
             // Check if the enemy can attack
@@ -144,14 +172,15 @@ public class FirstAttackState : BossState
                 stateMachine.BossAnimator.ResetTrigger("attacking");
                 stateMachine.BossAnimator.SetTrigger("attacking");
                 isAttacking = true;
-                // Set the attack timer to control attack speed
-                attackTimer = 1f / attackSpeed;
                 // Stop agent
                 agent.isStopped = true;
-                // Set attack state to true to prevent calling multiple times
+                telegraph.SetActive(false);
+                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
             }
             else
             {
+                telegraph.SetActive(false);
+                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
                 // Calculate the direction to the target
                 Vector3 targetDirection = playerTransform.position - transform.position;
 
@@ -164,16 +193,23 @@ public class FirstAttackState : BossState
         }
         else
         {
-            // Count down the attack timer
-            attackTimer -= Time.deltaTime;
-
-            if (attackTimer <= 0)
+            if (attackTime < attackDuration && !stateMachine.BossAnimator.GetBool("isTired"))
             {
-                // Reset the attack timer
-                stateMachine.BossAnimator.ResetTrigger("attacking");
-                isAttacking = false;
-                // Start agent
-                agent.isStopped = false;
+                telegraph.SetActive(true);
+                telegraph.GetComponent<BossTelegraphSlam>().attack = true;
+                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(true);
+                attackTime += Time.deltaTime;
+
+                telegraph.transform.position = transform.position;
+            }
+
+            if (attackTime >= attackDuration)
+            {
+                telegraph.SetActive(false);
+                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
+                stateMachine.BossAnimator.speed = 1f;
+                attackTime = 0f;
+                StartCoroutine(telegraph.GetComponent<BossTelegraphSlam>().DoSlamDamage(0.1f, Damage, attackRadius));
             }
         }
     }
@@ -318,7 +354,7 @@ public class FirstAttackState : BossState
             }
             else
             {
-                stateMachine.ChangeState(attackState2);
+                stateMachine.ChangeState(phaseTwoAttack);
             }
         }
     }
@@ -339,11 +375,11 @@ public class FirstAttackState : BossState
             }
             else if (randValue <= firstAttackChance + secondAttackChance)
             {
-                stateMachine.ChangeState(attackState2);
+                stateMachine.ChangeState(phaseTwoAttack);
             }
             else
             {
-                stateMachine.ChangeState(attackState3);
+                stateMachine.ChangeState(phaseThreeAttack);
             }
         }
     }
@@ -364,5 +400,10 @@ public class FirstAttackState : BossState
     {
         get { return isAttacking; }
         set { isAttacking = value; }
+    }
+
+    public GameObject Telegraph
+    {
+        get { return telegraph; }
     }
 }

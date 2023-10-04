@@ -11,7 +11,6 @@ public class BossStateMachine : MonoBehaviour
     {
         Chieftain,
         Basilisk,
-        SpiderQueen,
         Bird,
         Werewolf,
         Fire
@@ -148,6 +147,7 @@ public class BossStateMachine : MonoBehaviour
     private void DeadState()
     {
         isDead = true;
+        LevelManager.global.dayPaused = false;
         //agent.SetDestination(transform.position);
         //healthAnimation.gameObject.SetActive(false); // To make healthbar disappear once / if implemented the same way
         //animator.setTrigger("Death"); // For death animation
@@ -214,12 +214,12 @@ public class BossStateMachine : MonoBehaviour
         get { return canBeDamaged; }
         set { canBeDamaged = value; }
     }
-    public bool Phase2Ran
+    public bool PhaseTwoRan
     {
         get { return phase2Ran; }
         set { phase2Ran = value; }
     }
-    public bool Phase3Ran
+    public bool PhaseThreeRan
     {
         get { return phase3Ran; }
         set { phase3Ran = value; }

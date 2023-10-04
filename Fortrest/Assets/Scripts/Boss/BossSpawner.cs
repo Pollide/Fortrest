@@ -7,11 +7,6 @@ public class BossSpawner : MonoBehaviour
     [SerializeField] private GameObject boss;
     [SerializeField] private Transform spawnPosition;
 
-    private void Start()
-    {
-      
-    }
-
     private void Update()
     {
         if (CheckPlayerDistance() && hasRun == false)
@@ -20,10 +15,12 @@ public class BossSpawner : MonoBehaviour
             hasRun = true;
         }
     }
+
     private bool CheckPlayerDistance()
     {
         return Vector3.Distance(PlayerController.global.transform.position, transform.position) <= distance;
     }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;

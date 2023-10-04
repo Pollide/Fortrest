@@ -103,7 +103,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool damageEnemy = false;
     [HideInInspector] public bool lunge = false;
     [HideInInspector] public bool upgradedMelee;
-    [HideInInspector] public bool cursorNearEnemy;
 
     // States
     [Header("Player States")]
@@ -635,7 +634,7 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!pausedBool && !mapBool && !evading)
+        if (!pausedBool && !mapBool && !evading && !CameraFollow.global.bossCam)
         {
             RotatePlayer();
         }
@@ -1060,6 +1059,8 @@ public class PlayerController : MonoBehaviour
                     return;
             }
 
+            if (GameManager.global.GetComponent<Animation>().IsPlaying("Load Out"))
+                GameManager.PlayAnimation(GameManager.global.GetComponent<Animation>(), "Load Out", true, true);
 
             PauseCanvasGameObject.SetActive(pause);
 
@@ -1419,6 +1420,7 @@ public class PlayerController : MonoBehaviour
             {
                 boss.CanBeDamaged = true;
             });
+            SpiderBoss.global.canBeDamaged = true;
             if (upgradedMelee)
             {
                 attackDamage = 1.25f;
