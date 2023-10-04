@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public SFXManager MusicManager; //manages all music
 
     public bool KeyboardBool = true;
-
+    bool loadingScene;
     [Header("Music")]
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour
     public Texture2D pointerDoubleSword;
     public Texture2D pointerSword;
     public Texture2D pointerAim;
+    public Texture2D pointerAimTargeted;
     public Texture2D pointerPickaxe;
     public Texture2D pointerAxe;
     public Texture2D pointerSickle;
@@ -264,7 +265,7 @@ public class GameManager : MonoBehaviour
 
                 if (Physics.Raycast(ray, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Enemy" })))
                 {
-                    cursorTexture = pointerDoubleSword;
+                    cursorTexture = PlayerController.global.canShoot ? pointerAimTargeted : pointerDoubleSword;
                 }
             }
 
@@ -286,7 +287,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (Application.isFocused)
-            Cursor.SetCursor(cursorTexture, cursorTexture == pointerGeneric ? Vector2.zero : hotSpot, CursorMode.ForceSoftware);
+            Cursor.SetCursor(cursorTexture, (cursorTexture == pointerGeneric || cursorTexture == pointerUpgrade) ? Vector2.zero : hotSpot, CursorMode.ForceSoftware);
     }
 
 
@@ -710,10 +711,12 @@ public class GameManager : MonoBehaviour
         building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
         building.destroyedTimer = (int)Pref("Building Regenerate" + LevelManager.global.ReturnIndex(value), building.destroyedTimer, load);
 
+        /*
         if (building.destroyedTimer != 0 && load)
         {
             building.transform.localScale = Vector3.zero;
         }
+        */
 
         building.SetLastHealth();
 

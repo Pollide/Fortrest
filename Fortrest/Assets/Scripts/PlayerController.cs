@@ -1148,7 +1148,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void UpdateResourceHolder(int bridgeTypeInt = 0, bool showCosts = true)
+    public void UpdateResourceHolder(int bridgeTypeInt = 0, int upgradeTypeInt = 0, bool showCosts = true)
     {
         for (int i = 0; i < MapResourceHolder.childCount; i++)
         {
@@ -1166,6 +1166,18 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < LevelManager.global.StoneTierList.Count; i++)
         {
             stoneCostList.Add(new LevelManager.TierData());
+        }
+
+
+        if (upgradeTypeInt == -1) //repair
+        {
+            woodCostList[0].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -5;
+        }
+
+        if (upgradeTypeInt == -2) //destroy
+        {
+            woodCostList[0].ResourceCost = -5;
         }
 
         if (bridgeTypeInt == 1)
