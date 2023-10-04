@@ -47,7 +47,7 @@ public class Building : MonoBehaviour
 
     public BuildingType buildingObject;
 
-    [HideInInspector]
+    //[HideInInspector]
     public float health;
     public float maxHealth = 4;
     public int resourceAmount = 5;
@@ -237,7 +237,7 @@ public class Building : MonoBehaviour
                 if (ReturnWood())
                 {
                     treeFallingDirection = PlayerController.global.transform.up.normalized + (PlayerController.global.transform.position - transform.position).normalized;
-                    // treeFallingDirection = (PlayerController.global.transform.position - transform.position).normalized;
+                    //treeFallingDirection = (PlayerController.global.transform.position - transform.position).normalized;
                 }
                 else
                 {
@@ -252,7 +252,7 @@ public class Building : MonoBehaviour
     void ResourceRegenerate()
     {
         GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
-
+       
         GiveResources();
         destroyedTimer = 1;
     }
@@ -356,7 +356,10 @@ public class Building : MonoBehaviour
 
         if (destroyedTimer != 0)
         {
-            if (destroyedTimer > 120)
+            bool appear = destroyedTimer > 120;
+            transform.GetChild(0).gameObject.SetActive(appear); //hide model
+
+            if (appear)
             {
                 transform.rotation = startingRotation;
                 transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f * Time.deltaTime);
@@ -419,7 +422,7 @@ public class Building : MonoBehaviour
             }
 
             //  transform.Rotate(treeFallingDirection * 20 * Time.deltaTime);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 85 * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 100 * Time.deltaTime);
         }
     }
 }
