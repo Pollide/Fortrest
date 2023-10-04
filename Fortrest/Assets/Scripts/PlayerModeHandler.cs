@@ -203,16 +203,17 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void TurretMenuSet(bool open)
     {
-        PlayerController.global.turretMenuHolder.gameObject.SetActive(open);
-
         if (!open)
         {
 
             if (PlayerController.global.turretMenuHolder.gameObject.activeSelf)
-                PlayerController.global.OpenResourceHolder(false);
+                PlayerController.global.UpdateResourceHolder(); //so the turret costs update
 
             SelectedTurret = null;
         }
+
+        PlayerController.global.turretMenuHolder.gameObject.SetActive(open);
+
     }
 
     private void BuildMode()
