@@ -19,7 +19,6 @@ using TMPro;
 public class Building : MonoBehaviour
 {
     public bool NaturalBool;
-    public bool DestroyedBool;
 
     public enum ResourceType
     {
@@ -77,8 +76,8 @@ public class Building : MonoBehaviour
     public Vector2 gridLocation;
     Vector3 treeFallingDirection;
 
-    [HideInInspector]
-    public bool regenerateBool;
+    // [HideInInspector]
+    public float destroyedTimer;
     Quaternion startingRotation;
     // Start is called before the first frame update
     void Start()
@@ -163,7 +162,7 @@ public class Building : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
-        if (!DestroyedBool)
+        if (destroyedTimer == 0)
         {
             health -= amount;
             if (HUDHealthBar && buildingObject == BuildingType.House)
@@ -199,22 +198,11 @@ public class Building : MonoBehaviour
         }
     }
 
-    public void Repair(float amount)
-    {
-        if (health < maxHealth)
-        {
-            health += amount;
-
-            HealthAnimation();
-        }
-
-    }
 
     public void DestroyBuilding()
     {
-        if (!DestroyedBool && GetComponent<Animation>())
+        if (destroyedTimer == 0 && GetComponent<Animation>())
         {
-            DestroyedBool = true;
             HealthAppearTimer = 999;//so it fades away
             if (buildingObject == BuildingType.House)
             {
@@ -236,6 +224,7 @@ public class Building : MonoBehaviour
             }
 
             //  PlayerEulerY = PlayerController.global.transform.eulerAngles.y;
+            LevelManager.global.RemoveBuildingVoid(transform);
 
             if (ReturnWood())
             {
@@ -245,7 +234,7 @@ public class Building : MonoBehaviour
                 GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
                 */
 
-                treeFallingDirection = PlayerController.global.transform.position - transform.position;
+                treeFallingDirection = PlayerController.global.transform.up.normalized;
 
             }
             else
@@ -253,8 +242,6 @@ public class Building : MonoBehaviour
                 if (GetComponent<Defence>())
                 {
                     PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
-                    LevelManager.global.RemoveBuildingVoid(transform);
-
                     Destroy(gameObject);
                 }
                 else
@@ -268,16 +255,10 @@ public class Building : MonoBehaviour
 
     void ResourceRegenerate()
     {
-        Invoke(nameof(DisableInvoke), GameManager.PlayAnimation(GetComponent<Animation>()).length);
+        GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
 
         GiveResources();
-        regenerateBool = true;
-    }
-
-    public void DisableInvoke()
-    {
-        DestroyedBool = true; //also calls in DestroyBuilding
-        gameObject.SetActive(false);
+        destroyedTimer = 1;
     }
 
     public void RestartGame()
@@ -297,7 +278,7 @@ public class Building : MonoBehaviour
         HealthAppearTimer = 0;
 
         GameManager.PlayAnimation(animation, "Health Hit");
-        transform.rotation = startingRotation;
+
 
         if (health > 0)
             GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Shake");
@@ -377,8 +358,26 @@ public class Building : MonoBehaviour
             }
         }
 
-        if (regenerateBool)
+        if (destroyedTimer != 0)
         {
+            if (destroyedTimer > 30)
+            {
+                transform.rotation = startingRotation;
+                transform.localScale = Vector3.Slerp(transform.localScale, Vector3.one, 0.5f * Time.deltaTime);
+
+                if (transform.localScale.x > 0.99f)
+                {
+                    transform.localScale = Vector3.one;
+                    health = maxHealth;
+                    LevelManager.global.AddBuildingVoid(transform);
+                    destroyedTimer = 0;
+                }
+            }
+            else
+            {
+                transform.localScale = Vector3.zero;
+                destroyedTimer += Time.deltaTime;
+            }
             /*
             transform.localScale = Vector3.Slerp(transform.localScale, Vector3.one, Time.deltaTime);
 
@@ -407,24 +406,26 @@ public class Building : MonoBehaviour
             Debug.DrawRay(transform.position, treeFallingDirection * 10, Color.red);
 
             // Use LookRotation to orient the tree towards the player
-            Quaternion targetRotation = Quaternion.LookRotation(-treeFallingDirection);
+            Quaternion targetRotation = Quaternion.LookRotation(treeFallingDirection);
 
 
             // Calculate the angle between the tree's current rotation and the target rotation
             float angleDifference = Vector3.Angle(transform.forward, treeFallingDirection);
-            float maxRotationAngle = 90.0f;
 
-            if (angleDifference > maxRotationAngle)
+
+            if (angleDifference == 0)
             {
+
                 // If the angle exceeds the maximum allowed angle, set the rotation to the maximum angle
                 //   targetRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotationAngle);
-                //  treeFallingDirection = Vector3.zero; //Stop falling once it reaches the maximum angle
-                Debug.Log("REACHED" + maxRotationAngle);
-                // ResourceRegenerate();
+                treeFallingDirection = Vector3.zero; //Stop falling once it reaches the maximum angle
+
+                ResourceRegenerate();
 
             }
 
-            transform.Rotate(treeFallingDirection * 20 * Time.deltaTime);
+            //  transform.Rotate(treeFallingDirection * 20 * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 80 * Time.deltaTime);
         }
     }
 }

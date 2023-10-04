@@ -135,7 +135,8 @@ public class EnemyController : MonoBehaviour
     {
         Checks();
         CheckHouse();
-        if (house.transform.parent.GetComponent<Building>().DestroyedBool)
+
+        if (house.transform.parent.GetComponent<Building>().destroyedTimer != 0)
         {
             bestTarget = null;
             agent.SetDestination(transform.position);
@@ -360,7 +361,7 @@ public class EnemyController : MonoBehaviour
             ActiveAnimator.SetBool("Moving", false);
         }
     }
-    
+
     void Patrol()
     {
         patrolCooldown += Time.deltaTime;

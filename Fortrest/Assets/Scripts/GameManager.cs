@@ -688,6 +688,7 @@ public class GameManager : MonoBehaviour
         }
 
         building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
+        building.destroyedTimer = (int)Pref("Building Regenerate" + LevelManager.global.ReturnIndex(value), building.destroyedTimer, load);
         building.SetLastHealth();
 
         if (house && building.health <= 0) //prevents a softlock
@@ -698,9 +699,6 @@ public class GameManager : MonoBehaviour
         if (load)
         {
             building.TakeDamage(0); //refreshes the bar
-
-            if (building.health <= 0)
-                building.DisableInvoke();
         }
 
         else if (building.GetComponent<Defence>())
