@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public SFXManager MusicManager; //manages all music
 
     public bool KeyboardBool = true;
-
+    bool loadingScene;
     [Header("Music")]
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour
     public Texture2D pointerDoubleSword;
     public Texture2D pointerSword;
     public Texture2D pointerAim;
+    public Texture2D pointerAimTargeted;
     public Texture2D pointerPickaxe;
     public Texture2D pointerAxe;
     public Texture2D pointerSickle;
@@ -260,12 +261,13 @@ public class GameManager : MonoBehaviour
                     hotSpot.y -= 5;
                 }
 
-                if (PlayerController.global.cursorNearEnemy)
-                    cursorTexture = pointerDoubleSword;
-            }
+                Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
 
-            if (!PlayerController.global.attacking)
-                PlayerController.global.cursorNearEnemy = false;
+                if (Physics.Raycast(ray, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Enemy" })))
+                {
+                    cursorTexture = PlayerController.global.canShoot ? pointerAimTargeted : pointerDoubleSword;
+                }
+            }
 
             if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && PlayerController.global.currentResource)
             {
@@ -285,7 +287,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (Application.isFocused)
-            Cursor.SetCursor(cursorTexture, cursorTexture == pointerGeneric ? Vector2.zero : hotSpot, CursorMode.ForceSoftware);
+            Cursor.SetCursor(cursorTexture, (cursorTexture == pointerGeneric || cursorTexture == pointerUpgrade) ? Vector2.zero : hotSpot, CursorMode.ForceSoftware);
     }
 
 
@@ -554,12 +556,31 @@ public class GameManager : MonoBehaviour
         DataPositionVoid("Player", PlayerController.global.transform, load);
         ///  DataEulerVoid("Player", PlayerController.global.transform, load);
         ///  
-        if (Boar.global)
-            DataPositionVoid("Mount", Boar.global.transform, load);
+
         //  DataEulerVoid("Mount", Boar.global.transform, load);
 
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
+
+
+        if (Boar.global)
+        {
+            DataPositionVoid("Mount", Boar.global.transform, load);
+            Boar.global.mounted = (int)Pref("Player Mount", Boar.global.mounted ? 1 : 0, load) == 1;
+
+            if (Boar.global.mounted && load)
+            {
+                Boar.global.mounted = false;//as Mount flips = !Mount
+                Boar.global.Mount();
+            }
+        }
+
+        PlayerModeHandler.global.inTheFortress = (int)Pref("Player In Fortress", PlayerModeHandler.global.inTheFortress ? 1 : 0, load) == 1;
+
+        if (PlayerModeHandler.global.inTheFortress && load)
+        {
+            PlayerModeHandler.global.SwitchToBuildMode();
+        }
 
         LevelManager.global.daylightTimer = Pref("Daylight", LevelManager.global.daylightTimer, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
@@ -688,6 +709,15 @@ public class GameManager : MonoBehaviour
         }
 
         building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
+        building.destroyedTimer = (int)Pref("Building Regenerate" + LevelManager.global.ReturnIndex(value), building.destroyedTimer, load);
+
+
+        if (building.destroyedTimer != 0 && load)
+        {
+            GameManager.PlayAnimation(building.GetComponent<Animation>(), "Nature Destroy", true, true); //hides model quickly
+        }
+
+
         building.SetLastHealth();
 
         if (house && building.health <= 0) //prevents a softlock
@@ -698,9 +728,6 @@ public class GameManager : MonoBehaviour
         if (load)
         {
             building.TakeDamage(0); //refreshes the bar
-
-            if (building.health <= 0)
-                building.DisableInvoke();
         }
 
         else if (building.GetComponent<Defence>())

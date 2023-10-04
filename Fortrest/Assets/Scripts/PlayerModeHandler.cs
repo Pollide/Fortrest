@@ -180,16 +180,6 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (!inTheFortress)
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.EnterHouseSound);
-                PlayerController.global.evading = false;
-                lastMode = playerModes;
-                entryPosition = PlayerController.global.transform.position;
-                if (House.GetComponent<Building>().textDisplayed)
-                {
-                    LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
-                    House.GetComponent<Building>().textDisplayed = false;
-                }
-                centerMouse = false;
                 SwitchToBuildMode();
             }
             else
@@ -213,10 +203,17 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void TurretMenuSet(bool open)
     {
+        if (!open)
+        {
+
+            if (PlayerController.global.turretMenuHolder.gameObject.activeSelf)
+                PlayerController.global.UpdateResourceHolder(); //so the turret costs update
+
+            SelectedTurret = null;
+        }
+
         PlayerController.global.turretMenuHolder.gameObject.SetActive(open);
 
-        if (!open)
-            SelectedTurret = null;
     }
 
     private void BuildMode()
@@ -532,6 +529,16 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
         if (active)
         {
+            PlayerController.global.evading = false;
+            lastMode = playerModes;
+            // entryPosition = PlayerController.global.transform.position;
+            if (House.GetComponent<Building>().textDisplayed)
+            {
+                LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
+                House.GetComponent<Building>().textDisplayed = false;
+            }
+            centerMouse = false;
+
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
             PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position, true);

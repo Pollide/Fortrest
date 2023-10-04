@@ -65,8 +65,6 @@ public class Camp : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
-            PlayerController.global.cursorNearEnemy = true;
-
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 canBeDamaged = false;

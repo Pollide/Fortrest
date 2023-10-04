@@ -18,7 +18,7 @@ public class SpiderBoss : MonoBehaviour
     private float damage;
     private float health;
     private float maxHealth;
-    private bool canBeDamaged;
+    public bool canBeDamaged;
     public bool dead;
     public GameObject healthCanvas;
     public GameObject healthBar;
@@ -26,6 +26,16 @@ public class SpiderBoss : MonoBehaviour
     private float stoppingDistance;
     private float angularSpeed;
     private float acceleration;
+    public int stage;
+    private float timer;
+    private float specialAttackCD;
+    private float randomChance;
+    private float poisonAttackChance;
+    private float webAttackChance;
+    public GameObject poisonProjectile;
+    private float poisonSpeed;
+    private Rigidbody rb;
+    private bool jump;
 
     private void Awake()
     {
@@ -43,9 +53,17 @@ public class SpiderBoss : MonoBehaviour
         retreating = false;
         agent = animator.GetComponent<NavMeshAgent>();
         damage = 5.0f;
-        health = 200.0f;
+        health = 100.0f;
         maxHealth = health;
-        speed = 4.0f;
+        canBeDamaged = true;
+        stage = 1;
+        specialAttackCD = 10.0f;
+        poisonAttackChance = 0.5f;
+        webAttackChance = 0.3f;
+        poisonSpeed = 20.0f;
+        rb = GetComponent<Rigidbody>();
+
+        speed = 5.0f;
         stoppingDistance = 3.5f;
         angularSpeed = 180.0f;
         acceleration = 10.0f;
@@ -87,13 +105,38 @@ public class SpiderBoss : MonoBehaviour
             retreating = false;
         }
 
+        // Triggering different stages
+        if (health < ((maxHealth / 3) * 2) && health > (health / 3))
+        {
+            stage = 2;
+        }      
+        else if (health < (health / 3))
+        {
+            stage = 3;
+        }
+
+        // Special Attacks
+        if (awoken)
+        {
+            timer += Time.deltaTime;
+        }       
+        if (timer >= specialAttackCD)
+        {
+            SpecialAttack();
+        }     
+
+        if (jump)
+        {
+            agent.Move(-transform.forward * (Time.deltaTime * 10.0f));
+        }
+
         // Death state
         if (dead)
         {
             animator.SetTrigger("Death");
         }
     }
-  
+
     public void LookAt(Transform target)
     {
         Vector3 direction = (target.position - transform.position).normalized; // Gets a direction using a normalized vector
@@ -105,7 +148,7 @@ public class SpiderBoss : MonoBehaviour
     {
         LookAt(playerTransform);
         agent.SetDestination(agent.transform.position);
-        animator.SetTrigger("Attack1");
+        animator.SetTrigger("Attack");
     }
 
     public void NormalAttackAnimEvent()
@@ -133,6 +176,49 @@ public class SpiderBoss : MonoBehaviour
         }
     }
 
+    private void PoisonAttackAnimEvent()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            Vector3 direction = transform.forward;
+            if (i == 1)
+            {
+                direction = transform.forward + (transform.right * 0.8f);
+            }
+            else if (i == 2)
+            {
+                direction = transform.forward - (transform.right * 0.8f);
+            }
+            else if (i == 3)
+            {
+                direction = transform.forward + (transform.right * 0.4f);
+            }
+            else if (i == 4)
+            {
+                direction = transform.forward - (transform.right * 0.4f);
+            }
+            GameObject projectile = Instantiate(poisonProjectile, transform.position + (transform.forward) + new Vector3(0f, 1f, 0f), Quaternion.identity);
+            projectile.GetComponent<Rigidbody>().AddForce(direction * poisonSpeed, ForceMode.Impulse);
+        }        
+    }
+
+    private void WebAttackAnimEvent()
+    {
+        
+    }
+
+    private void StartJumpAnimEvent()
+    {
+        jump = true;
+        animator.speed = 0.75f;
+    }
+
+    private void EndJumpAnimEvent()
+    {
+        jump = false;
+        animator.speed = 1.0f;
+    }
+
     private void Damaged(float amount)
     {
         health -= amount;
@@ -146,13 +232,54 @@ public class SpiderBoss : MonoBehaviour
         }
     }
 
+    private void SpecialAttack()
+    {
+        timer = 0;
+        animator.ResetTrigger("PoisonAttack");
+        animator.ResetTrigger("WebAttack");
+        animator.ResetTrigger("JumpAttack");
+
+        switch (stage)
+        {
+            case 1:
+                animator.SetTrigger("PoisonAttack");
+                break;
+            case 2:
+                randomChance = Random.Range(0f, 1f);
+                if (randomChance <= poisonAttackChance || randomChance > poisonAttackChance + webAttackChance)
+                {
+                    animator.SetTrigger("PoisonAttack");
+                }
+                else if (randomChance <= poisonAttackChance + webAttackChance)
+                {
+                    animator.SetTrigger("WebAttack");
+                }               
+                break;
+            case 3:
+                randomChance = Random.Range(0f, 1f);
+                if (randomChance <= poisonAttackChance)
+                {
+                    animator.SetTrigger("PoisonAttack");
+                }
+                else if (randomChance <= poisonAttackChance + webAttackChance)
+                {
+                    animator.SetTrigger("WebAttack");
+                }
+                else
+                {
+                    animator.SetTrigger("JumpAttack");
+                }
+                break;
+            default:
+                break;
+        }         
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
             Debug.Log("yoza");
-            PlayerController.global.cursorNearEnemy = true;
-
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 canBeDamaged = false;
@@ -162,7 +289,7 @@ public class SpiderBoss : MonoBehaviour
                 Damaged(PlayerController.global.attackDamage);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
-        }       
+        }
         if (other.gameObject.tag == "Arrow")
         {
             if (!other.GetComponent<ArrowTrigger>().singleHit)

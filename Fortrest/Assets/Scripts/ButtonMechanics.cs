@@ -36,9 +36,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     public int TerrainTeleportInt = -1;
 
     [Header("Build")]
-    public bool RepairBool;
-    public bool UpgradeBool;
-    public bool DestroyBool;
+    public int UpgradeInt;
 
     [Header("Menu")]
     public bool ContinueBool;
@@ -108,6 +106,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         //Pause.global.SelectedList[Pause.global.ReturnIndex()] = -1;
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
+
     }
 
     //checks to see if the pointer has entered the button
@@ -116,7 +115,19 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
         Buttons buttons = GetComponentInParent<Buttons>();
         buttons.MenuList[buttons.ReturnIndex()] = transform.GetSiblingIndex();
+
+        CheckUpgrade();
         //ChangeColourVoid(Color.white);
+    }
+
+    void CheckUpgrade()
+    {
+        if (UpgradeInt != 0)
+        {
+            PlayerController.global.UpdateResourceHolder(UpgradeInt);
+
+            PlayerController.global.OpenResourceHolder(true);
+        }
     }
 
     //checks to see if the mouse was clicked ontop of the button
@@ -145,32 +156,46 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             PlayerController.global.PauseVoid(false);
         }
 
-        if (UpgradeBool)
+        if (UpgradeInt != 0)
         {
-            TurretStats turretStats = GetComponent<TurretStats>();
+            CheckUpgrade();
 
-
-            Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
-
-            if (defence && defence.ModelHolder.childCount > defence.CurrentLevel + 1)
+            if (PlayerController.global.CheckSufficientResources())
             {
-                defence.CurrentLevel++;
-                defence.ReturnAnimator();
+                if (UpgradeInt > 0)
+                {
+                    TurretStats turretStats = GetComponent<TurretStats>();
+
+
+                    Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
+
+                    if (defence && defence.ModelHolder.childCount > defence.CurrentLevel + 1)
+                    {
+                        defence.CurrentLevel++;
+                        defence.ReturnAnimator();
+                    }
+                }
+
+                if (UpgradeInt == -1)
+                {
+                    PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
+                    PlayerModeHandler.global.SelectedTurret.health = PlayerModeHandler.global.SelectedTurret.maxHealth;
+                    PlayerModeHandler.global.SelectedTurret.TakeDamage(0);
+                }
+
+                if (UpgradeInt == -2)
+                {
+                    PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
+                    PlayerModeHandler.global.SelectedTurret.DestroyBuilding();
+                }
+            }
+            else
+            {
+                GameManager.PlayAnimation(GetComponent<Animation>());
             }
         }
 
-        if (DestroyBool)
-        {
-            PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
-            PlayerModeHandler.global.SelectedTurret.DestroyBuilding();
-        }
 
-        if (RepairBool)
-        {
-            PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
-            PlayerModeHandler.global.SelectedTurret.health = PlayerModeHandler.global.SelectedTurret.maxHealth;
-            PlayerModeHandler.global.SelectedTurret.TakeDamage(0);
-        }
 
         if (BeginingBool || PlayBool)
         {
@@ -193,9 +218,15 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (TerrainTeleportInt != -1)
         {
-            Vector3 pos = LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(50, 2, 50);
-            pos.y = 2;
-            PlayerController.global.TeleportPlayer(pos, false);
+            Vector3 posVector = LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(50, 2, 50);
+            posVector.y = 2;
+
+            if (TerrainTeleportInt == 4)
+            {
+                posVector += new Vector3(5, 0, 150);
+            }
+
+            PlayerController.global.TeleportPlayer(posVector, false);
         }
 
         if (SaveBool)

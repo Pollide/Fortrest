@@ -13,18 +13,16 @@ public class TakeDamageTrigger : MonoBehaviour
         stateMachine = transform.parent.GetComponent<BossStateMachine>();
     }
 
-    private void  OnTriggerStay(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.gameObject == player.SwordGameObject)
         {
-            player.cursorNearEnemy = true;
-
             if (player.attacking && stateMachine.CanBeDamaged && player.damageEnemy)
             {
                 stateMachine.CanBeDamaged = false;
                 stateMachine.TakeDamage(player.attackDamage);
             }
-            
+
         }
     }
 }
