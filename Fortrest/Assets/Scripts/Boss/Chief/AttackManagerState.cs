@@ -109,7 +109,7 @@ public class AttackManagerState : BossState
         float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
 
         float threshold = 0.9f;
-        if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
+        if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance && stateMachine.BossAnimator.GetBool("isTired") == false)
         {
             return true;
         }
