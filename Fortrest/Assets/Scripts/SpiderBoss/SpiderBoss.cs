@@ -18,7 +18,7 @@ public class SpiderBoss : MonoBehaviour
     private float damage;
     private float health;
     private float maxHealth;
-    private bool canBeDamaged;
+    public bool canBeDamaged;
     public bool dead;
     public GameObject healthCanvas;
     public GameObject healthBar;
@@ -43,8 +43,10 @@ public class SpiderBoss : MonoBehaviour
         retreating = false;
         agent = animator.GetComponent<NavMeshAgent>();
         damage = 5.0f;
-        health = 200.0f;
+        health = 100.0f;
         maxHealth = health;
+        canBeDamaged = true;
+
         speed = 4.0f;
         stoppingDistance = 3.5f;
         angularSpeed = 180.0f;
@@ -153,6 +155,7 @@ public class SpiderBoss : MonoBehaviour
             Debug.Log("yoza");
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
+                Debug.Log("yoza");
                 canBeDamaged = false;
                 StopAllCoroutines();
                 //PickSound(hitSound, hitSound2, 1.0f);
