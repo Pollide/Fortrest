@@ -224,7 +224,7 @@ public class Building : MonoBehaviour
             }
 
             //  PlayerEulerY = PlayerController.global.transform.eulerAngles.y;
-            LevelManager.global.RemoveBuildingVoid(transform);
+
 
             if (ReturnWood())
             {
@@ -242,6 +242,7 @@ public class Building : MonoBehaviour
                 if (GetComponent<Defence>())
                 {
                     PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
+                    LevelManager.global.RemoveBuildingVoid(transform);
                     Destroy(gameObject);
                 }
                 else
@@ -363,13 +364,12 @@ public class Building : MonoBehaviour
             if (destroyedTimer > 30)
             {
                 transform.rotation = startingRotation;
-                transform.localScale = Vector3.Slerp(transform.localScale, Vector3.one, 0.5f * Time.deltaTime);
+                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f * Time.deltaTime);
 
                 if (transform.localScale.x > 0.99f)
                 {
                     transform.localScale = Vector3.one;
                     health = maxHealth;
-                    LevelManager.global.AddBuildingVoid(transform);
                     destroyedTimer = 0;
                 }
             }
