@@ -103,7 +103,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool damageEnemy = false;
     [HideInInspector] public bool lunge = false;
     [HideInInspector] public bool upgradedMelee;
-    [HideInInspector] public bool cursorNearEnemy;
 
     // States
     [Header("Player States")]

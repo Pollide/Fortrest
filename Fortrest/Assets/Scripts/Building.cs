@@ -361,7 +361,7 @@ public class Building : MonoBehaviour
 
         if (destroyedTimer != 0)
         {
-            if (destroyedTimer > 30)
+            if (destroyedTimer > 120)
             {
                 transform.rotation = startingRotation;
                 transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f * Time.deltaTime);

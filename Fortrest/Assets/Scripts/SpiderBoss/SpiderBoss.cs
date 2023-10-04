@@ -93,7 +93,7 @@ public class SpiderBoss : MonoBehaviour
             animator.SetTrigger("Death");
         }
     }
-  
+
     public void LookAt(Transform target)
     {
         Vector3 direction = (target.position - transform.position).normalized; // Gets a direction using a normalized vector
@@ -151,8 +151,6 @@ public class SpiderBoss : MonoBehaviour
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
             Debug.Log("yoza");
-            PlayerController.global.cursorNearEnemy = true;
-
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 canBeDamaged = false;
@@ -162,7 +160,7 @@ public class SpiderBoss : MonoBehaviour
                 Damaged(PlayerController.global.attackDamage);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
-        }       
+        }
         if (other.gameObject.tag == "Arrow")
         {
             if (!other.GetComponent<ArrowTrigger>().singleHit)

@@ -260,8 +260,12 @@ public class GameManager : MonoBehaviour
                     hotSpot.y -= 5;
                 }
 
-                if (PlayerController.global.cursorNearEnemy)
+                Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(Input.mousePosition);
+
+                if (Physics.Raycast(ray, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Enemy" })))
+                {
                     cursorTexture = pointerDoubleSword;
+                }
             }
 
             if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && PlayerController.global.currentResource)
