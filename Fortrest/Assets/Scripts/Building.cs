@@ -252,7 +252,7 @@ public class Building : MonoBehaviour
     void ResourceRegenerate()
     {
         GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy");
-       
+
         GiveResources();
         destroyedTimer = 1;
     }
@@ -366,7 +366,7 @@ public class Building : MonoBehaviour
 
                 if (transform.localScale.x > 0.99f)
                 {
-              
+
                     transform.localScale = Vector3.one;
                     health = maxHealth;
                     destroyedTimer = 0;
@@ -429,6 +429,6 @@ public class Building : MonoBehaviour
 
     public void SetModel(bool active)
     {
-
+        transform.GetChild(0).gameObject.SetActive(active);
     }
 }
