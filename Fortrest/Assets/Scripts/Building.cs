@@ -236,7 +236,8 @@ public class Building : MonoBehaviour
             {
                 if (ReturnWood())
                 {
-                    treeFallingDirection = PlayerController.global.transform.up.normalized;
+                    treeFallingDirection = PlayerController.global.transform.up.normalized + (PlayerController.global.transform.position - transform.position).normalized;
+                    // treeFallingDirection = (PlayerController.global.transform.position - transform.position).normalized;
                 }
                 else
                 {
@@ -418,7 +419,7 @@ public class Building : MonoBehaviour
             }
 
             //  transform.Rotate(treeFallingDirection * 20 * Time.deltaTime);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 80 * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 85 * Time.deltaTime);
         }
     }
 }
