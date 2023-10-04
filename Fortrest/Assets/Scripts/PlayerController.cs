@@ -1174,31 +1174,31 @@ public class PlayerController : MonoBehaviour
             woodCostList[0].ResourceCost = -10;
             stoneCostList[0].ResourceCost = -5;
         }
-
-        if (upgradeTypeInt == -2) //destroy
+        else if (upgradeTypeInt == -2) //destroy
         {
             woodCostList[0].ResourceCost = -5;
         }
-
-        if (bridgeTypeInt == 1)
+        else if (upgradeTypeInt > 0) //upgrade
+        {
+            woodCostList[0].ResourceCost = -5;
+            stoneCostList[0].ResourceCost = -5;
+        }
+        else if (bridgeTypeInt == 1)
         {
             woodCostList[0].ResourceCost = -30;
             stoneCostList[0].ResourceCost = -10;
         }
-
-        if (bridgeTypeInt == 2)
+        else if (bridgeTypeInt == 2)
         {
             woodCostList[1].ResourceCost = -30;
             stoneCostList[1].ResourceCost = -10;
         }
-
-        if (bridgeTypeInt == 3)
+        else if (bridgeTypeInt == 3)
         {
             woodCostList[2].ResourceCost = -30;
             stoneCostList[2].ResourceCost = -10;
         }
-
-        if (bridgeTypeInt == 4)
+        else if (bridgeTypeInt == 4)
         {
             woodCostList[0].ResourceCost = -10;
             stoneCostList[0].ResourceCost = -10;
@@ -1207,8 +1207,7 @@ public class PlayerController : MonoBehaviour
             woodCostList[2].ResourceCost = -10;
             stoneCostList[2].ResourceCost = -10;
         }
-
-        if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+        else if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
         {
             if (PlayerModeHandler.global.buildType == BuildType.Turret)
             {
