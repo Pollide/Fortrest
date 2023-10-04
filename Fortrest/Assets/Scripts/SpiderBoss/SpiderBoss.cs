@@ -26,6 +26,14 @@ public class SpiderBoss : MonoBehaviour
     private float stoppingDistance;
     private float angularSpeed;
     private float acceleration;
+    public int stage;
+    private float timer;
+    private float specialAttackCD;
+    private float randomChance;
+    private float poisonAttackChance;
+    private float webAttackChance;
+    public GameObject poisonProjectile;
+    public float projectileSpeed;
 
     private void Awake()
     {
@@ -46,6 +54,10 @@ public class SpiderBoss : MonoBehaviour
         health = 100.0f;
         maxHealth = health;
         canBeDamaged = true;
+        stage = 1;
+        specialAttackCD = 10.0f;
+        poisonAttackChance = 0.5f;
+        webAttackChance = 0.3f;        
 
         speed = 4.0f;
         stoppingDistance = 3.5f;
@@ -89,6 +101,26 @@ public class SpiderBoss : MonoBehaviour
             retreating = false;
         }
 
+        // Triggering different stages
+        if (health < ((maxHealth / 3) * 2) && health > (health / 3))
+        {
+            stage = 2;
+        }      
+        else if (health < (health / 3))
+        {
+            stage = 3;
+        }
+
+        // Special Attacks
+        if (awoken)
+        {
+            timer += Time.deltaTime;
+        }       
+        if (timer >= specialAttackCD)
+        {
+            SpecialAttack();
+        }     
+
         // Death state
         if (dead)
         {
@@ -107,7 +139,7 @@ public class SpiderBoss : MonoBehaviour
     {
         LookAt(playerTransform);
         agent.SetDestination(agent.transform.position);
-        animator.SetTrigger("Attack1");
+        animator.SetTrigger("Attack");
     }
 
     public void NormalAttackAnimEvent()
@@ -135,6 +167,12 @@ public class SpiderBoss : MonoBehaviour
         }
     }
 
+    private void PoisonAttackAnimEvent()
+    {
+        GameObject projectile = Instantiate(poisonProjectile, transform.position, Quaternion.identity);
+        projectile.GetComponent<Rigidbody>().AddForce(transform.forward * projectileSpeed, ForceMode.Impulse);
+    }
+
     private void Damaged(float amount)
     {
         health -= amount;
@@ -148,6 +186,49 @@ public class SpiderBoss : MonoBehaviour
         }
     }
 
+    private void SpecialAttack()
+    {
+        timer = 0;
+        animator.ResetTrigger("PoisonAttack");
+        animator.ResetTrigger("WebAttack");
+        animator.ResetTrigger("JumpAttack");
+
+        switch (stage)
+        {
+            case 1:
+                animator.SetTrigger("PoisonAttack");
+                break;
+            case 2:
+                randomChance = Random.Range(0f, 1f);
+                if (randomChance <= poisonAttackChance || randomChance > poisonAttackChance + webAttackChance)
+                {
+                    animator.SetTrigger("PoisonAttack");
+                }
+                else if (randomChance <= poisonAttackChance + webAttackChance)
+                {
+                    animator.SetTrigger("WebAttack");
+                }               
+                break;
+            case 3:
+                randomChance = Random.Range(0f, 1f);
+                if (randomChance <= poisonAttackChance)
+                {
+                    animator.SetTrigger("PoisonAttack");
+                }
+                else if (randomChance <= poisonAttackChance + webAttackChance)
+                {
+                    animator.SetTrigger("WebAttack");
+                }
+                else
+                {
+                    animator.SetTrigger("JumpAttack");
+                }
+                break;
+            default:
+                break;
+        }         
+    }
+
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
@@ -156,7 +237,6 @@ public class SpiderBoss : MonoBehaviour
 
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
-                Debug.Log("yoza");
                 canBeDamaged = false;
                 StopAllCoroutines();
                 //PickSound(hitSound, hitSound2, 1.0f);
