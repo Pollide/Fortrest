@@ -369,7 +369,6 @@ public class Building : MonoBehaviour
             }
             else
             {
-                transform.localScale = Vector3.zero;
                 destroyedTimer += Time.deltaTime;
             }
             /*

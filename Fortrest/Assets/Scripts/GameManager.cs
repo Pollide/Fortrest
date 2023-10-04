@@ -555,12 +555,31 @@ public class GameManager : MonoBehaviour
         DataPositionVoid("Player", PlayerController.global.transform, load);
         ///  DataEulerVoid("Player", PlayerController.global.transform, load);
         ///  
-        if (Boar.global)
-            DataPositionVoid("Mount", Boar.global.transform, load);
+
         //  DataEulerVoid("Mount", Boar.global.transform, load);
 
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
+
+
+        if (Boar.global)
+        {
+            DataPositionVoid("Mount", Boar.global.transform, load);
+            Boar.global.mounted = (int)Pref("Player Mount", Boar.global.mounted ? 1 : 0, load) == 1;
+
+            if (Boar.global.mounted && load)
+            {
+                Boar.global.mounted = false;//as Mount flips = !Mount
+                Boar.global.Mount();
+            }
+        }
+
+        PlayerModeHandler.global.inTheFortress = (int)Pref("Player In Fortress", PlayerModeHandler.global.inTheFortress ? 1 : 0, load) == 1;
+
+        if (PlayerModeHandler.global.inTheFortress && load)
+        {
+            PlayerModeHandler.global.SwitchToBuildMode();
+        }
 
         LevelManager.global.daylightTimer = Pref("Daylight", LevelManager.global.daylightTimer, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
@@ -690,6 +709,12 @@ public class GameManager : MonoBehaviour
 
         building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
         building.destroyedTimer = (int)Pref("Building Regenerate" + LevelManager.global.ReturnIndex(value), building.destroyedTimer, load);
+
+        if (building.destroyedTimer != 0 && load)
+        {
+            building.transform.localScale = Vector3.zero;
+        }
+
         building.SetLastHealth();
 
         if (house && building.health <= 0) //prevents a softlock

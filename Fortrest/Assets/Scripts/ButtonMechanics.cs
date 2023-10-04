@@ -193,9 +193,15 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (TerrainTeleportInt != -1)
         {
-            Vector3 pos = LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(50, 2, 50);
-            pos.y = 2;
-            PlayerController.global.TeleportPlayer(pos, false);
+            Vector3 posVector = LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(50, 2, 50);
+            posVector.y = 2;
+
+            if (TerrainTeleportInt == 4)
+            {
+                posVector += new Vector3(5, 0, 150);
+            }
+
+            PlayerController.global.TeleportPlayer(posVector, false);
         }
 
         if (SaveBool)
