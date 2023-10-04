@@ -1058,6 +1058,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2371456788394241868}
   - component: {fileID: 799317915277383869}
+  - component: {fileID: 6301308933982645103}
   m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
@@ -1183,6 +1184,22 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.000000011175871, y: 0.021902546, z: 0.0014981069}
     m_Extent: {x: 0.02126, y: 0.025445953, z: 0.014162365}
   m_DirtyAABB: 0
+--- !u!111 &6301308933982645103
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4198200033451987258}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: a585eb51da4f5624e8b82310c15c4eec, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: a585eb51da4f5624e8b82310c15c4eec, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &4275072300585029141
 GameObject:
   m_ObjectHideFlags: 0
@@ -1707,6 +1724,8 @@ MonoBehaviour:
   attacking: 0
   canGetInHouse: 0
   bridgeInteract: 0
+  poisoned: 0
+  poisonAnimation: {fileID: 6301308933982645103}
   canTeleport: 0
   teleporting: 0
   AxeGameObject: {fileID: 456314874255850566}

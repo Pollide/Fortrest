@@ -4,15 +4,26 @@ using UnityEngine;
 
 public class PoisonProjectile : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private bool hitOnce;
+
+    private void Start()
     {
-        
+        StartCoroutine(SelfDestruct());
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnCollisionEnter(Collision collision)
     {
-        
+        if (collision.gameObject == PlayerController.global.gameObject && !hitOnce)
+        {
+            PlayerController.global.poisoned = true;
+            hitOnce = true;
+        }
+        Destroy(gameObject);
+    }
+
+    private IEnumerator SelfDestruct()
+    {
+        yield return new WaitForSeconds(1.6f);
+        Destroy(gameObject);
     }
 }
