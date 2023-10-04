@@ -226,30 +226,24 @@ public class Building : MonoBehaviour
             //  PlayerEulerY = PlayerController.global.transform.eulerAngles.y;
 
 
-            if (ReturnWood())
+            if (GetComponent<Defence>())
             {
-                /*
-                GetComponent<Rigidbody>().isKinematic = false;
-                GetComponent<Rigidbody>().useGravity = true;
-                GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
-                */
-
-                treeFallingDirection = PlayerController.global.transform.up.normalized;
-
+                PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
+                LevelManager.global.RemoveBuildingVoid(transform);
+                Destroy(gameObject);
             }
             else
             {
-                if (GetComponent<Defence>())
+                if (ReturnWood())
                 {
-                    PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
-                    LevelManager.global.RemoveBuildingVoid(transform);
-                    Destroy(gameObject);
+                    treeFallingDirection = PlayerController.global.transform.up.normalized;
                 }
                 else
                 {
                     ResourceRegenerate();
                 }
             }
+
         }
         PlayerController.global.currentResource = null;
     }
