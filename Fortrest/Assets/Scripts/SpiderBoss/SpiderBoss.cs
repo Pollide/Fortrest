@@ -178,20 +178,27 @@ public class SpiderBoss : MonoBehaviour
 
     private void PoisonAttackAnimEvent()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 5; i++)
         {
-            Quaternion rotation = Quaternion.identity;
-            Vector3 spawnPosition = transform.position + (transform.forward);
+            Vector3 direction = transform.forward;
             if (i == 1)
             {
-                rotation = Quaternion.Euler(0f, 90f, 0f);
+                direction = transform.forward + (transform.right * 0.8f);
             }
             else if (i == 2)
             {
-                rotation = Quaternion.Euler(0f, -90f, 0f);
+                direction = transform.forward - (transform.right * 0.8f);
             }
-            GameObject projectile = Instantiate(poisonProjectile, spawnPosition, rotation);
-            projectile.GetComponent<Rigidbody>().AddForce(transform.forward * poisonSpeed, ForceMode.Impulse);
+            else if (i == 3)
+            {
+                direction = transform.forward + (transform.right * 0.4f);
+            }
+            else if (i == 4)
+            {
+                direction = transform.forward - (transform.right * 0.4f);
+            }
+            GameObject projectile = Instantiate(poisonProjectile, transform.position + (transform.forward) + new Vector3(0f, 1f, 0f), Quaternion.identity);
+            projectile.GetComponent<Rigidbody>().AddForce(direction * poisonSpeed, ForceMode.Impulse);
         }        
     }
 

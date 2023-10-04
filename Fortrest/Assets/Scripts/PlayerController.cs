@@ -111,6 +111,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool attacking = false;
     public bool canGetInHouse;
     public bool bridgeInteract;
+    public bool poisoned;
+    public Animation poisonAnimation;
 
     // Teleporter
     public bool canTeleport = false;
@@ -606,6 +608,13 @@ public class PlayerController : MonoBehaviour
         CheckCurrentTool();
         Resting();
 
+        if (poisoned)
+        {
+            GameManager.PlayAnimation(poisonAnimation, "Poison");
+            StartCoroutine(PoisonDamage());
+            poisoned = false;
+        }
+
         if (playerDead)
         {
             Death();
@@ -629,6 +638,15 @@ public class PlayerController : MonoBehaviour
                 Boar.global.Mount();
             }
             CharacterAnimator.SetTrigger("Death");
+        }
+    }
+
+    private IEnumerator PoisonDamage()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            playerHealth -= 5f;
+            yield return new WaitForSeconds(1f);
         }
     }
 
