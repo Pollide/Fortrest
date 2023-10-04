@@ -1357,6 +1357,7 @@ public class PlayerController : MonoBehaviour
     public float division = 1;
     private void RotatePlayer()
     {
+
         if (!Boar.global.mounted)
         {
             if (GameManager.global.KeyboardBool)
@@ -1365,7 +1366,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 targetPosition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "RotationRaycast" })))
+                if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "RotationRaycast", "Terrain" })))
                     targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 4;
 
                 targetPosition.y = transform.position.y;
