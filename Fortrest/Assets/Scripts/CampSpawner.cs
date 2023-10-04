@@ -39,7 +39,7 @@ public class CampSpawner : MonoBehaviour
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Camps Appear");
         }
         else if (LevelManager.global.campsCount == 0 && campUI.activeSelf)
-        {          
+        {
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Camps Appear", false);
         }
 
@@ -90,21 +90,47 @@ public class CampSpawner : MonoBehaviour
 
                 if (distance > 40.0f)
                 {
-                    Collider[] colliders = Physics.OverlapSphere(spawnPosition, mesh.bounds.size.x / 2.0f, GameManager.ReturnBitShift(new string[] { "Resource", "Building", "Boar" }));
 
-                    for (int i = 0; i < colliders.Length; i++)
+
+                    //Define the positions for the four raycasts
+                    Vector3[] raycastPositions = new Vector3[4];
+                    raycastPositions[0] = spawnPosition;
+                    float size = 5;
+                    raycastPositions[1] = spawnPosition + new Vector3(size, 0f, 0f); // Shift in positive X direction
+                    raycastPositions[2] = spawnPosition - new Vector3(size, 0f, 0f); // Shift in negative X direction
+                    raycastPositions[3] = spawnPosition + new Vector3(0f, 0f, size); // Shift in positive Z direction
+
+                    //Loop through each position and cast a ray
+                    bool isSafe = true; //Assuming it's safe until proven otherwise
+
+                    foreach (Vector3 position in raycastPositions)
                     {
-                        if (colliders[i].tag == "Shrine" || colliders[i].tag == "Boar" || colliders[i].tag == "Camp")
+                        if (!Physics.Raycast(position, Vector3.down, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
                         {
-                            return;
-                        }
-                        else if (colliders[i].tag == "Resource")
-                        {
-                            Destroy(colliders[i].gameObject);
+                            isSafe = false;
+
+                            break; //Exit the loop if any of the raycasts hit nothing
                         }
                     }
-                    GameObject camp = Instantiate(campPrefab, spawnPosition, Quaternion.identity);
-                    spawnCamp = true;
+
+                    if (isSafe) //Raycast prevents camp spawning somewhere there isnt terrain has island has unique shape
+                    {
+                        Collider[] colliders = Physics.OverlapSphere(spawnPosition, mesh.bounds.size.x / 2.0f, GameManager.ReturnBitShift(new string[] { "Resource", "Building", "Boar" }));
+
+                        for (int i = 0; i < colliders.Length; i++)
+                        {
+                            if (colliders[i].tag == "Shrine" || colliders[i].tag == "Boar" || colliders[i].tag == "Camp")
+                            {
+                                return;
+                            }
+                            else if (colliders[i].tag == "Resource")
+                            {
+                                Destroy(colliders[i].gameObject);
+                            }
+                        }
+                        GameObject camp = Instantiate(campPrefab, spawnPosition, Quaternion.identity);
+                        spawnCamp = true;
+                    }
                 }
                 else
                 {
