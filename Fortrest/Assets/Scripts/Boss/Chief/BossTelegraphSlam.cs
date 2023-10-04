@@ -77,5 +77,9 @@ public class BossTelegraphSlam : MonoBehaviour
 
             attackManagerState.IsAttacking = false;
         }
+       
+        //outer.SetActive(false);
+        //gameObject.SetActive(false);
+        
     }
 }
