@@ -264,9 +264,6 @@ public class GameManager : MonoBehaviour
                     cursorTexture = pointerDoubleSword;
             }
 
-            if (!PlayerController.global.attacking)
-                PlayerController.global.cursorNearEnemy = false;
-
             if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && PlayerController.global.currentResource)
             {
                 cursorTexture = pointerSickle;
