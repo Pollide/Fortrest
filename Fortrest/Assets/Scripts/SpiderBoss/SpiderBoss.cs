@@ -9,7 +9,6 @@ public class SpiderBoss : MonoBehaviour
     public static SpiderBoss global;
 
     private Transform playerTransform;
-    public float awakeRange;
     private float webAttackRange;
     private Animator animator;
     [HideInInspector] public bool awoken;
@@ -18,9 +17,7 @@ public class SpiderBoss : MonoBehaviour
     public bool retreating;
     private NavMeshAgent agent;
     private float damage;
-    private float health;
     private float maxHealth;
-    public bool canBeDamaged;
     public bool dead;
     public GameObject healthCanvas;
     public GameObject healthBar;
@@ -45,6 +42,11 @@ public class SpiderBoss : MonoBehaviour
     public bool rootNow;
     public bool midAir;
     public bool slamNow;
+    public bool startIntro;
+
+
+    [HideInInspector]
+    public BossSpawner bossSpawner;
 
     private void Awake()
     {
@@ -53,9 +55,13 @@ public class SpiderBoss : MonoBehaviour
 
     void Start()
     {
+        if (!bossSpawner)
+        {
+            Debug.Log("Yo pol cant dump spider onto ground by itself now, needs to come from the spawner as spawner holds the health for all bosses");
+        }
+
         VFXWeb.Stop();
         playerTransform = PlayerController.global.transform;
-        awakeRange = 20.0f;
         animator = GetComponent<Animator>();
         awoken = false;
         arenaSize = 50.0f;
@@ -63,9 +69,7 @@ public class SpiderBoss : MonoBehaviour
         retreating = false;
         agent = animator.GetComponent<NavMeshAgent>();
         damage = 5.0f;
-        health = 70.0f;
-        maxHealth = health;
-        canBeDamaged = true;
+        maxHealth = bossSpawner.health;
         stage = 1;
         specialAttackCD = 10.0f;
         poisonAttackChance = 0.4f;
@@ -88,17 +92,19 @@ public class SpiderBoss : MonoBehaviour
         agent.stoppingDistance = _stopping;
     }
 
+    public void Awaken()
+    {
+        startIntro = true;
+        awoken = true;
+        animator.SetTrigger("Awaking");
+    }
+
+
     // Update is called once per frame
     void Update()
     {
         distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
 
-        // Spider awakes when player gets close to it
-        if (distanceToPlayer <= awakeRange && !awoken)
-        {
-            healthCanvas.SetActive(true);
-            animator.SetTrigger("Awaking");
-        }
 
         // Spider moves at all times
         if (awoken)
@@ -118,13 +124,13 @@ public class SpiderBoss : MonoBehaviour
 
         if (retreating)
         {
-            if (health < maxHealth)
+            if (bossSpawner.health < maxHealth)
             {
-                health += Time.deltaTime * 3.0f;
+                bossSpawner.health += Time.deltaTime * 3.0f;
             }
             else
             {
-                health = maxHealth;
+                bossSpawner.health = maxHealth;
                 healthCanvas.SetActive(false);
             }
             UpdateHealth();
@@ -135,11 +141,11 @@ public class SpiderBoss : MonoBehaviour
         }
 
         // Triggering different stages
-        if (health < ((maxHealth / 3) * 2) && health > (health / 3))
+        if (bossSpawner.health < ((maxHealth / 3) * 2) && bossSpawner.health > (bossSpawner.health / 3))
         {
             stage = 2;
         }
-        else if (health < (health / 3))
+        else if (bossSpawner.health < (bossSpawner.health / 3))
         {
             stage = 3;
         }
@@ -173,7 +179,7 @@ public class SpiderBoss : MonoBehaviour
         // Death state
         if (dead)
         {
-            healthCanvas.SetActive(false);           
+            healthCanvas.SetActive(false);
             animator.SetTrigger("Dead");
             StartCoroutine(DestroyOnDeath());
             dead = false;
@@ -191,7 +197,7 @@ public class SpiderBoss : MonoBehaviour
     {
         LookAt(playerTransform);
         agent.SetDestination(agent.transform.position);
-        animator.SetTrigger("Attack");      
+        animator.SetTrigger("Attack");
     }
 
     public void NormalAttackAnimEvent()
@@ -226,16 +232,6 @@ public class SpiderBoss : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private IEnumerator Intro()
-    {
-        LevelManager.global.HUD.SetActive(false);
-        animator.SetTrigger("Awaking");
-        yield return new WaitForSeconds(2f);
-        LevelManager.global.HUD.SetActive(true);
-        healthCanvas.SetActive(true);
-
-    }
-
     private void PoisonAttackAnimEvent()
     {
         for (int i = 0; i < 5; i++)
@@ -262,7 +258,7 @@ public class SpiderBoss : MonoBehaviour
         }
         specialAttackReady = false;
     }
-    
+
     private void WebAttackAnimEvent()
     {
         VFXWeb.Play();
@@ -285,7 +281,7 @@ public class SpiderBoss : MonoBehaviour
     private void JumpAttackAnimEvent()
     {
         specialAttackReady = false;
-        StartCoroutine(Slamming());        
+        StartCoroutine(Slamming());
     }
 
     private void CircleAnimEvent()
@@ -316,10 +312,10 @@ public class SpiderBoss : MonoBehaviour
 
     private void Damaged(float amount)
     {
-        health -= amount;
+        bossSpawner.health -= amount;
         UpdateHealth();
 
-        if (health <= 0)
+        if (bossSpawner.health <= 0)
         {
             StopAllCoroutines();
             agent.SetDestination(transform.position);
@@ -329,7 +325,7 @@ public class SpiderBoss : MonoBehaviour
     }
 
     private void SpecialAttack()
-    {      
+    {
         timer = 0;
         animator.ResetTrigger("PoisonAttack");
         animator.ResetTrigger("WebAttack");
@@ -397,9 +393,9 @@ public class SpiderBoss : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
-            if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
+            if (PlayerController.global.attacking && bossSpawner.canBeDamaged && PlayerController.global.damageEnemy)
             {
-                canBeDamaged = false;
+                bossSpawner.canBeDamaged = false;
                 StopAllCoroutines();
                 //PickSound(hitSound, hitSound2, 1.0f);
                 ScreenShake.global.shake = true;
@@ -423,6 +419,6 @@ public class SpiderBoss : MonoBehaviour
 
     private void UpdateHealth()
     {
-        healthBar.GetComponent<HealthBar>().SetHealth(health, maxHealth);
+        healthBar.GetComponent<HealthBar>().SetHealth(bossSpawner.health, maxHealth);
     }
 }

@@ -51,15 +51,15 @@ public class IdleState : BossState
                     LevelManager.global.dayPaused = false;
                     stateMachine.HealthBar.SetActive(false);
                 }
-                
+
                 stateMachine.UpdateHealth();
             }
-            
-            if (stateMachine.BossType == BossStateMachine.TYPE.Chieftain)
+
+            if (stateMachine.BossType == BossSpawner.TYPE.Chieftain)
             {
                 WalkTo(initialSpawn.position, stoppingDistance);
             }
-           
+
             resetTimer -= Time.deltaTime;
         }
     }

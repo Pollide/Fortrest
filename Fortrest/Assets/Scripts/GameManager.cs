@@ -103,6 +103,22 @@ public class GameManager : MonoBehaviour
     public AudioClip TeleportSound;
     public AudioClip TeleporterEnterSound;
 
+    [Header("SpiderBoss")]
+    public AudioClip SpiderBossDeadSound;
+    public AudioClip SpiderBossEscapeSound;
+    public AudioClip SpiderBossHit1Sound;
+    public AudioClip SpiderBossHit2Sound;
+    public AudioClip SpiderBossJumpAttackSound;
+    public AudioClip SpiderBossJumpSound;
+    public AudioClip SpiderBossAttackSound;
+    public AudioClip SpiderBossPoisonAttackSound;
+    public AudioClip SpiderBossSlamSound;
+    public AudioClip SpiderBossStep1Sound;
+    public AudioClip SpiderBossStep2Sound;
+    public AudioClip SpiderBossStep3Sound;
+    public AudioClip SpiderBossStep4Sound;
+    public AudioClip SpiderBossWebAttackSound;
+
     private Vector3 lastMousePosition;
     public bool CheatInfiniteBuilding;
 
@@ -525,7 +541,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if (Pref("Has Started", 0, true) == 1)
+            if (Pref("Game Begun", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
@@ -550,7 +566,7 @@ public class GameManager : MonoBehaviour
     {
         if (!load)
         {
-            Pref("Has Started", 1, false);
+            Pref("Game Begun", 1, false);
         }
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
@@ -623,19 +639,31 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        LevelManager.ProcessEnemyList((enemy) =>
+        LevelManager.ProcessBossList((boss) =>
         {
-            int i = LevelManager.global.enemyList.IndexOf(enemy);
-            enemy.health = Pref("Enemy Health" + i, enemy.health, load);
-            DataPositionVoid("Enemy Position" + i, enemy.transform, load);
-            DataEulerVoid("Enemy Euler" + i, enemy.transform, load);
+            int i = LevelManager.global.bossList.IndexOf(boss);
+            boss.health = Pref("Boss Health" + i, boss.health, load);
 
-            if (enemy.health <= 0 && load)
+            if (boss.health <= 0 && load)
             {
-                enemy.gameObject.SetActive(false);
+                boss.hasRun = true;
             }
 
         });
+
+        LevelManager.ProcessEnemyList((enemy) =>
+    {
+        int i = LevelManager.global.enemyList.IndexOf(enemy);
+        enemy.health = Pref("Enemy Health" + i, enemy.health, load);
+        DataPositionVoid("Enemy Position" + i, enemy.transform, load);
+        DataEulerVoid("Enemy Euler" + i, enemy.transform, load);
+
+        if (enemy.health <= 0 && load)
+        {
+            enemy.gameObject.SetActive(false);
+        }
+
+    });
 
         int turretSize = (int)Pref("Turret Size", 0, load); //also resets on save
 
@@ -719,7 +747,7 @@ public class GameManager : MonoBehaviour
 
         if (house && building.health <= 0) //prevents a softlock
         {
-            Pref("Has Started", 0, false);
+            Pref("Game Begun", 0, false);
         }
 
         if (load)
@@ -737,7 +765,7 @@ public class GameManager : MonoBehaviour
 
                 for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
                 {
-                    if (building.name.Contains(PlayerModeHandler.global.turretPrefabs[i].name))
+                    if (PlayerModeHandler.global.turretPrefabs[i].GetComponent<Building>().buildingObject == defence.GetComponent<Building>().buildingObject)
                     {
                         //Debug.Log(turretSize + " " + i + " " + PlayerModeHandler.global.turretPrefabs[i].name);
                         Pref("Turret Type" + defence.turretID, i, false);
@@ -750,7 +778,7 @@ public class GameManager : MonoBehaviour
             DataEulerVoid("Turret Euler" + defence.turretID, building.transform, load);
 
             defence.CurrentTier = (int)Pref("Turret Tier" + defence.turretID, defence.CurrentTier, load);
-
+            defence.name = defence.turretID.ToString();
             defence.changeTier.damageTier = (int)Pref("Tier Damage" + defence.turretID, defence.changeTier.damageTier, load);
             defence.changeTier.healthTier = (int)Pref("Tier Health" + defence.turretID, defence.changeTier.healthTier, load);
             defence.changeTier.rangeTier = (int)Pref("Tier Range" + defence.turretID, defence.changeTier.rangeTier, load);

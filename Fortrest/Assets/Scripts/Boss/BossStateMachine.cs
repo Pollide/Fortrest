@@ -6,15 +6,7 @@ using UnityEngine.UI;
 
 public class BossStateMachine : MonoBehaviour
 {
-    // Enum for boss type
-    public enum TYPE
-    {
-        Chieftain,
-        Basilisk,
-        Bird,
-        Werewolf,
-        Fire
-    }
+
 
     // Enum for boss phases
     public enum BossPhase
@@ -23,9 +15,6 @@ public class BossStateMachine : MonoBehaviour
         Two,
         Three
     }
-
-    // Holds the current boss type
-    [SerializeField] private TYPE bossType;
     // Holds the bosses current phase
     [SerializeField] private BossPhase currentPhase;
 
@@ -35,8 +24,6 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private BossState initialState;
     [SerializeField] private GameObject BossCanvas;
 
-    // Holds the bosses health
-    [SerializeField] private float currentHealth;
     // Holds the bosses max health
     [SerializeField] private float maxHealth = 100f;
     // Arena radius
@@ -51,16 +38,17 @@ public class BossStateMachine : MonoBehaviour
 
     // Bool to see if in death state
     [SerializeField] private bool isDead = false;
-    [SerializeField] private Animator bossAnimator;
-    private bool canBeDamaged = false;
+    [SerializeField] public Animator bossAnimator;
 
+    [HideInInspector]
+    public BossSpawner bossSpawner;
     // Start is called before the first frame update
     void Start()
     {
         InitializeStateMachine();
         SetAgentStats();
-        currentHealth = maxHealth;
-        LevelManager.global.bossList.Add(this);
+        maxHealth = bossSpawner.health;
+
         currentPhase = BossPhase.One;
         inDefence = true;
     }
@@ -110,25 +98,25 @@ public class BossStateMachine : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (currentHealth > 0)
+        if (bossSpawner.health > 0)
         {
             if (inDefence)
             {
-                currentHealth -= (damage / 2f);
+                bossSpawner.health -= (damage / 2f);
                 UpdateHealth();
             }
             else
             {
-                currentHealth -= damage;
+                bossSpawner.health -= damage;
                 UpdateHealth();
             }
         }
 
-        if (currentHealth <= maxHealth / 3f)
+        if (bossSpawner.health <= maxHealth / 3f)
         {
             currentPhase = BossPhase.Three;
         }
-        else if (currentHealth <= maxHealth * 2f / 3f)
+        else if (bossSpawner.health <= maxHealth * 2f / 3f)
         {
             currentPhase = BossPhase.Two;
         }
@@ -137,7 +125,7 @@ public class BossStateMachine : MonoBehaviour
             currentPhase = BossPhase.One;
         }
 
-        if (currentHealth <= 0f && !isDead)
+        if (bossSpawner.health <= 0f && !isDead)
         {
             StartCoroutine(DeadState());
         }
@@ -145,7 +133,7 @@ public class BossStateMachine : MonoBehaviour
 
     public void UpdateHealth()
     {
-        BossCanvas.GetComponentInChildren<HealthBar>().SetHealth(currentHealth, maxHealth);
+        BossCanvas.GetComponentInChildren<HealthBar>().SetHealth(bossSpawner.health, maxHealth);
     }
 
     private IEnumerator DeadState()
@@ -154,7 +142,7 @@ public class BossStateMachine : MonoBehaviour
         LevelManager.global.dayPaused = false;
         bossAnimator.SetBool("isDead", true);
         yield return new WaitForSeconds(2);
-        LevelManager.global.bossList.Remove(this);
+
         Destroy(gameObject);
     }
 
@@ -177,8 +165,8 @@ public class BossStateMachine : MonoBehaviour
 
     public float CurrentHealth
     {
-        get { return currentHealth; }
-        set { currentHealth = value; }
+        get { return bossSpawner.health; }
+        set { bossSpawner.health = value; }
     }
     public float MaxHealth
     {
@@ -192,10 +180,10 @@ public class BossStateMachine : MonoBehaviour
         set { currentPhase = value; }
     }
 
-    public TYPE BossType
+    public BossSpawner.TYPE BossType
     {
-        get { return bossType; }
-        set { bossType = value; }
+        get { return bossSpawner.bossType; }
+        set { bossSpawner.bossType = value; }
     }
 
     public float BossSpeed
@@ -211,8 +199,8 @@ public class BossStateMachine : MonoBehaviour
 
     public bool CanBeDamaged
     {
-        get { return canBeDamaged; }
-        set { canBeDamaged = value; }
+        get { return bossSpawner.canBeDamaged; }
+        set { bossSpawner.canBeDamaged = value; }
     }
     public bool PhaseTwoRan
     {
