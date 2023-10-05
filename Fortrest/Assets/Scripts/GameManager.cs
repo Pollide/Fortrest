@@ -750,7 +750,7 @@ public class GameManager : MonoBehaviour
             DataEulerVoid("Turret Euler" + defence.turretID, building.transform, load);
 
             defence.CurrentTier = (int)Pref("Turret Tier" + defence.turretID, defence.CurrentTier, load);
-
+            defence.name = defence.turretID.ToString();
             defence.changeTier.damageTier = (int)Pref("Tier Damage" + defence.turretID, defence.changeTier.damageTier, load);
             defence.changeTier.healthTier = (int)Pref("Tier Health" + defence.turretID, defence.changeTier.healthTier, load);
             defence.changeTier.rangeTier = (int)Pref("Tier Range" + defence.turretID, defence.changeTier.rangeTier, load);

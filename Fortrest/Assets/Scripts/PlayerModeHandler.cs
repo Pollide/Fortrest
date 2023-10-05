@@ -225,7 +225,8 @@ public class PlayerModeHandler : MonoBehaviour
     {
         int tier = SelectedTurret.GetComponent<Defence>().CurrentTier;
         int max = 5;
-        int shift = (tier > 0 ? max : 0);
+        bool next = tier > 0;
+        int shift = (next ? max : 0);
 
         bool ReturnMax(ref int defenceTier)
         {
@@ -240,7 +241,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
 
             fillImage.fillAmount = ((float)defenceTier - shift) / max;
-            fillImage.color = upgradeColourList[tier + 1];
+            fillImage.color = next ? Color.magenta : Color.cyan;
 
             return ReturnMax(ref defenceTier);
         }
@@ -258,10 +259,15 @@ public class PlayerModeHandler : MonoBehaviour
         GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierTwo", false, true);
 
         if (defence.CurrentTier == 1)
+        {
+            Debug.Log("TIER");
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierOne", true, instant);
-
+        }
         if (defence.CurrentTier >= 2)
+        {
+            Debug.Log("TIERR");
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierTwo", true, instant);
+        }
 
     }
 
@@ -302,8 +308,6 @@ public class PlayerModeHandler : MonoBehaviour
 
 
     }
-    public List<Color> upgradeColourList = new List<Color>();
-
 
     private void BuildMode()
     {
@@ -361,7 +365,7 @@ public class PlayerModeHandler : MonoBehaviour
                         PlayerController.global.turretImageIcon.sprite = defence.spriteTierList[Mathf.Clamp(defence.CurrentTier, 0, defence.spriteTierList.Count - 1)];
                         //  Debug.Log(defence.CurrentTier + " --> " + Mathf.Clamp(defence.CurrentTier, 0, defence.spriteTierList.Count - 1));
                         PlayerController.global.turretMenuTitle.text = SelectedTurret.buildingObject.ToString();
-                        //TierChange(true);
+                        TierChange(true);
 
                         UpdateTier();
 
