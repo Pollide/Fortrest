@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     public AudioClip CannonSpawnedSound;
     public AudioClip CannonShootSound;
     public AudioClip SlowSpawnedSound;
-    public AudioClip SlowShootSound; // Not Implemented
+    public AudioClip SlowShootSound;
     public AudioClip ScatterSpawnedSound;
     public AudioClip ScatterShootSound; // Not Implemented & Not imported
     public AudioClip MiniTurretAppearSound;
@@ -93,9 +93,9 @@ public class GameManager : MonoBehaviour
     public AudioClip SnoringSound;
     public AudioClip NewDaySound;
     public AudioClip WaterSound;
-    public AudioClip ClockSound; // Not Implemented
-    public AudioClip MenuClickSound; // Not Implemented
-    public AudioClip UpgradeMenuClickSound; // Not Implemented
+    public AudioClip ClockSound;
+    public AudioClip MenuClickSound;
+    public AudioClip UpgradeMenuClickSound;
     public AudioClip ModeChangeClickSound;
     public AudioClip MapCloseSound;
     public AudioClip MapOpenSound;
@@ -749,7 +749,7 @@ public class GameManager : MonoBehaviour
             DataPositionVoid("Turret Position" + defence.turretID, building.transform, load);
             DataEulerVoid("Turret Euler" + defence.turretID, building.transform, load);
 
-            defence.CurrentLevel = (int)Pref("Turret Level" + defence.turretID, defence.CurrentLevel, load);
+            defence.CurrentTier = (int)Pref("Turret Tier" + defence.turretID, defence.CurrentTier, load);
 
             defence.changeTier.damageTier = (int)Pref("Tier Damage" + defence.turretID, defence.changeTier.damageTier, load);
             defence.changeTier.healthTier = (int)Pref("Tier Health" + defence.turretID, defence.changeTier.healthTier, load);

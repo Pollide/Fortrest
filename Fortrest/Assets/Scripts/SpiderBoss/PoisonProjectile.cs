@@ -13,7 +13,7 @@ public class PoisonProjectile : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject == PlayerController.global.gameObject && !hitOnce)
+        if (collision.gameObject == PlayerController.global.gameObject && !hitOnce && !PlayerController.global.evading)
         {
             PlayerController.global.poisoned = true;
             hitOnce = true;

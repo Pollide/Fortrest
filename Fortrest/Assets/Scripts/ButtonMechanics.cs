@@ -151,6 +151,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
     public void SelectVoid()
     {
+        // if(SceneManager.GetActiveScene().buildIndex == 0)
+        // {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClickSound);
+        //  }
+
         if (ResumeBool)
         {
             PlayerController.global.PauseVoid(false);
@@ -164,9 +169,13 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             {
                 if (UpgradeInt > 0)
                 {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
                     GameManager.PlayAnimation(GetComponent<Animation>(), "TierUpgrade");
 
                     PlayerModeHandler.global.UpdateTier(GetComponent<TurretStats>());
+
+
+
                     /*
                     Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
 
@@ -193,6 +202,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             }
             else
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                 GameManager.PlayAnimation(GetComponent<Animation>(), "Cannot Click");
             }
         }

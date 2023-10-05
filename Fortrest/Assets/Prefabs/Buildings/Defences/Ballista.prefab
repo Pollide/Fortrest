@@ -62,6 +62,12 @@ MonoBehaviour:
   shootingRange: 20
   fireRate: 1
   damage: 1
+  turretID: 0
+  changeTier:
+    damageTier: 0
+    healthTier: 0
+    rangeTier: 0
+    rateTier: 0
   targetLayer:
     serializedVersion: 2
     m_Bits: 8192
@@ -77,7 +83,9 @@ MonoBehaviour:
     type: 3}
   FirePoint: {fileID: 5947275829984533361}
   ModelHolder: {fileID: 7795524264066912067}
-  CurrentLevel: 0
+  CurrentTier: 0
+  TierOneAnimator: {fileID: 1735638862856206818}
+  TierTwoAnimator: {fileID: 7391883019569722729}
   MiniTurret: 0
   MiniTurretAnimator: {fileID: 1385913592716926598}
 --- !u!114 &6690662782521931398
@@ -93,7 +101,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 0
-  DestroyedBool: 0
   resourceObject: 7
   buildingObject: 0
   health: 0
@@ -110,6 +117,7 @@ MonoBehaviour:
   textDisplayed: 0
   DebugDestroyInstantly: 0
   gridLocation: {x: 0, y: 0}
+  destroyedTimer: 0
 --- !u!114 &2797255765923076010
 MonoBehaviour:
   m_ObjectHideFlags: 0
