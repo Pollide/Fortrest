@@ -41,7 +41,7 @@ public class Defence : MonoBehaviour
     [Header("Other")]
     public Transform ModelHolder;
 
-    [HideInInspector]
+    //  [HideInInspector]
     public int CurrentTier;
 
     public Animator TierOneAnimator;
