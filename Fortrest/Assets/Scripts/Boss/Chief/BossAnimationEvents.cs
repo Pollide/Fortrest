@@ -81,9 +81,12 @@ public class BossAnimationEvents : MonoBehaviour
 
     void SetTiredFalse()
     {
-
         stateMachine.BossAnimator.SetBool("isTired", false);
+    }
 
+    void SetTired()
+    {
+        stateMachine.BossAnimator.SetBool("isTired", true);
     }
 
     void SetTelegraphFalse()
