@@ -24,9 +24,9 @@ public class SpiderBossWalk : StateMachineBehaviour
     {
         if (!spiderScript.retreating)
         {
-            if (Vector3.Distance(playerTransform.position, agent.transform.position) <= attackRange)
+            if (Vector3.Distance(playerTransform.position, agent.transform.position) <= attackRange && !spiderScript.specialAttackReady)
             {
-                spiderScript.Attack();               
+                spiderScript.Attack();
             }
             else
             {
