@@ -36,7 +36,7 @@ public class IntroductionState : BossState
 
         ScreenShake.global.duration = 3f;
 
-        if (!introStarted && stateMachine.BossType == BossStateMachine.TYPE.Chieftain)
+        if (!introStarted && stateMachine.BossType == BossSpawner.TYPE.Chieftain)
         {
             StartCoroutine(Intro());
         }

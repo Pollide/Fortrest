@@ -227,7 +227,6 @@ public class PlayerController : MonoBehaviour
     public RectTransform turretMenuHolder;
     public TMP_Text turretMenuTitle;
     public Image turretImageIcon;
-
     // Animation
     private float speedAnim;
     private float transitionSpeed = 20f;
@@ -1469,9 +1468,9 @@ public class PlayerController : MonoBehaviour
             });
             LevelManager.ProcessBossList((boss) =>
             {
-                boss.CanBeDamaged = true;
+                boss.canBeDamaged = true;
             });
-            SpiderBoss.global.canBeDamaged = true;
+
             if (upgradedMelee)
             {
                 attackDamage = 1.25f;

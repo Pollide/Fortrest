@@ -8,31 +8,31 @@ public class AttackManagerState : BossState
     [SerializeField] private float attackTimer = 0f;
     public float attackTime = 0f;
     public float attackDuration = 5f;
-    
+
     // The speed of attacks 
     [SerializeField] private float stoppingDistance = 3f;
-    [SerializeField] private  float rotationSpeed = 5.0f;
+    [SerializeField] private float rotationSpeed = 5.0f;
     public int attackCounter = 0;
     public float attackRadius = 10f;
 
     // Timer for checking the random number to decide attack states
     [SerializeField] private float randomCheckTimer = 0f;
     [SerializeField] private float randomCheckDuration = 5f;
-    
+
     // Damage for attack
     [SerializeField] private float damage = 0f;
-    
+
     // The distance the enemy can attack from
     [SerializeField] private float attackDistance = 0f;
-    
+
     // Attack percentages
     [SerializeField] private float firstAttackChance = 0.6f;
     [SerializeField] private float secondAttackChance = 0.2f;
     [SerializeField] private float thirdAttackChance = 0.2f;
-    
+
     // The value to determine the attack used
     private float randValue = 0f;
-    
+
     // Holds the attack 
     [SerializeField] private bool isAttacking = false;
     [SerializeField] private bool canChangeState = false;
@@ -103,7 +103,7 @@ public class AttackManagerState : BossState
         {
             WalkTo(playerTransform.position, stoppingDistance);
         }
-       
+
         // Boss phasses
         PhaseOne();
         PhaseTwo();
@@ -141,25 +141,25 @@ public class AttackManagerState : BossState
 
         switch (stateMachine.BossType)
         {
-            case BossStateMachine.TYPE.Chieftain:
+            case BossSpawner.TYPE.Chieftain:
                 AttackChief();
                 break;
-            case BossStateMachine.TYPE.Basilisk:
+            case BossSpawner.TYPE.Basilisk:
                 AttackSnake();
                 break;
-            case BossStateMachine.TYPE.Bird:
+            case BossSpawner.TYPE.Bird:
                 AttackBird();
                 break;
-            case BossStateMachine.TYPE.Werewolf:
+            case BossSpawner.TYPE.Werewolf:
                 AttackWarewolf();
                 break;
-            case BossStateMachine.TYPE.Fire:
+            case BossSpawner.TYPE.Fire:
                 AttackFire();
                 break;
             default:
                 break;
         }
-      
+
 
     }
 
@@ -200,12 +200,12 @@ public class AttackManagerState : BossState
             canChangeState = false;
 
             if (attackTime < attackDuration && canAttack && !stateMachine.BossAnimator.GetBool("isTired"))
-            { 
-                
+            {
+
                 attackTime += Time.deltaTime;
 
                 telegraph.transform.position = transform.position;
-                
+
             }
 
             if (attackTime >= attackDuration && !stateMachine.BossAnimator.GetBool("isTired"))
@@ -217,7 +217,7 @@ public class AttackManagerState : BossState
                 {
                     StartCoroutine(GetComponent<BossTelegraphSlam>().DoSlamDamage(0.1f, Damage, attackRadius));
                 }
-                
+
             }
         }
     }
@@ -232,7 +232,7 @@ public class AttackManagerState : BossState
     {
         if (!isAttacking)
         {
-          
+
         }
         else
         {
@@ -315,7 +315,7 @@ public class AttackManagerState : BossState
             LevelManager.global.VFXBossSlashReversed.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
             LevelManager.global.VFXBossSlashReversed.transform.localScale = new Vector3(1.25f, 0.65f, 1.25f);
             LevelManager.global.VFXBossSlashReversed.Play();
-            
+
         }
         if (_index == 2)
         {
