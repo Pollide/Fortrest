@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 424764306}
-  m_IndirectSpecularColor: {r: 0.18239374, g: 0.22506636, b: 0.28964582, a: 1}
+  m_IndirectSpecularColor: {r: 0.1823935, g: 0.22506586, b: 0.28964525, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -592,6 +592,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
+      propertyPath: HUD
+      value: 
+      objectReference: {fileID: 1217495512}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
       propertyPath: clockSun
       value: 
       objectReference: {fileID: 486347348}
@@ -721,6 +726,12 @@ MonoBehaviour:
   extraApplesUnlocked: 0
   upgradedMeleeUnlocked: 0
   upgradedBowUnlocked: 0
+--- !u!1 &1217495512 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4977534187960484670, guid: 6909057cc05e5f446a9a6a2433f2911a,
+    type: 3}
+  m_PrefabInstance: {fileID: 2079811860}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1270996740
 GameObject:
   m_ObjectHideFlags: 0
@@ -3933,7 +3944,7 @@ PrefabInstance:
     - target: {fileID: 88359175537584397, guid: cd6c745cb2536c04280086398fb4be96,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.42
+      value: 58.4
       objectReference: {fileID: 0}
     - target: {fileID: 88359175537584397, guid: cd6c745cb2536c04280086398fb4be96,
         type: 3}
@@ -3943,7 +3954,7 @@ PrefabInstance:
     - target: {fileID: 88359175537584397, guid: cd6c745cb2536c04280086398fb4be96,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -113.47
+      value: -31
       objectReference: {fileID: 0}
     - target: {fileID: 88359175537584397, guid: cd6c745cb2536c04280086398fb4be96,
         type: 3}
