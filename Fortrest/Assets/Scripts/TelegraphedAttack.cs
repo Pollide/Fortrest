@@ -9,13 +9,11 @@ public class TelegraphedAttack : MonoBehaviour
 
     public float size = 0.0f;
     public float timer = 0.0f;
-    private float duration = 0.0f;
 
     public bool isJumpIndicator;    
 
     void Start()
     {
-        duration = 2.2f;
         spriteRenderer = transform.parent.GetComponentInChildren<SpriteRenderer>();
         innerShape = transform.parent.GetChild(1);
     }
@@ -23,12 +21,12 @@ public class TelegraphedAttack : MonoBehaviour
     void Update()
     {
         if (isJumpIndicator)
-            Indicator(ref SpiderBoss.global.jumpAttackIndicator, 1.0f);
+            Indicator(ref SpiderBoss.global.jumpAttackIndicator, 1.0f, 4.0f);
         else
-            Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f);
+            Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f, 2.2f);
     }
 
-    void Indicator(ref bool indicator, float multiplier)
+    void Indicator(ref bool indicator, float multiplier, float duration)
     {
         if (indicator)
             timer += Time.deltaTime;
@@ -55,6 +53,11 @@ public class TelegraphedAttack : MonoBehaviour
         {
             PlayerController.global.rooted = true;
             SpiderBoss.global.rootNow = false;
+        }
+        else if (isJumpIndicator && SpiderBoss.global.slamNow && other.gameObject == PlayerController.global.gameObject)
+        {
+            PlayerController.global.TakeDamage(20.0f, true);
+            SpiderBoss.global.slamNow = false;
         }
     }
 }

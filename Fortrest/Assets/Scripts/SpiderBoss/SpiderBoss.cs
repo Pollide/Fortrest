@@ -29,14 +29,13 @@ public class SpiderBoss : MonoBehaviour
     private float angularSpeed;
     private float acceleration;
     public int stage;
-    private float timer;
+    private float timer, timer2;
     private float specialAttackCD;
     private float randomChance;
     private float poisonAttackChance;
     private float webAttackChance;
     public GameObject poisonProjectile;
     private float poisonSpeed;
-    private Rigidbody rb;
     private bool jump;
     public bool jumpAttackIndicator;
     public bool webAttackIndicator;
@@ -44,6 +43,8 @@ public class SpiderBoss : MonoBehaviour
     public bool specialAttackReady;
     public float distanceToPlayer;
     public bool rootNow;
+    public bool midAir;
+    public bool slamNow;
 
     private void Awake()
     {
@@ -62,7 +63,7 @@ public class SpiderBoss : MonoBehaviour
         retreating = false;
         agent = animator.GetComponent<NavMeshAgent>();
         damage = 5.0f;
-        health = 100.0f;
+        health = 70.0f;
         maxHealth = health;
         canBeDamaged = true;
         stage = 1;
@@ -70,12 +71,11 @@ public class SpiderBoss : MonoBehaviour
         poisonAttackChance = 0.4f;
         webAttackChance = 0.4f;
         poisonSpeed = 20.0f;
-        rb = GetComponent<Rigidbody>();
         webAttackRange = 5.0f;
 
-        speed = 5.0f;
+        speed = 12f;
         stoppingDistance = 3.5f;
-        angularSpeed = 180.0f;
+        angularSpeed = 200.0f;
         acceleration = 10.0f;
         SetAgentParameters(speed, acceleration, angularSpeed, stoppingDistance);
     }
@@ -117,6 +117,24 @@ public class SpiderBoss : MonoBehaviour
             retreating = false;
         }
 
+        if (retreating)
+        {
+            if (health < maxHealth)
+            {
+                health += Time.deltaTime * 3.0f;
+            }
+            else
+            {
+                health = maxHealth;
+                healthCanvas.SetActive(false);
+            }
+            UpdateHealth();
+        }
+        else if (awoken)
+        {
+            healthCanvas.SetActive(true);
+        }
+
         // Triggering different stages
         if (health < ((maxHealth / 3) * 2) && health > (health / 3))
         {
@@ -143,10 +161,23 @@ public class SpiderBoss : MonoBehaviour
             agent.Move(-transform.forward * (Time.deltaTime * 10.0f));
         }
 
+        if (midAir)
+        {
+            timer2 += Time.deltaTime;
+            if (timer2 > 3.5f)
+            {
+                midAir = false;
+                animator.SetTrigger("Slam");
+            }
+        }
+
         // Death state
         if (dead)
         {
-            animator.SetTrigger("Death");
+            healthCanvas.SetActive(false);           
+            animator.SetTrigger("Dead");
+            StartCoroutine(DestroyOnDeath());
+            dead = false;
         }
     }
 
@@ -161,7 +192,7 @@ public class SpiderBoss : MonoBehaviour
     {
         LookAt(playerTransform);
         agent.SetDestination(agent.transform.position);
-        animator.SetTrigger("Attack");
+        animator.SetTrigger("Attack");      
     }
 
     public void NormalAttackAnimEvent()
@@ -189,6 +220,13 @@ public class SpiderBoss : MonoBehaviour
         }
     }
 
+    private IEnumerator DestroyOnDeath()
+    {
+        yield return new WaitForSeconds(7f);
+        agent.enabled = false;
+        Destroy(gameObject);
+    }
+
     private void PoisonAttackAnimEvent()
     {
         for (int i = 0; i < 5; i++)
@@ -213,18 +251,9 @@ public class SpiderBoss : MonoBehaviour
             GameObject projectile = Instantiate(poisonProjectile, transform.position + (transform.forward) + new Vector3(0f, 1f, 0f), Quaternion.identity);
             projectile.GetComponent<Rigidbody>().AddForce(direction * poisonSpeed, ForceMode.Impulse);
         }
+        specialAttackReady = false;
     }
-
-    private void CircleAnimEvent()
-    {
-        jumpAttackIndicator = true;       
-    }
-
-    private void ConeAnimEvent()
-    {
-        webAttackIndicator = true;
-    }
-
+    
     private void WebAttackAnimEvent()
     {
         VFXWeb.Play();
@@ -232,11 +261,36 @@ public class SpiderBoss : MonoBehaviour
         StartCoroutine(Rooting());
     }
 
+    private void ConeAnimEvent()
+    {
+        webAttackIndicator = true;
+    }
+
     private IEnumerator Rooting()
     {
         rootNow = true;
         yield return new WaitForSeconds(0.7f);
         rootNow = false;
+    }
+
+    private void JumpAttackAnimEvent()
+    {
+        specialAttackReady = false;
+        StartCoroutine(Slamming());        
+    }
+
+    private void CircleAnimEvent()
+    {
+        timer2 = 0;
+        midAir = true;
+        jumpAttackIndicator = true;
+    }
+
+    private IEnumerator Slamming()
+    {
+        slamNow = true;
+        yield return new WaitForFixedUpdate();
+        slamNow = false;
     }
 
     private void StartJumpAnimEvent()
@@ -259,6 +313,7 @@ public class SpiderBoss : MonoBehaviour
         if (health <= 0)
         {
             StopAllCoroutines();
+            agent.SetDestination(transform.position);
             dead = true;
             Time.timeScale = 1;
         }
@@ -274,7 +329,7 @@ public class SpiderBoss : MonoBehaviour
         switch (stage)
         {
             case 1:
-                animator.SetTrigger("WebAttack");
+                animator.SetTrigger("PoisonAttack");
                 break;
             case 2:
                 if (distanceToPlayer < webAttackRange)
