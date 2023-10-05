@@ -114,6 +114,8 @@ public class PlayerController : MonoBehaviour
     public bool poisoned;
     public Animation poisonAnimation;
     public bool rooted;
+    public GameObject spiderWeb;
+    private bool freezeRotation;
 
     // Teleporter
     public bool canTeleport = false;
@@ -661,15 +663,21 @@ public class PlayerController : MonoBehaviour
     private IEnumerator RootPlayer()
     {
         playerCanMove = false;
+        spiderWeb.SetActive(true);
+        freezeRotation = true;
+        CharacterAnimator.SetBool("Moving", false);
+        cancelHit = true;
 
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(3.5f);
 
         playerCanMove = true;
+        spiderWeb.SetActive(false);
+        freezeRotation = false;
     }
 
     private void LateUpdate()
     {
-        if (!pausedBool && !mapBool && !evading && !CameraFollow.global.bossCam)
+        if (!pausedBool && !mapBool && !evading && !CameraFollow.global.bossCam && !freezeRotation)
         {
             RotatePlayer();
         }
