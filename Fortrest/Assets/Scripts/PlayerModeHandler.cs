@@ -254,10 +254,15 @@ public class PlayerModeHandler : MonoBehaviour
     {
         Defence defence = SelectedTurret.GetComponent<Defence>();
 
-        bool tier = defence.CurrentTier > 0;
-        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierOne", tier, !tier || instant);
-        tier = defence.CurrentTier > 1;
-        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierTwo", tier, !tier || instant);
+        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierOne", false, true);
+        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierTwo", false, true);
+
+        if (defence.CurrentTier == 1)
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierOne", true, instant);
+
+        if (defence.CurrentTier >= 2)
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierTwo", true, instant);
+
     }
 
     public void UpdateTier(TurretStats buttonStat = null)
