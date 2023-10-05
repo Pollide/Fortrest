@@ -4,57 +4,48 @@ using UnityEngine;
 
 public class TelegraphedAttack : MonoBehaviour
 {
-    public GameObject circleIndicator;
-    public GameObject coneIndicator;
-    private SpriteRenderer circleRenderer;
-    private SpriteRenderer coneRenderer;
-    private Transform innerShapeCircle;
-    private Transform innerShapeCone;
+    private SpriteRenderer spriteRenderer;
+    private Transform innerShape;
 
-    public float size;
+    public float size = 0.0f;
     public float timer = 0.0f;
     private float duration = 0.0f;
+
+    public bool isJumpIndicator;
 
     void Start()
     {
         duration = 3.0f;
-        circleRenderer = circleIndicator.GetComponentInChildren<SpriteRenderer>();
-        coneRenderer = coneIndicator.GetComponentInChildren<SpriteRenderer>();
-        circleRenderer.enabled = false;
-        coneRenderer.enabled = false;
-        innerShapeCircle = circleIndicator.transform.GetChild(1);
-        innerShapeCircle.localScale = Vector3.zero;
-        innerShapeCone = coneIndicator.transform.GetChild(1);
-        innerShapeCone.localScale = Vector3.zero;
+        spriteRenderer = transform.parent.GetComponentInChildren<SpriteRenderer>();
+        innerShape = transform.parent.GetChild(1);
     }
 
     void Update()
     {
-        if (SpiderBoss.global.jumpAttackIndicator)
-        {
-            Indicate(ref SpiderBoss.global.jumpAttackIndicator, ref circleRenderer, ref innerShapeCircle);
-        }
-        else if (SpiderBoss.global.webAttackIndicator)
-        {
-            Indicate(ref SpiderBoss.global.webAttackIndicator, ref coneRenderer, ref innerShapeCone);
-        }      
+        if (isJumpIndicator)
+            Indicator(ref SpiderBoss.global.jumpAttackIndicator);
+        else
+            Indicator(ref SpiderBoss.global.webAttackIndicator);
     }
 
-    private void Indicate(ref bool specialAttacking, ref SpriteRenderer spriteRenderer, ref Transform innerShape)
+    void Indicator(ref bool indicator)
     {
-        spriteRenderer.enabled = true;
+        if (indicator)
+            timer += Time.deltaTime;
+
+        size = timer / duration;
+
+        bool active = timer > 0 && size < 1.0f;
+
         innerShape.localScale = new Vector3(size, size, 0);
+        spriteRenderer.enabled = active;
 
-        timer += Time.deltaTime;
-        size = Mathf.Clamp01(timer / duration);
-
-        if (size  == 1.0f)
+        if (!active)
         {
-            specialAttacking = false;
-            spriteRenderer.enabled = false;
-            innerShape.localScale = new Vector3(0, 0, 0);        
             size = 0;
             timer = 0;
+
+            indicator = false;
         }
     }
 }

@@ -94,7 +94,7 @@ public class Defence : MonoBehaviour
             }
 
         }
-        else if (target != null)
+        else if (target != null && target.GetComponent<EnemyController>())
         {
             Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
 
