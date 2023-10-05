@@ -12,9 +12,11 @@ public class TurretStats : MonoBehaviour
     [System.Serializable]
     public class Tier
     {
-        public int damageTier;
-        public int healthTier;
-        public int rangeTier;
-        public int rateTier;
+        public float damageTier;
+        public float healthTier;
+        public float rangeTier;
+        public float rateTier;
+
+
     }
 }

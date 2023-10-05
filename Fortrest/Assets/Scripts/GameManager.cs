@@ -435,6 +435,12 @@ public class GameManager : MonoBehaviour
                 }
 
                 anim.Play(nameClip);
+
+                if (quick)
+                {
+                    anim.Stop(nameClip);
+                }
+
                 // Debug.Log(nameClip);
                 return anim[nameClip]; //the state can provide the time, length etc
             }

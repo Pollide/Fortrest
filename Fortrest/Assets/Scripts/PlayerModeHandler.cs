@@ -221,14 +221,14 @@ public class PlayerModeHandler : MonoBehaviour
     }
 
 
-    public bool SetTeir(Image fillImage, ref int buttonTier, ref int defenceTier, bool upgrade)
+    public bool SetTeir(Image fillImage, ref float buttonTier, ref float defenceTier, bool upgrade)
     {
         int tier = SelectedTurret.GetComponent<Defence>().CurrentTier;
-        int max = 5;
+        float max = buttonTier * 5;
         bool next = tier > 0;
-        int shift = (next ? max : 0);
+        float shift = (next ? max : 0);
 
-        bool ReturnMax(ref int defenceTier)
+        bool ReturnMax(ref float defenceTier)
         {
             return (defenceTier - shift) >= max;
         }
@@ -255,21 +255,23 @@ public class PlayerModeHandler : MonoBehaviour
     {
         Defence defence = SelectedTurret.GetComponent<Defence>();
 
+        PlayerController.global.turretImageIcon.sprite = defence.spriteTierList[Mathf.Clamp(defence.CurrentTier, 0, defence.spriteTierList.Count - 1)];
+        PlayerController.global.turretMenuTitle.text = SelectedTurret.buildingObject.ToString();
+
         GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierOne", false, true);
-        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierTwo", false, true);
+        //  GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierTwo", false, true);
 
         if (defence.CurrentTier == 1)
         {
-            Debug.Log("TIER");
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierOne", true, instant);
         }
         if (defence.CurrentTier >= 2)
         {
-            Debug.Log("TIERR");
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierTwo", true, instant);
         }
 
     }
+
 
     public void UpdateTier(TurretStats buttonStat = null)
     {
@@ -300,7 +302,6 @@ public class PlayerModeHandler : MonoBehaviour
             defence.CurrentTier++;
             defence.ReturnAnimator();
 
-            Debug.Log(defence.CurrentTier);
             TierChange(false);
             GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
             UpdateTier(); //updates fill
@@ -361,10 +362,6 @@ public class PlayerModeHandler : MonoBehaviour
 
                         SelectedTurret = colliders[i].GetComponentInParent<Building>();
 
-                        Defence defence = SelectedTurret.GetComponent<Defence>();
-                        PlayerController.global.turretImageIcon.sprite = defence.spriteTierList[Mathf.Clamp(defence.CurrentTier, 0, defence.spriteTierList.Count - 1)];
-                        //  Debug.Log(defence.CurrentTier + " --> " + Mathf.Clamp(defence.CurrentTier, 0, defence.spriteTierList.Count - 1));
-                        PlayerController.global.turretMenuTitle.text = SelectedTurret.buildingObject.ToString();
                         TierChange(true);
 
                         UpdateTier();
