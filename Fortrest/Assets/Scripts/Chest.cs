@@ -13,13 +13,15 @@ public class Chest : MonoBehaviour
 
     void Update()
     {
-        if (canBeOpened && Input.GetKeyDown(KeyCode.E))
+        if (canBeOpened && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
         {
             opened = true;
             promptText.gameObject.SetActive(false);
             SpawnResources();
             StartCoroutine(SelfDestroy());
             canBeOpened = false;
+            PlayerController.global.interactCTRL = false;
+            PlayerController.global.needInteraction = false;
         }
     }
 
@@ -99,6 +101,7 @@ public class Chest : MonoBehaviour
                 promptText.gameObject.SetActive(true);
                 textDisplayed = true;
             }
+            PlayerController.global.needInteraction = true;
         }
     }
 
@@ -112,6 +115,7 @@ public class Chest : MonoBehaviour
                 promptText.gameObject.SetActive(false);
                 textDisplayed = false;
             }
+            PlayerController.global.needInteraction = false;
         }
     }
 
