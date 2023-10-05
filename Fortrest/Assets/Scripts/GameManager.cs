@@ -644,12 +644,8 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < turretSize; i++)
             {
                 GameObject turret = Instantiate(PlayerModeHandler.global.turretPrefabs[(int)Pref("Turret Type" + i, 0, true)]);
-
-                DataPositionVoid("Turret Position" + i, turret.transform, load);
-                DataEulerVoid("Turret Euler" + i, turret.transform, load);
+                LevelManager.global.AddBuildingVoid(turret.transform);
             }
-
-            PlayerController.global.HealthRestore(0); //refresh
         }
 
         //DEFENSE
@@ -729,13 +725,14 @@ public class GameManager : MonoBehaviour
         {
             building.TakeDamage(0); //refreshes the bar
         }
-        else
-        {
-            Defence defence = building.GetComponent<Defence>();
-            if (defence)
-            {
-                int ID = (int)Pref("Turret Size", 0, true);
 
+        Defence defence = building.GetComponent<Defence>();
+        if (defence)
+        {
+            int ID = (int)Pref("Turret Size", 0, true);
+
+            if (!load)
+            {
                 for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
                 {
                     if (building.name.Contains(PlayerModeHandler.global.turretPrefabs[i].name))
@@ -745,21 +742,22 @@ public class GameManager : MonoBehaviour
                         break;
                     }
                 }
-
-                DataPositionVoid("Turret Position" + ID, building.transform, false);
-                DataEulerVoid("Turret Euler" + ID, building.transform, false);
-
-                defence.CurrentLevel = (int)Pref("Turret Level" + ID, defence.CurrentLevel, load);
-
-                defence.changeTier.damageTier = (int)Pref("Tier Damage" + ID, defence.changeTier.damageTier, load);
-                defence.changeTier.healthTier = (int)Pref("Tier Health" + ID, defence.changeTier.healthTier, load);
-                defence.changeTier.rangeTier = (int)Pref("Tier Range" + ID, defence.changeTier.rangeTier, load);
-                defence.changeTier.rateTier = (int)Pref("Tier Rate" + ID, defence.changeTier.rateTier, load);
-
-                Pref("Turret Size", ID + 1, false);
             }
-        }
 
+            DataPositionVoid("Turret Position" + ID, building.transform, false);
+            DataEulerVoid("Turret Euler" + ID, building.transform, false);
+
+            defence.CurrentLevel = (int)Pref("Turret Level" + ID, defence.CurrentLevel, load);
+
+            defence.changeTier.damageTier = (int)Pref("Tier Damage" + ID, defence.changeTier.damageTier, load);
+            defence.changeTier.healthTier = (int)Pref("Tier Health" + ID, defence.changeTier.healthTier, load);
+            defence.changeTier.rangeTier = (int)Pref("Tier Range" + ID, defence.changeTier.rangeTier, load);
+            defence.changeTier.rateTier = (int)Pref("Tier Rate" + ID, defence.changeTier.rateTier, load);
+
+            Pref("Turret Size", ID + 1, false);
+
+
+        }
     }
 
     void DataPositionVoid(string pref, Transform value, bool load)
