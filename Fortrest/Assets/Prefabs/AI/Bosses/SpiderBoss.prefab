@@ -254,6 +254,7 @@ GameObject:
   - component: {fileID: 7266310432765318295}
   - component: {fileID: 3608040781225583450}
   - component: {fileID: 1576205250849020529}
+  - component: {fileID: 5839751702316513058}
   m_Layer: 13
   m_Name: SpiderBoss
   m_TagString: Untagged
@@ -365,11 +366,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 764930e38d0fa444b9c73c81a17fd26a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  awakeRange: 0
   awoken: 0
   startPosition: {x: 0, y: 0, z: 0}
   retreating: 0
-  canBeDamaged: 0
   dead: 0
   healthCanvas: {fileID: 4052270581425538444}
   healthBar: {fileID: 7864715980281735358}
@@ -385,6 +384,7 @@ MonoBehaviour:
   midAir: 0
   slamNow: 0
   startIntro: 0
+  bossSpawner: {fileID: 0}
 --- !u!114 &1576205250849020529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,6 +401,25 @@ MonoBehaviour:
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
   introCard: {fileID: 3923020520828481679}
+--- !u!114 &5839751702316513058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752728543038813111}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36a0a17476046894796388402f1cd957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 20
+  hasRun: 0
+  boss: {fileID: 0}
+  spawnPosition: {fileID: 0}
+  bossType: 2
+  health: 70
+  canBeDamaged: 1
 --- !u!1 &1272130810159069435
 GameObject:
   m_ObjectHideFlags: 0

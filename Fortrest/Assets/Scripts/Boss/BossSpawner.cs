@@ -2,11 +2,8 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
-    [SerializeField] private float distance = 5f;
+    [SerializeField] private float distance = 20f;
     [SerializeField] public bool hasRun = false;
-    [SerializeField] private GameObject boss;
-    [SerializeField] private Transform spawnPosition;
-
     // Holds the current boss type
     [SerializeField] public TYPE bossType;
 
@@ -29,22 +26,34 @@ public class BossSpawner : MonoBehaviour
     private void Start()
     {
         LevelManager.global.bossList.Add(this);
+
+        if (GetComponent<BossStateMachine>())
+        {
+            GetComponent<BossStateMachine>().bossSpawner = this;
+            GetComponent<BossStateMachine>().enabled = false;
+            GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(false);
+        }
+
+        if (GetComponent<SpiderBoss>())
+        {
+            GetComponent<SpiderBoss>().bossSpawner = this;
+        }
     }
+
 
     private void Update()
     {
         if (CheckPlayerDistance() && hasRun == false)
         {
-            GameObject bossObject = Instantiate(boss, spawnPosition);
-
-            if (bossObject.GetComponent<BossStateMachine>())
+            if (GetComponent<BossStateMachine>())
             {
-                bossObject.GetComponent<BossStateMachine>().bossSpawner = this;
+                GetComponent<BossStateMachine>().enabled = true;
+                GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(true);
             }
 
-            if (bossObject.GetComponent<SpiderBoss>())
+            if (GetComponent<SpiderBoss>())
             {
-                bossObject.GetComponent<SpiderBoss>().bossSpawner = this;
+                GetComponent<SpiderBoss>().Awaken();
             }
 
             hasRun = true;
