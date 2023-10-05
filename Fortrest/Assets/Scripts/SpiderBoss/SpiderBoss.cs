@@ -36,6 +36,8 @@ public class SpiderBoss : MonoBehaviour
     private float poisonSpeed;
     private Rigidbody rb;
     private bool jump;
+    public bool jumpAttackIndicator;
+    public bool webAttackIndicator;
 
     private void Awake()
     {
@@ -202,6 +204,16 @@ public class SpiderBoss : MonoBehaviour
         }        
     }
 
+    private void CircleAnimEvent()
+    {
+        jumpAttackIndicator = true;
+    }
+
+    private void ConeAnimEvent()
+    {
+        webAttackIndicator = true;
+    }
+
     private void WebAttackAnimEvent()
     {
         
@@ -242,7 +254,7 @@ public class SpiderBoss : MonoBehaviour
         switch (stage)
         {
             case 1:
-                animator.SetTrigger("PoisonAttack");
+                animator.SetTrigger("WebAttack");
                 break;
             case 2:
                 randomChance = Random.Range(0f, 1f);
