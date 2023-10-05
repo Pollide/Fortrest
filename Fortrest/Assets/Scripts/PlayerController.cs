@@ -645,8 +645,8 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            playerHealth -= 5f;
-            yield return new WaitForSeconds(1f);
+            playerHealth -= 3f;
+            yield return new WaitForSeconds(0.5f);
         }
     }
 
