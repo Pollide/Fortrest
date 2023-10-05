@@ -617,6 +617,12 @@ public class PlayerController : MonoBehaviour
             poisoned = false;
         }
 
+        if (rooted)
+        {
+            StartCoroutine(RootPlayer());
+            rooted = false;
+        }
+
         if (playerDead)
         {
             Death();
@@ -650,6 +656,15 @@ public class PlayerController : MonoBehaviour
             playerHealth -= 3f;
             yield return new WaitForSeconds(0.5f);
         }
+    }
+
+    private IEnumerator RootPlayer()
+    {
+        playerCanMove = false;
+
+        yield return new WaitForSeconds(2.5f);
+
+        playerCanMove = true;
     }
 
     private void LateUpdate()
