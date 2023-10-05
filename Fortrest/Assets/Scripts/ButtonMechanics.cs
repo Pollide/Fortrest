@@ -212,11 +212,14 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         if (BeginingBool || PlayBool)
         {
             GameManager.Pref("Has Started", 0, false); //restart game
-            List<ButtonMechanics> buttons = GameManager.FindComponent<ButtonMechanics>(transform.root);
+                                                       // List<ButtonMechanics> buttons = GameManager.FindComponent<ButtonMechanics>(transform.root);
+            GetComponentInParent<Buttons>().enabled = false;
+            /*
             for (int i = 0; i < buttons.Count; i++) //stops continue disappearing when starting new game
             {
                 buttons[i].enabled = false;
             }
+            */
 
             Time.timeScale = 1f;
             GameManager.global.NextScene(1);

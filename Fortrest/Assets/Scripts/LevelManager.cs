@@ -71,8 +71,9 @@ public class LevelManager : MonoBehaviour
     public List<EnemyController> enemyList = new List<EnemyController>();
     public List<GameObject> inventoryItemList = new List<GameObject>();
     public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
+    public List<BossSpawner> bossList = new List<BossSpawner>();
+
     public List<Camp> campList = new List<Camp>();
-    public List<BossStateMachine> bossList = new List<BossStateMachine>();
     public float daySpeed = 1;
     public float enemyTimer;
 
@@ -203,7 +204,7 @@ public class LevelManager : MonoBehaviour
         return BuildingList.IndexOf(requestedTransform);
     }
 
-    public static void ProcessBossList(System.Action<BossStateMachine> processAction)
+    public static void ProcessBossList(System.Action<BossSpawner> processAction)
     {
         for (int i = 0; i < LevelManager.global.bossList.Count; i++)
         {

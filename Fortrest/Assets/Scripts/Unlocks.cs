@@ -29,41 +29,35 @@ public class Unlocks : MonoBehaviour
     }
 
     void Update()
-    {       
+    {
         LevelManager.ProcessBossList((boss) =>
-        {           
-            if (boss.IsDead)
+        {
+            if (boss.health <= 0)
             {
-                switch (boss.BossType)
+                switch (boss.bossType)
                 {
-                    case BossStateMachine.TYPE.Chieftain:
+                    case BossSpawner.TYPE.Chieftain:
                         mountUnlocked = true;
                         break;
-                    case BossStateMachine.TYPE.Basilisk:
+                    case BossSpawner.TYPE.Basilisk:
                         bowUnlocked = true;
                         break;
-                    // Spider boss is not using the script being stored in that list
-                    //case BossStateMachine.TYPE.SpiderQueen:
-                    //    miniTurretUnlocked = true;
-                    //    break;
-                    case BossStateMachine.TYPE.Bird:
+                    case BossSpawner.TYPE.SpiderQueen:
+                        miniTurretUnlocked = true;
+                        break;
+                    case BossSpawner.TYPE.Bird:
                         extraApplesUnlocked = true;
                         break;
-                    case BossStateMachine.TYPE.Werewolf:
+                    case BossSpawner.TYPE.Werewolf:
                         upgradedMeleeUnlocked = true;
                         break;
-                    case BossStateMachine.TYPE.Fire:
+                    case BossSpawner.TYPE.Fire:
                         upgradedBowUnlocked = true;
                         break;
                     default:
                         break;
                 }
-            }           
+            }
         });
-
-        if (SpiderBoss.global.dead)
-        {
-            miniTurretUnlocked = true;
-        }
     }
 }

@@ -623,19 +623,31 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        LevelManager.ProcessEnemyList((enemy) =>
+        LevelManager.ProcessBossList((boss) =>
         {
-            int i = LevelManager.global.enemyList.IndexOf(enemy);
-            enemy.health = Pref("Enemy Health" + i, enemy.health, load);
-            DataPositionVoid("Enemy Position" + i, enemy.transform, load);
-            DataEulerVoid("Enemy Euler" + i, enemy.transform, load);
+            int i = LevelManager.global.bossList.IndexOf(boss);
+            boss.health = Pref("Boss Health" + i, boss.health, load);
 
-            if (enemy.health <= 0 && load)
+            if (boss.health <= 0 && load)
             {
-                enemy.gameObject.SetActive(false);
+                boss.hasRun = true;
             }
 
         });
+
+        LevelManager.ProcessEnemyList((enemy) =>
+    {
+        int i = LevelManager.global.enemyList.IndexOf(enemy);
+        enemy.health = Pref("Enemy Health" + i, enemy.health, load);
+        DataPositionVoid("Enemy Position" + i, enemy.transform, load);
+        DataEulerVoid("Enemy Euler" + i, enemy.transform, load);
+
+        if (enemy.health <= 0 && load)
+        {
+            enemy.gameObject.SetActive(false);
+        }
+
+    });
 
         int turretSize = (int)Pref("Turret Size", 0, load); //also resets on save
 
@@ -737,7 +749,7 @@ public class GameManager : MonoBehaviour
 
                 for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
                 {
-                    if (building.name.Contains(PlayerModeHandler.global.turretPrefabs[i].name))
+                    if (PlayerModeHandler.global.turretPrefabs[i].GetComponent<Building>().buildingObject == defence.GetComponent<Building>().buildingObject)
                     {
                         //Debug.Log(turretSize + " " + i + " " + PlayerModeHandler.global.turretPrefabs[i].name);
                         Pref("Turret Type" + defence.turretID, i, false);

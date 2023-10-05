@@ -1468,9 +1468,9 @@ public class PlayerController : MonoBehaviour
             });
             LevelManager.ProcessBossList((boss) =>
             {
-                boss.CanBeDamaged = true;
+                boss.canBeDamaged = true;
             });
-            SpiderBoss.global.canBeDamaged = true;
+
             if (upgradedMelee)
             {
                 attackDamage = 1.25f;
