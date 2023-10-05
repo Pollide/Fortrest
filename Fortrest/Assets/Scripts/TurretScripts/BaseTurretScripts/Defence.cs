@@ -8,7 +8,7 @@ public class Defence : MonoBehaviour
     public float shootingRange = 10f;
     public float fireRate = 1f;
     public float damage = 10;
-
+    public int turretID;
     public TurretStats.Tier changeTier = new TurretStats.Tier();
 
 
