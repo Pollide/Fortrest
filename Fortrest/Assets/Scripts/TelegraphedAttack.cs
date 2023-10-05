@@ -10,7 +10,9 @@ public class TelegraphedAttack : MonoBehaviour
     public float size = 0.0f;
     public float timer = 0.0f;
 
-    public bool isJumpIndicator;    
+    public bool isJumpIndicator;
+    public bool isWebIndicator;
+    public bool isSnakeIndicator;
 
     void Start()
     {
@@ -22,7 +24,9 @@ public class TelegraphedAttack : MonoBehaviour
     {
         if (isJumpIndicator)
             Indicator(ref SpiderBoss.global.jumpAttackIndicator, 1.0f, 4.0f);
-        else
+        if (isWebIndicator)
+            Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f, 2.2f);
+        if (isSnakeIndicator)
             Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f, 2.2f);
     }
 

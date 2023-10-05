@@ -669,10 +669,10 @@ public class GameManager : MonoBehaviour
 
         if (load)
         {
-            for (int i = 0; i < turretSize; i++)
+            for (int i = 1; i < turretSize + 1; i++)
             {
                 GameObject turret = Instantiate(PlayerModeHandler.global.turretPrefabs[(int)Pref("Turret Type" + i, 0, true)]);
-                turret.GetComponent<Defence>().turretID = i + 1;
+                turret.GetComponent<Defence>().turretID = i;
                 LevelManager.global.AddBuildingVoid(turret.transform);
             }
         }
@@ -778,7 +778,7 @@ public class GameManager : MonoBehaviour
             DataEulerVoid("Turret Euler" + defence.turretID, building.transform, load);
 
             defence.CurrentTier = (int)Pref("Turret Tier" + defence.turretID, defence.CurrentTier, load);
-            defence.name = defence.turretID.ToString();
+            defence.name = Pref("Turret Type" + defence.turretID, 0, true) + " -> " + defence.turretID.ToString();
             defence.changeTier.damageTier = (int)Pref("Tier Damage" + defence.turretID, defence.changeTier.damageTier, load);
             defence.changeTier.healthTier = (int)Pref("Tier Health" + defence.turretID, defence.changeTier.healthTier, load);
             defence.changeTier.rangeTier = (int)Pref("Tier Range" + defence.turretID, defence.changeTier.rangeTier, load);
