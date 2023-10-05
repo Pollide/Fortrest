@@ -15,7 +15,7 @@ public class TelegraphedAttack : MonoBehaviour
 
     void Start()
     {
-        duration = 3.0f;
+        duration = 2.2f;
         spriteRenderer = transform.parent.GetComponentInChildren<SpriteRenderer>();
         innerShape = transform.parent.GetChild(1);
     }
@@ -46,6 +46,14 @@ public class TelegraphedAttack : MonoBehaviour
             timer = 0;
 
             indicator = false;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == PlayerController.global.gameObject)
+        {
+            PlayerController.global.rooted = true;
         }
     }
 }
