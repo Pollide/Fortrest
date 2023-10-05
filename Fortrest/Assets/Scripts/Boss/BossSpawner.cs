@@ -4,9 +4,6 @@ public class BossSpawner : MonoBehaviour
 {
     [SerializeField] private float distance = 20f;
     [SerializeField] public bool hasRun = false;
-    [SerializeField] private GameObject boss;
-    [SerializeField] private Transform spawnPosition;
-
     // Holds the current boss type
     [SerializeField] public TYPE bossType;
 
@@ -34,7 +31,7 @@ public class BossSpawner : MonoBehaviour
         {
             GetComponent<BossStateMachine>().bossSpawner = this;
             GetComponent<BossStateMachine>().enabled = false;
-            GetComponent<BossStateMachine>().bossAnimator.enabled = false;
+            GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(false);
         }
 
         if (GetComponent<SpiderBoss>())
@@ -51,7 +48,7 @@ public class BossSpawner : MonoBehaviour
             if (GetComponent<BossStateMachine>())
             {
                 GetComponent<BossStateMachine>().enabled = true;
-                GetComponent<BossStateMachine>().bossAnimator.enabled = true;
+                GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(true);
             }
 
             if (GetComponent<SpiderBoss>())
