@@ -227,7 +227,6 @@ public class PlayerController : MonoBehaviour
     public RectTransform turretMenuHolder;
     public TMP_Text turretMenuTitle;
     public Image turretImageIcon;
-
     // Animation
     private float speedAnim;
     private float transitionSpeed = 20f;
