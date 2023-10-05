@@ -136,7 +136,7 @@ public class EnemyController : MonoBehaviour
         Checks();
         CheckHouse();
 
-        if (house.transform.parent.GetComponent<Building>().destroyedTimer != 0)
+        if (!LevelManager.global.enabled) //if level manager isnt enabled, its because the house was destroyed and its game over
         {
             bestTarget = null;
             agent.SetDestination(transform.position);
