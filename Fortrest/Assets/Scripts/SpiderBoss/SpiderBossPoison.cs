@@ -17,6 +17,7 @@ public class SpiderBossPoison : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent.SetDestination(agent.transform.position);
+        agent.GetComponent<SpiderBoss>().LookAt(PlayerController.global.transform);
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state

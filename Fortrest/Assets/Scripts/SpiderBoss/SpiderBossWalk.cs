@@ -22,7 +22,6 @@ public class SpiderBossWalk : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        //spiderScript.LookAt(playerTransform);
         if (!spiderScript.retreating)
         {
             if (Vector3.Distance(playerTransform.position, agent.transform.position) <= attackRange)
