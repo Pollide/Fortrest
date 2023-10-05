@@ -552,6 +552,7 @@ public class LevelManager : MonoBehaviour
         {
             enemyIncomingState = GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Incoming"); // Display enemies are coming a bit before an attack
             messageDisplayed = true;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.ClockSound);
         }
 
 

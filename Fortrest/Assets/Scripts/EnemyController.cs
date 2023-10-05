@@ -327,7 +327,7 @@ public class EnemyController : MonoBehaviour
             }
 
             // Enemy Attacks (works differently for the house
-            if (bestTarget != house.transform)
+            if (!house || bestTarget != house.transform)
             {
                 if (Vector3.Distance(transform.position, bestTarget.position) <= agent.stoppingDistance + offset) // Checks if enemy reached target
                 {

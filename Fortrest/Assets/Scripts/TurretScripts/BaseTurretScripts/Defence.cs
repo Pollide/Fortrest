@@ -42,7 +42,10 @@ public class Defence : MonoBehaviour
     public Transform ModelHolder;
 
     [HideInInspector]
-    public int CurrentLevel;
+    public int CurrentTier;
+
+    public Animator TierOneAnimator;
+    public Animator TierTwoAnimator;
 
     private Quaternion targetRotation;
     public bool MiniTurret;
@@ -58,15 +61,17 @@ public class Defence : MonoBehaviour
     {
         for (int i = 0; i < ModelHolder.childCount; i++)
         {
-            ModelHolder.GetChild(i).gameObject.SetActive(!MiniTurret && CurrentLevel == i);
+            ModelHolder.GetChild(i).gameObject.SetActive(false);
         }
 
+        Animator animator = TierOneAnimator;
 
-        Animator animator = ModelHolder.GetChild(CurrentLevel).GetComponent<Animator>();
+        if (TierTwoAnimator && CurrentTier > 0)
+            animator = TierTwoAnimator;
+
         if (MiniTurret)
         {
             animator = MiniTurretAnimator;
-            MiniTurretAnimator.gameObject.SetActive(true);
         }
 
         if (animator)
@@ -74,6 +79,7 @@ public class Defence : MonoBehaviour
             animator.speed = fireRate;
         }
 
+        animator.gameObject.SetActive(true);
         return animator;
     }
 
@@ -109,6 +115,7 @@ public class Defence : MonoBehaviour
 
                 if (building.buildingObject == Building.BuildingType.Slow)
                 {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound);
                     target.GetComponent<EnemyController>().ApplySlow(enemySpeedPercentage);
                 }
                 else
