@@ -9,10 +9,10 @@ public class SpiderBoss : MonoBehaviour
     public static SpiderBoss global;
 
     private Transform playerTransform;
-    private float awakeRange;
+    public float awakeRange;
     private float webAttackRange;
     private Animator animator;
-    private bool awoken;
+    [HideInInspector] public bool awoken;
     private float arenaSize;
     public Vector3 startPosition;
     public bool retreating;
@@ -43,6 +43,7 @@ public class SpiderBoss : MonoBehaviour
     public bool rootNow;
     public bool midAir;
     public bool slamNow;
+    public bool startIntro;
 
 
     [HideInInspector]
@@ -101,9 +102,8 @@ public class SpiderBoss : MonoBehaviour
         // Spider awakes when player gets close to it
         if (distanceToPlayer <= awakeRange && !awoken)
         {
+            startIntro = true;            
             animator.SetTrigger("Awaking");
-            awoken = true;
-            healthCanvas.SetActive(true);
         }
 
         // Spider moves at all times
