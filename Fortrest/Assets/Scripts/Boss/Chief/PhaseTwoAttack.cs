@@ -47,7 +47,6 @@ public class PhaseTwoAttack : BossState
     {
         // Turn off charge damage trigger
         stateMachine.BossAnimator.SetBool("isCharging", false);
-        stateMachine.BossAnimator.SetBool("isIdle", true);
         isCharging = false;
         agent.speed = stateMachine.BossSpeed;
         playerHit = false;

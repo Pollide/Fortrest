@@ -69,6 +69,21 @@ public class BossAnimationEvents : MonoBehaviour
         }
     }
 
+    void ResetAttackCounter()
+    {
+        attackState1.attackCounter = 0;
+    }
+
+    void CanChangeState()
+    {
+        attackState1.CanChangeState = true;
+    }
+
+    void CanChangeStatefalse()
+    {
+        attackState1.CanChangeState = false;
+    }
+
     void DeactivateAgent()
     {
         attackState1.GetComponent<NavMeshAgent>().isStopped = false;
@@ -91,7 +106,7 @@ public class BossAnimationEvents : MonoBehaviour
 
     void SetTelegraphFalse()
     {
-        attackState1.SetTeleFalse();
+        attackState1.SetTelegraph(false);
     }
 
     void PlayScreenShake()

@@ -33,10 +33,11 @@ public class PhaseThreeAttack : BossState
             attackState = GetComponent<AttackManagerState>();
         }
 
-        telegraph.SetActive(true);
+        SetTelegraph(true);
         agent.isStopped = true;
         stateMachine.BossAnimator.SetBool("attacking", false);
         stateMachine.BossAnimator.SetBool("isJumping", true);
+        GetComponent<BossTelegraphSlam>().attack = false;
         slamWaitTime = 0f;
         damageDone = false;
     }
@@ -45,7 +46,7 @@ public class PhaseThreeAttack : BossState
     {
         damageDone = true;
         slamWaitTime = 0f;
-        telegraph.SetActive(false);
+        SetTelegraph(false);
         stateMachine.BossAnimator.SetBool("isJumping", false);
         stateMachine.BossAnimator.SetBool("isDiving", false);
         hasJumped = false;
@@ -53,7 +54,7 @@ public class PhaseThreeAttack : BossState
 
     public override void UpdateState()
     {
-        if (!PlayerInArena(stateMachine.ArenaSize))
+        if (!PlayerInArena(stateMachine.ArenaSize) && !stateMachine.BossAnimator.GetBool("isJumping") && !stateMachine.BossAnimator.GetBool("isDiving"))
         {
             stateMachine.ChangeState(idleState);
         }
@@ -74,8 +75,18 @@ public class PhaseThreeAttack : BossState
         {
             stateMachine.BossAnimator.SetBool("isJumping", false);
             stateMachine.BossAnimator.SetBool("isDiving", true);
-            StartCoroutine(telegraph.GetComponent<BossTelegraphSlam>().DoSlamDamage(slamWaitAfterIndicator, Damage, SlamRadius));
+            if (telegraph.activeSelf)
+            {
+                StartCoroutine(GetComponent<BossTelegraphSlam>().DoSlamDamage(slamWaitAfterIndicator, Damage, SlamRadius));
+                damageDone = true;
+            }
         }
+    }
+
+    public void SetTelegraph(bool isActive)
+    {
+        telegraph.SetActive(isActive);
+        GetComponent<BossTelegraphSlam>().outer.SetActive(isActive);
     }
 
     public float SlamDuration

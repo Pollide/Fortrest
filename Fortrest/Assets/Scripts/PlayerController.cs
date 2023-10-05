@@ -1190,7 +1190,6 @@ public class PlayerController : MonoBehaviour
             stoneCostList.Add(new LevelManager.TierData());
         }
 
-
         if (upgradeTypeInt == -1) //repair
         {
             woodCostList[0].ResourceCost = -10;

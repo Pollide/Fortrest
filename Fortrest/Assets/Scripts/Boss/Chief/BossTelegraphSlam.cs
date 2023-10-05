@@ -8,13 +8,14 @@ public class BossTelegraphSlam : MonoBehaviour
     [SerializeField] private PhaseThreeAttack slamState;
     [SerializeField] private AttackManagerState attackManagerState;
     public GameObject outer;
+    public GameObject inner;
     public bool attack = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.transform.SetParent(null);
-        transform.localScale = Vector3.zero;       
+        inner.gameObject.transform.SetParent(null);
+        inner.transform.localScale = Vector3.zero;       
     }
 
     // Update is called once per frame
@@ -25,13 +26,13 @@ public class BossTelegraphSlam : MonoBehaviour
         if (!attack)
         {
             Vector3 newScale = new(slamState.SlamRadius * 2, slamState.SlamRadius * 2, 1);
-            transform.localScale = Vector3.Lerp(Vector3.zero, newScale, slamState.SlamWaitTime / slamState.SlamDuration);
+            inner.transform.localScale = Vector3.Lerp(Vector3.zero, newScale, slamState.SlamWaitTime / slamState.SlamDuration);
             outer.transform.localScale = newScale / 3.8f;
         }
         else
         {
             Vector3 newScale = new Vector3(attackManagerState.attackRadius * 2, attackManagerState.attackRadius * 2, 1);
-            transform.localScale = Vector3.Lerp(Vector3.zero, newScale, attackManagerState.attackTime / attackManagerState.attackDuration);
+            inner.transform.localScale = Vector3.Lerp(Vector3.zero, newScale, attackManagerState.attackTime / attackManagerState.attackDuration);
             outer.transform.localScale = newScale / 3.8f;
         }
     }
@@ -41,7 +42,7 @@ public class BossTelegraphSlam : MonoBehaviour
     {
         yield return new WaitForSeconds(waitTime);
         
-        Collider[] colliders = Physics.OverlapSphere(transform.position, radius);
+        Collider[] colliders = Physics.OverlapSphere(inner.transform.position, radius);
 
         foreach (var collider in colliders)
         {
@@ -56,8 +57,8 @@ public class BossTelegraphSlam : MonoBehaviour
                 {
                     player.TakeDamage(attackManagerState.Damage, true);
                 }
-                Vector3 pushDirection = player.transform.position - transform.position;
-                float angle = Vector3.Angle(pushDirection, player.transform.position - transform.position);
+                Vector3 pushDirection = player.transform.position - inner.transform.position;
+                float angle = Vector3.Angle(pushDirection, player.transform.position - inner.transform.position);
                 pushDirection = Quaternion.Euler(0f, angle, 0f) * pushDirection;
                 player.SetPushDirection(pushDirection, 1);
                 StartCoroutine(player.PushPlayer(0.5f));
@@ -68,6 +69,7 @@ public class BossTelegraphSlam : MonoBehaviour
 
         if (!attack)
         {
+            ScreenShake.global.duration = 0.3f;
             ScreenShake.global.shake = true;
             slamState.StateMachine.ChangeState(slamState.StateAttack);
         }
@@ -78,8 +80,6 @@ public class BossTelegraphSlam : MonoBehaviour
             attackManagerState.IsAttacking = false;
         }
        
-        //outer.SetActive(false);
-        //gameObject.SetActive(false);
-        
+        outer.SetActive(false);
     }
 }

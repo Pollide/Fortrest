@@ -54,9 +54,12 @@ public class IdleState : BossState
                 
                 stateMachine.UpdateHealth();
             }
-
-            WalkTo(initialSpawn.position, stoppingDistance);
-
+            
+            if (stateMachine.BossType == BossStateMachine.TYPE.Chieftain)
+            {
+                WalkTo(initialSpawn.position, stoppingDistance);
+            }
+           
             resetTimer -= Time.deltaTime;
         }
     }
