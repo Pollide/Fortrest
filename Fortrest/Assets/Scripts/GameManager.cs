@@ -541,7 +541,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if (Pref("Has Started", 0, true) == 1)
+            if (Pref("Game Begun", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
@@ -566,7 +566,7 @@ public class GameManager : MonoBehaviour
     {
         if (!load)
         {
-            Pref("Has Started", 1, false);
+            Pref("Game Begun", 1, false);
         }
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
@@ -747,7 +747,7 @@ public class GameManager : MonoBehaviour
 
         if (house && building.health <= 0) //prevents a softlock
         {
-            Pref("Has Started", 0, false);
+            Pref("Game Begun", 0, false);
         }
 
         if (load)
