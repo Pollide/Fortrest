@@ -113,6 +113,7 @@ public class PlayerController : MonoBehaviour
     public bool bridgeInteract;
     public bool poisoned;
     public Animation poisonAnimation;
+    public bool rooted;
 
     // Teleporter
     public bool canTeleport = false;
@@ -132,6 +133,7 @@ public class PlayerController : MonoBehaviour
     public GameObject MapResourcePrefab;
     public Animator ResourceHolderAnimator;
     public bool lastWasAxe;
+
     [System.Serializable]
     public class ToolData
     {

@@ -206,7 +206,7 @@ public class SpiderBoss : MonoBehaviour
 
     private void CircleAnimEvent()
     {
-        jumpAttackIndicator = true;
+        jumpAttackIndicator = true;       
     }
 
     private void ConeAnimEvent()
