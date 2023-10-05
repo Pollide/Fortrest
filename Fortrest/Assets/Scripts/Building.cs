@@ -117,12 +117,9 @@ public class Building : MonoBehaviour
                 HUDHealthBar.SetHealth(health, maxHealth);
             }
         }
-        else // the house itself is not part of the buildings list
+        else if (NaturalBool)
         {
-            if (!GetComponent<Defence>() || !GetComponent<Defence>().MiniTurret)
-            {
-                LevelManager.global.AddBuildingVoid(transform);
-            }
+            LevelManager.global.AddBuildingVoid(transform);
         }
     }
 
