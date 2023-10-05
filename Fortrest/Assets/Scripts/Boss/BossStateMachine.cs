@@ -33,7 +33,7 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private BossState currentState;
     // Holds the initial state the boss starts with
     [SerializeField] private BossState initialState;
-    [SerializeField] private GameObject healthBar;
+    [SerializeField] private GameObject BossCanvas;
 
     // Holds the bosses health
     [SerializeField] private float currentHealth;
@@ -48,7 +48,7 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private bool inDefence = false;
     [SerializeField] private bool phase2Ran = false;
     [SerializeField] private bool phase3Ran = false;
-   
+
     // Bool to see if in death state
     [SerializeField] private bool isDead = false;
     [SerializeField] private Animator bossAnimator;
@@ -142,7 +142,7 @@ public class BossStateMachine : MonoBehaviour
 
     public void UpdateHealth()
     {
-        healthBar.GetComponentInChildren<HealthBar>().SetHealth(currentHealth, maxHealth);
+        BossCanvas.GetComponentInChildren<HealthBar>().SetHealth(currentHealth, maxHealth);
     }
 
     private void DeadState()
@@ -167,7 +167,7 @@ public class BossStateMachine : MonoBehaviour
 
     public GameObject HealthBar
     {
-        get { return healthBar; }
+        get { return BossCanvas; }
     }
 
     public float ArenaSize
