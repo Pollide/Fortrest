@@ -111,7 +111,7 @@ public class SpiderBoss : MonoBehaviour
         if (health < ((maxHealth / 3) * 2) && health > (health / 3))
         {
             stage = 2;
-        }      
+        }
         else if (health < (health / 3))
         {
             stage = 3;
@@ -121,11 +121,11 @@ public class SpiderBoss : MonoBehaviour
         if (awoken)
         {
             timer += Time.deltaTime;
-        }       
+        }
         if (timer >= specialAttackCD)
         {
             SpecialAttack();
-        }     
+        }
 
         if (jump)
         {
@@ -201,7 +201,7 @@ public class SpiderBoss : MonoBehaviour
             }
             GameObject projectile = Instantiate(poisonProjectile, transform.position + (transform.forward) + new Vector3(0f, 1f, 0f), Quaternion.identity);
             projectile.GetComponent<Rigidbody>().AddForce(direction * poisonSpeed, ForceMode.Impulse);
-        }        
+        }
     }
 
     private void CircleAnimEvent()
@@ -216,7 +216,7 @@ public class SpiderBoss : MonoBehaviour
 
     private void WebAttackAnimEvent()
     {
-        
+
     }
 
     private void StartJumpAnimEvent()
@@ -265,7 +265,7 @@ public class SpiderBoss : MonoBehaviour
                 else if (randomChance <= poisonAttackChance + webAttackChance)
                 {
                     animator.SetTrigger("WebAttack");
-                }               
+                }
                 break;
             case 3:
                 randomChance = Random.Range(0f, 1f);
@@ -284,7 +284,7 @@ public class SpiderBoss : MonoBehaviour
                 break;
             default:
                 break;
-        }         
+        }
     }
 
     private void OnTriggerStay(Collider other)
@@ -302,7 +302,7 @@ public class SpiderBoss : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (other.gameObject.tag == "Arrow")
+        if (other.gameObject.tag == "Arrow" && other.GetComponent<ArrowTrigger>())
         {
             if (!other.GetComponent<ArrowTrigger>().singleHit)
             {
