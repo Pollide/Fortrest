@@ -12,7 +12,14 @@ public class BossAnimationEvents : MonoBehaviour
     [SerializeField] private BoxCollider bossCollider;
     [SerializeField] private AudioClip slamAudio;
     [SerializeField] private AudioClip enrageAudio;
+    [SerializeField] private GameObject introCard;
 
+
+    void ActivateIntroCard()
+    {
+        introCard.SetActive(true);
+        stateMachine.BossAnimator.speed = 0f;
+    }
 
     void PlaySlashOne()
     {
@@ -52,7 +59,7 @@ public class BossAnimationEvents : MonoBehaviour
 
     void Attack3()
     {
-        if (attackState1.attackCounter >= 2)
+        if (attackState1.attackCounter >= 3)
         {
             stateMachine.BossAnimator.SetBool("isTired", true);
         }
@@ -74,9 +81,17 @@ public class BossAnimationEvents : MonoBehaviour
 
     void SetTiredFalse()
     {
-
         stateMachine.BossAnimator.SetBool("isTired", false);
+    }
 
+    void SetTired()
+    {
+        stateMachine.BossAnimator.SetBool("isTired", true);
+    }
+
+    void SetTelegraphFalse()
+    {
+        attackState1.SetTeleFalse();
     }
 
     void PlayScreenShake()

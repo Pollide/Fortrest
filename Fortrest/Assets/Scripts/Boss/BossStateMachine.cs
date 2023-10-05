@@ -62,6 +62,7 @@ public class BossStateMachine : MonoBehaviour
         currentHealth = maxHealth;
         LevelManager.global.bossList.Add(this);
         currentPhase = BossPhase.One;
+        inDefence = true;
     }
 
     // Update is called once per frame

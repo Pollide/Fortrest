@@ -164,9 +164,10 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             {
                 if (UpgradeInt > 0)
                 {
-                    TurretStats turretStats = GetComponent<TurretStats>();
+                    GameManager.PlayAnimation(GetComponent<Animation>(), "TierUpgrade");
 
-
+                    PlayerModeHandler.global.UpdateTier(GetComponent<TurretStats>());
+                    /*
                     Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
 
                     if (defence && defence.ModelHolder.childCount > defence.CurrentLevel + 1)
@@ -174,6 +175,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                         defence.CurrentLevel++;
                         defence.ReturnAnimator();
                     }
+                    */
                 }
 
                 if (UpgradeInt == -1)
@@ -191,7 +193,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             }
             else
             {
-                GameManager.PlayAnimation(GetComponent<Animation>());
+                GameManager.PlayAnimation(GetComponent<Animation>(), "Cannot Click");
             }
         }
 

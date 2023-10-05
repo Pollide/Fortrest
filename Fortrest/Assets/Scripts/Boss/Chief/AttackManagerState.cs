@@ -109,7 +109,7 @@ public class AttackManagerState : BossState
         float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
 
         float threshold = 0.9f;
-        if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance)
+        if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance && stateMachine.BossAnimator.GetBool("isTired") == false)
         {
             return true;
         }
@@ -163,7 +163,6 @@ public class AttackManagerState : BossState
             telegraph.SetActive(false);
             telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
         }
-
         if (!isAttacking)
         {
             // Check if the enemy can attack
@@ -171,16 +170,14 @@ public class AttackManagerState : BossState
             {
                 stateMachine.BossAnimator.ResetTrigger("attacking");
                 stateMachine.BossAnimator.SetTrigger("attacking");
+                telegraph.SetActive(true);
+                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(true);
                 isAttacking = true;
                 // Stop agent
                 agent.isStopped = true;
-                telegraph.SetActive(false);
-                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
             }
             else
             {
-                telegraph.SetActive(false);
-                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
                 // Calculate the direction to the target
                 Vector3 targetDirection = playerTransform.position - transform.position;
 
@@ -193,11 +190,9 @@ public class AttackManagerState : BossState
         }
         else
         {
-            if (attackTime < attackDuration && !stateMachine.BossAnimator.GetBool("isTired"))
-            {
-                telegraph.SetActive(true);
+            if (attackTime < attackDuration)
+            { 
                 telegraph.GetComponent<BossTelegraphSlam>().attack = true;
-                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(true);
                 attackTime += Time.deltaTime;
 
                 telegraph.transform.position = transform.position;
@@ -205,13 +200,17 @@ public class AttackManagerState : BossState
 
             if (attackTime >= attackDuration)
             {
-                telegraph.SetActive(false);
-                telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
                 stateMachine.BossAnimator.speed = 1f;
                 attackTime = 0f;
                 StartCoroutine(telegraph.GetComponent<BossTelegraphSlam>().DoSlamDamage(0.1f, Damage, attackRadius));
             }
         }
+    }
+
+    public void SetTeleFalse()
+    {
+        telegraph.SetActive(false);
+        telegraph.GetComponent<BossTelegraphSlam>().outer.SetActive(false);
     }
 
     private void AttackSnake()
