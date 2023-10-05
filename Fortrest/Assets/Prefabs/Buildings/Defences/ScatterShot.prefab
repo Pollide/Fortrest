@@ -180,7 +180,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 0
-  DestroyedBool: 0
   resourceObject: 7
   buildingObject: 3
   health: 0
@@ -197,6 +196,7 @@ MonoBehaviour:
   textDisplayed: 0
   DebugDestroyInstantly: 0
   gridLocation: {x: 0, y: 0}
+  destroyedTimer: 0
 --- !u!114 &-7834737674383926328
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,6 +215,12 @@ MonoBehaviour:
   shootingRange: 20
   fireRate: 1
   damage: 1
+  turretID: 0
+  changeTier:
+    damageTier: 0
+    healthTier: 0
+    rangeTier: 0
+    rateTier: 0
   targetLayer:
     serializedVersion: 2
     m_Bits: 8192
@@ -238,7 +244,9 @@ MonoBehaviour:
     type: 3}
   FirePoint: {fileID: 5034843379706570171}
   ModelHolder: {fileID: 5034843379916696050}
-  CurrentLevel: 0
+  CurrentTier: 0
+  TierOneAnimator: {fileID: 4835001419835558389}
+  TierTwoAnimator: {fileID: 4835001419835558389}
   MiniTurret: 0
   MiniTurretAnimator: {fileID: 0}
 --- !u!208 &804743355647506232
@@ -1087,6 +1095,7 @@ GameObject:
   - component: {fileID: 5034843379916696050}
   - component: {fileID: 5034843379916696044}
   - component: {fileID: 5034843379916696045}
+  - component: {fileID: 4835001419835558389}
   m_Layer: 7
   m_Name: Stand
   m_TagString: Untagged
@@ -1160,6 +1169,26 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!95 &4835001419835558389
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5034843379916696051}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5034843380025814970
 GameObject:
   m_ObjectHideFlags: 0
