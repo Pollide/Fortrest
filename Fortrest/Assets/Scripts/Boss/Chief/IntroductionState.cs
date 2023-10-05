@@ -10,7 +10,6 @@ public class IntroductionState : BossState
     public Vector3 introPositionOffset = new(0, 2, -2); // Offset from the enemy's position during intro
 
     private Transform initialCameraTransform;
-    [SerializeField] private GameObject HUD;
     private float introTimer = 0.0f;
     private float waitBeforeStart = 3.0f;
     private bool introCompleted = false;
