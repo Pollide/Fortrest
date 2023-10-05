@@ -110,15 +110,18 @@ public class BossStateMachine : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (inDefence)
+        if (currentHealth > 0)
         {
-            currentHealth -= (damage / 2f);
-            UpdateHealth();
-        }
-        else
-        {
-            currentHealth -= damage;
-            UpdateHealth();
+            if (inDefence)
+            {
+                currentHealth -= (damage / 2f);
+                UpdateHealth();
+            }
+            else
+            {
+                currentHealth -= damage;
+                UpdateHealth();
+            }
         }
 
         if (currentHealth <= maxHealth / 3f)
@@ -134,9 +137,9 @@ public class BossStateMachine : MonoBehaviour
             currentPhase = BossPhase.One;
         }
 
-        if (currentHealth <= 0f)
+        if (currentHealth <= 0f && !isDead)
         {
-            DeadState();
+            StartCoroutine(DeadState());
         }
     }
 
@@ -145,16 +148,12 @@ public class BossStateMachine : MonoBehaviour
         BossCanvas.GetComponentInChildren<HealthBar>().SetHealth(currentHealth, maxHealth);
     }
 
-    private void DeadState()
+    private IEnumerator DeadState()
     {
         isDead = true;
         LevelManager.global.dayPaused = false;
-        //agent.SetDestination(transform.position);
-        //healthAnimation.gameObject.SetActive(false); // To make healthbar disappear once / if implemented the same way
-        //animator.setTrigger("Death"); // For death animation
-        // Then make the animation call the stuff below
-        //GameManager.global.SoundManager.PlaySound(deathSound, 1.0f);
-        //agent.enabled = false;
+        bossAnimator.SetBool("isDead", true);
+        yield return new WaitForSeconds(2);
         LevelManager.global.bossList.Remove(this);
         Destroy(gameObject);
     }
