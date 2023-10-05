@@ -103,6 +103,22 @@ public class GameManager : MonoBehaviour
     public AudioClip TeleportSound;
     public AudioClip TeleporterEnterSound;
 
+    [Header("SpiderBoss")]
+    public AudioClip SpiderBossDeadSound;
+    public AudioClip SpiderBossEscapeSound;
+    public AudioClip SpiderBossHit1Sound;
+    public AudioClip SpiderBossHit2Sound;
+    public AudioClip SpiderBossJumpAttackSound;
+    public AudioClip SpiderBossJumpSound;
+    public AudioClip SpiderBossAttackSound;
+    public AudioClip SpiderBossPoisonAttackSound;
+    public AudioClip SpiderBossSlamSound;
+    public AudioClip SpiderBossStep1Sound;
+    public AudioClip SpiderBossStep2Sound;
+    public AudioClip SpiderBossStep3Sound;
+    public AudioClip SpiderBossStep4Sound;
+    public AudioClip SpiderBossWebAttackSound;
+
     private Vector3 lastMousePosition;
     public bool CheatInfiniteBuilding;
 

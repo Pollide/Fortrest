@@ -45,6 +45,7 @@ public class SpiderBoss : MonoBehaviour
     public bool rootNow;
     public bool midAir;
     public bool slamNow;
+    public bool startIntro;
 
     private void Awake()
     {
@@ -96,7 +97,7 @@ public class SpiderBoss : MonoBehaviour
         // Spider awakes when player gets close to it
         if (distanceToPlayer <= awakeRange && !awoken)
         {
-            healthCanvas.SetActive(true);
+            startIntro = true;            
             animator.SetTrigger("Awaking");
         }
 
@@ -224,16 +225,6 @@ public class SpiderBoss : MonoBehaviour
         yield return new WaitForSeconds(7f);
         agent.enabled = false;
         Destroy(gameObject);
-    }
-
-    private IEnumerator Intro()
-    {
-        LevelManager.global.HUD.SetActive(false);
-        animator.SetTrigger("Awaking");
-        yield return new WaitForSeconds(2f);
-        LevelManager.global.HUD.SetActive(true);
-        healthCanvas.SetActive(true);
-
     }
 
     private void PoisonAttackAnimEvent()
