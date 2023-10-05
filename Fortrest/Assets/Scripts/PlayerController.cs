@@ -111,6 +111,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool attacking = false;
     public bool canGetInHouse;
     public bool bridgeInteract;
+    public bool poisoned;
+    public Animation poisonAnimation;
+    public bool rooted;
 
     // Teleporter
     public bool canTeleport = false;
@@ -130,6 +133,7 @@ public class PlayerController : MonoBehaviour
     public GameObject MapResourcePrefab;
     public Animator ResourceHolderAnimator;
     public bool lastWasAxe;
+
     [System.Serializable]
     public class ToolData
     {
@@ -606,6 +610,19 @@ public class PlayerController : MonoBehaviour
         CheckCurrentTool();
         Resting();
 
+        if (poisoned)
+        {
+            GameManager.PlayAnimation(poisonAnimation, "Poison");
+            StartCoroutine(PoisonDamage());
+            poisoned = false;
+        }
+
+        if (rooted)
+        {
+            StartCoroutine(RootPlayer());
+            rooted = false;
+        }
+
         if (playerDead)
         {
             Death();
@@ -630,6 +647,24 @@ public class PlayerController : MonoBehaviour
             }
             CharacterAnimator.SetTrigger("Death");
         }
+    }
+
+    private IEnumerator PoisonDamage()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            playerHealth -= 3f;
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    private IEnumerator RootPlayer()
+    {
+        playerCanMove = false;
+
+        yield return new WaitForSeconds(2.5f);
+
+        playerCanMove = true;
     }
 
     private void LateUpdate()
@@ -1130,7 +1165,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void UpdateResourceHolder(int bridgeTypeInt = 0, bool showCosts = true)
+    public void UpdateResourceHolder(int bridgeTypeInt = 0, int upgradeTypeInt = 0, bool showCosts = true)
     {
         for (int i = 0; i < MapResourceHolder.childCount; i++)
         {
@@ -1150,25 +1185,37 @@ public class PlayerController : MonoBehaviour
             stoneCostList.Add(new LevelManager.TierData());
         }
 
-        if (bridgeTypeInt == 1)
+
+        if (upgradeTypeInt == -1) //repair
+        {
+            woodCostList[0].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -5;
+        }
+        else if (upgradeTypeInt == -2) //destroy
+        {
+            woodCostList[0].ResourceCost = -5;
+        }
+        else if (upgradeTypeInt > 0) //upgrade
+        {
+            woodCostList[0].ResourceCost = -5;
+            stoneCostList[0].ResourceCost = -5;
+        }
+        else if (bridgeTypeInt == 1)
         {
             woodCostList[0].ResourceCost = -30;
             stoneCostList[0].ResourceCost = -10;
         }
-
-        if (bridgeTypeInt == 2)
+        else if (bridgeTypeInt == 2)
         {
             woodCostList[1].ResourceCost = -30;
             stoneCostList[1].ResourceCost = -10;
         }
-
-        if (bridgeTypeInt == 3)
+        else if (bridgeTypeInt == 3)
         {
             woodCostList[2].ResourceCost = -30;
             stoneCostList[2].ResourceCost = -10;
         }
-
-        if (bridgeTypeInt == 4)
+        else if (bridgeTypeInt == 4)
         {
             woodCostList[0].ResourceCost = -10;
             stoneCostList[0].ResourceCost = -10;
@@ -1177,8 +1224,7 @@ public class PlayerController : MonoBehaviour
             woodCostList[2].ResourceCost = -10;
             stoneCostList[2].ResourceCost = -10;
         }
-
-        if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+        else if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
         {
             if (PlayerModeHandler.global.buildType == BuildType.Turret)
             {
@@ -1339,6 +1385,7 @@ public class PlayerController : MonoBehaviour
     public float division = 1;
     private void RotatePlayer()
     {
+
         if (!Boar.global.mounted)
         {
             if (GameManager.global.KeyboardBool)
@@ -1347,7 +1394,7 @@ public class PlayerController : MonoBehaviour
 
                 Vector3 targetPosition = LevelManager.global.SceneCamera.ScreenToWorldPoint(Input.mousePosition);
 
-                if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "RotationRaycast" })))
+                if (Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "RotationRaycast", "Terrain" })))
                     targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 4;
 
                 targetPosition.y = transform.position.y;

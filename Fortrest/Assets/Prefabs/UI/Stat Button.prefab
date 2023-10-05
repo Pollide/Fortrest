@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1440382885096699686}
   - component: {fileID: 8069251409987643725}
   - component: {fileID: 3186483083796546926}
+  - component: {fileID: 1377300510228473267}
   m_Layer: 5
   m_Name: Stat Button
   m_TagString: Untagged
@@ -72,9 +73,7 @@ MonoBehaviour:
   SaveBool: 0
   MaxResourcesBool: 0
   TerrainTeleportInt: -1
-  RepairBool: 0
-  UpgradeBool: 1
-  DestroyBool: 0
+  UpgradeInt: 0
   ContinueBool: 0
   PlayBool: 0
   ExitBool: 0
@@ -98,10 +97,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f98f89451ccfbdb4cb45004dd73c32bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spriteList: []
   fillImage: {fileID: 3219991455604919353}
   selectImage: {fileID: 6838340557256899557}
   iconImage: {fileID: 8516051044347498499}
+  changeTier:
+    damageTier: 0
+    healthTier: 0
+    rangeTier: 0
+    rateTier: 0
 --- !u!114 &3186483083796546926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -132,6 +135,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!111 &1377300510228473267
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48226294651458890}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 64a7d1c7bb8fbd04eb6c727279821c14, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 64a7d1c7bb8fbd04eb6c727279821c14, type: 2}
+  - {fileID: 7400000, guid: e745a36395d2c9c45b2c3270ce38df55, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1295160147925813040
 GameObject:
   m_ObjectHideFlags: 0
@@ -462,14 +482,14 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7157366778273298951}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.30070576, w: 0.953717}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 857836570176696371}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 35}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -508,7 +528,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
-  m_FillAmount: 0.723
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0

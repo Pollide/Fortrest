@@ -8,6 +8,11 @@ public class Defence : MonoBehaviour
     public float shootingRange = 10f;
     public float fireRate = 1f;
     public float damage = 10;
+    public int turretID;
+    public TurretStats.Tier changeTier = new TurretStats.Tier();
+
+
+
     public LayerMask targetLayer;
 
     private Transform target;
@@ -89,7 +94,7 @@ public class Defence : MonoBehaviour
             }
 
         }
-        else if (target != null)
+        else if (target != null && target.GetComponent<EnemyController>())
         {
             Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
 
@@ -160,7 +165,7 @@ public class Defence : MonoBehaviour
 
             bullet.transform.localScale = new(0.3f, 0.3f, 0.3f);
 
-            bullet.transform.SetParent(transform);
+            bullet.transform.SetParent(LevelManager.global.transform);
             bullet.GetComponent<ScattershotBullet>().SetDamage(bulletDamage);
 
             // Destroy the bullet after the specified lifetime

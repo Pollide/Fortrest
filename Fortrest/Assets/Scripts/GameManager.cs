@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
     public SFXManager MusicManager; //manages all music
 
     public bool KeyboardBool = true;
-
+    bool loadingScene;
     [Header("Music")]
     public AudioClip MenuMusic;
     public AudioClip GameMusic;
@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour
     public Texture2D pointerDoubleSword;
     public Texture2D pointerSword;
     public Texture2D pointerAim;
+    public Texture2D pointerAimTargeted;
     public Texture2D pointerPickaxe;
     public Texture2D pointerAxe;
     public Texture2D pointerSickle;
@@ -264,7 +265,7 @@ public class GameManager : MonoBehaviour
 
                 if (Physics.Raycast(ray, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Enemy" })))
                 {
-                    cursorTexture = pointerDoubleSword;
+                    cursorTexture = PlayerController.global.canShoot ? pointerAimTargeted : pointerDoubleSword;
                 }
             }
 
@@ -286,7 +287,7 @@ public class GameManager : MonoBehaviour
         }
 
         if (Application.isFocused)
-            Cursor.SetCursor(cursorTexture, cursorTexture == pointerGeneric ? Vector2.zero : hotSpot, CursorMode.ForceSoftware);
+            Cursor.SetCursor(cursorTexture, (cursorTexture == pointerGeneric || cursorTexture == pointerUpgrade) ? Vector2.zero : hotSpot, CursorMode.ForceSoftware);
     }
 
 
@@ -555,12 +556,31 @@ public class GameManager : MonoBehaviour
         DataPositionVoid("Player", PlayerController.global.transform, load);
         ///  DataEulerVoid("Player", PlayerController.global.transform, load);
         ///  
-        if (Boar.global)
-            DataPositionVoid("Mount", Boar.global.transform, load);
+
         //  DataEulerVoid("Mount", Boar.global.transform, load);
 
         PlayerController.global.playerHealth = (int)Pref("Player Health", PlayerController.global.playerHealth, load);
         PlayerController.global.playerEnergy = (int)Pref("Player Energy", PlayerController.global.playerEnergy, load);
+
+
+        if (Boar.global)
+        {
+            DataPositionVoid("Mount", Boar.global.transform, load);
+            Boar.global.mounted = (int)Pref("Player Mount", Boar.global.mounted ? 1 : 0, load) == 1;
+
+            if (Boar.global.mounted && load)
+            {
+                Boar.global.mounted = false;//as Mount flips = !Mount
+                Boar.global.Mount();
+            }
+        }
+
+        PlayerModeHandler.global.inTheFortress = (int)Pref("Player In Fortress", PlayerModeHandler.global.inTheFortress ? 1 : 0, load) == 1;
+
+        if (PlayerModeHandler.global.inTheFortress && load)
+        {
+            PlayerModeHandler.global.SwitchToBuildMode();
+        }
 
         LevelManager.global.daylightTimer = Pref("Daylight", LevelManager.global.daylightTimer, load);
         LevelManager.global.day = (int)Pref("Day", LevelManager.global.day, load);
@@ -624,12 +644,9 @@ public class GameManager : MonoBehaviour
             for (int i = 0; i < turretSize; i++)
             {
                 GameObject turret = Instantiate(PlayerModeHandler.global.turretPrefabs[(int)Pref("Turret Type" + i, 0, true)]);
-
-                DataPositionVoid("Turret Position" + i, turret.transform, load);
-                DataEulerVoid("Turret Euler" + i, turret.transform, load);
+                turret.GetComponent<Defence>().turretID = i + 1;
+                LevelManager.global.AddBuildingVoid(turret.transform);
             }
-
-            PlayerController.global.HealthRestore(0); //refresh
         }
 
         //DEFENSE
@@ -690,6 +707,14 @@ public class GameManager : MonoBehaviour
 
         building.health = (int)Pref("Building Health" + LevelManager.global.ReturnIndex(value), building.health, load);
         building.destroyedTimer = (int)Pref("Building Regenerate" + LevelManager.global.ReturnIndex(value), building.destroyedTimer, load);
+
+
+        if (building.destroyedTimer != 0 && load)
+        {
+            GameManager.PlayAnimation(building.GetComponent<Animation>(), "Nature Destroy", true, true); //hides model quickly
+        }
+
+
         building.SetLastHealth();
 
         if (house && building.health <= 0) //prevents a softlock
@@ -702,28 +727,39 @@ public class GameManager : MonoBehaviour
             building.TakeDamage(0); //refreshes the bar
         }
 
-        else if (building.GetComponent<Defence>())
-        {
-            int turretSize = (int)Pref("Turret Size", 0, true);
+        Defence defence = building.GetComponent<Defence>();
 
-            for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
+        if (defence)
+        {
+            if (!load)
             {
-                if (building.name.Contains(PlayerModeHandler.global.turretPrefabs[i].name))
+                defence.turretID = (int)Pref("Turret Size", Pref("Turret Size", 0, true) + 1, false);
+
+                for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
                 {
-                    //Debug.Log(turretSize + " " + i + " " + PlayerModeHandler.global.turretPrefabs[i].name);
-                    Pref("Turret Type" + turretSize, i, false);
-                    break;
+                    if (building.name.Contains(PlayerModeHandler.global.turretPrefabs[i].name))
+                    {
+                        //Debug.Log(turretSize + " " + i + " " + PlayerModeHandler.global.turretPrefabs[i].name);
+                        Pref("Turret Type" + defence.turretID, i, false);
+                        break;
+                    }
                 }
             }
 
-            DataPositionVoid("Turret Position" + turretSize, building.transform, false);
-            DataEulerVoid("Turret Euler" + turretSize, building.transform, false);
+            DataPositionVoid("Turret Position" + defence.turretID, building.transform, load);
+            DataEulerVoid("Turret Euler" + defence.turretID, building.transform, load);
 
-            building.GetComponent<Defence>().CurrentLevel = (int)Pref("Turret Level" + turretSize, building.GetComponent<Defence>().CurrentLevel, load);
-            Pref("Turret Size", turretSize + 1, false);
+            defence.CurrentLevel = (int)Pref("Turret Level" + defence.turretID, defence.CurrentLevel, load);
+
+            defence.changeTier.damageTier = (int)Pref("Tier Damage" + defence.turretID, defence.changeTier.damageTier, load);
+            defence.changeTier.healthTier = (int)Pref("Tier Health" + defence.turretID, defence.changeTier.healthTier, load);
+            defence.changeTier.rangeTier = (int)Pref("Tier Range" + defence.turretID, defence.changeTier.rangeTier, load);
+            defence.changeTier.rateTier = (int)Pref("Tier Rate" + defence.turretID, defence.changeTier.rateTier, load);
+
+
         }
-
     }
+
     void DataPositionVoid(string pref, Transform value, bool load)
     {
         /*

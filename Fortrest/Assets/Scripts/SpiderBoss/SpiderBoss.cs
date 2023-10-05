@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.VFX;
 
 public class SpiderBoss : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class SpiderBoss : MonoBehaviour
 
     private Transform playerTransform;
     private float awakeRange;
+    private float webAttackRange;
     private Animator animator;
     private bool awoken;
     private float arenaSize;
@@ -33,7 +35,15 @@ public class SpiderBoss : MonoBehaviour
     private float poisonAttackChance;
     private float webAttackChance;
     public GameObject poisonProjectile;
-    public float projectileSpeed;
+    private float poisonSpeed;
+    private Rigidbody rb;
+    private bool jump;
+    public bool jumpAttackIndicator;
+    public bool webAttackIndicator;
+    public VisualEffect VFXWeb;
+    public bool specialAttackReady;
+    public float distanceToPlayer;
+    public bool rootNow;
 
     private void Awake()
     {
@@ -42,6 +52,7 @@ public class SpiderBoss : MonoBehaviour
 
     void Start()
     {
+        VFXWeb.Stop();
         playerTransform = PlayerController.global.transform;
         awakeRange = 20.0f;
         animator = GetComponent<Animator>();
@@ -56,10 +67,13 @@ public class SpiderBoss : MonoBehaviour
         canBeDamaged = true;
         stage = 1;
         specialAttackCD = 10.0f;
-        poisonAttackChance = 0.5f;
-        webAttackChance = 0.3f;        
+        poisonAttackChance = 0.4f;
+        webAttackChance = 0.4f;
+        poisonSpeed = 20.0f;
+        rb = GetComponent<Rigidbody>();
+        webAttackRange = 5.0f;
 
-        speed = 4.0f;
+        speed = 5.0f;
         stoppingDistance = 3.5f;
         angularSpeed = 180.0f;
         acceleration = 10.0f;
@@ -77,8 +91,10 @@ public class SpiderBoss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
+
         // Spider awakes when player gets close to it
-        if (Vector3.Distance(playerTransform.position, transform.position) <= awakeRange && !awoken)
+        if (distanceToPlayer <= awakeRange && !awoken)
         {
             animator.SetTrigger("Awaking");
             awoken = true;
@@ -105,7 +121,7 @@ public class SpiderBoss : MonoBehaviour
         if (health < ((maxHealth / 3) * 2) && health > (health / 3))
         {
             stage = 2;
-        }      
+        }
         else if (health < (health / 3))
         {
             stage = 3;
@@ -115,11 +131,17 @@ public class SpiderBoss : MonoBehaviour
         if (awoken)
         {
             timer += Time.deltaTime;
-        }       
+        }
         if (timer >= specialAttackCD)
         {
+            specialAttackReady = true;
             SpecialAttack();
-        }     
+        }
+
+        if (jump)
+        {
+            agent.Move(-transform.forward * (Time.deltaTime * 10.0f));
+        }
 
         // Death state
         if (dead)
@@ -169,8 +191,64 @@ public class SpiderBoss : MonoBehaviour
 
     private void PoisonAttackAnimEvent()
     {
-        GameObject projectile = Instantiate(poisonProjectile, transform.position, Quaternion.identity);
-        projectile.GetComponent<Rigidbody>().AddForce(transform.forward * projectileSpeed, ForceMode.Impulse);
+        for (int i = 0; i < 5; i++)
+        {
+            Vector3 direction = transform.forward;
+            if (i == 1)
+            {
+                direction = transform.forward + (transform.right * 0.8f);
+            }
+            else if (i == 2)
+            {
+                direction = transform.forward - (transform.right * 0.8f);
+            }
+            else if (i == 3)
+            {
+                direction = transform.forward + (transform.right * 0.4f);
+            }
+            else if (i == 4)
+            {
+                direction = transform.forward - (transform.right * 0.4f);
+            }
+            GameObject projectile = Instantiate(poisonProjectile, transform.position + (transform.forward) + new Vector3(0f, 1f, 0f), Quaternion.identity);
+            projectile.GetComponent<Rigidbody>().AddForce(direction * poisonSpeed, ForceMode.Impulse);
+        }
+    }
+
+    private void CircleAnimEvent()
+    {
+        jumpAttackIndicator = true;       
+    }
+
+    private void ConeAnimEvent()
+    {
+        webAttackIndicator = true;
+    }
+
+    private void WebAttackAnimEvent()
+    {
+        VFXWeb.Play();
+        specialAttackReady = false;
+        StartCoroutine(Rooting());
+    }
+
+    private IEnumerator Rooting()
+    {
+        rootNow = true;
+        yield return new WaitForSeconds(0.7f);
+        rootNow = false;
+    }
+
+    private void StartJumpAnimEvent()
+    {
+        jump = true;
+        animator.speed = 0.75f;
+    }
+
+    private void EndJumpAnimEvent()
+    {
+        jump = false;
+        animator.speed = 1.0f;
     }
 
     private void Damaged(float amount)
@@ -187,7 +265,7 @@ public class SpiderBoss : MonoBehaviour
     }
 
     private void SpecialAttack()
-    {
+    {      
         timer = 0;
         animator.ResetTrigger("PoisonAttack");
         animator.ResetTrigger("WebAttack");
@@ -196,44 +274,65 @@ public class SpiderBoss : MonoBehaviour
         switch (stage)
         {
             case 1:
-                animator.SetTrigger("PoisonAttack");
+                animator.SetTrigger("WebAttack");
                 break;
             case 2:
-                randomChance = Random.Range(0f, 1f);
-                if (randomChance <= poisonAttackChance || randomChance > poisonAttackChance + webAttackChance)
+                if (distanceToPlayer < webAttackRange)
                 {
-                    animator.SetTrigger("PoisonAttack");
-                }
-                else if (randomChance <= poisonAttackChance + webAttackChance)
-                {
-                    animator.SetTrigger("WebAttack");
-                }               
-                break;
-            case 3:
-                randomChance = Random.Range(0f, 1f);
-                if (randomChance <= poisonAttackChance)
-                {
-                    animator.SetTrigger("PoisonAttack");
-                }
-                else if (randomChance <= poisonAttackChance + webAttackChance)
-                {
-                    animator.SetTrigger("WebAttack");
+                    randomChance = Random.Range(0f, 1f);
+                    if (randomChance <= poisonAttackChance || randomChance > poisonAttackChance + webAttackChance)
+                    {
+                        animator.SetTrigger("PoisonAttack");
+                    }
+                    else if (randomChance <= poisonAttackChance + webAttackChance)
+                    {
+                        animator.SetTrigger("WebAttack");
+                    }
                 }
                 else
                 {
-                    animator.SetTrigger("JumpAttack");
+                    animator.SetTrigger("PoisonAttack");
+                }
+                break;
+            case 3:
+                if (distanceToPlayer < webAttackRange)
+                {
+                    randomChance = Random.Range(0f, 1f);
+                    if (randomChance <= poisonAttackChance)
+                    {
+                        animator.SetTrigger("PoisonAttack");
+                    }
+                    else if (randomChance <= poisonAttackChance + webAttackChance)
+                    {
+                        animator.SetTrigger("WebAttack");
+                    }
+                    else
+                    {
+                        animator.SetTrigger("JumpAttack");
+                    }
+                }
+                else
+                {
+                    int randomInt = Random.Range(1, 4);
+                    if (randomInt == 3)
+                    {
+                        animator.SetTrigger("JumpAttack");
+                    }
+                    else
+                    {
+                        animator.SetTrigger("PoisonAttack");
+                    }
                 }
                 break;
             default:
                 break;
-        }         
+        }
     }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
-            Debug.Log("yoza");
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 canBeDamaged = false;
@@ -244,7 +343,7 @@ public class SpiderBoss : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (other.gameObject.tag == "Arrow")
+        if (other.gameObject.tag == "Arrow" && other.GetComponent<ArrowTrigger>())
         {
             if (!other.GetComponent<ArrowTrigger>().singleHit)
             {

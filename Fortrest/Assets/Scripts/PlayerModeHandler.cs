@@ -63,7 +63,7 @@ public class PlayerModeHandler : MonoBehaviour
     public bool[,] occupied;
     private bool cantPlace;
     public bool buildingWithController;
-
+    bool turretMenuOpened;
     private void Awake()
     {
         if (global)
@@ -180,16 +180,6 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (!inTheFortress)
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.EnterHouseSound);
-                PlayerController.global.evading = false;
-                lastMode = playerModes;
-                entryPosition = PlayerController.global.transform.position;
-                if (House.GetComponent<Building>().textDisplayed)
-                {
-                    LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
-                    House.GetComponent<Building>().textDisplayed = false;
-                }
-                centerMouse = false;
                 SwitchToBuildMode();
             }
             else
@@ -213,10 +203,52 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void TurretMenuSet(bool open)
     {
-        PlayerController.global.turretMenuHolder.gameObject.SetActive(open);
+        if (open != turretMenuOpened)
+        {
+            turretMenuOpened = open;
+            if (!open)
+            {
 
-        if (!open)
-            SelectedTurret = null;
+                if (SelectedTurret)
+                    PlayerController.global.UpdateResourceHolder(); //so the turret costs update
+
+                SelectedTurret = null;
+            }
+
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
+        }
+
+    }
+
+    public void SetTeir(Image fillImage, ref int buttonTier, ref int defenceTier, bool upgrade)
+    {
+        int max = 5;
+
+        if (buttonTier != 0)
+        {
+            if (upgrade)
+            {
+                defenceTier += buttonTier;
+            }
+
+            fillImage.fillAmount = (float)defenceTier / max;
+        }
+    }
+
+    public void UpdateTier(TurretStats buttonStat = null)
+    {
+        List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
+        Defence defence = SelectedTurret.GetComponent<Defence>();
+
+        for (int i = 0; i < turretStats.Count; i++)
+        {
+            bool upgrade = turretStats[i] == buttonStat;
+
+            SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.damageTier, ref defence.changeTier.damageTier, upgrade);
+            SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade);
+            SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rangeTier, ref defence.changeTier.rangeTier, upgrade);
+            SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rateTier, ref defence.changeTier.rateTier, upgrade);
+        }
     }
 
     private void BuildMode()
@@ -275,12 +307,7 @@ public class PlayerModeHandler : MonoBehaviour
                         PlayerController.global.turretImageIcon.sprite = selected.spriteTierList[selected.CurrentLevel];
                         PlayerController.global.turretMenuTitle.text = SelectedTurret.buildingObject.ToString();
 
-                        List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
-
-                        for (int j = 0; j < turretStats.Count; j++)
-                        {
-                            turretStats[j].fillImage.fillAmount = Random.Range(0.0f, 1f);
-                        }
+                        UpdateTier();
 
                     }
 
@@ -297,6 +324,8 @@ public class PlayerModeHandler : MonoBehaviour
             if (!turretBlueprint)
             {
                 turretBlueprint = Instantiate(turretPrefab);
+               
+
                 //turretBlueprint.GetComponent<Building>().resourceObject = Building.BuildingType.DefenseBP;
                 turretBlueprint.GetComponent<Building>().enabled = false;
                 turretBlueprint.GetComponent<UnityEngine.AI.NavMeshObstacle>().enabled = false;
@@ -407,6 +436,7 @@ public class PlayerModeHandler : MonoBehaviour
             yield return null;
         }
 
+        LevelManager.global.AddBuildingVoid(newTurret.transform);
         newTurret.GetComponent<Defence>().enabled = true;
 
         if (prefab == turretPrefabs[0])
@@ -532,6 +562,16 @@ public class PlayerModeHandler : MonoBehaviour
         PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
         if (active)
         {
+            PlayerController.global.evading = false;
+            lastMode = playerModes;
+            // entryPosition = PlayerController.global.transform.position;
+            if (House.GetComponent<Building>().textDisplayed)
+            {
+                LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
+                House.GetComponent<Building>().textDisplayed = false;
+            }
+            centerMouse = false;
+
             ModeSwitchText.global.ResetText();
             ClearSelectionGrid();
             PlayerController.global.TeleportPlayer(PlayerController.global.house.transform.position, true);

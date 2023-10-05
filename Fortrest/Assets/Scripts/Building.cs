@@ -47,7 +47,7 @@ public class Building : MonoBehaviour
 
     public BuildingType buildingObject;
 
-    [HideInInspector]
+    //[HideInInspector]
     public float health;
     public float maxHealth = 4;
     public int resourceAmount = 5;
@@ -117,12 +117,9 @@ public class Building : MonoBehaviour
                 HUDHealthBar.SetHealth(health, maxHealth);
             }
         }
-        else // the house itself is not part of the buildings list
+        else if (NaturalBool)
         {
-            if (!GetComponent<Defence>() || !GetComponent<Defence>().MiniTurret)
-            {
-                LevelManager.global.AddBuildingVoid(transform);
-            }
+            LevelManager.global.AddBuildingVoid(transform);
         }
     }
 
@@ -226,30 +223,25 @@ public class Building : MonoBehaviour
             //  PlayerEulerY = PlayerController.global.transform.eulerAngles.y;
 
 
-            if (ReturnWood())
+            if (GetComponent<Defence>())
             {
-                /*
-                GetComponent<Rigidbody>().isKinematic = false;
-                GetComponent<Rigidbody>().useGravity = true;
-                GetComponent<Rigidbody>().AddForce(PlayerController.global.transform.forward * 10, ForceMode.Impulse);
-                */
-
-                treeFallingDirection = PlayerController.global.transform.up.normalized;
-
+                PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
+                LevelManager.global.RemoveBuildingVoid(transform);
+                Destroy(gameObject);
             }
             else
             {
-                if (GetComponent<Defence>())
+                if (ReturnWood())
                 {
-                    PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
-                    LevelManager.global.RemoveBuildingVoid(transform);
-                    Destroy(gameObject);
+                    treeFallingDirection = PlayerController.global.transform.up.normalized + (PlayerController.global.transform.position - transform.position).normalized;
+                    //treeFallingDirection = (PlayerController.global.transform.position - transform.position).normalized;
                 }
                 else
                 {
                     ResourceRegenerate();
                 }
             }
+
         }
         PlayerController.global.currentResource = null;
     }
@@ -361,21 +353,18 @@ public class Building : MonoBehaviour
 
         if (destroyedTimer != 0)
         {
-            if (destroyedTimer > 120)
+            bool appear = destroyedTimer > 120;
+
+            if (appear)
             {
                 transform.rotation = startingRotation;
-                transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f * Time.deltaTime);
-
-                if (transform.localScale.x > 0.99f)
-                {
-                    transform.localScale = Vector3.one;
-                    health = maxHealth;
-                    destroyedTimer = 0;
-                }
+                GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy", false);
+                transform.localScale = Vector3.one;
+                health = maxHealth;
+                destroyedTimer = 0;
             }
             else
             {
-                transform.localScale = Vector3.zero;
                 destroyedTimer += Time.deltaTime;
             }
             /*
@@ -425,7 +414,7 @@ public class Building : MonoBehaviour
             }
 
             //  transform.Rotate(treeFallingDirection * 20 * Time.deltaTime);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 80 * Time.deltaTime);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 100 * Time.deltaTime);
         }
     }
 }
