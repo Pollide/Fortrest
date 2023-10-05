@@ -16,7 +16,7 @@ public class SpiderBossWalk : StateMachineBehaviour
         playerTransform = PlayerController.global.transform;
         agent = animator.GetComponent<NavMeshAgent>();
         spiderScript = animator.GetComponent<SpiderBoss>();
-        attackRange = agent.stoppingDistance + 0.15f;
+        attackRange = agent.stoppingDistance + 0.5f;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

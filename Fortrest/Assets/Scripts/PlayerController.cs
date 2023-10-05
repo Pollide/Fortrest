@@ -752,13 +752,10 @@ public class PlayerController : MonoBehaviour
             {
                 playerHealth += Time.deltaTime * 2.0f;
             }
-
-            if (playerHealth > maxHealth)
+            else
             {
                 playerHealth = maxHealth;
             }
-            playerHealth += Time.deltaTime * 2.0f;
-            //healthBar.SetHealth(playerHealth, maxHealth);
         }
     }
 

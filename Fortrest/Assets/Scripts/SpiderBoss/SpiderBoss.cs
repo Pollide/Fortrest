@@ -73,9 +73,9 @@ public class SpiderBoss : MonoBehaviour
         poisonSpeed = 20.0f;
         webAttackRange = 5.0f;
 
-        speed = 7.0f;
+        speed = 12f;
         stoppingDistance = 3.5f;
-        angularSpeed = 180.0f;
+        angularSpeed = 200.0f;
         acceleration = 10.0f;
         SetAgentParameters(speed, acceleration, angularSpeed, stoppingDistance);
     }
@@ -117,6 +117,24 @@ public class SpiderBoss : MonoBehaviour
             retreating = false;
         }
 
+        if (retreating)
+        {
+            if (health < maxHealth)
+            {
+                health += Time.deltaTime * 3.0f;
+            }
+            else
+            {
+                health = maxHealth;
+                healthCanvas.SetActive(false);
+            }
+            UpdateHealth();
+        }
+        else if (awoken)
+        {
+            healthCanvas.SetActive(true);
+        }
+
         // Triggering different stages
         if (health < ((maxHealth / 3) * 2) && health > (health / 3))
         {
@@ -156,8 +174,7 @@ public class SpiderBoss : MonoBehaviour
         // Death state
         if (dead)
         {
-            healthCanvas.SetActive(false);
-            agent.SetDestination(transform.position);
+            healthCanvas.SetActive(false);           
             animator.SetTrigger("Dead");
             StartCoroutine(DestroyOnDeath());
             dead = false;
@@ -234,6 +251,7 @@ public class SpiderBoss : MonoBehaviour
             GameObject projectile = Instantiate(poisonProjectile, transform.position + (transform.forward) + new Vector3(0f, 1f, 0f), Quaternion.identity);
             projectile.GetComponent<Rigidbody>().AddForce(direction * poisonSpeed, ForceMode.Impulse);
         }
+        specialAttackReady = false;
     }
     
     private void WebAttackAnimEvent()
@@ -295,6 +313,7 @@ public class SpiderBoss : MonoBehaviour
         if (health <= 0)
         {
             StopAllCoroutines();
+            agent.SetDestination(transform.position);
             dead = true;
             Time.timeScale = 1;
         }
@@ -310,7 +329,7 @@ public class SpiderBoss : MonoBehaviour
         switch (stage)
         {
             case 1:
-                animator.SetTrigger("JumpAttack");
+                animator.SetTrigger("PoisonAttack");
                 break;
             case 2:
                 if (distanceToPlayer < webAttackRange)
