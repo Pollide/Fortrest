@@ -754,9 +754,6 @@ public class GameManager : MonoBehaviour
             defence.changeTier.rangeTier = (int)Pref("Tier Range" + ID, defence.changeTier.rangeTier, load);
             defence.changeTier.rateTier = (int)Pref("Tier Rate" + ID, defence.changeTier.rateTier, load);
 
-            if (!load)
-                PlayerController.global.HealthRestore(0); //refresh
-
             Pref("Turret Size", ID + 1, false);
 
 
