@@ -61,7 +61,7 @@ public class PhaseTwoAttack : BossState
             stateMachine.ChangeState(idleState);
         }
 
-        if (!isCharging && !hasRun)
+        if (!isCharging && !hasRun && stateMachine.BossType == BossSpawner.TYPE.Chieftain)
         {
             StartCoroutine(WindUpAndCharge());
             hasRun = true;
