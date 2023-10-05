@@ -9,7 +9,6 @@ public class SpiderBoss : MonoBehaviour
     public static SpiderBoss global;
 
     private Transform playerTransform;
-    public float awakeRange;
     private float webAttackRange;
     private Animator animator;
     [HideInInspector] public bool awoken;
@@ -63,7 +62,6 @@ public class SpiderBoss : MonoBehaviour
 
         VFXWeb.Stop();
         playerTransform = PlayerController.global.transform;
-        awakeRange = 20.0f;
         animator = GetComponent<Animator>();
         awoken = false;
         arenaSize = 50.0f;
@@ -94,17 +92,19 @@ public class SpiderBoss : MonoBehaviour
         agent.stoppingDistance = _stopping;
     }
 
+    public void Awaken()
+    {
+        startIntro = true;
+        awoken = true;
+        animator.SetTrigger("Awaking");
+    }
+
+
     // Update is called once per frame
     void Update()
     {
         distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
 
-        // Spider awakes when player gets close to it
-        if (distanceToPlayer <= awakeRange && !awoken)
-        {
-            startIntro = true;            
-            animator.SetTrigger("Awaking");
-        }
 
         // Spider moves at all times
         if (awoken)

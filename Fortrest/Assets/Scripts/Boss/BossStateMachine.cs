@@ -38,7 +38,7 @@ public class BossStateMachine : MonoBehaviour
 
     // Bool to see if in death state
     [SerializeField] private bool isDead = false;
-    [SerializeField] private Animator bossAnimator;
+    [SerializeField] public Animator bossAnimator;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
