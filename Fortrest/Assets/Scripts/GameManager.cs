@@ -633,6 +633,13 @@ public class GameManager : MonoBehaviour
         TierDataVoid(ref LevelManager.global.WoodTierList, load);
         TierDataVoid(ref LevelManager.global.StoneTierList, load);
 
+        for (int i = 0; i < LevelManager.global.chestList.Count; i++)
+        {
+            LevelManager.global.chestList[i].opened = Pref("Chest Open" + i, LevelManager.global.chestList[i].opened ? 1 : 0, load) == 1;
+
+            if (LevelManager.global.chestList[i].opened && load)
+                LevelManager.global.chestList[i].LoadOpen();
+        }
         for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
         {
             LevelManager.global.bridgeList[i].isBuilt = Pref("Bridge Built" + i, LevelManager.global.bridgeList[i].isBuilt ? 1 : 0, load) == 1;
