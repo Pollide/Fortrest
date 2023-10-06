@@ -57,7 +57,7 @@ public class IdleState : BossState
 
             if (stateMachine.BossType == BossSpawner.TYPE.Chieftain)
             {
-                WalkTo(initialSpawn.position, stoppingDistance);
+                WalkTo(initialSpawn, stoppingDistance);
             }
 
             resetTimer -= Time.deltaTime;
