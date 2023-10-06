@@ -17,6 +17,22 @@ public class PoisonProjectile : MonoBehaviour
         {
             PlayerController.global.poisoned = true;
             hitOnce = true;
+            int randomInt = Random.Range(0, 3);
+            AudioClip temp = null;
+            switch (randomInt)
+            {
+                case 0:
+                    temp = GameManager.global.PlayerHit1Sound;
+                    break;
+                case 1:
+                    temp = GameManager.global.PlayerHit2Sound;
+                    break;
+                case 2:
+                    temp = GameManager.global.PlayerHit3Sound;
+                    break;
+                default:
+                    break;
+            }
         }
         Destroy(gameObject);
     }
