@@ -86,7 +86,7 @@ public class IntroductionState : BossState
     {
         yield return new WaitForSeconds(0.005f);
         stateMachine.BossAnimator.speed = 0;
-        transform.position = initialSpawn.position;
+        transform.position = initialSpawn;
         yield return new WaitForSeconds(waitBeforeStart);
         stateMachine.BossAnimator.speed = 1;
     }
