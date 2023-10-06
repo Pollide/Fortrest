@@ -23,7 +23,8 @@ public class BossSpawner : MonoBehaviour
     public float health = 100;
     // Holds the bosses max health
     public float maxHealth = 100f;
-    bool bossEncountered;
+    [HideInInspector]
+    public bool bossEncountered;
     [HideInInspector]
     public bool canBeDamaged = true;
 
@@ -80,18 +81,20 @@ public class BossSpawner : MonoBehaviour
                 GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Appear", open);
             }
 
-            if (open)
-                GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
-            else
-            {
-                LevelManager.global.NightTimeMusic = !LevelManager.global.ReturnNight();
-            }
+            BossMusicBegin(open);
         }
 
         UpdateHealth();
 
 
         bossEncountered = open;
+    }
+
+public void BossMusicBegin(bool open)
+    {
+        LevelManager.global.activeBossSpawner = open ? this : null;
+
+        LevelManager.global.SetGameMusic();
     }
 
 

@@ -123,7 +123,7 @@ public class LevelManager : MonoBehaviour
     public bool dayPaused;
     private int groupSpawnAmount;
     private int laneInt;
-    private Transform houseTransform;
+    public Transform houseTransform;
     private Vector3 enemySpawnPosition;
     bool housePosObtained = false;
     private float spawnDistance = 39.0f;
@@ -274,6 +274,19 @@ public class LevelManager : MonoBehaviour
     public bool ReturnNight()
     {
         return daylightTimer > 180;
+    }
+
+    public BossSpawner activeBossSpawner;
+    public void SetGameMusic()
+    {
+if(activeBossSpawner)
+        {
+            GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
+        }
+else
+        {
+            GameManager.global.MusicManager.PlayMusic(LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+        }
     }
 
     private void CalculateCamps()

@@ -82,6 +82,7 @@ public class IntroductionState : BossState
     public IEnumerator Intro()
     {
         yield return new WaitForSeconds(0.005f);
+        stateMachine.bossSpawner.BossMusicBegin(true);
         stateMachine.BossAnimator.speed = 0;
         transform.position = initialSpawn;
         yield return new WaitForSeconds(waitBeforeStart);
