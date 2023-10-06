@@ -119,6 +119,8 @@ public class GameManager : MonoBehaviour
     public AudioClip SpiderBossStep4Sound;
     public AudioClip SpiderBossWebAttackSound;
 
+    public AudioClip ChestOpenSound;
+
     private Vector3 lastMousePosition;
     public bool CheatInfiniteBuilding;
 
