@@ -269,6 +269,7 @@ GameObject:
   - component: {fileID: 1969465713250628132}
   - component: {fileID: 3116273809109224010}
   - component: {fileID: 1786809585096736038}
+  - component: {fileID: 2506233975681815981}
   m_Layer: 0
   m_Name: Basalisk
   m_TagString: Untagged
@@ -424,6 +425,23 @@ MonoBehaviour:
   telegraph: {fileID: 0}
   damageDone: 0
   hasJumped: 0
+--- !u!114 &2506233975681815981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4034339124308090815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36a0a17476046894796388402f1cd957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 20
+  hasRun: 0
+  bossType: 1
+  health: 60
+  canBeDamaged: 1
 --- !u!1 &4632391821758241518
 GameObject:
   m_ObjectHideFlags: 0
