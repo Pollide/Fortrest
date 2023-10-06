@@ -509,7 +509,7 @@ public class PlayerController : MonoBehaviour
 
         speedAnim = 0f;
     }
-
+    public bool debugfrocemap;
     void Update()
     {
 #if UNITY_EDITOR
@@ -518,6 +518,12 @@ public class PlayerController : MonoBehaviour
             playerHealth = 0f;
             //healthBar.SetHealth(playerHealth, maxHealth);
         }
+
+        if (debugfrocemap)
+        {
+            UpdateMap();
+        }
+
 #endif
 
         if (mapBool)
