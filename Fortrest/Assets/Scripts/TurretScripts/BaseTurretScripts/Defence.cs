@@ -66,6 +66,7 @@ public class Defence : MonoBehaviour
     private void Start()
     {
         building = GetComponent<Building>();
+        ReturnAnimator().SetTrigger("Deploy");
         ReturnAnimator();
     }
 
