@@ -228,6 +228,7 @@ public class PlayerModeHandler : MonoBehaviour
         bool next = tier > 0;
         float shift = (next ? max : 0);
 
+
         bool ReturnMax(ref float defenceTier)
         {
             return (defenceTier - shift) >= max;
@@ -235,21 +236,31 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (buttonTier != 0)
         {
-            if (upgrade && !ReturnMax(ref defenceTier))
+
+            if (upgrade && !ReturnMax(ref defenceTier) && PlayerController.global.CheckSufficientResources())
             {
                 defenceTier += buttonTier;
+                GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
+                GameManager.PlayAnimation(fillImage.GetComponentInParent<Animation>(), "TierUpgrade");
+
             }
+
+
+
 
             fillImage.fillAmount = ((float)defenceTier - shift) / max;
             fillImage.color = next ? Color.magenta : Color.cyan;
 
+
             return ReturnMax(ref defenceTier);
+
         }
         else
         {
             return true;
         }
     }
+
 
     void TierChange(bool instant)
     {
@@ -316,7 +327,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         TurretMenuSet(SelectedTurret);
 
-        if (!MouseOverUI() && Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid", "Building" })))
+        if (!MouseOverUI() && Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })))
         {
             GameObject turretPrefab = turretPrefabs[0];
 
@@ -353,19 +364,27 @@ public class PlayerModeHandler : MonoBehaviour
 
                     bool enter = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL;
 
+                    Building building = colliders[i].GetComponentInParent<Building>();
 
-                    if (!SelectedTurret && enter)
+                    if (!SelectedTurret)
                     {
-                        ClearBlueprint();
+                        if (enter)
+                        {
+                            ClearBlueprint();
 
-                        PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+                            PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
 
-                        SelectedTurret = colliders[i].GetComponentInParent<Building>();
+                            SelectedTurret = building;
 
-                        TierChange(true);
+                            TierChange(true);
 
-                        UpdateTier();
+                            UpdateTier();
+                        }
 
+                    }
+                    else if (SelectedTurret != building)
+                    {
+                        SelectedTurret = null;
                     }
 
 
