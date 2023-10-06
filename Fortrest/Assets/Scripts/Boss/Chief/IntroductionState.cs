@@ -9,7 +9,6 @@ public class IntroductionState : BossState
     public float cameraDistance = 5.0f; // Distance between the camera and the enemy
     public Vector3 introPositionOffset = new(0, 2, -2); // Offset from the enemy's position during intro
 
-    private Transform initialCameraTransform;
     private float introTimer = 0.0f;
     private float waitBeforeStart = 3.0f;
     private bool introCompleted = false;
@@ -31,8 +30,6 @@ public class IntroductionState : BossState
 
             PlayerController.global.playerCanMove = false;
             PlayerController.global.CharacterAnimator.SetBool("Moving", false);
-
-            initialCameraTransform = Camera.main.transform;
 
             CameraFollow.global.bossCam = true;
 
@@ -66,8 +63,8 @@ public class IntroductionState : BossState
 
             // Perform the intro animation
             Vector3 targetPosition = targetEnemy.position + introPositionOffset;
-            Vector3 cameraPosition = Vector3.Lerp(initialCameraTransform.position, targetPosition - initialCameraTransform.forward, introProgress);
-            Camera.main.transform.position = cameraPosition;
+            Vector3 cameraPosition = Vector3.Lerp(LevelManager.global.SceneCamera.transform.position, targetPosition - LevelManager.global.SceneCamera.transform.forward, introProgress);
+            LevelManager.global.SceneCamera.transform.position = cameraPosition;
 
             if (introProgress >= 1.0f)
             {

@@ -99,13 +99,11 @@ public class BossStateMachine : MonoBehaviour
         {
             if (inDefence)
             {
-                bossSpawner.health -= (damage / 2f);
-               bossSpawner.UpdateHealth();
+                bossSpawner.UpdateHealth(-(damage / 2f));
             }
             else
             {
-                bossSpawner.health -= damage;
-                bossSpawner.UpdateHealth();
+                bossSpawner.UpdateHealth(-damage);
             }
         }
 

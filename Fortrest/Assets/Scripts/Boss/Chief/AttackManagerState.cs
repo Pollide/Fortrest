@@ -66,7 +66,11 @@ public class AttackManagerState : BossState
         canChangeState = true;
         canAttack = true;
         randValue = 0f;
-        GetComponent<BossTelegraphSlam>().attack = true;
+        if (GetComponent<BossTelegraphSlam>())
+        {
+            GetComponent<BossTelegraphSlam>().attack = true;
+        }
+        
         randomCheckTimer = randomCheckDuration;
         isAttacking = false;
     }

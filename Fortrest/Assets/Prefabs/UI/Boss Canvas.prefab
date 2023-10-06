@@ -12,13 +12,14 @@ GameObject:
   - component: {fileID: 5691083470782539837}
   - component: {fileID: 1281117557704541965}
   - component: {fileID: 7847547592933979312}
+  - component: {fileID: 3735471677869017847}
   m_Layer: 0
   m_Name: Boss Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7139299575455708735
 RectTransform:
   m_ObjectHideFlags: 0
@@ -101,6 +102,24 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!111 &3735471677869017847
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1948216934904101703}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: f74e951b1d57ad040ae41122b43f5c75, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: f74e951b1d57ad040ae41122b43f5c75, type: 2}
+  - {fileID: 7400000, guid: 934a2867b71937143984c65662aec114, type: 2}
+  - {fileID: 7400000, guid: d7ba127755f67974abeb5b8a45930a4d, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &2601295076671620243
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,7 +136,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4627837457633724989
 RectTransform:
   m_ObjectHideFlags: 0

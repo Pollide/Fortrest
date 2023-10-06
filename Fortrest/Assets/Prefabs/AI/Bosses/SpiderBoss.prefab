@@ -370,8 +370,6 @@ MonoBehaviour:
   startPosition: {x: 0, y: 0, z: 0}
   retreating: 0
   dead: 0
-  healthCanvas: {fileID: 4052270581425538444}
-  healthBar: {fileID: 7864715980281735358}
   stage: 0
   poisonProjectile: {fileID: 8677740985347998883, guid: f9ec2cacda4d4144eb2e404b5efc21cf,
     type: 3}
@@ -416,7 +414,9 @@ MonoBehaviour:
   distance: 20
   hasRun: 0
   bossType: 2
+  BossCanvas: {fileID: 4052270581425538444}
   health: 70
+  maxHealth: 70
   canBeDamaged: 1
 --- !u!1 &1272130810159069435
 GameObject:
@@ -1639,6 +1639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a03aa9a46947714aac9ee20e92b0432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  snakeSweep: {fileID: 0}
   size: 0
   timer: 0
   isJumpIndicator: 1
@@ -2011,6 +2012,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a03aa9a46947714aac9ee20e92b0432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  snakeSweep: {fileID: 0}
   size: 0
   timer: 0
   isJumpIndicator: 0
@@ -2158,7 +2160,7 @@ PrefabInstance:
     - target: {fileID: 1948216934904101703, guid: 44375879c0871ad48801120b3c517b5e,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7139299575455708735, guid: 44375879c0871ad48801120b3c517b5e,
         type: 3}
@@ -2276,12 +2278,6 @@ GameObject:
 --- !u!224 &4622409856817236212 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7139299575455708735, guid: 44375879c0871ad48801120b3c517b5e,
-    type: 3}
-  m_PrefabInstance: {fileID: 2537209278234197707}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7864715980281735358 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5625259708089538165, guid: 44375879c0871ad48801120b3c517b5e,
     type: 3}
   m_PrefabInstance: {fileID: 2537209278234197707}
   m_PrefabAsset: {fileID: 0}

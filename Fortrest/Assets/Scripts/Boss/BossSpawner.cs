@@ -23,7 +23,7 @@ public class BossSpawner : MonoBehaviour
     public float health = 100;
     // Holds the bosses max health
     public float maxHealth = 100f;
-
+    bool bossEncountered;
     [HideInInspector]
     public bool canBeDamaged = true;
 
@@ -32,9 +32,19 @@ public class BossSpawner : MonoBehaviour
         health = maxHealth;//on awake before the game loads
     }
 
-    public void UpdateHealth()
+    public void UpdateHealth(float change = 0)
     {
-        BossCanvas.GetComponentInChildren<HealthBar>().SetHealth(health, maxHealth);
+        health += change;
+
+        if (change < 0 && health > 0)
+        {
+            GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Damage");
+        }
+
+        health = Mathf.Clamp(health, 0, maxHealth);
+
+        if (bossEncountered)
+            BossCanvas.GetComponentInChildren<HealthBar>(true).SetHealth(health, maxHealth);
     }
 
 
@@ -58,7 +68,30 @@ public class BossSpawner : MonoBehaviour
     public void BossEncountered(bool open)
     {
         LevelManager.global.dayPaused = open;
-        BossCanvas.SetActive(open);
+
+        if (bossEncountered != open)
+        {
+            if (health <= 0)
+            {
+                GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
+            }
+            else
+            {
+                GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Appear", open);
+            }
+
+            if (open)
+                GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
+            else
+            {
+                LevelManager.global.NightTimeMusic = !LevelManager.global.ReturnNight();
+            }
+        }
+
+        UpdateHealth();
+
+
+        bossEncountered = open;
     }
 
 
@@ -77,7 +110,6 @@ public class BossSpawner : MonoBehaviour
                 GetComponent<SpiderBoss>().Awaken();
             }
 
-            GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
 
             hasRun = true;
         }
