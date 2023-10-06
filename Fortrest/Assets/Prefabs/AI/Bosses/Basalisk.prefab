@@ -310,8 +310,6 @@ MonoBehaviour:
   currentPhase: 0
   currentState: {fileID: 0}
   initialState: {fileID: 7968082093085993523}
-  BossCanvas: {fileID: 8308501013441466892}
-  maxHealth: 100
   arenaRadius: 50
   speed: 5
   inDefence: 0
@@ -440,7 +438,9 @@ MonoBehaviour:
   distance: 20
   hasRun: 0
   bossType: 1
+  BossCanvas: {fileID: 5502665693126012376}
   health: 60
+  maxHealth: 60
   canBeDamaged: 1
 --- !u!1 &4632391821758241518
 GameObject:
@@ -793,6 +793,12 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5283328030002937211, guid: 44375879c0871ad48801120b3c517b5e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7de407f96246132479224d9ae0baa9f4,
+        type: 3}
     - target: {fileID: 7139299575455708735, guid: 44375879c0871ad48801120b3c517b5e,
         type: 3}
       propertyPath: m_Pivot.x
@@ -906,9 +912,9 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 6292674034653648543}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &8308501013441466892 stripped
+--- !u!1 &5502665693126012376 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 2601295076671620243, guid: 44375879c0871ad48801120b3c517b5e,
+  m_CorrespondingSourceObject: {fileID: 1948216934904101703, guid: 44375879c0871ad48801120b3c517b5e,
     type: 3}
   m_PrefabInstance: {fileID: 6292674034653648543}
   m_PrefabAsset: {fileID: 0}

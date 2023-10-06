@@ -43,7 +43,6 @@ public class IdleState : BossState
             {
                 stateMachine.bossSpawner.Awake();
                 StateMachine.bossSpawner.BossEncountered(false);
-                stateMachine.bossSpawner.UpdateHealth();
             }
 
             if (stateMachine.BossType == BossSpawner.TYPE.Chieftain)

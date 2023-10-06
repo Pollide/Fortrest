@@ -7,6 +7,6 @@ public class SetMainCamAsWorldSpaceEvent : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameObject.GetComponent<Canvas>().worldCamera = Camera.main;
+        gameObject.GetComponent<Canvas>().worldCamera = LevelManager.global.SceneCamera;
     }
 }

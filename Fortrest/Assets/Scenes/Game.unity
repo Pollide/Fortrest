@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 424764306}
-  m_IndirectSpecularColor: {r: 0.9575639, g: 0.69974875, b: 0.47190616, a: 1}
+  m_IndirectSpecularColor: {r: 0.95758116, g: 0.6997581, b: 0.4719084, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -486,16 +486,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cheiften
       objectReference: {fileID: 0}
-    - target: {fileID: 4494706033441200502, guid: 97371e282500bc244b391e50c754e85f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8860127450049526509, guid: 97371e282500bc244b391e50c754e85f,
-        type: 3}
-      propertyPath: arenaRadius
-      value: 33.3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97371e282500bc244b391e50c754e85f, type: 3}
 --- !u!4 &151363504 stripped
@@ -504,29 +494,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 151363503}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &151363505 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1612966261804245062, guid: 97371e282500bc244b391e50c754e85f,
-    type: 3}
-  m_PrefabInstance: {fileID: 151363503}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &151363506
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 151363505}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36a0a17476046894796388402f1cd957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  distance: 20
-  hasRun: 0
-  bossType: 0
-  health: 50
-  canBeDamaged: 1
 --- !u!1001 &167911389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2457,7 +2424,9 @@ MonoBehaviour:
   distance: 20
   hasRun: 0
   bossType: 1
+  BossCanvas: {fileID: 0}
   health: 60
+  maxHealth: 100
   canBeDamaged: 1
 --- !u!1 &1813222627 stripped
 GameObject:
