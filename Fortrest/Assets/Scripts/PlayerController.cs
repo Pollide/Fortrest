@@ -163,7 +163,7 @@ public class PlayerController : MonoBehaviour
     // Inventory
     public GameObject DarkenGameObject;
     public GameObject InventoryHolder;
-
+    public GameObject MiniTurretUI;
     // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
@@ -1523,6 +1523,7 @@ public class PlayerController : MonoBehaviour
                     {
                         attackDamage = 1.5f;
                     }
+
                     CharacterAnimator.ResetTrigger("Swing3");
                     CharacterAnimator.SetTrigger("Swing3");
                     break;

@@ -49,7 +49,7 @@ public class BridgeBuilder : MonoBehaviour
         PlayerController.global.needInteraction = show;
         PlayerController.global.bridgeInteract = show;
 
-        bool canBuild = BridgeTypeInt == 3 || BridgeTypeInt == 5;
+        canBuild = BridgeTypeInt == 3 || BridgeTypeInt == 5;
 
         for (int i = 0; i < LevelManager.global.bossList.Count; i++)
         {
