@@ -89,7 +89,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
             if (KeyTipsBool)
             {
-                ButtonText.text = GameManager.Pref("Key Tips", 0, true) == 0 ? "ON" : "OFF";
+                ButtonText.text = "Key Tips: " + (GameManager.Pref("Key Tips", 0, true) == 0 ? "ON" : "OFF");
             }
 
             if (VolumeBool || MusicBool)
