@@ -10,6 +10,7 @@ public class BridgeBuilder : MonoBehaviour
     public bool isBuilt;
     bool triggered;
     public Animation FloatingTextAnimation;
+    public Animation FloatingTextCanBuildAnimation;
     public GameObject WalkAccrossCollider;
     public Animator bridgeAnimator;
 
@@ -35,19 +36,44 @@ public class BridgeBuilder : MonoBehaviour
             Indicator.global.AddIndicator(transform, Color.blue, "Taiga", false);
         }
 
+        if (BridgeTypeInt == 5)
+        {
+            Indicator.global.AddIndicator(transform, Color.red, "Volcanic Flats", false);
+        }
+
         LevelManager.global.bridgeList.Add(this);
     }
-    void ShowResources(bool show)
+    void ShowPrompt(bool show)
     {
-        /*
-       // PlayerController.global.OpenResourceHolder(show);
-       // PlayerController.global.needInteraction = show;
-        //PlayerController.global.bridgeInteract = show;
-        LevelManager.FloatingTextChange(FloatingTextAnimation.gameObject, show);
+        PlayerController.global.needInteraction = show;
+        PlayerController.global.bridgeInteract = show;
 
-        if (show)
-            PlayerController.global.UpdateResourceHolder(BridgeTypeInt);
-*/
+        bool canBuild = BridgeTypeInt == 3 || BridgeTypeInt == 5;
+
+        for (int i = 0; i < LevelManager.global.bossList.Count; i++)
+        {
+            if (LevelManager.global.bossList[i].health <= 0)
+            {
+                if (BridgeTypeInt == 1 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Chieftain)
+                {
+                    canBuild = true;
+                    break;
+                }
+
+                if (BridgeTypeInt == 2 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Basilisk)
+                {
+                    canBuild = true;
+                    break;
+                }
+
+                if (BridgeTypeInt == 4 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.SpiderQueen)
+                {
+                    canBuild = true;
+                    break;
+                }
+            }
+        }
+        LevelManager.FloatingTextChange(canBuild ? FloatingTextCanBuildAnimation.gameObject : FloatingTextAnimation.gameObject, show);
     }
 
     private void Update()
@@ -64,42 +90,25 @@ public class BridgeBuilder : MonoBehaviour
             if (triggered != open)
             {
                 triggered = open;
-                LevelManager.FloatingTextChange(FloatingTextAnimation.gameObject, open);
+                ShowPrompt(open);
 
             }
 
-            /*
             if (triggered && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
             {
                 PlayerController.global.interactCTRL = false;
                 PlayerController.global.evading = false;
-                if (PlayerController.global.CheckSufficientResources(true))
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltNoiseSound);
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
-                    isBuilt = true;
-                    LevelManager.FloatingTextChange(FloatingTextAnimation.gameObject, false);
 
-                    GameManager.PlayAnimator(bridgeAnimator, "Armature_BridgeSelfBuild");
-                    WalkAccrossCollider.SetActive(true);
-                }
-                else
-                {
-                    PlayerController.global.ShakeResourceHolder();
-                }
+                GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltNoiseSound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
+                isBuilt = true;
+                ShowPrompt(false);
+
+                GameManager.PlayAnimator(bridgeAnimator, "Armature_BridgeSelfBuild");
+                WalkAccrossCollider.SetActive(true);
+
             }
-            */
+
         }
-    }
-
-    public void Build()
-    {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltNoiseSound);
-        GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
-        isBuilt = true;
-        LevelManager.FloatingTextChange(FloatingTextAnimation.gameObject, false);
-
-        GameManager.PlayAnimator(bridgeAnimator, "Armature_BridgeSelfBuild");
-        WalkAccrossCollider.SetActive(true);
     }
 }
