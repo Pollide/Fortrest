@@ -10,6 +10,12 @@ public class Chest : MonoBehaviour
     public TMP_Text promptText;
     private bool textDisplayed;
     private bool opened;
+    public Animation openAnimation;
+
+    private void Start()
+    {
+        GameManager.PlayAnimation(openAnimation, "ChestClose");
+    }
 
     void Update()
     {
@@ -18,10 +24,11 @@ public class Chest : MonoBehaviour
             opened = true;
             promptText.gameObject.SetActive(false);
             SpawnResources();
-            StartCoroutine(SelfDestroy());
             canBeOpened = false;
             PlayerController.global.interactCTRL = false;
             PlayerController.global.needInteraction = false;
+            GameManager.PlayAnimation(openAnimation, "ChestOpen");
+            GameManager.global.SoundManager.PlaySound(GameManager.global.ChestOpenSound);
         }
     }
 
@@ -117,11 +124,5 @@ public class Chest : MonoBehaviour
             }
             PlayerController.global.needInteraction = false;
         }
-    }
-
-    private IEnumerator SelfDestroy()
-    {
-        yield return new WaitForSeconds(5.0f);
-        Destroy(gameObject);
     }
 }
