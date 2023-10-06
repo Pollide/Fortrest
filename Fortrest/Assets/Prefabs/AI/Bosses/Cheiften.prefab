@@ -97,12 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c243e2f4f2fd84ca0582127a985193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bossType: 0
   currentPhase: 0
   currentState: {fileID: 0}
   initialState: {fileID: 3651742728835903311}
   BossCanvas: {fileID: 2560772847806016731}
-  currentHealth: 0
   maxHealth: 50
   arenaRadius: 50
   speed: 5
@@ -111,6 +109,7 @@ MonoBehaviour:
   phase3Ran: 0
   isDead: 0
   bossAnimator: {fileID: 454620424452102865}
+  bossSpawner: {fileID: 0}
 --- !u!114 &3651742728835903311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,6 +188,7 @@ MonoBehaviour:
   isCharging: 0
   playerHit: 0
   hasRun: 0
+  coneIndicator: 0
   chargeSpeed: 15
   chargeDistance: 2
   chargePushForce: 1
@@ -410,6 +410,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82bcdb6d7114d7245bd7a505b27f05d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateMachine: {fileID: 8860127450049526509}
 --- !u!1 &5567472970536930146
 GameObject:
   m_ObjectHideFlags: 0
