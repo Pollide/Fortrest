@@ -9,12 +9,14 @@ public class Chest : MonoBehaviour
     private string resource;
     public TMP_Text promptText;
     private bool textDisplayed;
-    private bool opened;
+    [HideInInspector]
+    public bool opened;
     public Animation openAnimation;
 
     private void Start()
     {
-        GameManager.PlayAnimation(openAnimation, "ChestClose");
+        GameManager.PlayAnimation(openAnimation, "ChestClose", true, true);
+        LevelManager.global.chestList.Add(this);
     }
 
     void Update()
@@ -30,6 +32,13 @@ public class Chest : MonoBehaviour
             GameManager.PlayAnimation(openAnimation, "ChestOpen");
             GameManager.global.SoundManager.PlaySound(GameManager.global.ChestOpenSound);
         }
+    }
+
+    public void LoadOpen()
+    {
+        opened = true;
+        canBeOpened = false;
+        GameManager.PlayAnimation(openAnimation, "ChestOpen", true, true);
     }
 
     private void SpawnResources()
@@ -75,7 +84,7 @@ public class Chest : MonoBehaviour
     private void PickResource()
     {
         int randomInt = Random.Range(1, 7);
-        switch(randomInt)
+        switch (randomInt)
         {
             case 1:
                 resource = "Wood";

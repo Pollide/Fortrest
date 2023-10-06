@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class AnimEventsDnake : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private BossStateMachine stateMachine;
+    [SerializeField] private AudioClip enrageAudio;
+    [SerializeField] private GameObject introCard;
+
+
+    void PlayEnrageSound()
     {
-        
+        GameManager.global.SoundManager.PlaySound(enrageAudio);
     }
 
-    // Update is called once per frame
-    void Update()
+    void PlayScreenShake()
     {
-        
+        ScreenShake.global.shake = true;
+    }
+
+    void ActivateIntroCard()
+    {
+        introCard.SetActive(true);
+        stateMachine.BossAnimator.speed = 0f;
     }
 }

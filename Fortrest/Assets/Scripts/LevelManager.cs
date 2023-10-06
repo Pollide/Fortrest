@@ -72,6 +72,7 @@ public class LevelManager : MonoBehaviour
     public List<GameObject> inventoryItemList = new List<GameObject>();
     public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
     public List<BossSpawner> bossList = new List<BossSpawner>();
+    public List<Chest> chestList = new List<Chest>();
 
     public List<Camp> campList = new List<Camp>();
     public float daySpeed = 1;

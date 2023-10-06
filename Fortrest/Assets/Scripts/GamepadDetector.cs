@@ -21,6 +21,10 @@ public class GamepadDetector : MonoBehaviour
         if (GameManager.Pref("Key Tips", 0, true) == 1)
         {
             gameObject.SetActive(false);
+            if (GetComponent<SpriteRenderer>())
+            {
+                transform.parent.gameObject.SetActive(false);
+            }
             return;
         }
 
