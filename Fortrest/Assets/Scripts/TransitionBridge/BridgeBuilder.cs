@@ -13,6 +13,7 @@ public class BridgeBuilder : MonoBehaviour
     public Animation FloatingTextCanBuildAnimation;
     public GameObject WalkAccrossCollider;
     public Animator bridgeAnimator;
+    bool canBuild;
 
     private void Start()
     {
@@ -94,11 +95,11 @@ public class BridgeBuilder : MonoBehaviour
 
             }
 
-            if (triggered && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
+            if (canBuild && triggered && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
             {
                 PlayerController.global.interactCTRL = false;
                 PlayerController.global.evading = false;
-
+                canBuild = false;
                 GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltNoiseSound);
                 GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
                 isBuilt = true;
