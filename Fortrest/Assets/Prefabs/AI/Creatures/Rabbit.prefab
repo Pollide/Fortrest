@@ -121,6 +121,7 @@ GameObject:
   - component: {fileID: 5849789792375836304}
   - component: {fileID: 2099766879863536529}
   - component: {fileID: 966416156223363436}
+  - component: {fileID: 5949725048576113023}
   m_Layer: 0
   m_Name: Rabbit
   m_TagString: Untagged
@@ -181,7 +182,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: 2099766879863536529}
   animator: {fileID: 3689174479844001952}
-  DeathVFX: {fileID: 3911799328516649904}
+  DeathVFX: {fileID: 1060874133762554960}
+--- !u!65 &5949725048576113023
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2982984678359895099}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 3, z: 2}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1001 &4217877316242869985
 PrefabInstance:
   m_ObjectHideFlags: 0

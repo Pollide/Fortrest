@@ -49,6 +49,7 @@ public class Creature : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.ArrowHitBuildingSound, 1.0f);
             DeathVFX.transform.SetParent(null);
             DeathVFX.SetActive(true);
+
             Destroy(gameObject);
         }
     }
