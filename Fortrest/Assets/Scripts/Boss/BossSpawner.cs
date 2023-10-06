@@ -44,7 +44,7 @@ public class BossSpawner : MonoBehaviour
         health = Mathf.Clamp(health, 0, maxHealth);
 
         if (bossEncountered)
-            BossCanvas.GetComponentInChildren<HealthBar>(false).SetHealth(health, maxHealth);
+            BossCanvas.GetComponentInChildren<HealthBar>(true).SetHealth(health, maxHealth);
     }
 
 
@@ -79,9 +79,17 @@ public class BossSpawner : MonoBehaviour
             {
                 GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Appear", open);
             }
+
+            if (open)
+                GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
+            else
+            {
+                LevelManager.global.NightTimeMusic = !LevelManager.global.ReturnNight();
+            }
         }
 
         UpdateHealth();
+
 
         bossEncountered = open;
     }
@@ -102,7 +110,6 @@ public class BossSpawner : MonoBehaviour
                 GetComponent<SpiderBoss>().Awaken();
             }
 
-            GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
 
             hasRun = true;
         }
