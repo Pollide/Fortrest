@@ -43,7 +43,7 @@ public class SpiderBoss : MonoBehaviour
     public bool midAir;
     public bool slamNow;
     public bool startIntro;
-
+    private int steps = 0;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
@@ -73,7 +73,7 @@ public class SpiderBoss : MonoBehaviour
         stage = 1;
         specialAttackCD = 10.0f;
         poisonAttackChance = 0.4f;
-        webAttackChance = 0.4f;
+        webAttackChance = 0.3f;
         poisonSpeed = 20.0f;
         webAttackRange = 5.0f;
 
@@ -141,11 +141,11 @@ public class SpiderBoss : MonoBehaviour
         }
 
         // Triggering different stages
-        if (bossSpawner.health < ((maxHealth / 3) * 2) && bossSpawner.health > (bossSpawner.health / 3))
+        if (bossSpawner.health < ((maxHealth / 3) * 2) && bossSpawner.health > (maxHealth / 3))
         {
             stage = 2;
         }
-        else if (bossSpawner.health < (bossSpawner.health / 3))
+        else if (bossSpawner.health < (maxHealth / 3))
         {
             stage = 3;
         }
@@ -179,6 +179,7 @@ public class SpiderBoss : MonoBehaviour
         // Death state
         if (dead)
         {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossDeadSound, 1f, true, 0, false, transform);
             healthCanvas.SetActive(false);
             animator.SetTrigger("Dead");
             StartCoroutine(DestroyOnDeath());
@@ -202,25 +203,26 @@ public class SpiderBoss : MonoBehaviour
 
     public void NormalAttackAnimEvent()
     {
-        int randomInt = Random.Range(0, 3);
-        AudioClip temp = null;
-        switch (randomInt)
-        {
-            case 0:
-                temp = GameManager.global.PlayerHit1Sound;
-                break;
-            case 1:
-                temp = GameManager.global.PlayerHit2Sound;
-                break;
-            case 2:
-                temp = GameManager.global.PlayerHit3Sound;
-                break;
-            default:
-                break;
-        }
-        GameManager.global.SoundManager.PlaySound(temp, 0.9f);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossAttackSound, 1f, true, 0, false, transform);       
         if (PlayerController.global.playerCanBeDamaged)
         {
+            int randomInt = Random.Range(0, 3);
+            AudioClip temp = null;
+            switch (randomInt)
+            {
+                case 0:
+                    temp = GameManager.global.PlayerHit1Sound;
+                    break;
+                case 1:
+                    temp = GameManager.global.PlayerHit2Sound;
+                    break;
+                case 2:
+                    temp = GameManager.global.PlayerHit3Sound;
+                    break;
+                default:
+                    break;
+            }
+            GameManager.global.SoundManager.PlaySound(temp, 0.9f);
             PlayerController.global.TakeDamage(damage, true);
         }
     }
@@ -261,6 +263,7 @@ public class SpiderBoss : MonoBehaviour
 
     private void WebAttackAnimEvent()
     {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossWebAttackSound, 1f, true, 0, false, transform);
         VFXWeb.Play();
         specialAttackReady = false;
         StartCoroutine(Rooting());
@@ -280,6 +283,7 @@ public class SpiderBoss : MonoBehaviour
 
     private void JumpAttackAnimEvent()
     {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossSlamSound, 1f, true, 0, false, transform);
         specialAttackReady = false;
         StartCoroutine(Slamming());
     }
@@ -300,6 +304,7 @@ public class SpiderBoss : MonoBehaviour
 
     private void StartJumpAnimEvent()
     {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossJumpSound, 1f, true, 0, false, transform);
         jump = true;
         animator.speed = 0.75f;
     }
@@ -373,8 +378,8 @@ public class SpiderBoss : MonoBehaviour
                 }
                 else
                 {
-                    int randomInt = Random.Range(1, 4);
-                    if (randomInt == 3)
+                    int randomInt = Random.Range(1, 6);
+                    if (randomInt == 1 || randomInt == 2)
                     {
                         animator.SetTrigger("JumpAttack");
                     }
@@ -395,6 +400,7 @@ public class SpiderBoss : MonoBehaviour
         {
             if (PlayerController.global.attacking && bossSpawner.canBeDamaged && PlayerController.global.damageEnemy)
             {
+                GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
                 bossSpawner.canBeDamaged = false;
                 StopAllCoroutines();
                 //PickSound(hitSound, hitSound2, 1.0f);
@@ -407,6 +413,7 @@ public class SpiderBoss : MonoBehaviour
         {
             if (!other.GetComponent<ArrowTrigger>().singleHit)
             {
+                GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
                 other.GetComponent<ArrowTrigger>().singleHit = true;
                 Damaged(PlayerController.global.bowDamage);
                 if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
@@ -420,5 +427,43 @@ public class SpiderBoss : MonoBehaviour
     private void UpdateHealth()
     {
         healthBar.GetComponent<HealthBar>().SetHealth(bossSpawner.health, maxHealth);
+    }
+
+    private void JumpSound()
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossJumpAttackSound, 1f, true, 0, false, transform);
+    }
+
+    private void PoisonSound()
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossPoisonAttackSound, 1f, true, 0, false, transform);
+    }
+
+    private void StepsSound()
+    {
+        steps++;
+        if (steps > 4)
+        {
+            steps = 1;
+        }
+        switch(steps)
+        {
+            case 1:
+                GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossStep1Sound, 0.6f, true, 0, false, transform);
+                break;                                                                               
+            case 2:                                                                                  
+                GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossStep2Sound, 0.6f, true, 0, false, transform);
+                break;                                                                              
+            case 3:                                                                                 
+                GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossStep3Sound, 0.6f, true, 0, false, transform);
+                break;                                                                               
+            case 4:                                                                                  
+                GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossStep4Sound, 0.6f, true, 0, false, transform);
+                break;
+            default:
+                break;
+
+        }
+        
     }
 }
