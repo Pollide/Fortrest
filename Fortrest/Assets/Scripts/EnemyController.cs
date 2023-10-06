@@ -12,7 +12,7 @@ public class EnemyController : MonoBehaviour
     // Transforms
     private Transform bestTarget; // Target that the enemy will go towards
     private Transform playerPosition;
-    private GameObject house;
+    public GameObject house;
 
     // Parameters
     private float offset;
