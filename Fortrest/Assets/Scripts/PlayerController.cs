@@ -167,7 +167,9 @@ public class PlayerController : MonoBehaviour
     // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
-
+    public GameObject turretTierOne;
+    public GameObject turretTierTwo;
+    public Image turretBoarderImage;
     // Death
     private float respawnTimer = 0.0f;
     private bool textAnimated = false;

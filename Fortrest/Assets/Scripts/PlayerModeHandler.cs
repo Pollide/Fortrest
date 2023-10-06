@@ -257,8 +257,9 @@ public class PlayerModeHandler : MonoBehaviour
 
         PlayerController.global.turretImageIcon.sprite = defence.spriteTierList[Mathf.Clamp(defence.CurrentTier, 0, defence.spriteTierList.Count - 1)];
         PlayerController.global.turretMenuTitle.text = SelectedTurret.buildingObject.ToString();
-
-        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierOne", false, true);
+        PlayerController.global.turretTierOne.SetActive(false);
+        PlayerController.global.turretTierTwo.SetActive(false);
+        PlayerController.global.turretBoarderImage.color = Color.white;
         //  GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretTierTwo", false, true);
 
         if (defence.CurrentTier == 1)
@@ -285,11 +286,12 @@ public class PlayerModeHandler : MonoBehaviour
             bool upgrade = turretStats[i] == buttonStat;
 
             bool damage = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.damageTier, ref defence.changeTier.damageTier, upgrade);
-            bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade);
+            //bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade);
             bool range = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rangeTier, ref defence.changeTier.rangeTier, upgrade);
             bool rate = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rateTier, ref defence.changeTier.rateTier, upgrade);
 
-            if (damage && health && range && rate)
+
+            if (damage && range && rate)
             {
                 complete++;
             }
@@ -297,8 +299,6 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (complete == turretStats.Count && defence.CurrentTier < 2)
         {
-            Debug.Log(complete);
-
             defence.CurrentTier++;
             defence.ReturnAnimator();
 
@@ -316,7 +316,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         TurretMenuSet(SelectedTurret);
 
-        if (!MouseOverUI() && Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })))
+        if (!MouseOverUI() && Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid", "Building" })))
         {
             GameObject turretPrefab = turretPrefabs[0];
 
