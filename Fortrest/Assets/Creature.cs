@@ -14,7 +14,7 @@ public class Creature : MonoBehaviour
 
     void Update()
     {
-        float distance = Vector3.Distance(transform.position, PlayerController.global.transform.position);
+        float distance = PlayerController.global ? Vector3.Distance(transform.position, PlayerController.global.transform.position) : 999999;
         idleTimer += Time.deltaTime;
         bool run = distance < 12;
 
