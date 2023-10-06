@@ -56,6 +56,9 @@ public class IntroductionState : BossState
     {
         if (!introCompleted && !ScreenShake.global.shake)
         {
+            if (introTimer == 0)
+                stateMachine.bossSpawner.BossMusicBegin(true);
+
             introTimer += Time.deltaTime;
 
             // Calculate the interpolation factor
@@ -65,6 +68,8 @@ public class IntroductionState : BossState
             Vector3 targetPosition = targetEnemy.position + introPositionOffset;
             Vector3 cameraPosition = Vector3.Lerp(LevelManager.global.SceneCamera.transform.position, targetPosition - LevelManager.global.SceneCamera.transform.forward, introProgress);
             LevelManager.global.SceneCamera.transform.position = cameraPosition;
+
+
 
             if (introProgress >= 1.0f)
             {
@@ -82,6 +87,7 @@ public class IntroductionState : BossState
     public IEnumerator Intro()
     {
         yield return new WaitForSeconds(0.005f);
+
         stateMachine.BossAnimator.speed = 0;
         transform.position = initialSpawn;
         yield return new WaitForSeconds(waitBeforeStart);

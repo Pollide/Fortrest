@@ -659,7 +659,7 @@ public class GameManager : MonoBehaviour
 
             if (boss.health <= 0 && load)
             {
-                boss.hasRun = true;
+                boss.gameObject.SetActive(false);
             }
 
         });
