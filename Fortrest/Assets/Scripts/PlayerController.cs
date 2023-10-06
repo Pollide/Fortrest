@@ -509,7 +509,7 @@ public class PlayerController : MonoBehaviour
 
         speedAnim = 0f;
     }
-
+    public bool debugfrocemap;
     void Update()
     {
 #if UNITY_EDITOR
@@ -518,6 +518,12 @@ public class PlayerController : MonoBehaviour
             playerHealth = 0f;
             //healthBar.SetHealth(playerHealth, maxHealth);
         }
+
+        if (debugfrocemap)
+        {
+            UpdateMap();
+        }
+
 #endif
 
         if (mapBool)
@@ -1152,7 +1158,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
+                Vector3 dragDirection = (Input.mousePosition - mapMousePosition);
                 mapMousePosition = Input.mousePosition;
                 MapPanPosition += dragDirection * speed;
                 // MapPanPosition = Vector3.Slerp(MapPanPosition, MapPanPosition + dragDirection, speed);

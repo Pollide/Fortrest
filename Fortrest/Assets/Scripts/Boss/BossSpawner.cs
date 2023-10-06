@@ -6,6 +6,7 @@ public class BossSpawner : MonoBehaviour
     [SerializeField] public bool hasRun = false;
     // Holds the current boss type
     [SerializeField] public TYPE bossType;
+    public GameObject BossCanvas;
 
     // Enum for boss type
     public enum TYPE
@@ -18,10 +19,24 @@ public class BossSpawner : MonoBehaviour
         Fire
     }
 
+    [HideInInspector]
     public float health = 100;
+    // Holds the bosses max health
+    public float maxHealth = 100f;
 
     [HideInInspector]
     public bool canBeDamaged = true;
+
+    public void Awake()
+    {
+        health = maxHealth;//on awake before the game loads
+    }
+
+    public void UpdateHealth()
+    {
+        BossCanvas.GetComponentInChildren<HealthBar>().SetHealth(health, maxHealth);
+    }
+
 
     private void Start()
     {
@@ -40,6 +55,12 @@ public class BossSpawner : MonoBehaviour
         }
     }
 
+    public void BossEncountered(bool open)
+    {
+        LevelManager.global.dayPaused = open;
+        BossCanvas.SetActive(open);
+    }
+
 
     private void Update()
     {
@@ -56,9 +77,12 @@ public class BossSpawner : MonoBehaviour
                 GetComponent<SpiderBoss>().Awaken();
             }
 
+            GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
+
             hasRun = true;
         }
     }
+
 
     private bool CheckPlayerDistance()
     {
