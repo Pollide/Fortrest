@@ -1158,7 +1158,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
+                Vector3 dragDirection = (Input.mousePosition - mapMousePosition);
                 mapMousePosition = Input.mousePosition;
                 MapPanPosition += dragDirection * speed;
                 // MapPanPosition = Vector3.Slerp(MapPanPosition, MapPanPosition + dragDirection, speed);

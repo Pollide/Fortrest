@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public AudioClip GameMusic;
     public AudioClip PauseMusic;
     public AudioClip NightMusic;
+    public AudioClip BossMusic;
 
     [Header("Player Sounds")]
     public AudioClip PlayerEvadeSound;

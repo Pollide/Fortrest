@@ -22,10 +22,8 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private BossState currentState;
     // Holds the initial state the boss starts with
     [SerializeField] private BossState initialState;
-    [SerializeField] private GameObject BossCanvas;
 
-    // Holds the bosses max health
-    [SerializeField] private float maxHealth = 100f;
+
     // Arena radius
     [SerializeField] private float arenaRadius;
     // Agent current speed
@@ -47,7 +45,6 @@ public class BossStateMachine : MonoBehaviour
     {
         InitializeStateMachine();
         SetAgentStats();
-        maxHealth = bossSpawner.health;
 
         currentPhase = BossPhase.One;
         inDefence = true;
@@ -103,20 +100,20 @@ public class BossStateMachine : MonoBehaviour
             if (inDefence)
             {
                 bossSpawner.health -= (damage / 2f);
-                UpdateHealth();
+               bossSpawner.UpdateHealth();
             }
             else
             {
                 bossSpawner.health -= damage;
-                UpdateHealth();
+                bossSpawner.UpdateHealth();
             }
         }
 
-        if (bossSpawner.health <= maxHealth / 3f)
+        if (bossSpawner.health <= bossSpawner.maxHealth / 3f)
         {
             currentPhase = BossPhase.Three;
         }
-        else if (bossSpawner.health <= maxHealth * 2f / 3f)
+        else if (bossSpawner.health <= bossSpawner.maxHealth * 2f / 3f)
         {
             currentPhase = BossPhase.Two;
         }
@@ -131,19 +128,13 @@ public class BossStateMachine : MonoBehaviour
         }
     }
 
-    public void UpdateHealth()
-    {
-        BossCanvas.GetComponentInChildren<HealthBar>().SetHealth(bossSpawner.health, maxHealth);
-    }
-
     private IEnumerator DeadState()
     {
         isDead = true;
-        LevelManager.global.dayPaused = false;
+        bossSpawner.BossEncountered(false);
         bossAnimator.SetBool("isDead", true);
         yield return new WaitForSeconds(2);
-
-        Destroy(gameObject);
+        gameObject.SetActive(false); //i dont want bosses to be destroyed so i can save their HP as zero thanks
     }
 
     private void OnDrawGizmosSelected()
@@ -154,24 +145,13 @@ public class BossStateMachine : MonoBehaviour
 
     public GameObject HealthBar
     {
-        get { return BossCanvas; }
+        get { return bossSpawner.BossCanvas; }
     }
 
     public float ArenaSize
     {
         get { return arenaRadius; }
         set { arenaRadius = value; }
-    }
-
-    public float CurrentHealth
-    {
-        get { return bossSpawner.health; }
-        set { bossSpawner.health = value; }
-    }
-    public float MaxHealth
-    {
-        get { return maxHealth; }
-        set { maxHealth = value; }
     }
 
     public BossPhase CurrentPhase

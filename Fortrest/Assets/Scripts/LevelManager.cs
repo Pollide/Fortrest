@@ -89,7 +89,8 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector]
     public bool newDay = false;
-    bool NightTimeMusic;
+    [HideInInspector]
+    public bool NightTimeMusic;
     public Gradient textGradient;
 
     // [HideInInspector]

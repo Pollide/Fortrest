@@ -19,7 +19,7 @@ public class IdleState : BossState
             attackState = GetComponent<AttackManagerState>();
         }
 
-        stateMachine.HealthBar.SetActive(true);
+        stateMachine.bossSpawner.BossEncountered(true);
 
         resetTimer = resetTimerDuration;
     }
@@ -33,26 +33,17 @@ public class IdleState : BossState
         // checks if player is in the arena 
         if (PlayerInArena(stateMachine.ArenaSize))
         {
-            stateMachine.HealthBar.SetActive(true);
+            StateMachine.bossSpawner.BossEncountered(true);
             // changes to attack state
             stateMachine.ChangeState(attackState);
-            if (!LevelManager.global.dayPaused)
-            {
-                LevelManager.global.dayPaused = true;
-            }
         }
         else
         {
             if (resetTimer <= 0f)
             {
-                stateMachine.CurrentHealth = stateMachine.MaxHealth;
-                if (stateMachine.HealthBar.activeSelf)
-                {
-                    LevelManager.global.dayPaused = false;
-                    stateMachine.HealthBar.SetActive(false);
-                }
-
-                stateMachine.UpdateHealth();
+                stateMachine.bossSpawner.Awake();
+                StateMachine.bossSpawner.BossEncountered(false);
+                stateMachine.bossSpawner.UpdateHealth();
             }
 
             if (stateMachine.BossType == BossSpawner.TYPE.Chieftain)
