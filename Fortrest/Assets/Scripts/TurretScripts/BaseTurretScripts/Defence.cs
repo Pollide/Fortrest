@@ -227,7 +227,7 @@ public class Defence : MonoBehaviour
 
 
         BoltScript boltScript = projectile.GetComponent<BoltScript>();
-
+        Debug.Log(projectile);
         if (boltScript)
         {
             boltScript.turretShootingScript = this;
