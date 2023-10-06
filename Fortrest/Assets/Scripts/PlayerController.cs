@@ -1332,6 +1332,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (purchase)
             {
+                //   Debug.Log(tierList[i].ResourceAmount + " += " + tierList[i].ResourceCost);
                 tierList[i].ResourceAmount += tierList[i].ResourceCost;
             }
         }
