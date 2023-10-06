@@ -437,6 +437,8 @@ public class GameManager : MonoBehaviour
                 }
 
                 anim.Play(nameClip);
+
+
                 // Debug.Log(nameClip);
                 return anim[nameClip]; //the state can provide the time, length etc
             }
@@ -637,7 +639,8 @@ public class GameManager : MonoBehaviour
 
             if (load && LevelManager.global.bridgeList[i].isBuilt)
             {
-                LevelManager.global.bridgeList[i].BuildBridge();
+                GameManager.PlayAnimator(LevelManager.global.bridgeList[i].bridgeAnimator, "Armature_BridgeCompletedIdle");
+                LevelManager.global.bridgeList[i].WalkAccrossCollider.SetActive(true);
             }
         }
 

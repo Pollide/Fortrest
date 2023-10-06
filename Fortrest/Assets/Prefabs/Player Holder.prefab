@@ -1841,6 +1841,9 @@ MonoBehaviour:
   InventoryHolder: {fileID: 0}
   pausedBool: 0
   UIAnimation: {fileID: 2663856725082868601}
+  turretTierOne: {fileID: 9155640398394695204}
+  turretTierTwo: {fileID: 1154040104051433978}
+  turretBoarderImage: {fileID: 5174692808023486394}
   respawning: 0
   redSlashes:
   - {fileID: 835153175902691278}
@@ -1869,7 +1872,6 @@ MonoBehaviour:
   turretMenuHolder: {fileID: 6577643289762036005}
   turretMenuTitle: {fileID: 1413848136156042208}
   turretImageIcon: {fileID: 6222562049863200850}
-  turretboarderImage: {fileID: 0}
   bowAnimator: {fileID: 7495716635062900607}
   division: 1
 --- !u!143 &5569601162832024542
@@ -2002,10 +2004,6 @@ MonoBehaviour:
   SelectedTurret: {fileID: 0}
   hoveringTurret: 0
   buildingWithController: 0
-  upgradeColourList:
-  - {r: 1, g: 1, b: 1, a: 1}
-  - {r: 0.23113209, g: 0.9642387, b: 1, a: 1}
-  - {r: 1, g: 0.2028302, b: 0.915941, a: 1}
 --- !u!1 &5601085607544240354
 GameObject:
   m_ObjectHideFlags: 0
@@ -4108,6 +4106,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1154040104051433978 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6713460138787645705, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1413848136156042208 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6824649238497532691, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
@@ -4192,6 +4196,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 5559967730861656307}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5174692808023486394 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 790604386994153289, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &5317718323644424865 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 352597528061782610, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
@@ -4330,6 +4346,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &9155640398394695204 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3614041250256967383, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &9173138815882621967 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3631431921527110908, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,

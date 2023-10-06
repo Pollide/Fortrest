@@ -161,31 +161,18 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             PlayerController.global.PauseVoid(false);
         }
 
-        if (UpgradeInt != 0)
+        if (UpgradeInt > 0)
+        {
+            CheckUpgrade();
+            PlayerModeHandler.global.UpdateTier(GetComponent<TurretStats>());
+        }
+
+        if (UpgradeInt < 0)
         {
             CheckUpgrade();
 
             if (PlayerController.global.CheckSufficientResources())
             {
-                if (UpgradeInt > 0)
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
-                    GameManager.PlayAnimation(GetComponent<Animation>(), "TierUpgrade");
-
-                    PlayerModeHandler.global.UpdateTier(GetComponent<TurretStats>());
-
-
-
-                    /*
-                    Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
-
-                    if (defence && defence.ModelHolder.childCount > defence.CurrentLevel + 1)
-                    {
-                        defence.CurrentLevel++;
-                        defence.ReturnAnimator();
-                    }
-                    */
-                }
 
                 if (UpgradeInt == -1)
                 {
