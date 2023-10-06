@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2563743259708695537
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 5
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -20,26 +7,49 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CloudTest
-  m_Shader: {fileID: -6465566751694194690, guid: b563eba1fb1914e4697d55828883c7c7,
+  m_Name: Rabbit_Mat
+  m_Shader: {fileID: -6465566751694194690, guid: 6d1e564e810b5b04a9227282c1e3218e,
     type: 3}
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _ADDITIONAL_LIGHTS
+  - _ADDITIONAL_LIGHT_SHADOWS
+  - _MAIN_LIGHT_SHADOWS
+  - _MAIN_LIGHT_SHADOWS_CASCADE
+  - _SHADOWS_SOFT
+  - _SURFACE_TYPE_TRANSPARENT
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 3000
+  stringTagMap:
+    RenderType: Transparent
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AO:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Albedo:
+        m_Texture: {fileID: 2800000, guid: 77a6c7850d5f93c46b221f2d42360524, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Alpha:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CalculateLightingRamp_abdf794e0d3c486896b9aa3403833f47_ToonRamp_255809187:
+        m_Texture: {fileID: 2800000, guid: ccda879d80f360b45a8d401d444c2e4e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -62,8 +72,8 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
-    - _Mask:
-        m_Texture: {fileID: 0}
+    - _Metallic:
+        m_Texture: {fileID: 2800000, guid: 3b4676f54907b8e44a09b53586b127e1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -76,14 +86,6 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_42498310c6d3466a887248782bac659f_Texture_1:
-        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_64fdb57a86974e2ca8cc10f0132cb545_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 167feaddec6c5d84d9babcd920d3b994, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
@@ -104,47 +106,78 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _ADDITIONAL_LIGHTS: 1
+    - _ADDITIONAL_LIGHT_SHADOWS: 1
     - _AlphaClip: 0
+    - _AlphaClipThreshold: 0.5
+    - _Ambience_Multiplier: 0
     - _Blend: 0
     - _BumpScale: 1
+    - _CastShadows: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
-    - _Cloud_Amount: 0.75
-    - _Cloud_Amount_Feathering: 1
-    - _Cloud_Feathering: 1.87
-    - _Cloud_Height: 0.1
-    - _Cloud_Scale_1: 200
-    - _Cloud_Scale_2: 200
     - _Cull: 2
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DstBlend: 0
+    - _DstBlend: 10
+    - _EdgeDiffuse: 0
+    - _EdgeDistanceAttenuation: 0
+    - _EdgeRim: 0.1
+    - _EdgeRimAmount: 0.7
+    - _EdgeRimStrength: 0
+    - _EdgeShadowAttenuation: 0
+    - _EdgeSpecular: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
-    - _Max: -273.5
+    - _Is_Foliage: 0
+    - _MAIN_LIGHT_SHADOWS: 1
+    - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metallic: 0
-    - _Mid_Value: 0.17
-    - _Min: 1
     - _OcclusionStrength: 1
-    - _Pan_Speed: 0.0005
+    - _Offset: 0
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
+    - _RimThreshold: 0
+    - _SHADOWS_SOFT: 1
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _SrcBlend: 1
-    - _Surface: 0
-    - _Taper_Power: 0
+    - _SrcBlend: 5
+    - _Surface: 1
+    - _Tiling: 1
+    - _Use_Colour: 0
+    - _Use_Metallic_Textures: 1
+    - _Use_Vertex: 1
+    - _Wind_Strength: 0.5
     - _WorkflowMode: 1
+    - _ZTest: 4
     - _ZWrite: 1
+    - _ZWriteControl: 1
     m_Colors:
+    - _Ambient_Color: {r: 0.745283, g: 0.745283, b: 0.745283, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorAlbedo: {r: 0, g: 0, b: 0, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _Wind_Movement: {r: 2, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
+--- !u!114 &5845332308632148187
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 5
