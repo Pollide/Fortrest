@@ -11,7 +11,20 @@ public class Defence : MonoBehaviour
     public int turretID;
     public TurretStats.Tier changeTier = new TurretStats.Tier();
 
+    float ReturnDamage()
+    {
+        return damage + changeTier.damageTier;
+    }
 
+    float ReturnFireRate()
+    {
+        return fireRate + changeTier.rateTier;
+    }
+
+    float ReturnRange()
+    {
+        return shootingRange + changeTier.rangeTier;
+    }
 
     public LayerMask targetLayer;
 
@@ -29,7 +42,6 @@ public class Defence : MonoBehaviour
     [Header("Scatter Shot")]
     public float bulletSpeed = 10f;
     public float bulletLifetime = 3f; // Bullet lifetime in seconds
-    public float bulletDamage = 0.2f; // Bullet Damage
     public Transform[] spawnPositions; // Array of designated spawn positions
     public float cooldownTime = 0.5f; // Cooldown time in seconds
     private float cooldownTimer = 0f;
@@ -76,7 +88,7 @@ public class Defence : MonoBehaviour
 
         if (animator)
         {
-            animator.speed = fireRate;
+            animator.speed = ReturnFireRate();
         }
 
         animator.gameObject.SetActive(true);
@@ -110,7 +122,7 @@ public class Defence : MonoBehaviour
 
             transform.rotation = Quaternion.Lerp(transform.rotation, lookRotation, turn_speed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, target.transform.position) <= shootingRange)
+            if (Vector3.Distance(transform.position, target.transform.position) <= ReturnRange())
             {
 
                 if (building.buildingObject == Building.BuildingType.Slow)
@@ -124,7 +136,7 @@ public class Defence : MonoBehaviour
                 }
             }
 
-            if (Vector3.Distance(transform.position, target.position) > shootingRange && !attackStarted || target.GetComponent<EnemyController>().health <= 0f)
+            if (Vector3.Distance(transform.position, target.position) > ReturnRange() && !attackStarted || target.GetComponent<EnemyController>().health <= 0f)
             {
                 if (building.buildingObject == Building.BuildingType.Slow)
                 {
@@ -166,14 +178,14 @@ public class Defence : MonoBehaviour
 
             // Calculate the direction for the bullet to travel
             Vector3 spawnDirection = (spawnPosition - transform.position).normalized;
-
+            spawnDirection.y = 0;
             // Shoot the bullet in the spawn direction
             bullet.GetComponent<Rigidbody>().velocity = spawnDirection * bulletSpeed;
 
             bullet.transform.localScale = new(0.3f, 0.3f, 0.3f);
 
             bullet.transform.SetParent(LevelManager.global.transform);
-            bullet.GetComponent<ScattershotBullet>().SetDamage(bulletDamage);
+            bullet.GetComponent<ScattershotBullet>().SetDamage(ReturnDamage());
 
             // Destroy the bullet after the specified lifetime
             Destroy(bullet, bulletLifetime);
@@ -183,7 +195,7 @@ public class Defence : MonoBehaviour
     {
         if (target.GetComponent<EnemyController>())
         {
-            if (target.GetComponent<EnemyController>().health - damage <= 0)
+            if (target.GetComponent<EnemyController>().health - ReturnDamage() <= 0)
             {
                 target.gameObject.layer = 0; //so it doesnt get detected
             }
@@ -201,7 +213,7 @@ public class Defence : MonoBehaviour
             ReturnAnimator().ResetTrigger("Fire");
             ReturnAnimator().SetTrigger("Fire");
 
-            fireCountdown = 1f / fireRate;
+            fireCountdown = 1f / ReturnFireRate();
         }
 
         fireCountdown -= Time.deltaTime;
@@ -219,7 +231,7 @@ public class Defence : MonoBehaviour
         {
             boltScript.turretShootingScript = this;
             boltScript.ActiveTarget = target;
-            boltScript.SetDamage(damage);
+            boltScript.SetDamage(ReturnDamage());
         }
 
         if (building.buildingObject == Building.BuildingType.Cannon)
@@ -230,7 +242,7 @@ public class Defence : MonoBehaviour
             ProjectileExplosion explosion = projectile.GetComponent<ProjectileExplosion>();
             //  explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             explosion.explosionRadius = explosionRadius;
-            explosion.damage = damage;
+            explosion.damage = ReturnDamage();
             explosion.uCannon = GetComponent<U_Cannon>();
         }
         else
@@ -249,10 +261,10 @@ public class Defence : MonoBehaviour
                 if (range <= uTurret.multiShotPercentage)
                 {
                     GameObject bolt2 = Instantiate(ProjectilePrefab, FirePoint);
-                    bolt2.GetComponent<BoltScript>().SetDamage(damage / 2f);
+                    bolt2.GetComponent<BoltScript>().SetDamage(ReturnDamage() / 2f);
                     bolt2.transform.Rotate(new Vector3(0, 25, 0));
                     GameObject bolt3 = Instantiate(ProjectilePrefab, FirePoint);
-                    bolt3.GetComponent<BoltScript>().SetDamage(damage / 2f);
+                    bolt3.GetComponent<BoltScript>().SetDamage(ReturnDamage() / 2f);
                     bolt3.transform.Rotate(new Vector3(0, -25, 0));
                 }
             }
@@ -261,8 +273,8 @@ public class Defence : MonoBehaviour
 
     private void FindTarget()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, shootingRange, targetLayer);
-        float closestDistance = shootingRange;
+        Collider[] colliders = Physics.OverlapSphere(transform.position, ReturnRange(), targetLayer);
+        float closestDistance = ReturnRange();
         Transform closestTarget = null;
 
         foreach (Collider collider in colliders)
@@ -284,6 +296,6 @@ public class Defence : MonoBehaviour
     {
         // Draw a wire sphere in the editor to visualize the tower's radius
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, shootingRange);
+        Gizmos.DrawWireSphere(transform.position, ReturnRange());
     }
 }

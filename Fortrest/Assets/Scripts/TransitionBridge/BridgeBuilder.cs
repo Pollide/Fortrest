@@ -9,11 +9,9 @@ public class BridgeBuilder : MonoBehaviour
     public int BridgeTypeInt;
     public bool isBuilt;
     bool triggered;
-    public GameObject DamagedGameObject;
-    public GameObject RepairedGameObject;
     public Animation FloatingTextAnimation;
-
-
+    public GameObject WalkAccrossCollider;
+    public Animator bridgeAnimator;
     private void Start()
     {
         if (BridgeTypeInt == 1)
@@ -35,7 +33,6 @@ public class BridgeBuilder : MonoBehaviour
         {
             Indicator.global.AddIndicator(transform, Color.blue, "Taiga", false);
         }
-
 
         LevelManager.global.bridgeList.Add(this);
     }
@@ -79,7 +76,9 @@ public class BridgeBuilder : MonoBehaviour
                     GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
                     isBuilt = true;
                     ShowResources(false);
-                    BuildBridge();
+
+                    GameManager.PlayAnimator(bridgeAnimator, "Armature_BridgeSelfBuild");
+                    WalkAccrossCollider.SetActive(true);
                 }
                 else
                 {
@@ -87,11 +86,5 @@ public class BridgeBuilder : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void BuildBridge()
-    {
-        DamagedGameObject.SetActive(false);
-        RepairedGameObject.SetActive(true);
     }
 }
