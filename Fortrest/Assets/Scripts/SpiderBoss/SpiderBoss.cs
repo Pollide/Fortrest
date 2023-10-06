@@ -116,10 +116,12 @@ public class SpiderBoss : MonoBehaviour
         if (Vector3.Distance(playerTransform.position, startPosition) > arenaSize)
         {
             retreating = true;
+            LevelManager.global.dayPaused = false;
         }
         else
         {
             retreating = false;
+            LevelManager.global.dayPaused = true;
         }
 
         if (retreating)
@@ -230,6 +232,7 @@ public class SpiderBoss : MonoBehaviour
     private IEnumerator DestroyOnDeath()
     {
         yield return new WaitForSeconds(7f);
+        LevelManager.global.dayPaused = false;
         agent.enabled = false;
         Destroy(gameObject);
     }
