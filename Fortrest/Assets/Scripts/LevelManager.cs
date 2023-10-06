@@ -279,11 +279,11 @@ public class LevelManager : MonoBehaviour
     public BossSpawner activeBossSpawner;
     public void SetGameMusic()
     {
-if(activeBossSpawner)
+        if (activeBossSpawner)
         {
             GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
         }
-else
+        else
         {
             GameManager.global.MusicManager.PlayMusic(LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
         }
@@ -366,10 +366,10 @@ else
             GameManager.global.DataSetVoid(false);
         }
 
-        if (Unlocks.global.mountUnlocked)
+        if (Unlocks.global.mountUnlocked && !Boar.global)
         {
             Instantiate(mountPrefab, new Vector3(-30f, 0f, -120f), Quaternion.identity);
-            Unlocks.global.mountUnlocked = false;
+            // Unlocks.global.mountUnlocked = false;//its just gonna turn back on lol
         }
 
         CalculateCamps();
