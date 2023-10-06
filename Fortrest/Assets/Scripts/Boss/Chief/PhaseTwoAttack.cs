@@ -15,6 +15,7 @@ public class PhaseTwoAttack : BossState
     [SerializeField] private bool isCharging = false;
     [SerializeField] private bool playerHit = false;
     [SerializeField] private bool hasRun = false;
+    public bool coneIndicator = false;
     // Agent charge speed
     [SerializeField] private float chargeSpeed = 10f;
     [SerializeField] private float chargeDistance = 10f;
@@ -41,6 +42,13 @@ public class PhaseTwoAttack : BossState
             // Gets the connected state
             attackState = GetComponent<AttackManagerState>();
         }
+
+        coneIndicator = true;
+
+        if (stateMachine.BossType == BossSpawner.TYPE.Basilisk)
+        {
+            stateMachine.BossAnimator.SetBool("isCharging", true);
+        }
     }
 
     public override void ExitState()
@@ -52,6 +60,7 @@ public class PhaseTwoAttack : BossState
         playerHit = false;
         chargeDMGTrigger.enabled = false;
         hasRun = false;
+        coneIndicator = false;
     }
 
     public override void UpdateState()
@@ -61,7 +70,7 @@ public class PhaseTwoAttack : BossState
             stateMachine.ChangeState(idleState);
         }
 
-        if (!isCharging && !hasRun)
+        if (!isCharging && !hasRun && stateMachine.BossType == BossSpawner.TYPE.Chieftain)
         {
             StartCoroutine(WindUpAndCharge());
             hasRun = true;
@@ -114,5 +123,11 @@ public class PhaseTwoAttack : BossState
     {
         get { return playerHit; }
         set { playerHit = value; }
+    }
+
+    public bool ConeIdicator
+    {
+        get { return coneIndicator; }
+        set { coneIndicator = value; }
     }
 }

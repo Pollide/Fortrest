@@ -6,6 +6,7 @@ public class TelegraphedAttack : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
     private Transform innerShape;
+    public PhaseTwoAttack snakeSweep;
 
     public float size = 0.0f;
     public float timer = 0.0f;
@@ -27,7 +28,7 @@ public class TelegraphedAttack : MonoBehaviour
         if (isWebIndicator)
             Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f, 2.2f);
         if (isSnakeIndicator)
-            Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f, 2.2f);
+            Indicator(ref snakeSweep.coneIndicator, 1.5f, 2.2f);
     }
 
     void Indicator(ref bool indicator, float multiplier, float duration)

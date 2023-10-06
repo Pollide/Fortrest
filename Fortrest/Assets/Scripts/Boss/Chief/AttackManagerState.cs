@@ -99,7 +99,7 @@ public class AttackManagerState : BossState
         }
 
         // Set agent destination
-        if (!stateMachine.BossAnimator.GetBool("isTired") && !isAttacking)
+        if (!stateMachine.BossAnimator.GetBool("isTired") && !isAttacking && stateMachine.BossType == BossSpawner.TYPE.Chieftain)
         {
             WalkTo(playerTransform.position, stoppingDistance);
         }
