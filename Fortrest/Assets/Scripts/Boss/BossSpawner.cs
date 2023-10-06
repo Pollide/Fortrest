@@ -43,7 +43,8 @@ public class BossSpawner : MonoBehaviour
 
         health = Mathf.Clamp(health, 0, maxHealth);
 
-        BossCanvas.GetComponentInChildren<HealthBar>().SetHealth(health, maxHealth);
+        if (bossEncountered)
+            BossCanvas.GetComponentInChildren<HealthBar>(false).SetHealth(health, maxHealth);
     }
 
 
