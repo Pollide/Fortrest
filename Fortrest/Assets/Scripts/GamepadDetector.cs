@@ -18,6 +18,12 @@ public class GamepadDetector : MonoBehaviour
 
     private void Start()
     {
+        if (GameManager.Pref("Key Tips", 0, true) == 1)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
         Refresh();
     }
     private void Update()

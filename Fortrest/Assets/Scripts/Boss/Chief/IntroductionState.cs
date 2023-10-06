@@ -18,35 +18,41 @@ public class IntroductionState : BossState
 
     public override void EnterState()
     {
-        // Checks if the attack state is null
-        if (idleState == null)
+        if (stateMachine.bossSpawner)
         {
-            // Gets the connected attack state
-            idleState = GetComponent<IdleState>();
-        }
+            // Checks if the attack state is null
+            if (idleState == null)
+            {
+                // Gets the connected attack state
+                idleState = GetComponent<IdleState>();
+            }
 
-        LevelManager.global.HUD.SetActive(false);
+            LevelManager.global.HUD.SetActive(false);
 
-        PlayerController.global.playerCanMove = false;
-        PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+            PlayerController.global.playerCanMove = false;
+            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
 
-        initialCameraTransform = Camera.main.transform;
+            initialCameraTransform = Camera.main.transform;
 
-        CameraFollow.global.bossCam = true;
+            CameraFollow.global.bossCam = true;
 
-        ScreenShake.global.duration = 3f;
+            ScreenShake.global.duration = 3f;
 
-        if (!introStarted && stateMachine.BossType == BossSpawner.TYPE.Chieftain)
-        {
-            StartCoroutine(Intro());
+            if (stateMachine && !introStarted && stateMachine.BossType == BossSpawner.TYPE.Chieftain)
+            {
+                StartCoroutine(Intro());
+            }
         }
     }
 
     public override void ExitState()
     {
-        CameraFollow.global.bossCam = false;
-        PlayerController.global.playerCanMove = true;
-        LevelManager.global.HUD.SetActive(true);
+        if (stateMachine.bossSpawner)
+        {
+            CameraFollow.global.bossCam = false;
+            PlayerController.global.playerCanMove = true;
+            LevelManager.global.HUD.SetActive(true);
+        }
     }
 
     public override void UpdateState()

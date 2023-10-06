@@ -34,7 +34,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     public bool SaveBool;
     public bool MaxResourcesBool;
     public int TerrainTeleportInt = -1;
-
+    public bool KeyTipsBool;
     [Header("Build")]
     public int UpgradeInt;
 
@@ -85,6 +85,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 {
                     gameObject.SetActive(false);
                 }
+            }
+
+            if (KeyTipsBool)
+            {
+                ButtonText.text = "Key Tips: " + (GameManager.Pref("Key Tips", 0, true) == 0 ? "ON" : "OFF");
             }
 
             if (VolumeBool || MusicBool)
@@ -165,6 +170,12 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         {
             CheckUpgrade();
             PlayerModeHandler.global.UpdateTier(GetComponent<TurretStats>());
+        }
+
+        if (KeyTipsBool)
+        {
+            GameManager.Pref("Key Tips", GameManager.Pref("Key Tips", 0, true) == 1 ? 0 : 1, false);
+            Start();
         }
 
         if (UpgradeInt < 0)
