@@ -62,6 +62,22 @@ public class TelegraphedAttack : MonoBehaviour
         {
             PlayerController.global.TakeDamage(20.0f, true);
             SpiderBoss.global.slamNow = false;
+            int randomInt = Random.Range(0, 3);
+            AudioClip temp = null;
+            switch (randomInt)
+            {
+                case 0:
+                    temp = GameManager.global.PlayerHit1Sound;
+                    break;
+                case 1:
+                    temp = GameManager.global.PlayerHit2Sound;
+                    break;
+                case 2:
+                    temp = GameManager.global.PlayerHit3Sound;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
