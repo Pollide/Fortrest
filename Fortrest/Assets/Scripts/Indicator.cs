@@ -221,8 +221,8 @@ public class Indicator : MonoBehaviour
         // GetComponent<Canvas>().enabled = !PlayerModeHandler.global.inTheFortress;
         for (int i = 0; i < IndicatorList.Count; i++)
         {
-            bool enemy = IndicatorList[i].ActiveTarget.GetComponent<EnemyController>() && IndicatorList[i].ActiveTarget.GetComponent<EnemyController>().health <= 0;
-            bool boss = IndicatorList[i].ActiveTarget.GetComponent<BossSpawner>() && IndicatorList[i].ActiveTarget.GetComponent<BossSpawner>().health <= 0;
+            bool enemy = IndicatorList[i].ActiveTarget && IndicatorList[i].ActiveTarget.GetComponent<EnemyController>() && IndicatorList[i].ActiveTarget.GetComponent<EnemyController>().health <= 0;
+            bool boss = IndicatorList[i].ActiveTarget && IndicatorList[i].ActiveTarget.GetComponent<BossSpawner>() && IndicatorList[i].ActiveTarget.GetComponent<BossSpawner>().health <= 0;
 
             if (!IndicatorList[i].ActiveTarget || enemy || boss)
             {

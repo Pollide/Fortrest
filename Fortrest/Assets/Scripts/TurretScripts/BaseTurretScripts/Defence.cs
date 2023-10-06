@@ -66,6 +66,7 @@ public class Defence : MonoBehaviour
     private void Start()
     {
         building = GetComponent<Building>();
+        ReturnAnimator().SetTrigger("Deploy");
         ReturnAnimator();
     }
 
@@ -226,7 +227,7 @@ public class Defence : MonoBehaviour
 
 
         BoltScript boltScript = projectile.GetComponent<BoltScript>();
-
+        Debug.Log(projectile);
         if (boltScript)
         {
             boltScript.turretShootingScript = this;
