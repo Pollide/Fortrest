@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
     [HideInInspector] public Vector3 mousePos;
+    private bool left, right, forwards, backwards;
 
     // Player Knocked Back
     private Vector3 pushDirection;
@@ -164,12 +165,14 @@ public class PlayerController : MonoBehaviour
     public GameObject DarkenGameObject;
     public GameObject InventoryHolder;
     public GameObject MiniTurretUI;
+
     // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
     public GameObject turretTierOne;
     public GameObject turretTierTwo;
     public Image turretBoarderImage;
+
     // Death
     private float respawnTimer = 0.0f;
     private bool textAnimated = false;
@@ -228,10 +231,13 @@ public class PlayerController : MonoBehaviour
     public RectTransform turretMenuHolder;
     public TMP_Text turretMenuTitle;
     public Image turretImageIcon;
+
     // Animation
     private float speedAnim;
     private float transitionSpeed = 20f;
+    private float transitionSpeedDirection = 40f;
     public Animator bowAnimator;
+    public float horizontalAnim, verticalAnim;
 
     private bool playSoundOnce, playSoundOnce2;
 
@@ -610,13 +616,14 @@ public class PlayerController : MonoBehaviour
             verticalMovement = 0;
             running = false;
         }
-
+       
         UpdateHealth();
         HandleEnergy();
         TimersFunction();
         ScreenDamage();
         CheckCurrentTool();
         Resting();
+        CalculateMovementAngle(moveDirection);
 
         if (poisoned)
         {
@@ -1412,7 +1419,6 @@ public class PlayerController : MonoBehaviour
     public float division = 1;
     private void RotatePlayer()
     {
-
         if (!Boar.global.mounted)
         {
             if (GameManager.global.KeyboardBool)
@@ -1425,7 +1431,7 @@ public class PlayerController : MonoBehaviour
                     targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 4;
 
                 targetPosition.y = transform.position.y;
-                transform.LookAt(targetPosition);
+                transform.LookAt(targetPosition);                                                           
             }
             else
             {
@@ -1433,6 +1439,128 @@ public class PlayerController : MonoBehaviour
                 transform.rotation = Quaternion.Euler(transform.eulerAngles.x, -angle, transform.eulerAngles.z);
             }
         }
+    }
+
+    private void CalculateMovementAngle(Vector3 _moveDirection)
+    {
+        Vector2 move = new Vector2(_moveDirection.x, _moveDirection.z);
+        Vector2 look = new Vector2(transform.forward.x, transform.forward.z);
+        float angle = Vector2.Angle(move, look);       
+
+        bool facingRight;
+
+        if (Input.mousePosition.x > Screen.width / 2)
+        {
+            facingRight = true;
+        }
+        else
+        {
+            facingRight = false;
+        }
+
+        if (angle >= 0f && angle <= 45f)
+        {
+            forwards = true;
+            backwards = false;
+            left = false;
+            right = false;
+        }
+        else if (angle > 45f && angle <= 135f)
+        {
+            if (facingRight)
+            {
+                right = true;
+                left = false;
+            }
+            else
+            {
+                right = false;
+                left = true;
+            }
+            forwards = false;
+            backwards = false;
+            
+        }
+        else if (angle > 135f && angle <= 180f)
+        {
+            forwards = false;
+            backwards = true;
+            left = false;
+            right = false;
+        }       
+
+        if (forwards || backwards)
+        {
+            if (horizontalAnim != 0)
+            {
+                if (horizontalAnim < 0)
+                {
+                    horizontalAnim += 0.1f * Time.deltaTime * transitionSpeedDirection;
+                }
+                else if (horizontalAnim > 0)
+                {
+                    horizontalAnim -= 0.1f * Time.deltaTime * transitionSpeedDirection;
+                }
+                else
+                {
+                    horizontalAnim = 0f;
+                }
+            }
+
+            if (forwards)
+            {
+                if (verticalAnim <= 1.0f)
+                {
+                    verticalAnim += 0.1f * Time.deltaTime * transitionSpeedDirection;
+                }
+            }
+
+            if (backwards)
+            {
+                if (verticalAnim >= -1.0f)
+                {
+                    verticalAnim -= 0.1f * Time.deltaTime * transitionSpeedDirection;
+                }
+            }
+        }
+
+        if (right || left)
+        {
+            if (verticalAnim != 0)
+            {
+                if (verticalAnim < 0)
+                {
+                    verticalAnim += 0.1f * Time.deltaTime * transitionSpeedDirection;
+                }
+                else if (verticalAnim > 0)
+                {
+                    verticalAnim -= 0.1f * Time.deltaTime * transitionSpeedDirection;
+                }
+                else
+                {
+                    verticalAnim = 0f;
+                }
+            }
+
+            if (right)
+            {
+                if (horizontalAnim <= 1.0f)
+                {
+                    horizontalAnim += 0.1f * Time.deltaTime * transitionSpeedDirection;
+                }
+            }
+
+            if (left)
+            {
+                if (horizontalAnim >= -1.0f)
+                {
+                    horizontalAnim -= 0.1f * Time.deltaTime * transitionSpeedDirection;
+                }
+            }        
+        }
+
+        CharacterAnimator.SetFloat("Horizontal", horizontalAnim);
+        CharacterAnimator.SetFloat("Vertical", verticalAnim);
     }
 
     private void ApplyGravity()
