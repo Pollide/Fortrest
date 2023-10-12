@@ -2087,6 +2087,8 @@ MonoBehaviour:
   turretMenuTitle: {fileID: 1413848136156042208}
   turretImageIcon: {fileID: 6222562049863200850}
   bowAnimator: {fileID: 5709866159686491231}
+  horizontalAnim: 0
+  verticalAnim: 0
   debugfrocemap: 0
   division: 1
 --- !u!143 &5569601162832024542
@@ -3964,10 +3966,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 665985309353623843, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1847899375248257406, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -35.80005
+      objectReference: {fileID: 0}
+    - target: {fileID: 4908370130049595263, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3dc6b70a22c61f9489be8f4f4eb795d6, type: 3}
