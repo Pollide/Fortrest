@@ -128,7 +128,6 @@ public class Defence : MonoBehaviour
 
                 if (building.buildingObject == Building.BuildingType.Slow)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound);
                     target.GetComponent<EnemyController>().ApplySlow(enemySpeedPercentage);
                 }
                 else

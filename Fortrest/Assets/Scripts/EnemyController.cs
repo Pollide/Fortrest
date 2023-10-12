@@ -92,7 +92,7 @@ public class EnemyController : MonoBehaviour
     private float previousDistance;
     private float patrolCooldown;
     private float patrolThreshold;
-
+    bool slowed;
     private void Awake()
     {
         if (GameManager.ReturnInMainMenu())
@@ -494,11 +494,17 @@ public class EnemyController : MonoBehaviour
 
     public void ApplySlow(float _slowPercent)
     {
-        agent.speed *= _slowPercent;
+        if (!slowed)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound);
+            slowed = true;
+            agent.speed *= _slowPercent;
+        }
     }
 
     public void RemoveSlow()
     {
+        slowed = false;
         agent.speed = speed;
     }
 
