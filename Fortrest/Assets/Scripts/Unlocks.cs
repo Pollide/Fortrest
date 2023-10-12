@@ -20,9 +20,9 @@ public class Unlocks : MonoBehaviour
 
     void Start()
     {
-        mountUnlocked = false;
-        bowUnlocked = false;
-        miniTurretUnlocked = false;
+        mountUnlocked = true;
+        bowUnlocked = true;
+        miniTurretUnlocked = true;
         extraApplesUnlocked = false;
         upgradedMeleeUnlocked = false;
         upgradedBowUnlocked = false;
