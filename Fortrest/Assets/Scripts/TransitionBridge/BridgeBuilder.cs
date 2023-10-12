@@ -74,7 +74,14 @@ public class BridgeBuilder : MonoBehaviour
                 }
             }
         }
+
+        PlayerController.global.OpenResourceHolder(show);
+        PlayerController.global.needInteraction = show;
+        PlayerController.global.bridgeInteract = show;
         LevelManager.FloatingTextChange(canBuild ? FloatingTextCanBuildAnimation.gameObject : FloatingTextAnimation.gameObject, show);
+
+        if (show)
+            PlayerController.global.UpdateResourceHolder(BridgeTypeInt);
     }
 
     private void Update()
@@ -99,14 +106,22 @@ public class BridgeBuilder : MonoBehaviour
             {
                 PlayerController.global.interactCTRL = false;
                 PlayerController.global.evading = false;
-                canBuild = false;
-                GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltNoiseSound);
-                GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
-                isBuilt = true;
-                ShowPrompt(false);
 
-                GameManager.PlayAnimator(bridgeAnimator, "Armature_BridgeSelfBuild");
-                WalkAccrossCollider.SetActive(true);
+                if (PlayerController.global.CheckSufficientResources(true))
+                {
+                    canBuild = false;
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltNoiseSound);
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
+                    isBuilt = true;
+                    ShowPrompt(false);
+
+                    GameManager.PlayAnimator(bridgeAnimator, "Armature_BridgeSelfBuild");
+                    WalkAccrossCollider.SetActive(true);
+                }
+                else
+                {
+                    PlayerController.global.ShakeResourceHolder();
+                }
 
             }
 
