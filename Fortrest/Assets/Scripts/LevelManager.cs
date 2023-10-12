@@ -89,7 +89,8 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector]
     public bool newDay = false;
-    bool NightTimeMusic;
+    [HideInInspector]
+    public bool NightTimeMusic;
     public Gradient textGradient;
 
     // [HideInInspector]
@@ -122,7 +123,7 @@ public class LevelManager : MonoBehaviour
     public bool dayPaused;
     private int groupSpawnAmount;
     private int laneInt;
-    private Transform houseTransform;
+    public Transform houseTransform;
     private Vector3 enemySpawnPosition;
     bool housePosObtained = false;
     private float spawnDistance = 39.0f;
@@ -275,6 +276,19 @@ public class LevelManager : MonoBehaviour
         return daylightTimer > 180;
     }
 
+    public BossSpawner activeBossSpawner;
+    public void SetGameMusic()
+    {
+        if (activeBossSpawner)
+        {
+            GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
+        }
+        else
+        {
+            GameManager.global.MusicManager.PlayMusic(LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+        }
+    }
+
     private void CalculateCamps()
     {
         campsCount = 0;
@@ -352,10 +366,10 @@ public class LevelManager : MonoBehaviour
             GameManager.global.DataSetVoid(false);
         }
 
-        if (Unlocks.global.mountUnlocked)
+        if (Unlocks.global.mountUnlocked && !Boar.global)
         {
             Instantiate(mountPrefab, new Vector3(-30f, 0f, -120f), Quaternion.identity);
-            Unlocks.global.mountUnlocked = false;
+            // Unlocks.global.mountUnlocked = false;//its just gonna turn back on lol
         }
 
         CalculateCamps();

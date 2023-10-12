@@ -39,7 +39,7 @@ public class BridgeBuilder : MonoBehaviour
 
         if (BridgeTypeInt == 5)
         {
-            Indicator.global.AddIndicator(transform, Color.red, "Volcanic Flats", false);
+            Indicator.global.AddIndicator(transform, Color.gray, "Volcanic Flats", false);
         }
 
         LevelManager.global.bridgeList.Add(this);
@@ -49,7 +49,7 @@ public class BridgeBuilder : MonoBehaviour
         PlayerController.global.needInteraction = show;
         PlayerController.global.bridgeInteract = show;
 
-        bool canBuild = BridgeTypeInt == 3 || BridgeTypeInt == 5;
+        canBuild = BridgeTypeInt == 2 || BridgeTypeInt == 4;
 
         for (int i = 0; i < LevelManager.global.bossList.Count; i++)
         {
@@ -61,13 +61,13 @@ public class BridgeBuilder : MonoBehaviour
                     break;
                 }
 
-                if (BridgeTypeInt == 2 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Basilisk)
+                if (BridgeTypeInt == 3 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Basilisk)
                 {
                     canBuild = true;
                     break;
                 }
 
-                if (BridgeTypeInt == 4 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.SpiderQueen)
+                if (BridgeTypeInt == 5 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.SpiderQueen)
                 {
                     canBuild = true;
                     break;

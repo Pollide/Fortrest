@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 8740668045474777165}
   - component: {fileID: 7788129227239646016}
   - component: {fileID: 2194251229534165391}
+  - component: {fileID: 5411412253301375710}
   m_Layer: 13
   m_Name: Cheiften
   m_TagString: Untagged
@@ -97,13 +98,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1c243e2f4f2fd84ca0582127a985193, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bossType: 0
   currentPhase: 0
   currentState: {fileID: 0}
   initialState: {fileID: 3651742728835903311}
-  BossCanvas: {fileID: 2560772847806016731}
-  currentHealth: 0
-  maxHealth: 50
   arenaRadius: 50
   speed: 5
   inDefence: 0
@@ -111,6 +108,7 @@ MonoBehaviour:
   phase3Ran: 0
   isDead: 0
   bossAnimator: {fileID: 454620424452102865}
+  bossSpawner: {fileID: 0}
 --- !u!114 &3651742728835903311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,6 +187,7 @@ MonoBehaviour:
   isCharging: 0
   playerHit: 0
   hasRun: 0
+  coneIndicator: 0
   chargeSpeed: 15
   chargeDistance: 2
   chargePushForce: 1
@@ -245,6 +244,25 @@ MonoBehaviour:
   outer: {fileID: 5567472970536930146}
   inner: {fileID: 7556151477208924013}
   attack: 0
+--- !u!114 &5411412253301375710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612966261804245062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36a0a17476046894796388402f1cd957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 20
+  hasRun: 0
+  bossType: 0
+  BossCanvas: {fileID: 2060798956594959119}
+  health: 100
+  maxHealth: 50
+  canBeDamaged: 1
 --- !u!1 &3856323682597141708
 GameObject:
   m_ObjectHideFlags: 0
@@ -410,6 +428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82bcdb6d7114d7245bd7a505b27f05d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stateMachine: {fileID: 8860127450049526509}
 --- !u!1 &5567472970536930146
 GameObject:
   m_ObjectHideFlags: 0
@@ -772,9 +791,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 44375879c0871ad48801120b3c517b5e, type: 3}
---- !u!1 &2560772847806016731 stripped
+--- !u!1 &2060798956594959119 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 2601295076671620243, guid: 44375879c0871ad48801120b3c517b5e,
+  m_CorrespondingSourceObject: {fileID: 1948216934904101703, guid: 44375879c0871ad48801120b3c517b5e,
     type: 3}
   m_PrefabInstance: {fileID: 544963323738548296}
   m_PrefabAsset: {fileID: 0}

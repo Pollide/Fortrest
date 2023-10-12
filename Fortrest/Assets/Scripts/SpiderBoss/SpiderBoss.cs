@@ -17,10 +17,7 @@ public class SpiderBoss : MonoBehaviour
     public bool retreating;
     private NavMeshAgent agent;
     private float damage;
-    private float maxHealth;
     public bool dead;
-    public GameObject healthCanvas;
-    public GameObject healthBar;
     private float speed;
     private float stoppingDistance;
     private float angularSpeed;
@@ -69,7 +66,6 @@ public class SpiderBoss : MonoBehaviour
         retreating = false;
         agent = animator.GetComponent<NavMeshAgent>();
         damage = 5.0f;
-        maxHealth = bossSpawner.health;
         stage = 1;
         specialAttackCD = 10.0f;
         poisonAttackChance = 0.4f;
@@ -116,36 +112,37 @@ public class SpiderBoss : MonoBehaviour
         if (Vector3.Distance(playerTransform.position, startPosition) > arenaSize)
         {
             retreating = true;
+            LevelManager.global.dayPaused = false;
         }
         else
         {
             retreating = false;
+            LevelManager.global.dayPaused = true;
         }
 
         if (retreating)
         {
-            if (bossSpawner.health < maxHealth)
+            if (bossSpawner.health < bossSpawner.maxHealth)
             {
-                bossSpawner.health += Time.deltaTime * 3.0f;
+                bossSpawner.UpdateHealth(Time.deltaTime * 3.0f);
             }
             else
             {
-                bossSpawner.health = maxHealth;
-                healthCanvas.SetActive(false);
+                bossSpawner.UpdateHealth(bossSpawner.maxHealth);
+                bossSpawner.BossEncountered(false);
             }
-            UpdateHealth();
         }
         else if (awoken)
         {
-            healthCanvas.SetActive(true);
+            bossSpawner.BossEncountered(true);
         }
 
         // Triggering different stages
-        if (bossSpawner.health < ((maxHealth / 3) * 2) && bossSpawner.health > (maxHealth / 3))
+        if (bossSpawner.health < ((bossSpawner.maxHealth / 3) * 2) && bossSpawner.health > (bossSpawner.maxHealth / 3))
         {
             stage = 2;
         }
-        else if (bossSpawner.health < (maxHealth / 3))
+        else if (bossSpawner.health < (bossSpawner.maxHealth / 3))
         {
             stage = 3;
         }
@@ -180,7 +177,7 @@ public class SpiderBoss : MonoBehaviour
         if (dead)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossDeadSound, 1f, true, 0, false, transform);
-            healthCanvas.SetActive(false);
+            bossSpawner.BossEncountered(false);
             animator.SetTrigger("Dead");
             StartCoroutine(DestroyOnDeath());
             dead = false;
@@ -203,7 +200,7 @@ public class SpiderBoss : MonoBehaviour
 
     public void NormalAttackAnimEvent()
     {
-        GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossAttackSound, 1f, true, 0, false, transform);       
+        GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossAttackSound, 1f, true, 0, false, transform);
         if (PlayerController.global.playerCanBeDamaged)
         {
             int randomInt = Random.Range(0, 3);
@@ -230,6 +227,7 @@ public class SpiderBoss : MonoBehaviour
     private IEnumerator DestroyOnDeath()
     {
         yield return new WaitForSeconds(7f);
+        LevelManager.global.dayPaused = false;
         agent.enabled = false;
         Destroy(gameObject);
     }
@@ -317,8 +315,7 @@ public class SpiderBoss : MonoBehaviour
 
     private void Damaged(float amount)
     {
-        bossSpawner.health -= amount;
-        UpdateHealth();
+        bossSpawner.UpdateHealth(-amount);
 
         if (bossSpawner.health <= 0)
         {
@@ -424,10 +421,6 @@ public class SpiderBoss : MonoBehaviour
         }
     }
 
-    private void UpdateHealth()
-    {
-        healthBar.GetComponent<HealthBar>().SetHealth(bossSpawner.health, maxHealth);
-    }
 
     private void JumpSound()
     {
@@ -446,25 +439,25 @@ public class SpiderBoss : MonoBehaviour
         {
             steps = 1;
         }
-        switch(steps)
+        switch (steps)
         {
             case 1:
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossStep1Sound, 0.6f, true, 0, false, transform);
-                break;                                                                               
-            case 2:                                                                                  
+                break;
+            case 2:
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossStep2Sound, 0.6f, true, 0, false, transform);
-                break;                                                                              
-            case 3:                                                                                 
+                break;
+            case 3:
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossStep3Sound, 0.6f, true, 0, false, transform);
-                break;                                                                               
-            case 4:                                                                                  
+                break;
+            case 4:
                 GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossStep4Sound, 0.6f, true, 0, false, transform);
                 break;
             default:
                 break;
 
         }
-        
+
     }
 
 }

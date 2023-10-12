@@ -163,7 +163,7 @@ public class PlayerController : MonoBehaviour
     // Inventory
     public GameObject DarkenGameObject;
     public GameObject InventoryHolder;
-
+    public GameObject MiniTurretUI;
     // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
@@ -225,7 +225,6 @@ public class PlayerController : MonoBehaviour
     public bool ResourceHolderOpened;
     Vector3 MapPanPosition;
     private Vector3 mapMousePosition;
-
     public RectTransform turretMenuHolder;
     public TMP_Text turretMenuTitle;
     public Image turretImageIcon;
@@ -1112,7 +1111,15 @@ public class PlayerController : MonoBehaviour
             PauseCanvasGameObject.SetActive(pause);
 
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
-            GameManager.global.MusicManager.PlayMusic(pause ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            if (pause)
+            {
+                GameManager.global.MusicManager.PlayMusic(GameManager.global.PauseMusic);
+            }
+            else
+            {
+                LevelManager.global.SetGameMusic();
+            }
+
             GameManager.global.SoundManager.PlaySound(GameManager.global.PauseMenuSound);
 
             if (!mapBool)
@@ -1132,7 +1139,15 @@ public class PlayerController : MonoBehaviour
         if (!pausedBool)
         {
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
-            GameManager.global.MusicManager.PlayMusic(map ? GameManager.global.PauseMusic : LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            if (map)
+            {
+                GameManager.global.MusicManager.PlayMusic(GameManager.global.PauseMusic);
+            }
+            else
+            {
+                LevelManager.global.SetGameMusic();
+            }
+
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
@@ -1158,7 +1173,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
+                Vector3 dragDirection = (Input.mousePosition - mapMousePosition);
                 mapMousePosition = Input.mousePosition;
                 MapPanPosition += dragDirection * speed;
                 // MapPanPosition = Vector3.Slerp(MapPanPosition, MapPanPosition + dragDirection, speed);
@@ -1508,6 +1523,7 @@ public class PlayerController : MonoBehaviour
                     {
                         attackDamage = 1.5f;
                     }
+
                     CharacterAnimator.ResetTrigger("Swing3");
                     CharacterAnimator.SetTrigger("Swing3");
                     break;

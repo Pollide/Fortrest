@@ -15,7 +15,7 @@ public class IntroCamSpider : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        initialCameraTransform = Camera.main.transform;
+        initialCameraTransform = LevelManager.global.SceneCamera.transform;
     }
 
     // Update is called once per frame
@@ -32,9 +32,8 @@ public class IntroCamSpider : MonoBehaviour
             // Perform the intro animation
             Vector3 targetPosition = transform.position + introPositionOffset;
             Vector3 cameraPosition = Vector3.Lerp(initialCameraTransform.position, targetPosition - initialCameraTransform.forward, introProgress);
-            Camera.main.transform.position = cameraPosition;
-            GetComponent<SpiderBoss>().healthCanvas.SetActive(true);
-            GetComponent<SpiderBoss>().healthCanvas.transform.GetChild(0).gameObject.SetActive(false);
+            LevelManager.global.SceneCamera.transform.position = cameraPosition;
+
             introCard.SetActive(true);
 
             if (introProgress >= 1.0f)
@@ -49,7 +48,7 @@ public class IntroCamSpider : MonoBehaviour
             PlayerController.global.playerCanMove = true;
             LevelManager.global.HUD.SetActive(true);
             introCard.SetActive(false);
-            GetComponent<SpiderBoss>().healthCanvas.transform.GetChild(0).gameObject.SetActive(true);
+            GetComponent<BossSpawner>().BossEncountered(true);
         }
     }
 }

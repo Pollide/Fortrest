@@ -10,7 +10,7 @@ public abstract class BossState : MonoBehaviour
     // Holds target transform
     protected Transform playerTransform;
     // Holds the initial spawn position of the boss
-    protected Transform initialSpawn;
+    protected Vector3 initialSpawn;
     // Nav mesh agent component
     protected NavMeshAgent agent;
 
@@ -18,10 +18,10 @@ public abstract class BossState : MonoBehaviour
     {
         // Grabs the target transform for targeting
         playerTransform = PlayerController.global.transform;
-        // Grabs the spawn position as the initial position
-        initialSpawn = gameObject.transform.parent;
         // Grabs the NavMeshAgent
         agent = GetComponent<NavMeshAgent>();
+        initialSpawn = transform.position;
+        
     }
 
     // Sets agent destination and stopping distance
@@ -57,7 +57,7 @@ public abstract class BossState : MonoBehaviour
     // Returns true if the target is within a radius set in the inspector
     protected bool PlayerInArena(float _radius)
     {
-        return Vector3.Distance(initialSpawn.position, playerTransform.position) < _radius;
+        return Vector3.Distance(initialSpawn, playerTransform.position) < _radius;
     }
 
     // Populate the state machine
@@ -80,7 +80,7 @@ public abstract class BossState : MonoBehaviour
         get { return playerTransform; }
     } 
     
-    public Transform InitialSpawn
+    public Vector3 InitialSpawn
     {
         get { return initialSpawn; }
     }

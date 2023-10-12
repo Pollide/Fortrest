@@ -6,6 +6,7 @@ public class BossSpawner : MonoBehaviour
     [SerializeField] public bool hasRun = false;
     // Holds the current boss type
     [SerializeField] public TYPE bossType;
+    public GameObject BossCanvas;
 
     // Enum for boss type
     public enum TYPE
@@ -18,14 +19,42 @@ public class BossSpawner : MonoBehaviour
         Fire
     }
 
+    [HideInInspector]
     public float health = 100;
-
+    // Holds the bosses max health
+    public float maxHealth = 100f;
+    [HideInInspector]
+    public bool bossEncountered;
     [HideInInspector]
     public bool canBeDamaged = true;
+
+    public void Awake()
+    {
+        health = maxHealth;//on awake before the game loads
+    }
+
+    public void UpdateHealth(float change = 0)
+    {
+        health += change;
+
+        if (change < 0 && health > 0)
+        {
+            GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Damage");
+        }
+
+        health = Mathf.Clamp(health, 0, maxHealth);
+
+        if (bossEncountered)
+            BossCanvas.GetComponentInChildren<HealthBar>(true).SetHealth(health, maxHealth);
+    }
+
 
     private void Start()
     {
         LevelManager.global.bossList.Add(this);
+
+        if (health > 0)
+            Indicator.global.AddIndicator(transform, Color.red, bossType.ToString(), false);
 
         if (GetComponent<BossStateMachine>())
         {
@@ -38,6 +67,38 @@ public class BossSpawner : MonoBehaviour
         {
             GetComponent<SpiderBoss>().bossSpawner = this;
         }
+    }
+
+    public void BossEncountered(bool open)
+    {
+        LevelManager.global.dayPaused = open;
+
+        if (bossEncountered != open)
+        {
+            if (health <= 0)
+            {
+
+                GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
+            }
+            else
+            {
+                GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Appear", open);
+            }
+
+            BossMusicBegin(open);
+        }
+
+        UpdateHealth();
+
+
+        bossEncountered = open;
+    }
+
+    public void BossMusicBegin(bool open)
+    {
+        LevelManager.global.activeBossSpawner = open ? this : null;
+
+        LevelManager.global.SetGameMusic();
     }
 
 
@@ -56,9 +117,11 @@ public class BossSpawner : MonoBehaviour
                 GetComponent<SpiderBoss>().Awaken();
             }
 
+
             hasRun = true;
         }
     }
+
 
     private bool CheckPlayerDistance()
     {
