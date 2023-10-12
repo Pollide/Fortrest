@@ -44,13 +44,16 @@ public class Creature : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject == PlayerController.global.SwordGameObject || other.gameObject.tag == "Arrow")
+        if (PlayerController.global)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.ArrowHitBuildingSound, 1.0f);
-            DeathVFX.transform.SetParent(null);
-            DeathVFX.SetActive(true);
+            if (other.gameObject == PlayerController.global.SwordGameObject || other.gameObject.tag == "Arrow")
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.ArrowHitBuildingSound, 1.0f);
+                DeathVFX.transform.SetParent(null);
+                DeathVFX.SetActive(true);
 
-            Destroy(gameObject);
+                Destroy(gameObject);
+            }
         }
     }
 }
