@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     // Movement   
     [HideInInspector] public Vector3 moveDirection;
     [HideInInspector] public Vector3 mousePos;
-    private bool left, right, forwards, backwards;
+    public bool left, right, forwards, backwards;
 
     // Player Knocked Back
     private Vector3 pushDirection;
@@ -1445,122 +1445,108 @@ public class PlayerController : MonoBehaviour
     {
         Vector2 move = new Vector2(_moveDirection.x, _moveDirection.z);
         Vector2 look = new Vector2(transform.forward.x, transform.forward.z);
-        float angle = Vector2.Angle(move, look);       
+        float angle = Vector2.SignedAngle(move, look);
 
-        bool facingRight;
-
-        if (Input.mousePosition.x > Screen.width / 2)
+        if (playerisMoving)
         {
-            facingRight = true;
+            if ((angle <= 45f && angle >= 0f) || (angle >= -45f && angle <= 0f))
+            {
+                forwards = true;
+                backwards = false;
+                left = false;
+                right = false;
+            }
+            else if (angle < -45f && angle >= -135f)
+            {
+                forwards = false;
+                backwards = false;
+                left = true;
+                right = false;
+            }
+            else if ((angle < -135f && angle >= -180f) || (angle >= 135f && angle <= 180f))
+            {
+                forwards = false;
+                backwards = true;
+                left = false;
+                right = false;
+            }
+            else if (angle < 135f && angle >= 45f)
+            {
+                forwards = false;
+                backwards = false;
+                left = false;
+                right = true;
+            }
         }
         else
         {
-            facingRight = false;
-        }
+            forwards = false;
+            backwards = false;
+            right = false;
+            left = false;
 
-        if (angle >= 0f && angle <= 45f)
-        {
-            forwards = true;
-            backwards = false;
-            left = false;
-            right = false;
+            ResetValues(ref horizontalAnim);
+            ResetValues(ref verticalAnim);
         }
-        else if (angle > 45f && angle <= 135f)
-        {
-            if (facingRight)
-            {
-                right = true;
-                left = false;
-            }
-            else
-            {
-                right = false;
-                left = true;
-            }
-            forwards = false;
-            backwards = false;
-            
-        }
-        else if (angle > 135f && angle <= 180f)
-        {
-            forwards = false;
-            backwards = true;
-            left = false;
-            right = false;
-        }       
 
         if (forwards || backwards)
         {
-            if (horizontalAnim != 0)
-            {
-                if (horizontalAnim < 0)
-                {
-                    horizontalAnim += 0.1f * Time.deltaTime * transitionSpeedDirection;
-                }
-                else if (horizontalAnim > 0)
-                {
-                    horizontalAnim -= 0.1f * Time.deltaTime * transitionSpeedDirection;
-                }
-                else
-                {
-                    horizontalAnim = 0f;
-                }
-            }
+            ResetValues(ref horizontalAnim);
 
             if (forwards)
             {
-                if (verticalAnim <= 1.0f)
-                {
-                    verticalAnim += 0.1f * Time.deltaTime * transitionSpeedDirection;
-                }
+                TransitionAnim(ref verticalAnim, true);
             }
 
             if (backwards)
             {
-                if (verticalAnim >= -1.0f)
-                {
-                    verticalAnim -= 0.1f * Time.deltaTime * transitionSpeedDirection;
-                }
+                TransitionAnim(ref verticalAnim, false);
             }
         }
 
         if (right || left)
         {
-            if (verticalAnim != 0)
-            {
-                if (verticalAnim < 0)
-                {
-                    verticalAnim += 0.1f * Time.deltaTime * transitionSpeedDirection;
-                }
-                else if (verticalAnim > 0)
-                {
-                    verticalAnim -= 0.1f * Time.deltaTime * transitionSpeedDirection;
-                }
-                else
-                {
-                    verticalAnim = 0f;
-                }
-            }
+            ResetValues(ref verticalAnim);
 
             if (right)
             {
-                if (horizontalAnim <= 1.0f)
-                {
-                    horizontalAnim += 0.1f * Time.deltaTime * transitionSpeedDirection;
-                }
+                TransitionAnim(ref horizontalAnim, true);
             }
 
             if (left)
             {
-                if (horizontalAnim >= -1.0f)
-                {
-                    horizontalAnim -= 0.1f * Time.deltaTime * transitionSpeedDirection;
-                }
+                TransitionAnim(ref horizontalAnim, false);
             }        
-        }
+        }      
 
         CharacterAnimator.SetFloat("Horizontal", horizontalAnim);
         CharacterAnimator.SetFloat("Vertical", verticalAnim);
+    }
+
+    private void ResetValues(ref float directionFloat)
+    {
+        if (directionFloat != 0f)
+        {
+            directionFloat += (directionFloat < 0f ? 0.1f : -0.1f) * Time.deltaTime * transitionSpeedDirection;
+            
+            if (Mathf.Abs(directionFloat) < 0.05f)
+            {
+                directionFloat = 0f;
+            }            
+        }
+    }
+
+    private void TransitionAnim(ref float directionFloat, bool positive)
+    {
+        if (Mathf.Abs(directionFloat) <= 1.0f)
+        {
+            directionFloat += (positive ? 0.1f : -0.1f) * Time.deltaTime * transitionSpeedDirection;
+
+            if (Mathf.Abs(directionFloat) > 0.95f)
+            {
+                directionFloat = (positive ? 1f : -1f);
+            }
+        }
     }
 
     private void ApplyGravity()
