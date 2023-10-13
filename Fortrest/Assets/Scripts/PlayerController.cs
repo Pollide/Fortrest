@@ -197,6 +197,7 @@ public class PlayerController : MonoBehaviour
     private bool gatheringCTRL;
     private bool attackingCTRL;
     [HideInInspector] public bool aimingCTRL;
+    public bool aiming;
     private bool evadeCTRL;
     private bool cancelCTRL;
     private bool turretCTRL;
@@ -1714,6 +1715,7 @@ public class PlayerController : MonoBehaviour
                     bowTimer = 0.45f;
                     initialShot = true;
                 }
+                aiming = true;
                 CharacterAnimator.SetBool("Aiming", true);
                 ChangeTool(new ToolData() { BowBool = true });
                 bowAnimator.SetBool("Aiming", true);
@@ -1735,6 +1737,7 @@ public class PlayerController : MonoBehaviour
             }
             else if (BowGameObject.activeSelf)
             {
+                aiming = false;
                 CharacterAnimator.SetBool("Aiming", false);
                 bowAnimator.SetBool("Aiming", false);
                 ChangeTool(new ToolData() { SwordBool = true });
