@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     private float verticalMovement;
 
     // Speed
-    private float playerCurrentSpeed = 0f;
+    public float playerCurrentSpeed = 0f;
     private float playerWalkSpeed = 5.0f;
     private float playerSprintSpeed = 8.0f;
     private float playerBowSpeed = 3.0f;
@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
     private Quaternion tempDirection;
     public bool initialShot;
     [HideInInspector] public bool upgradedBow;
+    public bool firing;
 
     // Spawn Turret
     private bool turretSpawned;
@@ -1412,7 +1413,7 @@ public class PlayerController : MonoBehaviour
             moveDirection.z = 0f;
         }
 
-        if (!playerDead)
+        if (!playerDead && !firing)
         {
             playerCC.Move(moveDirection * Time.deltaTime);
         }
@@ -1740,7 +1741,10 @@ public class PlayerController : MonoBehaviour
                 aiming = false;
                 CharacterAnimator.SetBool("Aiming", false);
                 bowAnimator.SetBool("Aiming", false);
-                ChangeTool(new ToolData() { SwordBool = true });
+                if (!firing)
+                {
+                    ChangeTool(new ToolData() { SwordBool = true });
+                }               
                 canShoot = false;
             }
             else
