@@ -22,7 +22,7 @@ public class PlayerSteps : MonoBehaviour
 
     void Attack()
     {
-        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
+        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects && !PlayerController.global.characterAnimator.GetBool("Swapping"))
         {
             PlayerController.global.lunge = true;
             PlayerController.global.AttackEffects();        
@@ -37,11 +37,19 @@ public class PlayerSteps : MonoBehaviour
         }        
     }
 
-    void DamageEnemy()
+    void SwingStart()
     {
         if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
         {
             PlayerController.global.damageEnemy = true;
+        }
+    }
+
+    void SwingEnd()
+    {
+        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
+        {
+            PlayerController.global.damageEnemy = false;
         }
     }
 
