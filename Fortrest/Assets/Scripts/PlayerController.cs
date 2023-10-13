@@ -55,50 +55,48 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool firing; // Used to stop the player from moving while the firing animation is being played
 
     // Spawn Turret
-    private bool turretSpawned;
-    private float turretTimer = 0.0f;
-    private float resetTurret = 60.0f;
-    private float turretDuration = 20.0f;
-    GameObject miniTurret;
+    private bool turretSpawned; // Used to manage the turret cooldown once the turret is spawned
+    private float turretTimer = 0.0f; // Timer to reset the turret ability
+    private float resetTurret = 60.0f; // Turret cooldown
+    private float turretDuration = 20.0f; // The time the turret stays before disappearing
+    private GameObject miniTurret; // Object to hold the instantiated turret
 
     // Gravity
-    private float playerGravMultiplier = 2.0f;
-    private float playerGrav = -9.81f;
-    private float playerVelocity;
+    private float playerGrav = -19.62f; // Gravity Strength
+    private float verticalVelocity; // Player vertical velocity to apply gravity to
 
     // Energy
-    [HideInInspector] public float playerEnergy = 0f;
-    private float maxPlayerEnergy = 100f;
-    public Image playerEnergyBarImage;
-    private float energySpeed = 12.5f;
+    [HideInInspector] public float playerEnergy = 0f; // Player's current energy level used for sprinting
+    private float maxPlayerEnergy = 100f; // Maximum energy the player can have
+    public Image playerEnergyBarImage; // Energy bar UI
+    private float energySpeed = 12.5f; // Speed at which the energy regenerates
 
     // Health
-    private bool deathEffects = false;
-    [HideInInspector] public bool playerDead = false;
-    [HideInInspector] public bool playerRespawned;
-    [HideInInspector] public bool houseDisplay;
-    [HideInInspector] public float playerHealth = 0.0f;
-    [HideInInspector] public float maxHealth = 100.0f;
-    [HideInInspector] public float newHealth;
-    public HealthBar healthBar;
+    private bool deathEffects = false; // Used to apply everything that comes with dying
+    [HideInInspector] public bool playerDead = false; // Is true for the duration of the player being dead
+    [HideInInspector] public bool playerRespawned; // Used to check if the player respawned and to avoid double interaction with single key press
+    [HideInInspector] public float playerHealth = 0.0f; // Player's current health
+    private float maxHealth = 100.0f; // Maximum health the player can have
+    private float newHealth; // Used to pick up on changes in the health amount
+    public HealthBar healthBar; // Health bar UI
 
     // Eating
-    [HideInInspector] public int appleAmount = 0;
-    private float appleHealAmount = 10.0f;
-    [HideInInspector] public int maxApple = 5;
+    [HideInInspector] public int appleAmount = 0; // The current amount of apples being held by the player
+    private float appleHealAmount = 10.0f; // The amount of health restored when eating an apple
+    [HideInInspector] public int maxApple = 5; // The maximum amount of apples the player can hold
 
     // Attacks
-    [HideInInspector] public float attackDamage = 1.0f;
-    private float attackTimer = 0.0f;
-    private float resetAttack = 0.75f;
-    private float comboTimer = 0.0f;
-    private float resetCombo = 1.10f;
-    private int attackCount = 0;
-    public Building currentResource;
-    [HideInInspector] public bool damageEnemy = false;
-    [HideInInspector] public bool lunge = false;
-    [HideInInspector] public bool upgradedMelee;
-    public bool attackAnimEnded = true;
+    [HideInInspector] public float attackDamage = 1.0f; // The damage dealt by the melee attack
+    private float attackTimer = 0.0f; // Timer to reset the attack
+    private float resetAttack = 0.75f; // Attack cooldown
+    private float comboTimer = 0.0f; // Timer to reset the combo
+    private float resetCombo = 1.10f; // Combo cooldown
+    private int attackCount = 0; // Current attack number in the combo
+    [HideInInspector] public Building currentResource; // Current resource type being gathered
+    [HideInInspector] public bool damageEnemy = false; // Used to enable a time frame during the animation where the enemy can be damaged
+    [HideInInspector] public bool lunge = false; // Used to move the player forward (lunge) during their attack
+    [HideInInspector] public bool upgradedMelee; // Used to enable the upgraded melee perks
+    [HideInInspector] public bool attackAnimEnded = true; // Safety bool to avoid attack issues. Becomes true using anim behaviour, and is needed to attack again
 
     // States
     [Header("Player States")]
@@ -1382,13 +1380,6 @@ public class PlayerController : MonoBehaviour
             moveDirection *= playerCurrentSpeed;
 
             moveDirection = Quaternion.AngleAxis(45, Vector3.up) * moveDirection;
-
-            //if (moveDirection != Vector3.zero)
-            //{
-            //    transform.forward = moveDirection;
-            //}
-
-            ApplyGravity();
         }
         else
         {
@@ -1536,17 +1527,15 @@ public class PlayerController : MonoBehaviour
 
     private void ApplyGravity()
     {
-        // Run gravity
-        if (playerCC.isGrounded && playerVelocity < 0.0f)
+        if (playerCC.isGrounded && verticalVelocity < 0.0f)
         {
-            playerVelocity = -1.0f;
+            verticalVelocity = -1.0f;
         }
         else
         {
-            playerVelocity += playerGrav * playerGravMultiplier * Time.deltaTime;
+            verticalVelocity += playerGrav * Time.deltaTime;
         }
-
-        moveDirection.y = playerVelocity;
+        moveDirection.y = verticalVelocity;
     }
 
     public void HealthRestore(float amount)
@@ -2007,7 +1996,6 @@ public class PlayerController : MonoBehaviour
                         needInteraction = false;
                     }
                     interactCTRL = false;
-                    houseDisplay = true; // Used to reanimate house and make text appear once player respawns
                     respawning = true;
                     StartCoroutine(RevertBool(false));
                 }
