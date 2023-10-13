@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
 
     // Evade
     private float evadeTimer = 0.0f;
-    [SerializeField] private float evadeCoolDown = 2.5f;
+    [SerializeField] private float evadeCoolDown = 2f;
     [HideInInspector] public bool evading = false;
     [HideInInspector] public bool canEvade = true;
     [HideInInspector] public bool playerCanBeDamaged = true;
