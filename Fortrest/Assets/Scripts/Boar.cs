@@ -222,7 +222,7 @@ public class Boar : MonoBehaviour
             PlayerController.global.transform.rotation = transform.rotation;
             PlayerController.global.GetComponent<CharacterController>().enabled = true;
             PlayerController.global.GetComponent<PlayerController>().playerCanMove = false;
-            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+            PlayerController.global.characterAnimator.SetBool("Moving", false);
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HandBool = true });
             GetComponent<NavMeshObstacle>().enabled = false;
         }
@@ -240,7 +240,7 @@ public class Boar : MonoBehaviour
             PlayerController.global.transform.rotation = transform.rotation;
             PlayerController.global.GetComponent<CharacterController>().enabled = true;
             PlayerController.global.GetComponent<PlayerController>().playerCanMove = true;
-            PlayerController.global.CharacterAnimator.SetBool("Sitting", false);
+            PlayerController.global.characterAnimator.SetBool("Sitting", false);
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = PlayerModeHandler.global.playerModes == PlayerModes.CombatMode, AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
             GetComponent<NavMeshObstacle>().enabled = true;
             StartCoroutine(MidAir());
@@ -260,9 +260,9 @@ public class Boar : MonoBehaviour
     {
         PlayerController.global.transform.position = new Vector3(transform.position.x, transform.position.y + 4.65f, transform.position.z);
         PlayerController.global.transform.rotation = transform.rotation;
-        PlayerController.global.CharacterAnimator.SetBool("Sitting", true);
+        PlayerController.global.characterAnimator.SetBool("Sitting", true);
         float temp = currentSpeed / 90f;
-        PlayerController.global.CharacterAnimator.SetFloat("MountSpeed", temp);
+        PlayerController.global.characterAnimator.SetFloat("MountSpeed", temp);
     }
 
     void Ride()

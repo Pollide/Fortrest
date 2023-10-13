@@ -1986,13 +1986,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bowScript: {fileID: 7705193033240959401}
   playerCC: {fileID: 5569601162832024542}
-  CharacterAnimator: {fileID: 5025359818075223476}
+  characterAnimator: {fileID: 5025359818075223476}
   house: {fileID: 0}
   houseSpawnPoint: {fileID: 0}
   moveDirection: {x: 0, y: 0, z: 0}
-  mousePos: {x: 0, y: 0, z: 0}
+  left: 0
+  right: 0
+  forwards: 0
+  backwards: 0
+  playerCurrentSpeed: 0
   running: 0
-  evadeCoolDown: 2.5
+  evadeCooldown: 2
   evading: 0
   canEvade: 1
   playerCanBeDamaged: 1
@@ -2000,6 +2004,7 @@ MonoBehaviour:
   bowDamage: 1.5
   initialShot: 0
   upgradedBow: 0
+  firing: 0
   playerEnergy: 0
   playerEnergyBarImage: {fileID: 9199062799191684324}
   playerDead: 0
@@ -2016,6 +2021,7 @@ MonoBehaviour:
   damageEnemy: 0
   lunge: 0
   upgradedMelee: 0
+  attackAnimEnded: 1
   playerCanMove: 1
   playerisMoving: 0
   attacking: 0
@@ -2068,6 +2074,7 @@ MonoBehaviour:
   movingCTRL: 0
   selectCTRL: 0
   aimingCTRL: 0
+  aiming: 0
   interactCTRL: 0
   needInteraction: 0
   lockingCTRL: 0
@@ -2078,6 +2085,7 @@ MonoBehaviour:
   scrollCTRL: 0
   cancelAnimation: 0
   cancelEffects: 0
+  cancelHit: 0
   staggered: 0
   LanternLighted: 0
   LanternSkinnedRenderer: {fileID: 7646157555271428312}
@@ -4518,7 +4526,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.03, y: 0.065, z: 0.03}
+  m_Size: {x: 0.06, y: 0.1, z: 0.06}
   m_Center: {x: 0.000000007450581, y: 0.035, z: 0.0000000015773121}
 --- !u!4 &7717780500171651024 stripped
 Transform:
@@ -4551,7 +4559,7 @@ PrefabInstance:
     - target: {fileID: 2426253517423628975, guid: 2faf81635e35b5d49af4f5689384a99d,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2454720061685637071, guid: 2faf81635e35b5d49af4f5689384a99d,
         type: 3}

@@ -10,56 +10,49 @@ public class PlayerController : MonoBehaviour
     public static PlayerController global;
 
     // Class Access   
-    public Bow bowScript;
-    public CharacterController playerCC;
-    public Animator CharacterAnimator;
+    public Bow bowScript; // Used to call the shoot function of the bow
+    public CharacterController playerCC; // Used to move the player
+    public Animator characterAnimator; // Used to manage player animations
 
     // House & Player Model
-    public GameObject house;
-    [HideInInspector] public GameObject houseSpawnPoint;
+    public GameObject house; // Used for teleport location and accessing children of the house
+    private GameObject houseSpawnPoint; // Spawn position for the player on start and when reviving
 
     // Movement   
-    [HideInInspector] public Vector3 moveDirection;
-    [HideInInspector] public Vector3 mousePos;
-    public bool left, right, forwards, backwards;
-
-    // Player Knocked Back
-    private Vector3 pushDirection;
-    private float horizontalMovement;
-    private float verticalMovement;
+    [HideInInspector] public Vector3 moveDirection; // Direction the player is moving towards
+    private bool left, right, forwards, backwards; // Used for movement animations based on direction
+    private float horizontalMovement; // Horizontal variable movement for both controller and Keyboard
+    private float verticalMovement; // Vertical variable movement for both controller and Keyboard  
 
     // Speed
-    public float playerCurrentSpeed = 0f;
-    private float playerWalkSpeed = 5.0f;
-    private float playerSprintSpeed = 8.0f;
-    private float playerBowSpeed = 3.0f;
-    public bool running = false;
-    private float runTimer = 0.0f;
-    private bool canRun = true;
+    private float playerCurrentSpeed = 0f; // Speed applied to the player
+    private float playerWalkSpeed = 5.0f; // Player walking speed
+    private float playerSprintSpeed = 8.0f; // Player running speed
+    private float playerBowSpeed = 3.0f; // Player speed while aiming the bow
+    [HideInInspector] public bool running = false; // Is the player running
+    private float runTimer = 0.0f; // Timer before player can run again after running out of stamina
+    private bool canRun = true; // Boolean to trigger above timer or not
 
     // Gathering
-    private bool gathering = false;
-    private float gatherTimer = 0.0f;
-    private float resetGather = 1f;
+    private bool gathering = false; // Gathering is true when the player starts gathering, and false once the cooldown is over
+    private float gatherTimer = 0.0f; // Timer to reset gathering
+    private float resetGather = 1f; // Gathering cooldown
 
     // Evade
-    private float evadeTimer = 0.0f;
-    [SerializeField] private float evadeCoolDown = 2f;
-    [HideInInspector] public bool evading = false;
-    [HideInInspector] public bool canEvade = true;
-    [HideInInspector] public bool playerCanBeDamaged = true;
+    private float evadeCooldown = 2f; // Evade cooldown
+    [HideInInspector] public bool evading = false; // Used to apply evade effects
+    [HideInInspector] public bool canEvade = true; // Allows the player to evade again when cooldown is done
+    [HideInInspector] public bool playerCanBeDamaged = true; // Player is invincible while evading
 
     // Shooting
-    [HideInInspector] public bool canShoot;
-    [HideInInspector] public float bowDamage = 1.25f;
-    private float bowTimer = 0.0f;
-    private float resetBow = 1f;
-    private bool shooting = false;
-    private bool directionSaved = false;
-    private Quaternion tempDirection;
-    public bool initialShot;
-    [HideInInspector] public bool upgradedBow;
-    public bool firing;
+    [HideInInspector] public bool canShoot; // Used to allow the player to shoot the bow. True when aiming
+    [HideInInspector] public float bowDamage = 1.25f; // Bow Damage
+    private float bowTimer = 0.0f; // Timer to reset shooting
+    private float resetBow = 1f; // Shooting cooldown
+    private bool shooting = false; // Shooting is true when the play starts shooting, and false once the cooldown is over
+    private bool initialShot; // Used to add cooldown to the first arrow shot, to match the anim
+    [HideInInspector] public bool upgradedBow; // Used to enable the upgraded bow perks
+    [HideInInspector] public bool firing; // Used to stop the player from moving while the firing animation is being played
 
     // Spawn Turret
     private bool turretSpawned;
@@ -99,12 +92,13 @@ public class PlayerController : MonoBehaviour
     private float attackTimer = 0.0f;
     private float resetAttack = 0.75f;
     private float comboTimer = 0.0f;
-    private float resetCombo = 0.95f;
+    private float resetCombo = 1.10f;
     private int attackCount = 0;
     public Building currentResource;
     [HideInInspector] public bool damageEnemy = false;
     [HideInInspector] public bool lunge = false;
     [HideInInspector] public bool upgradedMelee;
+    public bool attackAnimEnded = true;
 
     // States
     [Header("Player States")]
@@ -118,6 +112,7 @@ public class PlayerController : MonoBehaviour
     public bool rooted;
     public GameObject spiderWeb;
     private bool freezeRotation;
+    private Vector3 pushDirection;
 
     // Teleporter
     public bool canTeleport = false;
@@ -218,7 +213,7 @@ public class PlayerController : MonoBehaviour
     // Cancel
     [HideInInspector] public bool cancelAnimation;
     [HideInInspector] public bool cancelEffects;
-    private bool cancelHit;
+    [HideInInspector] public bool cancelHit;
     [HideInInspector] public bool staggered;
 
     // Lantern
@@ -523,14 +518,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.L))
         {
             playerHealth = 0f;
-            //healthBar.SetHealth(playerHealth, maxHealth);
         }
 
         if (debugfrocemap)
         {
             UpdateMap();
         }
-
 #endif
 
         if (mapBool)
@@ -546,7 +539,6 @@ public class PlayerController : MonoBehaviour
         if (evading)
         {
             playerCanBeDamaged = false;
-            evadeTimer += Time.deltaTime;
 
             playerCC.Move(transform.forward * 6.0f * Time.deltaTime);
             return;
@@ -662,7 +654,7 @@ public class PlayerController : MonoBehaviour
             {
                 Boar.global.Mount();
             }
-            CharacterAnimator.SetTrigger("Death");
+            characterAnimator.SetTrigger("Death");
         }
     }
 
@@ -680,7 +672,7 @@ public class PlayerController : MonoBehaviour
         playerCanMove = false;
         spiderWeb.SetActive(true);
         freezeRotation = true;
-        CharacterAnimator.SetBool("Moving", false);
+        characterAnimator.SetBool("Moving", false);
         cancelHit = true;
 
         yield return new WaitForSeconds(3.5f);
@@ -736,19 +728,15 @@ public class PlayerController : MonoBehaviour
             StopCoroutine("RevertCancel");
             StartCoroutine("RevertCancel");
         }
-        //if (Input.GetMouseButton(0) || attackingCTRL || gatheringCTRL)
-        //{
-        //    cancelEffects = false;
-        //}
 
         if (cancelAnimation)
         {
-            CharacterAnimator.SetBool("Swapping", cancelAnimation);
+            characterAnimator.SetBool("Swapping", cancelAnimation);
             cancelAnimation = false;
         }
         else
         {
-            CharacterAnimator.SetBool("Swapping", cancelAnimation);
+            characterAnimator.SetBool("Swapping", cancelAnimation);
         }
     }
 
@@ -756,7 +744,6 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         cancelEffects = false;
-        //cancelAnimation = false;
     }
 
     private void Resting()
@@ -780,8 +767,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!TickTimers(resetAttack, ref attackTimer))
             {
-                attacking = false;
-                damageEnemy = false;
+                attacking = false;               
             }
         }
 
@@ -972,7 +958,7 @@ public class PlayerController : MonoBehaviour
             playerCC.enabled = false;
             transform.position = pos;
             playerCC.enabled = true;
-            CharacterAnimator.SetBool("Moving", false);
+            characterAnimator.SetBool("Moving", false);
         }
         interactCTRL = false;
         canTeleport = false;
@@ -1020,7 +1006,7 @@ public class PlayerController : MonoBehaviour
         }
 
         Mathf.Clamp(speedAnim, 0f, 1f);
-        CharacterAnimator.SetFloat("Speed", speedAnim);
+        characterAnimator.SetFloat("Speed", speedAnim);
     }
 
     private void HandleSpeed()
@@ -1043,7 +1029,6 @@ public class PlayerController : MonoBehaviour
             if (running)
             {
                 playerCurrentSpeed = playerSprintSpeed;
-                directionSaved = false;
             }
             else
             {
@@ -1089,18 +1074,16 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Evade()
     {
         canShoot = false;
-        //CharacterAnimator.SetBool("Aiming", false);
         bowAnimator.SetBool("Aiming", false);
         lunge = false;
-        evadeTimer = 0;
         canEvade = false;
         evading = true;
-        CharacterAnimator.ResetTrigger("Evade");
-        CharacterAnimator.SetTrigger("Evade");
+        characterAnimator.ResetTrigger("Evade");
+        characterAnimator.SetTrigger("Evade");
         staggered = false;
         GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerEvadeSound);
 
-        yield return new WaitForSeconds(evadeCoolDown);
+        yield return new WaitForSeconds(evadeCooldown);
         canEvade = true;
     }
 
@@ -1385,7 +1368,7 @@ public class PlayerController : MonoBehaviour
     {
         playerisMoving = (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D)) || (movingCTRL);
 
-        CharacterAnimator.SetBool("Moving", playerisMoving);
+        characterAnimator.SetBool("Moving", playerisMoving);
 
         if (playerisMoving)
         {
@@ -1521,8 +1504,8 @@ public class PlayerController : MonoBehaviour
             }        
         }      
 
-        CharacterAnimator.SetFloat("Horizontal", horizontalAnim);
-        CharacterAnimator.SetFloat("Vertical", verticalAnim);
+        characterAnimator.SetFloat("Horizontal", horizontalAnim);
+        characterAnimator.SetFloat("Vertical", verticalAnim);
     }
 
     private void ResetValues(ref float directionFloat)
@@ -1574,7 +1557,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpgradeMelee()
     {
-        CharacterAnimator.SetBool("Upgraded", true);
+        characterAnimator.SetBool("Upgraded", true);
         resetAttack = 0.6f;
         resetCombo = 0.8f;
         upgradedMelee = true;
@@ -1591,13 +1574,8 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode) //  && !PlayerModeHandler.global.MouseOverUI()
+        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && attackAnimEnded && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
-            attackingCTRL = false;
-            attacking = true;
-            attackTimer = 0;
-            comboTimer = 0;
-
             LevelManager.ProcessEnemyList((enemy) =>
             {
                 enemy.canBeDamaged = true;
@@ -1611,6 +1589,12 @@ public class PlayerController : MonoBehaviour
                 boss.canBeDamaged = true;
             });
 
+            attackingCTRL = false;
+            attacking = true;
+            attackAnimEnded = false;
+            attackTimer = 0;
+            comboTimer = 0;
+
             if (upgradedMelee)
             {
                 attackDamage = 1.25f;
@@ -1623,12 +1607,12 @@ public class PlayerController : MonoBehaviour
             switch (attackCount)
             {
                 case 0:
-                    CharacterAnimator.ResetTrigger("Swing1");
-                    CharacterAnimator.SetTrigger("Swing1");
+                    characterAnimator.ResetTrigger("Swing1");
+                    characterAnimator.SetTrigger("Swing1");
                     break;
                 case 1:
-                    CharacterAnimator.ResetTrigger("Swing2");
-                    CharacterAnimator.SetTrigger("Swing2");
+                    characterAnimator.ResetTrigger("Swing2");
+                    characterAnimator.SetTrigger("Swing2");
                     break;
                 case 2:
                     if (upgradedMelee)
@@ -1639,12 +1623,10 @@ public class PlayerController : MonoBehaviour
                     {
                         attackDamage = 1.5f;
                     }
-
-                    CharacterAnimator.ResetTrigger("Swing3");
-                    CharacterAnimator.SetTrigger("Swing3");
+                    characterAnimator.ResetTrigger("Swing3");
+                    characterAnimator.SetTrigger("Swing3");
                     break;
                 default:
-                    Debug.Log("error");
                     break;
             }
         }
@@ -1681,18 +1663,18 @@ public class PlayerController : MonoBehaviour
 
                     if (currentResource.ReturnWood())
                     {
-                        CharacterAnimator.ResetTrigger("Wood");
-                        CharacterAnimator.SetTrigger("Wood");
+                        characterAnimator.ResetTrigger("Wood");
+                        characterAnimator.SetTrigger("Wood");
                     }
                     else if (currentResource.ReturnStone())
                     {
-                        CharacterAnimator.ResetTrigger("Stone");
-                        CharacterAnimator.SetTrigger("Stone");
+                        characterAnimator.ResetTrigger("Stone");
+                        characterAnimator.SetTrigger("Stone");
                     }
                     if (currentResource.resourceObject == Building.ResourceType.Bush)
                     {
-                        CharacterAnimator.ResetTrigger("Bush");
-                        CharacterAnimator.SetTrigger("Bush");
+                        characterAnimator.ResetTrigger("Bush");
+                        characterAnimator.SetTrigger("Bush");
                     }
                 }
             }
@@ -1717,29 +1699,15 @@ public class PlayerController : MonoBehaviour
                     initialShot = true;
                 }
                 aiming = true;
-                CharacterAnimator.SetBool("Aiming", true);
+                characterAnimator.SetBool("Aiming", true);
                 ChangeTool(new ToolData() { BowBool = true });
                 bowAnimator.SetBool("Aiming", true);
                 canShoot = true;
-                if (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL)
-                {
-                    if (!directionSaved)
-                    {
-                        tempDirection = transform.rotation;
-                        directionSaved = true;
-                    }
-                    transform.rotation = tempDirection;
-                    //CharacterAnimator.SetBool("Moving", false);
-                }
-                else
-                {
-                    directionSaved = false;
-                }
             }
             else if (BowGameObject.activeSelf)
             {
                 aiming = false;
-                CharacterAnimator.SetBool("Aiming", false);
+                characterAnimator.SetBool("Aiming", false);
                 bowAnimator.SetBool("Aiming", false);
                 if (!firing)
                 {
@@ -1754,8 +1722,8 @@ public class PlayerController : MonoBehaviour
 
             if ((Input.GetMouseButtonDown(0) || attackingCTRL) && canShoot && !shooting)
             {
-                CharacterAnimator.ResetTrigger("Shoot");
-                CharacterAnimator.SetTrigger("Shoot");
+                characterAnimator.ResetTrigger("Shoot");
+                characterAnimator.SetTrigger("Shoot");
                 bowAnimator.ResetTrigger("Shoot");
                 bowAnimator.SetTrigger("Shoot");
                 attackingCTRL = false;
@@ -1996,7 +1964,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!deathEffects)
         {
-            CharacterAnimator.gameObject.SetActive(false);
+            characterAnimator.gameObject.SetActive(false);
             GameManager.global.SoundManager.PlaySound(GameManager.global.SnoringSound, 0.2f, true, 0, true);
             LevelManager.global.VFXSleeping.Play();
             TeleportPlayer(house.transform.position, true);
@@ -2021,9 +1989,9 @@ public class PlayerController : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
                 {
                     playSoundOnce = false;
-                    CharacterAnimator.gameObject.SetActive(true);
-                    CharacterAnimator.ResetTrigger("Death");
-                    CharacterAnimator.SetTrigger("Respawn");
+                    characterAnimator.gameObject.SetActive(true);
+                    characterAnimator.ResetTrigger("Death");
+                    characterAnimator.SetTrigger("Respawn");
                     GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
                     LevelManager.global.VFXSleeping.Stop();
                     TeleportPlayer(houseSpawnPoint.transform.position, true);
@@ -2067,25 +2035,24 @@ public class PlayerController : MonoBehaviour
             cancelHit = true;
             StopCoroutine("Staggered");
             StartCoroutine("Staggered");
-            CharacterAnimator.ResetTrigger("Hit1");
-            CharacterAnimator.ResetTrigger("Hit2");
-            CharacterAnimator.ResetTrigger("Hit3");
+            characterAnimator.ResetTrigger("Hit1");
+            characterAnimator.ResetTrigger("Hit2");
+            characterAnimator.ResetTrigger("Hit3");
             int random = Random.Range(1, 4);
             if (random == 1)
             {
-                CharacterAnimator.SetTrigger("Hit1");
+                characterAnimator.SetTrigger("Hit1");
             }
             else if (random == 2)
             {
-                CharacterAnimator.SetTrigger("Hit2");
+                characterAnimator.SetTrigger("Hit2");
             }
             else
             {
-                CharacterAnimator.SetTrigger("Hit3");
+                characterAnimator.SetTrigger("Hit3");
             }
         }
         playerHealth -= damage;
-        //healthBar.SetHealth(playerHealth, maxHealth);
         displaySlash = true;
     }
 

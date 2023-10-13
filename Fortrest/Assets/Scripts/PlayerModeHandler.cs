@@ -147,7 +147,7 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     case PlayerModes.CombatMode:
                         PlayerController.global.canShoot = false;
-                        PlayerController.global.CharacterAnimator.SetBool("Aiming", false);
+                        PlayerController.global.characterAnimator.SetBool("Aiming", false);
                         PlayerController.global.lunge = false;
                         SwitchToResourceMode();
                         break;
@@ -635,7 +635,7 @@ public class PlayerModeHandler : MonoBehaviour
         buildGrid.gameObject.SetActive(active);
         PlayerController.global.OpenResourceHolder(active);
 
-        PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
+        PlayerController.global.characterAnimator.gameObject.SetActive(!active);
         if (active)
         {
             PlayerController.global.evading = false;
