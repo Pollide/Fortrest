@@ -63,16 +63,14 @@ public class CameraFollow : MonoBehaviour
             {
                 if (GameManager.global.KeyboardBool)
                 {
-                    distance = Vector3.Distance(targetPosition, PlayerController.global.mousePos);
+                    distance = Vector3.Distance(targetPosition, Camera.main.ScreenToWorldPoint(Input.mousePosition));
                     distance = Mathf.Clamp(distance, 0f, 12f);
                     distance /= 12f;
                 }
                 else
                 {
-                    distance = Mathf.Clamp(Mathf.Abs(PlayerController.global.rotateCTRL.y) + Mathf.Abs(PlayerController.global.rotateCTRL.x), 0, 1);
-                }
-                //            transform.position = Vector3.SmoothDamp(transform.position, targetPosition + (PlayerModeHandler.global.inTheFortress ? Vector3.zero : (PlayerController.global.transform.forward * distance * 1.25f)), ref currentVelocity, 0.2f);
-
+                    distance = Mathf.Clamp(Mathf.Abs(PlayerController.global.rotateCTRL.y) + Mathf.Abs(PlayerController.global.rotateCTRL.x), 0f, 1f);
+                }               
 
                 transform.position = Vector3.SmoothDamp(transform.position, targetPosition + PlayerController.global.transform.forward, ref currentVelocity, 0.2f);
             }

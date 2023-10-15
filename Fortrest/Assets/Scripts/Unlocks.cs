@@ -26,6 +26,12 @@ public class Unlocks : MonoBehaviour
         extraApplesUnlocked = false;
         upgradedMeleeUnlocked = false;
         upgradedBowUnlocked = false;
+
+#if UNITY_EDITOR
+        mountUnlocked = true;
+        bowUnlocked = true;
+        miniTurretUnlocked = true;
+#endif
     }
 
     void Update()
@@ -52,7 +58,7 @@ public class Unlocks : MonoBehaviour
                     case BossSpawner.TYPE.Werewolf:
                         upgradedMeleeUnlocked = true;
                         break;
-                    case BossSpawner.TYPE.Fire:
+                    case BossSpawner.TYPE.Squid:
                         upgradedBowUnlocked = true;
                         break;
                     default:
