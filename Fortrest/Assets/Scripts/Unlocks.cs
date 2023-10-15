@@ -49,7 +49,7 @@ public class Unlocks : MonoBehaviour
                         bowUnlocked = true;
                         break;
                     case BossSpawner.TYPE.SpiderQueen:
-                        PlayerController.global.MiniTurretUI.SetActive(true);
+
                         miniTurretUnlocked = true;
                         break;
                     case BossSpawner.TYPE.Bird:
@@ -66,5 +66,7 @@ public class Unlocks : MonoBehaviour
                 }
             }
         });
+
+        PlayerController.global.MiniTurretUI.SetActive(miniTurretUnlocked);
     }
 }
