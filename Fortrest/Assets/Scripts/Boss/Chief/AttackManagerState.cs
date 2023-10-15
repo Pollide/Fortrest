@@ -70,7 +70,7 @@ public class AttackManagerState : BossState
         {
             GetComponent<BossTelegraphSlam>().attack = true;
         }
-        
+
         randomCheckTimer = randomCheckDuration;
         isAttacking = false;
     }
@@ -157,8 +157,8 @@ public class AttackManagerState : BossState
             case BossSpawner.TYPE.Werewolf:
                 AttackWarewolf();
                 break;
-            case BossSpawner.TYPE.Fire:
-                AttackFire();
+            case BossSpawner.TYPE.Squid:
+                AttackSquid();
                 break;
             default:
                 break;
@@ -286,7 +286,7 @@ public class AttackManagerState : BossState
         }
     }
 
-    private void AttackFire()
+    private void AttackSquid()
     {
         if (!isAttacking)
         {
