@@ -147,7 +147,7 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     case PlayerModes.CombatMode:
                         PlayerController.global.canShoot = false;
-                        PlayerController.global.CharacterAnimator.SetBool("Aiming", false);
+                        PlayerController.global.characterAnimator.SetBool("Aiming", false);
                         PlayerController.global.lunge = false;
                         SwitchToResourceMode();
                         break;
@@ -180,6 +180,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (!inTheFortress)
             {
+                entryPosition = PlayerController.global.transform.position;
                 SwitchToBuildMode();
             }
             else
@@ -635,12 +636,12 @@ public class PlayerModeHandler : MonoBehaviour
         buildGrid.gameObject.SetActive(active);
         PlayerController.global.OpenResourceHolder(active);
 
-        PlayerController.global.CharacterAnimator.gameObject.SetActive(!active);
+        PlayerController.global.characterAnimator.gameObject.SetActive(!active);
         if (active)
         {
             PlayerController.global.evading = false;
             lastMode = playerModes;
-            // entryPosition = PlayerController.global.transform.position;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.EnterHouseSound);          
             if (House.GetComponent<Building>().textDisplayed)
             {
                 LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);
@@ -656,8 +657,6 @@ public class PlayerModeHandler : MonoBehaviour
             playerModes = PlayerModes.BuildMode;
             PlayerController.global.UpdateResourceHolder();
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
-
-            // Debug.Log("Build");
         }
         else
         {

@@ -4,9 +4,25 @@ using UnityEngine;
 
 public class PlayerSteps : MonoBehaviour
 {
+    private float timer = 0f;
+    private bool initialStep;
+
+    private void Update()
+    {
+        if (PlayerController.global && PlayerController.global.playerisMoving)
+        {
+            timer += Time.deltaTime;
+        }
+        else
+        {
+            timer = 0f;
+            initialStep = false;
+        }
+    }
+
     void Attack()
     {
-        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
+        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects && !PlayerController.global.characterAnimator.GetBool("Swapping"))
         {
             PlayerController.global.lunge = true;
             PlayerController.global.AttackEffects();        
@@ -21,11 +37,19 @@ public class PlayerSteps : MonoBehaviour
         }        
     }
 
-    void DamageEnemy()
+    void SwingStart()
     {
         if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
         {
             PlayerController.global.damageEnemy = true;
+        }
+    }
+
+    void SwingEnd()
+    {
+        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
+        {
+            PlayerController.global.damageEnemy = false;
         }
     }
 
@@ -41,34 +65,59 @@ public class PlayerSteps : MonoBehaviour
 
     void StepOne()
     {
-        if (!PlayerController.global.running)
+        if (!PlayerController.global.running && !PlayerController.global.aiming && (timer >= 0.3f || !initialStep))
         {
+            initialStep = true;
+            timer = 0f;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound, 0.05f);
-        }       
+        }
     }
 
     void StepTwo()
     {
-        if (!PlayerController.global.running)
+        if (!PlayerController.global.running && !PlayerController.global.aiming && timer >= 0.3f)
         {
+            timer = 0f;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStep2Sound, 0.05f);
         }       
     }
 
     void RunningStepOne()
     {
-        if (PlayerController.global.running)
+        if (PlayerController.global.running && !PlayerController.global.aiming && (timer >= 0.2f || !initialStep))
         {
+            initialStep = true;
+            timer = 0f;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound, 0.05f);
-        }        
+        }
     }
 
     void RunningStepTwo()
     {
-        if (PlayerController.global.running)
+        if (PlayerController.global.running && !PlayerController.global.aiming && timer >= 0.2f)
         {
+            timer = 0f;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStep2Sound, 0.05f);
         }        
+    }
+
+    void AimingStepOne()
+    {
+        if (!PlayerController.global.running && PlayerController.global.aiming && (timer >= 0.2f || !initialStep))
+        {
+            initialStep = true;
+            timer = 0f;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound, 0.05f);
+        }
+    }
+
+    void AimingStepTwo()
+    {
+        if (!PlayerController.global.running && PlayerController.global.aiming && timer >= 0.2f)
+        {
+            timer = 0f;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStepSound, 0.05f);
+        }
     }
 
     void Death()

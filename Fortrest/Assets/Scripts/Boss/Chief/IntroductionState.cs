@@ -29,7 +29,7 @@ public class IntroductionState : BossState
             LevelManager.global.HUD.SetActive(false);
 
             PlayerController.global.playerCanMove = false;
-            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+            PlayerController.global.characterAnimator.SetBool("Moving", false);
 
             CameraFollow.global.bossCam = true;
 
