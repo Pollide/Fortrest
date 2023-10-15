@@ -608,7 +608,7 @@ public class PlayerController : MonoBehaviour
             verticalMovement = 0;
             running = false;
         }
-       
+
         UpdateHealth();
         HandleEnergy();
         TimersFunction();
@@ -692,8 +692,12 @@ public class PlayerController : MonoBehaviour
     {
         if (newHealth != playerHealth)
         {
+
             healthBar.SetHealth(playerHealth, maxHealth);
             newHealth = playerHealth;
+
+            if (playerHealth < maxHealth)
+                GameManager.PlayAnimation(UIAnimation, "Health Flash");
         }
     }
 
@@ -765,7 +769,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!TickTimers(resetAttack, ref attackTimer))
             {
-                attacking = false;               
+                attacking = false;
             }
         }
 
@@ -1163,7 +1167,7 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                Vector3 dragDirection = (Input.mousePosition - mapMousePosition);
+                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
                 mapMousePosition = Input.mousePosition;
                 MapPanPosition += dragDirection * speed;
                 // MapPanPosition = Vector3.Slerp(MapPanPosition, MapPanPosition + dragDirection, speed);
@@ -1407,7 +1411,7 @@ public class PlayerController : MonoBehaviour
                     targetPosition = new Vector3(hitData.point.x, 0, hitData.point.z) - LevelManager.global.SceneCamera.transform.up * 4;
 
                 targetPosition.y = transform.position.y;
-                transform.LookAt(targetPosition);                                                           
+                transform.LookAt(targetPosition);
             }
             else
             {
@@ -1492,8 +1496,8 @@ public class PlayerController : MonoBehaviour
             if (left)
             {
                 TransitionAnim(ref horizontalAnim, false);
-            }        
-        }      
+            }
+        }
 
         characterAnimator.SetFloat("Horizontal", horizontalAnim);
         characterAnimator.SetFloat("Vertical", verticalAnim);
@@ -1504,11 +1508,11 @@ public class PlayerController : MonoBehaviour
         if (directionFloat != 0f)
         {
             directionFloat += (directionFloat < 0f ? 0.1f : -0.1f) * Time.deltaTime * transitionSpeedDirection;
-            
+
             if (Mathf.Abs(directionFloat) < 0.05f)
             {
                 directionFloat = 0f;
-            }            
+            }
         }
     }
 
@@ -1701,7 +1705,7 @@ public class PlayerController : MonoBehaviour
                 if (!firing)
                 {
                     ChangeTool(new ToolData() { SwordBool = true });
-                }               
+                }
                 canShoot = false;
             }
             else
