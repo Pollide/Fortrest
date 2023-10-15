@@ -344,7 +344,7 @@ public class LevelManager : MonoBehaviour
         // daySpeed = 7.0f; // FOR TESTING
 #endif
         //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
-        DirectionalLightTransform.eulerAngles = new Vector3(90, 0, 0);
+        DirectionalLightTransform.eulerAngles = new Vector3(45, 0, 0);
         //        DirectionalLightTransform.eulerAngles = new Vector3(daylightTimer, 0, 0);
         clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -daylightTimer + 90);
         daylightTimer += daySpeed * Time.deltaTime;

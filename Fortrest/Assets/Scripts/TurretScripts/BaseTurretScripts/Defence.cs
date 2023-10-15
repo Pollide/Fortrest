@@ -66,7 +66,11 @@ public class Defence : MonoBehaviour
     private void Start()
     {
         building = GetComponent<Building>();
-        ReturnAnimator();
+
+        if (!MiniTurret)
+            ReturnAnimator().SetTrigger("Deploy");
+        else
+            ReturnAnimator();
     }
 
     public Animator ReturnAnimator()
@@ -127,7 +131,6 @@ public class Defence : MonoBehaviour
 
                 if (building.buildingObject == Building.BuildingType.Slow)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound);
                     target.GetComponent<EnemyController>().ApplySlow(enemySpeedPercentage);
                 }
                 else
@@ -226,7 +229,7 @@ public class Defence : MonoBehaviour
 
 
         BoltScript boltScript = projectile.GetComponent<BoltScript>();
-
+        Debug.Log(projectile);
         if (boltScript)
         {
             boltScript.turretShootingScript = this;

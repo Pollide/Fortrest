@@ -53,6 +53,9 @@ public class BossSpawner : MonoBehaviour
     {
         LevelManager.global.bossList.Add(this);
 
+        if (health > 0)
+            Indicator.global.AddIndicator(transform, Color.red, bossType.ToString(), false);
+
         if (GetComponent<BossStateMachine>())
         {
             GetComponent<BossStateMachine>().bossSpawner = this;
@@ -74,6 +77,7 @@ public class BossSpawner : MonoBehaviour
         {
             if (health <= 0)
             {
+
                 GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
             }
             else
@@ -90,7 +94,7 @@ public class BossSpawner : MonoBehaviour
         bossEncountered = open;
     }
 
-public void BossMusicBegin(bool open)
+    public void BossMusicBegin(bool open)
     {
         LevelManager.global.activeBossSpawner = open ? this : null;
 

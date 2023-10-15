@@ -16,7 +16,8 @@ public class Chest : MonoBehaviour
     private void Start()
     {
         GameManager.PlayAnimation(openAnimation, "ChestClose", true, true);
-        LevelManager.global.chestList.Add(this);
+        if (LevelManager.global)
+            LevelManager.global.chestList.Add(this);
     }
 
     void Update()

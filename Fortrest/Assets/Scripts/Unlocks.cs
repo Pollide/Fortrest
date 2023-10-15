@@ -20,12 +20,18 @@ public class Unlocks : MonoBehaviour
 
     void Start()
     {
-        mountUnlocked = true;
-        bowUnlocked = true;
-        miniTurretUnlocked = true;
+        mountUnlocked = false;
+        bowUnlocked = false;
+        miniTurretUnlocked = false;
         extraApplesUnlocked = false;
         upgradedMeleeUnlocked = false;
         upgradedBowUnlocked = false;
+
+#if UNITY_EDITOR
+        mountUnlocked = true;
+        bowUnlocked = true;
+        miniTurretUnlocked = true;
+#endif
     }
 
     void Update()
@@ -43,6 +49,7 @@ public class Unlocks : MonoBehaviour
                         bowUnlocked = true;
                         break;
                     case BossSpawner.TYPE.SpiderQueen:
+                        PlayerController.global.MiniTurretUI.SetActive(true);
                         miniTurretUnlocked = true;
                         break;
                     case BossSpawner.TYPE.Bird:

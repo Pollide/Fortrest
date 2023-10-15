@@ -117,7 +117,7 @@ public class Building : MonoBehaviour
                 HUDHealthBar.SetHealth(health, maxHealth);
             }
         }
-        else if (NaturalBool)
+        else if (NaturalBool || buildingObject == BuildingType.HouseNode)
         {
             LevelManager.global.AddBuildingVoid(transform);
         }
