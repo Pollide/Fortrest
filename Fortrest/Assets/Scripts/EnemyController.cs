@@ -92,6 +92,7 @@ public class EnemyController : MonoBehaviour
     private float previousDistance;
     private float patrolCooldown;
     private float patrolThreshold;
+    bool slowed;
 
     private void Awake()
     {
@@ -494,11 +495,17 @@ public class EnemyController : MonoBehaviour
 
     public void ApplySlow(float _slowPercent)
     {
-        agent.speed *= _slowPercent;
+        if (!slowed)
+        {
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound);
+            slowed = true;
+            agent.speed *= _slowPercent;
+        }
     }
 
     public void RemoveSlow()
     {
+        slowed = false;
         agent.speed = speed;
     }
 
@@ -698,14 +705,7 @@ public class EnemyController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(temp, 0.9f);
             if (PlayerController.global.playerCanBeDamaged)
             {
-                if (currentEnemyType == ENEMYTYPE.goblin)
-                {
-                    PlayerController.global.TakeDamage(enemyDamage, false);
-                }
-                else
-                {
-                    PlayerController.global.TakeDamage(enemyDamage, true);
-                }
+                PlayerController.global.TakeDamage(enemyDamage, false);
             }
         }
         else if (bestTarget)

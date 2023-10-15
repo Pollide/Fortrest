@@ -16,14 +16,14 @@ public class BossSpawner : MonoBehaviour
         SpiderQueen,
         Bird,
         Werewolf,
-        Fire
+        Squid
     }
 
     [HideInInspector]
     public float health = 100;
     // Holds the bosses max health
     public float maxHealth = 100f;
-    [HideInInspector]
+    //[HideInInspector]
     public bool bossEncountered;
     [HideInInspector]
     public bool canBeDamaged = true;

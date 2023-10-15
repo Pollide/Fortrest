@@ -115,6 +115,8 @@ public class Building : MonoBehaviour
             if (HUDHealthBar != null)
             {
                 HUDHealthBar.SetHealth(health, maxHealth);
+
+
             }
         }
         else if (NaturalBool || buildingObject == BuildingType.HouseNode)
@@ -165,6 +167,9 @@ public class Building : MonoBehaviour
             if (HUDHealthBar && buildingObject == BuildingType.House)
             {
                 HUDHealthBar.SetHealth(health, maxHealth);
+
+                if (health < maxHealth && amount != 0)
+                    GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash");
             }
             if (healthBarImage)
             {

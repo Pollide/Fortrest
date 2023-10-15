@@ -23,7 +23,7 @@ public class IntroCamSpider : MonoBehaviour
     {
         if (!introCompleted && GetComponent<SpiderBoss>().startIntro)
         {
-            PlayerController.global.CharacterAnimator.SetBool("Moving", false);
+            PlayerController.global.characterAnimator.SetBool("Moving", false);
             introTimer += Time.deltaTime;
             CameraFollow.global.bossCam = true;
             // Calculate the interpolation factor

@@ -81,8 +81,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 1
-  DestroyedBool: 0
-  resourceObject: 3
+  resourceObject: 1
+  buildingObject: 0
   health: 0
   maxHealth: 8
   resourceAmount: 10
@@ -96,6 +96,8 @@ MonoBehaviour:
   interactText: {fileID: 0}
   textDisplayed: 0
   DebugDestroyInstantly: 0
+  gridLocation: {x: 0, y: 0}
+  destroyedTimer: 0
 --- !u!111 &-6799876280890107172
 Animation:
   m_ObjectHideFlags: 0

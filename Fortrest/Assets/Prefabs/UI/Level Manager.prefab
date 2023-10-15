@@ -245,6 +245,7 @@ GameObject:
   - component: {fileID: 927623175018942828}
   - component: {fileID: 927623175018942829}
   - component: {fileID: 7386932472633630464}
+  - component: {fileID: 1010599321}
   m_Layer: 0
   m_Name: Level Manager
   m_TagString: LevelManager
@@ -390,6 +391,7 @@ MonoBehaviour:
     type: 3}
   HUD: {fileID: 0}
   newDay: 0
+  NightTimeMusic: 0
   textGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0, b: 0, a: 0}
@@ -419,7 +421,13 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  terrainList: []
+  terrainList:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   clockHand: {fileID: 0}
   clockSun: {fileID: 0}
   clockMoon: {fileID: 0}
@@ -430,8 +438,10 @@ MonoBehaviour:
   spawnEnemies: 0
   randomAttackTrigger: 0
   dayPaused: 0
+  houseTransform: {fileID: 0}
   messageDisplayed: 0
   ActiveBiomeMusic: {fileID: 0}
+  activeBossSpawner: {fileID: 0}
 --- !u!114 &7386932472633630464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,6 +459,24 @@ MonoBehaviour:
   mesh: {fileID: 5960873131632778912, guid: 6f112fb65cf7af84fa7dabf857eb2607, type: 3}
   campUI: {fileID: 0}
   campText: {fileID: 0}
+--- !u!114 &1010599321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 927623175018942830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8dd6e49d176f9444db75be82138e3b8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mountUnlocked: 0
+  bowUnlocked: 0
+  miniTurretUnlocked: 0
+  extraApplesUnlocked: 0
+  upgradedMeleeUnlocked: 0
+  upgradedBowUnlocked: 0
 --- !u!1 &975559097986637665
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +547,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 425983
+    m_Bits: 4620255
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -677,7 +705,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354247512816183170}
-  m_LocalRotation: {x: 0.16964014, y: -0.25479627, z: 0.045454934, w: 0.9509127}
+  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -685,7 +713,7 @@ Transform:
   - {fileID: 1658321192}
   m_Father: {fileID: 6694460402543658492}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 20.23, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!108 &7185075909050736379
 Light:
   m_ObjectHideFlags: 0
@@ -1670,7 +1698,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5903244205017672140}
   m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -57.41, y: 3.601, z: -162.83}
+  m_LocalPosition: {x: -57.41, y: 3.308, z: -166.085}
   m_LocalScale: {x: 5, y: 2.5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []

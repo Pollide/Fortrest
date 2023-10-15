@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 7706243652678526390}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalScale: {x: 0.55, y: 0.55, z: 0.55}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4111915459659159143}
@@ -81,8 +81,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 1
-  DestroyedBool: 0
-  resourceObject: 7
+  resourceObject: 3
   buildingObject: 0
   health: 0
   maxHealth: 5
@@ -98,6 +97,7 @@ MonoBehaviour:
   textDisplayed: 0
   DebugDestroyInstantly: 0
   gridLocation: {x: 0, y: 0}
+  destroyedTimer: 0
 --- !u!111 &-6799876280890107172
 Animation:
   m_ObjectHideFlags: 0
