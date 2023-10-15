@@ -58,7 +58,7 @@ public class Unlocks : MonoBehaviour
                     case BossSpawner.TYPE.Werewolf:
                         upgradedMeleeUnlocked = true;
                         break;
-                    case BossSpawner.TYPE.Fire:
+                    case BossSpawner.TYPE.Squid:
                         upgradedBowUnlocked = true;
                         break;
                     default:
