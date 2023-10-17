@@ -52,11 +52,6 @@ public class SpiderBoss : MonoBehaviour
 
     void Start()
     {
-        if (!bossSpawner)
-        {
-            Debug.Log("Yo pol cant dump spider onto ground by itself now, needs to come from the spawner as spawner holds the health for all bosses");
-        }
-
         VFXWeb.Stop();
         playerTransform = PlayerController.global.transform;
         animator = GetComponent<Animator>();
