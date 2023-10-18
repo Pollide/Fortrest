@@ -1384,6 +1384,8 @@ public class PlayerController : MonoBehaviour
             moveDirection *= playerCurrentSpeed;
 
             moveDirection = Quaternion.AngleAxis(45, Vector3.up) * moveDirection;
+
+            ApplyGravity();
         }
         else
         {
