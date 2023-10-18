@@ -395,7 +395,6 @@ public class SpiderBoss : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
                 bossSpawner.canBeDamaged = false;
                 StopAllCoroutines();
-                //PickSound(hitSound, hitSound2, 1.0f);
                 ScreenShake.global.shake = true;
                 Damaged(PlayerController.global.attackDamage);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());

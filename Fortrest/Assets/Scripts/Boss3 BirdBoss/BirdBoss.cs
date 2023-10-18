@@ -24,6 +24,15 @@ public class BirdBoss : MonoBehaviour
     public float stoppingDistance;
     public bool outOfScreen;
     public float offset;
+    public float attackRange = 10.0f;
+    [HideInInspector] public bool playerReached = true;
+    [HideInInspector] public bool targetReached = false;
+    public int hitReceived;
+    public bool vulnerable;
+    public bool crashed;
+
+    [HideInInspector]
+    public BossSpawner bossSpawner;
 
     private void Awake()
     {
@@ -65,6 +74,12 @@ public class BirdBoss : MonoBehaviour
         if (awoken)
         {
             animator.SetTrigger("TakeOff");
+        }
+
+        if (hitReceived >= 3)
+        {
+            animator.ResetTrigger("Crash");
+            animator.SetTrigger("Crash");
         }
     }
 
@@ -113,6 +128,49 @@ public class BirdBoss : MonoBehaviour
         else
         {
             return false;
+        }
+    }
+
+    private void Damaged(float amount)
+    {
+        bossSpawner.UpdateHealth(-amount);
+
+        if (bossSpawner.health <= 0)
+        {
+            StopAllCoroutines();
+            MoveToTarget(transform.position, transform.position);
+            dead = true;
+            Time.timeScale = 1;
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == PlayerController.global.SwordGameObject)
+        {
+            if (PlayerController.global.attacking && bossSpawner.canBeDamaged && PlayerController.global.damageEnemy && crashed)
+            {
+                //GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
+                bossSpawner.canBeDamaged = false;
+                StopAllCoroutines();
+                ScreenShake.global.shake = true;
+                Damaged(PlayerController.global.attackDamage);
+                PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
+            }
+        }
+        if (other.gameObject.tag == "Arrow" && other.GetComponent<ArrowTrigger>() && vulnerable)
+        {
+            if (!other.GetComponent<ArrowTrigger>().singleHit)
+            {
+                GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
+                other.GetComponent<ArrowTrigger>().singleHit = true;
+                Damaged(PlayerController.global.bowDamage);
+                hitReceived++;
+                if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
+                {
+                    Destroy(other.gameObject.transform.parent.gameObject);
+                }
+            }
         }
     }
 }
