@@ -6,8 +6,8 @@ public class BirdBossFly : StateMachineBehaviour
 {
     private BirdBoss birdScript;
     private float timer;
-    private float attackCD = 2.5f;
-    private float attackDelay = 1.0f;  
+    private float attackCD = 2.0f;
+    private float attackDelay = 0.25f;  
     private bool targetSet;
     private Vector3 destination;
     float x, z;
@@ -22,48 +22,47 @@ public class BirdBossFly : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (!birdScript.playerReached && birdScript.targetReached) //  && birdScript.distanceToPlayerNoY > birdScript.stoppingDistance
+        if (birdScript.altitudeReached)
         {
-            birdScript.MoveToTarget(birdScript.playerTransform.position, birdScript.directionToPlayerNoY);
-            if (!birdScript.outOfScreen)
+            if (!birdScript.playerReached && birdScript.targetReached) //  && birdScript.distanceToPlayerNoY > birdScript.stoppingDistance
             {
-                timer += Time.deltaTime;
-                if (timer > attackDelay)
+                birdScript.MoveToTarget(birdScript.playerTransform.position, birdScript.directionToPlayerNoY);
+                if (!birdScript.outOfScreen)
                 {
-                    animator.SetTrigger("Attack");
-                    timer = 0f;
-                }                                           
-            }
-        }
-
-        if (!birdScript.targetReached && birdScript.playerReached)
-        {
-            if (!targetSet)
+                    animator.SetTrigger("Attack");                   
+                }
+            }    
+            if (!birdScript.targetReached && birdScript.playerReached)
             {
-                x = Random.Range(0, 2) == 0 ? Random.Range(40f, 150f) : Random.Range(-40f, -150f);
-                z = Random.Range(0, 2) == 0 ? Random.Range(40f, 150f) : Random.Range(-40f, -150f);
-                targetSet = true;
-            }
-            destination = birdScript.transform.position + new Vector3(x, 0f, z);
-            Vector3 directionToTarget = (new Vector3(destination.x, 0f, destination.z) - new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)).normalized;
-            birdScript.MoveToTarget(destination, directionToTarget);
-            if (birdScript.outOfScreen)
-            {
-                timer += Time.deltaTime;
-                if (timer > attackCD)
+                if (!targetSet)
                 {
-                    birdScript.targetReached = true;
-                    birdScript.playerReached = false;
-                    targetSet = false;
-                    timer = 0f;
+                    x = Random.Range(0, 2) == 0 ? Random.Range(40f, 150f) : Random.Range(-40f, -150f);
+                    z = Random.Range(0, 2) == 0 ? Random.Range(40f, 150f) : Random.Range(-40f, -150f);
+                    targetSet = true;
+                }
+                destination = birdScript.transform.position + new Vector3(x, 0f, z);
+                Vector3 directionToTarget = (new Vector3(destination.x, 0f, destination.z) - new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)).normalized;
+                birdScript.MoveToTarget(destination, directionToTarget);
+                if (birdScript.outOfScreen)
+                {
+                    timer += Time.deltaTime;
+                    if (timer > attackCD)
+                    {
+                        birdScript.targetReached = true;
+                        birdScript.playerReached = false;
+                        targetSet = false;
+                        timer = 0f;
+                    }
                 }
             }
-        }            
+        }                
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.ResetTrigger("Attack");
+        birdScript.playerReached = true;
+        birdScript.targetReached = false;
     }
 }
