@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BossTelegraphSlam : MonoBehaviour
+public class TelegraphCircle : MonoBehaviour
 {
     [SerializeField] private PhaseThreeAttack slamState;
-    [SerializeField] private AttackManagerState attackManagerState;
+    [SerializeField] private PhaseOneChief phaseOneState;
     public GameObject outer;
     public GameObject inner;
-    public bool attack = false;
+    public bool isAttack = false;
 
     // Start is called before the first frame update
     void Start()
@@ -23,7 +23,7 @@ public class BossTelegraphSlam : MonoBehaviour
     {
         outer.transform.position = transform.position;
 
-        if (!attack)
+        if (!isAttack)
         {
             Vector3 newScale = new(slamState.SlamRadius * 2, slamState.SlamRadius * 2, 1);
             inner.transform.localScale = Vector3.Lerp(Vector3.zero, newScale, slamState.SlamWaitTime / slamState.SlamDuration);
@@ -31,14 +31,13 @@ public class BossTelegraphSlam : MonoBehaviour
         }
         else
         {
-            Vector3 newScale = new Vector3(attackManagerState.attackRadius * 2, attackManagerState.attackRadius * 2, 1);
-            inner.transform.localScale = Vector3.Lerp(Vector3.zero, newScale, attackManagerState.attackTime / attackManagerState.attackDuration);
+            Vector3 newScale = new(phaseOneState.attackRadius * 2, phaseOneState.attackRadius * 2, 1);
+            inner.transform.localScale = Vector3.Lerp(Vector3.zero, newScale, phaseOneState.attackTime / phaseOneState.attackDuration);
             outer.transform.localScale = newScale / 3.8f;
         }
     }
 
-
-    public IEnumerator DoSlamDamage(float waitTime, float damage, float radius)
+    public IEnumerator DoAreaDamage(float waitTime, float damage, float radius)
     {
         yield return new WaitForSeconds(waitTime);
         
@@ -49,14 +48,9 @@ public class BossTelegraphSlam : MonoBehaviour
             if (collider.GetComponent<PlayerController>())
             {
                 PlayerController player = collider.GetComponent<PlayerController>();
-                if (!attack)
-                {
-                    player.TakeDamage(slamState.Damage, true);
-                }
-                else
-                {
-                    player.TakeDamage(attackManagerState.Damage, true);
-                }
+                
+                player.TakeDamage(damage, true);
+
                 Vector3 pushDirection = player.transform.position - inner.transform.position;
                 float angle = Vector3.Angle(pushDirection, player.transform.position - inner.transform.position);
                 pushDirection = Quaternion.Euler(0f, angle, 0f) * pushDirection;
@@ -67,7 +61,7 @@ public class BossTelegraphSlam : MonoBehaviour
 
 
 
-        if (!attack)
+        if (!isAttack)
         {
             ScreenShake.global.duration = 0.3f;
             ScreenShake.global.shake = true;
@@ -77,7 +71,7 @@ public class BossTelegraphSlam : MonoBehaviour
         {
             yield return new WaitForSeconds(0.2f);
 
-            attackManagerState.IsAttacking = false;
+            phaseOneState.IsAttacking = false;
         }
        
         outer.SetActive(false);

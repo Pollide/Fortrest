@@ -6,8 +6,6 @@ using UnityEngine.UI;
 
 public class BossStateMachine : MonoBehaviour
 {
-
-
     // Enum for boss phases
     public enum BossPhase
     {
@@ -15,6 +13,7 @@ public class BossStateMachine : MonoBehaviour
         Two,
         Three
     }
+
     // Holds the bosses current phase
     [SerializeField] private BossPhase currentPhase;
 
@@ -22,7 +21,6 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private BossState currentState;
     // Holds the initial state the boss starts with
     [SerializeField] private BossState initialState;
-
 
     // Arena radius
     [SerializeField] private float arenaRadius;
@@ -36,10 +34,11 @@ public class BossStateMachine : MonoBehaviour
 
     // Bool to see if in death state
     [SerializeField] private bool isDead = false;
-    [SerializeField] public Animator bossAnimator;
+    [SerializeField] private Animator bossAnimator;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -79,7 +78,6 @@ public class BossStateMachine : MonoBehaviour
             agent.speed = speed;
         }
     }
-
 
     public void ChangeState(BossState newState)
     {
