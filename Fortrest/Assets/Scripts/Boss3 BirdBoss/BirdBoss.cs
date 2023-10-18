@@ -30,6 +30,8 @@ public class BirdBoss : MonoBehaviour
     public int hitReceived;
     public bool vulnerable;
     public bool crashed;
+    public bool flying;
+    public bool altitudeReached;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
@@ -66,13 +68,9 @@ public class BirdBoss : MonoBehaviour
         distanceToPlayerNoY = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
         outOfScreen = IsOutOfScreen();
 
-        if (distanceToPlayer < 20.0f)
+        if (distanceToPlayer < 20.0f && !awoken)
         {
             awoken = true;
-        }
-
-        if (awoken)
-        {
             animator.SetTrigger("TakeOff");
         }
 
@@ -80,6 +78,15 @@ public class BirdBoss : MonoBehaviour
         {
             animator.ResetTrigger("Crash");
             animator.SetTrigger("Crash");
+        }      
+        
+        if (flying && !altitudeReached)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(startPosition.x, 5f, startPosition.z), Time.deltaTime * (speed / 2.0f));
+            if (transform.position.y >= 5.0f)
+            {
+                altitudeReached = true;
+            }
         }
     }
 
@@ -97,17 +104,17 @@ public class BirdBoss : MonoBehaviour
 
     public void MoveTowards(Vector3 targetPosition)
     {
+        if (flying)
+        {
+            targetPosition = new Vector3(targetPosition.x, 5f, targetPosition.z);
+        }
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
-    }
-
-    public void Attack()
-    {
-        animator.SetTrigger("Attack");
     }
 
     private void StartFlying()
     {
         animator.SetBool("Flying", true);
+        flying = true;
     }
 
     private bool IsOutOfScreen()
@@ -172,5 +179,10 @@ public class BirdBoss : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void SlidingAnimEvent()
+    {
+        flying = false;
     }
 }
