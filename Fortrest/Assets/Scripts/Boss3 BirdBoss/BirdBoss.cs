@@ -19,7 +19,7 @@ public class BirdBoss : MonoBehaviour
     public float distanceToPlayer;
     public Vector3 directionToPlayerNoY;
     public float distanceToPlayerNoY;
-    private float speed = 10.0f;
+    private float speed = 15f;
     private float rotationSpeed = 10.0f;
     public float stoppingDistance;
     public bool outOfScreen;
@@ -32,6 +32,10 @@ public class BirdBoss : MonoBehaviour
     public bool crashed;
     public bool flying;
     public bool altitudeReached;
+    public bool normalAttack = true;
+    public bool normalAttackIndicator;
+    public bool rockAttackIndicator;
+    public GameObject telegraphedRectangle;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
@@ -183,6 +187,6 @@ public class BirdBoss : MonoBehaviour
 
     private void SlidingAnimEvent()
     {
-        flying = false;
+        flying = false;        
     }
 }
