@@ -7,7 +7,6 @@ public class BirdBossFly : StateMachineBehaviour
     private BirdBoss birdScript;
     private float timer;
     private float attackCD = 2.0f;
-    private float attackDelay = 0.25f;  
     private bool targetSet;
     private Vector3 destination;
     float x, z;
@@ -28,8 +27,16 @@ public class BirdBossFly : StateMachineBehaviour
             {
                 birdScript.MoveToTarget(birdScript.playerTransform.position, birdScript.directionToPlayerNoY);
                 if (!birdScript.outOfScreen)
-                {
-                    animator.SetTrigger("Attack");                   
+                {                   
+                    if (birdScript.normalAttack)
+                    {
+                        animator.SetTrigger("Attack1");
+                    }
+                    else
+                    {
+                        animator.SetBool("Attack2", true);
+                        birdScript.normalAttack = true;
+                    }
                 }
             }    
             if (!birdScript.targetReached && birdScript.playerReached)
@@ -61,7 +68,7 @@ public class BirdBossFly : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.ResetTrigger("Attack");
+        animator.ResetTrigger("Attack1");
         birdScript.playerReached = true;
         birdScript.targetReached = false;
     }

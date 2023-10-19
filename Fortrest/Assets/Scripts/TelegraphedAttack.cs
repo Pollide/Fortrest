@@ -14,6 +14,8 @@ public class TelegraphedAttack : MonoBehaviour
     public bool isJumpIndicator;
     public bool isWebIndicator;
     public bool isSnakeIndicator;
+    public bool isBirdIndicatorRectangle;
+    public bool isBirdIndicatorCircle;
 
     void Start()
     {
@@ -29,9 +31,13 @@ public class TelegraphedAttack : MonoBehaviour
             Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f, 2.2f);
         if (isSnakeIndicator)
             Indicator(ref snakeSweep.coneIndicator, 1.5f, 2.2f);
+        if (isBirdIndicatorRectangle)
+            Indicator(ref BirdBoss.global.normalAttackIndicator, 2f, 2f, true);
+        if (isBirdIndicatorCircle)
+            Indicator(ref BirdBoss.global.rockAttackIndicator, 1.5f, 2.2f);
     }
 
-    void Indicator(ref bool indicator, float multiplier, float duration)
+    void Indicator(ref bool indicator, float multiplier, float duration, bool unique = false)
     {
         if (indicator)
             timer += Time.deltaTime;
@@ -40,7 +46,15 @@ public class TelegraphedAttack : MonoBehaviour
 
         bool active = timer > 0 && size < multiplier;
 
-        innerShape.localScale = new Vector3(size, size, 0);
+        if (unique)
+        {
+            innerShape.localScale = new Vector3(1, size, 0);
+        }
+        else
+        {
+            innerShape.localScale = new Vector3(size, size, 0);
+        }
+        
         spriteRenderer.enabled = active;
 
         if (!active)
