@@ -111,12 +111,7 @@ public class SpiderBoss : MonoBehaviour
             else
             {
                 bossSpawner.UpdateHealth(bossSpawner.maxHealth);
-                bossSpawner.BossEncountered(false);
             }
-        }
-        else if (awoken)
-        {
-            bossSpawner.BossEncountered(true);
         }
 
         // Triggering different stages

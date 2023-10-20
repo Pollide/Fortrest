@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36a0a17476046894796388402f1cd957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 30
+  ArenaSize: 80
   hasRun: 0
   bossType: 5
   BossCanvas: {fileID: 2060798956594959119}
@@ -73,6 +73,7 @@ MonoBehaviour:
   maxHealth: 150
   bossEncountered: 0
   canBeDamaged: 1
+  StartPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &9193962727061746161
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,6 +86,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3136f417f2175f94a956de52a0e2c811, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 902255068813967466}
 --- !u!1 &3856323682597141708
 GameObject:
   m_ObjectHideFlags: 0

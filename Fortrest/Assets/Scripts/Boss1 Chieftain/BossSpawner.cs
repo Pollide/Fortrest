@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
-    [SerializeField] private float ArenaSize = 80f;
+    [SerializeField] private float arenaSize = 50f;
     [SerializeField] public bool hasRun = false;
     // Holds the current boss type
     [SerializeField] public TYPE bossType;
@@ -130,13 +130,13 @@ public class BossSpawner : MonoBehaviour
 
     public bool CheckPlayerDistance()
     {
-        return Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (hasRun ? ArenaSize : 20);
+        return Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (hasRun ? arenaSize : 20);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
 
-        Gizmos.DrawWireSphere(transform.position, ArenaSize);
+        Gizmos.DrawWireSphere(transform.position, arenaSize);
     }
 }
