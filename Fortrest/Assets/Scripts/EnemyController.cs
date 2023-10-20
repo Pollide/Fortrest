@@ -44,6 +44,11 @@ public class EnemyController : MonoBehaviour
     public bool canBeDamagedByBoar = true;
     private bool knockbackIncreased;
     private bool waveEnemy;
+    // Used for lycan boss
+    public bool isMob = false;
+    public PhaseOneLycan bossScriptOne;
+    public PhaseTwoLycan bossScriptTwo;
+
 
     // Others
     public Animator ActiveAnimator;
@@ -767,7 +772,7 @@ public class EnemyController : MonoBehaviour
         agent.speed = speed;
     }
 
-    private void Death()
+    public void Death()
     {
         agent.enabled = false;
         if (currentEnemyType != ENEMYTYPE.wolf)
@@ -778,6 +783,18 @@ public class EnemyController : MonoBehaviour
         else
         {
             gameObject.SetActive(false); //wolves spawn in the scene on start so they need to stay in memory
+        }
+
+        if (isMob)
+        {
+            if (bossScriptOne)
+            {
+                bossScriptOne.EnemyList.Remove(gameObject);
+            }
+            else if (bossScriptTwo)
+            {
+                bossScriptTwo.EnemyList.Remove(gameObject);
+            }
         }
     }
 

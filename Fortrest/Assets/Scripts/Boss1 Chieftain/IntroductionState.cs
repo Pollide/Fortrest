@@ -14,18 +14,14 @@ public class IntroductionState : BossState
     private bool introCompleted = false;
     private bool introStarted = false;
     [SerializeField] private IdleState idleState;
+    [SerializeField] private BossState nextState;
 
     public override void EnterState()
     {
         if (stateMachine.bossSpawner)
         {
-            // Checks if the attack state is null
-            if (idleState == null)
-            {
-                // Gets the connected attack state
-                idleState = GetComponent<IdleState>();
-            }
-
+            stateMachine.BossAnimator.Rebind();
+            stateMachine.BossAnimator.Update(0f);
             LevelManager.global.HUD.SetActive(false);
 
             PlayerController.global.playerCanMove = false;
@@ -50,6 +46,9 @@ public class IntroductionState : BossState
             PlayerController.global.playerCanMove = true;
             LevelManager.global.HUD.SetActive(true);
         }
+
+        introTimer = 0f;
+        introCompleted = false;
     }
 
     public override void UpdateState()
@@ -67,8 +66,6 @@ public class IntroductionState : BossState
             Vector3 cameraPosition = Vector3.Lerp(LevelManager.global.SceneCamera.transform.position, targetPosition - LevelManager.global.SceneCamera.transform.forward, introProgress);
             LevelManager.global.SceneCamera.transform.position = cameraPosition;
 
-
-
             if (introProgress >= 1.0f)
             {
                 introCompleted = true;
@@ -77,7 +74,19 @@ public class IntroductionState : BossState
 
         if (introCompleted)
         {
-            stateMachine.ChangeState(idleState);
+            if (idleState.IdleRuns < 1 && stateMachine.BossType == BossSpawner.TYPE.Werewolf)
+            {
+                stateMachine.ChangeState(idleState);
+            }
+            else if (idleState.IdleRuns >= 1 && stateMachine.BossType == BossSpawner.TYPE.Werewolf)
+            {
+                stateMachine.ChangeState(nextState);
+            }
+            else if (stateMachine.BossType != BossSpawner.TYPE.Werewolf)
+            {
+                stateMachine.ChangeState(idleState);
+            }
+            
         }
     }
 
@@ -85,7 +94,6 @@ public class IntroductionState : BossState
     public IEnumerator Intro()
     {
         yield return new WaitForSeconds(0.005f);
-
         stateMachine.BossAnimator.speed = 0;
         transform.position = initialSpawn;
         yield return new WaitForSeconds(waitBeforeStart);

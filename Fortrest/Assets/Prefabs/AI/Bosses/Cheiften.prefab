@@ -85,7 +85,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &8860127450049526509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ MonoBehaviour:
   currentPhase: 0
   currentState: {fileID: 0}
   initialState: {fileID: 3651742728835903311}
-  arenaRadius: 50
+  arenaRadius: 33.19
   speed: 5
   inDefence: 0
   phase2Ran: 0
@@ -126,6 +126,7 @@ MonoBehaviour:
   cameraDistance: 5
   introPositionOffset: {x: -4, y: 7, z: -2}
   idleState: {fileID: -4260576750701210383}
+  nextState: {fileID: -4260576750701210383}
 --- !u!114 &-4260576750701210383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -138,6 +139,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ea7e7c1cb8129a43b7883af50163a20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextStateOne: {fileID: 9094052015298210235}
+  nextStateIntro: {fileID: 0}
+  lastState: {fileID: 0}
+  idleRuns: 0
   resetTimerDuration: 3
   stoppingDistance: 0.2
 --- !u!114 &9094052015298210235
@@ -236,14 +241,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1612966261804245062}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a74425afa2f627c4983e38b8d329d521, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ce2758684d32ac4f8d8b4a836722d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slamState: {fileID: 8740668045474777165}
-  attackManagerState: {fileID: 9094052015298210235}
+  phaseOneState: {fileID: 9094052015298210235}
   outer: {fileID: 5567472970536930146}
   inner: {fileID: 7556151477208924013}
-  attack: 0
+  isAttack: 0
 --- !u!114 &5411412253301375710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +267,7 @@ MonoBehaviour:
   BossCanvas: {fileID: 2060798956594959119}
   health: 100
   maxHealth: 50
+  bossEncountered: 0
   canBeDamaged: 1
 --- !u!1 &3856323682597141708
 GameObject:

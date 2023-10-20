@@ -2,10 +2,11 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
+    [SerializeField] private float distance = 20f;
+    public bool hasRun = false;
     [SerializeField] private float Arenasize = 40f;
-    [SerializeField] public bool hasRun = false;
     // Holds the current boss type
-    [SerializeField] public TYPE bossType;
+    public TYPE bossType;
     public GameObject BossCanvas;
 
     // Enum for boss type
@@ -62,7 +63,7 @@ public class BossSpawner : MonoBehaviour
         {
             GetComponent<BossStateMachine>().bossSpawner = this;
             GetComponent<BossStateMachine>().enabled = false;
-            GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(false);
+            GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(false);
         }
 
         if (GetComponent<SpiderBoss>())
@@ -79,7 +80,6 @@ public class BossSpawner : MonoBehaviour
         {
             if (health <= 0)
             {
-
                 GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
             }
             else
@@ -110,10 +110,11 @@ public class BossSpawner : MonoBehaviour
         {
             if (!hasRun)
             {
+
                 if (GetComponent<BossStateMachine>())
                 {
                     GetComponent<BossStateMachine>().enabled = true;
-                    GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(true);
+                    GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(true);
                 }
 
                 if (GetComponent<SpiderBoss>())
