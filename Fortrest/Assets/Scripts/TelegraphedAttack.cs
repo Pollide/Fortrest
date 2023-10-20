@@ -32,7 +32,7 @@ public class TelegraphedAttack : MonoBehaviour
         if (isSnakeIndicator)
             Indicator(ref snakeSweep.coneIndicator, 1.5f, 2.2f);
         if (isBirdIndicatorRectangle)
-            Indicator(ref BirdBoss.global.normalAttackIndicator, 2f, 2f, true);
+            Indicator(ref BirdBoss.global.normalAttackIndicator, 2f, 2.5f, true);
         if (isBirdIndicatorCircle)
             Indicator(ref BirdBoss.global.rockAttackIndicator, 1.5f, 2.2f);
     }
