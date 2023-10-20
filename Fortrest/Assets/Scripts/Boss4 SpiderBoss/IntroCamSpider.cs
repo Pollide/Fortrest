@@ -48,7 +48,6 @@ public class IntroCamSpider : MonoBehaviour
             PlayerController.global.playerCanMove = true;
             LevelManager.global.HUD.SetActive(true);
             introCard.SetActive(false);
-            GetComponent<BossSpawner>().BossEncountered(true);
         }
     }
 }

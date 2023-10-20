@@ -56,8 +56,6 @@ public class IntroductionState : BossState
     {
         if (!introCompleted && !ScreenShake.global.shake)
         {
-            if (introTimer == 0)
-                stateMachine.bossSpawner.BossMusicBegin(true);
 
             introTimer += Time.deltaTime;
 

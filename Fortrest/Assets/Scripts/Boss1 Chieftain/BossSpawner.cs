@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
-    [SerializeField] private float arenaSize = 50f;
+    [SerializeField] private float Arenasize = 40f;
     [SerializeField] public bool hasRun = false;
     // Holds the current boss type
     [SerializeField] public TYPE bossType;
@@ -106,37 +106,50 @@ public class BossSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (CheckPlayerDistance() && !hasRun)
+        if (CheckPlayerDistance())
         {
-            if (GetComponent<BossStateMachine>())
+            if (!hasRun)
             {
-                GetComponent<BossStateMachine>().enabled = true;
-                GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(true);
-            }
+                if (GetComponent<BossStateMachine>())
+                {
+                    GetComponent<BossStateMachine>().enabled = true;
+                    GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(true);
+                }
 
-            if (GetComponent<SpiderBoss>())
-            {
-                GetComponent<SpiderBoss>().Awaken();
-            }
-            if (GetComponent<SquidBoss>())
-            {
-                GetComponent<SquidBoss>().Awaken();
-            }
+                if (GetComponent<SpiderBoss>())
+                {
+                    GetComponent<SpiderBoss>().Awaken();
+                }
+                if (GetComponent<SquidBoss>())
+                {
+                    GetComponent<SquidBoss>().Awaken();
+                }
 
-            hasRun = true;
+                hasRun = true;
+
+            }
+            else
+            {
+                BossEncountered(true);
+            }
+        }
+        else
+        {
+            BossEncountered(false);
         }
     }
 
 
     public bool CheckPlayerDistance()
     {
-        return Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (hasRun ? arenaSize : 20);
+
+        return health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (hasRun ? Arenasize : 20);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
 
-        Gizmos.DrawWireSphere(transform.position, arenaSize);
+        Gizmos.DrawWireSphere(transform.position, Arenasize);
     }
 }

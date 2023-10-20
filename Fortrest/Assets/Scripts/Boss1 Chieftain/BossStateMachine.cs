@@ -129,7 +129,6 @@ public class BossStateMachine : MonoBehaviour
     private IEnumerator DeadState()
     {
         isDead = true;
-        bossSpawner.BossEncountered(false);
         bossAnimator.SetBool("isDead", true);
         yield return new WaitForSeconds(2);
         gameObject.SetActive(false); //i dont want bosses to be destroyed so i can save their HP as zero thanks
