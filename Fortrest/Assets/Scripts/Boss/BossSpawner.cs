@@ -3,9 +3,9 @@ using UnityEngine;
 public class BossSpawner : MonoBehaviour
 {
     [SerializeField] private float distance = 20f;
-    [SerializeField] public bool hasRun = false;
+    public bool hasRun = false;
     // Holds the current boss type
-    [SerializeField] public TYPE bossType;
+    public TYPE bossType;
     public GameObject BossCanvas;
 
     // Enum for boss type
@@ -77,7 +77,6 @@ public class BossSpawner : MonoBehaviour
         {
             if (health <= 0)
             {
-
                 GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
             }
             else
