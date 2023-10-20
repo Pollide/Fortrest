@@ -384,6 +384,5 @@ public class Boar : MonoBehaviour
             SmokeVFXRight.GetComponent<VisualEffect>().Play();
             Destroy(SmokeVFXRight, 1.5f);
         }
-
     }
 }

@@ -36,6 +36,8 @@ public class BirdBoss : MonoBehaviour
     public bool normalAttackIndicator;
     public bool rockAttackIndicator;
     public GameObject telegraphedRectangle;
+    private bool stopMoving;
+    public bool diving;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
@@ -97,7 +99,10 @@ public class BirdBoss : MonoBehaviour
     public void MoveToTarget(Vector3 targetPosition, Vector3 targetDirection)
     {
         LookAt(targetDirection);
-        MoveTowards(targetPosition);
+        if (!stopMoving)
+        {
+            MoveTowards(targetPosition);
+        }       
     }
 
     public void LookAt(Vector3 targetDirection)
@@ -112,7 +117,15 @@ public class BirdBoss : MonoBehaviour
         {
             targetPosition = new Vector3(targetPosition.x, 5f, targetPosition.z);
         }
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
+
+        if (!diving)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
+        }
+        else
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * (speed * 1.5f));
+        }
     }
 
     private void StartFlying()
@@ -185,8 +198,15 @@ public class BirdBoss : MonoBehaviour
         }
     }
 
-    private void SlidingAnimEvent()
+    private void StopMovementAnimEvent()
     {
-        flying = false;        
+        stopMoving = true;
+    }
+
+    private void StartMovementAnimEvent()
+    {
+        flying = false;
+        stopMoving = false;
+        diving = true;
     }
 }
