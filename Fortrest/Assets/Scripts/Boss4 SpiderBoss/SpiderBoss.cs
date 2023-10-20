@@ -12,8 +12,6 @@ public class SpiderBoss : MonoBehaviour
     private float webAttackRange;
     private Animator animator;
     [HideInInspector] public bool awoken;
-    private float arenaSize;
-    public Vector3 startPosition;
     public bool retreating;
     private NavMeshAgent agent;
     private float damage;
@@ -56,8 +54,6 @@ public class SpiderBoss : MonoBehaviour
         playerTransform = PlayerController.global.transform;
         animator = GetComponent<Animator>();
         awoken = false;
-        arenaSize = 50.0f;
-        startPosition = transform.position;
         retreating = false;
         agent = animator.GetComponent<NavMeshAgent>();
         damage = 5.0f;
@@ -104,16 +100,7 @@ public class SpiderBoss : MonoBehaviour
         }
 
         // Spider retreats to its starting position if the player exits the arena
-        if (Vector3.Distance(playerTransform.position, startPosition) > arenaSize)
-        {
-            retreating = true;
-            LevelManager.global.dayPaused = false;
-        }
-        else
-        {
-            retreating = false;
-            LevelManager.global.dayPaused = true;
-        }
+        retreating = !bossSpawner.CheckPlayerDistance();
 
         if (retreating)
         {

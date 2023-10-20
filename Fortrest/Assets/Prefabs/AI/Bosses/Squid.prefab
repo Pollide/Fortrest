@@ -9,17 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 184428647038659639}
-  - component: {fileID: 6621607431229203120}
-  - component: {fileID: 1045815493214259681}
-  - component: {fileID: 8860127450049526509}
-  - component: {fileID: 3651742728835903311}
-  - component: {fileID: -4260576750701210383}
-  - component: {fileID: 9094052015298210235}
-  - component: {fileID: 7004052578520432879}
-  - component: {fileID: 8740668045474777165}
   - component: {fileID: 7788129227239646016}
-  - component: {fileID: 2194251229534165391}
   - component: {fileID: 5411412253301375710}
+  - component: {fileID: 9193962727061746161}
   m_Layer: 13
   m_Name: Squid
   m_TagString: Untagged
@@ -48,172 +40,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 200, z: 0}
---- !u!195 &6621607431229203120
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 2.14
-  m_Speed: 0
-  m_Acceleration: 0
-  avoidancePriority: 50
-  m_AngularSpeed: 0
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 10
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!54 &1045815493214259681
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  serializedVersion: 2
-  m_Mass: 5
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!114 &8860127450049526509
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1c243e2f4f2fd84ca0582127a985193, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentPhase: 0
-  currentState: {fileID: 0}
-  initialState: {fileID: 3651742728835903311}
-  arenaRadius: 50
-  speed: 5
-  inDefence: 0
-  phase2Ran: 0
-  phase3Ran: 0
-  isDead: 0
-  bossAnimator: {fileID: 902255068813967466}
-  bossSpawner: {fileID: 0}
---- !u!114 &3651742728835903311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c29c3adad8c8da4db8e7b5483e98134, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 184428647038659639}
-  introDuration: 8
-  cameraDistance: 5
-  introPositionOffset: {x: -4, y: 7, z: -2}
-  idleState: {fileID: -4260576750701210383}
---- !u!114 &-4260576750701210383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ea7e7c1cb8129a43b7883af50163a20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  resetTimerDuration: 3
-  stoppingDistance: 0.2
---- !u!114 &9094052015298210235
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89ef28e57aa23d4468a3dbc23b971b99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackTimer: 0
-  attackTime: 0
-  attackDuration: 3.5
-  stoppingDistance: 3
-  rotationSpeed: 5
-  attackCounter: 0
-  attackRadius: 10
-  randomCheckTimer: 0
-  randomCheckDuration: 3
-  damage: 10
-  attackDistance: 5
-  firstAttackChance: 0.5
-  secondAttackChance: 0.25
-  thirdAttackChance: 0.25
-  isAttacking: 0
-  canChangeState: 0
-  canAttack: 0
-  telegraph: {fileID: 7556151477208924013}
---- !u!114 &7004052578520432879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d466e0f2120000b4f8700d66f0465845, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  windUpDuration: 1.8
-  waitDuration: 3
-  isCharging: 0
-  playerHit: 0
-  hasRun: 0
-  coneIndicator: 0
-  chargeSpeed: 15
-  chargeDistance: 2
-  chargePushForce: 1
-  chargePushDuration: 0.3
-  stoppingDistance: 3
-  damage: 15
-  chargeDMGTrigger: {fileID: 6793321651510773346}
---- !u!114 &8740668045474777165
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 799cfd510f7943547b5f8028a35bae70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slamDuration: 5
-  slamRadius: 8
-  slamWaitAfterIndicator: 0.5
-  damage: 20
-  telegraph: {fileID: 7556151477208924013}
-  damageDone: 0
-  hasJumped: 0
 --- !u!65 &7788129227239646016
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -227,23 +53,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 4.131092, y: 10.600843, z: 2.8159409}
   m_Center: {x: -0.056043983, y: 4.8004217, z: -0.13675785}
---- !u!114 &2194251229534165391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1612966261804245062}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a74425afa2f627c4983e38b8d329d521, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slamState: {fileID: 8740668045474777165}
-  attackManagerState: {fileID: 9094052015298210235}
-  outer: {fileID: 5567472970536930146}
-  inner: {fileID: 7556151477208924013}
-  attack: 0
 --- !u!114 &5411412253301375710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,7 +65,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36a0a17476046894796388402f1cd957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 40
+  distance: 30
   hasRun: 0
   bossType: 5
   BossCanvas: {fileID: 2060798956594959119}
@@ -264,6 +73,18 @@ MonoBehaviour:
   maxHealth: 150
   bossEncountered: 0
   canBeDamaged: 1
+--- !u!114 &9193962727061746161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1612966261804245062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3136f417f2175f94a956de52a0e2c811, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3856323682597141708
 GameObject:
   m_ObjectHideFlags: 0
@@ -429,7 +250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82bcdb6d7114d7245bd7a505b27f05d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 8860127450049526509}
+  stateMachine: {fileID: 0}
 --- !u!1 &5567472970536930146
 GameObject:
   m_ObjectHideFlags: 0
@@ -4516,10 +4337,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0255624b6f956944b18e61a1b48c05d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackState1: {fileID: 9094052015298210235}
-  attackState2: {fileID: 7004052578520432879}
-  attackState3: {fileID: 8740668045474777165}
-  stateMachine: {fileID: 8860127450049526509}
+  attackState1: {fileID: 0}
+  attackState2: {fileID: 0}
+  attackState3: {fileID: 0}
+  stateMachine: {fileID: 0}
   bossCollider: {fileID: 7788129227239646016}
   slamAudio: {fileID: 8300000, guid: 708a0dc6ef2b29a439691a89a05da232, type: 3}
   enrageAudio: {fileID: 8300000, guid: 35cc153cc87e96942b4335aaa6c11486, type: 3}
