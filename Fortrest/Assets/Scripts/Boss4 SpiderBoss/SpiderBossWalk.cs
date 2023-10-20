@@ -35,7 +35,7 @@ public class SpiderBossWalk : StateMachineBehaviour
         }
         else
         {
-            agent.SetDestination(spiderScript.startPosition);
+            agent.SetDestination(spiderScript.bossSpawner.StartPosition);
         }
     }
 

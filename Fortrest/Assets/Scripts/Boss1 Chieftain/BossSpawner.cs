@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BossSpawner : MonoBehaviour
 {
-    [SerializeField] private float distance = 20f;
+    [SerializeField] private float arenaSize = 50f;
     [SerializeField] public bool hasRun = false;
     // Holds the current boss type
     [SerializeField] public TYPE bossType;
@@ -27,10 +27,12 @@ public class BossSpawner : MonoBehaviour
     public bool bossEncountered;
     [HideInInspector]
     public bool canBeDamaged = true;
-
+    [HideInInspector]
+    public Vector3 StartPosition;
     public void Awake()
     {
         health = maxHealth;//on awake before the game loads
+        StartPosition = transform.position;
     }
 
     public void UpdateHealth(float change = 0)
@@ -104,7 +106,7 @@ public class BossSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (CheckPlayerDistance() && hasRun == false)
+        if (CheckPlayerDistance() && !hasRun)
         {
             if (GetComponent<BossStateMachine>())
             {
@@ -116,22 +118,25 @@ public class BossSpawner : MonoBehaviour
             {
                 GetComponent<SpiderBoss>().Awaken();
             }
-
+            if (GetComponent<SquidBoss>())
+            {
+                GetComponent<SquidBoss>().Awaken();
+            }
 
             hasRun = true;
         }
     }
 
 
-    private bool CheckPlayerDistance()
+    public bool CheckPlayerDistance()
     {
-        return Vector3.Distance(PlayerController.global.transform.position, transform.position) <= distance;
+        return Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (hasRun ? arenaSize : 20);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
 
-        Gizmos.DrawWireSphere(transform.position, distance);
+        Gizmos.DrawWireSphere(transform.position, arenaSize);
     }
 }
