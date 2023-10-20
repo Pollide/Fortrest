@@ -336,6 +336,7 @@ MonoBehaviour:
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
   idleState: {fileID: 7512057030111246424}
+  nextState: {fileID: 7512057030111246424}
 --- !u!114 &7512057030111246424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,6 +349,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ea7e7c1cb8129a43b7883af50163a20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  nextStateOne: {fileID: 1969465713250628132}
+  nextStateIntro: {fileID: 0}
+  lastState: {fileID: 0}
+  idleRuns: 0
   resetTimerDuration: 0
   stoppingDistance: 3
 --- !u!114 &1969465713250628132
