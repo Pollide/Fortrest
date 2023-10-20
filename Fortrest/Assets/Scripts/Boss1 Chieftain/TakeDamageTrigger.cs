@@ -21,7 +21,6 @@ public class TakeDamageTrigger : MonoBehaviour
                 stateMachine.CanBeDamaged = false;
                 stateMachine.TakeDamage(player.attackDamage);
             }
-
         }
     }
 }

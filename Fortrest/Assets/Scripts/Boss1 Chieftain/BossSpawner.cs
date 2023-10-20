@@ -62,7 +62,7 @@ public class BossSpawner : MonoBehaviour
         {
             GetComponent<BossStateMachine>().bossSpawner = this;
             GetComponent<BossStateMachine>().enabled = false;
-            GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(false);
+            GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(false);
         }
 
         if (GetComponent<SpiderBoss>())
