@@ -16,6 +16,7 @@ public class TelegraphedAttack : MonoBehaviour
     public bool isSnakeIndicator;
     public bool isBirdIndicatorRectangle;
     public bool isBirdIndicatorCircle;
+    private bool appearOnStart = true;
 
     void Start()
     {
@@ -34,7 +35,7 @@ public class TelegraphedAttack : MonoBehaviour
         if (isBirdIndicatorRectangle)
             Indicator(ref BirdBoss.global.normalAttackIndicator, 2f, 2.5f, true);
         if (isBirdIndicatorCircle)
-            Indicator(ref BirdBoss.global.rockAttackIndicator, 1.5f, 2.2f);
+            Indicator(ref appearOnStart, 0.75f, 2f);
     }
 
     void Indicator(ref bool indicator, float multiplier, float duration, bool unique = false)

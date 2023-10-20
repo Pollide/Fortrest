@@ -7,11 +7,10 @@ public class BirdBossAttack : StateMachineBehaviour
 {
     private BirdBoss birdScript;
     private Vector3 target;
-    private Vector3 directionToTarget;
-    private GameObject telegraph;
+    private Vector3 directionToTarget;   
     private bool sliding;
     private float timer;
-    public Vector3 smokePosition;
+    //private GameObject telegraph;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {      
@@ -44,7 +43,7 @@ public class BirdBossAttack : StateMachineBehaviour
             if (timer > 0.06f)
             {
                 timer = 0f;
-                GameObject SmokeVFXRight = Instantiate(LevelManager.global.VFXSmoke.gameObject, birdScript.transform.position + smokePosition, Quaternion.identity);
+                GameObject SmokeVFXRight = Instantiate(LevelManager.global.VFXSmoke.gameObject, birdScript.transform.position, Quaternion.identity);
                 float randomeFloat = Random.Range(0.2f, 0.4f);
                 SmokeVFXRight.transform.localScale = new Vector3(randomeFloat * 1.5f, randomeFloat, randomeFloat * 1.5f);
                 SmokeVFXRight.GetComponent<VisualEffect>().Play();
@@ -60,6 +59,6 @@ public class BirdBossAttack : StateMachineBehaviour
         birdScript.flying = true;
         birdScript.normalAttack = false;
         sliding = false;
-        Destroy(telegraph);
+        //Destroy(telegraph);
     }
 }
