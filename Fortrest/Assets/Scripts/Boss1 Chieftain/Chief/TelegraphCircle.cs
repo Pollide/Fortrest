@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class TelegraphCircle : MonoBehaviour
 {
     [SerializeField] private PhaseThreeAttack slamState;
-    [SerializeField] private PhaseOneChief phaseOneState;
+    [SerializeField] private AttackManagerState phaseOneState;
     public GameObject outer;
     public GameObject inner;
     public bool isAttack = false;

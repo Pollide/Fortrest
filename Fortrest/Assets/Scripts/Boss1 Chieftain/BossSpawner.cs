@@ -5,7 +5,6 @@ public class BossSpawner : MonoBehaviour
     [SerializeField] private float distance = 20f;
     public bool hasRun = false;
     [SerializeField] private float Arenasize = 40f;
-    public bool hasRun = false;
     // Holds the current boss type
     public TYPE bossType;
     public GameObject BossCanvas;
@@ -115,7 +114,7 @@ public class BossSpawner : MonoBehaviour
                 if (GetComponent<BossStateMachine>())
                 {
                     GetComponent<BossStateMachine>().enabled = true;
-                    GetComponent<BossStateMachine>().bossAnimator.gameObject.SetActive(true);
+                    GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(true);
                 }
 
                 if (GetComponent<SpiderBoss>())

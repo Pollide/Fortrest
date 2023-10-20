@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhaseOneChief : BossState
+public class AttackManagerState : BossState
 {
     // Timer for attacks
     [SerializeField] private float attackTimer = 0f;

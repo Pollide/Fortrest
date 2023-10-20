@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class BossAnimationEvents : MonoBehaviour
 {
-    [SerializeField] private PhaseOneChief attackState1;
+    [SerializeField] private AttackManagerState attackState1;
     [SerializeField] private PhaseTwoAttack attackState2;
     [SerializeField] private PhaseThreeAttack attackState3;
     [SerializeField] private BossStateMachine stateMachine;

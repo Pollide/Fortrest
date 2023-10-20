@@ -6,7 +6,7 @@ public class PhaseThreeAttack : BossState
 {
     // Holds states
     private IdleState idleState;
-    private PhaseOneChief attackState;
+    private AttackManagerState attackState;
     // Slam wait time
     private float slamWaitTime = 0f;
     [SerializeField] private float slamDuration = 5f;
@@ -30,7 +30,7 @@ public class PhaseThreeAttack : BossState
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<PhaseOneChief>();
+            attackState = GetComponent<AttackManagerState>();
         }
 
         SetTelegraph(true);
@@ -109,7 +109,7 @@ public class PhaseThreeAttack : BossState
         get { return slamWaitTime; }
     }
 
-    public PhaseOneChief StateAttack
+    public AttackManagerState StateAttack
     {
         get { return attackState; }
     }
