@@ -154,7 +154,6 @@ public class SpiderBoss : MonoBehaviour
         if (dead)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossDeadSound, 1f, true, 0, false, transform);
-            bossSpawner.BossEncountered(false);
             animator.SetTrigger("Dead");
             StartCoroutine(DestroyOnDeath());
             dead = false;

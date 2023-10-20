@@ -19,8 +19,6 @@ public class IdleState : BossState
             attackState = GetComponent<AttackManagerState>();
         }
 
-        stateMachine.bossSpawner.BossEncountered(true);
-
         resetTimer = resetTimerDuration;
     }
 
@@ -33,7 +31,6 @@ public class IdleState : BossState
         // checks if player is in the arena 
         if (PlayerInArena(stateMachine.ArenaSize))
         {
-            StateMachine.bossSpawner.BossEncountered(true);
             // changes to attack state
             stateMachine.ChangeState(attackState);
         }
@@ -42,7 +39,6 @@ public class IdleState : BossState
             if (resetTimer <= 0f)
             {
                 stateMachine.bossSpawner.Awake();
-                StateMachine.bossSpawner.BossEncountered(false);
             }
 
             if (stateMachine.BossType == BossSpawner.TYPE.Chieftain)
