@@ -34,7 +34,7 @@ public class BirdBoss : MonoBehaviour
     public bool altitudeReached;
     public bool normalAttack = true;
     public bool normalAttackIndicator;
-    public bool rockAttackIndicator;
+    public bool circleAttackIndicator;
     public GameObject telegraphedRectangle;
     public GameObject telegraphedCircle;
     private bool stopMoving;
@@ -119,14 +119,7 @@ public class BirdBoss : MonoBehaviour
             targetPosition = new Vector3(targetPosition.x, 7.5f, targetPosition.z);
         }
 
-        if (!diving)
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
-        }
-        else
-        {
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * (speed * 1.5f));
-        }
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
     }
 
     private void StartFlying()

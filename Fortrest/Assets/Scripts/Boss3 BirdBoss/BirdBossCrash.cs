@@ -6,7 +6,7 @@ public class BirdBossCrash : StateMachineBehaviour
 {
     private BirdBoss birdScript;
     private float timer;
-    private float recoveryTime = 5.0f;
+    private float recoveryTime = 3.0f;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

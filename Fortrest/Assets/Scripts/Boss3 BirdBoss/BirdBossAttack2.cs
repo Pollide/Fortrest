@@ -14,11 +14,12 @@ public class BirdBossAttack2 : StateMachineBehaviour
     private int rocks;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        rocks = 0;
+    {       
         birdScript = animator.GetComponent<BirdBoss>();
-        target = birdScript.playerTransform.position + (birdScript.directionToPlayerNoY.normalized * 50.0f);
+        target = birdScript.playerTransform.position + (birdScript.directionToPlayerNoY.normalized * 150.0f);
         directionToTarget = (new Vector3(target.x, 0f, target.z) - new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)).normalized;
+        rocks = 0;
+        throwRock = false;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
