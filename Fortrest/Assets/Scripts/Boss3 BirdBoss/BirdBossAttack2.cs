@@ -5,8 +5,6 @@ using UnityEngine;
 public class BirdBossAttack2 : StateMachineBehaviour
 {
     private BirdBoss birdScript;
-    private Vector3 target;
-    private Vector3 directionToTarget;
     private float timer1, timer2;
     private float rockCD = 0.6f;
     private float attackCD = 2.0f;
@@ -16,36 +14,40 @@ public class BirdBossAttack2 : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {       
         birdScript = animator.GetComponent<BirdBoss>();
-        target = birdScript.playerTransform.position + (birdScript.directionToPlayerNoY.normalized * 150.0f);
-        directionToTarget = (new Vector3(target.x, 0f, target.z) - new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)).normalized;
+        birdScript.targetPosition = birdScript.playerTransform.position + (birdScript.directionToPlayer.normalized * 150.0f);
+        birdScript.targetDirection = (new Vector3(birdScript.targetPosition.x, 0f, birdScript.targetPosition.z) - new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)).normalized;
         rocks = 0;
         throwRock = false;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        birdScript.MoveToTarget(target, directionToTarget);
+        birdScript.MoveToTarget(birdScript.targetPosition, birdScript.targetDirection);
 
-        if (rocks < 6)
+        if (birdScript.flyAnimOver)
         {
-            if (!throwRock)
+            if (rocks < 6)
             {
-                rocks++;
-                GameObject telegraph = Instantiate(birdScript.telegraphedCircle, new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z), Quaternion.identity);
-                Destroy(telegraph, 5.0f);
-                throwRock = true;
-            }
-            else
-            {
-                timer1 += Time.deltaTime;
-                if (timer1 > rockCD)
+                if (!throwRock)
                 {
-                    throwRock = false;
-                    timer1 = 0f;
+                    rocks++;
+                    GameObject telegraph = Instantiate(birdScript.telegraphedCircle, new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z), Quaternion.identity);
+                    Destroy(telegraph, 5.0f);
+                    throwRock = true;
                 }
-            }           
+                else
+                {
+                    timer1 += Time.deltaTime;
+                    if (timer1 > rockCD)
+                    {
+                        throwRock = false;
+                        timer1 = 0f;
+                    }
+                }
+            }
         }
-        if (birdScript.outOfScreen)
+
+        if (birdScript.IsOutOfScreen())
         {
             timer2 += Time.deltaTime;
             if (timer2 > attackCD)

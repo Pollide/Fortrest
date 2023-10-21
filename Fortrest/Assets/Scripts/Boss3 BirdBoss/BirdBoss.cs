@@ -6,7 +6,7 @@ public class BirdBoss : MonoBehaviour
 {
     public static BirdBoss global;
 
-    public Transform playerTransform;
+    [HideInInspector] public Transform playerTransform;
     private Animator animator;
     [HideInInspector] public bool awoken;
     public Vector3 startPosition;
@@ -17,12 +17,9 @@ public class BirdBoss : MonoBehaviour
     public bool startIntro;
     public Vector3 directionToPlayer;
     public float distanceToPlayer;
-    public Vector3 directionToPlayerNoY;
-    public float distanceToPlayerNoY;
     private float speed = 15f;
     private float rotationSpeed = 10.0f;
     public float stoppingDistance;
-    public bool outOfScreen;
     public float offset;
     public float attackRange = 10.0f;
     [HideInInspector] public bool playerReached = true;
@@ -39,6 +36,9 @@ public class BirdBoss : MonoBehaviour
     public GameObject telegraphedCircle;
     private bool stopMoving;
     public bool diving;
+    public Vector3 targetPosition;
+    public Vector3 targetDirection;
+    public bool flyAnimOver;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
@@ -60,33 +60,19 @@ public class BirdBoss : MonoBehaviour
         stoppingDistance = 5.0f;
     }
 
-    public void Awaken()
-    {
-        startIntro = true;
-        awoken = true;
-        animator.SetTrigger("Awaking");
-    }
-
     void Update()
     {
-        directionToPlayer = (playerTransform.position - transform.position).normalized;
-        directionToPlayerNoY = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
-        distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
-        distanceToPlayerNoY = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
-        outOfScreen = IsOutOfScreen();
+        directionToPlayer = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
+        distanceToPlayer = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
 
+        // Boss wakes up when player gets close to it
         if (distanceToPlayer < 20.0f && !awoken)
         {
             awoken = true;
             animator.SetTrigger("TakeOff");
         }
 
-        if (hitReceived >= 3)
-        {
-            animator.ResetTrigger("Crash");
-            animator.SetTrigger("Crash");
-        }      
-        
+        // Boss flies up at the start
         if (flying && !altitudeReached)
         {
             transform.position = Vector3.MoveTowards(transform.position, new Vector3(startPosition.x, 7.5f, startPosition.z), Time.deltaTime * (speed / 2.0f));
@@ -95,40 +81,44 @@ public class BirdBoss : MonoBehaviour
                 altitudeReached = true;
             }
         }
+
+        // Boss crashes after being hit 3 times
+        if (hitReceived >= 3)
+        {
+            animator.ResetTrigger("Crash");
+            animator.SetTrigger("Crash");
+        }                
     }
 
+    // Used to orientate and move the boss
     public void MoveToTarget(Vector3 targetPosition, Vector3 targetDirection)
     {
         LookAt(targetDirection);
-        if (!stopMoving)
-        {
-            MoveTowards(targetPosition);
-        }       
+        MoveTowards(targetPosition);  
     }
 
+    // Direction the boss is looking at
     public void LookAt(Vector3 targetDirection)
     {       
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(targetDirection.x, 0, targetDirection.z));
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);    
     }
 
+    // Location the boss is moving to
     public void MoveTowards(Vector3 targetPosition)
     {
-        if (flying)
+        if (!stopMoving)
         {
-            targetPosition = new Vector3(targetPosition.x, 7.5f, targetPosition.z);
+            if (flying)
+            {
+                targetPosition = new Vector3(targetPosition.x, 7.5f, targetPosition.z);
+            }
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
         }
-
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, Time.deltaTime * speed);
     }
 
-    private void StartFlying()
-    {
-        animator.SetBool("Flying", true);
-        flying = true;
-    }
-
-    private bool IsOutOfScreen()
+    // Checks if the boss can be seen on the screen
+    public bool IsOutOfScreen()
     {
         Vector3 screenCenter = new Vector3(Screen.width / 2, Screen.height / 2, Camera.main.transform.position.z);
         Vector3 screenHeight = new Vector3(Screen.width / 2, Screen.height, Camera.main.transform.position.z);
@@ -148,6 +138,7 @@ public class BirdBoss : MonoBehaviour
             return false;
         }
     }
+
 
     private void Damaged(float amount)
     {
@@ -192,6 +183,13 @@ public class BirdBoss : MonoBehaviour
         }
     }
 
+    // Boss starts flying through this anim event and then only uses triggers
+    private void StartFlyingAnimEvent()
+    {
+        animator.SetBool("Flying", true);
+        flying = true;
+    }
+
     private void StopMovementAnimEvent()
     {
         stopMoving = true;
@@ -199,8 +197,13 @@ public class BirdBoss : MonoBehaviour
 
     private void StartMovementAnimEvent()
     {
-        flying = false;
         stopMoving = false;
+        flying = false;
         diving = true;
+    }
+
+    public void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(targetPosition, 1);
     }
 }
