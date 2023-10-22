@@ -14,8 +14,10 @@ public class PhaseThreeAttack : BossState
     [SerializeField] private float slamWaitAfterIndicator = 2f;
     [SerializeField] private float damage = 5f;
     [SerializeField] private GameObject telegraph;
+    [SerializeField] private TakeDamageTrigger trigger;
     [SerializeField] private bool damageDone = false;
     [SerializeField] private bool hasJumped = false;
+
 
 
     public override void EnterState()
@@ -80,6 +82,15 @@ public class PhaseThreeAttack : BossState
                 StartCoroutine(GetComponent<TelegraphCircle>().DoAreaDamage(slamWaitAfterIndicator, Damage, SlamRadius));
                 damageDone = true;
             }
+        }
+
+        if (stateMachine.BossAnimator.GetBool("isJumping") && trigger.enabled)
+        {
+            trigger.enabled = false;
+        }
+        else if(!stateMachine.BossAnimator.GetBool("isJumping") && !trigger.enabled)
+        {
+            trigger.enabled = true;
         }
     }
 

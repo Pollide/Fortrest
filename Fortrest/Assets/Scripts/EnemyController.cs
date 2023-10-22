@@ -520,13 +520,16 @@ public class EnemyController : MonoBehaviour
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 StopAllCoroutines();
+
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chaseTimer = 0;
                     chasing = true;
                 }
                 canBeDamaged = false;
+
                 PickSound(hitSound, hitSound2, 1.0f);
+                
                 if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin && !flashing) // remove goblin once we have the anim
                 {
                     ActiveAnimator.ResetTrigger("Hit1");
@@ -659,6 +662,7 @@ public class EnemyController : MonoBehaviour
     private void PickSound(AudioClip name1, AudioClip name2, float volume)
     {
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? name1 : name2, volume, true, 0, false, transform);
+        Debug.Log("Sound");
     }
 
     private void ResetAttack()
