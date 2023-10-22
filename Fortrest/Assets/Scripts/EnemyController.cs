@@ -690,27 +690,7 @@ public class EnemyController : MonoBehaviour
 
         if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
         {
-            int randomInt = Random.Range(0, 3);
-            AudioClip temp = null;
-            switch (randomInt)
-            {
-                case 0:
-                    temp = GameManager.global.PlayerHit1Sound;
-                    break;
-                case 1:
-                    temp = GameManager.global.PlayerHit2Sound;
-                    break;
-                case 2:
-                    temp = GameManager.global.PlayerHit3Sound;
-                    break;
-                default:
-                    break;
-            }
-            GameManager.global.SoundManager.PlaySound(temp, 0.9f);
-            if (PlayerController.global.playerCanBeDamaged)
-            {
-                PlayerController.global.TakeDamage(enemyDamage);
-            }
+            PlayerController.global.TakeDamage(enemyDamage);
         }
         else if (bestTarget)
         {
