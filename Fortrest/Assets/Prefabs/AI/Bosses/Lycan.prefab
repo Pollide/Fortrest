@@ -206,8 +206,8 @@ GameObject:
   - component: {fileID: 1021942600754924428}
   - component: {fileID: 7055684526235057948}
   - component: {fileID: 7648598950419578789}
-  - component: {fileID: 1167555268680015984}
-  - component: {fileID: 1718762431911725954}
+  - component: {fileID: 1162035985534289388}
+  - component: {fileID: 1990839997988401373}
   - component: {fileID: 3918630169187030591}
   - component: {fileID: 1652765843960285866}
   - component: {fileID: 7026883036366209325}
@@ -275,12 +275,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distance: 20
   hasRun: 0
+  Arenasize: 40
   bossType: 4
   BossCanvas: {fileID: 7423440669727652635}
   health: 100
   maxHealth: 20
   bossEncountered: 0
   canBeDamaged: 1
+  StartPosition: {x: 0, y: 0, z: 0}
 --- !u!114 &7648598950419578789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,7 +297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentPhase: 0
   currentState: {fileID: 0}
-  initialState: {fileID: 1167555268680015984}
+  initialState: {fileID: 1162035985534289388}
   arenaRadius: 50
   speed: 4
   inDefence: 0
@@ -304,7 +306,7 @@ MonoBehaviour:
   isDead: 0
   bossAnimator: {fileID: 6850407931364350455}
   bossSpawner: {fileID: 0}
---- !u!114 &1167555268680015984
+--- !u!114 &1162035985534289388
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -313,16 +315,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5753501578752780492}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c29c3adad8c8da4db8e7b5483e98134, type: 3}
+  m_Script: {fileID: 11500000, guid: eca4ba2841e208542a3a619e65976c1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   targetEnemy: {fileID: 6158916799259184055}
   introDuration: 3
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
-  idleState: {fileID: 1718762431911725954}
+  idleState: {fileID: 1990839997988401373}
   nextState: {fileID: 3918630169187030591}
---- !u!114 &1718762431911725954
+--- !u!114 &1990839997988401373
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -331,14 +333,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 5753501578752780492}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ea7e7c1cb8129a43b7883af50163a20, type: 3}
+  m_Script: {fileID: 11500000, guid: d07584372cb58df46808b848e1fb02fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   nextStateOne: {fileID: 3918630169187030591}
-  nextStateIntro: {fileID: 1167555268680015984}
+  nextStateIntro: {fileID: 1162035985534289388}
   lastState: {fileID: 0}
   idleRuns: 0
-  resetTimerDuration: 5
+  resetTimerDuration: 0
   stoppingDistance: 3
 --- !u!114 &3918630169187030591
 MonoBehaviour:
@@ -362,7 +364,7 @@ MonoBehaviour:
     type: 3}
   enemyList: []
   nextState: {fileID: 1652765843960285866}
-  idleState: {fileID: 1718762431911725954}
+  idleState: {fileID: 1990839997988401373}
 --- !u!114 &1652765843960285866
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -405,7 +407,7 @@ MonoBehaviour:
     type: 3}
   enemyList: []
   nextState: {fileID: 6881087863631915970}
-  idleState: {fileID: 1718762431911725954}
+  idleState: {fileID: 1990839997988401373}
 --- !u!114 &6881087863631915970
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,10 +437,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 000117105ecb695439745fed5c6750ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  idleState: {fileID: 1718762431911725954}
+  idleState: {fileID: 1990839997988401373}
   nextAttackTime: 0
-  attackRange: 2
-  attackCooldown: 2
+  attackRange: 3
+  attackCooldown: 5
 --- !u!54 &7296249777344085743
 Rigidbody:
   m_ObjectHideFlags: 0

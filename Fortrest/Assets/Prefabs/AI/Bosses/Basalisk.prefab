@@ -263,13 +263,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7356453876488459006}
-  - component: {fileID: 6111063971844364718}
-  - component: {fileID: 7968082093085993523}
-  - component: {fileID: 7512057030111246424}
-  - component: {fileID: 1969465713250628132}
-  - component: {fileID: 3116273809109224010}
-  - component: {fileID: 1786809585096736038}
-  - component: {fileID: 2506233975681815981}
   - component: {fileID: 8902644454454473462}
   m_Layer: 0
   m_Name: Basalisk
@@ -296,159 +289,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -115.815, z: 0}
---- !u!114 &6111063971844364718
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4034339124308090815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1c243e2f4f2fd84ca0582127a985193, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentPhase: 0
-  currentState: {fileID: 0}
-  initialState: {fileID: 7968082093085993523}
-  arenaRadius: 50
-  speed: 5
-  inDefence: 0
-  phase2Ran: 0
-  phase3Ran: 0
-  isDead: 0
-  bossAnimator: {fileID: 9180576964448709641}
-  bossSpawner: {fileID: 0}
---- !u!114 &7968082093085993523
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4034339124308090815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c29c3adad8c8da4db8e7b5483e98134, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 7356453876488459006}
-  introDuration: 3
-  cameraDistance: 5
-  introPositionOffset: {x: 0, y: 2, z: -2}
-  idleState: {fileID: 7512057030111246424}
-  nextState: {fileID: 7512057030111246424}
---- !u!114 &7512057030111246424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4034339124308090815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8ea7e7c1cb8129a43b7883af50163a20, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nextStateOne: {fileID: 1969465713250628132}
-  nextStateIntro: {fileID: 0}
-  lastState: {fileID: 0}
-  idleRuns: 0
-  resetTimerDuration: 0
-  stoppingDistance: 3
---- !u!114 &1969465713250628132
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4034339124308090815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89ef28e57aa23d4468a3dbc23b971b99, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackTimer: 0
-  attackTime: 0
-  attackDuration: 5
-  stoppingDistance: 3
-  rotationSpeed: 5
-  attackCounter: 0
-  attackRadius: 10
-  randomCheckTimer: 0
-  randomCheckDuration: 5
-  damage: 0
-  attackDistance: 0
-  firstAttackChance: 0.6
-  secondAttackChance: 0.2
-  thirdAttackChance: 0.2
-  isAttacking: 0
-  canChangeState: 0
-  canAttack: 0
-  telegraph: {fileID: 0}
---- !u!114 &3116273809109224010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4034339124308090815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d466e0f2120000b4f8700d66f0465845, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  windUpDuration: 5
-  waitDuration: 3
-  isCharging: 0
-  playerHit: 0
-  hasRun: 0
-  coneIndicator: 0
-  chargeSpeed: 10
-  chargeDistance: 10
-  chargePushForce: 5
-  chargePushDuration: 1
-  stoppingDistance: 3
-  damage: 0
-  chargeDMGTrigger: {fileID: 0}
---- !u!114 &1786809585096736038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4034339124308090815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 799cfd510f7943547b5f8028a35bae70, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  slamDuration: 5
-  slamRadius: 5
-  slamWaitAfterIndicator: 2
-  damage: 5
-  telegraph: {fileID: 0}
-  damageDone: 0
-  hasJumped: 0
---- !u!114 &2506233975681815981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4034339124308090815}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36a0a17476046894796388402f1cd957, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  distance: 20
-  hasRun: 0
-  bossType: 1
-  BossCanvas: {fileID: 5502665693126012376}
-  health: 60
-  maxHealth: 60
-  bossEncountered: 0
-  canBeDamaged: 1
 --- !u!54 &8902644454454473462
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -576,12 +416,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a03aa9a46947714aac9ee20e92b0432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snakeSweep: {fileID: 3116273809109224010}
+  snakeSweep: {fileID: 0}
   size: 0
   timer: 0
   isJumpIndicator: 0
   isWebIndicator: 0
   isSnakeIndicator: 0
+  isBirdIndicatorRectangle: 0
+  isBirdIndicatorCircle: 0
 --- !u!1 &7970238437833776492
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,12 +774,6 @@ PrefabInstance:
 --- !u!224 &3767246325133385888 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7139299575455708735, guid: 44375879c0871ad48801120b3c517b5e,
-    type: 3}
-  m_PrefabInstance: {fileID: 6292674034653648543}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5502665693126012376 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1948216934904101703, guid: 44375879c0871ad48801120b3c517b5e,
     type: 3}
   m_PrefabInstance: {fileID: 6292674034653648543}
   m_PrefabAsset: {fileID: 0}
@@ -1456,7 +1292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82bcdb6d7114d7245bd7a505b27f05d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 6111063971844364718}
+  stateMachine: {fileID: 0}
 --- !u!1 &4862370148252824802 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2835964399650666016, guid: a2a5ce2af3de00f488685842ffb86058,
@@ -1488,7 +1324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82bcdb6d7114d7245bd7a505b27f05d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 6111063971844364718}
+  stateMachine: {fileID: 0}
 --- !u!1 &5144753959519553759 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2541177032343341597, guid: a2a5ce2af3de00f488685842ffb86058,
@@ -1520,7 +1356,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82bcdb6d7114d7245bd7a505b27f05d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 6111063971844364718}
+  stateMachine: {fileID: 0}
 --- !u!4 &7181970399196554537 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: a2a5ce2af3de00f488685842ffb86058,
@@ -1565,6 +1401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d1fcb26ab1a48e47a1acf0348553a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stateMachine: {fileID: 6111063971844364718}
+  stateMachine: {fileID: 0}
   enrageAudio: {fileID: 8300000, guid: 35cc153cc87e96942b4335aaa6c11486, type: 3}
   introCard: {fileID: 7970238437833776492}
