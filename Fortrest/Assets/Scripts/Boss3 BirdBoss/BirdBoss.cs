@@ -9,36 +9,30 @@ public class BirdBoss : MonoBehaviour
     [HideInInspector] public Transform playerTransform;
     private Animator animator;
     [HideInInspector] public bool awoken;
-    public Vector3 startPosition;
-    public bool retreating;
-    private float damage;
-    public bool dead;
-    public int stage;
-    public bool startIntro;
-    public Vector3 directionToPlayer;
-    public float distanceToPlayer;
+    [HideInInspector] public Vector3 startPosition;   
+    [HideInInspector] public bool dead;
+    [HideInInspector] public bool startIntro;
+    [HideInInspector] public Vector3 directionToPlayer;
+    [HideInInspector] public float distanceToPlayer;
     private float speed = 15f;
-    private float rotationSpeed = 10.0f;
-    public float offset;
-    public float attackRange = 10.0f;
+    private float screenOffset = 50f;
     [HideInInspector] public bool playerReached = true;
     [HideInInspector] public bool targetReached = false;
-    public int hitReceived;
+    public bool altitudeReached;
+    public bool flying;
+    public bool diving;     
     public bool vulnerable;
     public bool crashed;
-    public bool flying;
-    public bool altitudeReached;
-    public bool normalAttack = true;
-    public bool normalAttackIndicator;
-    public bool circleAttackIndicator;
-    public GameObject telegraphedRectangle;
+    public bool retreating;
+    public int hitReceived;
+    [HideInInspector] public bool normalAttack = true;
+    [HideInInspector] public bool circleAttackIndicator;
     public GameObject telegraphedCircle;
     private bool stopMoving;
-    public bool diving;
-    public Vector3 targetPosition;
-    public Vector3 targetDirection;
-    public bool flyAnimOver;
-    public BoxCollider rigidCollider;
+    [HideInInspector] public Vector3 targetPosition;
+    [HideInInspector] public Vector3 targetDirection;
+    [HideInInspector] public bool flyAnimOver;
+    public BoxCollider mainCollider;
     public GameObject rockObject;
     public GameObject displayedRock;
 
@@ -57,15 +51,13 @@ public class BirdBoss : MonoBehaviour
         awoken = false;
         startPosition = transform.position;
         retreating = false;
-        damage = 5.0f;
-        stage = 1;
     }
 
     void Update()
     {
         directionToPlayer = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
         distanceToPlayer = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
-        rigidCollider.enabled = vulnerable ? true : false;
+        mainCollider.isTrigger = vulnerable ? true : false;
 
         // Boss wakes up when player gets close to it
         if (distanceToPlayer < 20.0f && !awoken)
@@ -103,7 +95,7 @@ public class BirdBoss : MonoBehaviour
     public void LookAt(Vector3 targetDirection)
     {       
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(targetDirection.x, 0, targetDirection.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * rotationSpeed);    
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10.0f);    
     }
 
     // Location the boss is moving to
@@ -131,7 +123,7 @@ public class BirdBoss : MonoBehaviour
         float distanceX = Vector3.Distance(new Vector3(Screen.width / 2, 0f, 0f), new Vector3(screenPos.x, 0f, 0f));
         float distanceY = Vector3.Distance(new Vector3(0f, Screen.height / 2, 0f), new Vector3(0f, screenPos.y, 0f));
 
-        if (distanceX - offset > Screen.width / 2 || distanceY - offset > Screen.height / 2)
+        if (distanceX - screenOffset > Screen.width / 2 || distanceY - screenOffset > Screen.height / 2)
         {
             return true;
         }
@@ -169,14 +161,17 @@ public class BirdBoss : MonoBehaviour
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
         }
-        if (other.gameObject.tag == "Arrow" && other.GetComponent<ArrowTrigger>() && vulnerable)
+        if (other.gameObject.tag == "Arrow" && other.GetComponent<ArrowTrigger>() && (crashed || vulnerable))
         {
             if (!other.GetComponent<ArrowTrigger>().singleHit)
             {
+                if (vulnerable)
+                {
+                    hitReceived++;
+                }
                 GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
                 other.GetComponent<ArrowTrigger>().singleHit = true;
-                Damaged(PlayerController.global.bowDamage);
-                hitReceived++;
+                Damaged(PlayerController.global.bowDamage);              
                 if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
                 {
                     Destroy(other.gameObject.transform.parent.gameObject);
