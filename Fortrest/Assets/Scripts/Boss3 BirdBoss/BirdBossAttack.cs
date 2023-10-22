@@ -39,7 +39,7 @@ public class BirdBossAttack : StateMachineBehaviour
         else if (sliding && birdScript.flyAnimOver)
         {
             birdScript.targetPosition = birdScript.targetPosition + (birdScript.targetDirection * 12.5f);
-
+            birdScript.vulnerable = true;
             timer += Time.deltaTime;
             if (timer > 0.06f)
             {
@@ -51,12 +51,15 @@ public class BirdBossAttack : StateMachineBehaviour
                 Destroy(SmokeVFXRight, 1.5f);
             }
         }
+        else 
+        {
+            birdScript.vulnerable = false;
+        }
         birdScript.MoveToTarget(birdScript.targetPosition, birdScript.targetDirection);        
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {       
-        birdScript.vulnerable = false;
         birdScript.flying = true;
         birdScript.normalAttack = false;
         sliding = false;
