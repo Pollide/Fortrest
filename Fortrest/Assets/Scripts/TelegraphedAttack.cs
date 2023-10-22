@@ -40,7 +40,7 @@ public class TelegraphedAttack : MonoBehaviour
         if (isBirdIndicatorCircle)
             Indicator(ref appearOnStart, 0.75f, 1.5f);
         if (isBirdIndicatorBigCircle)
-            Indicator(ref BirdBoss.global.circleAttackIndicator, 1.0f, 1.65f);
+            Indicator(ref BirdBoss.global.circleAttackIndicator, 0.75f, 1.65f);
     }
 
     void Indicator(ref bool indicator, float multiplier, float duration, bool unique = false)
@@ -65,12 +65,13 @@ public class TelegraphedAttack : MonoBehaviour
 
         if (!active)
         {            
-            if (isBirdIndicatorCircle || isBirdIndicatorBigCircle)
+            if (isBirdIndicatorBigCircle && indicator)
             {
                 StartCoroutine(TriggerDamage());
             }
             if (rockObject)
-            {                
+            {
+                StartCoroutine(TriggerDamage());
                 Destroy(rockObject);
             }
             size = 0;
@@ -89,7 +90,7 @@ public class TelegraphedAttack : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject == PlayerController.global.gameObject)
+        if (other.gameObject == PlayerController.global.gameObject && PlayerController.global.playerCanBeDamaged)
         {
             if (!isWebIndicator && SpiderBoss.global.rootNow)
             {
@@ -100,43 +101,11 @@ public class TelegraphedAttack : MonoBehaviour
             {
                 PlayerController.global.TakeDamage(20.0f);
                 SpiderBoss.global.slamNow = false;
-                int randomInt = Random.Range(0, 3);
-                AudioClip temp = null;
-                switch (randomInt)
-                {
-                    case 0:
-                        temp = GameManager.global.PlayerHit1Sound;
-                        break;
-                    case 1:
-                        temp = GameManager.global.PlayerHit2Sound;
-                        break;
-                    case 2:
-                        temp = GameManager.global.PlayerHit3Sound;
-                        break;
-                    default:
-                        break;
-                }
             }
             else if ((isBirdIndicatorCircle || isBirdIndicatorBigCircle) && damageNow)
             {
                 PlayerController.global.TakeDamage(20.0f);
                 damageNow = false;
-                int randomInt = Random.Range(0, 3);
-                AudioClip temp = null;
-                switch (randomInt)
-                {
-                    case 0:
-                        temp = GameManager.global.PlayerHit1Sound;
-                        break;
-                    case 1:
-                        temp = GameManager.global.PlayerHit2Sound;
-                        break;
-                    case 2:
-                        temp = GameManager.global.PlayerHit3Sound;
-                        break;
-                    default:
-                        break;
-                }
             }
         }
     }
