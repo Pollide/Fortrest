@@ -6,7 +6,7 @@ public class BirdBossAttack2 : StateMachineBehaviour
 {
     private BirdBoss birdScript;
     private float timer1, timer2;
-    private float rockCD = 0.6f;
+    private float rockCD = 0.5f;
     private float attackCD = 2.0f;
     private bool throwRock;
     private int rocks;

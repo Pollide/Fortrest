@@ -179,7 +179,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 1
-  DestroyedBool: 0
   resourceObject: 2
   buildingObject: 6
   health: 0
@@ -196,7 +195,7 @@ MonoBehaviour:
   textDisplayed: 0
   DebugDestroyInstantly: 0
   gridLocation: {x: 0, y: 0}
-  defenseBuilding: 0
+  destroyedTimer: 0
 --- !u!111 &3550765887160449743
 Animation:
   m_ObjectHideFlags: 0
@@ -487,8 +486,8 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4738890789707668172}
   m_PrefabAsset: {fileID: 0}
---- !u!135 &3478397562041192312
-SphereCollider:
+--- !u!136 &1944014242562147923
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -497,8 +496,9 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
   m_Radius: 0.23385382
+  m_Height: 0.7
+  m_Direction: 1
   m_Center: {x: 0.0023472607, y: 0.14545855, z: 0.004636787}
 --- !u!4 &7749359851512086157 stripped
 Transform:
