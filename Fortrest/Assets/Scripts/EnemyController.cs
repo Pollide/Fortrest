@@ -709,7 +709,7 @@ public class EnemyController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(temp, 0.9f);
             if (PlayerController.global.playerCanBeDamaged)
             {
-                PlayerController.global.TakeDamage(enemyDamage, false);
+                PlayerController.global.TakeDamage(enemyDamage);
             }
         }
         else if (bestTarget)

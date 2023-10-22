@@ -196,7 +196,7 @@ public class SpiderBoss : MonoBehaviour
                     break;
             }
             GameManager.global.SoundManager.PlaySound(temp, 0.9f);
-            PlayerController.global.TakeDamage(damage, true);
+            PlayerController.global.TakeDamage(damage);
         }
     }
 

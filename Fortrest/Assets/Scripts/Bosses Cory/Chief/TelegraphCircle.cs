@@ -49,7 +49,7 @@ public class TelegraphCircle : MonoBehaviour
             {
                 PlayerController player = collider.GetComponent<PlayerController>();
                 
-                player.TakeDamage(damage, true);
+                player.TakeDamage(damage);
 
                 Vector3 pushDirection = player.transform.position - inner.transform.position;
                 float angle = Vector3.Angle(pushDirection, player.transform.position - inner.transform.position);
