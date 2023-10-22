@@ -18,7 +18,7 @@ public class ChargeTrigger : MonoBehaviour
         {
             state.PlayerHit = true;
             PlayerController player = other.GetComponent<PlayerController>();
-            player.TakeDamage(state.Damage, true);
+            player.TakeDamage(state.Damage);
             Vector3 pushDirection = state.PlayerTransform.position - transform.position;
             float angle = Vector3.Angle(pushDirection, player.transform.position - transform.position);
             pushDirection = Quaternion.Euler(0f, angle, 0f) * pushDirection;
