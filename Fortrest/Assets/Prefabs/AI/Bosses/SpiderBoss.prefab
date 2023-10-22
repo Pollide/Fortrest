@@ -367,7 +367,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   awoken: 0
-  startPosition: {x: 0, y: 0, z: 0}
   retreating: 0
   dead: 0
   stage: 0
@@ -413,11 +412,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distance: 20
   hasRun: 0
+  Arenasize: 40
   bossType: 2
   BossCanvas: {fileID: 4052270581425538444}
   health: 70
   maxHealth: 70
+  bossEncountered: 0
   canBeDamaged: 1
+  StartPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &1272130810159069435
 GameObject:
   m_ObjectHideFlags: 0
@@ -1645,6 +1647,8 @@ MonoBehaviour:
   isJumpIndicator: 1
   isWebIndicator: 0
   isSnakeIndicator: 0
+  isBirdIndicatorCircle: 0
+  isBirdIndicatorBigCircle: 0
 --- !u!1 &7067317520787767096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2018,6 +2022,8 @@ MonoBehaviour:
   isJumpIndicator: 0
   isWebIndicator: 1
   isSnakeIndicator: 0
+  isBirdIndicatorCircle: 0
+  isBirdIndicatorBigCircle: 0
 --- !u!1 &8338390557246855583
 GameObject:
   m_ObjectHideFlags: 0
