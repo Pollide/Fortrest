@@ -264,6 +264,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7356453876488459006}
   - component: {fileID: 8902644454454473462}
+  - component: {fileID: 7009022988851924574}
+  - component: {fileID: 7388286947653290419}
+  - component: {fileID: 4418357230339626261}
+  - component: {fileID: 6334537736045912761}
+  - component: {fileID: 8047871076533031680}
   m_Layer: 0
   m_Name: Basalisk
   m_TagString: Untagged
@@ -305,6 +310,117 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &7009022988851924574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4034339124308090815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c243e2f4f2fd84ca0582127a985193, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentPhase: 0
+  currentState: {fileID: 0}
+  initialState: {fileID: 4418357230339626261}
+  arenaRadius: 50
+  speed: 0
+  inDefence: 0
+  phase2Ran: 0
+  phase3Ran: 0
+  isDead: 0
+  bossAnimator: {fileID: 9180576964448709641}
+  bossSpawner: {fileID: 0}
+--- !u!114 &7388286947653290419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4034339124308090815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36a0a17476046894796388402f1cd957, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 20
+  hasRun: 0
+  Arenasize: 40
+  bossType: 0
+  BossCanvas: {fileID: 0}
+  health: 100
+  maxHealth: 100
+  bossEncountered: 0
+  canBeDamaged: 1
+  StartPosition: {x: 0, y: 0, z: 0}
+--- !u!114 &4418357230339626261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4034339124308090815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eca4ba2841e208542a3a619e65976c1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetEnemy: {fileID: 7356453876488459006}
+  introDuration: 3
+  cameraDistance: 5
+  introPositionOffset: {x: 0, y: 2, z: -2}
+  idleState: {fileID: 8047871076533031680}
+  nextState: {fileID: 6334537736045912761}
+--- !u!114 &6334537736045912761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4034339124308090815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85ae25859d725be4aaffeafb7e433673, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackTimer: 0
+  attackTime: 0
+  attackDuration: 5
+  stoppingDistance: 3
+  rotationSpeed: 5
+  attackCounter: 0
+  attackRadius: 10
+  randomCheckTimer: 0
+  randomCheckDuration: 5
+  damage: 0
+  attackDistance: 0
+  firstAttackChance: 0.6
+  secondAttackChance: 0.2
+  thirdAttackChance: 0.2
+  isAttacking: 0
+  canChangeState: 0
+  canAttack: 0
+  telegraph: {fileID: 0}
+--- !u!114 &8047871076533031680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4034339124308090815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d07584372cb58df46808b848e1fb02fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nextStateOne: {fileID: 6334537736045912761}
+  nextStateIntro: {fileID: 6334537736045912761}
+  lastState: {fileID: 0}
+  idleRuns: 0
+  resetTimerDuration: 5
+  stoppingDistance: 3
 --- !u!1 &4632391821758241518
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,6 +540,7 @@ MonoBehaviour:
   isSnakeIndicator: 0
   isBirdIndicatorRectangle: 0
   isBirdIndicatorCircle: 0
+  isBirdIndicatorBigCircle: 0
 --- !u!1 &7970238437833776492
 GameObject:
   m_ObjectHideFlags: 0

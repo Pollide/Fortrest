@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetEnemy: {fileID: 184428647038659639}
-  introDuration: 3
+  introDuration: 7
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
   idleState: {fileID: 2852120374224939685}
@@ -143,7 +143,7 @@ MonoBehaviour:
   nextStateIntro: {fileID: 0}
   lastState: {fileID: 0}
   idleRuns: 0
-  resetTimerDuration: 0
+  resetTimerDuration: 5
   stoppingDistance: 3
 --- !u!114 &1711056823258257152
 MonoBehaviour:
@@ -159,15 +159,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackTimer: 0
   attackTime: 0
-  attackDuration: 5
+  attackDuration: 2.5
   stoppingDistance: 3
   rotationSpeed: 5
   attackCounter: 0
   attackRadius: 10
   randomCheckTimer: 0
   randomCheckDuration: 5
-  damage: 0
-  attackDistance: 0
+  damage: 10
+  attackDistance: 3.5
   firstAttackChance: 0.6
   secondAttackChance: 0.2
   thirdAttackChance: 0.2
@@ -217,6 +217,7 @@ MonoBehaviour:
   slamWaitAfterIndicator: 0.5
   damage: 20
   telegraph: {fileID: 7556151477208924013}
+  trigger: {fileID: 0}
   damageDone: 0
   hasJumped: 0
 --- !u!114 &9036080059429049915
@@ -1924,7 +1925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0255624b6f956944b18e61a1b48c05d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackState1: {fileID: 0}
+  attackState1: {fileID: 1711056823258257152}
   attackState2: {fileID: 7004052578520432879}
   attackState3: {fileID: 8740668045474777165}
   stateMachine: {fileID: 8860127450049526509}
