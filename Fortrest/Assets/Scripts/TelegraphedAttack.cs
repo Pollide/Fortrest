@@ -14,7 +14,6 @@ public class TelegraphedAttack : MonoBehaviour
     public bool isJumpIndicator;
     public bool isWebIndicator;
     public bool isSnakeIndicator;
-    public bool isBirdIndicatorRectangle;
     public bool isBirdIndicatorCircle;
     public bool isBirdIndicatorBigCircle;
     private bool appearOnStart = true;
@@ -35,8 +34,6 @@ public class TelegraphedAttack : MonoBehaviour
             Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f, 2.2f);
         if (isSnakeIndicator)
             Indicator(ref snakeSweep.coneIndicator, 1.5f, 2.2f);
-        if (isBirdIndicatorRectangle)
-            Indicator(ref BirdBoss.global.normalAttackIndicator, 2f, 2.5f, true);
         if (isBirdIndicatorCircle)
             Indicator(ref appearOnStart, 0.75f, 1.5f);
         if (isBirdIndicatorBigCircle)

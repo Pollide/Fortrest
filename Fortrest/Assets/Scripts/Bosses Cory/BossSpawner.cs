@@ -70,6 +70,10 @@ public class BossSpawner : MonoBehaviour
         {
             GetComponent<SpiderBoss>().bossSpawner = this;
         }
+        if (GetComponent<BirdBoss>())
+        {
+            GetComponent<BirdBoss>().bossSpawner = this;
+        }
     }
 
     public void BossEncountered(bool open)
