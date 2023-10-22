@@ -18,6 +18,7 @@ public class BirdBossAttack2 : StateMachineBehaviour
         birdScript.targetDirection = (new Vector3(birdScript.targetPosition.x, 0f, birdScript.targetPosition.z) - new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)).normalized;
         rocks = 0;
         throwRock = false;
+        birdScript.displayedRock.SetActive(true);
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -26,17 +27,19 @@ public class BirdBossAttack2 : StateMachineBehaviour
 
         if (birdScript.flyAnimOver)
         {
-            if (rocks < 6)
+            if (rocks < 7)
             {
                 if (!throwRock)
-                {
+                {                   
                     rocks++;
+                    GameObject rockObject = Instantiate(birdScript.rockObject, birdScript.transform.position, Quaternion.identity);
                     GameObject telegraph = Instantiate(birdScript.telegraphedCircle, new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z), Quaternion.identity);
+                    telegraph.GetComponentInChildren<TelegraphedAttack>().getRockObject(rockObject);
                     Destroy(telegraph, 5.0f);
                     throwRock = true;
                 }
                 else
-                {
+                {                    
                     timer1 += Time.deltaTime;
                     if (timer1 > rockCD)
                     {
@@ -55,7 +58,7 @@ public class BirdBossAttack2 : StateMachineBehaviour
                 birdScript.targetReached = true;
                 birdScript.playerReached = false;
                 animator.SetBool("Attack2", false);
-                timer2 = 0f;
+                timer2 = 0f;               
             }
         }
     }
@@ -63,5 +66,6 @@ public class BirdBossAttack2 : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         birdScript.normalAttack = true;
+        birdScript.displayedRock.SetActive(false);
     }
 }

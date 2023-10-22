@@ -10,7 +10,6 @@ public class BirdBossFly : StateMachineBehaviour
     private bool targetSet;
     float x, z;
 
-    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {       
         birdScript = animator.GetComponent<BirdBoss>();
@@ -18,28 +17,23 @@ public class BirdBossFly : StateMachineBehaviour
         timer = 0f;
     }
 
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         if (birdScript.altitudeReached)
         {
-            if (!birdScript.playerReached && birdScript.targetReached) //  && birdScript.distanceToPlayerNoY > birdScript.stoppingDistance
+            if (!birdScript.playerReached && birdScript.targetReached)
             {
                 birdScript.MoveToTarget(birdScript.playerTransform.position, birdScript.directionToPlayer);
-                if (!birdScript.IsOutOfScreen())
+                if (birdScript.distanceToPlayer < 30.0f)
                 {
-                    if (birdScript.distanceToPlayer < 40.0f)
+                    if (birdScript.normalAttack)
                     {
-                        if (birdScript.normalAttack)
-                        {
-
-                            animator.SetTrigger("Attack1");
-                        }
-                        else
-                        {
-                            animator.SetBool("Attack2", true);
-                            birdScript.normalAttack = true;
-                        }
+                        animator.SetTrigger("Attack1");
+                    }
+                    else
+                    {
+                        animator.SetBool("Attack2", true);
+                        birdScript.normalAttack = true;
                     }
                 }
             }    
@@ -69,7 +63,6 @@ public class BirdBossFly : StateMachineBehaviour
         }                
     }
 
-    // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.ResetTrigger("Attack1");

@@ -18,6 +18,7 @@ public class TelegraphedAttack : MonoBehaviour
     public bool isBirdIndicatorCircle;
     public bool isBirdIndicatorBigCircle;
     private bool appearOnStart = true;
+    private GameObject rockObject;
 
     void Start()
     {
@@ -63,6 +64,10 @@ public class TelegraphedAttack : MonoBehaviour
 
         if (!active)
         {
+            if (rockObject)
+            {
+                Destroy(rockObject);
+            }
             size = 0;
             timer = 0;
 
@@ -98,5 +103,10 @@ public class TelegraphedAttack : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void getRockObject(GameObject rock)
+    {
+        rockObject = rock;
     }
 }
