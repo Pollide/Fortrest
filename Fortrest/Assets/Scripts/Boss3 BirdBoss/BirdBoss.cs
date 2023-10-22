@@ -19,7 +19,6 @@ public class BirdBoss : MonoBehaviour
     public float distanceToPlayer;
     private float speed = 15f;
     private float rotationSpeed = 10.0f;
-    public float stoppingDistance;
     public float offset;
     public float attackRange = 10.0f;
     [HideInInspector] public bool playerReached = true;
@@ -39,6 +38,9 @@ public class BirdBoss : MonoBehaviour
     public Vector3 targetPosition;
     public Vector3 targetDirection;
     public bool flyAnimOver;
+    public BoxCollider rigidCollider;
+    public GameObject rockObject;
+    public GameObject displayedRock;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
@@ -57,13 +59,13 @@ public class BirdBoss : MonoBehaviour
         retreating = false;
         damage = 5.0f;
         stage = 1;
-        stoppingDistance = 5.0f;
     }
 
     void Update()
     {
         directionToPlayer = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
         distanceToPlayer = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
+        rigidCollider.enabled = vulnerable ? true : false;
 
         // Boss wakes up when player gets close to it
         if (distanceToPlayer < 20.0f && !awoken)

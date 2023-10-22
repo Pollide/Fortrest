@@ -36,7 +36,7 @@ public class BirdBossAttack : StateMachineBehaviour
                 birdScript.diving = false;              
             }
         }
-        else if (sliding)
+        else if (sliding && birdScript.flyAnimOver)
         {
             birdScript.targetPosition = birdScript.targetPosition + (birdScript.targetDirection * 12.5f);
 
