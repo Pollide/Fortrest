@@ -163,9 +163,11 @@ public class Building : MonoBehaviour
         if (destroyedTimer == 0)
         {
             health -= amount;
-            HUDHealthBar.SetHealth(health, maxHealth);
 
-            if (HUDHealthBar && buildingObject == BuildingType.House)
+            if (HUDHealthBar) //house doesnt have one
+                HUDHealthBar.SetHealth(health, maxHealth);
+
+            if (buildingObject == BuildingType.House)
             {
 
                 if (health < maxHealth && amount != 0)
