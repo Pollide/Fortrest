@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5411412253301375710}
   - component: {fileID: 9193962727061746161}
   m_Layer: 13
-  m_Name: Squid
+  m_Name: Isle-Maker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74,9 +74,9 @@ MonoBehaviour:
   bossEncountered: 0
   canBeDamaged: 1
   StartPosition: {x: 0, y: 0, z: 0}
-  introDuration: 3
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
+  introTimer: 0
   introCompleted: 0
   introCard: {fileID: 3266678436718030063}
   bossAnimator: {fileID: 902255068813967466}
@@ -416,6 +416,12 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 674d5408edb97f34fafb0db75efb7a31,
+        type: 3}
+    - target: {fileID: 6653658492852377821, guid: 44375879c0871ad48801120b3c517b5e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: a57f0a7486a38b6409c2cf3da6de4d52,
         type: 3}
     - target: {fileID: 7139299575455708735, guid: 44375879c0871ad48801120b3c517b5e,
         type: 3}
@@ -4261,7 +4267,6 @@ MonoBehaviour:
   bossCollider: {fileID: 7788129227239646016}
   slamAudio: {fileID: 8300000, guid: 708a0dc6ef2b29a439691a89a05da232, type: 3}
   enrageAudio: {fileID: 8300000, guid: 35cc153cc87e96942b4335aaa6c11486, type: 3}
-  introCard: {fileID: 0}
 --- !u!4 &5358124072363949228 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fcbc40f372ac8b64fb8664339f273e32,

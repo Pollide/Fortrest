@@ -276,14 +276,15 @@ MonoBehaviour:
   Arenasize: 40
   bossType: 4
   BossCanvas: {fileID: 7423440669727652635}
+  DebugDamageBoss: 0
   health: 100
   maxHealth: 20
   bossEncountered: 0
   canBeDamaged: 1
   StartPosition: {x: 0, y: 0, z: 0}
-  introDuration: 3
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
+  introTimer: 0
   introCompleted: 0
   introCard: {fileID: 6253710933162116347}
   bossAnimator: {fileID: 6850407931364350455}
@@ -361,10 +362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6551d4fc9ee71534da79fb98f54c01aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 6158916799259184055}
-  introDuration: 3
-  cameraDistance: 5
-  introPositionOffset: {x: 0, y: 2, z: -2}
   nextState: {fileID: 7026883036366209325}
 --- !u!114 &7026883036366209325
 MonoBehaviour:
@@ -404,10 +401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce40fd5854b8d514281b39806316bfc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 6158916799259184055}
-  introDuration: 3
-  cameraDistance: 5
-  introPositionOffset: {x: 0, y: 2, z: -2}
   nextState: {fileID: 5035358121503287246}
 --- !u!114 &5035358121503287246
 MonoBehaviour:
@@ -1510,6 +1503,12 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 4946f81226a5e6b408887328d7f1ecf6,
+        type: 3}
+    - target: {fileID: 6653658492852377821, guid: 44375879c0871ad48801120b3c517b5e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c3d54d58e83b8f54ebf78ef6a7f61a2a,
         type: 3}
     - target: {fileID: 7139299575455708735, guid: 44375879c0871ad48801120b3c517b5e,
         type: 3}

@@ -58,7 +58,7 @@ public class Unlocks : MonoBehaviour
                     case BossSpawner.TYPE.Lycan:
                         upgradedMeleeUnlocked = true;
                         break;
-                    case BossSpawner.TYPE.Squid:
+                    case BossSpawner.TYPE.IsleMaker:
                         upgradedBowUnlocked = true;
                         break;
                     default:

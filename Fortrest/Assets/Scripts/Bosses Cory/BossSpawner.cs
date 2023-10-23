@@ -5,12 +5,12 @@ public class BossSpawner : MonoBehaviour
 {
     [HideInInspector]
     public bool bossAwakened;
-
+    bool initialIntro = true;
     [SerializeField] public float Arenasize = 40f;
     // Holds the current boss type
     public TYPE bossType;
     public GameObject BossCanvas;
-
+    public bool DebugDamageBoss;
     // Enum for boss type
     public enum TYPE
     {
@@ -19,10 +19,10 @@ public class BossSpawner : MonoBehaviour
         SpiderQueen,
         Hrafn,
         Lycan,
-        Squid
+        IsleMaker,
     }
 
-    // [HideInInspector]
+    [HideInInspector]
     public float health = 100;
     // Holds the bosses max health
     public float maxHealth = 100f;
@@ -32,12 +32,10 @@ public class BossSpawner : MonoBehaviour
     public bool canBeDamaged = true;
     [HideInInspector]
     public Vector3 StartPosition;
-    public float introDuration = 3.0f; // Duration of the intro animation
     public float cameraDistance = 5.0f; // Distance between the camera and the enemy
     public Vector3 introPositionOffset = new(0, 2, -2); // Offset from the enemy's position during intro
-    private Transform initialCameraTransform;
-    private float introTimer = 0.0f;
-    [HideInInspector]
+    public float introTimer = 0.0f;
+    //[HideInInspector]
     public bool introCompleted = false;
     [SerializeField] private GameObject introCard;
     [SerializeField] public Animator bossAnimator;
@@ -76,8 +74,8 @@ public class BossSpawner : MonoBehaviour
             GetComponent<BossStateMachine>().bossSpawner = this;
             GetComponent<BossStateMachine>().enabled = false;
 
-            if (bossType == TYPE.Chieftain)
-                GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(false);
+            //if (bossType == TYPE.Chieftain)
+            bossAnimator.gameObject.SetActive(false);
         }
 
         if (GetComponent<SpiderBoss>())
@@ -89,6 +87,7 @@ public class BossSpawner : MonoBehaviour
         {
             GetComponent<SquidBoss>().bossSpawner = this;
         }
+
         if (GetComponent<BirdBoss>())
         {
             GetComponent<BirdBoss>().bossSpawner = this;
@@ -129,27 +128,43 @@ public class BossSpawner : MonoBehaviour
 
     private void Update()
     {
+        if (DebugDamageBoss)
+        {
+            DebugDamageBoss = false;
+            UpdateHealth(-10);
+        }
         if (CheckPlayerDistance())
         {
             if (!bossAwakened)
             {
+                bossAwakened = true;
+                BossIntro();
+
                 if (GetComponent<BossStateMachine>())
                 {
                     GetComponent<BossStateMachine>().enabled = true;
-                    GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(true);
+                    bossAnimator.gameObject.SetActive(true);
+
+                    //   if(bossType == TYPE.Basilisk)
+                    //   GameManager.global.SoundManager.PlaySound(enrageAudio);
                 }
                 else
                 {
-                    bossAnimator.SetTrigger("Awaking");
+                    if (GetComponent<BirdBoss>())
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossEncounterSound);
+                        bossAnimator.SetTrigger("TakeOff");
+                    }
+                    else
+                    {
+                        bossAnimator.ResetTrigger("Awaking");
+                        bossAnimator.SetTrigger("Awaking");
+                        // Debug.Log("set off");
+                    }
                 }
 
-                if (GetComponent<BirdBoss>())
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossEncounterSound);
-                    bossAnimator.SetTrigger("TakeOff");
-                }
 
-                bossAwakened = true;
+
 
             }
             else
@@ -158,27 +173,14 @@ public class BossSpawner : MonoBehaviour
 
                 if (!introCompleted)
                 {
-                    if (!CameraFollow.global.bossCam)
-                    {
-                        ScreenShake.global.duration = 3f;
-                        bossAnimator.Rebind();
-                        bossAnimator.Update(0f);
-                    }
-
                     PlayerController.global.characterAnimator.SetBool("Moving", false);
                     introTimer += Time.deltaTime;
-
-
-
-                    //Calculate the interpolation factor
-                    float introProgress = Mathf.Clamp01(introTimer / introDuration);
-
+                    float length = 6;
                     //Perform the intro animation
                     Vector3 targetPosition = transform.position + introPositionOffset;
-                    Vector3 cameraPosition = Vector3.Lerp(initialCameraTransform.position, targetPosition - initialCameraTransform.forward, introProgress);
-                    LevelManager.global.SceneCamera.transform.position = cameraPosition;
+                    LevelManager.global.SceneCamera.transform.position = Vector3.Lerp(LevelManager.global.SceneCamera.transform.position, targetPosition - LevelManager.global.SceneCamera.transform.forward, 2 * Time.deltaTime);
 
-                    if (introProgress >= 1.0f)
+                    if (introTimer >= length)
                     {
                         introCompleted = true;
 
@@ -199,11 +201,19 @@ public class BossSpawner : MonoBehaviour
                         }
                     }
 
-                    bossAnimator.speed = introCompleted ? 1 : 0;
-                    PlayerController.global.playerCanMove = !introCompleted;
-                    CameraFollow.global.bossCam = introCompleted;
-                    LevelManager.global.HUD.SetActive(!introCompleted);
-                    introCard.SetActive(!introCompleted);
+                    bool show = introTimer > 3 && initialIntro && !introCompleted;
+
+
+                    bossAnimator.speed = show ? 0 : 1;
+
+                    if (show)
+                        introCard.SetActive(true);
+
+                    CameraFollow.global.bossCam = !introCompleted;
+
+
+                    PlayerController.global.playerCanMove = introCompleted;
+                    LevelManager.global.HUD.SetActive(introCompleted);
                 }
             }
         }
@@ -211,6 +221,15 @@ public class BossSpawner : MonoBehaviour
         {
             BossEncountered(false);
         }
+    }
+
+    public void BossIntro()
+    {
+        introTimer = 0;
+        introCompleted = false;
+
+        bossAnimator.Rebind();
+        bossAnimator.Update(0f);
     }
 
     public bool CheckPlayerDistance()

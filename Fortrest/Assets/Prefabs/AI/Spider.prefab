@@ -1479,13 +1479,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea845b5433f796146be446269510fdee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bestTarget: {fileID: 0}
+  house: {fileID: 0}
   health: 0
-  healthBarImage: {fileID: 4259687617297835117}
+  healthBar: {fileID: 7646260862211229927}
   healthAnimation: {fileID: 6570201099238631830}
   chasing: 0
   canBeDamaged: 1
+  canBeDamagedByBoar: 1
+  isMob: 0
+  bossScriptOne: {fileID: 0}
+  bossScriptTwo: {fileID: 0}
   ActiveAnimator: {fileID: 2106938913424930742}
+  knockBackScript: {fileID: 0}
+  currentEnemyType: 2
   hitSound: {fileID: 8300000, guid: df19ab739cef55b4387888f679f9899e, type: 3}
   hitSound2: {fileID: 8300000, guid: 75455dd3d90c87b4f943b86361f5f4b5, type: 3}
   attackSound: {fileID: 8300000, guid: 9a0e07d02a24f6a4ba41f1de14bf3d99, type: 3}
@@ -1498,7 +1504,6 @@ MonoBehaviour:
   stepSound2: {fileID: 8300000, guid: 7be1854742b1c214f93184373f3d8d36, type: 3}
   ogreSpawnSound: {fileID: 0}
   ogreAttackSound: {fileID: 0}
-  currentEnemyType: 2
   flashingAnimation: {fileID: 335623215080273736}
   flashing: 0
 --- !u!114 &7711817039593075443
@@ -1515,6 +1520,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   strength: 45
   knock: 0
+  mountKnock: 0
 --- !u!1 &6181531277398584947
 GameObject:
   m_ObjectHideFlags: 0
@@ -2189,18 +2195,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}
---- !u!114 &4259687617297835117 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1467846266723204868, guid: 412f881170d2477458b73d3eddd5ab20,
-    type: 3}
-  m_PrefabInstance: {fileID: 3405747397316418409}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &5312649370111536178 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
@@ -2213,3 +2207,15 @@ Animation:
     type: 3}
   m_PrefabInstance: {fileID: 3405747397316418409}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &7646260862211229927 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4998815853741020046, guid: 412f881170d2477458b73d3eddd5ab20,
+    type: 3}
+  m_PrefabInstance: {fileID: 3405747397316418409}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

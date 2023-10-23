@@ -63,7 +63,7 @@ public class BossStateMachine : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Initial state not set in BossStateMachine.");
+            // Debug.LogError("Initial state not set in BossStateMachine.");
         }
     }
 
