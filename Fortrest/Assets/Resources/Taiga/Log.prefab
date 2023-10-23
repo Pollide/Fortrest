@@ -81,21 +81,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NaturalBool: 1
-  DestroyedBool: 0
   resourceObject: 2
+  buildingObject: 0
   health: 0
   maxHealth: 3
   resourceAmount: 2
   constructionCostWood: 5
   constructionCostStone: 5
-  healthBarImage: {fileID: 1280423068281564523}
-  HUDHealthBar: {fileID: 0}
+  healthBarImage: {fileID: 0}
+  HUDHealthBar: {fileID: 4667263103679529441}
   playerinRange: 0
   normalHouse: {fileID: 0}
   destroyedHouse: {fileID: 0}
   interactText: {fileID: 0}
   textDisplayed: 0
   DebugDestroyInstantly: 0
+  gridLocation: {x: 0, y: 0}
+  destroyedTimer: 0
 --- !u!111 &-6799876280890107172
 Animation:
   m_ObjectHideFlags: 0
@@ -265,16 +267,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}
---- !u!114 &1280423068281564523 stripped
+--- !u!114 &4667263103679529441 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1467846266723204868, guid: 412f881170d2477458b73d3eddd5ab20,
+  m_CorrespondingSourceObject: {fileID: 4998815853741020046, guid: 412f881170d2477458b73d3eddd5ab20,
     type: 3}
   m_PrefabInstance: {fileID: 403687447353365103}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!224 &7161806266648159540 stripped

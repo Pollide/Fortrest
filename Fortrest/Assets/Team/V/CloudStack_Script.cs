@@ -10,7 +10,7 @@ public class CloudStack_Script : MonoBehaviour
     float offset;
 
     public int layer;
-    public Camera camera;
+    public Camera cameraCloud;
     private Matrix4x4 matrix;
     private Matrix4x4[] matrices;
     public bool castShadows = false;
@@ -40,7 +40,7 @@ public class CloudStack_Script : MonoBehaviour
             }
             else
             {
-                Graphics.DrawMesh(quadMesh, matrix, cloudMaterial, layer, camera, 0, null, castShadows, false, false); // otherwise just draw it now
+                Graphics.DrawMesh(quadMesh, matrix, cloudMaterial, layer, cameraCloud, 0, null, castShadows, false, false); // otherwise just draw it now
             }
         }
 
@@ -50,7 +50,7 @@ public class CloudStack_Script : MonoBehaviour
             if (castShadows)
                 shadowCasting = UnityEngine.Rendering.ShadowCastingMode.On;
 
-            Graphics.DrawMeshInstanced(quadMesh, 0, cloudMaterial, matrices, horizontalStackSize, null, shadowCasting, false, layer, camera);
+            Graphics.DrawMeshInstanced(quadMesh, 0, cloudMaterial, matrices, horizontalStackSize, null, shadowCasting, false, layer, cameraCloud);
 
         }
     }

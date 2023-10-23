@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class AttackManagerState : BossState
 {
-    // Timer for attacks
-    [SerializeField] private float attackTimer = 0f;
     public float attackTime = 0f;
     public float attackDuration = 5f;
 
