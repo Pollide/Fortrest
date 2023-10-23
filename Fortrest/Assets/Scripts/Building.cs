@@ -163,9 +163,10 @@ public class Building : MonoBehaviour
         if (destroyedTimer == 0)
         {
             health -= amount;
+            HUDHealthBar.SetHealth(health, maxHealth);
+
             if (HUDHealthBar && buildingObject == BuildingType.House)
             {
-                HUDHealthBar.SetHealth(health, maxHealth);
 
                 if (health < maxHealth && amount != 0)
                     GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash");
