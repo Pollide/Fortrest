@@ -15,8 +15,6 @@ public class IdleState : BossState
 
     public override void EnterState()
     {
-        stateMachine.bossSpawner.BossEncountered(true);
-
         idleRuns++;
 
         resetTimer = resetTimerDuration;
@@ -32,14 +30,12 @@ public class IdleState : BossState
         // checks if player is in the arena 
         if (PlayerInArena(stateMachine.ArenaSize))
         {
-            StateMachine.bossSpawner.BossEncountered(true);
-
             // changes to attack state
-            if (idleRuns <= 1 && stateMachine.BossType == BossSpawner.TYPE.Werewolf)
+            if (idleRuns <= 1 && stateMachine.BossType == BossSpawner.TYPE.Lycan)
             {
                 stateMachine.ChangeState(nextStateOne);
             }
-            else if (idleRuns > 1 && stateMachine.BossType == BossSpawner.TYPE.Werewolf)
+            else if (idleRuns > 1 && stateMachine.BossType == BossSpawner.TYPE.Lycan)
             {
                 if (resetTimer <= 0)
                 {
@@ -49,12 +45,12 @@ public class IdleState : BossState
                 {
                     stateMachine.ChangeState(lastState);
                 }
-                
+
             }
-            else if (stateMachine.BossType != BossSpawner.TYPE.Werewolf)
+            else if (stateMachine.BossType != BossSpawner.TYPE.Lycan)
             {
                 stateMachine.ChangeState(nextStateOne);
-            } 
+            }
         }
         else
         {
@@ -76,7 +72,7 @@ public class IdleState : BossState
             {
                 WalkTo(initialSpawn, stoppingDistance);
             }
-            else if (stateMachine.BossType == BossSpawner.TYPE.Werewolf)
+            else if (stateMachine.BossType == BossSpawner.TYPE.Lycan)
             {
                 WalkTo(initialSpawn, stoppingDistance);
             }

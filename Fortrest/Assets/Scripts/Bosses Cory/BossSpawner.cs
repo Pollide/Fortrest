@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BossSpawner : MonoBehaviour
 {
-    [SerializeField] private float distance = 20f;
-    public bool hasRun = false;
-    [SerializeField] private float Arenasize = 40f;
+    [HideInInspector]
+    public bool bossAwakened;
+
+    [SerializeField] public float Arenasize = 40f;
     // Holds the current boss type
     public TYPE bossType;
     public GameObject BossCanvas;
@@ -15,12 +17,12 @@ public class BossSpawner : MonoBehaviour
         Chieftain,
         Basilisk,
         SpiderQueen,
-        Bird,
-        Werewolf,
+        Hrafn,
+        Lycan,
         Squid
     }
 
-    [HideInInspector]
+    // [HideInInspector]
     public float health = 100;
     // Holds the bosses max health
     public float maxHealth = 100f;
@@ -30,6 +32,16 @@ public class BossSpawner : MonoBehaviour
     public bool canBeDamaged = true;
     [HideInInspector]
     public Vector3 StartPosition;
+    public float introDuration = 3.0f; // Duration of the intro animation
+    public float cameraDistance = 5.0f; // Distance between the camera and the enemy
+    public Vector3 introPositionOffset = new(0, 2, -2); // Offset from the enemy's position during intro
+    private Transform initialCameraTransform;
+    private float introTimer = 0.0f;
+    [HideInInspector]
+    public bool introCompleted = false;
+    [SerializeField] private GameObject introCard;
+    [SerializeField] public Animator bossAnimator;
+
     public void Awake()
     {
         health = maxHealth;//on awake before the game loads
@@ -63,12 +75,19 @@ public class BossSpawner : MonoBehaviour
         {
             GetComponent<BossStateMachine>().bossSpawner = this;
             GetComponent<BossStateMachine>().enabled = false;
-            GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(false);
+
+            if (bossType == TYPE.Chieftain)
+                GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(false);
         }
 
         if (GetComponent<SpiderBoss>())
         {
             GetComponent<SpiderBoss>().bossSpawner = this;
+        }
+
+        if (GetComponent<SquidBoss>())
+        {
+            GetComponent<SquidBoss>().bossSpawner = this;
         }
         if (GetComponent<BirdBoss>())
         {
@@ -112,29 +131,80 @@ public class BossSpawner : MonoBehaviour
     {
         if (CheckPlayerDistance())
         {
-            if (!hasRun)
+            if (!bossAwakened)
             {
                 if (GetComponent<BossStateMachine>())
                 {
                     GetComponent<BossStateMachine>().enabled = true;
                     GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(true);
                 }
-
-                if (GetComponent<SpiderBoss>())
+                else
                 {
-                    GetComponent<SpiderBoss>().Awaken();
-                }
-                if (GetComponent<SquidBoss>())
-                {
-                    GetComponent<SquidBoss>().Awaken();
+                    bossAnimator.SetTrigger("Awaking");
                 }
 
-                hasRun = true;
+                if (GetComponent<BirdBoss>())
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossEncounterSound);
+                    bossAnimator.SetTrigger("TakeOff");
+                }
+
+                bossAwakened = true;
 
             }
             else
             {
                 BossEncountered(true);
+
+                if (!introCompleted)
+                {
+                    if (!CameraFollow.global.bossCam)
+                    {
+                        ScreenShake.global.duration = 3f;
+                        bossAnimator.Rebind();
+                        bossAnimator.Update(0f);
+                    }
+
+                    PlayerController.global.characterAnimator.SetBool("Moving", false);
+                    introTimer += Time.deltaTime;
+
+
+
+                    //Calculate the interpolation factor
+                    float introProgress = Mathf.Clamp01(introTimer / introDuration);
+
+                    //Perform the intro animation
+                    Vector3 targetPosition = transform.position + introPositionOffset;
+                    Vector3 cameraPosition = Vector3.Lerp(initialCameraTransform.position, targetPosition - initialCameraTransform.forward, introProgress);
+                    LevelManager.global.SceneCamera.transform.position = cameraPosition;
+
+                    if (introProgress >= 1.0f)
+                    {
+                        introCompleted = true;
+
+                        if (GetComponent<BossStateMachine>())
+                        {
+                            if (GetComponent<IdleState>().IdleRuns < 1 && bossType == BossSpawner.TYPE.Lycan)
+                            {
+                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
+                            }
+                            else if (GetComponent<IdleState>().IdleRuns >= 1 && bossType == BossSpawner.TYPE.Lycan)
+                            {
+                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
+                            }
+                            else if (bossType != BossSpawner.TYPE.Lycan)
+                            {
+                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
+                            }
+                        }
+                    }
+
+                    bossAnimator.speed = introCompleted ? 1 : 0;
+                    PlayerController.global.playerCanMove = !introCompleted;
+                    CameraFollow.global.bossCam = introCompleted;
+                    LevelManager.global.HUD.SetActive(!introCompleted);
+                    introCard.SetActive(!introCompleted);
+                }
             }
         }
         else
@@ -143,11 +213,10 @@ public class BossSpawner : MonoBehaviour
         }
     }
 
-
     public bool CheckPlayerDistance()
     {
 
-        return health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (hasRun ? Arenasize : 20);
+        return health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (bossAwakened ? Arenasize : 20);
     }
 
     private void OnDrawGizmosSelected()

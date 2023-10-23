@@ -52,10 +52,10 @@ public class Unlocks : MonoBehaviour
 
                         miniTurretUnlocked = true;
                         break;
-                    case BossSpawner.TYPE.Bird:
+                    case BossSpawner.TYPE.Hrafn:
                         extraApplesUnlocked = true;
                         break;
-                    case BossSpawner.TYPE.Werewolf:
+                    case BossSpawner.TYPE.Lycan:
                         upgradedMeleeUnlocked = true;
                         break;
                     case BossSpawner.TYPE.Squid:
