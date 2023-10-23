@@ -662,7 +662,6 @@ public class EnemyController : MonoBehaviour
     private void PickSound(AudioClip name1, AudioClip name2, float volume)
     {
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? name1 : name2, volume, true, 0, false, transform);
-        Debug.Log("Sound");
     }
 
     private void ResetAttack()

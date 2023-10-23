@@ -9,6 +9,7 @@ public class BirdBossFly : StateMachineBehaviour
     private float attackCD = 2.0f;
     private bool targetSet;
     float x, z;
+    private bool setAttack;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {       
@@ -24,8 +25,17 @@ public class BirdBossFly : StateMachineBehaviour
             if (!birdScript.playerReached && birdScript.targetReached)
             {
                 birdScript.MoveToTarget(birdScript.playerTransform.position, birdScript.directionToPlayer);
-                if (birdScript.distanceToPlayer < 30.0f)
+                if (birdScript.distanceToPlayer < 30.0f && !setAttack)
                 {
+                    if (birdScript.lastWasNormal)
+                    {
+                        birdScript.normalAttack = Random.Range(0, 3) == 0 ? true : false;
+                    }
+                    else
+                    {
+                        birdScript.normalAttack = Random.Range(0, 3) == 0 ? false : true;
+                    }
+                    
                     if (birdScript.normalAttack)
                     {
                         animator.SetTrigger("Attack1");
@@ -35,6 +45,7 @@ public class BirdBossFly : StateMachineBehaviour
                         animator.SetBool("Attack2", true);
                         birdScript.normalAttack = true;
                     }
+                    setAttack = true;
                 }
             }    
             if (!birdScript.targetReached && birdScript.playerReached)
@@ -69,5 +80,6 @@ public class BirdBossFly : StateMachineBehaviour
         birdScript.playerReached = true;
         birdScript.targetReached = false;
         birdScript.flyAnimOver = true;
+        setAttack = false;
     }
 }

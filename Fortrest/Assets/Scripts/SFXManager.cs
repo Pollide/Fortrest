@@ -238,11 +238,11 @@ public class SFXManager : MonoBehaviour
 
             if (SpatialTransform) //default is Vector3.zero
             {
-                if (Vector3.Distance(SpatialTransform.position, PlayerController.global.transform.position) > 20)
+                if (Vector3.Distance(SpatialTransform.position, PlayerController.global.transform.position) > 40)
                 {
                     return 0;//too far away
                 }
-                SFXList[PoolPosition].Audio.spatialBlend = 0.8f;
+                SFXList[PoolPosition].Audio.spatialBlend = 0.5f;
                 SFXList[PoolPosition].Audio.transform.position = SpatialTransform.position; //stops the high pitch sound
             }
             else
