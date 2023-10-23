@@ -95,12 +95,19 @@ public class LevelManager : MonoBehaviour
 
     // [HideInInspector]
     public List<Terrain> terrainList = new List<Terrain>();
-
+    public List<TerrainData> terrainDataList = new List<TerrainData>();
     public Image clockHand;
     public Image clockSun;
     public Image clockMoon;
 
     public bool waveEnd;
+
+    [System.Serializable]
+    public class TerrainData
+    {
+        public Terrain terrain;
+        public AudioClip music;
+    }
 
     public enum SPAWNLANE
     {
