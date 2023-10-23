@@ -346,14 +346,15 @@ MonoBehaviour:
   Arenasize: 40
   bossType: 1
   BossCanvas: {fileID: 5502665693126012376}
+  DebugDamageBoss: 0
   health: 100
   maxHealth: 60
   bossEncountered: 0
   canBeDamaged: 1
   StartPosition: {x: 0, y: 0, z: 0}
-  introDuration: 3
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
+  introTimer: 0
   introCompleted: 0
   introCard: {fileID: 9048182776193749560}
   bossAnimator: {fileID: 9180576964448709641}
@@ -615,8 +616,8 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 3824686513915610074}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &8507120425560357395
-MeshCollider:
+--- !u!135 &7400914022351567842
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -625,10 +626,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4910182920940080952, guid: 039c29fcb3da0ed4e81838439d382d65, type: 3}
+  serializedVersion: 2
+  m_Radius: 3.7
+  m_Center: {x: -3.2055166, y: -0.5712305, z: 1.0137879}
 --- !u!1001 &6292674034653648543
 PrefabInstance:
   m_ObjectHideFlags: 0
