@@ -325,6 +325,11 @@ public class LevelManager : MonoBehaviour
 
         PlayerController.global.EnemiesTextControl();
 
+        for (int i = 0; i < terrainDataList.Count; i++)
+        {
+
+        }
+
         if (!NightTimeMusic && ReturnNight())
         {
             NightTimeMusic = true;

@@ -54,7 +54,6 @@ public class Building : MonoBehaviour
     public int constructionCostWood = 5;
     public int constructionCostStone = 5;
 
-    public Image healthBarImage;
     public HealthBar HUDHealthBar;
 
     float HealthAppearTimer = -1;
@@ -164,16 +163,15 @@ public class Building : MonoBehaviour
         if (destroyedTimer == 0)
         {
             health -= amount;
-            if (HUDHealthBar && buildingObject == BuildingType.House)
-            {
+
+            if (HUDHealthBar) //house doesnt have one
                 HUDHealthBar.SetHealth(health, maxHealth);
+
+            if (buildingObject == BuildingType.House)
+            {
 
                 if (health < maxHealth && amount != 0)
                     GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash");
-            }
-            if (healthBarImage)
-            {
-                healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
             }
 
             if (amount != 0)
@@ -266,7 +264,7 @@ public class Building : MonoBehaviour
 
     private void HealthAnimation()
     {
-        Animation animation = healthBarImage.GetComponentInParent<Animation>();
+        Animation animation = HUDHealthBar.GetComponentInParent<Animation>();
 
         if (HealthAppearTimer == -1)
         {
@@ -391,7 +389,7 @@ public class Building : MonoBehaviour
             if (HealthAppearTimer > 5)
             {
                 HealthAppearTimer = -1;
-                GameManager.PlayAnimation(healthBarImage.GetComponentInParent<Animation>(), "Health Appear", false);
+                GameManager.PlayAnimation(HUDHealthBar.GetComponentInParent<Animation>(), "Health Appear", false);
             }
         }
 
