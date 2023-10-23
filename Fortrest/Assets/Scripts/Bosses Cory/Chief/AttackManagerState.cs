@@ -66,9 +66,10 @@ public class AttackManagerState : BossState
         canChangeState = true;
         canAttack = true;
         randValue = 0f;
+
         if (GetComponent<TelegraphCircle>())
         {
-            GetComponent<TelegraphCircle>().attack = true;
+            GetComponent<TelegraphCircle>().isAttack = true;
         }
 
         randomCheckTimer = randomCheckDuration;
@@ -77,7 +78,7 @@ public class AttackManagerState : BossState
 
     public override void ExitState()
     {
-        stateMachine.BossAnimator.ResetTrigger("attacking");
+        stateMachine.BossAnimator.ResetTrigger("isAttacking");
         telegraph.SetActive(false);
         isAttacking = false;
         attackTime = 0f;
@@ -143,32 +144,6 @@ public class AttackManagerState : BossState
             randomCheckTimer -= Time.deltaTime;
         }
 
-        switch (stateMachine.BossType)
-        {
-            case BossSpawner.TYPE.Chieftain:
-                AttackChief();
-                break;
-            case BossSpawner.TYPE.Basilisk:
-                AttackSnake();
-                break;
-            case BossSpawner.TYPE.Bird:
-                AttackBird();
-                break;
-            case BossSpawner.TYPE.Werewolf:
-                AttackWarewolf();
-                break;
-            case BossSpawner.TYPE.Squid:
-                AttackSquid();
-                break;
-            default:
-                break;
-        }
-
-
-    }
-
-    private void AttackChief()
-    {
         if (stateMachine.BossAnimator.GetBool("isTired"))
         {
             SetTelegraph(false);
@@ -179,8 +154,8 @@ public class AttackManagerState : BossState
             // Check if the enemy can attack
             if (CanAttack(false))
             {
-                stateMachine.BossAnimator.ResetTrigger("attacking");
-                stateMachine.BossAnimator.SetTrigger("attacking");
+                stateMachine.BossAnimator.ResetTrigger("isAttacking");
+                stateMachine.BossAnimator.SetTrigger("isAttacking");
                 SetTelegraph(true);
                 isAttacking = true;
                 canAttack = true;
@@ -217,9 +192,10 @@ public class AttackManagerState : BossState
                 stateMachine.BossAnimator.speed = 1f;
                 attackTime = 0f;
                 canAttack = false;
+
                 if (telegraph.activeSelf)
                 {
-                    StartCoroutine(GetComponent<TelegraphCircle>().DoSlamDamage(0.1f, Damage, attackRadius));
+                    StartCoroutine(GetComponent<TelegraphCircle>().DoAreaDamage(0.1f, Damage, attackRadius));
                 }
 
             }
@@ -232,77 +208,6 @@ public class AttackManagerState : BossState
         GetComponent<TelegraphCircle>().outer.SetActive(isActive);
     }
 
-    private void AttackSnake()
-    {
-        if (!isAttacking)
-        {
-
-        }
-        else
-        {
-            // Count down the attack timer
-            attackTimer -= Time.deltaTime;
-
-            if (attackTimer <= 0)
-            {
-                isAttacking = false;
-            }
-        }
-    }
-
-    private void AttackBird()
-    {
-        if (!isAttacking)
-        {
-
-        }
-        else
-        {
-            // Count down the attack timer
-            attackTimer -= Time.deltaTime;
-
-            if (attackTimer <= 0)
-            {
-                isAttacking = false;
-            }
-        }
-    }
-
-    private void AttackWarewolf()
-    {
-        if (!isAttacking)
-        {
-
-        }
-        else
-        {
-            // Count down the attack timer
-            attackTimer -= Time.deltaTime;
-
-            if (attackTimer <= 0)
-            {
-                isAttacking = false;
-            }
-        }
-    }
-
-    private void AttackSquid()
-    {
-        if (!isAttacking)
-        {
-
-        }
-        else
-        {
-            // Count down the attack timer
-            attackTimer -= Time.deltaTime;
-
-            if (attackTimer <= 0)
-            {
-                isAttacking = false;
-            }
-        }
-    }
 
     public void PlaySlash(int _index)
     {
