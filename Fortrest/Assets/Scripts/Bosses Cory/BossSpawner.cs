@@ -54,7 +54,7 @@ public class BossSpawner : MonoBehaviour
 
     private void Start()
     {
-        global::System.Object value = LevelManager.global.bossList.Add(this);
+        LevelManager.global.bossList.Add(this);
 
         if (health > 0)
             Indicator.global.AddIndicator(transform, Color.red, bossType.ToString(), false);
