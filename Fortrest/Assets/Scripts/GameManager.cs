@@ -120,6 +120,22 @@ public class GameManager : MonoBehaviour
     public AudioClip SpiderBossStep4Sound;
     public AudioClip SpiderBossWebAttackSound;
 
+    [Header("BirdBoss")]
+    public AudioClip BirdBossWing1Sound;
+    public AudioClip BirdBossWing2Sound;
+    public AudioClip BirdBossCrashSound;
+    public AudioClip BirdBossEncounterSound;
+    public AudioClip BirdBossPreAttack1Sound;
+    public AudioClip BirdBossPreAttack2Sound;
+    public AudioClip BirdBossPreAttack3Sound;
+    public AudioClip BirdBossAttack3Sound;
+    public AudioClip BirdBossSlideSound;
+    public AudioClip BirdBossRockSound;
+    public AudioClip BirdBossHit1Sound;
+    public AudioClip BirdBossHit2Sound;
+    public AudioClip BirdBossHoverSound;
+    public AudioClip BirdBossDeadSound;
+
     public AudioClip ChestOpenSound;
 
     private Vector3 lastMousePosition;
