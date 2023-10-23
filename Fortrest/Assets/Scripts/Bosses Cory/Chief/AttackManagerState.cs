@@ -66,9 +66,9 @@ public class AttackManagerState : BossState
         canChangeState = true;
         canAttack = true;
         randValue = 0f;
-        if (GetComponent<BossTelegraphSlam>())
+        if (GetComponent<TelegraphCircle>())
         {
-            GetComponent<BossTelegraphSlam>().attack = true;
+            GetComponent<TelegraphCircle>().attack = true;
         }
 
         randomCheckTimer = randomCheckDuration;
@@ -219,7 +219,7 @@ public class AttackManagerState : BossState
                 canAttack = false;
                 if (telegraph.activeSelf)
                 {
-                    StartCoroutine(GetComponent<BossTelegraphSlam>().DoSlamDamage(0.1f, Damage, attackRadius));
+                    StartCoroutine(GetComponent<TelegraphCircle>().DoSlamDamage(0.1f, Damage, attackRadius));
                 }
 
             }
@@ -229,7 +229,7 @@ public class AttackManagerState : BossState
     public void SetTelegraph(bool isActive)
     {
         telegraph.SetActive(isActive);
-        GetComponent<BossTelegraphSlam>().outer.SetActive(isActive);
+        GetComponent<TelegraphCircle>().outer.SetActive(isActive);
     }
 
     private void AttackSnake()
