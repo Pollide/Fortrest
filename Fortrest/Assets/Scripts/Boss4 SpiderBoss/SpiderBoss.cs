@@ -177,27 +177,7 @@ public class SpiderBoss : MonoBehaviour
     public void NormalAttackAnimEvent()
     {
         GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossAttackSound, 1f, true, 0, false, transform);
-        if (PlayerController.global.playerCanBeDamaged)
-        {
-            int randomInt = Random.Range(0, 3);
-            AudioClip temp = null;
-            switch (randomInt)
-            {
-                case 0:
-                    temp = GameManager.global.PlayerHit1Sound;
-                    break;
-                case 1:
-                    temp = GameManager.global.PlayerHit2Sound;
-                    break;
-                case 2:
-                    temp = GameManager.global.PlayerHit3Sound;
-                    break;
-                default:
-                    break;
-            }
-            GameManager.global.SoundManager.PlaySound(temp, 0.9f);
-            PlayerController.global.TakeDamage(damage, true);
-        }
+        PlayerController.global.TakeDamage(damage);
     }
 
     private IEnumerator DestroyOnDeath()

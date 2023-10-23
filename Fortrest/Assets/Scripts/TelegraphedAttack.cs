@@ -14,9 +14,12 @@ public class TelegraphedAttack : MonoBehaviour
     public bool isJumpIndicator;
     public bool isWebIndicator;
     public bool isSnakeIndicator;
-    public bool isBirdIndicatorRectangle;
     public bool isBirdIndicatorCircle;
+    public bool isBirdIndicatorBigCircle;
     private bool appearOnStart = true;
+    private GameObject rockObject;
+    private bool damageNow;
+    private bool pushBack;
 
     void Start()
     {
@@ -32,10 +35,16 @@ public class TelegraphedAttack : MonoBehaviour
             Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f, 2.2f);
         if (isSnakeIndicator)
             Indicator(ref snakeSweep.coneIndicator, 1.5f, 2.2f);
-        if (isBirdIndicatorRectangle)
-            Indicator(ref BirdBoss.global.normalAttackIndicator, 2f, 2.5f, true);
         if (isBirdIndicatorCircle)
-            Indicator(ref appearOnStart, 0.75f, 2f);
+            Indicator(ref appearOnStart, 0.75f, 1.5f);
+        if (isBirdIndicatorBigCircle)
+            Indicator(ref BirdBoss.global.circleAttackIndicator, 0.75f, 1.65f);
+
+        if (pushBack)
+        {
+            PlayerController.global.playerCanMove = false;
+            PlayerController.global.playerCC.Move(BirdBoss.global.directionToPlayer * 10.0f * Time.deltaTime);
+        }
     }
 
     void Indicator(ref bool indicator, float multiplier, float duration, bool unique = false)
@@ -59,7 +68,16 @@ public class TelegraphedAttack : MonoBehaviour
         spriteRenderer.enabled = active;
 
         if (!active)
-        {
+        {            
+            if (isBirdIndicatorBigCircle && indicator)
+            {
+                StartCoroutine(TriggerDamage());
+            }
+            if (rockObject)
+            {
+                StartCoroutine(TriggerDamage());
+                Destroy(rockObject);
+            }
             size = 0;
             timer = 0;
 
@@ -67,33 +85,50 @@ public class TelegraphedAttack : MonoBehaviour
         }
     }
 
+    private IEnumerator TriggerDamage()
+    {
+        damageNow = true;
+        yield return new WaitForFixedUpdate();
+        damageNow = false;
+    }
+
     private void OnTriggerStay(Collider other)
     {
-        if (!isJumpIndicator && SpiderBoss.global.rootNow && other.gameObject == PlayerController.global.gameObject)
+        if (other.gameObject == PlayerController.global.gameObject && PlayerController.global.playerCanBeDamaged)
         {
-            PlayerController.global.rooted = true;
-            SpiderBoss.global.rootNow = false;
-        }
-        else if (isJumpIndicator && SpiderBoss.global.slamNow && other.gameObject == PlayerController.global.gameObject)
-        {
-            PlayerController.global.TakeDamage(20.0f, true);
-            SpiderBoss.global.slamNow = false;
-            int randomInt = Random.Range(0, 3);
-            AudioClip temp = null;
-            switch (randomInt)
+            if (!isWebIndicator && SpiderBoss.global.rootNow)
             {
-                case 0:
-                    temp = GameManager.global.PlayerHit1Sound;
-                    break;
-                case 1:
-                    temp = GameManager.global.PlayerHit2Sound;
-                    break;
-                case 2:
-                    temp = GameManager.global.PlayerHit3Sound;
-                    break;
-                default:
-                    break;
+                PlayerController.global.rooted = true;
+                SpiderBoss.global.rootNow = false;
+            }
+            else if (isJumpIndicator && SpiderBoss.global.slamNow)
+            {
+                PlayerController.global.TakeDamage(20.0f);
+                SpiderBoss.global.slamNow = false;
+            }
+            else if ((isBirdIndicatorCircle || isBirdIndicatorBigCircle) && damageNow)
+            {
+                if (isBirdIndicatorBigCircle && PlayerController.global.playerCanBeDamaged)
+                {
+                    pushBack = true;
+                    StartCoroutine(PushBack());
+                }
+                PlayerController.global.TakeDamage(20.0f);
+                damageNow = false;
             }
         }
+    }
+
+    public void getRockObject(GameObject rock)
+    {
+        rockObject = rock;
+    }
+
+    public IEnumerator PushBack()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        pushBack = false;
+        PlayerController.global.playerCanMove = true;
     }
 }

@@ -51,7 +51,7 @@ public abstract class BossState : MonoBehaviour
     {
         PlayerController playerScript = playerTransform.GetComponent<PlayerController>();
 
-        playerScript.TakeDamage(damage, true);
+        playerScript.TakeDamage(damage);
     }
 
     // Returns true if the target is within a radius set in the inspector

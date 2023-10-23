@@ -6,39 +6,40 @@ using UnityEngine.VFX;
 public class BirdBossAttack : StateMachineBehaviour
 {
     private BirdBoss birdScript;
-    private Vector3 target;
-    private Vector3 directionToTarget;   
     private bool sliding;
     private float timer;
-    //private GameObject telegraph;
+    private bool newTarget;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {      
-        birdScript = animator.GetComponent<BirdBoss>();
-        target = birdScript.playerTransform.position + (birdScript.directionToPlayerNoY.normalized * 20.0f);
-        directionToTarget = (new Vector3(target.x, 0f, target.z) - new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)).normalized;
-        birdScript.normalAttackIndicator = true;
-        //telegraph = Instantiate(birdScript.telegraphedRectangle, new Vector3(birdScript.playerTransform.position.x, 0f, birdScript.playerTransform.position.z), birdScript.transform.rotation);
+        birdScript = animator.GetComponent<BirdBoss>();                
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
+    {      
         if (!birdScript.diving && !sliding)
         {
-            target = birdScript.playerTransform.position + (directionToTarget * 20.0f);
+            birdScript.targetPosition = birdScript.playerTransform.position;
+            birdScript.targetDirection = (new Vector3(birdScript.targetPosition.x, 0f, birdScript.targetPosition.z) - new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)).normalized;
         }
         else if (birdScript.diving)
         {
-            target = new Vector3(birdScript.playerTransform.position.x, 0f, birdScript.playerTransform.position.z) - (directionToTarget * 7.5f);
-            if (birdScript.transform.position == target)
-            {               
+            if (!newTarget)
+            {
+                birdScript.targetPosition = (new Vector3(birdScript.playerTransform.position.x, 0f, birdScript.playerTransform.position.z) + new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)) / 2;
+                birdScript.targetDirection = (new Vector3(birdScript.targetPosition.x, 0f, birdScript.targetPosition.z) - new Vector3(birdScript.transform.position.x, 0f, birdScript.transform.position.z)).normalized;               
+                newTarget = true;
+            }
+            if (birdScript.transform.position == birdScript.targetPosition)
+            {              
                 sliding = true;
-                birdScript.diving = false;
+                birdScript.diving = false;              
             }
         }
-        else
+        else if (sliding && birdScript.flyAnimOver)
         {
-            target = new Vector3(birdScript.playerTransform.position.x, 0f, birdScript.playerTransform.position.z) + (directionToTarget * 20.0f);
+            birdScript.targetPosition = birdScript.targetPosition + (birdScript.targetDirection * 12.5f);
+            birdScript.vulnerable = true;
             timer += Time.deltaTime;
             if (timer > 0.06f)
             {
@@ -50,15 +51,16 @@ public class BirdBossAttack : StateMachineBehaviour
                 Destroy(SmokeVFXRight, 1.5f);
             }
         }
-        birdScript.MoveToTarget(target, directionToTarget);        
+        birdScript.MoveToTarget(birdScript.targetPosition, birdScript.targetDirection);        
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {       
-        birdScript.vulnerable = false;
         birdScript.flying = true;
         birdScript.normalAttack = false;
         sliding = false;
-        //Destroy(telegraph);
-    }
+        newTarget = false;
+        birdScript.vulnerable = false;
+        birdScript.hitOnce = false;
+    }    
 }

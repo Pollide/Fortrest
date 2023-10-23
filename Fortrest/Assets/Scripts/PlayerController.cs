@@ -212,7 +212,6 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool cancelAnimation;
     [HideInInspector] public bool cancelEffects;
     [HideInInspector] public bool cancelHit;
-    [HideInInspector] public bool staggered;
 
     // Lantern
     [HideInInspector] public bool LanternLighted;
@@ -1013,7 +1012,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot && !attacking)
+        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !canShoot && !attacking)
         {
             running = true;
         }
@@ -1082,7 +1081,6 @@ public class PlayerController : MonoBehaviour
         evading = true;
         characterAnimator.ResetTrigger("Evade");
         characterAnimator.SetTrigger("Evade");
-        staggered = false;
         GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerEvadeSound);
 
         yield return new WaitForSeconds(evadeCooldown);
@@ -2022,39 +2020,50 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage, bool stagger)
+    public void TakeDamage(float damage)
     {
-        if (stagger && !Boar.global.mounted)
+        if (playerCanBeDamaged)
         {
-            cancelHit = true;
-            StopCoroutine("Staggered");
-            StartCoroutine("Staggered");
-            characterAnimator.ResetTrigger("Hit1");
-            characterAnimator.ResetTrigger("Hit2");
-            characterAnimator.ResetTrigger("Hit3");
-            int random = Random.Range(1, 4);
-            if (random == 1)
+            if (!Boar.global.mounted)
             {
-                characterAnimator.SetTrigger("Hit1");
+                cancelHit = true;
+                characterAnimator.ResetTrigger("Hit1");
+                characterAnimator.ResetTrigger("Hit2");
+                characterAnimator.ResetTrigger("Hit3");
+                int random = Random.Range(1, 4);
+                if (random == 1)
+                {
+                    characterAnimator.SetTrigger("Hit1");
+                }
+                else if (random == 2)
+                {
+                    characterAnimator.SetTrigger("Hit2");
+                }
+                else
+                {
+                    characterAnimator.SetTrigger("Hit3");
+                }              
             }
-            else if (random == 2)
+            int randomInt = Random.Range(0, 3);
+            AudioClip temp = null;
+            switch (randomInt)
             {
-                characterAnimator.SetTrigger("Hit2");
+                case 0:
+                    temp = GameManager.global.PlayerHit1Sound;
+                    break;
+                case 1:
+                    temp = GameManager.global.PlayerHit2Sound;
+                    break;
+                case 2:
+                    temp = GameManager.global.PlayerHit3Sound;
+                    break;
+                default:
+                    break;
             }
-            else
-            {
-                characterAnimator.SetTrigger("Hit3");
-            }
+            GameManager.global.SoundManager.PlaySound(temp, 0.9f);
+            playerHealth -= damage;
+            displaySlash = true;
         }
-        playerHealth -= damage;
-        displaySlash = true;
-    }
-
-    private IEnumerator Staggered()
-    {
-        staggered = true;
-        yield return new WaitForSeconds(0.33f);
-        staggered = false;
     }
 
     private bool Facing(Vector3 otherPosition, float desiredAngle) // Making sure the enemy always faces what it is attacking

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhaseOneChief : BossState
+public class AttackManagerState : BossState
 {
     // Timer for attacks
     [SerializeField] private float attackTimer = 0f;
@@ -66,10 +66,9 @@ public class PhaseOneChief : BossState
         canChangeState = true;
         canAttack = true;
         randValue = 0f;
-
-        if (GetComponent<TelegraphCircle>())
+        if (GetComponent<BossTelegraphSlam>())
         {
-            GetComponent<TelegraphCircle>().isAttack = true;
+            GetComponent<BossTelegraphSlam>().attack = true;
         }
 
         randomCheckTimer = randomCheckDuration;
@@ -78,7 +77,7 @@ public class PhaseOneChief : BossState
 
     public override void ExitState()
     {
-        stateMachine.BossAnimator.ResetTrigger("isAttacking");
+        stateMachine.BossAnimator.ResetTrigger("attacking");
         telegraph.SetActive(false);
         isAttacking = false;
         attackTime = 0f;
@@ -144,6 +143,32 @@ public class PhaseOneChief : BossState
             randomCheckTimer -= Time.deltaTime;
         }
 
+        switch (stateMachine.BossType)
+        {
+            case BossSpawner.TYPE.Chieftain:
+                AttackChief();
+                break;
+            case BossSpawner.TYPE.Basilisk:
+                AttackSnake();
+                break;
+            case BossSpawner.TYPE.Bird:
+                AttackBird();
+                break;
+            case BossSpawner.TYPE.Werewolf:
+                AttackWarewolf();
+                break;
+            case BossSpawner.TYPE.Squid:
+                AttackSquid();
+                break;
+            default:
+                break;
+        }
+
+
+    }
+
+    private void AttackChief()
+    {
         if (stateMachine.BossAnimator.GetBool("isTired"))
         {
             SetTelegraph(false);
@@ -154,15 +179,15 @@ public class PhaseOneChief : BossState
             // Check if the enemy can attack
             if (CanAttack(false))
             {
-                stateMachine.BossAnimator.ResetTrigger("isAttacking");
-                stateMachine.BossAnimator.SetTrigger("isAttacking");
+                stateMachine.BossAnimator.ResetTrigger("attacking");
+                stateMachine.BossAnimator.SetTrigger("attacking");
                 SetTelegraph(true);
                 isAttacking = true;
                 canAttack = true;
                 // Stop agent
                 agent.isStopped = true;
             }
-            else if (!CanAttack(false))
+            else if (!CanAttack(false) && stateMachine.BossAnimator.GetBool("isTired"))
             {
                 // Calculate the direction to the target
                 Vector3 targetDirection = playerTransform.position - transform.position;
@@ -192,10 +217,9 @@ public class PhaseOneChief : BossState
                 stateMachine.BossAnimator.speed = 1f;
                 attackTime = 0f;
                 canAttack = false;
-
                 if (telegraph.activeSelf)
                 {
-                    StartCoroutine(GetComponent<TelegraphCircle>().DoAreaDamage(0.1f, Damage, attackRadius));
+                    StartCoroutine(GetComponent<BossTelegraphSlam>().DoSlamDamage(0.1f, Damage, attackRadius));
                 }
 
             }
@@ -205,10 +229,81 @@ public class PhaseOneChief : BossState
     public void SetTelegraph(bool isActive)
     {
         telegraph.SetActive(isActive);
-        GetComponent<TelegraphCircle>().outer.SetActive(isActive);
+        GetComponent<BossTelegraphSlam>().outer.SetActive(isActive);
     }
 
-  
+    private void AttackSnake()
+    {
+        if (!isAttacking)
+        {
+
+        }
+        else
+        {
+            // Count down the attack timer
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer <= 0)
+            {
+                isAttacking = false;
+            }
+        }
+    }
+
+    private void AttackBird()
+    {
+        if (!isAttacking)
+        {
+
+        }
+        else
+        {
+            // Count down the attack timer
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer <= 0)
+            {
+                isAttacking = false;
+            }
+        }
+    }
+
+    private void AttackWarewolf()
+    {
+        if (!isAttacking)
+        {
+
+        }
+        else
+        {
+            // Count down the attack timer
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer <= 0)
+            {
+                isAttacking = false;
+            }
+        }
+    }
+
+    private void AttackSquid()
+    {
+        if (!isAttacking)
+        {
+
+        }
+        else
+        {
+            // Count down the attack timer
+            attackTimer -= Time.deltaTime;
+
+            if (attackTimer <= 0)
+            {
+                isAttacking = false;
+            }
+        }
+    }
+
     public void PlaySlash(int _index)
     {
         if (_index == 0)

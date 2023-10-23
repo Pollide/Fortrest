@@ -44,6 +44,11 @@ public class EnemyController : MonoBehaviour
     public bool canBeDamagedByBoar = true;
     private bool knockbackIncreased;
     private bool waveEnemy;
+    // Used for lycan boss
+    public bool isMob = false;
+    public PhaseOneLycan bossScriptOne;
+    public PhaseTwoLycan bossScriptTwo;
+
 
     // Others
     public Animator ActiveAnimator;
@@ -515,13 +520,16 @@ public class EnemyController : MonoBehaviour
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 StopAllCoroutines();
+
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chaseTimer = 0;
                     chasing = true;
                 }
                 canBeDamaged = false;
+
                 PickSound(hitSound, hitSound2, 1.0f);
+                
                 if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin && !flashing) // remove goblin once we have the anim
                 {
                     ActiveAnimator.ResetTrigger("Hit1");
@@ -654,6 +662,7 @@ public class EnemyController : MonoBehaviour
     private void PickSound(AudioClip name1, AudioClip name2, float volume)
     {
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? name1 : name2, volume, true, 0, false, transform);
+        Debug.Log("Sound");
     }
 
     private void ResetAttack()
@@ -685,27 +694,7 @@ public class EnemyController : MonoBehaviour
 
         if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
         {
-            int randomInt = Random.Range(0, 3);
-            AudioClip temp = null;
-            switch (randomInt)
-            {
-                case 0:
-                    temp = GameManager.global.PlayerHit1Sound;
-                    break;
-                case 1:
-                    temp = GameManager.global.PlayerHit2Sound;
-                    break;
-                case 2:
-                    temp = GameManager.global.PlayerHit3Sound;
-                    break;
-                default:
-                    break;
-            }
-            GameManager.global.SoundManager.PlaySound(temp, 0.9f);
-            if (PlayerController.global.playerCanBeDamaged)
-            {
-                PlayerController.global.TakeDamage(enemyDamage, false);
-            }
+            PlayerController.global.TakeDamage(enemyDamage);
         }
         else if (bestTarget)
         {
@@ -767,7 +756,7 @@ public class EnemyController : MonoBehaviour
         agent.speed = speed;
     }
 
-    private void Death()
+    public void Death()
     {
         agent.enabled = false;
         if (currentEnemyType != ENEMYTYPE.wolf)
@@ -778,6 +767,18 @@ public class EnemyController : MonoBehaviour
         else
         {
             gameObject.SetActive(false); //wolves spawn in the scene on start so they need to stay in memory
+        }
+
+        if (isMob)
+        {
+            if (bossScriptOne)
+            {
+                bossScriptOne.EnemyList.Remove(gameObject);
+            }
+            else if (bossScriptTwo)
+            {
+                bossScriptTwo.EnemyList.Remove(gameObject);
+            }
         }
     }
 

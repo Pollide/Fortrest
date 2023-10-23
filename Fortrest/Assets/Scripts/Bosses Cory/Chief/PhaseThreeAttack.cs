@@ -6,7 +6,7 @@ public class PhaseThreeAttack : BossState
 {
     // Holds states
     private IdleState idleState;
-    private PhaseOneChief attackState;
+    private AttackManagerState attackState;
     // Slam wait time
     private float slamWaitTime = 0f;
     [SerializeField] private float slamDuration = 5f;
@@ -14,8 +14,10 @@ public class PhaseThreeAttack : BossState
     [SerializeField] private float slamWaitAfterIndicator = 2f;
     [SerializeField] private float damage = 5f;
     [SerializeField] private GameObject telegraph;
+    [SerializeField] private TakeDamageTrigger trigger;
     [SerializeField] private bool damageDone = false;
     [SerializeField] private bool hasJumped = false;
+
 
 
     public override void EnterState()
@@ -30,7 +32,7 @@ public class PhaseThreeAttack : BossState
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<PhaseOneChief>();
+            attackState = GetComponent<AttackManagerState>();
         }
 
         SetTelegraph(true);
@@ -81,6 +83,15 @@ public class PhaseThreeAttack : BossState
                 damageDone = true;
             }
         }
+
+        if (stateMachine.BossAnimator.GetBool("isJumping") && trigger.enabled)
+        {
+            trigger.enabled = false;
+        }
+        else if(!stateMachine.BossAnimator.GetBool("isJumping") && !trigger.enabled)
+        {
+            trigger.enabled = true;
+        }
     }
 
     public void SetTelegraph(bool isActive)
@@ -109,7 +120,7 @@ public class PhaseThreeAttack : BossState
         get { return slamWaitTime; }
     }
 
-    public PhaseOneChief StateAttack
+    public AttackManagerState StateAttack
     {
         get { return attackState; }
     }

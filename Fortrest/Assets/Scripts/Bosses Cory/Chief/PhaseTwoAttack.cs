@@ -6,7 +6,7 @@ public class PhaseTwoAttack : BossState
 {
     // Holds states
     private IdleState idleState;
-    private PhaseOneChief attackState;
+    private AttackManagerState attackState;
 
     // Duration of the wind-up phase
     [SerializeField] private float windUpDuration = 5f;
@@ -40,7 +40,7 @@ public class PhaseTwoAttack : BossState
         if (attackState == null)
         {
             // Gets the connected state
-            attackState = GetComponent<PhaseOneChief>();
+            attackState = GetComponent<AttackManagerState>();
         }
 
         coneIndicator = true;
