@@ -19,6 +19,8 @@ public class BirdBossAttack2 : StateMachineBehaviour
         rocks = 0;
         throwRock = false;
         birdScript.displayedRock.SetActive(true);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossPreAttack2Sound);
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossHoverSound, 1f, true, 0, false, birdScript.transform);
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -65,7 +67,8 @@ public class BirdBossAttack2 : StateMachineBehaviour
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        birdScript.normalAttack = true;
+        birdScript.lastWasNormal = false;
         birdScript.displayedRock.SetActive(false);
+        GameManager.global.SoundManager.StopSelectedSound(GameManager.global.BirdBossHoverSound);
     }
 }

@@ -9,10 +9,12 @@ public class BirdBossAttack : StateMachineBehaviour
     private bool sliding;
     private float timer;
     private bool newTarget;
+    private bool playOnce;
 
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {      
-        birdScript = animator.GetComponent<BirdBoss>();                
+        birdScript = animator.GetComponent<BirdBoss>();
+        playOnce = false;
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -36,8 +38,13 @@ public class BirdBossAttack : StateMachineBehaviour
                 birdScript.diving = false;              
             }
         }
-        else if (sliding && birdScript.flyAnimOver)
+        else if (sliding && birdScript.flyAnimOver && birdScript.crashAnimOver)
         {
+            if (!playOnce)
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossSlideSound);
+                playOnce = true;
+            }
             birdScript.targetPosition = birdScript.targetPosition + (birdScript.targetDirection * 12.5f);
             birdScript.vulnerable = true;
             timer += Time.deltaTime;
@@ -51,16 +58,21 @@ public class BirdBossAttack : StateMachineBehaviour
                 Destroy(SmokeVFXRight, 1.5f);
             }
         }
+        else if (!birdScript.flyAnimOver || !birdScript.crashAnimOver)
+        {
+            birdScript.vulnerable = false;
+            GameManager.global.SoundManager.StopSelectedSound(GameManager.global.BirdBossSlideSound);
+        }
         birdScript.MoveToTarget(birdScript.targetPosition, birdScript.targetDirection);        
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {       
-        birdScript.flying = true;
-        birdScript.normalAttack = false;
-        sliding = false;
-        newTarget = false;
+    {
         birdScript.vulnerable = false;
+        birdScript.flying = true;
+        birdScript.lastWasNormal = true;
+        sliding = false;
+        newTarget = false;        
         birdScript.hitOnce = false;
     }    
 }

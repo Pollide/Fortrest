@@ -10,6 +10,7 @@ public class BirdBossAttack3 : StateMachineBehaviour
     {
         birdScript = animator.GetComponent<BirdBoss>();
         birdScript.circleAttackIndicator = true;
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossPreAttack3Sound);
     }
 
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

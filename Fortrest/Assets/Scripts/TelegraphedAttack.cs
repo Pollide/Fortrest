@@ -72,9 +72,11 @@ public class TelegraphedAttack : MonoBehaviour
             if (isBirdIndicatorBigCircle && indicator)
             {
                 StartCoroutine(TriggerDamage());
+                GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossAttack3Sound);
             }
             if (rockObject)
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossRockSound, 1f, true, 0, false, rockObject.transform);
                 StartCoroutine(TriggerDamage());
                 Destroy(rockObject);
             }
