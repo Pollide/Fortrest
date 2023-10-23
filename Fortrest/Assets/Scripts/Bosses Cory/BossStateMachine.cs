@@ -22,8 +22,6 @@ public class BossStateMachine : MonoBehaviour
     // Holds the initial state the boss starts with
     [SerializeField] private BossState initialState;
 
-    // Arena radius
-    [SerializeField] private float arenaRadius;
     // Agent current speed
     [SerializeField] private float speed;
 
@@ -34,7 +32,6 @@ public class BossStateMachine : MonoBehaviour
 
     // Bool to see if in death state
     [SerializeField] private bool isDead = false;
-    [SerializeField] private Animator bossAnimator;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
@@ -66,7 +63,7 @@ public class BossStateMachine : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Initial state not set in BossStateMachine.");
+            // Debug.LogError("Initial state not set in BossStateMachine.");
         }
     }
 
@@ -127,7 +124,7 @@ public class BossStateMachine : MonoBehaviour
     private IEnumerator DeadState()
     {
         isDead = true;
-        bossAnimator.SetBool("isDead", true);
+        BossAnimator.SetBool("isDead", true);
         yield return new WaitForSeconds(2);
         gameObject.SetActive(false); //i dont want bosses to be destroyed so i can save their HP as zero thanks
     }
@@ -135,7 +132,7 @@ public class BossStateMachine : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, arenaRadius);
+        Gizmos.DrawWireSphere(transform.position, ArenaSize);
     }
 
     public GameObject HealthBar
@@ -145,8 +142,8 @@ public class BossStateMachine : MonoBehaviour
 
     public float ArenaSize
     {
-        get { return arenaRadius; }
-        set { arenaRadius = value; }
+        get { return bossSpawner.Arenasize; }
+        set { bossSpawner.Arenasize = value; }
     }
 
     public BossPhase CurrentPhase
@@ -196,6 +193,6 @@ public class BossStateMachine : MonoBehaviour
 
     public Animator BossAnimator
     {
-        get { return bossAnimator; }
+        get { return bossSpawner.bossAnimator; }
     }
 }

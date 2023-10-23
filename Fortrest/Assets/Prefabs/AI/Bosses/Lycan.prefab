@@ -206,7 +206,6 @@ GameObject:
   - component: {fileID: 1021942600754924428}
   - component: {fileID: 7055684526235057948}
   - component: {fileID: 7648598950419578789}
-  - component: {fileID: 1162035985534289388}
   - component: {fileID: 1990839997988401373}
   - component: {fileID: 3918630169187030591}
   - component: {fileID: 1652765843960285866}
@@ -273,16 +272,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36a0a17476046894796388402f1cd957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 20
-  hasRun: 0
+  bossAwakened: 0
   Arenasize: 40
   bossType: 4
   BossCanvas: {fileID: 7423440669727652635}
+  DebugDamageBoss: 0
   health: 100
   maxHealth: 20
   bossEncountered: 0
   canBeDamaged: 1
   StartPosition: {x: 0, y: 0, z: 0}
+  cameraDistance: 5
+  introPositionOffset: {x: 0, y: 2, z: -2}
+  introTimer: 0
+  introCompleted: 0
+  introCard: {fileID: 6253710933162116347}
+  bossAnimator: {fileID: 6850407931364350455}
 --- !u!114 &7648598950419578789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,33 +302,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentPhase: 0
   currentState: {fileID: 0}
-  initialState: {fileID: 1162035985534289388}
-  arenaRadius: 50
+  initialState: {fileID: 0}
   speed: 4
   inDefence: 0
   phase2Ran: 0
   phase3Ran: 0
   isDead: 0
-  bossAnimator: {fileID: 6850407931364350455}
   bossSpawner: {fileID: 0}
---- !u!114 &1162035985534289388
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5753501578752780492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eca4ba2841e208542a3a619e65976c1c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 6158916799259184055}
-  introDuration: 3
-  cameraDistance: 5
-  introPositionOffset: {x: 0, y: 2, z: -2}
-  idleState: {fileID: 1990839997988401373}
-  nextState: {fileID: 3918630169187030591}
 --- !u!114 &1990839997988401373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,7 +322,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nextStateOne: {fileID: 3918630169187030591}
-  nextStateIntro: {fileID: 1162035985534289388}
+  nextStateIntro: {fileID: 0}
   lastState: {fileID: 0}
   idleRuns: 0
   resetTimerDuration: 0
@@ -377,10 +362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6551d4fc9ee71534da79fb98f54c01aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 6158916799259184055}
-  introDuration: 3
-  cameraDistance: 5
-  introPositionOffset: {x: 0, y: 2, z: -2}
   nextState: {fileID: 7026883036366209325}
 --- !u!114 &7026883036366209325
 MonoBehaviour:
@@ -420,10 +401,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce40fd5854b8d514281b39806316bfc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 6158916799259184055}
-  introDuration: 3
-  cameraDistance: 5
-  introPositionOffset: {x: 0, y: 2, z: -2}
   nextState: {fileID: 5035358121503287246}
 --- !u!114 &5035358121503287246
 MonoBehaviour:
@@ -1516,6 +1493,23 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boss Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 2601295076671620243, guid: 44375879c0871ad48801120b3c517b5e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5283328030002937211, guid: 44375879c0871ad48801120b3c517b5e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4946f81226a5e6b408887328d7f1ecf6,
+        type: 3}
+    - target: {fileID: 6653658492852377821, guid: 44375879c0871ad48801120b3c517b5e,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 28c2989d575626845874f576cb1407a0,
+        type: 3}
     - target: {fileID: 7139299575455708735, guid: 44375879c0871ad48801120b3c517b5e,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1626,6 +1620,12 @@ PrefabInstance:
 --- !u!224 &2242735632163305059 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7139299575455708735, guid: 44375879c0871ad48801120b3c517b5e,
+    type: 3}
+  m_PrefabInstance: {fileID: 8938571104781729884}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6253710933162116347 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3082023427591947431, guid: 44375879c0871ad48801120b3c517b5e,
     type: 3}
   m_PrefabInstance: {fileID: 8938571104781729884}
   m_PrefabAsset: {fileID: 0}

@@ -1552,13 +1552,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea845b5433f796146be446269510fdee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bestTarget: {fileID: 0}
+  house: {fileID: 0}
   health: 0
-  healthBarImage: {fileID: 6810651069541831479}
+  healthBar: {fileID: 1118513385883090877}
   healthAnimation: {fileID: 4519137201270415052}
   chasing: 0
   canBeDamaged: 1
+  canBeDamagedByBoar: 1
+  isMob: 0
+  bossScriptOne: {fileID: 0}
+  bossScriptTwo: {fileID: 0}
   ActiveAnimator: {fileID: 1418143058657694191}
+  knockBackScript: {fileID: 0}
+  currentEnemyType: 4
   hitSound: {fileID: 8300000, guid: 5ff45cfd8499b68458076f6a0ca7578b, type: 3}
   hitSound2: {fileID: 8300000, guid: 78d30e394149bd94a9a21c137edd59dc, type: 3}
   attackSound: {fileID: 8300000, guid: 4b5e2e36227af5d46914557fdee9d1a6, type: 3}
@@ -1571,7 +1577,8 @@ MonoBehaviour:
   stepSound2: {fileID: 8300000, guid: d35dc6887fe58244d9d6756ff7941c75, type: 3}
   ogreSpawnSound: {fileID: 8300000, guid: 35cc153cc87e96942b4335aaa6c11486, type: 3}
   ogreAttackSound: {fileID: 8300000, guid: 708a0dc6ef2b29a439691a89a05da232, type: 3}
-  currentEnemyType: 4
+  flashingAnimation: {fileID: 0}
+  flashing: 0
 --- !u!114 &4741653604666875877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1586,6 +1593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   strength: 0
   knock: 0
+  mountKnock: 0
 --- !u!95 &1418143058657694191
 Animator:
   serializedVersion: 4
@@ -2711,6 +2719,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}
+--- !u!114 &1118513385883090877 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4998815853741020046, guid: 412f881170d2477458b73d3eddd5ab20,
+    type: 3}
+  m_PrefabInstance: {fileID: 5393796638857210931}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &3180502541271391080 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
@@ -2723,15 +2743,3 @@ Animation:
     type: 3}
   m_PrefabInstance: {fileID: 5393796638857210931}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6810651069541831479 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1467846266723204868, guid: 412f881170d2477458b73d3eddd5ab20,
-    type: 3}
-  m_PrefabInstance: {fileID: 5393796638857210931}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

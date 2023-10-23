@@ -208,7 +208,7 @@ public class AttackManagerState : BossState
         GetComponent<TelegraphCircle>().outer.SetActive(isActive);
     }
 
-  
+
     public void PlaySlash(int _index)
     {
         if (_index == 0)

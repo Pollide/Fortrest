@@ -7,11 +7,8 @@ public class BirdBoss : MonoBehaviour
     public static BirdBoss global;
 
     [HideInInspector] public Transform playerTransform;
-    private Animator animator;
-    [HideInInspector] public bool awoken;
     [HideInInspector] public Vector3 startPosition;
     [HideInInspector] public bool dead;
-    [HideInInspector] public bool startIntro;
     [HideInInspector] public Vector3 directionToPlayer;
     [HideInInspector] public float distanceToPlayer;
     private float speed = 15f;
@@ -51,8 +48,6 @@ public class BirdBoss : MonoBehaviour
     void Start()
     {
         playerTransform = PlayerController.global.transform;
-        animator = GetComponent<Animator>();
-        awoken = false;
         startPosition = transform.position;
         retreating = false;
         boxCollider = GetComponent<BoxCollider>();
@@ -67,14 +62,6 @@ public class BirdBoss : MonoBehaviour
         boxCollider.enabled = crashed ? false : true;
         telegraphCollider.enabled = boxCollider.enabled ? false : true;
 
-        // Boss wakes up when player gets close to it
-        if (distanceToPlayer < 20.0f && !awoken)
-        {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossEncounterSound);
-            awoken = true;
-            animator.SetTrigger("TakeOff");
-        }
-
         // Boss flies up at the start
         if (flying && !altitudeReached)
         {
@@ -88,8 +75,8 @@ public class BirdBoss : MonoBehaviour
         // Boss crashes after being hit 3 times
         if (hitReceived >= 3)
         {
-            animator.ResetTrigger("Crash");
-            animator.SetTrigger("Crash");
+            bossSpawner.bossAnimator.ResetTrigger("Crash");
+            bossSpawner.bossAnimator.SetTrigger("Crash");
             hitReceived = 0;
         }
     }
@@ -149,7 +136,7 @@ public class BirdBoss : MonoBehaviour
 
         if (bossSpawner.health <= 0)
         {
-            animator.SetTrigger("Dead");
+            bossSpawner.bossAnimator.SetTrigger("Dead");
             StopAllCoroutines();
             MoveToTarget(transform.position, transform.position);
             dead = true;
@@ -202,7 +189,7 @@ public class BirdBoss : MonoBehaviour
         hitReceived = 0;
         crashed = false;
         altitudeReached = false;
-        animator.SetBool("Flying", true);
+        bossSpawner.bossAnimator.SetBool("Flying", true);
         flying = true;
     }
 
@@ -216,7 +203,7 @@ public class BirdBoss : MonoBehaviour
     {
         stopMoving = false;
         flying = false;
-        diving = true;      
+        diving = true;
     }
 
     private void RecoverSoundAnimEvent()

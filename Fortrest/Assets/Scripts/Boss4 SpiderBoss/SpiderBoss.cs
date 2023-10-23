@@ -10,8 +10,6 @@ public class SpiderBoss : MonoBehaviour
 
     private Transform playerTransform;
     private float webAttackRange;
-    private Animator animator;
-    [HideInInspector] public bool awoken;
     public bool retreating;
     private NavMeshAgent agent;
     private float damage;
@@ -37,7 +35,6 @@ public class SpiderBoss : MonoBehaviour
     public bool rootNow;
     public bool midAir;
     public bool slamNow;
-    public bool startIntro;
     private int steps = 0;
 
     [HideInInspector]
@@ -52,10 +49,8 @@ public class SpiderBoss : MonoBehaviour
     {
         VFXWeb.Stop();
         playerTransform = PlayerController.global.transform;
-        animator = GetComponent<Animator>();
-        awoken = false;
         retreating = false;
-        agent = animator.GetComponent<NavMeshAgent>();
+        agent = bossSpawner.bossAnimator.GetComponent<NavMeshAgent>();
         damage = 5.0f;
         stage = 1;
         specialAttackCD = 10.0f;
@@ -79,14 +74,6 @@ public class SpiderBoss : MonoBehaviour
         agent.stoppingDistance = _stopping;
     }
 
-    public void Awaken()
-    {
-        startIntro = true;
-        awoken = true;
-        animator.SetTrigger("Awaking");
-    }
-
-
     // Update is called once per frame
     void Update()
     {
@@ -94,9 +81,9 @@ public class SpiderBoss : MonoBehaviour
 
 
         // Spider moves at all times
-        if (awoken)
+        if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
         {
-            animator.SetBool("Moving", true);
+            bossSpawner.bossAnimator.SetBool("Moving", true);
         }
 
         // Spider retreats to its starting position if the player exits the arena
@@ -125,7 +112,7 @@ public class SpiderBoss : MonoBehaviour
         }
 
         // Special Attacks
-        if (awoken)
+        if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
         {
             timer += Time.deltaTime;
         }
@@ -146,7 +133,7 @@ public class SpiderBoss : MonoBehaviour
             if (timer2 > 3.5f)
             {
                 midAir = false;
-                animator.SetTrigger("Slam");
+                bossSpawner.bossAnimator.SetTrigger("Slam");
             }
         }
 
@@ -154,7 +141,7 @@ public class SpiderBoss : MonoBehaviour
         if (dead)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossDeadSound, 1f, true, 0, false, transform);
-            animator.SetTrigger("Dead");
+            bossSpawner.bossAnimator.SetTrigger("Dead");
             StartCoroutine(DestroyOnDeath());
             dead = false;
         }
@@ -171,7 +158,7 @@ public class SpiderBoss : MonoBehaviour
     {
         LookAt(playerTransform);
         agent.SetDestination(agent.transform.position);
-        animator.SetTrigger("Attack");
+        bossSpawner.bossAnimator.SetTrigger("Attack");
     }
 
     public void NormalAttackAnimEvent()
@@ -260,13 +247,13 @@ public class SpiderBoss : MonoBehaviour
     {
         GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossJumpSound, 1f, true, 0, false, transform);
         jump = true;
-        animator.speed = 0.75f;
+        bossSpawner.bossAnimator.speed = 0.75f;
     }
 
     private void EndJumpAnimEvent()
     {
         jump = false;
-        animator.speed = 1.0f;
+        bossSpawner.bossAnimator.speed = 1.0f;
     }
 
     private void Damaged(float amount)
@@ -285,14 +272,14 @@ public class SpiderBoss : MonoBehaviour
     private void SpecialAttack()
     {
         timer = 0;
-        animator.ResetTrigger("PoisonAttack");
-        animator.ResetTrigger("WebAttack");
-        animator.ResetTrigger("JumpAttack");
+        bossSpawner.bossAnimator.ResetTrigger("PoisonAttack");
+        bossSpawner.bossAnimator.ResetTrigger("WebAttack");
+        bossSpawner.bossAnimator.ResetTrigger("JumpAttack");
 
         switch (stage)
         {
             case 1:
-                animator.SetTrigger("PoisonAttack");
+                bossSpawner.bossAnimator.SetTrigger("PoisonAttack");
                 break;
             case 2:
                 if (distanceToPlayer < webAttackRange)
@@ -300,16 +287,16 @@ public class SpiderBoss : MonoBehaviour
                     randomChance = Random.Range(0f, 1f);
                     if (randomChance <= poisonAttackChance || randomChance > poisonAttackChance + webAttackChance)
                     {
-                        animator.SetTrigger("PoisonAttack");
+                        bossSpawner.bossAnimator.SetTrigger("PoisonAttack");
                     }
                     else if (randomChance <= poisonAttackChance + webAttackChance)
                     {
-                        animator.SetTrigger("WebAttack");
+                        bossSpawner.bossAnimator.SetTrigger("WebAttack");
                     }
                 }
                 else
                 {
-                    animator.SetTrigger("PoisonAttack");
+                    bossSpawner.bossAnimator.SetTrigger("PoisonAttack");
                 }
                 break;
             case 3:
@@ -318,15 +305,15 @@ public class SpiderBoss : MonoBehaviour
                     randomChance = Random.Range(0f, 1f);
                     if (randomChance <= poisonAttackChance)
                     {
-                        animator.SetTrigger("PoisonAttack");
+                        bossSpawner.bossAnimator.SetTrigger("PoisonAttack");
                     }
                     else if (randomChance <= poisonAttackChance + webAttackChance)
                     {
-                        animator.SetTrigger("WebAttack");
+                        bossSpawner.bossAnimator.SetTrigger("WebAttack");
                     }
                     else
                     {
-                        animator.SetTrigger("JumpAttack");
+                        bossSpawner.bossAnimator.SetTrigger("JumpAttack");
                     }
                 }
                 else
@@ -334,11 +321,11 @@ public class SpiderBoss : MonoBehaviour
                     int randomInt = Random.Range(1, 6);
                     if (randomInt == 1 || randomInt == 2)
                     {
-                        animator.SetTrigger("JumpAttack");
+                        bossSpawner.bossAnimator.SetTrigger("JumpAttack");
                     }
                     else
                     {
-                        animator.SetTrigger("PoisonAttack");
+                        bossSpawner.bossAnimator.SetTrigger("PoisonAttack");
                     }
                 }
                 break;

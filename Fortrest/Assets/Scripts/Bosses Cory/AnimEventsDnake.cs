@@ -21,7 +21,6 @@ public class AnimEventsDnake : MonoBehaviour
 
     void ActivateIntroCard()
     {
-        introCard.SetActive(true);
-        stateMachine.BossAnimator.speed = 0f;
+
     }
 }
