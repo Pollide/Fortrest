@@ -85,7 +85,7 @@ public class SpiderBoss : MonoBehaviour
     {
         // Spider retreats to its starting position if the player exits the arena
         retreating = !bossSpawner.CheckPlayerDistance();
-        distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
+        distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);       
 
         if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
         {
@@ -200,7 +200,10 @@ public class SpiderBoss : MonoBehaviour
     public void NormalAttackAnimEvent()
     {
         GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossAttackSound, 1f, true, 0, false, transform);
-        PlayerController.global.TakeDamage(damage);
+        if (distanceToPlayer < 8.0f)
+        {
+            PlayerController.global.TakeDamage(damage);
+        }       
     }
 
     private IEnumerator DestroyOnDeath()
