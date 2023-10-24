@@ -67,10 +67,8 @@ public class Defence : MonoBehaviour
     {
         building = GetComponent<Building>();
 
-        if (!MiniTurret)
+        if (ReturnAnimator() && !MiniTurret)
             ReturnAnimator().SetTrigger("Deploy");
-        else
-            ReturnAnimator();
     }
 
     public Animator ReturnAnimator()
