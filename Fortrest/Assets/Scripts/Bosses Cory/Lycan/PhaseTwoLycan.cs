@@ -9,6 +9,8 @@ public class PhaseTwoLycan : BossState
     [SerializeField] private List<GameObject> enemyList;
     [SerializeField] private BossState nextState;
     [SerializeField] private BossState idleState;
+    [SerializeField] private bool introRan;
+    public Vector3 directionToPlayer;
 
     public override void EnterState()
     {
@@ -20,11 +22,14 @@ public class PhaseTwoLycan : BossState
 
                 enemy.GetComponent<EnemyController>().bossScriptTwo = this;
                 enemy.GetComponent<EnemyController>().isMob = true;
+                enemy.GetComponent<EnemyController>().wolfDistanceBetweenPlayer = 100;
 
                 enemyList.Add(enemy);
 
             }
         }
+
+        introRan = false;
     }
 
     public override void ExitState()
@@ -42,7 +47,16 @@ public class PhaseTwoLycan : BossState
 
         if (enemyList.Count == 0 && PlayerInArena(stateMachine.ArenaSize))
         {
-            stateMachine.ChangeState(nextState);
+            if (!introRan)
+            {
+                stateMachine.bossSpawner.BossIntro();
+                introRan = true;
+            }
+
+            if (stateMachine.bossSpawner.introCompleted)
+            {
+                stateMachine.ChangeState(nextState);
+            }
         }
     }
 

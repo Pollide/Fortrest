@@ -97,6 +97,7 @@ public class EnemyController : MonoBehaviour
     private float previousDistance;
     private float patrolCooldown;
     private float patrolThreshold;
+    public float wolfDistanceBetweenPlayer = 17.5f;
     bool slowed;
 
     private void Awake()
@@ -210,7 +211,7 @@ public class EnemyController : MonoBehaviour
             if (bestTarget == null)
             {
                 Patrol();
-                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 17.5f)
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= wolfDistanceBetweenPlayer)
                 {
                     bestTarget = playerPosition;
                 }

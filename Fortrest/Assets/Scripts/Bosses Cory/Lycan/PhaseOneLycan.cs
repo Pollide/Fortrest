@@ -9,10 +9,13 @@ public class PhaseOneLycan : BossState
     [SerializeField] private List<GameObject> enemyList;
     [SerializeField] private BossState nextState;
     [SerializeField] private BossState idleState;
+    [SerializeField] private bool introRan;
 
     public override void EnterState()
     {
-        if (enemyList.Count > 0)
+        stateMachine.CurrentPhase = BossStateMachine.BossPhase.One;
+
+        if (enemyList.Count <= 0)
         {
             for (int i = 0; i < spawnLocation.Length; i++)
             {
@@ -20,10 +23,13 @@ public class PhaseOneLycan : BossState
 
                 enemy.GetComponent<EnemyController>().bossScriptOne = this;
                 enemy.GetComponent<EnemyController>().isMob = true;
+                enemy.GetComponent<EnemyController>().wolfDistanceBetweenPlayer = 100;
 
                 enemyList.Add(enemy);
             }
         }
+
+        introRan = false;
     }
 
     public override void ExitState()
@@ -40,8 +46,17 @@ public class PhaseOneLycan : BossState
         }
 
         if (enemyList.Count == 0 && PlayerInArena(stateMachine.ArenaSize))
-        {
-            stateMachine.ChangeState(nextState);
+        {   
+            if (!introRan)
+            {
+                stateMachine.bossSpawner.BossIntro();
+                introRan = true;
+            }
+
+            if (stateMachine.bossSpawner.introCompleted)
+            {
+                stateMachine.ChangeState(nextState);
+            }
         }
     }
 

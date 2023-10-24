@@ -87,7 +87,7 @@ public class BossStateMachine : MonoBehaviour
         currentState.Initialize(this); // Pass a reference to the state machine
         currentState.EnterState();
     }
-
+   
     public void TakeDamage(float damage)
     {
         if (bossSpawner.health > 0)
@@ -102,15 +102,15 @@ public class BossStateMachine : MonoBehaviour
             }
         }
 
-        if (bossSpawner.health <= bossSpawner.maxHealth / 3f)
+        if (bossSpawner.health <= bossSpawner.maxHealth / 3f && bossSpawner.bossType != BossSpawner.TYPE.Lycan) 
         {
             currentPhase = BossPhase.Three;
         }
-        else if (bossSpawner.health <= bossSpawner.maxHealth * 2f / 3f)
+        else if (bossSpawner.health <= bossSpawner.maxHealth * 2f / 3f && bossSpawner.bossType != BossSpawner.TYPE.Lycan)
         {
             currentPhase = BossPhase.Two;
         }
-        else
+        else if(bossSpawner.health > bossSpawner.maxHealth * 2f / 3f && bossSpawner.bossType != BossSpawner.TYPE.Lycan)
         {
             currentPhase = BossPhase.One;
         }

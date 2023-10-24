@@ -32,13 +32,18 @@ public class BossSpawner : MonoBehaviour
     public bool canBeDamaged = true;
     [HideInInspector]
     public Vector3 StartPosition;
+    [Header("Intro Variables")]
     public float cameraDistance = 5.0f; // Distance between the camera and the enemy
     public Vector3 introPositionOffset = new(0, 2, -2); // Offset from the enemy's position during intro
     public float introTimer = 0.0f;
+    public float introLength = 6.0f;
+    public float introSlowTimeStart = 3f;
+    public float introSlowTimeEnd = 4f;
+    public float slowRate = 0.3f;
     //[HideInInspector]
     public bool introCompleted = false;
     [SerializeField] private GameObject introCard;
-    [SerializeField] public Animator bossAnimator;
+    public Animator bossAnimator;
 
     public void Awake()
     {
@@ -161,9 +166,6 @@ public class BossSpawner : MonoBehaviour
                     }
                 }
 
-
-
-
             }
             else
             {
@@ -173,36 +175,20 @@ public class BossSpawner : MonoBehaviour
                 {
                     PlayerController.global.characterAnimator.SetBool("Moving", false);
                     introTimer += Time.deltaTime;
-                    float length = 6;
-                    //Perform the intro animation
+                    // Perform the intro animation
                     Vector3 targetPosition = transform.position + introPositionOffset;
                     LevelManager.global.SceneCamera.transform.position = Vector3.Lerp(LevelManager.global.SceneCamera.transform.position, targetPosition - LevelManager.global.SceneCamera.transform.forward, 2 * Time.deltaTime);
 
-                    if (introTimer >= length)
+                    if (introTimer >= introLength)
                     {
                         introCompleted = true;
-
-                        if (GetComponent<BossStateMachine>())
-                        {
-                            if (GetComponent<IdleState>().IdleRuns < 1 && bossType == BossSpawner.TYPE.Lycan)
-                            {
-                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
-                            }
-                            else if (GetComponent<IdleState>().IdleRuns >= 1 && bossType == BossSpawner.TYPE.Lycan)
-                            {
-                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
-                            }
-                            else if (bossType != BossSpawner.TYPE.Lycan)
-                            {
-                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
-                            }
-                        }
+                        initialIntro = false;
                     }
 
-                    bool show = introTimer > 3 && initialIntro && !introCompleted;
+                    bool show = introTimer > introSlowTimeStart && initialIntro && !introCompleted && introTimer < introSlowTimeEnd;
 
 
-                    bossAnimator.speed = show ? 0 : 1;
+                    Time.timeScale = show ? 0.5f : 1f;
 
                     if (show)
                         introCard.SetActive(true);
@@ -211,6 +197,7 @@ public class BossSpawner : MonoBehaviour
 
 
                     PlayerController.global.playerCanMove = introCompleted;
+
                     LevelManager.global.HUD.SetActive(introCompleted);
                 }
             }
@@ -226,13 +213,15 @@ public class BossSpawner : MonoBehaviour
         introTimer = 0;
         introCompleted = false;
 
-        bossAnimator.Rebind();
-        bossAnimator.Update(0f);
+        if (bossAnimator.enabled)
+        {
+            bossAnimator.Rebind();
+            bossAnimator.Update(0f);
+        }
     }
 
     public bool CheckPlayerDistance()
     {
-
         return health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (bossAwakened ? Arenasize : 20);
     }
 

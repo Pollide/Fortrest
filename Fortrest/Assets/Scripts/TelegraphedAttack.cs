@@ -6,8 +6,6 @@ public class TelegraphedAttack : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
     private Transform innerShape;
-    public PhaseTwoAttack snakeSweep;
-
     public float size = 0.0f;
     public float timer = 0.0f;
 
@@ -33,8 +31,6 @@ public class TelegraphedAttack : MonoBehaviour
             Indicator(ref SpiderBoss.global.jumpAttackIndicator, 1.0f, 4.0f);
         if (isWebIndicator)
             Indicator(ref SpiderBoss.global.webAttackIndicator, 1.5f, 2.2f);
-        if (isSnakeIndicator)
-            Indicator(ref snakeSweep.coneIndicator, 1.5f, 2.2f);
         if (isBirdIndicatorCircle)
             Indicator(ref appearOnStart, 0.75f, 1.5f);
         if (isBirdIndicatorBigCircle)
