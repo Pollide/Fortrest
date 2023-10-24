@@ -11,6 +11,7 @@ public class SpiderBossNormal : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent = animator.GetComponent<NavMeshAgent>();
+        animator.speed = 1.4f;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -24,5 +25,6 @@ public class SpiderBossNormal : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         agent.GetComponent<SpiderBoss>().attacking = false;
+        animator.speed = 1.0f;
     }
 }
