@@ -140,12 +140,24 @@ public class Boar : MonoBehaviour
                 transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0.0f, currentTurn, 0.0f));
             }
 
-            Vector3 direction = transform.forward + Vector3.up * 3 * (currentSpeed > 0 ? 1 : -1);
+            Vector3 direction = transform.forward + Vector3.up * 3 * (currentSpeed > 0 ? 1 : -1); //searches area in front of boar or behind if reversing
             Collider[] colliders = Physics.OverlapSphere(transform.position + direction, 2, GameManager.ReturnBitShift(new string[] { "Default", "Building", "Resource" }), QueryTriggerInteraction.Ignore);
 
             if (colliders.Length == 0) //stops boar hitting trees and buildings
             {
-                MoveBoar();
+                MoveBoar(); //move boar when nothing being collided
+            }
+
+            for (int i = 0; i < colliders.Length; i++)//shakes the building without any damage just for visual fun
+            {
+                Building building = colliders[i].GetComponentInParent<Building>();
+
+                if (building && !building.GetComponent<Animation>().IsPlaying("Nature Shake")) //stops building shaking too often
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f);
+                    building.HealthAnimation();
+                    break;
+                }
             }
 
             currentTurn = 0.0f;
