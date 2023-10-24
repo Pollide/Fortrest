@@ -154,8 +154,8 @@ public class Boar : MonoBehaviour
 
                 if (building && !building.GetComponent<Animation>().IsPlaying("Nature Shake")) //stops building shaking too often
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f);
-                    building.HealthAnimation();
+                    //  GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f);
+                    building.TakeDamage(-2);
                     break;
                 }
             }
