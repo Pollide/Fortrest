@@ -8,7 +8,7 @@ public class SpiderBoss : MonoBehaviour
 {
     public static SpiderBoss global;
 
-    private Transform playerTransform;
+    [HideInInspector] public Transform playerTransform;
     private float webAttackRange;
     public bool retreating;
     private NavMeshAgent agent;
@@ -19,7 +19,7 @@ public class SpiderBoss : MonoBehaviour
     private float angularSpeed;
     private float acceleration;
     public int stage;
-    private float timer, timer2;
+    private float timer, timer2, timer3;
     private float specialAttackCD;
     private float randomChance;
     private float poisonAttackChance;
@@ -36,6 +36,10 @@ public class SpiderBoss : MonoBehaviour
     public bool midAir;
     public bool slamNow;
     private int steps = 0;
+    [HideInInspector] public float normalAttackCD;
+    public bool normalAttackReady;
+    private float attackRange;
+    public bool attacking;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
@@ -58,12 +62,14 @@ public class SpiderBoss : MonoBehaviour
         webAttackChance = 0.3f;
         poisonSpeed = 20.0f;
         webAttackRange = 5.0f;
+        normalAttackCD = 4.0f;
 
-        speed = 12f;
+        speed = 11f;
         stoppingDistance = 3.5f;
-        angularSpeed = 200.0f;
+        angularSpeed = 180.0f;
         acceleration = 10.0f;
         SetAgentParameters(speed, acceleration, angularSpeed, stoppingDistance);
+        attackRange = agent.stoppingDistance + 0.75f;
     }
 
     void SetAgentParameters(float _speed, float _acceleration, float _angular, float _stopping)
@@ -77,73 +83,101 @@ public class SpiderBoss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
-
-
-        // Spider moves at all times
-        if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
-        {
-            bossSpawner.bossAnimator.SetBool("Moving", true);
-        }
-
         // Spider retreats to its starting position if the player exits the arena
         retreating = !bossSpawner.CheckPlayerDistance();
+        distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
 
-        if (retreating)
+        if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
         {
-            if (bossSpawner.health < bossSpawner.maxHealth)
+            if (!attacking)
             {
-                bossSpawner.UpdateHealth(Time.deltaTime * 3.0f);
+                if (distanceToPlayer <= attackRange)
+                {
+                    bossSpawner.bossAnimator.SetBool("Moving", false);
+                }
+                else
+                {
+                    bossSpawner.bossAnimator.SetBool("Moving", true);
+                }
+            }          
+
+            if (retreating)
+            {
+                agent.SetDestination(bossSpawner.StartPosition);
+                if (bossSpawner.health < bossSpawner.maxHealth)
+                {
+                    bossSpawner.UpdateHealth(Time.deltaTime * 3.0f);
+                }
+                else
+                {
+                    bossSpawner.UpdateHealth(bossSpawner.maxHealth);
+                }
             }
             else
             {
-                bossSpawner.UpdateHealth(bossSpawner.maxHealth);
+                if (Vector3.Distance(playerTransform.position, agent.transform.position) <= attackRange && !specialAttackReady && normalAttackReady)
+                {
+                    Attack();
+                }
+                else
+                {
+                    agent.SetDestination(playerTransform.position);
+                }
             }
-        }
 
-        // Triggering different stages
-        if (bossSpawner.health < ((bossSpawner.maxHealth / 3) * 2) && bossSpawner.health > (bossSpawner.maxHealth / 3))
-        {
-            stage = 2;
-        }
-        else if (bossSpawner.health < (bossSpawner.maxHealth / 3))
-        {
-            stage = 3;
-        }
-
-        // Special Attacks
-        if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
-        {
-            timer += Time.deltaTime;
-        }
-        if (timer >= specialAttackCD)
-        {
-            specialAttackReady = true;
-            SpecialAttack();
-        }
-
-        if (jump)
-        {
-            agent.Move(-transform.forward * (Time.deltaTime * 10.0f));
-        }
-
-        if (midAir)
-        {
-            timer2 += Time.deltaTime;
-            if (timer2 > 3.5f)
+            // Triggering different stages
+            if (bossSpawner.health < ((bossSpawner.maxHealth / 3) * 2) && bossSpawner.health > (bossSpawner.maxHealth / 3))
             {
-                midAir = false;
-                bossSpawner.bossAnimator.SetTrigger("Slam");
+                stage = 2;
             }
-        }
+            else if (bossSpawner.health < (bossSpawner.maxHealth / 3))
+            {
+                stage = 3;
+            }
 
-        // Death state
-        if (dead)
-        {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossDeadSound, 1f, true, 0, false, transform);
-            bossSpawner.bossAnimator.SetTrigger("Dead");
-            StartCoroutine(DestroyOnDeath());
-            dead = false;
+            // Special Attacks
+            if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
+            {
+                timer += Time.deltaTime;
+            }
+            if (timer >= specialAttackCD)
+            {
+                specialAttackReady = true;
+                SpecialAttack();
+            }
+
+            if (!normalAttackReady)
+            {
+                timer3 += Time.deltaTime;
+                if (timer3 > normalAttackCD)
+                {
+                    normalAttackReady = true;
+                }
+            }
+
+            if (jump)
+            {
+                agent.Move(-transform.forward * (Time.deltaTime * 10.0f));
+            }
+
+            if (midAir)
+            {
+                timer2 += Time.deltaTime;
+                if (timer2 > 3.5f)
+                {
+                    midAir = false;
+                    bossSpawner.bossAnimator.SetTrigger("Slam");
+                }
+            }
+
+            // Death state
+            if (dead)
+            {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossDeadSound, 1f, true, 0, false, transform);
+                bossSpawner.bossAnimator.SetTrigger("Dead");
+                StartCoroutine(DestroyOnDeath());
+                dead = false;
+            }
         }
     }
 
@@ -156,9 +190,11 @@ public class SpiderBoss : MonoBehaviour
 
     public void Attack()
     {
-        LookAt(playerTransform);
-        agent.SetDestination(agent.transform.position);
+        attacking = true;
+        bossSpawner.bossAnimator.ResetTrigger("Attack");
         bossSpawner.bossAnimator.SetTrigger("Attack");
+        normalAttackReady = false;
+        timer3 = 0f;
     }
 
     public void NormalAttackAnimEvent()
