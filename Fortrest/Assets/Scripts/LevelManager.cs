@@ -89,12 +89,9 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector]
     public bool newDay = false;
-    [HideInInspector]
-    public bool NightTimeMusic;
     public Gradient textGradient;
-
-    // [HideInInspector]
-    public List<Terrain> terrainList = new List<Terrain>();
+    [HideInInspector]
+    public AudioClip currentMusic;
     public List<TerrainData> terrainDataList = new List<TerrainData>();
     public Image clockHand;
     public Image clockSun;
@@ -152,11 +149,8 @@ public class LevelManager : MonoBehaviour
 
     }
 
-    public AudioClip ActiveBiomeMusic;
-
     private void Start()
     {
-        ActiveBiomeMusic = GameManager.global.GameMusic;
         newDay = true;
 
         VFXSlash.Stop();
@@ -286,14 +280,39 @@ public class LevelManager : MonoBehaviour
     public BossSpawner activeBossSpawner;
     public void SetGameMusic()
     {
+        AudioClip music = GameManager.global.GameMusic;
+
         if (activeBossSpawner)
         {
-            GameManager.global.MusicManager.PlayMusic(GameManager.global.BossMusic);
+            music = GameManager.global.BossMusic;
         }
         else
         {
-            GameManager.global.MusicManager.PlayMusic(LevelManager.global.ReturnNight() ? GameManager.global.NightMusic : LevelManager.global.ActiveBiomeMusic);
+            if (LevelManager.global.ReturnNight())
+            {
+                music = GameManager.global.NightMusic;
+            }
+            else
+            {
+                Physics.Raycast(PlayerController.global.transform.position, Vector3.up * -2, out RaycastHit raycastHit, GameManager.ReturnBitShift());
+
+                for (int i = 0; i < terrainDataList.Count; i++)
+                {
+                    if (terrainDataList[i].terrain == raycastHit.transform)
+                    {
+                        music = terrainDataList[i].music;
+                        break;
+                    }
+                }
+            }
         }
+
+        if (currentMusic != music)
+        {
+            currentMusic = music;
+            GameManager.global.MusicManager.PlayMusic(music);
+        }
+
     }
 
     private void CalculateCamps()
@@ -325,22 +344,7 @@ public class LevelManager : MonoBehaviour
 
         PlayerController.global.EnemiesTextControl();
 
-        for (int i = 0; i < terrainDataList.Count; i++)
-        {
-
-        }
-
-        if (!NightTimeMusic && ReturnNight())
-        {
-            NightTimeMusic = true;
-            GameManager.global.MusicManager.PlayMusic(GameManager.global.NightMusic);
-        }
-
-        if (NightTimeMusic && !ReturnNight())
-        {
-            NightTimeMusic = false;
-            GameManager.global.MusicManager.PlayMusic(ActiveBiomeMusic);
-        }
+        SetGameMusic();
 
         if (dayPaused)
         {

@@ -1117,7 +1117,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                LevelManager.global.SetGameMusic();
+                LevelManager.global.currentMusic = null;
             }
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.PauseMenuSound);
@@ -1145,7 +1145,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                LevelManager.global.SetGameMusic();
+                LevelManager.global.currentMusic = null;
             }
 
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
