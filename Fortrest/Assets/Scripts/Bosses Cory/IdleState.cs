@@ -5,19 +5,20 @@ using UnityEngine;
 public class IdleState : BossState
 {
     // Holds next state
-    [SerializeField] private BossState nextStateOne;
-    [SerializeField] private BossState nextStateIntro;
+    [SerializeField] private BossState nextState;
     public BossState lastState;
-    private float resetTimer = 0f;
+    [SerializeField] private float resetTimer = 0f;
     [SerializeField] private int idleRuns = 0;
     [SerializeField] private float resetTimerDuration;
     [SerializeField] private float stoppingDistance = 3f;
+    [SerializeField] private bool introRan;
 
     public override void EnterState()
     {
         idleRuns++;
 
         resetTimer = resetTimerDuration;
+        introRan = false;
     }
 
     public override void ExitState()
@@ -31,15 +32,21 @@ public class IdleState : BossState
         if (PlayerInArena(stateMachine.ArenaSize))
         {
             // changes to attack state
-            if (idleRuns <= 1 && stateMachine.BossType == BossSpawner.TYPE.Lycan)
+            if (stateMachine.BossType == BossSpawner.TYPE.Lycan)
             {
-                stateMachine.ChangeState(nextStateOne);
-            }
-            else if (idleRuns > 1 && stateMachine.BossType == BossSpawner.TYPE.Lycan)
-            {
-                if (resetTimer <= 0)
+                if (resetTimer <= 0 || resetTimer == resetTimerDuration)
                 {
-                    stateMachine.ChangeState(nextStateIntro);
+                    if (!introRan)
+                    {
+                        stateMachine.bossSpawner.BossIntro();
+                        introRan = true;
+                    }
+
+                    if (stateMachine.bossSpawner.introCompleted)
+                    {
+                        stateMachine.ChangeState(nextState);
+                    }
+
                 }
                 else
                 {
@@ -49,7 +56,7 @@ public class IdleState : BossState
             }
             else if (stateMachine.BossType != BossSpawner.TYPE.Lycan)
             {
-                stateMachine.ChangeState(nextStateOne);
+                stateMachine.ChangeState(nextState);
             }
         }
         else

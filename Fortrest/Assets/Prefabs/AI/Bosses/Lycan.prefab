@@ -208,9 +208,7 @@ GameObject:
   - component: {fileID: 7648598950419578789}
   - component: {fileID: 1990839997988401373}
   - component: {fileID: 3918630169187030591}
-  - component: {fileID: 1652765843960285866}
   - component: {fileID: 7026883036366209325}
-  - component: {fileID: 6881087863631915970}
   - component: {fileID: 5035358121503287246}
   - component: {fileID: 7296249777344085743}
   m_Layer: 0
@@ -227,7 +225,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5753501578752780492}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -285,6 +283,10 @@ MonoBehaviour:
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
   introTimer: 0
+  introLength: 6
+  introSlowTimeStart: 3
+  introSlowTimeEnd: 4
+  slowRate: 0.3
   introCompleted: 0
   introCard: {fileID: 6253710933162116347}
   bossAnimator: {fileID: 6850407931364350455}
@@ -302,7 +304,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentPhase: 0
   currentState: {fileID: 0}
-  initialState: {fileID: 0}
+  initialState: {fileID: 1990839997988401373}
   speed: 4
   inDefence: 0
   phase2Ran: 0
@@ -321,12 +323,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d07584372cb58df46808b848e1fb02fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextStateOne: {fileID: 3918630169187030591}
-  nextStateIntro: {fileID: 0}
+  nextState: {fileID: 3918630169187030591}
   lastState: {fileID: 0}
+  resetTimer: 0
   idleRuns: 0
-  resetTimerDuration: 0
+  resetTimerDuration: 5
   stoppingDistance: 3
+  introRan: 0
 --- !u!114 &3918630169187030591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -348,21 +351,9 @@ MonoBehaviour:
   enemyPrefab: {fileID: 9064983638505709771, guid: 8b044387f32d2864fa8871fba56a8a17,
     type: 3}
   enemyList: []
-  nextState: {fileID: 1652765843960285866}
-  idleState: {fileID: 1990839997988401373}
---- !u!114 &1652765843960285866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5753501578752780492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6551d4fc9ee71534da79fb98f54c01aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   nextState: {fileID: 7026883036366209325}
+  idleState: {fileID: 1990839997988401373}
+  introRan: 0
 --- !u!114 &7026883036366209325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,21 +378,9 @@ MonoBehaviour:
   enemyPrefab: {fileID: 9064983638505709771, guid: 8b044387f32d2864fa8871fba56a8a17,
     type: 3}
   enemyList: []
-  nextState: {fileID: 6881087863631915970}
-  idleState: {fileID: 1990839997988401373}
---- !u!114 &6881087863631915970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5753501578752780492}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce40fd5854b8d514281b39806316bfc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   nextState: {fileID: 5035358121503287246}
+  idleState: {fileID: 1990839997988401373}
+  introRan: 0
 --- !u!114 &5035358121503287246
 MonoBehaviour:
   m_ObjectHideFlags: 0

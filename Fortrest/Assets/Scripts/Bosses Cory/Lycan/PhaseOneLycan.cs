@@ -9,6 +9,7 @@ public class PhaseOneLycan : BossState
     [SerializeField] private List<GameObject> enemyList;
     [SerializeField] private BossState nextState;
     [SerializeField] private BossState idleState;
+    [SerializeField] private bool introRan;
 
     public override void EnterState()
     {
@@ -24,6 +25,8 @@ public class PhaseOneLycan : BossState
                 enemyList.Add(enemy);
             }
         }
+
+        introRan = false;
     }
 
     public override void ExitState()
@@ -40,8 +43,17 @@ public class PhaseOneLycan : BossState
         }
 
         if (enemyList.Count == 0 && PlayerInArena(stateMachine.ArenaSize))
-        {
-            stateMachine.ChangeState(nextState);
+        {   
+            if (!introRan)
+            {
+                stateMachine.bossSpawner.BossIntro();
+                introRan = true;
+            }
+
+            if (stateMachine.bossSpawner.introCompleted)
+            {
+                stateMachine.ChangeState(nextState);
+            }
         }
     }
 
