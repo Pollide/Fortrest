@@ -81,7 +81,10 @@ public class Building : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        HUDHealthBar = GetComponentInChildren<HealthBar>();
+        List<HealthBar> healthBarList = GameManager.FindComponent<HealthBar>(transform);
+
+        if (healthBarList.Count > 0)
+            HUDHealthBar = healthBarList[0];
 
         if (GameManager.ReturnInMainMenu())
         {
