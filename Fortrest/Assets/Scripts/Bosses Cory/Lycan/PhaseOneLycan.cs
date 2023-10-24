@@ -13,6 +13,8 @@ public class PhaseOneLycan : BossState
 
     public override void EnterState()
     {
+        stateMachine.CurrentPhase = BossStateMachine.BossPhase.One;
+
         if (enemyList.Count > 0)
         {
             for (int i = 0; i < spawnLocation.Length; i++)

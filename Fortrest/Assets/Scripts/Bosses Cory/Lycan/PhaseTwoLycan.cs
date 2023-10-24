@@ -10,6 +10,7 @@ public class PhaseTwoLycan : BossState
     [SerializeField] private BossState nextState;
     [SerializeField] private BossState idleState;
     [SerializeField] private bool introRan;
+    public Vector3 directionToPlayer;
 
     public override void EnterState()
     {

@@ -215,8 +215,11 @@ public class BossSpawner : MonoBehaviour
         introTimer = 0;
         introCompleted = false;
 
-        bossAnimator.Rebind();
-        bossAnimator.Update(0f);
+        if (bossAnimator.enabled)
+        {
+            bossAnimator.Rebind();
+            bossAnimator.Update(0f);
+        }
     }
 
     public bool CheckPlayerDistance()

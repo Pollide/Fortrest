@@ -1080,6 +1080,7 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator Evade()
     {
+        transform.LookAt(transform.position + (moveDirection * 10));
         canShoot = false;
         bowAnimator.SetBool("Aiming", false);
         lunge = false;
