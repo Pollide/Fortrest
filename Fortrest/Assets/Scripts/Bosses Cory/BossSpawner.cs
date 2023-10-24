@@ -198,7 +198,7 @@ public class BossSpawner : MonoBehaviour
 
 
                     PlayerController.global.playerCanMove = introCompleted;
-
+                    Indicator.global.GetComponent<Canvas>().enabled = introCompleted;
                     LevelManager.global.HUD.SetActive(introCompleted);
                 }
             }
