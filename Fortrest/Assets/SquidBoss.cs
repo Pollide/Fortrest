@@ -24,14 +24,16 @@ public class SquidBoss : MonoBehaviour
 
     private void Update()
     {
-        if (bossSpawner.introCompleted)
+        if (bossSpawner.introCompleted && bossSpawner.bossEncountered)
         {
-            if (fireballTimer > 5)
+            if (fireballTimer > 3)
             {
                 fireballTimer = 0;
 
                 bossSpawner.bossAnimator.ResetTrigger("Fire Vomit");
                 bossSpawner.bossAnimator.SetTrigger("Fire Vomit");
+
+                LaunchFireball();
             }
             else
             {
@@ -42,14 +44,20 @@ public class SquidBoss : MonoBehaviour
 
         for (int i = 0; i < fireballList.Count; i++)
         {
-            float height = 10.0f;
-            float duration = 5.0f;
+            float height = 5.0f;
+            float duration = 1.5f;
 
             float t = (Time.time - fireballList[i].startTime) / duration;
             Vector3 archPosition = Vector3.Lerp(transform.position, fireballList[i].landingPosition, t);
             archPosition.y += height * Mathf.Sin(t * Mathf.PI);
             fireballList[i].fireball.position = archPosition;
 
+            if (Vector3.Distance(fireballList[i].fireball.position, fireballList[i].landingPosition) < 1)
+            {
+                Destroy(fireballList[i].fireball.gameObject);
+                Destroy(fireballList[i].telegraphedCircle.gameObject);
+                fireballList.RemoveAt(i);
+            }
         }
     }
     public void LaunchFireball()
