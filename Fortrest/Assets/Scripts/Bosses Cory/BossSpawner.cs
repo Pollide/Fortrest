@@ -115,11 +115,12 @@ public class BossSpawner : MonoBehaviour
             }
 
             BossMusicBegin(open);
+
+            UpdateHealth();
+
+            LevelManager.global.dayPaused = open;
         }
 
-        UpdateHealth();
-
-        LevelManager.global.dayPaused = open;
         bossEncountered = open;
     }
 
