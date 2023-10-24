@@ -185,6 +185,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
             else
             {
+                CameraMovement.global.ResetAll();
                 GameManager.global.SoundManager.PlaySound(GameManager.global.ExitHouseSound);
                 if (!House.GetComponent<Building>().textDisplayed)
                 {
