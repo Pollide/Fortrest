@@ -7,7 +7,7 @@ public class SquidBoss : MonoBehaviour
     [HideInInspector]
     public BossSpawner bossSpawner;
 
-    bool fireBallAttack;
+    public bool fireBallAttack;
     public GameObject fireBallPrefab;
     public GameObject telegraphedCirclePrefab;
     float fireballTimer;
@@ -23,30 +23,33 @@ public class SquidBoss : MonoBehaviour
 
     private void Update()
     {
-        if (fireballTimer > 5)
+        if (bossSpawner.bossEncountered)
         {
-            fireballTimer = 0;
-            FireBallData fireBallData = new FireBallData();
-            fireBallData.fireball = Instantiate(fireBallPrefab, transform.position, Quaternion.identity).transform;
-            fireBallData.landingPosition = PlayerController.global.transform.position;
+            if (fireballTimer > 5)
+            {
+                fireballTimer = 0;
+                FireBallData fireBallData = new FireBallData();
+                fireBallData.fireball = Instantiate(fireBallPrefab, transform.position, Quaternion.identity).transform;
+                fireBallData.landingPosition = PlayerController.global.transform.position;
 
-            fireBallData.telegraphedCircle = Instantiate(telegraphedCirclePrefab, fireBallData.landingPosition, Quaternion.identity);
-            // fireBallData.telegraphedCircle.GetComponentInChildren<TelegraphedAttack>().getRockObject(fireBallData.fireball.gameObject);
+                fireBallData.telegraphedCircle = Instantiate(telegraphedCirclePrefab, fireBallData.landingPosition, Quaternion.identity);
+                // fireBallData.telegraphedCircle.GetComponentInChildren<TelegraphedAttack>().getRockObject(fireBallData.fireball.gameObject);
 
-            float angle = 40 * Mathf.Deg2Rad;
-            float distance = Vector3.Distance(fireBallData.landingPosition, transform.position);
+                float angle = 40 * Mathf.Deg2Rad;
+                float distance = Vector3.Distance(fireBallData.landingPosition, transform.position);
 
-            float horizontalVelocity = distance / (Mathf.Sin(2 * angle) / Physics.gravity.y);
-            float verticalVelocity = Mathf.Sqrt(Mathf.Abs(Physics.gravity.y) * distance / Mathf.Sin(2 * angle));
+                float horizontalVelocity = distance / (Mathf.Sin(2 * angle) / Physics.gravity.y);
+                float verticalVelocity = Mathf.Sqrt(Mathf.Abs(Physics.gravity.y) * distance / Mathf.Sin(2 * angle));
 
-            Vector3 velocity = new Vector3(0, verticalVelocity, horizontalVelocity);
-            fireBallData.fireball.GetComponent<Rigidbody>().velocity = fireBallData.fireball.TransformDirection(velocity);
+                Vector3 velocity = new Vector3(0, verticalVelocity, horizontalVelocity);
+                fireBallData.fireball.GetComponent<Rigidbody>().velocity = fireBallData.fireball.TransformDirection(velocity);
 
-            fireballList.Add(fireBallData);
-        }
-        else
-        {
-            fireballTimer += Time.deltaTime;
+                fireballList.Add(fireBallData);
+            }
+            else
+            {
+                fireballTimer += Time.deltaTime;
+            }
         }
 
         /*
