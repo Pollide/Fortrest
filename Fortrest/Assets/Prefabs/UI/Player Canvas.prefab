@@ -1113,7 +1113,6 @@ GameObject:
   - component: {fileID: 593131314368711632}
   - component: {fileID: 593131314368711631}
   - component: {fileID: 593131314368711630}
-  - component: {fileID: 2960440420326346431}
   - component: {fileID: 8303298403136182084}
   - component: {fileID: 7628836783462892426}
   - component: {fileID: 839674210329337736}
@@ -1221,29 +1220,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &2960440420326346431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 593131314368711629}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15a1f0b36e2f48d43972fae321df2baa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventory: []
-  inventorySize: 8
-  inventorySlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &8303298403136182084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4320,9 +4296,10 @@ MonoBehaviour:
   - {fileID: 1834942567877364764}
   - {fileID: 7030042288428421442}
   - {fileID: 4908370130049595263}
+  - {fileID: 5940946857988810658}
+  - {fileID: 7959323036822806453}
   objectsToDisableNonBuild:
   - {fileID: 2410077078395221953}
-  downScale: {x: 0.5, y: 0.5, z: 1}
   time: 0
   duration: 0.3
   isCombat: 0
@@ -9755,6 +9732,12 @@ PrefabInstance:
 --- !u!224 &2386410999724370113 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8014679319271398887, guid: b89e7deebedcd044a8b7192ae0864fbc,
+    type: 3}
+  m_PrefabInstance: {fileID: 5631716465392530726}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7959323036822806453 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2329155302313208467, guid: b89e7deebedcd044a8b7192ae0864fbc,
     type: 3}
   m_PrefabInstance: {fileID: 5631716465392530726}
   m_PrefabAsset: {fileID: 0}

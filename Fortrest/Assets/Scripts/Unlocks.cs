@@ -67,6 +67,7 @@ public class Unlocks : MonoBehaviour
             }
         });
 
-        PlayerController.global.MiniTurretUI.SetActive(miniTurretUnlocked);
+        if (!PlayerModeHandler.global.inTheFortress)
+            PlayerController.global.MiniTurretUI.SetActive(miniTurretUnlocked);
     }
 }

@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7380161676424695968}
   - component: {fileID: 8838984403330512497}
   - component: {fileID: 6690662782521931398}
-  - component: {fileID: 2797255765923076010}
   - component: {fileID: 4180874995037509510}
   - component: {fileID: 8130336773142844391}
   - component: {fileID: 7549195925445845935}
@@ -115,55 +114,6 @@ MonoBehaviour:
   DebugDestroyInstantly: 0
   gridLocation: {x: 0, y: 0}
   destroyedTimer: 0
---- !u!114 &2797255765923076010
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 27263479634249880}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b57a064641ac3a24bbc4482795d3e9ae, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackSpeedButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  damageButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  rangeButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  allButtons: []
-  buyUpgradeButton: {fileID: 0}
-  upgradeMenu: {fileID: 0}
-  addKnockBackButton: {fileID: 0}
-  addChanceToKillButton: {fileID: 0}
-  addChanceToMultiShotButton: {fileID: 0}
-  upgradeTextObject: {fileID: 0}
-  uiText: {fileID: 0}
-  detectionRange: 5
-  upgradeCostWood: 1
-  upgradeCostStone: 1
-  upgradeASPercent: 5
-  upgradeRangePercent: 5
-  upgradeDamagePercent: 5
-  instantKillPercent: 5
-  knockBackPercentage: 100
-  multiShotPercentage: 60
-  upgradeRankScaleRange: 1
-  upgradeRankScaleDMG: 1
-  upgradeRankScaleAS: 1
-  isInstantKillPercent: 0
-  isKnockBackActive: 0
-  isMultiShotActive: 0
-  specialActive: 0
-  canUpgrade: 0
 --- !u!111 &4180874995037509510
 Animation:
   m_ObjectHideFlags: 0

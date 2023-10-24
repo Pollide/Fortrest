@@ -246,7 +246,6 @@ public class Defence : MonoBehaviour
             //  explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             explosion.explosionRadius = explosionRadius;
             explosion.damage = ReturnDamage();
-            explosion.uCannon = GetComponent<U_Cannon>();
         }
         else
         {
@@ -256,24 +255,23 @@ public class Defence : MonoBehaviour
             }
             // Debug.Log(projectile);
             GameManager.global.SoundManager.PlaySound(GameManager.global.BallistaShootSound, 0.3f, true, 0, false, transform);
-            U_Turret uTurret = GetComponent<U_Turret>();
 
-            if (uTurret && uTurret.isMultiShotActive)
+            if (CurrentTier > 1)
             {
-                float range = Random.Range(0f, 101);
-                if (range <= uTurret.multiShotPercentage)
-                {
-                    GameObject bolt2 = Instantiate(ProjectilePrefab, FirePoint);
-                    bolt2.GetComponent<BoltScript>().SetDamage(ReturnDamage() / 2f);
-                    bolt2.transform.Rotate(new Vector3(0, 25, 0));
-                    GameObject bolt3 = Instantiate(ProjectilePrefab, FirePoint);
-                    bolt3.GetComponent<BoltScript>().SetDamage(ReturnDamage() / 2f);
-                    bolt3.transform.Rotate(new Vector3(0, -25, 0));
-                }
+                // float range = Random.Range(0f, 101);
+                // // if (range <= 50)
+                //   {
+                GameObject bolt2 = Instantiate(ProjectilePrefab, FirePoint);
+                bolt2.GetComponent<BoltScript>().SetDamage(ReturnDamage() / 2f);
+                bolt2.transform.Rotate(new Vector3(0, 25, 0));
+                GameObject bolt3 = Instantiate(ProjectilePrefab, FirePoint);
+                bolt3.GetComponent<BoltScript>().SetDamage(ReturnDamage() / 2f);
+                bolt3.transform.Rotate(new Vector3(0, -25, 0));
+                //   }
+                // }
             }
         }
     }
-
     private void FindTarget()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, ReturnRange(), targetLayer);

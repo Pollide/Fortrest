@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
-public class InventoryItem : MonoBehaviour
+public class ItemDrop : MonoBehaviour
 {
     bool soundPlayed;
     public int TierInt;
@@ -29,13 +29,13 @@ public class InventoryItem : MonoBehaviour
 
     private void Start()
     {
-        LevelManager.global.inventoryItemList.Add(gameObject);
+        LevelManager.global.ItemDropList.Add(gameObject);
 
 
         /* I have another idea cory if your wondering why this is hidden again
         for (int i = 0; i < resourceAmount; i++)
         {
-            LevelManager.global.inventoryItemList.Add(gameObject);
+            LevelManager.global.ItemDropList.Add(gameObject);
         }
         */
     }
@@ -94,7 +94,7 @@ public class InventoryItem : MonoBehaviour
 
         // InventoryManager.global.AddItem(this, resourceAmount);
         CollectedBool = true;
-        LevelManager.global.inventoryItemList.Remove(gameObject);
+        LevelManager.global.ItemDropList.Remove(gameObject);
     }
 
     private void Update()
