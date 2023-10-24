@@ -95,16 +95,12 @@ public class Boar : MonoBehaviour
             }
         }
 
-        if (mounted)
-        {
-            PlayerStick();
-            PlayAnimations();
-        }
-
         ApplyGravity();
 
         if (mounted)
         {
+            PlayerStick();
+            PlayAnimations();
             if (canMove)
             {
                 SmokeTrail();
@@ -139,6 +135,7 @@ public class Boar : MonoBehaviour
             {
                 animator.SetBool("Moving", false);
                 animator.SetBool("Reversing", false);
+                transform.position = transform.position;
             }
         }
 
