@@ -73,15 +73,16 @@ public class CampSpawner : MonoBehaviour
 
             if (!spawnCamp)
             {
-                spawnPosition.x = LevelManager.global.terrainList[0].transform.position.x + Random.Range(edge, LevelManager.global.terrainList[0].terrainData.size.x - edge);
+                Terrain terrain = LevelManager.global.terrainDataList[0].terrain;
+                spawnPosition.x = terrain.transform.position.x + Random.Range(edge, terrain.terrainData.size.x - edge);
 
                 if (spawnPosition.x >= buildZone)
                 {
-                    spawnPosition.z = LevelManager.global.terrainList[0].transform.position.z + Random.Range(edge, LevelManager.global.terrainList[0].terrainData.size.z - edge);
+                    spawnPosition.z = terrain.transform.position.z + Random.Range(edge, terrain.terrainData.size.z - edge);
                 }
                 else
                 {
-                    spawnPosition.z = LevelManager.global.terrainList[0].transform.position.z + Random.Range(buildZone, LevelManager.global.terrainList[0].terrainData.size.z - edge);
+                    spawnPosition.z = terrain.transform.position.z + Random.Range(buildZone, terrain.terrainData.size.z - edge);
                 }
 
                 spawnPosition.y = mesh.bounds.size.y / 2.0f;

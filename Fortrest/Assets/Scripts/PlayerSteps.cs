@@ -25,8 +25,8 @@ public class PlayerSteps : MonoBehaviour
         if (!PlayerController.global.evading && !PlayerController.global.cancelEffects && !PlayerController.global.characterAnimator.GetBool("Swapping"))
         {
             PlayerController.global.lunge = true;
-            PlayerController.global.AttackEffects();        
-        }       
+            PlayerController.global.AttackEffects();
+        }
     }
 
     void Gather()
@@ -34,7 +34,7 @@ public class PlayerSteps : MonoBehaviour
         if (PlayerModeHandler.global.playerModes == PlayerModes.ResourceMode && !PlayerController.global.evading && !PlayerController.global.cancelEffects)
         {
             PlayerController.global.GatheringEffects();
-        }        
+        }
     }
 
     void SwingStart()
@@ -42,15 +42,20 @@ public class PlayerSteps : MonoBehaviour
         if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
         {
             PlayerController.global.damageEnemy = true;
+            PlayerController.global.attackTimer = 0;
+            CancelInvoke("SwingEnding");
+            Invoke("SwingEnding", 0.5f);
         }
+    }
+
+    void SwingEnding()
+    {
+        PlayerController.global.damageEnemy = false;
     }
 
     void SwingEnd()
     {
-        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
-        {
-            PlayerController.global.damageEnemy = false;
-        }
+        //not in use anymore
     }
 
     void Evading()
@@ -79,7 +84,7 @@ public class PlayerSteps : MonoBehaviour
         {
             timer = 0f;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStep2Sound, 0.05f);
-        }       
+        }
     }
 
     void RunningStepOne()
@@ -98,7 +103,7 @@ public class PlayerSteps : MonoBehaviour
         {
             timer = 0f;
             GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerStep2Sound, 0.05f);
-        }        
+        }
     }
 
     void AimingStepOne()

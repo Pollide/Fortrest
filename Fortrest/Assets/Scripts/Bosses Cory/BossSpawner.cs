@@ -126,8 +126,6 @@ public class BossSpawner : MonoBehaviour
     public void BossMusicBegin(bool open)
     {
         LevelManager.global.activeBossSpawner = open ? this : null;
-
-        LevelManager.global.SetGameMusic();
     }
 
 

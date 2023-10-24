@@ -160,7 +160,7 @@ public class Boar : MonoBehaviour
                 }
             }
 
-            colliders = Physics.OverlapSphere(transform.position - transform.up, 3, GameManager.ReturnBitShift(new string[] { "Default" }), QueryTriggerInteraction.Ignore);
+            colliders = Physics.OverlapSphere(transform.position - transform.up, 3, GameManager.ReturnBitShift(new string[] { "Default", "Terrain" }), QueryTriggerInteraction.Ignore);
 
             if (colliders.Length == 0) //fall to the abyss if walk off the cliff of an island
             {

@@ -616,8 +616,6 @@ MonoBehaviour:
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
-  healthBarImage: {fileID: 8239902508864658042}
-  HUDHealthBar: {fileID: 0}
   playerinRange: 0
   normalHouse: {fileID: 8745183708598832640}
   destroyedHouse: {fileID: 1715340328102381873}
@@ -1488,6 +1486,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0.017
       objectReference: {fileID: 0}
+    - target: {fileID: 7534750687163408695, guid: 412f881170d2477458b73d3eddd5ab20,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c1ec0d1f1c22ef147abaf0b27803714d,
+        type: 3}
     - target: {fileID: 8026301831611583226, guid: 412f881170d2477458b73d3eddd5ab20,
         type: 3}
       propertyPath: m_Layer
@@ -1501,18 +1505,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7351235563259766142}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8239902508864658042 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1467846266723204868, guid: 412f881170d2477458b73d3eddd5ab20,
-    type: 3}
-  m_PrefabInstance: {fileID: 7351235563259766142}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &7805011324990703005
 PrefabInstance:
   m_ObjectHideFlags: 0

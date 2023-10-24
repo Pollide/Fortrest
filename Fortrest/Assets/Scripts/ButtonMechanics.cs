@@ -236,7 +236,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (TerrainTeleportInt != -1)
         {
-            Vector3 posVector = LevelManager.global.terrainList[TerrainTeleportInt].transform.position + new Vector3(50, 2, 50);
+            Vector3 posVector = LevelManager.global.terrainDataList[TerrainTeleportInt].terrain.transform.position + new Vector3(50, 2, 50);
             posVector.y = 2;
 
             if (TerrainTeleportInt == 4)

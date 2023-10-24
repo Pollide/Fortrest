@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
     private float maxHealth = 100.0f; // Maximum health the player can have
     private float newHealth; // Used to pick up on changes in the health amount
     public HealthBar healthBar; // Health bar UI
-
+    public HealthBar houseHealthBar; // Health bar UI
     // Eating
     [HideInInspector] public int appleAmount = 0; // The current amount of apples being held by the player
     private float appleHealAmount = 10.0f; // The amount of health restored when eating an apple
@@ -90,22 +90,22 @@ public class PlayerController : MonoBehaviour
 
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f; // The damage dealt by the melee attack
-    private float attackTimer = 0.0f; // Timer to reset the attack
+    [HideInInspector] public float attackTimer = 0.0f; // Timer to reset the attack
     private float resetAttack = 0.75f; // Attack cooldown
     private float comboTimer = 0.0f; // Timer to reset the combo
     private float resetCombo = 1.10f; // Combo cooldown
     private int attackCount = 0; // Current attack number in the combo
     [HideInInspector] public Building currentResource; // Current resource type being gathered
-    [HideInInspector] public bool damageEnemy = false; // Used to enable a time frame during the animation where the enemy can be damaged
+    public bool damageEnemy = false; // Used to enable a time frame during the animation where the enemy can be damaged
     [HideInInspector] public bool lunge = false; // Used to move the player forward (lunge) during their attack
     [HideInInspector] public bool upgradedMelee; // Used to enable the upgraded melee perks
-    [HideInInspector] public bool attackAnimEnded = true; // Safety bool to avoid attack issues. Becomes true using anim behaviour, and is needed to attack again
+    public bool attackAnimEnded = true; // Safety bool to avoid attack issues. Becomes true using anim behaviour, and is needed to attack again
 
     // States
     [Header("Player States")]
     public bool playerCanMove = true;
     public bool playerisMoving = false;
-    [HideInInspector] public bool attacking = false;
+    public bool attacking = false;
     public bool canGetInHouse;
     public bool bridgeInteract;
     public bool poisoned;
@@ -114,6 +114,7 @@ public class PlayerController : MonoBehaviour
     public GameObject spiderWeb;
     private bool freezeRotation;
     private Vector3 pushDirection;
+    private bool staggered;
 
     // Teleporter
     public bool canTeleport = false;
@@ -1018,7 +1019,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleSpeed()
     {
-        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !canShoot && !attacking)
+        if (playerisMoving && (Input.GetKey(KeyCode.LeftShift) || sprintingCTRL) && canRun && !staggered && !canShoot && !attacking)
         {
             running = true;
         }
@@ -1045,9 +1046,11 @@ public class PlayerController : MonoBehaviour
 
         if (!canRun)
         {
+            playerEnergyBarImage.color = new Color32(133, 133, 133, 255);
             runTimer += Time.deltaTime;
             if (runTimer > 2.5f)
             {
+                playerEnergyBarImage.color = new Color32(255, 255, 255, 255);
                 canRun = true;
                 runTimer = 0;
             }
@@ -1088,6 +1091,7 @@ public class PlayerController : MonoBehaviour
         evading = true;
         characterAnimator.ResetTrigger("Evade");
         characterAnimator.SetTrigger("Evade");
+        staggered = false;
         GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerEvadeSound);
         evadeTimer = 0f;
         evadeCooldownImage.transform.localPosition = evadeImageStartPos;
@@ -1118,7 +1122,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                LevelManager.global.SetGameMusic();
+                LevelManager.global.currentMusic = null;
             }
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.PauseMenuSound);
@@ -1146,7 +1150,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                LevelManager.global.SetGameMusic();
+                LevelManager.global.currentMusic = null;
             }
 
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
@@ -1593,7 +1597,6 @@ public class PlayerController : MonoBehaviour
 
             attackingCTRL = false;
             attacking = true;
-            attackAnimEnded = false;
             attackTimer = 0;
             comboTimer = 0;
 
@@ -1786,46 +1789,49 @@ public class PlayerController : MonoBehaviour
 
     public void AttackEffects()
     {
-        int randomInt = Random.Range(0, 3);
-
-        if (attackCount == 0 || attackCount == 2)
+        if (!attackAnimEnded)
         {
-            LevelManager.global.VFXSlash.transform.position = transform.position;
-            LevelManager.global.VFXSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
-            LevelManager.global.VFXSlash.Play();
-            if (attackCount == 0)
+            int randomInt = Random.Range(0, 3);
+
+            if (attackCount == 0 || attackCount == 2)
             {
+                LevelManager.global.VFXSlash.transform.position = transform.position;
+                LevelManager.global.VFXSlash.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y - 90.0f, transform.eulerAngles.z);
+                LevelManager.global.VFXSlash.Play();
+                if (attackCount == 0)
+                {
+                    if (randomInt == 1 || randomInt == 2)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack1Sound, 0.9f);
+                    }
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing1Sound);
+                }
+                else
+                {
+                    if (randomInt == 1 || randomInt == 2)
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.9f);
+                    }
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing3Sound);
+                }
+            }
+            else if (attackCount == 1)
+            {
+                LevelManager.global.VFXSlashReversed.transform.position = transform.position;
+                LevelManager.global.VFXSlashReversed.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + 90.0f, transform.eulerAngles.z);
+                LevelManager.global.VFXSlashReversed.Play();
                 if (randomInt == 1 || randomInt == 2)
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack1Sound, 0.9f);
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.9f);
                 }
-                GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing1Sound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);
             }
-            else
-            {
-                if (randomInt == 1 || randomInt == 2)
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack3Sound, 0.9f);
-                }
-                GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing3Sound);
-            }
-        }
-        else if (attackCount == 1)
-        {
-            LevelManager.global.VFXSlashReversed.transform.position = transform.position;
-            LevelManager.global.VFXSlashReversed.transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y + 90.0f, transform.eulerAngles.z);
-            LevelManager.global.VFXSlashReversed.Play();
-            if (randomInt == 1 || randomInt == 2)
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerAttack2Sound, 0.9f);
-            }
-            GameManager.global.SoundManager.PlaySound(GameManager.global.SwordSwing2Sound);
-        }
 
-        attackCount++;
-        if (attackCount > 2)
-        {
-            attackCount = 0;
+            attackCount++;
+            if (attackCount > 2)
+            {
+                attackCount = 0;
+            }
         }
     }
 
@@ -2035,10 +2041,15 @@ public class PlayerController : MonoBehaviour
         {
             if (!Boar.global.mounted)
             {
+                StopCoroutine("Staggered");
+                StartCoroutine("Staggered");
                 cancelHit = true;
                 characterAnimator.ResetTrigger("Hit1");
                 characterAnimator.ResetTrigger("Hit2");
                 characterAnimator.ResetTrigger("Hit3");
+                characterAnimator.ResetTrigger("Swing1");
+                characterAnimator.ResetTrigger("Swing2");
+                characterAnimator.ResetTrigger("Swing3");
                 int random = Random.Range(1, 4);
                 if (random == 1)
                 {
@@ -2073,6 +2084,13 @@ public class PlayerController : MonoBehaviour
             playerHealth -= damage;
             displaySlash = true;
         }
+    }
+
+    private IEnumerator Staggered()
+    {
+        staggered = true;
+        yield return new WaitForSeconds(0.33f);
+        staggered = false;
     }
 
     private bool Facing(Vector3 otherPosition, float desiredAngle) // Making sure the enemy always faces what it is attacking
