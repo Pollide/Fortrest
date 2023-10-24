@@ -288,15 +288,14 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            if (LevelManager.global.ReturnNight())
+            if (ReturnNight())
             {
                 music = GameManager.global.NightMusic;
             }
             else
             {
-                Physics.Raycast(PlayerController.global.transform.position, Vector3.up * -3, out RaycastHit raycastHit, GameManager.ReturnBitShift());
+                Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" }));
 
-                Debug.Log(raycastHit.transform);
                 for (int i = 0; i < terrainDataList.Count; i++)
                 {
                     if (terrainDataList[i].terrain == raycastHit.transform)
