@@ -550,6 +550,7 @@ public class PlayerController : MonoBehaviour
             playerCanBeDamaged = false;
 
             playerCC.Move(transform.forward * 6.0f * Time.deltaTime);
+            attacking = false;
             return;
         }
         else
