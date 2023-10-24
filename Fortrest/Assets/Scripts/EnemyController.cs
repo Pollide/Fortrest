@@ -376,7 +376,6 @@ public class EnemyController : MonoBehaviour
 
             if (previousDistance != 0 && previousDistance == distance) //prevents wolf getting stuck and standing still
             {
-                // Debug.Log("Cant reach, finding new");
                 newDestination = true;
             }
             previousDistance = distance;
