@@ -209,6 +209,14 @@ public class SFXManager : MonoBehaviour
         {
             bool ArrayIsFull = true;
 
+            for (int i = 0; i < SFXList.Count; i++)
+            {
+                if (SpatialTransform && SFXList[i].SpatialTransform == SpatialTransform && SFXList[i].Audio == clip)
+                {
+                    return i; //stops same sound running
+                }
+            }
+
             for (int i = PoolPosition; i < SFXList.Count + PoolPosition; i++)
             {
                 int CurrentCycle = (int)GameManager.ReturnThresholds(i + 1, SFXList.Count - 1);
