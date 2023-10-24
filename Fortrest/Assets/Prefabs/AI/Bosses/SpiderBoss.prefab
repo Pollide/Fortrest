@@ -365,6 +365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 764930e38d0fa444b9c73c81a17fd26a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerTransform: {fileID: 0}
   retreating: 0
   dead: 0
   stage: 0
@@ -378,6 +379,9 @@ MonoBehaviour:
   rootNow: 0
   midAir: 0
   slamNow: 0
+  normalAttackCD: 4
+  normalAttackReady: 1
+  attacking: 0
   bossSpawner: {fileID: 0}
 --- !u!114 &5839751702316513058
 MonoBehaviour:
@@ -576,7 +580,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4779166329654855270}
   - component: {fileID: 2622106035761491257}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: InnerShape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1049,7 +1053,7 @@ GameObject:
   - component: {fileID: 3562521944671574029}
   - component: {fileID: 325956428277000439}
   - component: {fileID: 5367426410689052660}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: OuterShape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1729,7 +1733,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8216938281832612625}
-  m_Layer: 13
+  m_Layer: 19
   m_Name: ConeAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
