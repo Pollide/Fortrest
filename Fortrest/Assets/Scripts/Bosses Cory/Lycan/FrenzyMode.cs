@@ -1,18 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class FrenzyMode : BossState
 {
     [SerializeField] private BossState idleState;
     [SerializeField] private float nextAttackTime = 0f;
-    public float attackRange = 2f;
-    public float attackCooldown = 2f;
-
+    [SerializeField] private float jumpDistance = 10f;
+    [SerializeField] private float jumpSpeed = 10f;
+    public float timeBetweenJump = 2f;
+    public bool attacking = false;
+    public bool stopRotation = false;
+    public bool telegraph;
+    public float rotationSpeed = 4;
 
     public override void EnterState()
     {
         stateMachine.CurrentPhase = BossStateMachine.BossPhase.Three;
+        stateMachine.BossAnimator.ResetTrigger("Frenzy");
+        stateMachine.BossAnimator.SetTrigger("Frenzy");
+        stateMachine.BossAnimator.SetBool("inFrenzy", true);
+        GetComponent<NavMeshAgent>().speed = jumpSpeed;
+        GetComponent<NavMeshAgent>().acceleration = jumpSpeed * 10;
+        stopRotation = true;
     }
 
     public override void ExitState()
@@ -22,6 +33,7 @@ public class FrenzyMode : BossState
 
     public override void UpdateState()
     {
+
         // Switch to Idle if player is outside of arena
         if (!PlayerInArena(stateMachine.ArenaSize))
         {
@@ -29,25 +41,30 @@ public class FrenzyMode : BossState
         }
         else
         {
-            WalkTo(playerTransform.position, 3);
             Attack();
         }
     }
 
     private void Attack()
     {
-        if (Time.time >= nextAttackTime)
+        if (attacking)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, playerTransform.position);
-
-            if (distanceToPlayer <= attackRange)
+            GetComponent<NavMeshAgent>().isStopped = false;
+            WalkTo(transform.position + transform.forward * jumpDistance, 1);
+        }
+        else
+        {
+            GetComponent<NavMeshAgent>().isStopped = true;
+            if (!stopRotation)
             {
-                // Play the attack animation
-                stateMachine.BossAnimator.ResetTrigger("Attack");
-                stateMachine.BossAnimator.SetTrigger("Attack");
+                // Calculate the direction to the target
+                Vector3 targetDirection = playerTransform.position - transform.position;
 
-                // Set the cooldown timer
-                nextAttackTime = Time.time + attackCooldown;
+                // Calculate the rotation needed to face the target
+                Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+
+                // Smoothly interpolate the current rotation to the target rotation
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
         }
     }

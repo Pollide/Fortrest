@@ -14,7 +14,7 @@ public class PhaseTwoLycan : BossState
 
     public override void EnterState()
     {
-        if (enemyList.Count > 0)
+        if (enemyList.Count <= 0)
         {
             for (int i = 0; i < spawnLocation.Length; i++)
             {

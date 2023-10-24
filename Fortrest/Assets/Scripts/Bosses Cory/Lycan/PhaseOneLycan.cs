@@ -15,7 +15,7 @@ public class PhaseOneLycan : BossState
     {
         stateMachine.CurrentPhase = BossStateMachine.BossPhase.One;
 
-        if (enemyList.Count > 0)
+        if (enemyList.Count <= 0)
         {
             for (int i = 0; i < spawnLocation.Length; i++)
             {
