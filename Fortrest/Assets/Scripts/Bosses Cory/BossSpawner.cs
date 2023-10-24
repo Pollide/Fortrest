@@ -6,6 +6,7 @@ public class BossSpawner : MonoBehaviour
     [HideInInspector]
     public bool bossAwakened;
     bool initialIntro = true;
+    public bool escapeByDistance = true;
     [SerializeField] public float Arenasize = 40f;
     // Holds the current boss type
     public TYPE bossType;
@@ -102,26 +103,28 @@ public class BossSpawner : MonoBehaviour
     public void BossEncountered(bool open)
     {
 
-
-        if (bossEncountered != open)
+        if (bossAwakened)
         {
-            if (health <= 0)
+            if (bossEncountered != open)
             {
-                GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
+                if (health <= 0)
+                {
+                    GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
+                }
+                else
+                {
+                    GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Appear", open);
+                }
+
+                BossMusicBegin(open);
+
+                UpdateHealth();
+
+                LevelManager.global.dayPaused = open;
             }
-            else
-            {
-                GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Appear", open);
-            }
 
-            BossMusicBegin(open);
-
-            UpdateHealth();
-
-            LevelManager.global.dayPaused = open;
+            bossEncountered = open;
         }
-
-        bossEncountered = open;
     }
 
     public void BossMusicBegin(bool open)
@@ -203,7 +206,7 @@ public class BossSpawner : MonoBehaviour
                 }
             }
         }
-        else
+        else if (escapeByDistance)
         {
             BossEncountered(false);
         }
