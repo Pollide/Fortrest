@@ -132,7 +132,9 @@ public class BossStateMachine : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, ArenaSize);
+
+        if (transform)
+            Gizmos.DrawWireSphere(transform.position, ArenaSize);
     }
 
     public GameObject HealthBar
