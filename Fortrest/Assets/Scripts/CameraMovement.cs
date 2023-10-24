@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
-{  
+{
+    public static CameraMovement global;
+
     private float timer;
     private bool up, down, left, right;
     private float upF, downF, leftF, rightF;
@@ -11,16 +13,16 @@ public class CameraMovement : MonoBehaviour
     private float[] times;
     private float biggest;
     private KeyCode[] keyCodes;
-    public Renderer gridRenderer;
     private float xMove, yMove, xMin, yMin, xMax, yMax;
     private Vector2 cameraCTRL;
 
+    private void Awake()
+    {
+        global = this;
+    }
+
     private void Start()
     {
-        xMin = -4.4f;
-        xMax = 4.6f;
-        yMin = -2.15f;
-        yMax = 6.5f;
         times = new float[4];
         keyCodes = (KeyCode[])System.Enum.GetValues(typeof(KeyCode));
 
@@ -209,5 +211,11 @@ public class CameraMovement : MonoBehaviour
     {
         CameraFollow.global.cameraMoving = true;
         transform.position += new Vector3(x, 0.0f, z) * Time.deltaTime * 100.0f;
+    }
+
+    public void ResetAll()
+    {
+        xMove = 0f;
+        yMove = 0f;
     }
 }
