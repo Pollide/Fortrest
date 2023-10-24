@@ -14,8 +14,6 @@ public class BoltScript : MonoBehaviour
 
     [HideInInspector]
     public Transform ActiveTarget;
-
-    private bool instakill;
     private bool damageDealt;
 
     // Update is called once per frame
@@ -37,50 +35,15 @@ public class BoltScript : MonoBehaviour
     {
         if (!damageDealt && turretShootingScript && !GetComponent<ProjectileExplosion>())
         {
-            U_Turret uTurret = turretShootingScript.GetComponent<U_Turret>();
-
             if (other.CompareTag("Enemy"))
             {
                 // Retrieve the Enemy component from the collided object
                 EnemyController enemy = other.GetComponent<EnemyController>();
-                NavMeshAgent enemyAgent = other.GetComponent<NavMeshAgent>();
+                // NavMeshAgent enemyAgent = other.GetComponent<NavMeshAgent>();
                 if (enemy != null)
                 {
-                    if (!turretShootingScript.MiniTurret)
-                    {
-                        if (uTurret.isKnockBackActive)
-                        {
-                            float randomRange = Random.Range(0f, 100f);
-                            if (randomRange <= uTurret.knockBackPercentage)
-                            {
-                                Vector3 direction = (enemyAgent.transform.position - transform.position).normalized;
-                                enemyAgent.velocity = direction * pushForce;
-                            }
-                        }
-
-                        if (uTurret.isInstantKillPercent)
-                        {
-                            instakill = true;
-                            float randomRange = Random.Range(0f, 100f);
-                            if (randomRange <= uTurret.instantKillPercent)
-                            {
-                                enemy.Damaged(5000); // Apply damage to the enemy
-                                damageDealt = true;
-                            }
-                            else
-                            {
-                                enemy.Damaged(damage); // Apply damage to the enemy
-                                damageDealt = true;
-                            }
-
-                        }
-                    }
-
-                    if (!instakill)
-                    {
-                        enemy.Damaged(damage); // Apply damage to the enemy
-                        damageDealt = true;
-                    }
+                    enemy.Damaged(damage); // Apply damage to the enemy
+                    damageDealt = true;
 
                 }
 

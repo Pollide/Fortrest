@@ -69,7 +69,7 @@ public class LevelManager : MonoBehaviour
     public float daylightTimer;
     public int day = 0;
     public List<EnemyController> enemyList = new List<EnemyController>();
-    public List<GameObject> inventoryItemList = new List<GameObject>();
+    public List<GameObject> ItemDropList = new List<GameObject>();
     public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
     public List<BossSpawner> bossList = new List<BossSpawner>();
     public List<Chest> chestList = new List<Chest>();

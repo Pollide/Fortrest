@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 3691568561601696348}
   - component: {fileID: 5612272988515515401}
   - component: {fileID: 8741814616103344503}
-  - component: {fileID: 4725232762020171120}
   - component: {fileID: 2153438666847805586}
   - component: {fileID: 7101719424413169726}
   - component: {fileID: 7434200447892280958}
@@ -146,55 +145,6 @@ MonoBehaviour:
   DebugDestroyInstantly: 0
   gridLocation: {x: 0, y: 0}
   destroyedTimer: 0
---- !u!114 &4725232762020171120
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6178621800414324515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29a019fc2bee72043b589714c7417c16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  explosianRadiusButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  damageButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  rangeButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  allButtons: []
-  buyUpgradeButton: {fileID: 0}
-  upgradeMenu: {fileID: 0}
-  addHPButton: {fileID: 0}
-  addChanceToKillButton: {fileID: 0}
-  addChanceToMultiShotButton: {fileID: 0}
-  upgradeTextObject: {fileID: 0}
-  uiText: {fileID: 0}
-  detectionRange: 3
-  upgradeCostWood: 1
-  upgradeCostStone: 1
-  upgradeExplosionRadiusPercentage: 5
-  upgradeRangePercent: 5
-  upgradeDamagePercent: 5
-  instantKillPercent: 5
-  increasedHPPercentage: 5
-  multiShotPercentage: 5
-  upgradeRankScaleRange: 1
-  upgradeRankScaleDMG: 1
-  upgradeRankScaleExplosionRadius: 1
-  isInstantKillPercent: 0
-  isHPActive: 0
-  isMultiShotActive: 0
-  specialActive: 0
-  canUpgrade: 0
 --- !u!208 &2153438666847805586
 NavMeshObstacle:
   m_ObjectHideFlags: 0

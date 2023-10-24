@@ -7,7 +7,6 @@ public class ProjectileExplosion : MonoBehaviour
     public float damage = 0.1f;
     public float pushForce = 5f;
     public GameObject explosionEffect;
-    public U_Cannon uCannon;
 
     void OnCollisionEnter(Collision collision)
     {
@@ -27,22 +26,7 @@ public class ProjectileExplosion : MonoBehaviour
         {
             if (collider.GetComponent<EnemyController>())
             {
-                if (uCannon.isInstantKillPercent)
-                {
-                    float randomRange = Random.Range(0f, 100f);
-                    if (randomRange <= uCannon.instantKillPercent)
-                    {
-                        collider.GetComponent<EnemyController>().Damaged(5000);
-                    }
-                    else
-                    {
-                        collider.GetComponent<EnemyController>().Damaged(damage);
-                    }
-                }
-                else
-                {
-                    collider.GetComponent<EnemyController>().Damaged(damage);
-                }
+                collider.GetComponent<EnemyController>().Damaged(damage);
             }
 
             Rigidbody enemyRigidbody = collider.GetComponent<Rigidbody>();

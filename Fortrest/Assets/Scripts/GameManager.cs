@@ -231,11 +231,10 @@ public class GameManager : MonoBehaviour
 
             if (PlayerPrefs.GetInt("Quick Load") > 0)
             {
-                PlayAnimation(GetComponent<Animation>(), "Load In", true, true); //first bool skips this
                 PlayerPrefs.SetInt("Quick Load", 0); //now set it to zero as no need for the feature to exist until next time a peer runs another scene
             }
 
-            NextScene(quickLoadInt, quickLoadInt == 0); //go to that next scene
+            NextScene(quickLoadInt, true); //go to that next scene
         }
 
     }
@@ -546,7 +545,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => !state || !state.enabled || first);
 
         //gets the scene index and loads it async
-        if (!first)
+        if (!first || index > 0)
         {
             AsyncOperation operation = SceneManager.LoadSceneAsync(index);
 
@@ -570,7 +569,7 @@ public class GameManager : MonoBehaviour
     public static GameObject ReturnResource(string resourceObject, Vector3 position, Quaternion rotation)
     {
         GameObject item = Instantiate(Resources.Load("Drops/" + resourceObject + " Drop"), position, rotation) as GameObject;
-        item.GetComponent<InventoryItem>().resourceObject = resourceObject;
+        item.GetComponent<ItemDrop>().resourceObject = resourceObject;
 
         return item;
     }
@@ -624,24 +623,24 @@ public class GameManager : MonoBehaviour
         LevelManager.global.enemyTimer = (int)Pref("Goblin Timer", LevelManager.global.enemyTimer, load);
 
         LevelManager.global.enemyThreshold = (int)Pref("Goblin Threshold", LevelManager.global.enemyThreshold, load);
-        int itemSize = (int)Pref("Item Size", LevelManager.global.inventoryItemList.Count, load);
+        int itemSize = (int)Pref("Item Size", LevelManager.global.ItemDropList.Count, load);
 
         // LevelManager.global.runOnce = Pref("Run Once", LevelManager.global.runOnce ? 1 : 0, load) == 1;
         LevelManager.global.messageDisplayed = Pref("Message Display", LevelManager.global.messageDisplayed ? 1 : 0, load) == 1;
 
         for (int i = 0; i < itemSize; i++)
         {
-            string original = load ? "" : LevelManager.global.inventoryItemList[i].GetComponent<InventoryItem>().resourceObject.ToString();
+            string original = load ? "" : LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().resourceObject.ToString();
             string resourceObject = PrefString("Item Resource" + i, original, load);
 
-            Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.inventoryItemList[i].transform;
+            Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.ItemDropList[i].transform;
 
-            // int collected = (int)Pref("Item Collected" + i, resource.GetComponent<InventoryItem>().CollectedBool ? 1 : 0, load);
+            // int collected = (int)Pref("Item Collected" + i, resource.GetComponent<ItemDrop>().CollectedBool ? 1 : 0, load);
 
-            resource.GetComponent<InventoryItem>().resourceAmount = (int)Pref("Item Amount" + i, resource.GetComponent<InventoryItem>().resourceAmount, load);
+            resource.GetComponent<ItemDrop>().resourceAmount = (int)Pref("Item Amount" + i, resource.GetComponent<ItemDrop>().resourceAmount, load);
 
             // if (load && collected == 1)
-            //    resource.GetComponent<InventoryItem>().CollectVoid();
+            //    resource.GetComponent<ItemDrop>().CollectVoid();
 
             DataPositionVoid("Item Position" + i, resource, load);
             DataEulerVoid("Item Euler" + i, resource, load);

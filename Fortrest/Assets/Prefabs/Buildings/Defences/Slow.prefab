@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: -4194129225788264529}
   - component: {fileID: 9042061743958791025}
   - component: {fileID: 8458094183806817661}
-  - component: {fileID: 8614547827603314935}
   - component: {fileID: 1291244798047708635}
   - component: {fileID: 5759019112172937666}
   m_Layer: 7
@@ -160,55 +159,6 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!114 &8614547827603314935
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4568575667695550563}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4114ad8d9223afb459f4de9d97c27d38, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackSpeedButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  damageButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  rangeButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  allButtons: []
-  buyUpgradeButton: {fileID: 0}
-  upgradeMenu: {fileID: 0}
-  addKnockBackButton: {fileID: 0}
-  addChanceToKillButton: {fileID: 0}
-  addChanceToMultiShotButton: {fileID: 0}
-  upgradeTextObject: {fileID: 0}
-  uiText: {fileID: 0}
-  detectionRange: 10
-  upgradeCostWood: 1
-  upgradeCostStone: 1
-  upgradeASPercent: 5
-  upgradeRangePercent: 5
-  upgradeDamagePercent: 5
-  instantKillPercent: 5
-  knockBackPercentage: 5
-  multiShotPercentage: 5
-  upgradeRankScaleRange: 1
-  upgradeRankScaleDMG: 1
-  upgradeRankScaleAS: 1
-  isInstantKillPercent: 0
-  isKnockBackActive: 0
-  isMultiShotActive: 0
-  specialActive: 0
-  canUpgrade: 0
 --- !u!208 &1291244798047708635
 NavMeshObstacle:
   m_ObjectHideFlags: 0
