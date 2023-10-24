@@ -101,17 +101,6 @@ public class Building : MonoBehaviour
         rigidbody.isKinematic = true; //prevents any forces acting upon it
         rigidbody.useGravity = false; //prevents the object from being affected by gravity
 
-        //grabs all children transforms including itself by finding the component it matches, as I put transform there, it will just grab all of them
-        List<Transform> transformList = GameManager.FindComponent<Transform>(transform);
-
-        //create a for loop from the list
-        //for (int i = 0; i < transformList.Count; i++)
-        //{
-        //    //sets all transforms to the building layer, so the mouse will easily be able to click the building
-        //    if (transformList[i].gameObject.layer != LayerMask.NameToLayer("UI"))
-        //        transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
-        //}
-
         if (buildingObject == BuildingType.House)
         {
             Indicator.global.AddIndicator(transform, Color.yellow, "Home", customSprite: Indicator.global.HomeSprite);
