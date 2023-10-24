@@ -184,6 +184,22 @@ public class BossSpawner : MonoBehaviour
                     {
                         introCompleted = true;
                         initialIntro = false;
+
+                        if (GetComponent<BossStateMachine>())
+                        {
+                            if (GetComponent<IdleState>().IdleRuns < 1 && bossType == BossSpawner.TYPE.Lycan)
+                            {
+                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
+                            }
+                            else if (GetComponent<IdleState>().IdleRuns >= 1 && bossType == BossSpawner.TYPE.Lycan)
+                            {
+                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
+                            }
+                            else if (bossType != BossSpawner.TYPE.Lycan)
+                            {
+                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
+                            }
+                        }
                     }
 
                     bool show = introTimer > introSlowTimeStart && initialIntro && !introCompleted && introTimer < introSlowTimeEnd;
@@ -198,7 +214,7 @@ public class BossSpawner : MonoBehaviour
 
 
                     PlayerController.global.playerCanMove = introCompleted;
-
+                    Indicator.global.GetComponent<Canvas>().enabled = introCompleted;
                     LevelManager.global.HUD.SetActive(introCompleted);
                 }
             }
