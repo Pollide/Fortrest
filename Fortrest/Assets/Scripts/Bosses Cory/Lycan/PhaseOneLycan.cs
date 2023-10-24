@@ -23,6 +23,7 @@ public class PhaseOneLycan : BossState
 
                 enemy.GetComponent<EnemyController>().bossScriptOne = this;
                 enemy.GetComponent<EnemyController>().isMob = true;
+                enemy.GetComponent<EnemyController>().wolfDistanceBetweenPlayer = 100;
 
                 enemyList.Add(enemy);
             }

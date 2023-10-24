@@ -22,5 +22,17 @@ public class TakeDamageTrigger : MonoBehaviour
                 stateMachine.TakeDamage(player.attackDamage);
             }
         }
+        if (other.gameObject.tag == "Arrow" && other.GetComponent<ArrowTrigger>())
+        {
+            if (!other.GetComponent<ArrowTrigger>().singleHit)
+            {
+                other.GetComponent<ArrowTrigger>().singleHit = true;
+                stateMachine.TakeDamage(PlayerController.global.bowDamage);
+                if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
+                {
+                    Destroy(other.gameObject.transform.parent.gameObject);
+                }
+            }
+        }
     }
 }
