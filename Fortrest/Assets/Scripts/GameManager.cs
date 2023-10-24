@@ -231,11 +231,10 @@ public class GameManager : MonoBehaviour
 
             if (PlayerPrefs.GetInt("Quick Load") > 0)
             {
-                PlayAnimation(GetComponent<Animation>(), "Load In", true, true); //first bool skips this
                 PlayerPrefs.SetInt("Quick Load", 0); //now set it to zero as no need for the feature to exist until next time a peer runs another scene
             }
 
-            NextScene(quickLoadInt, quickLoadInt == 0); //go to that next scene
+            NextScene(quickLoadInt, true); //go to that next scene
         }
 
     }
@@ -546,7 +545,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => !state || !state.enabled || first);
 
         //gets the scene index and loads it async
-        if (!first)
+        if (!first || index > 0)
         {
             AsyncOperation operation = SceneManager.LoadSceneAsync(index);
 
