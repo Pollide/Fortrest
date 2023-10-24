@@ -6,6 +6,7 @@ public class ArenaTrigger : MonoBehaviour
 {
     public BossSpawner bossSpawner;
     public bool EnteringBool;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Boar"))
