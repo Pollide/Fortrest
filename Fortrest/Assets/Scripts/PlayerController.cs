@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
     private float maxHealth = 100.0f; // Maximum health the player can have
     private float newHealth; // Used to pick up on changes in the health amount
     public HealthBar healthBar; // Health bar UI
-
+    public HealthBar houseHealthBar; // Health bar UI
     // Eating
     [HideInInspector] public int appleAmount = 0; // The current amount of apples being held by the player
     private float appleHealAmount = 10.0f; // The amount of health restored when eating an apple
@@ -90,13 +90,13 @@ public class PlayerController : MonoBehaviour
 
     // Attacks
     [HideInInspector] public float attackDamage = 1.0f; // The damage dealt by the melee attack
-    private float attackTimer = 0.0f; // Timer to reset the attack
+    [HideInInspector] public float attackTimer = 0.0f; // Timer to reset the attack
     private float resetAttack = 0.75f; // Attack cooldown
     private float comboTimer = 0.0f; // Timer to reset the combo
     private float resetCombo = 1.10f; // Combo cooldown
     private int attackCount = 0; // Current attack number in the combo
     [HideInInspector] public Building currentResource; // Current resource type being gathered
-    [HideInInspector] public bool damageEnemy = false; // Used to enable a time frame during the animation where the enemy can be damaged
+    public bool damageEnemy = false; // Used to enable a time frame during the animation where the enemy can be damaged
     [HideInInspector] public bool lunge = false; // Used to move the player forward (lunge) during their attack
     [HideInInspector] public bool upgradedMelee; // Used to enable the upgraded melee perks
     public bool attackAnimEnded = true; // Safety bool to avoid attack issues. Becomes true using anim behaviour, and is needed to attack again
@@ -105,7 +105,7 @@ public class PlayerController : MonoBehaviour
     [Header("Player States")]
     public bool playerCanMove = true;
     public bool playerisMoving = false;
-    [HideInInspector] public bool attacking = false;
+    public bool attacking = false;
     public bool canGetInHouse;
     public bool bridgeInteract;
     public bool poisoned;
@@ -1595,7 +1595,7 @@ public class PlayerController : MonoBehaviour
             });
 
             attackingCTRL = false;
-            attacking = true;            
+            attacking = true;
             attackTimer = 0;
             comboTimer = 0;
 

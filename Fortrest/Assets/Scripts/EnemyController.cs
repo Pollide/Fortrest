@@ -8,7 +8,7 @@ public class EnemyController : MonoBehaviour
 {
     // Agent components
     private NavMeshAgent agent; // Nav mesh agent component
-
+    public bool debugingoredamage;
     // Transforms
     private Transform bestTarget; // Target that the enemy will go towards
     private Transform playerPosition;
@@ -443,7 +443,8 @@ public class EnemyController : MonoBehaviour
 
     public void Damaged(float amount)
     {
-        health -= amount;
+        if (!debugingoredamage)
+            health -= amount;
 
         if (health <= 0)
         {
@@ -517,8 +518,7 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
-            if (PlayerController.global.attacking)
-                Debug.Log("trigger" + PlayerController.global.attacking + " && " + canBeDamaged + " && " + PlayerController.global.damageEnemy);
+            //  Debug.Log("trigger" + PlayerController.global.attacking + " && " + canBeDamaged + " && " + PlayerController.global.damageEnemy);
 
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
