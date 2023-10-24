@@ -84,13 +84,16 @@ public class PhaseThreeAttack : BossState
             }
         }
 
-        if (stateMachine.BossAnimator.GetBool("isJumping") && trigger.enabled)
+        if (trigger)
         {
-            trigger.enabled = false;
-        }
-        else if(!stateMachine.BossAnimator.GetBool("isJumping") && !trigger.enabled)
-        {
-            trigger.enabled = true;
+            if (stateMachine.BossAnimator.GetBool("isJumping") && trigger.enabled)
+            {
+                trigger.enabled = false;
+            }
+            else if (!stateMachine.BossAnimator.GetBool("isJumping") && !trigger.enabled)
+            {
+                trigger.enabled = true;
+            }
         }
     }
 

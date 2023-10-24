@@ -7,11 +7,8 @@ public class BirdBoss : MonoBehaviour
     public static BirdBoss global;
 
     [HideInInspector] public Transform playerTransform;
-    private Animator animator;
-    [HideInInspector] public bool awoken;
-    [HideInInspector] public Vector3 startPosition;   
+    [HideInInspector] public Vector3 startPosition;
     [HideInInspector] public bool dead;
-    [HideInInspector] public bool startIntro;
     [HideInInspector] public Vector3 directionToPlayer;
     [HideInInspector] public float distanceToPlayer;
     private float speed = 15f;
@@ -20,7 +17,7 @@ public class BirdBoss : MonoBehaviour
     [HideInInspector] public bool targetReached = false;
     public bool altitudeReached;
     public bool flying;
-    public bool diving;     
+    public bool diving;
     public bool vulnerable;
     public bool crashed;
     public bool retreating;
@@ -31,13 +28,15 @@ public class BirdBoss : MonoBehaviour
     private bool stopMoving;
     [HideInInspector] public Vector3 targetPosition;
     [HideInInspector] public Vector3 targetDirection;
-    [HideInInspector] public bool flyAnimOver;
+    [HideInInspector] public bool flyAnimOver = true;
+    [HideInInspector] public bool crashAnimOver = true;
     [HideInInspector] public BoxCollider boxCollider;
     [HideInInspector] public CapsuleCollider capsuleCollider;
     public SphereCollider telegraphCollider;
     public GameObject rockObject;
     public GameObject displayedRock;
     [HideInInspector] public bool hitOnce;
+    [HideInInspector] public bool lastWasNormal;
 
     [HideInInspector] public BossSpawner bossSpawner;
 
@@ -49,8 +48,6 @@ public class BirdBoss : MonoBehaviour
     void Start()
     {
         playerTransform = PlayerController.global.transform;
-        animator = GetComponent<Animator>();
-        awoken = false;
         startPosition = transform.position;
         retreating = false;
         boxCollider = GetComponent<BoxCollider>();
@@ -65,13 +62,6 @@ public class BirdBoss : MonoBehaviour
         boxCollider.enabled = crashed ? false : true;
         telegraphCollider.enabled = boxCollider.enabled ? false : true;
 
-        // Boss wakes up when player gets close to it
-        if (distanceToPlayer < 20.0f && !awoken)
-        {
-            awoken = true;
-            animator.SetTrigger("TakeOff");
-        }
-
         // Boss flies up at the start
         if (flying && !altitudeReached)
         {
@@ -85,23 +75,24 @@ public class BirdBoss : MonoBehaviour
         // Boss crashes after being hit 3 times
         if (hitReceived >= 3)
         {
-            animator.ResetTrigger("Crash");
-            animator.SetTrigger("Crash");
-        }                
+            bossSpawner.bossAnimator.ResetTrigger("Crash");
+            bossSpawner.bossAnimator.SetTrigger("Crash");
+            hitReceived = 0;
+        }
     }
 
     // Used to orientate and move the boss
     public void MoveToTarget(Vector3 targetPosition, Vector3 targetDirection)
     {
         LookAt(targetDirection);
-        MoveTowards(targetPosition);  
+        MoveTowards(targetPosition);
     }
 
     // Direction the boss is looking at
     public void LookAt(Vector3 targetDirection)
-    {       
+    {
         Quaternion lookRotation = Quaternion.LookRotation(new Vector3(targetDirection.x, 0, targetDirection.z));
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10.0f);    
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10.0f);
     }
 
     // Location the boss is moving to
@@ -145,10 +136,12 @@ public class BirdBoss : MonoBehaviour
 
         if (bossSpawner.health <= 0)
         {
+            bossSpawner.bossAnimator.SetTrigger("Dead");
             StopAllCoroutines();
             MoveToTarget(transform.position, transform.position);
             dead = true;
             Time.timeScale = 1;
+            GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossDeadSound);
         }
     }
 
@@ -158,7 +151,7 @@ public class BirdBoss : MonoBehaviour
         {
             if (PlayerController.global.attacking && bossSpawner.canBeDamaged && PlayerController.global.damageEnemy && crashed)
             {
-                //GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
+                GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.BirdBossHit1Sound : GameManager.global.BirdBossHit2Sound, 1f, true, 0, false, transform);
                 bossSpawner.canBeDamaged = false;
                 StopAllCoroutines();
                 ScreenShake.global.shake = true;
@@ -174,9 +167,9 @@ public class BirdBoss : MonoBehaviour
                 {
                     hitReceived++;
                 }
-                GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
+                GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.BirdBossHit1Sound : GameManager.global.BirdBossHit2Sound, 1f, true, 0, false, transform);
                 other.GetComponent<ArrowTrigger>().singleHit = true;
-                Damaged(PlayerController.global.bowDamage);              
+                Damaged(PlayerController.global.bowDamage);
                 if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
                 {
                     Destroy(other.gameObject.transform.parent.gameObject);
@@ -196,13 +189,14 @@ public class BirdBoss : MonoBehaviour
         hitReceived = 0;
         crashed = false;
         altitudeReached = false;
-        animator.SetBool("Flying", true);
+        bossSpawner.bossAnimator.SetBool("Flying", true);
         flying = true;
     }
 
     private void StopMovementAnimEvent()
     {
         stopMoving = true;
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossPreAttack1Sound);
     }
 
     private void StartMovementAnimEvent()
@@ -210,5 +204,20 @@ public class BirdBoss : MonoBehaviour
         stopMoving = false;
         flying = false;
         diving = true;
+    }
+
+    private void RecoverSoundAnimEvent()
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossEncounterSound, 1f, true, 0, false, transform);
+    }
+
+    private void Wing1SoundAnimEvent()
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossWing1Sound);
+    }
+
+    private void Wing2SoundAnimEvent()
+    {
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossWing2Sound);
     }
 }

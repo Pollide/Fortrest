@@ -10,10 +10,12 @@ public class BirdBossCrash : StateMachineBehaviour
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
+    {       
         birdScript = animator.GetComponent<BirdBoss>();
+        birdScript.crashAnimOver = false;
         timer = 0f;
         birdScript.crashed = true;
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossCrashSound);
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
@@ -29,6 +31,7 @@ public class BirdBossCrash : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.ResetTrigger("Recover");        
+        animator.ResetTrigger("Recover");
+        birdScript.crashAnimOver = true;
     }
 }

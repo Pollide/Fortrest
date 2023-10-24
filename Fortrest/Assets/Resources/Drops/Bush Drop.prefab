@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 5978854809606840967}
   - component: {fileID: 7302291374581181730}
   - component: {fileID: 4805908258019580392}
-  - component: {fileID: -8031403630271878927}
   - component: {fileID: -8626655744956993048}
   - component: {fileID: 2376181608674374804}
   - component: {fileID: -3985135360857826516}
+  - component: {fileID: 7119830231905822113}
   m_Layer: 0
   m_Name: Bush Drop
   m_TagString: Untagged
@@ -87,26 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-8031403630271878927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6463501546040604733}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1043cc45c4c660c409a00f4054d2e690, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TierInt: 0
-  resourceAmount: 1
-  stackable: 1
-  name: Apple
-  dragableItem: {fileID: 8108218794651406590, guid: a7dce0859bbba1d4ebafff6fb9bcbdfb,
-    type: 3}
-  resourceObject: 
-  CollectedBool: 0
 --- !u!54 &-8626655744956993048
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -149,3 +129,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.1, y: 0.1, z: 0.1}
   m_Center: {x: -0.0000000037252903, y: 0.05, z: 0.0000000055879354}
+--- !u!114 &7119830231905822113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6463501546040604733}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656cb4b3cd074594881b714cba5a30a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TierInt: 0
+  resourceAmount: 1
+  stackable: 0
+  name: 
+  dragableItem: {fileID: 0}
+  resourceObject: 
+  CollectedBool: 0

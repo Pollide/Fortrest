@@ -16,8 +16,6 @@ public class HUDHandler : MonoBehaviour
     [SerializeField] private GameObject[] objectsToDisableBuild;
     [SerializeField] private GameObject[] objectsToDisableNonBuild;
 
-    [SerializeField] private Vector3 downScale = new(0.5f, 0.5f, 1);
-
     [SerializeField] private float time = 0;
     [SerializeField] private float duration = 1;
     [SerializeField] private bool isCombat = false;
@@ -69,8 +67,8 @@ public class HUDHandler : MonoBehaviour
 
         if (time < duration)
         {
-            LerpRectScale(gatherIcon.rectTransform, gather);
-            LerpRectScale(combatIcon.rectTransform, !gather);
+            LerpRectScale(gatherIcon.rectTransform, gather, 0.5f);
+            LerpRectScale(combatIcon.rectTransform, !gather, 0.5f);
 
             time += Time.deltaTime;
         }
@@ -140,10 +138,12 @@ public class HUDHandler : MonoBehaviour
         }
     }
 
-    void LerpRectScale(RectTransform rectTransform, bool flip = false)
+    void LerpRectScale(RectTransform rectTransform, bool flip = false, float size = 1)
     {
-        Vector3 a = flip ? downScale : Vector3.one;
-        Vector3 b = flip ? Vector3.one : downScale;
+        Vector3 scale = new(0.7f, 0.7f, 1);
+
+        Vector3 a = scale * (flip ? size : size * 2);
+        Vector3 b = scale * (flip ? size * 2 : size);
 
         if (Mathf.Abs(rectTransform.localScale.x - b.x) > 0.1f) //prevents icons that are already small from being shrinked again
             rectTransform.localScale = Vector3.Lerp(a, b, time / duration);

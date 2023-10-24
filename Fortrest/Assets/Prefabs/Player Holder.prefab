@@ -1993,6 +1993,7 @@ MonoBehaviour:
   evading: 0
   canEvade: 1
   playerCanBeDamaged: 1
+  evadeCooldownImage: {fileID: 2768716759395685872}
   canShoot: 0
   bowDamage: 1.5
   upgradedBow: 0
@@ -2101,7 +2102,7 @@ CharacterController:
   m_Height: 2.75
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 0.4
+  m_StepOffset: 0.45
   m_SkinWidth: 0.0001
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
@@ -4031,6 +4032,12 @@ Animation:
     type: 3}
   m_PrefabInstance: {fileID: 5559967730861656307}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2768716759395685872 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7729456827935988995, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3068825275599399422 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7475501927148773645, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
@@ -4461,7 +4468,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 076da3c8df70fca4b80217bcd905ac7d,
         type: 3}

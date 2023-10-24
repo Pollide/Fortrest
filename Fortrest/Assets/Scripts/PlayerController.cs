@@ -43,6 +43,9 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool evading = false; // Used to apply evade effects
     [HideInInspector] public bool canEvade = true; // Allows the player to evade again when cooldown is done
     [HideInInspector] public bool playerCanBeDamaged = true; // Player is invincible while evading
+    public GameObject evadeCooldownImage; // Game object used to show the cooldown of the evade
+    private Vector3 evadeImageStartPos = new Vector3(0f, -95f, 0f); // Initial position of the image
+    private float evadeTimer;
 
     // Shooting
     [HideInInspector] public bool canShoot; // Used to allow the player to shoot the bow. True when aiming
@@ -522,6 +525,11 @@ public class PlayerController : MonoBehaviour
             UpdateMap();
         }
 #endif
+        if (!canEvade)
+        {
+            evadeTimer += Time.deltaTime;
+            evadeCooldownImage.transform.localPosition = Vector3.Lerp(evadeImageStartPos, new Vector3(evadeImageStartPos.x, evadeImageStartPos.y + 90f, evadeImageStartPos.z), evadeTimer / evadeCooldown);
+        }
 
         if (mapBool)
         {
@@ -949,9 +957,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Boar.global.mounted)
         {
-            Boar.global.cc.enabled = false;
             Boar.global.transform.position = pos;
-            Boar.global.cc.enabled = true;
             Boar.global.animator.SetBool("Moving", false);
         }
         else
@@ -1082,6 +1088,8 @@ public class PlayerController : MonoBehaviour
         characterAnimator.ResetTrigger("Evade");
         characterAnimator.SetTrigger("Evade");
         GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerEvadeSound);
+        evadeTimer = 0f;
+        evadeCooldownImage.transform.localPosition = evadeImageStartPos;
 
         yield return new WaitForSeconds(evadeCooldown);
         canEvade = true;
@@ -2042,7 +2050,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     characterAnimator.SetTrigger("Hit3");
-                }              
+                }
             }
             int randomInt = Random.Range(0, 3);
             AudioClip temp = null;

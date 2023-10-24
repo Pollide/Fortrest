@@ -54,8 +54,7 @@ public class Building : MonoBehaviour
     public int constructionCostWood = 5;
     public int constructionCostStone = 5;
 
-    public Image healthBarImage;
-    public HealthBar HUDHealthBar;
+    HealthBar HUDHealthBar;
 
     float HealthAppearTimer = -1;
 
@@ -75,13 +74,18 @@ public class Building : MonoBehaviour
 
     public Vector2 gridLocation;
     Vector3 treeFallingDirection;
-
+    float treefallingTimer;
     // [HideInInspector]
     public float destroyedTimer;
     Quaternion startingRotation;
     // Start is called before the first frame update
     void Start()
     {
+        List<HealthBar> healthBarList = GameManager.FindComponent<HealthBar>(transform);
+
+        if (healthBarList.Count > 0)
+            HUDHealthBar = healthBarList[0];
+
         if (GameManager.ReturnInMainMenu())
         {
             enabled = false;
@@ -96,17 +100,6 @@ public class Building : MonoBehaviour
         Rigidbody rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.isKinematic = true; //prevents any forces acting upon it
         rigidbody.useGravity = false; //prevents the object from being affected by gravity
-
-        //grabs all children transforms including itself by finding the component it matches, as I put transform there, it will just grab all of them
-        List<Transform> transformList = GameManager.FindComponent<Transform>(transform);
-
-        //create a for loop from the list
-        //for (int i = 0; i < transformList.Count; i++)
-        //{
-        //    //sets all transforms to the building layer, so the mouse will easily be able to click the building
-        //    if (transformList[i].gameObject.layer != LayerMask.NameToLayer("UI"))
-        //        transformList[i].gameObject.layer = LayerMask.NameToLayer("Building");
-        //}
 
         if (buildingObject == BuildingType.House)
         {
@@ -164,16 +157,15 @@ public class Building : MonoBehaviour
         if (destroyedTimer == 0)
         {
             health -= amount;
-            if (HUDHealthBar && buildingObject == BuildingType.House)
-            {
+
+            if (HUDHealthBar) //house doesnt have one
                 HUDHealthBar.SetHealth(health, maxHealth);
+
+            if (buildingObject == BuildingType.House)
+            {
 
                 if (health < maxHealth && amount != 0)
                     GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash");
-            }
-            if (healthBarImage)
-            {
-                healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
             }
 
             if (amount != 0)
@@ -238,7 +230,8 @@ public class Building : MonoBehaviour
             {
                 if (ReturnWood())
                 {
-                    treeFallingDirection = PlayerController.global.transform.up.normalized + (PlayerController.global.transform.position - transform.position).normalized;
+                    treeFallingDirection = (PlayerController.global.transform.up * 2) - PlayerController.global.transform.forward;
+                    //   treeFallingDirection = PlayerController.global.transform.up.normalized + (PlayerController.global.transform.position - transform.position).normalized;
                     //treeFallingDirection = (PlayerController.global.transform.position - transform.position).normalized;
                 }
                 else
@@ -264,9 +257,9 @@ public class Building : MonoBehaviour
         GameManager.global.NextScene(1);
     }
 
-    private void HealthAnimation()
+    public void HealthAnimation()
     {
-        Animation animation = healthBarImage.GetComponentInParent<Animation>();
+        Animation animation = HUDHealthBar.GetComponentInParent<Animation>();
 
         if (HealthAppearTimer == -1)
         {
@@ -391,7 +384,7 @@ public class Building : MonoBehaviour
             if (HealthAppearTimer > 5)
             {
                 HealthAppearTimer = -1;
-                GameManager.PlayAnimation(healthBarImage.GetComponentInParent<Animation>(), "Health Appear", false);
+                GameManager.PlayAnimation(HUDHealthBar.GetComponentInParent<Animation>(), "Health Appear", false);
             }
         }
 
@@ -399,27 +392,21 @@ public class Building : MonoBehaviour
         {
             Debug.DrawRay(transform.position, treeFallingDirection * 10, Color.red);
 
-            // Use LookRotation to orient the tree towards the player
-            Quaternion targetRotation = Quaternion.LookRotation(treeFallingDirection);
+            treefallingTimer += Time.deltaTime;
 
-
-            // Calculate the angle between the tree's current rotation and the target rotation
-            float angleDifference = Vector3.Angle(transform.forward, treeFallingDirection);
-
-
-            if (angleDifference == 0)
+            if (treefallingTimer > 1.5f)
             {
 
                 // If the angle exceeds the maximum allowed angle, set the rotation to the maximum angle
                 //   targetRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotationAngle);
                 treeFallingDirection = Vector3.zero; //Stop falling once it reaches the maximum angle
-
+                treefallingTimer = 0;
                 ResourceRegenerate();
 
             }
 
-            //  transform.Rotate(treeFallingDirection * 20 * Time.deltaTime);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 100 * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(treeFallingDirection), Time.deltaTime * 2f);
+
         }
     }
 }

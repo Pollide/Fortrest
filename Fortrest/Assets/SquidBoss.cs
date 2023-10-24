@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class SquidBoss : MonoBehaviour
 {
-    public Animator animator;
-    public void Awaken()
-    {
-        animator.SetTrigger("Awaking");
-    }
+    [HideInInspector]
+    public BossSpawner bossSpawner;
 
 }

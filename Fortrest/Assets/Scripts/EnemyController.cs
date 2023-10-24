@@ -32,7 +32,7 @@ public class EnemyController : MonoBehaviour
     [HideInInspector]
     public float health;
     private float maxHealth;
-    public Image healthBarImage;
+    public HealthBar healthBar;
     private float HealthAppearTimer = -1;
     public Animation healthAnimation;
     private bool dead;
@@ -480,7 +480,7 @@ public class EnemyController : MonoBehaviour
             HealthAppearTimer = 0;
 
             GameManager.PlayAnimation(healthAnimation, "Health Hit");
-            healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
+            healthBar.SetHealth(health, maxHealth);
         }
     }
 
@@ -529,7 +529,7 @@ public class EnemyController : MonoBehaviour
                 canBeDamaged = false;
 
                 PickSound(hitSound, hitSound2, 1.0f);
-                
+
                 if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin && !flashing) // remove goblin once we have the anim
                 {
                     ActiveAnimator.ResetTrigger("Hit1");
@@ -662,7 +662,6 @@ public class EnemyController : MonoBehaviour
     private void PickSound(AudioClip name1, AudioClip name2, float volume)
     {
         GameManager.global.SoundManager.PlaySound(Random.Range(0, 2) == 0 ? name1 : name2, volume, true, 0, false, transform);
-        Debug.Log("Sound");
     }
 
     private void ResetAttack()

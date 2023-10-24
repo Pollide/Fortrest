@@ -69,7 +69,7 @@ public class LevelManager : MonoBehaviour
     public float daylightTimer;
     public int day = 0;
     public List<EnemyController> enemyList = new List<EnemyController>();
-    public List<GameObject> inventoryItemList = new List<GameObject>();
+    public List<GameObject> ItemDropList = new List<GameObject>();
     public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
     public List<BossSpawner> bossList = new List<BossSpawner>();
     public List<Chest> chestList = new List<Chest>();
@@ -95,12 +95,19 @@ public class LevelManager : MonoBehaviour
 
     // [HideInInspector]
     public List<Terrain> terrainList = new List<Terrain>();
-
+    public List<TerrainData> terrainDataList = new List<TerrainData>();
     public Image clockHand;
     public Image clockSun;
     public Image clockMoon;
 
     public bool waveEnd;
+
+    [System.Serializable]
+    public class TerrainData
+    {
+        public Terrain terrain;
+        public AudioClip music;
+    }
 
     public enum SPAWNLANE
     {
@@ -317,6 +324,11 @@ public class LevelManager : MonoBehaviour
         }
 
         PlayerController.global.EnemiesTextControl();
+
+        for (int i = 0; i < terrainDataList.Count; i++)
+        {
+
+        }
 
         if (!NightTimeMusic && ReturnNight())
         {

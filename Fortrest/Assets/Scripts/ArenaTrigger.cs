@@ -12,7 +12,9 @@ public class ArenaTrigger : MonoBehaviour
             {
                 Boar.global.Mount();
             }
-            Boar.global.cc.Move((transform.forward * -10));
-        } 
+
+            Boar.global.currentSpeed = -50;
+            Boar.global.MoveBoar();
+        }
     }
 }

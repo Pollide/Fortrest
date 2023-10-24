@@ -1,23 +1,25 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BossSpawner : MonoBehaviour
 {
-    [SerializeField] private float distance = 20f;
-    public bool hasRun = false;
-    [SerializeField] private float Arenasize = 40f;
+    [HideInInspector]
+    public bool bossAwakened;
+    bool initialIntro = true;
+    [SerializeField] public float Arenasize = 40f;
     // Holds the current boss type
     public TYPE bossType;
     public GameObject BossCanvas;
-
+    public bool DebugDamageBoss;
     // Enum for boss type
     public enum TYPE
     {
         Chieftain,
         Basilisk,
         SpiderQueen,
-        Bird,
-        Werewolf,
-        Squid
+        Hrafn,
+        Lycan,
+        IsleMaker,
     }
 
     [HideInInspector]
@@ -30,6 +32,14 @@ public class BossSpawner : MonoBehaviour
     public bool canBeDamaged = true;
     [HideInInspector]
     public Vector3 StartPosition;
+    public float cameraDistance = 5.0f; // Distance between the camera and the enemy
+    public Vector3 introPositionOffset = new(0, 2, -2); // Offset from the enemy's position during intro
+    public float introTimer = 0.0f;
+    //[HideInInspector]
+    public bool introCompleted = false;
+    [SerializeField] private GameObject introCard;
+    [SerializeField] public Animator bossAnimator;
+
     public void Awake()
     {
         health = maxHealth;//on awake before the game loads
@@ -63,13 +73,21 @@ public class BossSpawner : MonoBehaviour
         {
             GetComponent<BossStateMachine>().bossSpawner = this;
             GetComponent<BossStateMachine>().enabled = false;
-            GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(false);
+
+            //if (bossType == TYPE.Chieftain)
+            bossAnimator.gameObject.SetActive(false);
         }
 
         if (GetComponent<SpiderBoss>())
         {
             GetComponent<SpiderBoss>().bossSpawner = this;
         }
+
+        if (GetComponent<SquidBoss>())
+        {
+            GetComponent<SquidBoss>().bossSpawner = this;
+        }
+
         if (GetComponent<BirdBoss>())
         {
             GetComponent<BirdBoss>().bossSpawner = this;
@@ -110,32 +128,93 @@ public class BossSpawner : MonoBehaviour
 
     private void Update()
     {
+        if (DebugDamageBoss)
+        {
+            DebugDamageBoss = false;
+            UpdateHealth(-10);
+        }
         if (CheckPlayerDistance())
         {
-            if (!hasRun)
+            if (!bossAwakened)
             {
+                bossAwakened = true;
+                BossIntro();
 
                 if (GetComponent<BossStateMachine>())
                 {
                     GetComponent<BossStateMachine>().enabled = true;
-                    GetComponent<BossStateMachine>().BossAnimator.gameObject.SetActive(true);
+                    bossAnimator.gameObject.SetActive(true);
+
+                    //   if(bossType == TYPE.Basilisk)
+                    //   GameManager.global.SoundManager.PlaySound(enrageAudio);
+                }
+                else
+                {
+                    if (GetComponent<BirdBoss>())
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossEncounterSound);
+                        bossAnimator.SetTrigger("TakeOff");
+                    }
+                    else
+                    {
+                        bossAnimator.ResetTrigger("Awaking");
+                        bossAnimator.SetTrigger("Awaking");
+                        // Debug.Log("set off");
+                    }
                 }
 
-                if (GetComponent<SpiderBoss>())
-                {
-                    GetComponent<SpiderBoss>().Awaken();
-                }
-                if (GetComponent<SquidBoss>())
-                {
-                    GetComponent<SquidBoss>().Awaken();
-                }
 
-                hasRun = true;
+
 
             }
             else
             {
                 BossEncountered(true);
+
+                if (!introCompleted)
+                {
+                    PlayerController.global.characterAnimator.SetBool("Moving", false);
+                    introTimer += Time.deltaTime;
+                    float length = 6;
+                    //Perform the intro animation
+                    Vector3 targetPosition = transform.position + introPositionOffset;
+                    LevelManager.global.SceneCamera.transform.position = Vector3.Lerp(LevelManager.global.SceneCamera.transform.position, targetPosition - LevelManager.global.SceneCamera.transform.forward, 2 * Time.deltaTime);
+
+                    if (introTimer >= length)
+                    {
+                        introCompleted = true;
+
+                        if (GetComponent<BossStateMachine>())
+                        {
+                            if (GetComponent<IdleState>().IdleRuns < 1 && bossType == BossSpawner.TYPE.Lycan)
+                            {
+                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
+                            }
+                            else if (GetComponent<IdleState>().IdleRuns >= 1 && bossType == BossSpawner.TYPE.Lycan)
+                            {
+                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
+                            }
+                            else if (bossType != BossSpawner.TYPE.Lycan)
+                            {
+                                GetComponent<BossStateMachine>().ChangeState(GetComponent<IdleState>());
+                            }
+                        }
+                    }
+
+                    bool show = introTimer > 3 && initialIntro && !introCompleted;
+
+
+                    bossAnimator.speed = show ? 0 : 1;
+
+                    if (show)
+                        introCard.SetActive(true);
+
+                    CameraFollow.global.bossCam = !introCompleted;
+
+
+                    PlayerController.global.playerCanMove = introCompleted;
+                    LevelManager.global.HUD.SetActive(introCompleted);
+                }
             }
         }
         else
@@ -144,11 +223,19 @@ public class BossSpawner : MonoBehaviour
         }
     }
 
+    public void BossIntro()
+    {
+        introTimer = 0;
+        introCompleted = false;
+
+        bossAnimator.Rebind();
+        bossAnimator.Update(0f);
+    }
 
     public bool CheckPlayerDistance()
     {
 
-        return health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (hasRun ? Arenasize : 20);
+        return health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (bossAwakened ? Arenasize : 20);
     }
 
     private void OnDrawGizmosSelected()

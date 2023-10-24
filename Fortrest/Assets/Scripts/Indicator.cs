@@ -137,8 +137,8 @@ public class Indicator : MonoBehaviour
             }
 
             float distance = Vector3.Distance(PlayerController.global.transform.position, WorldPosition);
-
-            if ((distance < 22 || Unlocked) && !CustomSprite)
+            bool closeBool = distance < 22;
+            if ((closeBool || Unlocked) && !CustomSprite)
             {
                 Unlocked = true;
                 MainData.ArrowText.text = ActiveString;
@@ -149,7 +149,7 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            bool active = (Permenant || distance < 240);
+            bool active = (Permenant || distance < 240) && !closeBool;
 
             if (active != AppearBool)
             {

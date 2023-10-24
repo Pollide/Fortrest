@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8196819728047928108}
-  - component: {fileID: -9012962618591065044}
   - component: {fileID: -63628865183272622}
   - component: {fileID: -8946152043099323548}
   - component: {fileID: -4063508483239744869}
+  - component: {fileID: -6358268088671706480}
   m_Layer: 0
   m_Name: SlateStone Drop
   m_TagString: Untagged
@@ -36,26 +36,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-9012962618591065044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8830191839845132694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1043cc45c4c660c409a00f4054d2e690, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TierInt: 2
-  resourceAmount: 1
-  stackable: 1
-  name: Slate
-  dragableItem: {fileID: 8108218794651406590, guid: ad8028e431217364e884f0039aaf2060,
-    type: 3}
-  resourceObject: 
-  CollectedBool: 0
 --- !u!54 &-63628865183272622
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -98,6 +78,25 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.05, y: 0.09, z: 0.06}
   m_Center: {x: 0.0020954339, y: 0.047071308, z: 0.0020545311}
+--- !u!114 &-6358268088671706480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8830191839845132694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656cb4b3cd074594881b714cba5a30a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TierInt: 2
+  resourceAmount: 1
+  stackable: 0
+  name: 
+  dragableItem: {fileID: 0}
+  resourceObject: 
+  CollectedBool: 0
 --- !u!1001 &291881759532164795
 PrefabInstance:
   m_ObjectHideFlags: 0

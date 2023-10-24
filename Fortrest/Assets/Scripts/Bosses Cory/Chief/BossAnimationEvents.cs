@@ -12,13 +12,11 @@ public class BossAnimationEvents : MonoBehaviour
     [SerializeField] private BoxCollider bossCollider;
     [SerializeField] private AudioClip slamAudio;
     [SerializeField] private AudioClip enrageAudio;
-    [SerializeField] private GameObject introCard;
 
 
     void ActivateIntroCard()
     {
-        introCard.SetActive(true);
-        stateMachine.BossAnimator.speed = 0f;
+        //not in use anymore, found in boss spawner
     }
 
     void PlaySlashOne()
@@ -46,10 +44,12 @@ public class BossAnimationEvents : MonoBehaviour
 
     void PlaySlamSound()
     {
+        ScreenShake.global.shake = true;
         GameManager.global.SoundManager.PlaySound(slamAudio);
     }
     void PlayEnrageSound()
     {
+        ScreenShake.global.shake = true;
         GameManager.global.SoundManager.PlaySound(enrageAudio);
     }
     void AttackPlusPlus()
@@ -122,13 +122,13 @@ public class BossAnimationEvents : MonoBehaviour
     void SetAttackFalse()
     {
         GetComponentInParent<Animator>().SetBool("attacking", false);
-    }  
-    
+    }
+
     void PauseAnimater()
     {
         GetComponentInParent<Animator>().speed = 0f;
-    } 
-    
+    }
+
     void SetDiveFalse()
     {
         stateMachine.BossAnimator.SetBool("isDiving", false);

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class AttackManagerState : BossState
 {
-    // Timer for attacks
-    [SerializeField] private float attackTimer = 0f;
     public float attackTime = 0f;
     public float attackDuration = 5f;
 
@@ -208,7 +206,7 @@ public class AttackManagerState : BossState
         GetComponent<TelegraphCircle>().outer.SetActive(isActive);
     }
 
-  
+
     public void PlaySlash(int _index)
     {
         if (_index == 0)
