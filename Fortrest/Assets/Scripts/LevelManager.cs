@@ -294,8 +294,9 @@ public class LevelManager : MonoBehaviour
             }
             else
             {
-                Physics.Raycast(PlayerController.global.transform.position, Vector3.up * -2, out RaycastHit raycastHit, GameManager.ReturnBitShift());
+                Physics.Raycast(PlayerController.global.transform.position, Vector3.up * -3, out RaycastHit raycastHit, GameManager.ReturnBitShift());
 
+                Debug.Log(raycastHit.transform);
                 for (int i = 0; i < terrainDataList.Count; i++)
                 {
                     if (terrainDataList[i].terrain == raycastHit.transform)
