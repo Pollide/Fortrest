@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 8196819728047928108}
   - component: {fileID: 5075327568181918857}
   - component: {fileID: 7028949969535633475}
-  - component: {fileID: -9012962618591065044}
   - component: {fileID: -63628865183272622}
   - component: {fileID: -8946152043099323548}
   - component: {fileID: -4063508483239744869}
+  - component: {fileID: 6017521538514528872}
   m_Layer: 0
   m_Name: MossyStone Drop
   m_TagString: Untagged
@@ -87,26 +87,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &-9012962618591065044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8830191839845132694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1043cc45c4c660c409a00f4054d2e690, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TierInt: 1
-  resourceAmount: 1
-  stackable: 1
-  name: MossyStone
-  dragableItem: {fileID: 8108218794651406590, guid: cb28344bf991f954fa67096005de1039,
-    type: 3}
-  resourceObject: 
-  CollectedBool: 0
 --- !u!54 &-63628865183272622
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -149,3 +129,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.98, y: 1.53, z: 1.04}
   m_Center: {x: -0.06, y: 0.65, z: 0.0020545311}
+--- !u!114 &6017521538514528872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8830191839845132694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656cb4b3cd074594881b714cba5a30a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TierInt: 1
+  resourceAmount: 1
+  stackable: 0
+  name: 
+  dragableItem: {fileID: 0}
+  resourceObject: 
+  CollectedBool: 0

@@ -54,7 +54,7 @@ public class Building : MonoBehaviour
     public int constructionCostWood = 5;
     public int constructionCostStone = 5;
 
-    public HealthBar HUDHealthBar;
+    HealthBar HUDHealthBar;
 
     float HealthAppearTimer = -1;
 
@@ -81,6 +81,8 @@ public class Building : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        HUDHealthBar = GetComponentInChildren<HealthBar>();
+
         if (GameManager.ReturnInMainMenu())
         {
             enabled = false;
