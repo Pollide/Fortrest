@@ -164,7 +164,7 @@ public class Boar : MonoBehaviour
 
             if (colliders.Length == 0) //fall to the abyss if walk off the cliff of an island
             {
-                transform.position = Vector3.Lerp(transform.position, transform.position - transform.up, 10 * Time.deltaTime);
+                transform.position = Vector3.Lerp(transform.position, transform.position - transform.up, 20 * Time.deltaTime);
             }
 
             currentTurn = 0.0f;

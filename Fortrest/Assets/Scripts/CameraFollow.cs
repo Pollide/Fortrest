@@ -53,13 +53,14 @@ public class CameraFollow : MonoBehaviour
                 {
                     canMoveCamera = true;
                 }
-            }            
+            }
         }
         else
         {
             cameraMoving = false;
             canMoveCamera = false;
-            if (!Boar.global.mounted)
+
+            if (!Boar.global || !Boar.global.mounted)
             {
                 if (GameManager.global.KeyboardBool)
                 {
@@ -70,7 +71,7 @@ public class CameraFollow : MonoBehaviour
                 else
                 {
                     distance = Mathf.Clamp(Mathf.Abs(PlayerController.global.rotateCTRL.y) + Mathf.Abs(PlayerController.global.rotateCTRL.x), 0f, 1f);
-                }               
+                }
 
                 transform.position = Vector3.SmoothDamp(transform.position, targetPosition + PlayerController.global.transform.forward, ref currentVelocity, 0.2f);
             }
