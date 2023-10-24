@@ -1328,7 +1328,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1410037552901871630
 Transform:
   m_ObjectHideFlags: 0
@@ -1340,8 +1340,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 1.3236359, z: 0}
   m_LocalScale: {x: 0.36363626, y: 0.3636364, z: 0.3636364}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 319555843144723853}
+  m_Children: []
   m_Father: {fileID: 8001351653680436295}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1548,13 +1547,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4412088012528774691}
-  m_LocalRotation: {x: -0.2828114, y: 0.64808774, z: -0.64808774, w: 0.2828114}
-  m_LocalPosition: {x: 0, y: -0, z: 3}
-  m_LocalScale: {x: 18.463785, y: 0.53397036, z: 18.463785}
+  m_LocalRotation: {x: -0, y: -0.39995575, z: -0, w: 0.91653454}
+  m_LocalPosition: {x: 0, y: 0.23272656, z: 0}
+  m_LocalScale: {x: 6.7141037, y: 0.19417107, z: 6.714103}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1410037552901871630}
-  m_RootOrder: 0
+  m_Father: {fileID: 8001351653680436295}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5678806090921065345
 MeshFilter:
@@ -2009,6 +2008,7 @@ MonoBehaviour:
   maxApple: 5
   attackDamage: 1
   attackTimer: 0
+  staggerCDMax: 1.5
   currentResource: {fileID: 0}
   damageEnemy: 0
   lunge: 0
@@ -2986,6 +2986,7 @@ Transform:
   - {fileID: 5181754792043488421}
   - {fileID: 4747427067447271209}
   - {fileID: 1410037552901871630}
+  - {fileID: 319555843144723853}
   m_Father: {fileID: 5569601162832024531}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}

@@ -503,7 +503,7 @@ public class EnemyController : MonoBehaviour
     {
         if (!slowed)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound, SpatialTransform: transform);
             slowed = true;
             agent.speed *= _slowPercent;
         }

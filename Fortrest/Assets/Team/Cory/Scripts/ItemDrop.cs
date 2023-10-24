@@ -63,7 +63,7 @@ public class ItemDrop : MonoBehaviour
 
     public void CollectVoid()
     {
-        if (name == "Bush Drop")
+        if (name.Contains("Bush Drop"))
         {
             PlayerController.global.appleAmount += 1;
             GameManager.PlayAnimation(PlayerController.global.appleText.GetComponent<Animation>(), "EnemyAmount");
