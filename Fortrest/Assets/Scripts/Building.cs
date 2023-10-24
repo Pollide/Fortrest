@@ -262,7 +262,7 @@ public class Building : MonoBehaviour
         GameManager.global.NextScene(1);
     }
 
-    private void HealthAnimation()
+    public void HealthAnimation()
     {
         Animation animation = HUDHealthBar.GetComponentInParent<Animation>();
 

@@ -614,7 +614,7 @@ public class PlayerController : MonoBehaviour
             horizontalMovement = 0;
             verticalMovement = 0;
             running = false;
-        }        
+        }
 
         UpdateHealth();
         HandleEnergy();
@@ -957,9 +957,7 @@ public class PlayerController : MonoBehaviour
         }
         if (Boar.global.mounted)
         {
-            Boar.global.cc.enabled = false;
             Boar.global.transform.position = pos;
-            Boar.global.cc.enabled = true;
             Boar.global.animator.SetBool("Moving", false);
         }
         else
@@ -2052,7 +2050,7 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     characterAnimator.SetTrigger("Hit3");
-                }              
+                }
             }
             int randomInt = Random.Range(0, 3);
             AudioClip temp = null;
