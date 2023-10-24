@@ -18,15 +18,12 @@ public class Boar : MonoBehaviour
     public float currentSpeed;
     private float currentTurn;
     private float turnAnglePerSec = 0.0f;
-    private float verticalVelocity;
-    private float gravity = -20.0f;
 
     [HideInInspector] public bool canMove = true;
     [HideInInspector] public bool isMoving;
     public bool isReversing;
 
     public Animator animator;
-    [HideInInspector] public CharacterController cc;
 
     public AudioClip mountSound;
     public AudioClip dismountSound;
@@ -48,7 +45,6 @@ public class Boar : MonoBehaviour
         global = this;
         currentSpeed = 0.0f;
         currentTurn = 0.0f;
-        verticalVelocity = 0.0f;
     }
 
     void Start()
@@ -62,7 +58,7 @@ public class Boar : MonoBehaviour
         }
 
         text = transform.GetChild(0).gameObject;
-        cc = GetComponent<CharacterController>();
+
         Indicator.global.AddIndicator(transform, Color.green, "Mount", false, Indicator.global.MountSprite);
         house = PlayerController.global.house;
     }
@@ -94,8 +90,6 @@ public class Boar : MonoBehaviour
                 Mount();
             }
         }
-
-        ApplyGravity();
 
         if (mounted)
         {
@@ -145,9 +139,25 @@ public class Boar : MonoBehaviour
             {
                 transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0.0f, currentTurn, 0.0f));
             }
-            cc.Move((transform.forward * (currentSpeed / 8.0f) * Time.deltaTime) + new Vector3(0.0f, verticalVelocity, 0.0f));
+
+            Physics.Raycast(transform.position + Vector3.up, transform.forward * 3.5f * (currentSpeed > 0 ? 1 : -1), out RaycastHit hit);
+            //Debug.DrawRay(transform.position + Vector3.up, transform.forward * 2 * (currentSpeed > 0 ? 1 : -1));
+
+            if (!hit.transform || hit.transform == transform || hit.transform.GetComponent<EnemyController>()) //stops boar hitting trees and buildings
+            {
+                MoveBoar();
+            }
+            else
+            {
+                Debug.Log(hit.transform);
+            }
             currentTurn = 0.0f;
         }
+    }
+
+    public void MoveBoar()
+    {
+        transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward, (currentSpeed / 8.0f) * Time.deltaTime);
     }
 
     private void DisplayText()
@@ -300,6 +310,7 @@ public class Boar : MonoBehaviour
         }
     }
 
+    /*
     private void ApplyGravity()
     {
         // if (Physics.Raycast(transform.position, Vector3.down, Mathf.Infinity)) //only apply gravity if there is a ground
@@ -314,6 +325,7 @@ public class Boar : MonoBehaviour
         }
         //}
     }
+    */
 
     void Lerping(float min, float max, ref float value, float dividerCoefficient)
     {
