@@ -517,6 +517,9 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
+            if (PlayerController.global.attacking)
+                Debug.Log("trigger" + PlayerController.global.attacking + " && " + canBeDamaged + " && " + PlayerController.global.damageEnemy);
+
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 StopAllCoroutines();
