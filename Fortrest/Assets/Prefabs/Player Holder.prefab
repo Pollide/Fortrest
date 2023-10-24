@@ -1549,7 +1549,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4412088012528774691}
   m_LocalRotation: {x: -0.2828114, y: 0.64808774, z: -0.64808774, w: 0.2828114}
-  m_LocalPosition: {x: 0, y: -0, z: 0}
+  m_LocalPosition: {x: 0, y: -0, z: 3}
   m_LocalScale: {x: 18.463785, y: 0.53397036, z: 18.463785}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2008,6 +2008,7 @@ MonoBehaviour:
   appleAmount: 0
   maxApple: 5
   attackDamage: 1
+  attackTimer: 0
   currentResource: {fileID: 0}
   damageEnemy: 0
   lunge: 0
@@ -2087,6 +2088,7 @@ MonoBehaviour:
   bowAnimator: {fileID: 5709866159686491231}
   horizontalAnim: 0
   verticalAnim: 0
+  canAttack: 1
   debugfrocemap: 0
   division: 1
 --- !u!143 &5569601162832024542

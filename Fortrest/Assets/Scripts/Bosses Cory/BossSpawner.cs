@@ -101,7 +101,7 @@ public class BossSpawner : MonoBehaviour
 
     public void BossEncountered(bool open)
     {
-        LevelManager.global.dayPaused = open;
+
 
         if (bossEncountered != open)
         {
@@ -115,10 +115,11 @@ public class BossSpawner : MonoBehaviour
             }
 
             BossMusicBegin(open);
+
+            UpdateHealth();
+
+            LevelManager.global.dayPaused = open;
         }
-
-        UpdateHealth();
-
 
         bossEncountered = open;
     }

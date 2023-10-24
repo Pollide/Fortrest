@@ -85,7 +85,7 @@ public class SpiderBoss : MonoBehaviour
     {
         // Spider retreats to its starting position if the player exits the arena
         retreating = !bossSpawner.CheckPlayerDistance();
-        distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);       
+        distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
 
         if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
         {
@@ -99,7 +99,7 @@ public class SpiderBoss : MonoBehaviour
                 {
                     bossSpawner.bossAnimator.SetBool("Moving", true);
                 }
-            }          
+            }
 
             if (retreating)
             {
@@ -203,13 +203,12 @@ public class SpiderBoss : MonoBehaviour
         if (distanceToPlayer < 8.0f)
         {
             PlayerController.global.TakeDamage(damage);
-        }       
+        }
     }
 
     private IEnumerator DestroyOnDeath()
     {
         yield return new WaitForSeconds(7f);
-        LevelManager.global.dayPaused = false;
         agent.enabled = false;
         Destroy(gameObject);
     }
