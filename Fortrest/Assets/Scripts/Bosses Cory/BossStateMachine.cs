@@ -133,8 +133,10 @@ public class BossStateMachine : MonoBehaviour
     {
         Gizmos.color = Color.red;
 
-        if (transform)
+        if (bossSpawner)
             Gizmos.DrawWireSphere(transform.position, ArenaSize);
+        else
+            bossSpawner = GetComponent<BossSpawner>();
     }
 
     public GameObject HealthBar

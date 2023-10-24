@@ -74,7 +74,7 @@ public class Building : MonoBehaviour
 
     public Vector2 gridLocation;
     Vector3 treeFallingDirection;
-
+    float treefallingTimer;
     // [HideInInspector]
     public float destroyedTimer;
     Quaternion startingRotation;
@@ -230,7 +230,8 @@ public class Building : MonoBehaviour
             {
                 if (ReturnWood())
                 {
-                    treeFallingDirection = PlayerController.global.transform.up.normalized + (PlayerController.global.transform.position - transform.position).normalized;
+                    treeFallingDirection = (PlayerController.global.transform.up * 2) - PlayerController.global.transform.forward;
+                    //   treeFallingDirection = PlayerController.global.transform.up.normalized + (PlayerController.global.transform.position - transform.position).normalized;
                     //treeFallingDirection = (PlayerController.global.transform.position - transform.position).normalized;
                 }
                 else
@@ -391,27 +392,21 @@ public class Building : MonoBehaviour
         {
             Debug.DrawRay(transform.position, treeFallingDirection * 10, Color.red);
 
-            // Use LookRotation to orient the tree towards the player
-            Quaternion targetRotation = Quaternion.LookRotation(treeFallingDirection);
+            treefallingTimer += Time.deltaTime;
 
-
-            // Calculate the angle between the tree's current rotation and the target rotation
-            float angleDifference = Vector3.Angle(transform.forward, treeFallingDirection);
-
-
-            if (angleDifference == 0)
+            if (treefallingTimer > 1.5f)
             {
 
                 // If the angle exceeds the maximum allowed angle, set the rotation to the maximum angle
                 //   targetRotation = Quaternion.RotateTowards(transform.rotation, targetRotation, maxRotationAngle);
                 treeFallingDirection = Vector3.zero; //Stop falling once it reaches the maximum angle
-
+                treefallingTimer = 0;
                 ResourceRegenerate();
 
             }
 
-            //  transform.Rotate(treeFallingDirection * 20 * Time.deltaTime);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 100 * Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(treeFallingDirection), Time.deltaTime * 2f);
+
         }
     }
 }
