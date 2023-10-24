@@ -18,33 +18,22 @@ public class SquidBoss : MonoBehaviour
         public Vector3 landingPosition;
         public Transform fireball;
         public GameObject telegraphedCircle;
+        public float startTime = Time.time;
     }
     public List<FireBallData> fireballList = new List<FireBallData>();
 
     private void Update()
     {
-        if (bossSpawner.bossEncountered)
+        if (bossSpawner.introCompleted && bossSpawner.bossEncountered)
         {
-            if (fireballTimer > 5)
+            if (fireballTimer > 3)
             {
                 fireballTimer = 0;
-                FireBallData fireBallData = new FireBallData();
-                fireBallData.fireball = Instantiate(fireBallPrefab, transform.position, Quaternion.identity).transform;
-                fireBallData.landingPosition = PlayerController.global.transform.position;
 
-                fireBallData.telegraphedCircle = Instantiate(telegraphedCirclePrefab, fireBallData.landingPosition, Quaternion.identity);
-                // fireBallData.telegraphedCircle.GetComponentInChildren<TelegraphedAttack>().getRockObject(fireBallData.fireball.gameObject);
+                bossSpawner.bossAnimator.ResetTrigger("Fire Vomit");
+                bossSpawner.bossAnimator.SetTrigger("Fire Vomit");
 
-                float angle = 40 * Mathf.Deg2Rad;
-                float distance = Vector3.Distance(fireBallData.landingPosition, transform.position);
-
-                float horizontalVelocity = distance / (Mathf.Sin(2 * angle) / Physics.gravity.y);
-                float verticalVelocity = Mathf.Sqrt(Mathf.Abs(Physics.gravity.y) * distance / Mathf.Sin(2 * angle));
-
-                Vector3 velocity = new Vector3(0, verticalVelocity, horizontalVelocity);
-                fireBallData.fireball.GetComponent<Rigidbody>().velocity = fireBallData.fireball.TransformDirection(velocity);
-
-                fireballList.Add(fireBallData);
+                LaunchFireball();
             }
             else
             {
@@ -52,19 +41,33 @@ public class SquidBoss : MonoBehaviour
             }
         }
 
-        /*
+
         for (int i = 0; i < fireballList.Count; i++)
         {
-            float angle = 20 * Mathf.Deg2Rad;
-            float distance = Vector3.Distance(fireballList[i].landingPosition, transform.position);
+            float height = 5.0f;
+            float duration = 1.5f;
 
-            float horizontalVelocity = distance / (Mathf.Sin(2 * angle) / Physics.gravity.y);
-            float verticalVelocity = Mathf.Sqrt(Mathf.Abs(Physics.gravity.y) * distance / Mathf.Sin(2 * angle));
+            float t = (Time.time - fireballList[i].startTime) / duration;
+            Vector3 archPosition = Vector3.Lerp(transform.position, fireballList[i].landingPosition, t);
+            archPosition.y += height * Mathf.Sin(t * Mathf.PI);
+            fireballList[i].fireball.position = archPosition;
 
-            Vector3 velocity = new Vector3(0, verticalVelocity, horizontalVelocity);
-            fireballList[i].fireball.GetComponent<Rigidbody>().velocity = fireballList[i].fireball.TransformDirection(velocity);
-
+            if (Vector3.Distance(fireballList[i].fireball.position, fireballList[i].landingPosition) < 1)
+            {
+                Destroy(fireballList[i].fireball.gameObject);
+                Destroy(fireballList[i].telegraphedCircle.gameObject);
+                fireballList.RemoveAt(i);
+            }
         }
-        */
+    }
+    public void LaunchFireball()
+    {
+        FireBallData fireBallData = new FireBallData();
+        fireBallData.fireball = Instantiate(fireBallPrefab, transform.position, Quaternion.identity).transform;
+        fireBallData.landingPosition = PlayerController.global.transform.position;
+        fireBallData.landingPosition.y = 0;
+        fireBallData.telegraphedCircle = Instantiate(telegraphedCirclePrefab, fireBallData.landingPosition, Quaternion.identity);
+        // fireBallData.telegraphedCircle.GetComponentInChildren<TelegraphedAttack>().getRockObject(fireBallData.fireball.gameObject);
+        fireballList.Add(fireBallData);
     }
 }
