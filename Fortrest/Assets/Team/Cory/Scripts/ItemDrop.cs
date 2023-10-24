@@ -11,13 +11,7 @@ public class ItemDrop : MonoBehaviour
     public int TierInt;
     public int resourceAmount = 1;
 
-    // Whether the item is stackable or not
-    public bool stackable;
-
-    // Name of the item
-    public new string name;
-
-    public GameObject dragableItem;
+    [HideInInspector]
     public string resourceObject;
 
     private float timer;
@@ -46,7 +40,7 @@ public class ItemDrop : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                if (name == "Apple" && PlayerController.global.appleAmount >= PlayerController.global.maxApple)
+                if (name == "Bush Drop" && PlayerController.global.appleAmount >= PlayerController.global.maxApple)
                 {
                     Vector3 direction = (transform.position - PlayerController.global.transform.position).normalized;
                     direction.y = 0.4f;
@@ -69,7 +63,7 @@ public class ItemDrop : MonoBehaviour
 
     public void CollectVoid()
     {
-        if (name == "Apple")
+        if (name == "Bush Drop")
         {
             PlayerController.global.appleAmount += 1;
             GameManager.PlayAnimation(PlayerController.global.appleText.GetComponent<Animation>(), "EnemyAmount");
