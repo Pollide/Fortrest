@@ -51,10 +51,6 @@ public class BirdBossAttack : StateMachineBehaviour
                 Destroy(SmokeVFXRight, 1.5f);
             }
         }
-        else 
-        {
-            birdScript.vulnerable = false;
-        }
         birdScript.MoveToTarget(birdScript.targetPosition, birdScript.targetDirection);        
     }
 
@@ -64,5 +60,7 @@ public class BirdBossAttack : StateMachineBehaviour
         birdScript.normalAttack = false;
         sliding = false;
         newTarget = false;
+        birdScript.vulnerable = false;
+        birdScript.hitOnce = false;
     }    
 }

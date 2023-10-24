@@ -32,12 +32,14 @@ public class BirdBoss : MonoBehaviour
     [HideInInspector] public Vector3 targetPosition;
     [HideInInspector] public Vector3 targetDirection;
     [HideInInspector] public bool flyAnimOver;
-    public BoxCollider mainCollider;
+    [HideInInspector] public BoxCollider boxCollider;
+    [HideInInspector] public CapsuleCollider capsuleCollider;
+    public SphereCollider telegraphCollider;
     public GameObject rockObject;
     public GameObject displayedRock;
+    [HideInInspector] public bool hitOnce;
 
-    [HideInInspector]
-    public BossSpawner bossSpawner;
+    [HideInInspector] public BossSpawner bossSpawner;
 
     private void Awake()
     {
@@ -51,13 +53,17 @@ public class BirdBoss : MonoBehaviour
         awoken = false;
         startPosition = transform.position;
         retreating = false;
+        boxCollider = GetComponent<BoxCollider>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
     }
 
     void Update()
     {
         directionToPlayer = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
         distanceToPlayer = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
-        mainCollider.isTrigger = vulnerable ? true : false;
+        capsuleCollider.enabled = crashed ? true : false;
+        boxCollider.enabled = crashed ? false : true;
+        telegraphCollider.enabled = boxCollider.enabled ? false : true;
 
         // Boss wakes up when player gets close to it
         if (distanceToPlayer < 20.0f && !awoken)
@@ -69,7 +75,7 @@ public class BirdBoss : MonoBehaviour
         // Boss flies up at the start
         if (flying && !altitudeReached)
         {
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(startPosition.x, 7.5f, startPosition.z), Time.deltaTime * (speed / 2.0f));
+            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 7.5f, transform.position.z), Time.deltaTime * (speed / 2.0f));
             if (transform.position.y >= 7.5f)
             {
                 altitudeReached = true;
@@ -133,7 +139,6 @@ public class BirdBoss : MonoBehaviour
         }
     }
 
-
     private void Damaged(float amount)
     {
         bossSpawner.UpdateHealth(-amount);
@@ -178,11 +183,19 @@ public class BirdBoss : MonoBehaviour
                 }
             }
         }
+        if (other.gameObject == PlayerController.global.gameObject && vulnerable && !hitOnce)
+        {
+            PlayerController.global.TakeDamage(15.0f);
+            hitOnce = true;
+        }
     }
 
     // Boss starts flying through this anim event and then only uses triggers
     private void StartFlyingAnimEvent()
     {
+        hitReceived = 0;
+        crashed = false;
+        altitudeReached = false;
         animator.SetBool("Flying", true);
         flying = true;
     }
@@ -197,10 +210,5 @@ public class BirdBoss : MonoBehaviour
         stopMoving = false;
         flying = false;
         diving = true;
-    }
-
-    public void OnDrawGizmos()
-    {
-        Gizmos.DrawSphere(targetPosition, 1);
     }
 }

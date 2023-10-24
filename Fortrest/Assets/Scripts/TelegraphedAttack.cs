@@ -19,6 +19,7 @@ public class TelegraphedAttack : MonoBehaviour
     private bool appearOnStart = true;
     private GameObject rockObject;
     private bool damageNow;
+    private bool pushBack;
 
     void Start()
     {
@@ -38,6 +39,12 @@ public class TelegraphedAttack : MonoBehaviour
             Indicator(ref appearOnStart, 0.75f, 1.5f);
         if (isBirdIndicatorBigCircle)
             Indicator(ref BirdBoss.global.circleAttackIndicator, 0.75f, 1.65f);
+
+        if (pushBack)
+        {
+            PlayerController.global.playerCanMove = false;
+            PlayerController.global.playerCC.Move(BirdBoss.global.directionToPlayer * 10.0f * Time.deltaTime);
+        }
     }
 
     void Indicator(ref bool indicator, float multiplier, float duration, bool unique = false)
@@ -101,6 +108,11 @@ public class TelegraphedAttack : MonoBehaviour
             }
             else if ((isBirdIndicatorCircle || isBirdIndicatorBigCircle) && damageNow)
             {
+                if (isBirdIndicatorBigCircle && PlayerController.global.playerCanBeDamaged)
+                {
+                    pushBack = true;
+                    StartCoroutine(PushBack());
+                }
                 PlayerController.global.TakeDamage(20.0f);
                 damageNow = false;
             }
@@ -110,5 +122,13 @@ public class TelegraphedAttack : MonoBehaviour
     public void getRockObject(GameObject rock)
     {
         rockObject = rock;
+    }
+
+    public IEnumerator PushBack()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        pushBack = false;
+        PlayerController.global.playerCanMove = true;
     }
 }

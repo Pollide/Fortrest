@@ -12,7 +12,6 @@ public class BirdBossCrash : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         birdScript = animator.GetComponent<BirdBoss>();
-        birdScript.hitReceived = 0;
         timer = 0f;
         birdScript.crashed = true;
     }
@@ -30,7 +29,6 @@ public class BirdBossCrash : StateMachineBehaviour
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.ResetTrigger("Recover");
-        birdScript.crashed = false;
+        animator.ResetTrigger("Recover");        
     }
 }
