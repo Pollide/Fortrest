@@ -160,6 +160,13 @@ public class Boar : MonoBehaviour
                 }
             }
 
+            colliders = Physics.OverlapSphere(transform.position - transform.up, 3, GameManager.ReturnBitShift(new string[] { "Default" }), QueryTriggerInteraction.Ignore);
+
+            if (colliders.Length == 0) //fall to the abyss if walk off the cliff of an island
+            {
+                transform.position = Vector3.Lerp(transform.position, transform.position - transform.up, 10 * Time.deltaTime);
+            }
+
             currentTurn = 0.0f;
         }
     }

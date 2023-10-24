@@ -408,7 +408,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2668825626618279108}
   - component: {fileID: 1967088107265189926}
-  - component: {fileID: 7035913441632634667}
   - component: {fileID: 8057984985762525425}
   - component: {fileID: 7383631925837582762}
   - component: {fileID: 1273095432}
@@ -453,24 +452,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 5
   m_Center: {x: 0, y: 0, z: 0.5}
---- !u!143 &7035913441632634667
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3333299692556185214}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Height: 0
-  m_Radius: 0.75
-  m_SlopeLimit: 45
-  m_StepOffset: 0.1
-  m_SkinWidth: 0.08
-  m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.58, z: 0.75}
 --- !u!114 &8057984985762525425
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,7 +474,6 @@ MonoBehaviour:
   isMoving: 0
   isReversing: 0
   animator: {fileID: 7383631925837582762}
-  cc: {fileID: 0}
   mountSound: {fileID: 8300000, guid: 0aface736e3e167449859c76f6bbc70f, type: 3}
   dismountSound: {fileID: 8300000, guid: f9248ad0c1674b142bea348727297d4b, type: 3}
   stepSound: {fileID: 8300000, guid: a7e465f647f74704794080459b1e58cb, type: 3}
