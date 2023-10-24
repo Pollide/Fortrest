@@ -88,7 +88,6 @@ MonoBehaviour:
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
-  HUDHealthBar: {fileID: 4667263103679529441}
   playerinRange: 0
   normalHouse: {fileID: 0}
   destroyedHouse: {fileID: 0}
@@ -137,15 +136,15 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8707849239115483156}
     m_Modifications:
-    - target: {fileID: 648307879903201773, guid: c3d78a57dfcef2848ba5e11d67aa986a,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 2143292339446341653, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
       propertyPath: m_Name
       value: Resource Health Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 4892650892793539855, guid: c3d78a57dfcef2848ba5e11d67aa986a,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7150008790253612511, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
@@ -275,18 +274,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3d78a57dfcef2848ba5e11d67aa986a, type: 3}
---- !u!114 &4667263103679529441 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5689871794550267750, guid: c3d78a57dfcef2848ba5e11d67aa986a,
-    type: 3}
-  m_PrefabInstance: {fileID: 1023178379630075527}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &7161806266648159540 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
