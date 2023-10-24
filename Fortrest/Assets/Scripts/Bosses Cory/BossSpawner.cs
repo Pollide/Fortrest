@@ -101,7 +101,7 @@ public class BossSpawner : MonoBehaviour
 
     public void BossEncountered(bool open)
     {
-        LevelManager.global.dayPaused = open;
+
 
         if (bossEncountered != open)
         {
@@ -119,7 +119,7 @@ public class BossSpawner : MonoBehaviour
 
         UpdateHealth();
 
-
+        LevelManager.global.dayPaused = open;
         bossEncountered = open;
     }
 
