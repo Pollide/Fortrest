@@ -162,7 +162,7 @@ public class AttackManagerState : BossState
                 // Stop agent
                 agent.isStopped = true;
             }
-            else if (!CanAttack(false) && stateMachine.BossAnimator.GetBool("isTired"))
+            else if (!CanAttack(true))
             {
                 // Calculate the direction to the target
                 Vector3 targetDirection = playerTransform.position - transform.position;
