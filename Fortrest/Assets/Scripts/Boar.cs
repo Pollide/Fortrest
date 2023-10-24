@@ -140,17 +140,14 @@ public class Boar : MonoBehaviour
                 transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0.0f, currentTurn, 0.0f));
             }
 
-            Physics.Raycast(transform.position + Vector3.up, transform.forward * 3.5f * (currentSpeed > 0 ? 1 : -1), out RaycastHit hit);
-            //Debug.DrawRay(transform.position + Vector3.up, transform.forward * 2 * (currentSpeed > 0 ? 1 : -1));
+            Vector3 direction = transform.forward + Vector3.up * 3 * (currentSpeed > 0 ? 1 : -1);
+            Collider[] colliders = Physics.OverlapSphere(transform.position + direction, 2, GameManager.ReturnBitShift(new string[] { "Default", "Building", "Resource" }), QueryTriggerInteraction.Ignore);
 
-            if (!hit.transform || hit.transform == transform || hit.transform.GetComponent<EnemyController>()) //stops boar hitting trees and buildings
+            if (colliders.Length == 0) //stops boar hitting trees and buildings
             {
                 MoveBoar();
             }
-            else
-            {
-                Debug.Log(hit.transform);
-            }
+
             currentTurn = 0.0f;
         }
     }
