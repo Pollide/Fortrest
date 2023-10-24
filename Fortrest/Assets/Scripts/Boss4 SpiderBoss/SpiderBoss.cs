@@ -84,7 +84,7 @@ public class SpiderBoss : MonoBehaviour
     void Update()
     {
         // Spider retreats to its starting position if the player exits the arena
-        retreating = !bossSpawner.CheckPlayerDistance();
+        retreating = !bossSpawner.bossEncountered;
         distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
 
         if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
