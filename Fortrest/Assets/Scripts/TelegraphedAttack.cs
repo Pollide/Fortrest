@@ -14,6 +14,7 @@ public class TelegraphedAttack : MonoBehaviour
     public bool isSnakeIndicator;
     public bool isBirdIndicatorCircle;
     public bool isBirdIndicatorBigCircle;
+    public bool isAsileMakerFireballIndicator;
     private bool appearOnStart = true;
     private GameObject rockObject;
     private bool damageNow;
@@ -35,6 +36,9 @@ public class TelegraphedAttack : MonoBehaviour
             Indicator(ref appearOnStart, 0.75f, 1.5f);
         if (isBirdIndicatorBigCircle)
             Indicator(ref BirdBoss.global.circleAttackIndicator, 0.75f, 1.65f);
+
+        if (isAsileMakerFireballIndicator)
+            Indicator(ref appearOnStart, 0.75f, 1.5f);
 
         if (pushBack)
         {
@@ -60,11 +64,11 @@ public class TelegraphedAttack : MonoBehaviour
         {
             innerShape.localScale = new Vector3(size, size, 0);
         }
-        
+
         spriteRenderer.enabled = active;
 
         if (!active)
-        {            
+        {
             if (isBirdIndicatorBigCircle && indicator)
             {
                 StartCoroutine(TriggerDamage());
