@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ArenaTrigger : MonoBehaviour
 {
+    public BossSpawner bossSpawner;
+    public bool EnteringBool;
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Boar"))
@@ -16,5 +18,7 @@ public class ArenaTrigger : MonoBehaviour
             Boar.global.currentSpeed = -50;
             Boar.global.MoveBoar();
         }
+
+        bossSpawner.BossEncountered(EnteringBool);
     }
 }

@@ -78,6 +78,10 @@ MonoBehaviour:
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
   introTimer: 0
+  introLength: 6
+  introSlowTimeStart: 3
+  introSlowTimeEnd: 4
+  slowRate: 0.3
   introCompleted: 0
   introCard: {fileID: 3266678436718030063}
   bossAnimator: {fileID: 902255068813967466}
@@ -94,6 +98,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossSpawner: {fileID: 0}
+  fireBallPrefab: {fileID: 8830191839845132694, guid: ea3794e280bcb7f4dabd3ff9865b5c37,
+    type: 3}
+  telegraphedCirclePrefab: {fileID: 906252197028255537, guid: 287c557e760808f45888df7628e93d8a,
+    type: 3}
+  fireballList: []
 --- !u!1 &4347007020634852079
 GameObject:
   m_ObjectHideFlags: 0
