@@ -94,6 +94,8 @@ public class PlayerController : MonoBehaviour
     private float resetAttack = 0.75f; // Attack cooldown
     private float comboTimer = 0.0f; // Timer to reset the combo
     private float resetCombo = 1.10f; // Combo cooldown
+    private float staggerCD; // Combo cooldown
+    public float staggerCDMax = 1.5f; // Combo cooldown
     private int attackCount = 0; // Current attack number in the combo
     [HideInInspector] public Building currentResource; // Current resource type being gathered
     public bool damageEnemy = false; // Used to enable a time frame during the animation where the enemy can be damaged
@@ -313,6 +315,8 @@ public class PlayerController : MonoBehaviour
             //gamepadControls.Controls.CameraLock.performed += context => lockingCTRL = true;
             // X to open / close inventory
             //gamepadControls.Controls.Inventory.performed += context => inventoryCTRL = true;
+
+
         }
     }
 
@@ -514,6 +518,7 @@ public class PlayerController : MonoBehaviour
         playerCC.enabled = true;
 
         speedAnim = 0f;
+        staggerCD = staggerCDMax;
     }
     public bool debugfrocemap;
     void Update()
@@ -529,6 +534,12 @@ public class PlayerController : MonoBehaviour
             UpdateMap();
         }
 #endif
+        if (staggerCD > 0f)
+        {
+            staggerCD -= Time.deltaTime;
+        }
+       
+
         if (!canEvade)
         {
             evadeTimer += Time.deltaTime;
@@ -2061,28 +2072,33 @@ public class PlayerController : MonoBehaviour
             if (!Boar.global.mounted)
             {
                 wasHit = true;
-                StopCoroutine("Staggered");
-                StartCoroutine("Staggered");
-                cancelHit = true;
-                characterAnimator.ResetTrigger("Hit1");
-                characterAnimator.ResetTrigger("Hit2");
-                characterAnimator.ResetTrigger("Hit3");
-                characterAnimator.ResetTrigger("Swing1");
-                characterAnimator.ResetTrigger("Swing2");
-                characterAnimator.ResetTrigger("Swing3");
-                int random = Random.Range(1, 4);
-                if (random == 1)
+                if (staggerCD <= 0)
                 {
-                    characterAnimator.SetTrigger("Hit1");
+                    StopCoroutine("Staggered");
+                    StartCoroutine("Staggered");
+                    cancelHit = true;
+                    characterAnimator.ResetTrigger("Hit1");
+                    characterAnimator.ResetTrigger("Hit2");
+                    characterAnimator.ResetTrigger("Hit3");
+                    characterAnimator.ResetTrigger("Swing1");
+                    characterAnimator.ResetTrigger("Swing2");
+                    characterAnimator.ResetTrigger("Swing3");
+                    int random = Random.Range(1, 4);
+                    if (random == 1)
+                    {
+                        characterAnimator.SetTrigger("Hit1");
+                    }
+                    else if (random == 2)
+                    {
+                        characterAnimator.SetTrigger("Hit2");
+                    }
+                    else
+                    {
+                        characterAnimator.SetTrigger("Hit3");
+                    }
+                    staggerCD = staggerCDMax;
                 }
-                else if (random == 2)
-                {
-                    characterAnimator.SetTrigger("Hit2");
-                }
-                else
-                {
-                    characterAnimator.SetTrigger("Hit3");
-                }
+               
             }
             int randomInt = Random.Range(0, 3);
             AudioClip temp = null;
