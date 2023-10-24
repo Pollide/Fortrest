@@ -39,23 +39,15 @@ public class PlayerSteps : MonoBehaviour
 
     void SwingStart()
     {
-        if (!PlayerController.global.evading && !PlayerController.global.cancelEffects)
+        if (!PlayerController.global.evading)
         {
             PlayerController.global.damageEnemy = true;
-            PlayerController.global.attackTimer = 0;
-            CancelInvoke("SwingEnding");
-            Invoke("SwingEnding", 0.5f);
         }
-    }
-
-    void SwingEnding()
-    {
-        PlayerController.global.damageEnemy = false;
     }
 
     void SwingEnd()
     {
-        //not in use anymore
+        PlayerController.global.damageEnemy = false;
     }
 
     void Evading()
