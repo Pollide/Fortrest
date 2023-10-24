@@ -239,6 +239,9 @@ public class PlayerController : MonoBehaviour
 
     private bool playSoundOnce, playSoundOnce2;
 
+    private bool wasHit;
+    public bool canAttack = true;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -1580,8 +1583,13 @@ public class PlayerController : MonoBehaviour
 
     private void Attack()
     {
-        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && attackAnimEnded && !canShoot && !attacking && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
+        if ((Input.GetMouseButtonDown(0) || attackingCTRL) && attackAnimEnded && !canShoot && !attacking && canAttack && PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
+            if (wasHit)
+            {
+                wasHit = false;
+                return;
+            }
             LevelManager.ProcessEnemyList((enemy) =>
             {
                 enemy.canBeDamaged = true;
@@ -1789,6 +1797,12 @@ public class PlayerController : MonoBehaviour
 
     public void AttackEffects()
     {
+        if (wasHit)
+        {
+            wasHit = false;
+            return;
+        }
+
         if (!attackAnimEnded)
         {
             int randomInt = Random.Range(0, 3);
@@ -2041,6 +2055,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!Boar.global.mounted)
             {
+                wasHit = true;
                 StopCoroutine("Staggered");
                 StartCoroutine("Staggered");
                 cancelHit = true;
