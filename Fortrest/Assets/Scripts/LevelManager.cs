@@ -294,11 +294,11 @@ public class LevelManager : MonoBehaviour
             }
             else
             {
-                Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" }));
-
+                Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Default", "Terrain" }));
+                // Debug.Log(raycastHit.transform);
                 for (int i = 0; i < terrainDataList.Count; i++)
                 {
-                    if (terrainDataList[i].terrain == raycastHit.transform)
+                    if (terrainDataList[i].terrain.transform == raycastHit.transform)
                     {
                         music = terrainDataList[i].music;
                         break;
