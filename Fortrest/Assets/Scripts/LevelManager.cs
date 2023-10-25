@@ -38,6 +38,7 @@ public class LevelManager : MonoBehaviour
     public List<TierData> StoneTierList = new List<TierData>();
 
     public Gradient SunriseGradient;
+    public Gradient SkyboxGradient;
 
     [System.Serializable]
     public class TierData
@@ -367,7 +368,10 @@ public class LevelManager : MonoBehaviour
 
         Light light = DirectionalLightTransform.GetComponent<Light>();
         int cycle = 360;
+
         light.color = SunriseGradient.Evaluate(daylightTimer / cycle);
+        SceneCamera.backgroundColor = SkyboxGradient.Evaluate(daylightTimer / cycle);
+
         if (daylightTimer > cycle)
         {
             attackHappening = false;
