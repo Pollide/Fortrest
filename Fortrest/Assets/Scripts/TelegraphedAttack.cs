@@ -43,7 +43,21 @@ public class TelegraphedAttack : MonoBehaviour
         if (pushBack)
         {
             PlayerController.global.playerCanMove = false;
-            PlayerController.global.playerCC.Move(BirdBoss.global.directionToPlayer * 10.0f * Time.deltaTime);
+            if (isBirdIndicatorBigCircle)
+            {
+                PlayerController.global.playerCC.Move(BirdBoss.global.directionToPlayer * 10.0f * Time.deltaTime);
+            }
+            else if (isJumpIndicator)
+            {
+                if (SpiderBoss.global.directionToPlayer == Vector3.zero)
+                {
+                    PlayerController.global.playerCC.Move(new Vector3(Random.Range(0,2), 0f, Random.Range(0, 2)) * 15.0f * Time.deltaTime);
+                }
+                else
+                {
+                    PlayerController.global.playerCC.Move(SpiderBoss.global.directionToPlayer * 12.0f * Time.deltaTime);
+                }               
+            }
         }
     }
 
@@ -107,6 +121,8 @@ public class TelegraphedAttack : MonoBehaviour
             {
                 PlayerController.global.TakeDamage(20.0f);
                 SpiderBoss.global.slamNow = false;
+                pushBack = true;
+                StartCoroutine(PushBack());
             }
             else if ((isBirdIndicatorCircle || isBirdIndicatorBigCircle) && damageNow)
             {

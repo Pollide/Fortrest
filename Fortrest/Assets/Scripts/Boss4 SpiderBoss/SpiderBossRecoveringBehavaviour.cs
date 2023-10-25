@@ -3,30 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class SpiderBossJump : StateMachineBehaviour
+public class SpiderBossRecoveringBehavaviour : StateMachineBehaviour
 {
     private NavMeshAgent agent;
-    private SpiderBoss spiderScript;
 
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        animator.ResetTrigger("Slam");
         agent = animator.GetComponent<NavMeshAgent>();
-        spiderScript = animator.GetComponent<SpiderBoss>();
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        if (!spiderScript.midAir)
-        {
-            agent.SetDestination(agent.transform.position);           
-        }
-        else
-        {
-            agent.SetDestination(PlayerController.global.transform.position);
-            spiderScript.col.enabled = false;
-        }       
+        agent.SetDestination(agent.transform.position);
     }
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
