@@ -60,7 +60,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     public Building SelectedTurret;
     public bool hoveringTurret;
-    public bool[,] occupied;
+    public bool[,] occupied; //this isnt in use anymore, i know its big brain and stuff but it works without it and was causing errors with grid index
     private bool cantPlace;
     public bool buildingWithController;
     bool turretMenuOpened;
