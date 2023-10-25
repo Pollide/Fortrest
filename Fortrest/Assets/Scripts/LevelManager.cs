@@ -371,6 +371,7 @@ public class LevelManager : MonoBehaviour
 
         light.color = SunriseGradient.Evaluate(daylightTimer / cycle);
         SceneCamera.backgroundColor = SkyboxGradient.Evaluate(daylightTimer / cycle);
+        RenderSettings.ambientLight = light.color;
 
         if (daylightTimer > cycle)
         {
