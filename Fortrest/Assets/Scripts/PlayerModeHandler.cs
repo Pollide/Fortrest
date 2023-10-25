@@ -350,8 +350,8 @@ public class PlayerModeHandler : MonoBehaviour
             Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
             worldPos = new Vector3(gridPos.x, 0, gridPos.z);
             Vector2 gridNumber = new Vector2();
-            gridNumber.x = (worldPos.x + 57.20f) / 4.0f;
-            gridNumber.y = (worldPos.z + 145.30f) / 4.0f;
+            gridNumber.x = (worldPos.x) / 4.0f;
+            gridNumber.y = (worldPos.z) / 4.0f;
 
             Collider[] colliders = Physics.OverlapSphere(worldPos, minDistanceBetweenTurrets, GameManager.ReturnBitShift(new string[] { "Building", "Resource", "Boar" }));
 
@@ -360,37 +360,40 @@ public class PlayerModeHandler : MonoBehaviour
 
             for (int i = 0; i < colliders.Length; i++)
             {
-                if (colliders[i].tag == "Turret" && colliders[i].gameObject.transform.localScale == Vector3.one)
+                if (colliders[i].tag == "Turret")
                 {
                     hoveringTurret = true;
 
-                    bool enter = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL;
-
-                    Building building = colliders[i].GetComponentInParent<Building>();
-
-                    if (!SelectedTurret)
+                    if (colliders[i].gameObject.transform.localScale == Vector3.one)
                     {
-                        if (enter)
+                        bool enter = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL;
+
+                        Building building = colliders[i].GetComponentInParent<Building>();
+
+                        if (!SelectedTurret)
                         {
-                            ClearBlueprint();
+                            if (enter)
+                            {
+                                ClearBlueprint();
 
-                            PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+                                PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
 
-                            SelectedTurret = building;
+                                SelectedTurret = building;
 
-                            TierChange(true);
+                                TierChange(true);
 
-                            UpdateTier();
+                                UpdateTier();
+                            }
+
+                        }
+                        else if (SelectedTurret != building)
+                        {
+                            SelectedTurret = null;
                         }
 
-                    }
-                    else if (SelectedTurret != building)
-                    {
-                        SelectedTurret = null;
-                    }
 
-
-                    return;
+                        return;
+                    }
                 }
                 if (colliders[i].tag == "Resource" || colliders[i].tag == "BoarTurret")
                 {
@@ -433,7 +436,8 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 runOnce = false;
             }
-            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !occupied[(int)gridNumber.x, (int)gridNumber.y] && !cantPlace)
+
+            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !hoveringTurret && !cantPlace)
             {
                 BluePrintSet(turretBlueprintBlue);
 
@@ -458,7 +462,7 @@ public class PlayerModeHandler : MonoBehaviour
                             timer = 0f;
                             break;
                     }
-                    occupied[(int)gridNumber.x, (int)gridNumber.y] = true;
+                    //occupied[(int)gridNumber.x, (int)gridNumber.y] = true;
                     StartCoroutine(TurretConstructing(timer, turretPrefab, worldPos, new Vector2((int)gridNumber.x, (int)gridNumber.y)));
                 }
             }
@@ -642,7 +646,7 @@ public class PlayerModeHandler : MonoBehaviour
         {
             PlayerController.global.evading = false;
             lastMode = playerModes;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.EnterHouseSound);          
+            GameManager.global.SoundManager.PlaySound(GameManager.global.EnterHouseSound);
             if (House.GetComponent<Building>().textDisplayed)
             {
                 LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, false);

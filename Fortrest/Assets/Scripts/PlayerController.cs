@@ -538,7 +538,7 @@ public class PlayerController : MonoBehaviour
         {
             staggerCD -= Time.deltaTime;
         }
-       
+
 
         if (!canEvade)
         {
@@ -715,12 +715,13 @@ public class PlayerController : MonoBehaviour
     {
         if (newHealth != playerHealth)
         {
-
             healthBar.SetHealth(playerHealth, maxHealth);
-            newHealth = playerHealth;
+            float difference = playerHealth - newHealth;
 
-            if (playerHealth < maxHealth)
-                GameManager.PlayAnimation(UIAnimation, "Health Flash");
+            if (newHealth != 0 && difference != 0)
+                GameManager.PlayAnimation(UIAnimation, difference > 0 ? "Health Flash Green" : "Health Flash");
+
+            newHealth = playerHealth;
         }
     }
 
@@ -1102,7 +1103,7 @@ public class PlayerController : MonoBehaviour
         {
             transform.LookAt(transform.position + (moveDirection * 10));
         }
-        
+
         canShoot = false;
         bowAnimator.SetBool("Aiming", false);
         lunge = false;
@@ -2014,8 +2015,8 @@ public class PlayerController : MonoBehaviour
         if (!playerRespawned)
         {
             respawnTimer += Time.deltaTime;
-            playerHealth = Mathf.Lerp(0.0f, maxHealth, respawnTimer / 15.0f);
-            //healthBar.SetHealth(playerHealth, maxHealth);
+            playerHealth += 5 * Time.deltaTime;
+
             if (respawnTimer >= 15.0f)
             {
                 needInteraction = true;
@@ -2098,7 +2099,7 @@ public class PlayerController : MonoBehaviour
                     }
                     staggerCD = staggerCDMax;
                 }
-               
+
             }
             int randomInt = Random.Range(0, 3);
             AudioClip temp = null;
