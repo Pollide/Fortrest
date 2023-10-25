@@ -15,6 +15,7 @@ public class BridgeBuilder : MonoBehaviour
     public Animator bridgeAnimator;
     bool canBuild;
 
+
     private void Start()
     {
         if (BridgeTypeInt == 1)
