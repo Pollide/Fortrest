@@ -39,6 +39,7 @@ public class LevelManager : MonoBehaviour
 
     public Gradient SunriseGradient;
     public Gradient SkyboxGradient;
+    public Gradient AmbientGradient;
 
     [System.Serializable]
     public class TierData
@@ -369,9 +370,11 @@ public class LevelManager : MonoBehaviour
         Light light = DirectionalLightTransform.GetComponent<Light>();
         int cycle = 360;
 
-        light.color = SunriseGradient.Evaluate(daylightTimer / cycle);
-        SceneCamera.backgroundColor = SkyboxGradient.Evaluate(daylightTimer / cycle);
-        RenderSettings.ambientLight = light.color;
+        float evaluate = daylightTimer / cycle;
+
+        light.color = SunriseGradient.Evaluate(evaluate);
+        SceneCamera.backgroundColor = SkyboxGradient.Evaluate(evaluate);
+        RenderSettings.ambientLight = AmbientGradient.Evaluate(evaluate);
 
         if (daylightTimer > cycle)
         {
