@@ -396,6 +396,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossAwakened: 0
+  escapeByDistance: 1
   Arenasize: 40
   bossType: 2
   BossCanvas: {fileID: 4052270581425538444}
@@ -408,6 +409,10 @@ MonoBehaviour:
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
   introTimer: 0
+  introLength: 6
+  introSlowTimeStart: 3
+  introSlowTimeEnd: 4
+  slowRate: 0.3
   introCompleted: 0
   introCard: {fileID: 716197269320612460}
   bossAnimator: {fileID: 7266310432765318295}
@@ -580,7 +585,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4779166329654855270}
   - component: {fileID: 2622106035761491257}
-  m_Layer: 19
+  m_Layer: 0
   m_Name: InnerShape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1053,7 +1058,7 @@ GameObject:
   - component: {fileID: 3562521944671574029}
   - component: {fileID: 325956428277000439}
   - component: {fileID: 5367426410689052660}
-  m_Layer: 19
+  m_Layer: 0
   m_Name: OuterShape
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1525,7 +1530,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a03aa9a46947714aac9ee20e92b0432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snakeSweep: {fileID: 0}
   size: 0
   timer: 0
   isJumpIndicator: 1
@@ -1533,6 +1537,7 @@ MonoBehaviour:
   isSnakeIndicator: 0
   isBirdIndicatorCircle: 0
   isBirdIndicatorBigCircle: 0
+  isAsileMakerFireballIndicator: 0
 --- !u!1 &7067317520787767096
 GameObject:
   m_ObjectHideFlags: 0
@@ -1818,7 +1823,7 @@ Transform:
   m_GameObject: {fileID: 8326742268262744467}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.5, z: 0.5}
-  m_LocalScale: {x: 750, y: 750, z: 50}
+  m_LocalScale: {x: 750, y: 750, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8216938281832612625}
@@ -1900,7 +1905,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a03aa9a46947714aac9ee20e92b0432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snakeSweep: {fileID: 0}
   size: 0
   timer: 0
   isJumpIndicator: 0
@@ -1908,6 +1912,7 @@ MonoBehaviour:
   isSnakeIndicator: 0
   isBirdIndicatorCircle: 0
   isBirdIndicatorBigCircle: 0
+  isAsileMakerFireballIndicator: 0
 --- !u!1 &8338390557246855583
 GameObject:
   m_ObjectHideFlags: 0

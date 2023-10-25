@@ -21,9 +21,6 @@ public class SpiderBoss : MonoBehaviour
     public int stage;
     private float timer, timer2, timer3;
     private float specialAttackCD;
-    private float randomChance;
-    private float poisonAttackChance;
-    private float webAttackChance;
     public GameObject poisonProjectile;
     private float poisonSpeed;
     private bool jump;
@@ -40,6 +37,8 @@ public class SpiderBoss : MonoBehaviour
     public bool normalAttackReady;
     private float attackRange;
     public bool attacking;
+    public BoxCollider col;
+    public Vector3 directionToPlayer;
 
     [HideInInspector]
     public BossSpawner bossSpawner;
@@ -58,10 +57,8 @@ public class SpiderBoss : MonoBehaviour
         damage = 5.0f;
         stage = 1;
         specialAttackCD = 10.0f;
-        poisonAttackChance = 0.4f;
-        webAttackChance = 0.3f;
         poisonSpeed = 20.0f;
-        webAttackRange = 5.0f;
+        webAttackRange = 12.5f;
         normalAttackCD = 4.0f;
 
         speed = 11f;
@@ -70,6 +67,8 @@ public class SpiderBoss : MonoBehaviour
         acceleration = 10.0f;
         SetAgentParameters(speed, acceleration, angularSpeed, stoppingDistance);
         attackRange = agent.stoppingDistance + 0.75f;
+
+        col = GetComponent<BoxCollider>();
     }
 
     void SetAgentParameters(float _speed, float _acceleration, float _angular, float _stopping)
@@ -86,8 +85,9 @@ public class SpiderBoss : MonoBehaviour
         // Spider retreats to its starting position if the player exits the arena
         retreating = !bossSpawner.bossEncountered;
         distanceToPlayer = Vector3.Distance(playerTransform.position, transform.position);
+        directionToPlayer = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
 
-        if (bossSpawner.bossAwakened && bossSpawner.introCompleted)
+        if (bossSpawner.bossAwakened && bossSpawner.introCompleted && !dead)
         {
             if (!attacking)
             {
@@ -164,20 +164,18 @@ public class SpiderBoss : MonoBehaviour
             {
                 timer2 += Time.deltaTime;
                 if (timer2 > 3.5f)
-                {
+                {                   
                     midAir = false;
                     bossSpawner.bossAnimator.SetTrigger("Slam");
+                    timer2 = 0f;
                 }
-            }
-
-            // Death state
-            if (dead)
-            {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossDeadSound, 1f, true, 0, false, transform);
-                bossSpawner.bossAnimator.SetTrigger("Dead");
-                StartCoroutine(DestroyOnDeath());
-                dead = false;
-            }
+            }           
+        }
+        else if (dead)
+        {
+            agent.SetDestination(transform.position);           
+            bossSpawner.bossAnimator.SetTrigger("Dead");
+            StartCoroutine(DestroyOnDeath());           
         }
     }
 
@@ -248,11 +246,6 @@ public class SpiderBoss : MonoBehaviour
         StartCoroutine(Rooting());
     }
 
-    private void ConeAnimEvent()
-    {
-        webAttackIndicator = true;
-    }
-
     private IEnumerator Rooting()
     {
         rootNow = true;
@@ -261,15 +254,19 @@ public class SpiderBoss : MonoBehaviour
     }
 
     private void JumpAttackAnimEvent()
-    {
+    {      
         GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossSlamSound, 1f, true, 0, false, transform);
         specialAttackReady = false;
         StartCoroutine(Slamming());
     }
 
+    private void EnableColliderAnimEvent()
+    {
+        col.enabled = true;
+    }
+
     private void CircleAnimEvent()
     {
-        timer2 = 0;
         midAir = true;
         jumpAttackIndicator = true;
     }
@@ -300,8 +297,8 @@ public class SpiderBoss : MonoBehaviour
 
         if (bossSpawner.health <= 0)
         {
-            StopAllCoroutines();
-            agent.SetDestination(transform.position);
+            GameManager.global.SoundManager.PlaySound(GameManager.global.SpiderBossDeadSound, 1f, true, 0, false, transform);
+            StopAllCoroutines();           
             dead = true;
             Time.timeScale = 1;
         }
@@ -322,12 +319,11 @@ public class SpiderBoss : MonoBehaviour
             case 2:
                 if (distanceToPlayer < webAttackRange)
                 {
-                    randomChance = Random.Range(0f, 1f);
-                    if (randomChance <= poisonAttackChance || randomChance > poisonAttackChance + webAttackChance)
+                    if (Random.Range(0,2) == 0)
                     {
                         bossSpawner.bossAnimator.SetTrigger("PoisonAttack");
                     }
-                    else if (randomChance <= poisonAttackChance + webAttackChance)
+                    else
                     {
                         bossSpawner.bossAnimator.SetTrigger("WebAttack");
                     }
@@ -340,12 +336,12 @@ public class SpiderBoss : MonoBehaviour
             case 3:
                 if (distanceToPlayer < webAttackRange)
                 {
-                    randomChance = Random.Range(0f, 1f);
-                    if (randomChance <= poisonAttackChance)
+                    int randomInt = Random.Range(0, 3);
+                    if (randomInt == 0)
                     {
                         bossSpawner.bossAnimator.SetTrigger("PoisonAttack");
                     }
-                    else if (randomChance <= poisonAttackChance + webAttackChance)
+                    else if (randomInt == 1)
                     {
                         bossSpawner.bossAnimator.SetTrigger("WebAttack");
                     }
@@ -356,8 +352,7 @@ public class SpiderBoss : MonoBehaviour
                 }
                 else
                 {
-                    int randomInt = Random.Range(1, 6);
-                    if (randomInt == 1 || randomInt == 2)
+                    if (Random.Range(0,3) == 0)
                     {
                         bossSpawner.bossAnimator.SetTrigger("JumpAttack");
                     }
@@ -380,7 +375,6 @@ public class SpiderBoss : MonoBehaviour
             {
                 GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
                 bossSpawner.canBeDamaged = false;
-                StopAllCoroutines();
                 ScreenShake.global.shake = true;
                 Damaged(PlayerController.global.attackDamage);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
