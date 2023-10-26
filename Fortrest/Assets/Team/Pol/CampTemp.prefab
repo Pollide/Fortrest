@@ -128,9 +128,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab958e3acd606ee40808dca7ca7b4884, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 0
   campType: 1
   canBeDamaged: 1
-  healthBarImage: {fileID: 8757495571773383087}
+  healthBar: {fileID: 2920959555664055589}
   healthAnimation: {fileID: 1854259932808801364}
 --- !u!54 &5356670339063588549
 Rigidbody:
@@ -140,7 +141,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1285012206302860940}
   serializedVersion: 2
-  m_Mass: 0.0000001
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
@@ -309,15 +310,15 @@ Animation:
     type: 3}
   m_PrefabInstance: {fileID: 7914524071724883627}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8757495571773383087 stripped
+--- !u!114 &2920959555664055589 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1467846266723204868, guid: 412f881170d2477458b73d3eddd5ab20,
+  m_CorrespondingSourceObject: {fileID: 4998815853741020046, guid: 412f881170d2477458b73d3eddd5ab20,
     type: 3}
   m_PrefabInstance: {fileID: 7914524071724883627}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
