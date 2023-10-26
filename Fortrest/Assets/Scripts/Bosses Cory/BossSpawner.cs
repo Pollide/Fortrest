@@ -103,21 +103,21 @@ public class BossSpawner : MonoBehaviour
     public void BossEncountered(bool open)
     {
 
-        if (bossAwakened)
+        if (bossAwakened && enabled)
         {
             if (bossEncountered != open)
             {
                 if (health <= 0)
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
+                    enabled = false;
                 }
                 else
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Appear", open);
                 }
 
-                BossMusicBegin(open);
-
+                LevelManager.global.activeBossSpawner = open ? this : null;
                 UpdateHealth();
 
                 LevelManager.global.dayPaused = open;
@@ -125,11 +125,6 @@ public class BossSpawner : MonoBehaviour
 
             bossEncountered = open;
         }
-    }
-
-    public void BossMusicBegin(bool open)
-    {
-        LevelManager.global.activeBossSpawner = open ? this : null;
     }
 
 
@@ -173,7 +168,8 @@ public class BossSpawner : MonoBehaviour
             }
             else
             {
-                BossEncountered(true);
+                if (escapeByDistance || !introCompleted)
+                    BossEncountered(true);
 
                 if (!introCompleted)
                 {
@@ -206,7 +202,7 @@ public class BossSpawner : MonoBehaviour
                 }
             }
         }
-        else if (escapeByDistance)
+        else if (escapeByDistance || health == 0)
         {
             BossEncountered(false);
         }
