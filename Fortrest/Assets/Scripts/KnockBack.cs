@@ -35,7 +35,7 @@ public class KnockBack : MonoBehaviour
     // Stop the pushback
     private IEnumerator Push()
     {
-        Vector3 direction = (transform.position - PlayerController.global.transform.position).normalized;
+        Vector3 direction = (new Vector3(transform.position.x, 0f, transform.position.z) - new Vector3(PlayerController.global.transform.position.x, 0f, PlayerController.global.transform.position.z)).normalized;
         direction.y = 0.0f;       
         Vector3 startPos = transform.position;
         Vector3 targetPos = startPos + direction;

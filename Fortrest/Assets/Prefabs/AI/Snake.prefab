@@ -752,7 +752,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72024c4f829febc45a0ad83a35f2bc16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  strength: 0
+  strength: 60
+  mountStrength: 0
   knock: 0
   mountKnock: 0
 --- !u!1 &6611190395284993285
@@ -830,7 +831,6 @@ GameObject:
   - component: {fileID: 6170724406602635431}
   - component: {fileID: 9137073815566904840}
   - component: {fileID: 1999852434505880824}
-  - component: {fileID: 767092256072162123}
   m_Layer: 0
   m_Name: Snake
   m_TagString: Untagged
@@ -941,20 +941,6 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!64 &767092256072162123
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7131222748753866027}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 0}
 --- !u!1 &7813647467150308029
 GameObject:
   m_ObjectHideFlags: 0
