@@ -426,12 +426,13 @@ public class LevelManager : MonoBehaviour
 
         PlayerController.global.LanternSkinnedRenderer.materials = mats;
 
-        if (PlayerController.global.transform.position.y < -3)
+        if (PlayerController.global.transform.position.y < -3 && PlayerController.global.playerHealth > 0)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
-            GameManager.global.NextScene(1);
-            enabled = false;
-            return;
+            //   GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
+            // GameManager.global.NextScene(1);
+            PlayerController.global.TakeDamage(PlayerController.global.playerHealth);
+            // enabled = false;
+            // return;
         }
 
 
