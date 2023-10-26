@@ -6,15 +6,20 @@ using UnityEngine.UI;
 public class Camp : MonoBehaviour
 {
     private float health;
-    private float maxHealth;
+    public float maxHealth = 15f;
+    
     public enum CAMPTYPE
     {
         goblinCamp = 1,
-        spiderCamp
+        snakesCamp,
+        spiderCamp,
+        wolfCamp
+        
     };
+
     public CAMPTYPE campType;
     public bool canBeDamaged = true;
-    public Image healthBarImage;
+    public HealthBar healthBar;
     private float HealthAppearTimer = -1;
     public Animation healthAnimation;
 
@@ -22,7 +27,6 @@ public class Camp : MonoBehaviour
     {
         LevelManager.global.campList.Add(this);
         //Indicator.global.AddIndicator(transform)
-        maxHealth = 15.0f;
         health = maxHealth;
     }
 
@@ -51,7 +55,7 @@ public class Camp : MonoBehaviour
         HealthAppearTimer = 0;
 
         GameManager.PlayAnimation(healthAnimation, "Health Hit");
-        healthBarImage.fillAmount = Mathf.Clamp(health / maxHealth, 0, 1f);
+        healthBar.SetHealth(health, maxHealth);
 
         if (health <= 0)
         {

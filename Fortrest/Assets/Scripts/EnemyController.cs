@@ -680,7 +680,7 @@ public class EnemyController : MonoBehaviour
         else if (currentEnemyType == ENEMYTYPE.snake)
         {
             agent.speed = 5.0f;
-            agent.acceleration = 50.0f;
+            agent.acceleration = 70.0f;
             agent.angularSpeed = 150.0f;
             maxHealth = 3.5f;
             attackTimerMax = 3.0f;

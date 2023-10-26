@@ -32,6 +32,11 @@ public class Creature : MonoBehaviour
             if (run)
             {
                 destination += transform.position - PlayerController.global.transform.position;
+                navMeshAgent.speed = 10;
+            }
+            else
+            {
+                navMeshAgent.speed = 3.5f;
             }
 
             navMeshAgent.SetDestination(destination);
