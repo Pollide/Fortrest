@@ -174,7 +174,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL || 3 < Vector3.Distance(PlayerController.global.transform.position, House.transform.position)) && canInteractWithHouse)
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL || 1 < Vector3.Distance(PlayerController.global.transform.position, House.transform.position)) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
 
