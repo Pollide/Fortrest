@@ -395,7 +395,7 @@ public class Building : MonoBehaviour
 
             treefallingTimer += Time.deltaTime;
 
-            if (treefallingTimer > 1.5f)
+            if (treefallingTimer > 1f)
             {
 
                 // If the angle exceeds the maximum allowed angle, set the rotation to the maximum angle

@@ -280,6 +280,7 @@ public class LevelManager : MonoBehaviour
     }
 
     public BossSpawner activeBossSpawner;
+
     public void SetGameMusic()
     {
         TerrainData terrainData = currentTerrainData;
@@ -307,8 +308,8 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        bool missing = currentTerrainData == null || !currentTerrainData.terrain;
-        if (missing || terrainData != currentTerrainData)
+        bool missing = currentTerrainData == null || !currentTerrainData.music;
+        if (missing || terrainData != currentTerrainData && terrainData.music != currentTerrainData.music)
         {
             currentTerrainData = terrainData;
             GameManager.global.MusicManager.PlayMusic(terrainData.music);

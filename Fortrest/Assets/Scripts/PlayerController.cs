@@ -2016,7 +2016,7 @@ public class PlayerController : MonoBehaviour
         if (!playerRespawned)
         {
             respawnTimer += Time.deltaTime;
-            playerHealth += 10 * Time.deltaTime;
+            playerHealth += 12 * Time.deltaTime;
 
             if (playerHealth >= maxHealth)
             {

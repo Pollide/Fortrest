@@ -174,7 +174,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL || 3 < Vector3.Distance(PlayerController.global.transform.position, House.transform.position)) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
 
@@ -662,10 +662,6 @@ public class PlayerModeHandler : MonoBehaviour
             playerModes = PlayerModes.BuildMode;
             PlayerController.global.UpdateResourceHolder();
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
-        }
-        else
-        {
-
         }
     }
 
