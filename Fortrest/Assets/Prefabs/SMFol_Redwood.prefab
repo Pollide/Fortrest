@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5448374988497345377}
-  - component: {fileID: 5404481544563550266}
+  - component: {fileID: 8274783605097132769}
+  - component: {fileID: 7545986190779247308}
   m_Layer: 0
-  m_Name: NavMeshObstacle
+  m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +33,21 @@ Transform:
   m_Father: {fileID: 9086331762440083270}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
---- !u!208 &5404481544563550266
+--- !u!136 &8274783605097132769
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7028522439916449476}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 3.5
+  m_Height: 30
+  m_Direction: 1
+  m_Center: {x: 0, y: 10, z: 0}
+--- !u!208 &7545986190779247308
 NavMeshObstacle:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -42,9 +57,9 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 0
-  m_Extents: {x: 2.5, y: 15, z: 2.5}
+  m_Extents: {x: 3.5, y: 15, z: 3.5}
   m_MoveThreshold: 0.1
-  m_Carve: 0
+  m_Carve: 1
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 10, z: 0}
   m_TimeToStationary: 0.5
@@ -59,7 +74,6 @@ GameObject:
   - component: {fileID: 9086331762440083270}
   - component: {fileID: 5311706648880355555}
   - component: {fileID: 7949431978011978793}
-  - component: {fileID: 9003206535563294993}
   m_Layer: 0
   m_Name: SMFol_Redwood
   m_TagString: Untagged
@@ -133,17 +147,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &9003206535563294993
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8454085756370505212}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 487465498629626217, guid: 4daea1f8d70e2e24b945000fe50ca798, type: 3}
