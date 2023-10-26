@@ -40,7 +40,7 @@ public class ItemDrop : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                if (name == "Bush Drop" && PlayerController.global.appleAmount >= PlayerController.global.maxApple)
+                if (name.Contains("Bush Drop") && PlayerController.global.appleAmount >= PlayerController.global.maxApple)
                 {
                     Vector3 direction = (transform.position - PlayerController.global.transform.position).normalized;
                     direction.y = 0.4f;
