@@ -112,7 +112,7 @@ public class TelegraphedAttack : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.gameObject && PlayerController.global.playerCanBeDamaged)
         {
-            if (!isWebIndicator && SpiderBoss.global.rootNow)
+            if (isWebIndicator && SpiderBoss.global.rootNow)
             {
                 PlayerController.global.rooted = true;
                 SpiderBoss.global.rootNow = false;
