@@ -202,7 +202,7 @@ public class SFXManager : MonoBehaviour
     }
 
 
-    public int PlaySound(AudioClip clip, float RequestedVolume = 1, bool ChangePitch = true, int Piority = 0, bool isLooped = false, Transform SpatialTransform = null)
+    public SFXData PlaySound(AudioClip clip, float RequestedVolume = 1, bool ChangePitch = true, int Piority = 0, bool isLooped = false, Transform SpatialTransform = null)
     {
 
         if (clip)
@@ -213,7 +213,7 @@ public class SFXManager : MonoBehaviour
             {
                 if (SpatialTransform && SFXList[i].SpatialTransform == SpatialTransform && SFXList[i].Audio == clip)
                 {
-                    return i; //stops same sound running
+                    return SFXList[i]; //stops same sound running
                 }
             }
 
@@ -232,7 +232,7 @@ public class SFXManager : MonoBehaviour
             if (ArrayIsFull)
             {
                 Debug.LogError("Array full!");
-                return 0;
+                return null;
             }
 
             if (ChangePitch)
@@ -248,7 +248,7 @@ public class SFXManager : MonoBehaviour
             {
                 if (Vector3.Distance(SpatialTransform.position, PlayerController.global.transform.position) > 40)
                 {
-                    return 0;//too far away
+                    return null;//too far away
                 }
                 SFXList[PoolPosition].Audio.spatialBlend = 0.5f;
                 SFXList[PoolPosition].Audio.transform.position = SpatialTransform.position; //stops the high pitch sound
@@ -268,7 +268,7 @@ public class SFXManager : MonoBehaviour
             SFXList[PoolPosition].Audio.Play();
         }
 
-        return PoolPosition;
+        return SFXList[PoolPosition];
     }
 
     //When Music is called, it turns off all other music and plays this one, until finished then returning down the queue

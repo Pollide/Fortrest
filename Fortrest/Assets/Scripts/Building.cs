@@ -29,7 +29,8 @@ public class Building : MonoBehaviour
         CoarseWood,
         SlateStone,
         MossyStone,
-        none
+        none,
+        Bone,
     }
 
     public ResourceType resourceObject;
@@ -175,11 +176,11 @@ public class Building : MonoBehaviour
 
                 if (health <= 0)
                 {
-                    if (resourceObject == ResourceType.Wood || resourceObject == ResourceType.CoarseWood || resourceObject == ResourceType.HardWood)
+                    if (ReturnWood())
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.TreeBreakingSound);
                     }
-                    else if (resourceObject == ResourceType.Stone || resourceObject == ResourceType.MossyStone || resourceObject == ResourceType.SlateStone)
+                    else if (ReturnStone())
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound);
                     }
@@ -283,7 +284,7 @@ public class Building : MonoBehaviour
 
     public bool ReturnStone()
     {
-        return resourceObject == ResourceType.Stone || resourceObject == ResourceType.MossyStone || resourceObject == ResourceType.SlateStone;
+        return resourceObject == ResourceType.Stone || resourceObject == ResourceType.MossyStone || resourceObject == ResourceType.SlateStone || resourceObject == ResourceType.Bone;
     }
 
     private void Update()
