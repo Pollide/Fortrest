@@ -427,7 +427,7 @@ public class LevelManager : MonoBehaviour
 
         PlayerController.global.LanternSkinnedRenderer.materials = mats;
 
-        if (PlayerController.global.transform.position.y < -3 && PlayerController.global.playerHealth > 0)
+        if (!PlayerModeHandler.global.inTheFortress && PlayerController.global.transform.position.y < -3 && PlayerController.global.playerHealth > 0)
         {
             //   GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
             // GameManager.global.NextScene(1);
