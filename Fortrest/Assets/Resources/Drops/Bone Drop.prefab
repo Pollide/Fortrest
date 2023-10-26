@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 8196819728047928108}
   - component: {fileID: -63628865183272622}
   - component: {fileID: -8946152043099323548}
-  - component: {fileID: 1080893275397560294}
   - component: {fileID: -7771321479776677803}
+  - component: {fileID: 4598584457465302526}
   m_Layer: 0
-  m_Name: GiantsBone Drop
+  m_Name: Bone Drop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -64,21 +64,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.1
-  m_Center: {x: 0, y: 0.05, z: 0}
---- !u!64 &1080893275397560294
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8830191839845132694}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 5863799758854754480, guid: be65895f33dda2843ae6d0d81cdbe030, type: 3}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &-7771321479776677803
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -91,13 +77,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656cb4b3cd074594881b714cba5a30a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TierInt: 1
+  TierInt: 2
   resourceAmount: 1
-  stackable: 0
-  name: 
-  dragableItem: {fileID: 0}
   resourceObject: 
   CollectedBool: 0
+  stoneBool: 1
+  WoodBool: 0
+  foodBool: 0
+--- !u!65 &4598584457465302526
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8830191839845132694}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.13803446, y: 0.042490404, z: 0.048461597}
+  m_Center: {x: -0.03335231, y: 0.006680718, z: 0.0017051011}
 --- !u!1001 &291881759532164795
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -133,7 +132,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 1f385c3f924add14bb190f58f2cf81df,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0446
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1f385c3f924add14bb190f58f2cf81df,
         type: 3}

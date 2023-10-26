@@ -121,6 +121,12 @@ public class BossSpawner : MonoBehaviour
                 UpdateHealth();
 
                 LevelManager.global.dayPaused = open;
+
+                if (open && LevelManager.global.messageDisplayed)
+                {
+                    LevelManager.global.messageDisplayed = false;
+                    GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false, true);
+                }
             }
 
             bossEncountered = open;
