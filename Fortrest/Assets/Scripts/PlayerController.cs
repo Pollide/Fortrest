@@ -172,6 +172,7 @@ public class PlayerController : MonoBehaviour
     public GameObject turretTierOne;
     public GameObject turretTierTwo;
     public Image turretBoarderImage;
+    public Image biomeNameImage;
 
     // Death
     private float respawnTimer = 0.0f;
@@ -1142,7 +1143,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                LevelManager.global.currentMusic = null;
+                LevelManager.global.currentTerrainData = null;
             }
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.PauseMenuSound);
@@ -1170,7 +1171,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                LevelManager.global.currentMusic = null;
+                LevelManager.global.currentTerrainData = null;
             }
 
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
