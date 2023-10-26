@@ -15,6 +15,7 @@ public class BridgeBuilder : MonoBehaviour
     public Animator bridgeAnimator;
     bool canBuild;
 
+    public bool debugforcebuild;
 
     private void Start()
     {
@@ -103,8 +104,9 @@ public class BridgeBuilder : MonoBehaviour
 
             }
 
-            if (canBuild && triggered && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
+            if ((debugforcebuild || canBuild) && triggered && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
             {
+                debugforcebuild = false;
                 PlayerController.global.interactCTRL = false;
                 PlayerController.global.evading = false;
 

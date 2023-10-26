@@ -155,7 +155,6 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         newDay = true;
-        currentTerrainData = terrainDataList[0];
         VFXSlash.Stop();
         VFXSlashReversed.Stop();
         VFXSleeping.Stop();
@@ -283,8 +282,6 @@ public class LevelManager : MonoBehaviour
     public BossSpawner activeBossSpawner;
     public void SetGameMusic()
     {
-        AudioClip music = GameManager.global.GameMusic;
-
         TerrainData terrainData = currentTerrainData;
 
         if (activeBossSpawner)
@@ -297,26 +294,30 @@ public class LevelManager : MonoBehaviour
             // Debug.Log(raycastHit.transform);
             for (int i = 0; i < terrainDataList.Count; i++)
             {
-                terrainData = terrainDataList[i];
-
-                if (ReturnNight())
+                if (terrainDataList[i].terrain.transform == raycastHit.transform)
                 {
-                    terrainData = new TerrainData() { terrain = terrainDataList[i].terrain, welcomeSprite = terrainDataList[i].welcomeSprite, music = GameManager.global.NightMusic };
+                    terrainData = terrainDataList[i];
+
+                    if (ReturnNight())
+                    {
+                        terrainData = new TerrainData() { terrain = terrainDataList[i].terrain, welcomeSprite = terrainDataList[i].welcomeSprite, music = GameManager.global.NightMusic };
+                    }
+                    break;
                 }
-                break;
             }
         }
 
-        if (terrainData != currentTerrainData)
+        bool missing = currentTerrainData == null || !currentTerrainData.music;
+        if (missing || terrainData != currentTerrainData)
         {
             currentTerrainData = terrainData;
-            GameManager.global.MusicManager.PlayMusic(music);
+            GameManager.global.MusicManager.PlayMusic(terrainData.music);
 
-            if (currentTerrainData.welcomeSprite)
+            if (!missing && currentTerrainData.welcomeSprite)
             {
                 PlayerController.global.biomeNameImage.sprite = currentTerrainData.welcomeSprite;
                 GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Biome Name Appear");
-                GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
+                //GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
             }
         }
 
