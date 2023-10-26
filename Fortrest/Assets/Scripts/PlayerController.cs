@@ -719,7 +719,7 @@ public class PlayerController : MonoBehaviour
             healthBar.SetHealth(playerHealth, maxHealth);
             float difference = playerHealth - newHealth;
 
-            if (newHealth != 0 && difference != 0)
+            if (newHealth != 0 && difference != 0 && playerHealth < maxHealth)
                 GameManager.PlayAnimation(UIAnimation, difference > 0 ? "Health Flash Green" : "Health Flash");
 
             newHealth = playerHealth;
@@ -2016,9 +2016,9 @@ public class PlayerController : MonoBehaviour
         if (!playerRespawned)
         {
             respawnTimer += Time.deltaTime;
-            playerHealth += 10 * Time.deltaTime;
+            playerHealth += 12 * Time.deltaTime;
 
-            if (respawnTimer >= 15.0f)
+            if (playerHealth >= maxHealth)
             {
                 needInteraction = true;
                 if (!textAnimated)

@@ -663,10 +663,6 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.UpdateResourceHolder();
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
         }
-        else
-        {
-
-        }
     }
 
     public void SwitchToResourceMode()

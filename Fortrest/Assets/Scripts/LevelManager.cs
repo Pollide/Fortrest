@@ -280,6 +280,7 @@ public class LevelManager : MonoBehaviour
     }
 
     public BossSpawner activeBossSpawner;
+
     public void SetGameMusic()
     {
         TerrainData terrainData = currentTerrainData;
@@ -307,8 +308,8 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        bool missing = currentTerrainData == null || !currentTerrainData.terrain;
-        if (missing || terrainData != currentTerrainData)
+        bool missing = currentTerrainData == null || !currentTerrainData.music;
+        if (missing || terrainData != currentTerrainData && terrainData.music != currentTerrainData.music)
         {
             currentTerrainData = terrainData;
             GameManager.global.MusicManager.PlayMusic(terrainData.music);
@@ -426,12 +427,13 @@ public class LevelManager : MonoBehaviour
 
         PlayerController.global.LanternSkinnedRenderer.materials = mats;
 
-        if (PlayerController.global.transform.position.y < -3)
+        if (!PlayerModeHandler.global.inTheFortress && PlayerController.global.transform.position.y < -3 && PlayerController.global.playerHealth > 0)
         {
-            GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
-            GameManager.global.NextScene(1);
-            enabled = false;
-            return;
+            //   GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
+            // GameManager.global.NextScene(1);
+            PlayerController.global.TakeDamage(PlayerController.global.playerHealth);
+            // enabled = false;
+            // return;
         }
 
 
