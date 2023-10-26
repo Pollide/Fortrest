@@ -314,7 +314,7 @@ public class SpiderBoss : MonoBehaviour
         switch (stage)
         {
             case 1:
-                bossSpawner.bossAnimator.SetTrigger("PoisonAttack");
+                bossSpawner.bossAnimator.SetTrigger("JumpAttack");
                 break;
             case 2:
                 if (distanceToPlayer < webAttackRange)
