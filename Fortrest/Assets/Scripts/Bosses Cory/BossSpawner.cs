@@ -103,13 +103,14 @@ public class BossSpawner : MonoBehaviour
     public void BossEncountered(bool open)
     {
 
-        if (bossAwakened)
+        if (bossAwakened && enabled)
         {
             if (bossEncountered != open)
             {
                 if (health <= 0)
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
+                    enabled = false;
                 }
                 else
                 {

@@ -307,7 +307,7 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        bool missing = currentTerrainData == null || !currentTerrainData.music;
+        bool missing = currentTerrainData == null || !currentTerrainData.terrain;
         if (missing || terrainData != currentTerrainData)
         {
             currentTerrainData = terrainData;
