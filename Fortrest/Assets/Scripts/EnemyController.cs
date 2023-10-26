@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
     private NavMeshAgent agent; // Nav mesh agent component
     public bool debugingoredamage;
     // Transforms
-    private Transform bestTarget; // Target that the enemy will go towards
+    public Transform bestTarget; // Target that the enemy will go towards
     private Transform playerPosition;
     public GameObject house;
 
@@ -49,7 +49,6 @@ public class EnemyController : MonoBehaviour
     public PhaseOneLycan bossScriptOne;
     public PhaseTwoLycan bossScriptTwo;
 
-
     // Others
     public Animator ActiveAnimator;
     [HideInInspector] public KnockBack knockBackScript;
@@ -59,7 +58,8 @@ public class EnemyController : MonoBehaviour
         goblin = 1,
         spider,
         wolf,
-        ogre
+        ogre,
+        snake
     };
     public ENEMYTYPE currentEnemyType;
 
@@ -153,6 +153,19 @@ public class EnemyController : MonoBehaviour
             MakeNoise();
             Process();
             ResetAttack();
+            if (currentEnemyType == ENEMYTYPE.snake)
+            {
+                if (ActiveAnimator.GetBool("Moving") == true)
+                {
+                    GetComponentInChildren<BoxCollider>().size = new Vector3(11f, 6f, 7f);
+                    GetComponentInChildren<BoxCollider>().center = new Vector3(1.5f, 3f, 0f);
+                }
+                else
+                {
+                    GetComponentInChildren<BoxCollider>().size = new Vector3(5.5f, 6f, 5.5f);
+                    GetComponentInChildren<BoxCollider>().center = new Vector3(-1.5f, 3f, 1.5f);
+                }
+            }
         }
 
         if (PlayerController.global.upgradedMelee && !knockbackIncreased)
@@ -276,6 +289,13 @@ public class EnemyController : MonoBehaviour
                     chasing = false;
                     chaseTimer = 0;
                 }
+            }
+        }
+        if (currentEnemyType == ENEMYTYPE.snake)
+        {
+            if (bestTarget == null)
+            {
+                bestTarget = playerPosition;
             }
         }
 
@@ -534,7 +554,7 @@ public class EnemyController : MonoBehaviour
 
                 PickSound(hitSound, hitSound2, 1.0f);
 
-                if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin && !flashing) // remove goblin once we have the anim
+                if (currentEnemyType == ENEMYTYPE.wolf || currentEnemyType == ENEMYTYPE.spider && !flashing) // remove goblin once we have the anim
                 {
                     ActiveAnimator.ResetTrigger("Hit1");
                     ActiveAnimator.ResetTrigger("Hit2");
@@ -657,6 +677,18 @@ public class EnemyController : MonoBehaviour
             enemyDamage = 10.0f;
             knockBackScript.strength = 0.0f;
         }
+        else if (currentEnemyType == ENEMYTYPE.snake)
+        {
+            agent.speed = 5.0f;
+            agent.acceleration = 50.0f;
+            agent.angularSpeed = 150.0f;
+            maxHealth = 3.5f;
+            attackTimerMax = 3.0f;
+            agent.stoppingDistance = 2.5f;
+            offset = 0.5f;
+            enemyDamage = 5.0f;
+            knockBackScript.strength = 60.0f;
+        }
         health = maxHealth;
         health = maxHealth;
         speed = agent.speed;
@@ -715,6 +747,11 @@ public class EnemyController : MonoBehaviour
                 }
                 building.TakeDamage(1f);
             }
+        }
+
+        if (currentEnemyType == ENEMYTYPE.snake)
+        {
+            ActiveAnimator.SetTrigger("EndAttack");
         }
     }
 
