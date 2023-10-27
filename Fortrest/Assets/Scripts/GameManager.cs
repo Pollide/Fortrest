@@ -138,6 +138,10 @@ public class GameManager : MonoBehaviour
 
     public AudioClip ChestOpenSound;
 
+    [Header("Cutscene")]
+    public AudioClip BossRoarSound;
+    public AudioClip CutsceneChattingOutside;
+
     private Vector3 lastMousePosition;
     public bool CheatInfiniteBuilding;
 

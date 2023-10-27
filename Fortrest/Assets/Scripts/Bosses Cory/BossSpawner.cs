@@ -45,6 +45,7 @@ public class BossSpawner : MonoBehaviour
     public bool introCompleted = false;
     [SerializeField] private GameObject introCard;
     public Animator bossAnimator;
+    public bool cutsceneMode;
 
     public void Awake()
     {
@@ -180,7 +181,7 @@ public class BossSpawner : MonoBehaviour
                 }
 
             }
-            else
+            else if (!cutsceneMode)
             {
                 if (escapeByDistance || !introCompleted)
                     BossEncountered(true);
@@ -231,7 +232,7 @@ public class BossSpawner : MonoBehaviour
         introTimer = 0;
         introCompleted = false;
 
-        if (bossAnimator.enabled)
+        if (bossAnimator.gameObject.activeSelf && bossAnimator.enabled)
         {
             bossAnimator.Rebind();
             bossAnimator.Update(0f);
@@ -240,7 +241,7 @@ public class BossSpawner : MonoBehaviour
 
     public bool CheckPlayerDistance()
     {
-        return health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (bossAwakened ? Arenasize : 20);
+        return (cutsceneMode || health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (bossAwakened ? Arenasize : 20));
     }
 
     private void OnDrawGizmosSelected()

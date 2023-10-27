@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -151,6 +152,7 @@ public class LevelManager : MonoBehaviour
     public bool wolfSpawnable;
     public bool lavaSpawnable;
 
+    public List<Transform> cutsceneCameraLocations = new List<Transform>();
 
     private void Awake()
     {
@@ -194,6 +196,117 @@ public class LevelManager : MonoBehaviour
         */
 
         enemyThreshold = 0.0f;
+
+        if (PlayerPrefs.GetInt("Prologue") == 0)
+        {
+            StartCoroutine(PrologueCutscene());
+        }
+    }
+
+    IEnumerator PrologueCutscene()
+    {
+        PlayerController.global.gameObject.SetActive(false);
+        PlayerController.global.UIAnimation.gameObject.SetActive(false);
+        Indicator.global.GetComponent<Canvas>().enabled = false;
+
+        SceneCamera.orthographic = false;
+        SceneCamera.fieldOfView = 60;
+
+        CameraFollow.global.bossCam = true;
+        SFXManager.SFXData sFXData = GameManager.global.SoundManager.PlaySound(GameManager.global.CutsceneChattingOutside, 1, false);
+
+        CutsceneSet(SceneCamera.transform, 0);
+
+        while (Vector3.Distance(SceneCamera.transform.position, cutsceneCameraLocations[1].position) > 0.5f)
+        {
+            SceneCamera.transform.position = Vector3.Slerp(SceneCamera.transform.position, cutsceneCameraLocations[1].position, 0.6f * Time.deltaTime);
+            yield return 0;
+        }
+
+        float timer = 0;
+
+        yield return new WaitForSeconds(2);
+
+        ScreenShake.global.ShakeScreen(0.5f);
+
+        GameManager.global.SoundManager.StopSelectedSound(sFXData.Audio.clip);
+
+        yield return new WaitForSeconds(1);
+
+        while (timer < 2)
+        {
+            SceneCamera.transform.rotation = Quaternion.Slerp(SceneCamera.transform.rotation, cutsceneCameraLocations[2].transform.rotation, 0.5f * Time.deltaTime);
+            timer += Time.deltaTime;
+            yield return 0;
+        }
+
+        ScreenShake.global.ShakeScreen(1);
+
+
+        for (int i = 0; i < bossList.Count; i++)
+        {
+            if (bossList[i].bossType == BossSpawner.TYPE.IsleMaker)
+            {
+                CutsceneSet(bossList[i].transform, 3);
+
+                while (Vector3.Distance(bossList[i].transform.position, cutsceneCameraLocations[4].position) > 1)
+                {
+                    activeBossSpawner = bossList[i]; //so the music changes
+                    bossList[i].transform.position = Vector3.Slerp(bossList[i].transform.position, cutsceneCameraLocations[4].position, 2 * Time.deltaTime);
+                    yield return 0;
+                }
+
+                break;
+            }
+        }
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BossRoarSound, 1, false);
+
+        yield return new WaitForSeconds(1);
+
+        for (int i = 0; i < bossList.Count; i++)
+        {
+            if (bossList[i].gameObject.activeInHierarchy && bossList[i].bossType != BossSpawner.TYPE.IsleMaker)
+            {
+                if (bossList[i].GetComponent<UnityEngine.AI.NavMeshAgent>())
+                    bossList[i].GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+                bossList[i].cutsceneMode = true;
+                timer = 0;
+                if (bossList[i].bossType == BossSpawner.TYPE.Hrafn)
+                {
+                    bossList[i].GetComponent<BirdBoss>().enabled = false;
+                }
+
+                for (int j = 0; j < cutsceneCameraLocations.Count; j++)
+                {
+                    if (cutsceneCameraLocations[j].name.Contains(bossList[i].bossType.ToString()))
+                    {
+                        CutsceneSet(bossList[i].transform, j);
+                        bossList[i].transform.position -= new Vector3(0, 3, 0);
+
+                        while (timer < 2)
+                        {
+                            bossList[i].transform.position = Vector3.Slerp(bossList[i].transform.position, cutsceneCameraLocations[j].position, 2 * Time.deltaTime);
+                            timer += Time.deltaTime;
+                            yield return 0;
+                        }
+
+                        yield return new WaitForSeconds(1);
+                        break;
+                    }
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(1);
+
+        PlayerPrefs.SetInt("Prologue", 1);
+        GameManager.global.NextScene(1);
+    }
+
+    void CutsceneSet(Transform move, int number)
+    {
+        move.position = cutsceneCameraLocations[number].position;
+        move.rotation = cutsceneCameraLocations[number].rotation;
     }
 
     private void GetHousePosition()
