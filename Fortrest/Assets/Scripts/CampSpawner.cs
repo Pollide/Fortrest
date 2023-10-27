@@ -130,6 +130,7 @@ public class CampSpawner : MonoBehaviour
                             }
                         }
                         GameObject camp = Instantiate(campPrefab, spawnPosition, Quaternion.identity);
+                        Debug.Log("Camp Spawned Total " + LevelManager.global.campsCount);
                         spawnCamp = true;
                     }
                 }
