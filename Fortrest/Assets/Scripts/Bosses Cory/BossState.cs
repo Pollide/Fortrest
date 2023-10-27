@@ -21,12 +21,15 @@ public abstract class BossState : MonoBehaviour
         // Grabs the NavMeshAgent
         agent = GetComponent<NavMeshAgent>();
         initialSpawn = transform.position;
-        
+
     }
 
     // Sets agent destination and stopping distance
     protected void WalkTo(Vector3 targetPos, float stoppingDist)
     {
+        if (!agent.enabled)
+            return;
+
         if (agent.stoppingDistance != stoppingDist)
         {
             agent.stoppingDistance = stoppingDist;
@@ -68,18 +71,18 @@ public abstract class BossState : MonoBehaviour
 
     // Run when entering the state
     public abstract void EnterState();
-    
+
     // Run during the update stage
     public abstract void UpdateState();
-    
+
     // Run on exit to do cleanup
     public abstract void ExitState();
 
     public Transform PlayerTransform
     {
         get { return playerTransform; }
-    } 
-    
+    }
+
     public Vector3 InitialSpawn
     {
         get { return initialSpawn; }

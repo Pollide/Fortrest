@@ -32,7 +32,7 @@ public class Creature : MonoBehaviour
     {
         //  mesh.material = currentMat[(int)rabitType];
 
-        if (Physics.Raycast(transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+        if (LevelManager.global && Physics.Raycast(transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
             for (int i = 0; i < LevelManager.global.terrainDataList.Count; i++)
             {
