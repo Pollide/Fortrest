@@ -38,7 +38,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (!bossCam)
         {
-            FocusOnTarget(PlayerController.global.transform.position + (transform.up - transform.forward * 5) * 10, initialRotation);
+            FocusOnTarget(PlayerController.global.transform.position , initialRotation);
         }
     }
 
