@@ -46,7 +46,7 @@ public class Indicator : MonoBehaviour
         public bool topBool;
         public bool bottomBool;
         public bool isOutsideCanvas;
-
+        public Terrain onTerrain;
         public float ignoreX;
         public float ignoreY;
         public void Refresh()
@@ -149,7 +149,7 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            bool active = (Permenant || distance < 240) && !closeBool;
+            bool active = (Permenant || !onTerrain && distance < 200 || (onTerrain == LevelManager.global.currentTerrainData.terrain)) && !closeBool;
 
             if (active != AppearBool)
             {
@@ -274,6 +274,16 @@ public class Indicator : MonoBehaviour
         indicatorData.MainData.CustomImageLocalPosition = indicatorData.MainData.CustomImage.transform.localPosition;
 
         IndicatorList.Add(indicatorData);
+
+        if (Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+        {
+            indicatorData.onTerrain = raycastHit.transform.GetComponent<Terrain>();
+
+            if (!indicatorData.onTerrain)
+            {
+                Debug.Log(raycastHit.transform);
+            }
+        }
 
         if (!permenant || customSprite)
         {

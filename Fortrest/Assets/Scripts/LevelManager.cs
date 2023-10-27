@@ -302,7 +302,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Default", "Terrain" }));
+            Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" }));
             // Debug.Log(raycastHit.transform);
             for (int i = 0; i < terrainDataList.Count; i++)
             {
@@ -393,6 +393,7 @@ public class LevelManager : MonoBehaviour
         light.color = SunriseGradient.Evaluate(evaluate);
         SceneCamera.backgroundColor = SkyboxGradient.Evaluate(evaluate);
         RenderSettings.ambientLight = AmbientGradient.Evaluate(evaluate);
+        RenderSettings.skybox.SetColor("_Tint", SkyboxGradient.Evaluate(evaluate));
 
         if (daylightTimer > cycle)
         {
@@ -442,6 +443,11 @@ public class LevelManager : MonoBehaviour
         {
             //   GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
             // GameManager.global.NextScene(1);
+            if (Boar.global.mounted)
+            {
+                Boar.global.Mount();
+                Boar.global.transform.position = Boar.global.respawnLocation;
+            }
             PlayerController.global.TakeDamage(PlayerController.global.playerHealth);
             // enabled = false;
             // return;
@@ -726,11 +732,11 @@ public class LevelManager : MonoBehaviour
                         }
 
                         enemySpawnPosition.y = 0; //everything is at ground zero                   
-                        
+
                         if (prefab != null)
                         {
                             GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
-                        } 
+                        }
                     }
                     enemiesCount -= randomRange;
                     enemyTimer = 0;

@@ -537,6 +537,11 @@ public class GameManager : MonoBehaviour
 
         yield return 0; //gives a frame for sfx to load
 
+        for (int i = 0; i < SoundManager.SFXList.Count; i++)
+        {
+            SoundManager.StopSelectedSound(SoundManager.SFXList[i].Audio.clip);
+        }
+
         //switches between music
         if (GameManager.global)
             GameManager.global.MusicManager.PlayMusic(index == 0 ? GameManager.global.MenuMusic : GameManager.global.GameMusic);
