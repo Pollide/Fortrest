@@ -166,6 +166,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        RenderSettings.skybox = new Material(RenderSettings.skybox);
+
         newDay = true;
         VFXSlash.Stop();
         VFXSlashReversed.Stop();
