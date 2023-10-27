@@ -180,9 +180,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d92cc58772ef7a6418b5b9fb8d539f6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rabitType: 0
   navMeshAgent: {fileID: 2099766879863536529}
   animator: {fileID: 3689174479844001952}
   DeathVFX: {fileID: 1060874133762554960}
+  currentMat:
+  - {fileID: 2100000, guid: a7b83db934c27c348ba58f10fb732e83, type: 2}
+  - {fileID: 2100000, guid: 092d8e1dfdb2fa9428b7e3e624da358c, type: 2}
+  - {fileID: 2100000, guid: 716b70db87e766148aec7f12c0239a75, type: 2}
+  - {fileID: 2100000, guid: c2c8faa308702074982798a64a53aeb8, type: 2}
+  - {fileID: 2100000, guid: 3c59fad4aed9b39478ffdcedda94298a, type: 2}
+  mesh: {fileID: 7256777560772345610}
 --- !u!65 &5949725048576113023
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -384,6 +392,12 @@ Animator:
 --- !u!4 &4396164624381700362 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 94de308b87c4ae54e9d53c5a157a219c,
+    type: 3}
+  m_PrefabInstance: {fileID: 4217877316242869985}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &7256777560772345610 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6790770370267443691, guid: 94de308b87c4ae54e9d53c5a157a219c,
     type: 3}
   m_PrefabInstance: {fileID: 4217877316242869985}
   m_PrefabAsset: {fileID: 0}
