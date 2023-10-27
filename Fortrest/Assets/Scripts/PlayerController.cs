@@ -1195,7 +1195,7 @@ public class PlayerController : MonoBehaviour
     {
         MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
 
-        float speed = 2.5f * Time.unscaledDeltaTime;
+        float speed = 10f * Time.unscaledDeltaTime;
 
         if (GameManager.global.KeyboardBool)
         {
