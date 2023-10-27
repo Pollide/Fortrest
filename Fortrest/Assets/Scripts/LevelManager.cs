@@ -121,6 +121,10 @@ public class LevelManager : MonoBehaviour
         public Terrain terrain;
         public Sprite welcomeSprite;
         public AudioClip music;
+        public Material rabbitMaterial;
+
+        public string indictorName;
+        public Color indicatorColor;
     }
 
     public enum SPAWNLANE
