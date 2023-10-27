@@ -87,7 +87,6 @@ public class LevelManager : MonoBehaviour
     public GameObject snakePrefab;
     public GameObject wolfPrefab;
     public GameObject lavaPrefab;
-    public GameObject HUD;
 
     [HideInInspector]
     public bool newDay = false;
@@ -108,6 +107,9 @@ public class LevelManager : MonoBehaviour
         public Sprite welcomeSprite;
         public AudioClip music;
         public Material rabbitMaterial;
+
+        public string indictorName;
+        public Color indicatorColor;
     }
 
     public enum SPAWNLANE
@@ -166,7 +168,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        RenderSettings.skybox = new Material(RenderSettings.skybox);
+        RenderSettings.skybox = new Material(RenderSettings.skybox); //stops it changing in git
 
         newDay = true;
         VFXSlash.Stop();
@@ -330,6 +332,7 @@ public class LevelManager : MonoBehaviour
 
             if (!missing && currentTerrainData.welcomeSprite)
             {
+                PlayerController.global.biomeNameImage.color = currentTerrainData.indicatorColor;
                 PlayerController.global.biomeNameImage.sprite = currentTerrainData.welcomeSprite;
                 GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Biome Name Appear");
                 //GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);

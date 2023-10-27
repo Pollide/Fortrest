@@ -110,6 +110,12 @@ public class BossSpawner : MonoBehaviour
                 if (health <= 0)
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
+
+
+                    for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
+                    {
+                        LevelManager.global.bridgeList[i].CheckIndicators();
+                    }
                     enabled = false;
                 }
                 else
@@ -119,7 +125,7 @@ public class BossSpawner : MonoBehaviour
 
                 LevelManager.global.activeBossSpawner = open ? this : null;
                 UpdateHealth();
-
+                Indicator.global.GetComponent<Canvas>().enabled = !open;
                 LevelManager.global.dayPaused = open;
 
                 if (open && LevelManager.global.messageDisplayed)
@@ -203,8 +209,7 @@ public class BossSpawner : MonoBehaviour
 
 
                     PlayerController.global.playerCanMove = introCompleted;
-                    Indicator.global.GetComponent<Canvas>().enabled = introCompleted;
-                    LevelManager.global.HUD.SetActive(introCompleted);
+                    PlayerController.global.HUDGameObject.SetActive(introCompleted);
                 }
             }
         }

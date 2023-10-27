@@ -160,10 +160,7 @@ public class PlayerController : MonoBehaviour
     public TMP_Text turretText;
 
     public Buttons pauseButtons;
-
-    // Inventory
     public GameObject DarkenGameObject;
-    public GameObject InventoryHolder;
     public GameObject MiniTurretUI;
 
     // Pause
@@ -173,7 +170,10 @@ public class PlayerController : MonoBehaviour
     public GameObject turretTierTwo;
     public Image turretBoarderImage;
     public Image biomeNameImage;
-
+    public Image controllerImage;
+    public Sprite controllerSprite;
+    public Sprite keyboardSprite;
+    public GameObject HUDGameObject;
     // Death
     private float respawnTimer = 0.0f;
     private bool textAnimated = false;
@@ -1137,7 +1137,7 @@ public class PlayerController : MonoBehaviour
                 GameManager.PlayAnimation(GameManager.global.GetComponent<Animation>(), "Load Out", true, true);
 
             PauseCanvasGameObject.SetActive(pause);
-
+            controllerImage.sprite = GameManager.global.KeyboardBool ? keyboardSprite : controllerSprite;
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             if (pause)
             {
