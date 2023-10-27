@@ -1,12 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.EventSystems;
-using UnityEngine.VFX;
-using TMPro;
 using UnityEngine.UI;
-using System.Linq;
+using UnityEngine.VFX;
 
 public class LevelManager : MonoBehaviour
 {
@@ -26,6 +22,7 @@ public class LevelManager : MonoBehaviour
     public static LevelManager global;
     public Camera SceneCamera;
     public GameObject PlayerPrefab;
+    public GameObject mountPrefab;
     public float PanSpeed = 20f;
     public float ZoomSpeedTouch = 0.1f;
     public float ZoomSpeedMouse = 0.5f;
@@ -82,11 +79,14 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector]
     public float enemyThreshold;
-
+    [Header("Enemy Prefabs")]
+    [Space]
     public GameObject goblinPrefab;
     public GameObject ogrePrefab;
     public GameObject spiderPrefab;
-    public GameObject mountPrefab;
+    public GameObject snakePrefab;
+    public GameObject wolfPrefab;
+    public GameObject lavaPrefab;
     public GameObject HUD;
 
     [HideInInspector]
@@ -120,6 +120,8 @@ public class LevelManager : MonoBehaviour
 
     public int campsCount;
     public int enemiesCount;
+    public int ogreDayCount = 3;
+    private int ogreSpawnCounter = 1;
     public bool spawnEnemies;
     private bool nightAttack;
     public float randomAttackTrigger;
@@ -137,6 +139,15 @@ public class LevelManager : MonoBehaviour
     AnimationState enemyIncomingState;
     [HideInInspector]
     public bool messageDisplayed;
+
+    [Header("Enemies Spawnable")]
+    [Space]
+    public bool goblinSpawnable;
+    public bool snakeSpawnable;
+    public bool spiderSpawnable;
+    public bool wolfSpawnable;
+    public bool lavaSpawnable;
+
 
     private void Awake()
     {
@@ -676,6 +687,7 @@ public class LevelManager : MonoBehaviour
                 // Group of enemies
                 if (randomInt == 1 && enemiesCount > 3)
                 {
+                    int ogresSpawned = 0;
                     int randomRange = Random.Range(2, 5);
 
                     for (int i = 0; i < randomRange; i++)
@@ -683,22 +695,47 @@ public class LevelManager : MonoBehaviour
                         enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
                         enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
 
-                        GameObject prefab = goblinPrefab;
+                        GameObject prefab = null;
 
-                        if (day > 1 && Random.Range(0, 3) == 0)
+                        if (goblinSpawnable)
+                        {
+                            prefab = goblinPrefab;
+                        }
+                        if (snakeSpawnable && Random.Range(0, 3) == 0)
+                        {
+                            prefab = snakePrefab;
+                        }
+                        if (spiderSpawnable && Random.Range(0, 4) == 0)
                         {
                             prefab = spiderPrefab;
                         }
-
-                        if (day > 2 && Random.Range(0, 7) == 0 && !ogreSpawned)
+                        if (wolfSpawnable && Random.Range(0, 5) == 0)
+                        {
+                            prefab = wolfPrefab;
+                        }
+                        if (lavaSpawnable && Random.Range(0, 6) == 0)
+                        {
+                            prefab = lavaPrefab;
+                        }
+                        if (day % ogreDayCount == 0 && Random.Range(0, 7) == 0 && !ogreSpawned)
                         {
                             prefab = ogrePrefab;
-                            ogreSpawned = true;
+
+                            ogresSpawned++;
+
+                            if (ogresSpawned == ogreSpawnCounter)
+                            {
+                                ogreSpawnCounter++;
+                                ogreSpawned = true;
+                            }
                         }
 
                         enemySpawnPosition.y = 0; //everything is at ground zero                   
-
-                        GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
+                        
+                        if (prefab != null)
+                        {
+                            GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
+                        } 
                     }
                     enemiesCount -= randomRange;
                     enemyTimer = 0;
@@ -711,17 +748,41 @@ public class LevelManager : MonoBehaviour
                     enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
                     enemySpawnPosition.y = 0; //everything is at ground zero        
 
+                    int ogresSpawned = 0;
+
                     GameObject prefab = goblinPrefab;
 
-                    if (day > 1 && Random.Range(0, 3) == 0)
+                    if (goblinSpawnable)
+                    {
+                        prefab = goblinPrefab;
+                    }
+                    if (snakeSpawnable && Random.Range(0, 3) == 0)
+                    {
+                        prefab = snakePrefab;
+                    }
+                    if (spiderSpawnable && Random.Range(0, 4) == 0)
                     {
                         prefab = spiderPrefab;
                     }
-
-                    if (day > 2 && Random.Range(0, 7) == 0 && !ogreSpawned)
+                    if (wolfSpawnable && Random.Range(0, 5) == 0)
+                    {
+                        prefab = wolfPrefab;
+                    }
+                    if (lavaSpawnable && Random.Range(0, 6) == 0)
+                    {
+                        prefab = lavaPrefab;
+                    }
+                    if (day % ogreDayCount == 0 && Random.Range(0, 7) == 0 && !ogreSpawned)
                     {
                         prefab = ogrePrefab;
-                        ogreSpawned = true;
+
+                        ogresSpawned++;
+
+                        if (ogresSpawned == ogreSpawnCounter)
+                        {
+                            ogreSpawnCounter++;
+                            ogreSpawned = true;
+                        }
                     }
 
                     GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
