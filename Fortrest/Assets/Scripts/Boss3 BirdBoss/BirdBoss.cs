@@ -68,8 +68,8 @@ public class BirdBoss : MonoBehaviour
             bossSpawner.bossAnimator.SetBool("Attack1", false);
             bossSpawner.bossAnimator.SetBool("Attack2", false);
             bossSpawner.bossAnimator.SetBool("Attack3", false);
-            bossSpawner.bossAnimator.SetBool("Flying", false);
-            flying = false;
+            // bossSpawner.bossAnimator.SetBool("Flying", false);
+            //   flying = false;
             MoveToTarget(initialPosition, initialDirection);
         }
         else
