@@ -754,7 +754,7 @@ public class LevelManager : MonoBehaviour
 
                     int ogresSpawned = 0;
 
-                    GameObject prefab = goblinPrefab;
+                    GameObject prefab = null;
 
                     if (goblinSpawnable)
                     {
