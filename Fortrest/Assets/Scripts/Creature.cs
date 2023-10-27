@@ -5,12 +5,30 @@ using UnityEngine.AI;
 
 public class Creature : MonoBehaviour
 {
+    enum MatType
+    {
+        White,
+        Brown,
+        Black,
+        Cream,
+        Grey
+    }
+
+    [SerializeField] private MatType rabitType;
+
     public NavMeshAgent navMeshAgent;
     public Animator animator;
     // Update is called once per frame
     public GameObject DeathVFX;
     float idleThreshold;
     float idleTimer;
+    [SerializeField] private Material[] currentMat;
+    [SerializeField] private SkinnedMeshRenderer mesh;
+
+    private void Start()
+    {
+        mesh.material = currentMat[(int)rabitType];
+    }
 
     void Update()
     {
