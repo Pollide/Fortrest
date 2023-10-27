@@ -107,6 +107,7 @@ public class LevelManager : MonoBehaviour
         public Terrain terrain;
         public Sprite welcomeSprite;
         public AudioClip music;
+        public Material rabbitMaterial;
     }
 
     public enum SPAWNLANE
@@ -165,6 +166,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        RenderSettings.skybox = new Material(RenderSettings.skybox);
+
         newDay = true;
         VFXSlash.Stop();
         VFXSlashReversed.Stop();

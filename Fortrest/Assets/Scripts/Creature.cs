@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 public class Creature : MonoBehaviour
 {
+    /* up to you if you want to use bring this back, its nice code
     enum MatType
     {
         White,
@@ -14,7 +15,9 @@ public class Creature : MonoBehaviour
         Grey
     }
 
-    [SerializeField] private MatType rabitType;
+    // [SerializeField] private MatType rabitType;
+    // [SerializeField] private Material[] currentMat;
+       */
 
     public NavMeshAgent navMeshAgent;
     public Animator animator;
@@ -22,12 +25,23 @@ public class Creature : MonoBehaviour
     public GameObject DeathVFX;
     float idleThreshold;
     float idleTimer;
-    [SerializeField] private Material[] currentMat;
+
     [SerializeField] private SkinnedMeshRenderer mesh;
 
     private void Start()
     {
-        mesh.material = currentMat[(int)rabitType];
+        //  mesh.material = currentMat[(int)rabitType];
+
+        if (Physics.Raycast(transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+        {
+            for (int i = 0; i < LevelManager.global.terrainDataList.Count; i++)
+            {
+                if (LevelManager.global.terrainDataList[i].terrain && LevelManager.global.terrainDataList[i].terrain.transform == raycastHit.transform)
+                {
+                    mesh.material = LevelManager.global.terrainDataList[i].rabbitMaterial;
+                }
+            }
+        }
     }
 
     void Update()
