@@ -60,8 +60,9 @@ public class CampSpawner : MonoBehaviour
 
             Debug.Log(randomTime);
 
-            if (LevelManager.global.daylightTimer > randomTime && LevelManager.global.daylightTimer < randomTime + 1.0f && !onlyOnce)
+            if (LevelManager.global.daylightTimer > randomTime && !onlyOnce)
             {
+                Debug.Log("ready");
                 onlyOnce = true;
                 spawnCamp = false;
             }
@@ -91,9 +92,11 @@ public class CampSpawner : MonoBehaviour
 
                 float distance = Vector3.Distance(PlayerController.global.transform.position, spawnPosition);
 
+                Debug.Log("work");
+
                 if (distance > 40.0f)
                 {
-
+                    Debug.Log("work1");
 
                     //Define the positions for the four raycasts
                     Vector3[] raycastPositions = new Vector3[4];
