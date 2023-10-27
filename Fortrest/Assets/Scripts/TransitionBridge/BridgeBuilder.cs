@@ -41,7 +41,7 @@ public class BridgeBuilder : MonoBehaviour
 
             if (LevelManager.global.bossList[i].health <= 0)
             {
-                if (BridgeTypeInt == 1 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Chieftain)
+                if (BridgeTypeInt == 4 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Chieftain)
                 {
                     canBuild = true;
                     break;
@@ -120,22 +120,27 @@ public class BridgeBuilder : MonoBehaviour
                     if (BridgeTypeInt == 1)
                     {
                         LevelManager.global.goblinSpawnable = true;
+                        LevelManager.global.spawnEntries.Add(LevelManager.global.goblin);
                     }
                     if (BridgeTypeInt == 2)
                     {
                         LevelManager.global.snakeSpawnable = true;
+                        LevelManager.global.spawnEntries.Add(LevelManager.global.snake);
                     }
                     if (BridgeTypeInt == 3)
                     {
                         LevelManager.global.wolfSpawnable = true;
+                        LevelManager.global.spawnEntries.Add(LevelManager.global.wolf);
                     }
                     if (BridgeTypeInt == 4)
                     {
                         LevelManager.global.spiderSpawnable = true;
+                        LevelManager.global.spawnEntries.Add(LevelManager.global.spider);
                     }
                     if (BridgeTypeInt == 5)
                     {
                         LevelManager.global.lavaSpawnable = true;
+                        LevelManager.global.spawnEntries.Add(LevelManager.global.lava);
                     }
                 }
                 else

@@ -5,6 +5,8 @@ using TMPro;
 
 public class CampSpawner : MonoBehaviour
 {
+    public static CampSpawner global;
+
     private int currentDay;
     private bool setTime = true;
     private bool spawnCamp = true;
@@ -18,9 +20,17 @@ public class CampSpawner : MonoBehaviour
     public GameObject campUI;
     public TMP_Text campText;
     int lastAmount;
+    int campInt;
+
+    public float goblinCampPercent = 2;
+    public float snakegoblinCampPercent = 2;
+    public float spidergoblinCampPercent = 2;
+    public float wolfgoblinCampPercents = 2;
+    public float lavagoblinCampPercent = 2;
 
     private void Start()
     {
+        global = this;
         currentDay = LevelManager.global.day;
         lastAmount = 0;
     }
@@ -58,10 +68,8 @@ public class CampSpawner : MonoBehaviour
                 onlyOnce = false;
             }
 
-
             if (LevelManager.global.daylightTimer > randomTime && !onlyOnce)
             {
-                Debug.Log("ready");
                 onlyOnce = true;
                 spawnCamp = false;
             }
@@ -72,35 +80,56 @@ public class CampSpawner : MonoBehaviour
                 spawnCamp = false;
             }
 #endif
+            LevelManager manager = LevelManager.global;
 
-            if (!spawnCamp)
+            if (!spawnCamp && manager.goblinSpawnable)
             {
-                Terrain terrain = LevelManager.global.terrainDataList[0].terrain;
+                Terrain terrain = LevelManager.global.terrainDataList[1].terrain;
+                campInt = 1;
+
+                if (manager.snakeSpawnable)
+                {
+                    int rand = Random.Range(1, 3);
+                    campInt = rand;
+                    terrain = LevelManager.global.terrainDataList[rand].terrain;
+                }
+
+                if (manager.spiderSpawnable)
+                {
+                    int rand = Random.Range(1, 4);
+                    campInt = rand;
+                    terrain = LevelManager.global.terrainDataList[rand].terrain;
+                }
+
+                if (manager.wolfSpawnable)
+                {
+                    int rand = Random.Range(1, 5);
+                    campInt = rand;
+                    terrain = LevelManager.global.terrainDataList[rand].terrain;
+                }
+
+                if (manager.lavaSpawnable)
+                {
+                    int rand = Random.Range(1, 6);
+                    campInt = rand;
+                    terrain = LevelManager.global.terrainDataList[rand].terrain;
+                }
+
+
                 spawnPosition.x = terrain.transform.position.x + Random.Range(edge, terrain.terrainData.size.x - edge);
 
-                if (spawnPosition.x >= buildZone)
-                {
-                    spawnPosition.z = terrain.transform.position.z + Random.Range(edge, terrain.terrainData.size.z - edge);
-                }
-                else
-                {
-                    spawnPosition.z = terrain.transform.position.z + Random.Range(buildZone, terrain.terrainData.size.z - edge);
-                }
-
-                spawnPosition.y = mesh.bounds.size.y / 2.0f;
+                spawnPosition.z = terrain.transform.position.z + Random.Range(edge, terrain.terrainData.size.z - edge);
+             
+                spawnPosition.y = (mesh.bounds.size.y / 2.0f) - 3;
 
                 float distance = Vector3.Distance(PlayerController.global.transform.position, spawnPosition);
 
-                Debug.Log("work");
-
                 if (distance > 40.0f)
                 {
-                    Debug.Log("work1");
-
                     //Define the positions for the four raycasts
                     Vector3[] raycastPositions = new Vector3[4];
                     raycastPositions[0] = spawnPosition;
-                    float size = 5;
+                    float size = 2;
                     raycastPositions[1] = spawnPosition + new Vector3(size, 0f, 0f); // Shift in positive X direction
                     raycastPositions[2] = spawnPosition - new Vector3(size, 0f, 0f); // Shift in negative X direction
                     raycastPositions[3] = spawnPosition + new Vector3(0f, 0f, size); // Shift in positive Z direction
@@ -110,10 +139,9 @@ public class CampSpawner : MonoBehaviour
 
                     foreach (Vector3 position in raycastPositions)
                     {
-                        if (!Physics.Raycast(position, Vector3.down, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+                        if (!Physics.Raycast(position, Vector3.down, Mathf.Infinity, LayerMask.GetMask("Terrain")))
                         {
                             isSafe = false;
-
                             break; //Exit the loop if any of the raycasts hit nothing
                         }
                     }
@@ -134,6 +162,9 @@ public class CampSpawner : MonoBehaviour
                             }
                         }
                         GameObject camp = Instantiate(campPrefab, spawnPosition, Quaternion.identity);
+
+                        camp.GetComponent<Camp>().campType = (Camp.CAMPTYPE)campInt;
+
                         Debug.Log("Camp Spawned Total " + LevelManager.global.campsCount);
                         spawnCamp = true;
                     }

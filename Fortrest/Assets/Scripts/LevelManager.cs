@@ -1,12 +1,11 @@
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.VFX;
 
 public class LevelManager : MonoBehaviour
-{
+{ 
     // VFXs
     public VisualEffect VFXSlash;
     public VisualEffect VFXSlashReversed;
@@ -21,6 +20,25 @@ public class LevelManager : MonoBehaviour
     public VisualEffect VFXBossSlashReversed;
 
     public static LevelManager global;
+
+    [System.Serializable]
+    public class SpawnEntry
+    {
+        public GameObject objectToSpawn;
+        public float spawnPercentage;
+    }
+
+
+    [Header("Enemies to spawn by chance")]
+    public List<SpawnEntry> spawnEntries = new List<SpawnEntry>();
+
+    public SpawnEntry goblin;
+    public SpawnEntry snake;
+    public SpawnEntry spider;
+    public SpawnEntry wolf;
+    public SpawnEntry lava;
+    [Space]
+
     public Camera SceneCamera;
     public GameObject PlayerPrefab;
     public GameObject mountPrefab;
@@ -80,14 +98,11 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector]
     public float enemyThreshold;
-    [Header("Enemy Prefabs")]
+    [Header("Ogre Prefab")]
     [Space]
-    public GameObject goblinPrefab;
     public GameObject ogrePrefab;
-    public GameObject spiderPrefab;
-    public GameObject snakePrefab;
-    public GameObject wolfPrefab;
-    public GameObject lavaPrefab;
+    [Space]
+    public GameObject HUD;
 
     [HideInInspector]
     public bool newDay = false;
@@ -98,7 +113,6 @@ public class LevelManager : MonoBehaviour
     public Image clockHand;
     public Image clockSun;
     public Image clockMoon;
-
     public bool waveEnd;
 
     [System.Serializable]
@@ -107,10 +121,6 @@ public class LevelManager : MonoBehaviour
         public Terrain terrain;
         public Sprite welcomeSprite;
         public AudioClip music;
-        public Material rabbitMaterial;
-
-        public string indictorName;
-        public Color indicatorColor;
     }
 
     public enum SPAWNLANE
@@ -125,7 +135,8 @@ public class LevelManager : MonoBehaviour
     public int campsCount;
     public int enemiesCount;
     public int ogreDayCount = 3;
-    private int ogreSpawnCounter = 1;
+    private int ogreSpawnCounterMax = 1;
+    private int ogresSpawnCounter = 0;
     public bool spawnEnemies;
     private bool nightAttack;
     public float randomAttackTrigger;
@@ -152,7 +163,6 @@ public class LevelManager : MonoBehaviour
     public bool wolfSpawnable;
     public bool lavaSpawnable;
 
-    public List<Transform> cutsceneCameraLocations = new List<Transform>();
 
     private void Awake()
     {
@@ -170,8 +180,6 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        RenderSettings.skybox = new Material(RenderSettings.skybox); //stops it changing in git
-
         newDay = true;
         VFXSlash.Stop();
         VFXSlashReversed.Stop();
@@ -197,116 +205,6 @@ public class LevelManager : MonoBehaviour
 
         enemyThreshold = 0.0f;
 
-        if (PlayerPrefs.GetInt("Prologue") == 0)
-        {
-            StartCoroutine(PrologueCutscene());
-        }
-    }
-
-    IEnumerator PrologueCutscene()
-    {
-        PlayerController.global.gameObject.SetActive(false);
-        PlayerController.global.UIAnimation.gameObject.SetActive(false);
-        Indicator.global.GetComponent<Canvas>().enabled = false;
-
-        SceneCamera.orthographic = false;
-        SceneCamera.fieldOfView = 60;
-
-        CameraFollow.global.bossCam = true;
-        SFXManager.SFXData sFXData = GameManager.global.SoundManager.PlaySound(GameManager.global.CutsceneChattingOutside, 1, false);
-
-        CutsceneSet(SceneCamera.transform, 0);
-
-        while (Vector3.Distance(SceneCamera.transform.position, cutsceneCameraLocations[1].position) > 0.5f)
-        {
-            SceneCamera.transform.position = Vector3.Slerp(SceneCamera.transform.position, cutsceneCameraLocations[1].position, 0.6f * Time.deltaTime);
-            yield return 0;
-        }
-
-        float timer = 0;
-
-        yield return new WaitForSeconds(2);
-
-        ScreenShake.global.ShakeScreen(0.5f);
-
-        GameManager.global.SoundManager.StopSelectedSound(sFXData.Audio.clip);
-
-        yield return new WaitForSeconds(1);
-
-        while (timer < 2)
-        {
-            SceneCamera.transform.rotation = Quaternion.Slerp(SceneCamera.transform.rotation, cutsceneCameraLocations[2].transform.rotation, 0.5f * Time.deltaTime);
-            timer += Time.deltaTime;
-            yield return 0;
-        }
-
-        ScreenShake.global.ShakeScreen(1);
-
-
-        for (int i = 0; i < bossList.Count; i++)
-        {
-            if (bossList[i].bossType == BossSpawner.TYPE.IsleMaker)
-            {
-                CutsceneSet(bossList[i].transform, 3);
-
-                while (Vector3.Distance(bossList[i].transform.position, cutsceneCameraLocations[4].position) > 1)
-                {
-                    activeBossSpawner = bossList[i]; //so the music changes
-                    bossList[i].transform.position = Vector3.Slerp(bossList[i].transform.position, cutsceneCameraLocations[4].position, 2 * Time.deltaTime);
-                    yield return 0;
-                }
-
-                break;
-            }
-        }
-        GameManager.global.SoundManager.PlaySound(GameManager.global.BossRoarSound, 1, false);
-
-        yield return new WaitForSeconds(1);
-
-        for (int i = 0; i < bossList.Count; i++)
-        {
-            if (bossList[i].gameObject.activeInHierarchy && bossList[i].bossType != BossSpawner.TYPE.IsleMaker)
-            {
-                if (bossList[i].GetComponent<UnityEngine.AI.NavMeshAgent>())
-                    bossList[i].GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
-                bossList[i].cutsceneMode = true;
-                timer = 0;
-                if (bossList[i].bossType == BossSpawner.TYPE.Hrafn)
-                {
-                    bossList[i].GetComponent<BirdBoss>().enabled = false;
-                }
-
-                for (int j = 0; j < cutsceneCameraLocations.Count; j++)
-                {
-                    if (cutsceneCameraLocations[j].name.Contains(bossList[i].bossType.ToString()))
-                    {
-                        CutsceneSet(bossList[i].transform, j);
-                        bossList[i].transform.position -= new Vector3(0, 3, 0);
-
-                        while (timer < 2)
-                        {
-                            bossList[i].transform.position = Vector3.Slerp(bossList[i].transform.position, cutsceneCameraLocations[j].position, 2 * Time.deltaTime);
-                            timer += Time.deltaTime;
-                            yield return 0;
-                        }
-
-                        yield return new WaitForSeconds(1);
-                        break;
-                    }
-                }
-            }
-        }
-
-        yield return new WaitForSeconds(1);
-
-        PlayerPrefs.SetInt("Prologue", 1);
-        GameManager.global.NextScene(1);
-    }
-
-    void CutsceneSet(Transform move, int number)
-    {
-        move.position = cutsceneCameraLocations[number].position;
-        move.rotation = cutsceneCameraLocations[number].rotation;
     }
 
     private void GetHousePosition()
@@ -420,7 +318,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" }));
+            Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Default", "Terrain" }));
             // Debug.Log(raycastHit.transform);
             for (int i = 0; i < terrainDataList.Count; i++)
             {
@@ -445,7 +343,6 @@ public class LevelManager : MonoBehaviour
 
             if (!missing && currentTerrainData.welcomeSprite)
             {
-                PlayerController.global.biomeNameImage.color = currentTerrainData.indicatorColor;
                 PlayerController.global.biomeNameImage.sprite = currentTerrainData.welcomeSprite;
                 GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Biome Name Appear");
                 //GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
@@ -512,7 +409,6 @@ public class LevelManager : MonoBehaviour
         light.color = SunriseGradient.Evaluate(evaluate);
         SceneCamera.backgroundColor = SkyboxGradient.Evaluate(evaluate);
         RenderSettings.ambientLight = AmbientGradient.Evaluate(evaluate);
-        RenderSettings.skybox.SetColor("_Tint", SkyboxGradient.Evaluate(evaluate));
 
         if (daylightTimer > cycle)
         {
@@ -540,7 +436,7 @@ public class LevelManager : MonoBehaviour
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
 
-        light.intensity = Mathf.Lerp(light.intensity, 1 - (ReturnNight() ? 0 : Weather.global.DecreaseDayLightIntensity), 0.4f * Time.deltaTime);
+        light.intensity = Mathf.Lerp(light.intensity, 1 - Weather.global.DecreaseDayLightIntensity, 0.4f * Time.deltaTime);
 
 
 
@@ -562,11 +458,6 @@ public class LevelManager : MonoBehaviour
         {
             //   GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
             // GameManager.global.NextScene(1);
-            if (Boar.global.mounted)
-            {
-                Boar.global.Mount();
-                Boar.global.transform.position = Boar.global.respawnLocation;
-            }
             PlayerController.global.TakeDamage(PlayerController.global.playerHealth);
             // enabled = false;
             // return;
@@ -666,58 +557,82 @@ public class LevelManager : MonoBehaviour
         lastPanPosition = newPanPosition;
     }
 
+    private GameObject SpawnRandomEnemy()
+    {
+        float totalPercentage = 0f;
+
+        foreach (SpawnEntry entry in spawnEntries)
+        {
+            totalPercentage += entry.spawnPercentage;
+        }
+
+        float randomValue = Random.Range(0f, totalPercentage);
+        float cumulativePercentage = 0f;
+
+        foreach (SpawnEntry entry in spawnEntries)
+        {
+            cumulativePercentage += entry.spawnPercentage;
+            if (randomValue <= cumulativePercentage)
+            {
+                return entry.objectToSpawn; 
+            }
+        }
+
+        return null;
+    }
+
     private void EnemyWaves()
     {
-        // Day Attack
-        if (day > 0 && !ReturnNight() && !randomSet)
-        {
-            float randomChance = Random.Range(0.0f, 1.0f);
+        //// Day Attack
+        //if (day > 0 && !ReturnNight() && !randomSet)
+        //{
+        //    float randomChance = Random.Range(0.0f, 1.0f);
 
-            switch (campsCount)
-            {
-                case 0: // No camps = no day attack
-                    attackHappening = false;
-                    break;
-                case 1: // 1 camp = 20% chance
-                    if (randomChance > 0.8f)
-                    {
-                        attackHappening = true;
-                    }
-                    break;
-                case 2: // 2 camps = 40% chance
-                    if (randomChance > 0.6f)
-                    {
-                        attackHappening = true;
-                    }
-                    break;
-                case 3: // 3 camps = 60% chance
-                    if (randomChance > 0.4f)
-                    {
-                        attackHappening = true;
-                    }
-                    break;
-                case 4: // 4 camps = 80% chance
-                    if (randomChance > 0.2f)
-                    {
-                        attackHappening = true;
-                    }
-                    break;
-                default:
-                    break;
-            }
+        //    switch (campsCount)
+        //    {
+        //        case 0: // No camps = no day attack
+        //            attackHappening = false;
+        //            break;
+        //        case 1: // 1 camp = 20% chance
+        //            if (randomChance > 0.8f)
+        //            {
+        //                attackHappening = true;
+        //            }
+        //            break;
+        //        case 2: // 2 camps = 40% chance
+        //            if (randomChance > 0.6f)
+        //            {
+        //                attackHappening = true;
+        //            }
+        //            break;
+        //        case 3: // 3 camps = 60% chance
+        //            if (randomChance > 0.4f)
+        //            {
+        //                attackHappening = true;
+        //            }
+        //            break;
+        //        case 4: // 4 camps = 80% chance
+        //            if (randomChance > 0.2f)
+        //            {
+        //                attackHappening = true;
+        //            }
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
-            if (campsCount >= 5) // 5+ camps = 100% chance
-            {
-                attackHappening = true;
-            }
+        //    if (campsCount >= 5) // 5+ camps = 100% chance
+        //    {
+        //        attackHappening = true;
+        //    }
 
-            if (attackHappening)
-            {
-                randomAttackTrigger = Random.Range(60.0f, 120.0f); // Attack starts at a random time during the day
-                nightAttack = false; // It is not a night attack
-            }
-            randomSet = true; // Regardless of the outcome, we are not running this again until the next day                     
-        }
+        //    if (attackHappening)
+        //    {
+        //        randomAttackTrigger = Random.Range(60.0f, 120.0f); // Attack starts at a random time during the day
+        //        nightAttack = false; // It is not a night attack
+        //    }
+        //    randomSet = true; // Regardless of the outcome, we are not running this again until the next day                     
+        //}
 
         // Night attack
         if (daylightTimer >= 150.0f && daylightTimer <= 151.0f)
@@ -807,7 +722,6 @@ public class LevelManager : MonoBehaviour
                 // Group of enemies
                 if (randomInt == 1 && enemiesCount > 3)
                 {
-                    int ogresSpawned = 0;
                     int randomRange = Random.Range(2, 5);
 
                     for (int i = 0; i < randomRange; i++)
@@ -815,37 +729,18 @@ public class LevelManager : MonoBehaviour
                         enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
                         enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
 
-                        GameObject prefab = null;
+                        GameObject prefab = SpawnRandomEnemy();
 
-                        if (goblinSpawnable)
-                        {
-                            prefab = goblinPrefab;
-                        }
-                        if (snakeSpawnable && Random.Range(0, 3) == 0)
-                        {
-                            prefab = snakePrefab;
-                        }
-                        if (wolfSpawnable && Random.Range(0, 4) == 0)
-                        {
-                            prefab = wolfPrefab;
-                        }
-                        if (spiderSpawnable && Random.Range(0, 5) == 0)
-                        {
-                            prefab = spiderPrefab;
-                        }
-                        if (lavaSpawnable && Random.Range(0, 6) == 0)
-                        {
-                            prefab = lavaPrefab;
-                        }
-                        if (day % ogreDayCount == 0 && Random.Range(0, 7) == 0 && !ogreSpawned)
+                        if (day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
                         {
                             prefab = ogrePrefab;
 
-                            ogresSpawned++;
+                            ogresSpawnCounter++;
 
-                            if (ogresSpawned == ogreSpawnCounter)
+                            if (ogresSpawnCounter == ogreSpawnCounterMax)
                             {
-                                ogreSpawnCounter++;
+                                ogresSpawnCounter = 0;
+                                ogreSpawnCounterMax++;
                                 ogreSpawned = true;
                             }
                         }
@@ -868,39 +763,18 @@ public class LevelManager : MonoBehaviour
                     enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
                     enemySpawnPosition.y = 0; //everything is at ground zero        
 
-                    int ogresSpawned = 0;
+                    GameObject prefab = SpawnRandomEnemy();
 
-                    GameObject prefab = null;
-
-                    if (goblinSpawnable)
-                    {
-                        prefab = goblinPrefab;
-                    }
-                    if (snakeSpawnable && Random.Range(0, 3) == 0)
-                    {
-                        prefab = snakePrefab;
-                    }
-                    if (wolfSpawnable && Random.Range(0, 4) == 0)
-                    {
-                        prefab = wolfPrefab;
-                    }
-                    if (spiderSpawnable && Random.Range(0, 5) == 0)
-                    {
-                        prefab = spiderPrefab;
-                    }
-                    if (lavaSpawnable && Random.Range(0, 6) == 0)
-                    {
-                        prefab = lavaPrefab;
-                    }
-                    if (day % ogreDayCount == 0 && Random.Range(0, 7) == 0 && !ogreSpawned)
+                    if (day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
                     {
                         prefab = ogrePrefab;
 
-                        ogresSpawned++;
+                        ogresSpawnCounter++;
 
-                        if (ogresSpawned == ogreSpawnCounter)
+                        if (ogresSpawnCounter == ogreSpawnCounterMax)
                         {
-                            ogreSpawnCounter++;
+                            ogresSpawnCounter = 0;
+                            ogreSpawnCounterMax++;
                             ogreSpawned = true;
                         }
                     }
