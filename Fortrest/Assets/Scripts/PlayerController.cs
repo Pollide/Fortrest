@@ -227,7 +227,7 @@ public class PlayerController : MonoBehaviour
     // Map
     [HideInInspector] public bool mapBool;
     public bool ResourceHolderOpened;
-    Vector3 MapPanPosition;
+    Vector3 MapPanningPosition;
     private Vector3 mapMousePosition;
     public RectTransform turretMenuHolder;
     public TMP_Text turretMenuTitle;
@@ -1002,9 +1002,11 @@ public class PlayerController : MonoBehaviour
 
         StartCoroutine(RevertBool(true));
     }
-
+    [HideInInspector]
+    public ToolData activeToolData = new PlayerController.ToolData() { HandBool = true };
     public void ChangeTool(ToolData toolData)
     {
+        activeToolData = toolData;
         AxeGameObject.SetActive(toolData.AxeBool);
         HammerGameObject.SetActive(toolData.HammerBool);
         PickaxeGameObject.SetActive(toolData.PickaxeBool);
@@ -1180,7 +1182,7 @@ public class PlayerController : MonoBehaviour
             if (mapBool)
             {
                 UpdateMap();
-                MapPanPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
+                MapPanningPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
                 if (!ResourceHolderOpened)
                     UpdateResourceHolder(showCosts: false);
             }
@@ -1188,30 +1190,36 @@ public class PlayerController : MonoBehaviour
             OpenResourceHolder(map);
         }
     }
-
+    public float speedy = 1;
     void UpdateMap()
     {
         MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
 
-        float speed = 800 * Time.unscaledDeltaTime;
+        float speed = 2.5f * Time.unscaledDeltaTime;
 
         if (GameManager.global.KeyboardBool)
         {
             if (Input.GetMouseButton(0))
             {
-                Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
-                mapMousePosition = Input.mousePosition;
-                MapPanPosition += dragDirection * speed;
-                // MapPanPosition = Vector3.Slerp(MapPanPosition, MapPanPosition + dragDirection, speed);
+                //  Vector3 dragDirection = (Input.mousePosition - mapMousePosition).normalized;
+                //  mapMousePosition = Input.mousePosition;
+                //  MapPanningPosition += dragDirection * speed;
+
+                Vector3 currentMousePosition = Input.mousePosition;
+                Vector3 mouseVelocity = (currentMousePosition - mapMousePosition) / Time.unscaledDeltaTime;
+
+                MapPanningPosition += mouseVelocity * speedy * Time.unscaledDeltaTime;
+                // MapPanningPosition = Vector3.Slerp(MapPanningPosition, MapPanningPosition + dragDirection, speed);
             }
 
+            mapMousePosition = Input.mousePosition;
         }
         else
         {
-            MapPanPosition -= new Vector3(GameManager.global.moveCTRL.x, GameManager.global.moveCTRL.y) * speed;
+            MapPanningPosition -= new Vector3(GameManager.global.moveCTRL.x, GameManager.global.moveCTRL.y) * speed;
         }
 
-        MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = MapPanPosition;
+        MapSpotHolder.GetComponent<RectTransform>().anchoredPosition = MapPanningPosition;
 
         MapPlayerRectTransform.eulerAngles = new Vector3(0, 0, -transform.eulerAngles.y + 45);
         MapPlayerRectTransform.SetAsLastSibling(); //keeps it ontop

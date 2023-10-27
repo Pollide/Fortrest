@@ -291,7 +291,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Default", "Terrain" }));
+            Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" }));
             // Debug.Log(raycastHit.transform);
             for (int i = 0; i < terrainDataList.Count; i++)
             {
@@ -431,6 +431,11 @@ public class LevelManager : MonoBehaviour
         {
             //   GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
             // GameManager.global.NextScene(1);
+            if (Boar.global.mounted)
+            {
+                Boar.global.Mount();
+                Boar.global.transform.position = Boar.global.respawnLocation;
+            }
             PlayerController.global.TakeDamage(PlayerController.global.playerHealth);
             // enabled = false;
             // return;
