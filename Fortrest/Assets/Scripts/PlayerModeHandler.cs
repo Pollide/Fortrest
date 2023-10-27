@@ -43,7 +43,6 @@ public class PlayerModeHandler : MonoBehaviour
     public GameObject selectionGrid;
     GameObject newSelectionGrid;
     public GameObject KeyBlueprintHintPrefab;
-    private HUDHandler HUD;
 
     public bool inTheFortress;
     private bool centerMouse;
@@ -84,7 +83,6 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         buildType = BuildType.Turret;
-        HUD = HUDHandler.global;
         SwitchToBuildMode(false);
         SwitchToResourceMode();
         entryPosition = PlayerController.global.transform.position;

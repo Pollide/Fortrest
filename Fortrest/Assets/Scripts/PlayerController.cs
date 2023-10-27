@@ -160,10 +160,7 @@ public class PlayerController : MonoBehaviour
     public TMP_Text turretText;
 
     public Buttons pauseButtons;
-
-    // Inventory
     public GameObject DarkenGameObject;
-    public GameObject InventoryHolder;
     public GameObject MiniTurretUI;
 
     // Pause
@@ -176,7 +173,7 @@ public class PlayerController : MonoBehaviour
     public Image controllerImage;
     public Sprite controllerSprite;
     public Sprite keyboardSprite;
-
+    public GameObject HUDGameObject;
     // Death
     private float respawnTimer = 0.0f;
     private bool textAnimated = false;

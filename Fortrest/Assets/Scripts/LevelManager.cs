@@ -87,7 +87,6 @@ public class LevelManager : MonoBehaviour
     public GameObject snakePrefab;
     public GameObject wolfPrefab;
     public GameObject lavaPrefab;
-    public GameObject HUD;
 
     [HideInInspector]
     public bool newDay = false;

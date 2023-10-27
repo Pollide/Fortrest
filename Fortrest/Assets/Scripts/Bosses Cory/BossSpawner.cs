@@ -125,7 +125,7 @@ public class BossSpawner : MonoBehaviour
 
                 LevelManager.global.activeBossSpawner = open ? this : null;
                 UpdateHealth();
-
+                Indicator.global.GetComponent<Canvas>().enabled = !open;
                 LevelManager.global.dayPaused = open;
 
                 if (open && LevelManager.global.messageDisplayed)
@@ -209,8 +209,7 @@ public class BossSpawner : MonoBehaviour
 
 
                     PlayerController.global.playerCanMove = introCompleted;
-                    Indicator.global.GetComponent<Canvas>().enabled = introCompleted;
-                    LevelManager.global.HUD.SetActive(introCompleted);
+                    PlayerController.global.HUDGameObject.SetActive(introCompleted);
                 }
             }
         }
