@@ -6,8 +6,8 @@ public class ScreenShake : MonoBehaviour
 {
     public static ScreenShake global;
 
-    public float duration = 0.1f;
-    public bool shake = false;
+    float duration = 0.1f;
+    bool shake = false;
     public AnimationCurve curve;
 
     private void Awake()
@@ -19,15 +19,21 @@ public class ScreenShake : MonoBehaviour
     {
         if (shake)
         {
-            
+
             StartCoroutine(Shaking());
         }
+    }
+
+    public void ShakeScreen(float length = 0.1f)
+    {
+        shake = true;
+        duration = length;
     }
 
     IEnumerator Shaking()
     {
         Vector3 startPosition = transform.position;
-        float elapsedTime = 0.0f;       
+        float elapsedTime = 0.0f;
         while (elapsedTime < duration)
         {
             elapsedTime += Time.deltaTime;

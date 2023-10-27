@@ -44,12 +44,12 @@ public class BossAnimationEvents : MonoBehaviour
 
     void PlaySlamSound()
     {
-        ScreenShake.global.shake = true;
+        ScreenShake.global.ShakeScreen(1);
         GameManager.global.SoundManager.PlaySound(slamAudio);
     }
     void PlayEnrageSound()
     {
-        ScreenShake.global.shake = true;
+        ScreenShake.global.ShakeScreen(1);
         GameManager.global.SoundManager.PlaySound(enrageAudio);
     }
     void AttackPlusPlus()
@@ -111,7 +111,7 @@ public class BossAnimationEvents : MonoBehaviour
 
     void PlayScreenShake()
     {
-        ScreenShake.global.shake = true;
+        ScreenShake.global.ShakeScreen();
     }
 
     void SetHasJumped()

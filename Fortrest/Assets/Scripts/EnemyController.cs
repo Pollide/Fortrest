@@ -576,7 +576,7 @@ public class EnemyController : MonoBehaviour
                     flashing = true;
                 }
                 knockBackScript.knock = true;
-                ScreenShake.global.shake = true;
+                ScreenShake.global.ShakeScreen();
                 Damaged(PlayerController.global.attackDamage);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
                 if (PlayerController.global.upgradedMelee && health > 0)
@@ -598,9 +598,14 @@ public class EnemyController : MonoBehaviour
         }
         if (other.gameObject.tag == "Arrow")
         {
-            if (!other.GetComponent<ArrowTrigger>().singleHit)
+            ArrowTrigger arrowTrigger = other.GetComponent<ArrowTrigger>();
+
+            if (!arrowTrigger)
+                arrowTrigger = other.GetComponentInChildren<ArrowTrigger>();
+
+            if (arrowTrigger && !arrowTrigger.singleHit)
             {
-                other.GetComponent<ArrowTrigger>().singleHit = true;
+                arrowTrigger.singleHit = true;
                 if (currentEnemyType == ENEMYTYPE.goblin)
                 {
                     chaseTimer = 0;
@@ -621,7 +626,7 @@ public class EnemyController : MonoBehaviour
                 }
                 if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
                 {
-                    Destroy(other.gameObject.transform.parent.gameObject);
+                    Destroy(arrowTrigger.transform.parent.gameObject);
                 }
             }
         }

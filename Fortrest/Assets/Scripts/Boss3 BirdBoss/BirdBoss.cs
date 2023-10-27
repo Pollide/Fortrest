@@ -39,10 +39,13 @@ public class BirdBoss : MonoBehaviour
     [HideInInspector] public bool lastWasNormal;
 
     [HideInInspector] public BossSpawner bossSpawner;
-
+    Vector3 initialPosition;
+    Vector3 initialDirection;
     private void Awake()
     {
         global = this;
+        initialPosition = transform.position;
+        initialDirection = transform.forward;
     }
 
     void Start()
@@ -56,28 +59,45 @@ public class BirdBoss : MonoBehaviour
 
     void Update()
     {
-        directionToPlayer = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
-        distanceToPlayer = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
-        capsuleCollider.enabled = crashed ? true : false;
-        boxCollider.enabled = crashed ? false : true;
-        telegraphCollider.enabled = boxCollider.enabled ? false : true;
 
-        // Boss flies up at the start
-        if (flying && !altitudeReached)
+        if (bossSpawner.bossAwakened && !bossSpawner.bossEncountered)
         {
-            transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 7.5f, transform.position.z), Time.deltaTime * (speed / 2.0f));
-            if (transform.position.y >= 7.5f)
-            {
-                altitudeReached = true;
-            }
-        }
-
-        // Boss crashes after being hit 3 times
-        if (hitReceived >= 3)
-        {
-            bossSpawner.bossAnimator.ResetTrigger("Crash");
-            bossSpawner.bossAnimator.SetTrigger("Crash");
             hitReceived = 0;
+            crashed = false;
+            altitudeReached = false;
+            bossSpawner.bossAnimator.SetBool("Attack1", false);
+            bossSpawner.bossAnimator.SetBool("Attack2", false);
+            bossSpawner.bossAnimator.SetBool("Attack3", false);
+            bossSpawner.bossAnimator.SetBool("Flying", false);
+            flying = false;
+            MoveToTarget(initialPosition, initialDirection);
+        }
+        else
+        {
+            directionToPlayer = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
+            distanceToPlayer = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
+            capsuleCollider.enabled = crashed ? true : false;
+            boxCollider.enabled = crashed ? false : true;
+            telegraphCollider.enabled = boxCollider.enabled ? false : true;
+
+            // Boss flies up at the start
+            if (flying && !altitudeReached)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 7.5f, transform.position.z), Time.deltaTime * (speed / 2.0f));
+                if (transform.position.y >= 7.5f)
+                {
+                    altitudeReached = true;
+                }
+            }
+
+            // Boss crashes after being hit 3 times
+            if (hitReceived >= 3)
+            {
+                bossSpawner.bossAnimator.ResetTrigger("Crash");
+                bossSpawner.bossAnimator.SetTrigger("Crash");
+                hitReceived = 0;
+            }
+
         }
     }
 
@@ -154,7 +174,7 @@ public class BirdBoss : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.BirdBossHit1Sound : GameManager.global.BirdBossHit2Sound, 1f, true, 0, false, transform);
                 bossSpawner.canBeDamaged = false;
                 StopAllCoroutines();
-                ScreenShake.global.shake = true;
+                ScreenShake.global.ShakeScreen();
                 Damaged(PlayerController.global.attackDamage);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
             }
