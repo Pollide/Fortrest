@@ -30,12 +30,12 @@ public class BridgeBuilder : MonoBehaviour
 
         if (BridgeTypeInt == 3)
         {
-            Indicator.global.AddIndicator(transform, Color.yellow, "Coast", false);
+            Indicator.global.AddIndicator(transform, Color.blue, "Taiga", false);
         }
 
         if (BridgeTypeInt == 4)
         {
-            Indicator.global.AddIndicator(transform, Color.blue, "Taiga", false);
+            Indicator.global.AddIndicator(transform, Color.yellow, "Coast", false);
         }
 
         if (BridgeTypeInt == 5)
@@ -130,11 +130,11 @@ public class BridgeBuilder : MonoBehaviour
                     }
                     if (BridgeTypeInt == 3)
                     {
-                        LevelManager.global.spiderSpawnable = true;
+                        LevelManager.global.wolfSpawnable = true;
                     }
                     if (BridgeTypeInt == 4)
                     {
-                        LevelManager.global.wolfSpawnable = true;
+                        LevelManager.global.spiderSpawnable = true;
                     }
                     if (BridgeTypeInt == 5)
                     {

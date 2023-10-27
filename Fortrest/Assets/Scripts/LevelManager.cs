@@ -707,13 +707,13 @@ public class LevelManager : MonoBehaviour
                         {
                             prefab = snakePrefab;
                         }
-                        if (spiderSpawnable && Random.Range(0, 4) == 0)
-                        {
-                            prefab = spiderPrefab;
-                        }
-                        if (wolfSpawnable && Random.Range(0, 5) == 0)
+                        if (wolfSpawnable && Random.Range(0, 4) == 0)
                         {
                             prefab = wolfPrefab;
+                        }
+                        if (spiderSpawnable && Random.Range(0, 5) == 0)
+                        {
+                            prefab = spiderPrefab;
                         }
                         if (lavaSpawnable && Random.Range(0, 6) == 0)
                         {
@@ -762,13 +762,13 @@ public class LevelManager : MonoBehaviour
                     {
                         prefab = snakePrefab;
                     }
-                    if (spiderSpawnable && Random.Range(0, 4) == 0)
-                    {
-                        prefab = spiderPrefab;
-                    }
-                    if (wolfSpawnable && Random.Range(0, 5) == 0)
+                    if (wolfSpawnable && Random.Range(0, 4) == 0)
                     {
                         prefab = wolfPrefab;
+                    }
+                    if (spiderSpawnable && Random.Range(0, 5) == 0)
+                    {
+                        prefab = spiderPrefab;
                     }
                     if (lavaSpawnable && Random.Range(0, 6) == 0)
                     {
