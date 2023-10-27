@@ -110,6 +110,12 @@ public class BossSpawner : MonoBehaviour
                 if (health <= 0)
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
+
+
+                    for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
+                    {
+                        LevelManager.global.bridgeList[i].CheckIndicators();
+                    }
                     enabled = false;
                 }
                 else

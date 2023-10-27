@@ -152,7 +152,8 @@ public class Indicator : MonoBehaviour
                 }
             }
 
-            bool active = (Permenant || (!onTerrain || LevelManager.global.currentTerrainData == null) && distance < 200 || (onTerrain == LevelManager.global.currentTerrainData.terrain)) && !closeBool;
+            bool missing = !onTerrain || LevelManager.global.currentTerrainData == null || !LevelManager.global.currentTerrainData.terrain;
+            bool active = (Permenant || (missing ? distance < 200 : onTerrain == LevelManager.global.currentTerrainData.terrain)) && !closeBool;
 
             if (active != AppearBool)
             {
