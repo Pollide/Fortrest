@@ -20,27 +20,27 @@ public class BridgeBuilder : MonoBehaviour
     {
         if (BridgeTypeInt == 1)
         {
-            Indicator.global.AddIndicator(transform, Color.magenta, "Marsh", false);
+            Indicator.global.AddIndicator(transform, Color.magenta, "Marsh", false, Indicator.global.BridgeSprite);
         }
 
         if (BridgeTypeInt == 2)
         {
-            Indicator.global.AddIndicator(transform, new Color(1.0f, 0.6f, 0.0f, 1.0f), "Tussocks", false);
+            Indicator.global.AddIndicator(transform, new Color(1.0f, 0.6f, 0.0f, 1.0f), "Tussocks", false, Indicator.global.BridgeSprite);
         }
 
         if (BridgeTypeInt == 3)
         {
-            Indicator.global.AddIndicator(transform, Color.blue, "Taiga", false);
+            Indicator.global.AddIndicator(transform, Color.blue, "Taiga", false, Indicator.global.BridgeSprite);
         }
 
         if (BridgeTypeInt == 4)
         {
-            Indicator.global.AddIndicator(transform, Color.yellow, "Coast", false);
+            Indicator.global.AddIndicator(transform, Color.yellow, "Coast", false, Indicator.global.BridgeSprite);
         }
 
         if (BridgeTypeInt == 5)
         {
-            Indicator.global.AddIndicator(transform, Color.gray, "Volcanic Flats", false);
+            Indicator.global.AddIndicator(transform, Color.gray, "Volcanic Flats", false, Indicator.global.BridgeSprite);
         }
 
         LevelManager.global.bridgeList.Add(this);

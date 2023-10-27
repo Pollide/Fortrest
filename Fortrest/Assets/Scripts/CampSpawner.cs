@@ -58,7 +58,6 @@ public class CampSpawner : MonoBehaviour
                 onlyOnce = false;
             }
 
-            Debug.Log(randomTime);
 
             if (LevelManager.global.daylightTimer > randomTime && LevelManager.global.daylightTimer < randomTime + 1.0f && !onlyOnce)
             {

@@ -166,7 +166,7 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        RenderSettings.skybox = new Material(RenderSettings.skybox);
+        RenderSettings.skybox = new Material(RenderSettings.skybox); //stops it changing in git
 
         newDay = true;
         VFXSlash.Stop();
