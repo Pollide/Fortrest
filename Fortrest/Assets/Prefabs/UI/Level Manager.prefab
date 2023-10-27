@@ -297,6 +297,8 @@ MonoBehaviour:
   SceneCamera: {fileID: 2501624831455937127}
   PlayerPrefab: {fileID: 5569601164179657938, guid: 6909057cc05e5f446a9a6a2433f2911a,
     type: 3}
+  mountPrefab: {fileID: 3333299692556185214, guid: 4c7f0939d26439b44be8f3e4c51cebd3,
+    type: 3}
   PanSpeed: 60
   ZoomSpeedTouch: 0.1
   ZoomSpeedMouse: 8
@@ -393,6 +395,35 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  AmbientGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0, g: 0, b: 0, a: 0}
+    key3: {r: 0, g: 0, b: 0, a: 0}
+    key4: {r: 0, g: 0, b: 0, a: 0}
+    key5: {r: 0, g: 0, b: 0, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 65535
+    ctime2: 0
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 2
+    m_NumAlphaKeys: 2
   ResourceHolderTransform: {fileID: 0}
   ActiveBuildingGameObject: {fileID: 0}
   DirectionalLightTransform: {fileID: 7444467798429044014}
@@ -416,7 +447,11 @@ MonoBehaviour:
     type: 3}
   spiderPrefab: {fileID: 5936932421964932193, guid: 7aa9da11c0a47014693eeed85fca301e,
     type: 3}
-  mountPrefab: {fileID: 3333299692556185214, guid: 4c7f0939d26439b44be8f3e4c51cebd3,
+  snakePrefab: {fileID: 6307758033353301056, guid: 1ac9e20574a8d9c4da3f303481136ebf,
+    type: 3}
+  wolfPrefab: {fileID: 9064983638505709771, guid: 8b044387f32d2864fa8871fba56a8a17,
+    type: 3}
+  lavaPrefab: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
     type: 3}
   HUD: {fileID: 0}
   newDay: 0
@@ -449,19 +484,28 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  currentMusic: {fileID: 0}
+  currentTerrainData:
+    terrain: {fileID: 0}
+    welcomeSprite: {fileID: 0}
+    music: {fileID: 0}
   terrainDataList:
   - terrain: {fileID: 0}
+    welcomeSprite: {fileID: 0}
     music: {fileID: 8300000, guid: c50b6cb3da380aa4197d5ed9034052b3, type: 3}
   - terrain: {fileID: 0}
+    welcomeSprite: {fileID: 0}
     music: {fileID: 8300000, guid: 8936ba70ea08eda439c9eeef81969247, type: 3}
   - terrain: {fileID: 0}
+    welcomeSprite: {fileID: 0}
     music: {fileID: 8300000, guid: b011934c800d34b4eba21e3e9209a172, type: 3}
   - terrain: {fileID: 0}
+    welcomeSprite: {fileID: 0}
     music: {fileID: 8300000, guid: c50b6cb3da380aa4197d5ed9034052b3, type: 3}
   - terrain: {fileID: 0}
+    welcomeSprite: {fileID: 0}
     music: {fileID: 8300000, guid: 8936ba70ea08eda439c9eeef81969247, type: 3}
   - terrain: {fileID: 0}
+    welcomeSprite: {fileID: 0}
     music: {fileID: 8300000, guid: b011934c800d34b4eba21e3e9209a172, type: 3}
   clockHand: {fileID: 0}
   clockSun: {fileID: 0}
@@ -470,11 +514,17 @@ MonoBehaviour:
   lane: 0
   campsCount: 0
   enemiesCount: 0
+  ogreDayCount: 3
   spawnEnemies: 0
   randomAttackTrigger: 0
   dayPaused: 0
   houseTransform: {fileID: 0}
   messageDisplayed: 0
+  goblinSpawnable: 0
+  snakeSpawnable: 0
+  spiderSpawnable: 0
+  wolfSpawnable: 0
+  lavaSpawnable: 0
   activeBossSpawner: {fileID: 0}
 --- !u!114 &7386932472633630464
 MonoBehaviour:

@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class BridgeBuilder : MonoBehaviour
 {
-
     public int BridgeTypeInt;
     public bool isBuilt;
     bool triggered;
@@ -120,6 +119,27 @@ public class BridgeBuilder : MonoBehaviour
 
                     GameManager.PlayAnimator(bridgeAnimator, "Armature_BridgeSelfBuild");
                     WalkAccrossCollider.SetActive(true);
+
+                    if (BridgeTypeInt == 1)
+                    {
+                        LevelManager.global.goblinSpawnable = true;
+                    }
+                    if (BridgeTypeInt == 2)
+                    {
+                        LevelManager.global.snakeSpawnable = true;
+                    }
+                    if (BridgeTypeInt == 3)
+                    {
+                        LevelManager.global.spiderSpawnable = true;
+                    }
+                    if (BridgeTypeInt == 4)
+                    {
+                        LevelManager.global.wolfSpawnable = true;
+                    }
+                    if (BridgeTypeInt == 5)
+                    {
+                        LevelManager.global.lavaSpawnable = true;
+                    }
                 }
                 else
                 {
