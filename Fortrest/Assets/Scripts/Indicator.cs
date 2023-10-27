@@ -15,6 +15,7 @@ public class Indicator : MonoBehaviour
 
     public Sprite HomeSprite;
     public Sprite MountSprite;
+    public Sprite BridgeSprite;
 
     public int bottomRightStack;
     public int bottomLeftStack;
@@ -46,7 +47,7 @@ public class Indicator : MonoBehaviour
         public bool topBool;
         public bool bottomBool;
         public bool isOutsideCanvas;
-
+        public Terrain onTerrain;
         public float ignoreX;
         public float ignoreY;
         public void Refresh()
@@ -142,14 +143,17 @@ public class Indicator : MonoBehaviour
             {
                 Unlocked = true;
                 MainData.ArrowText.text = ActiveString;
+                MainData.ArrowText.color = MainData.ArrowImage.color;
 
                 if (MapData)
                 {
                     MapData.ArrowText.text = MainData.ArrowText.text;
+                    MapData.ArrowText.color = MainData.ArrowImage.color;
                 }
             }
 
-            bool active = (Permenant || distance < 240) && !closeBool;
+            bool missing = !onTerrain || LevelManager.global.currentTerrainData == null || !LevelManager.global.currentTerrainData.terrain;
+            bool active = (Permenant || (missing ? distance < 200 : onTerrain == LevelManager.global.currentTerrainData.terrain)) && !closeBool;
 
             if (active != AppearBool)
             {
@@ -263,6 +267,7 @@ public class Indicator : MonoBehaviour
         indicatorData.MainData = Instantiate(arrowPrefab, transform).GetComponent<ArrowData>();
         indicatorData.MainData.ArrowImage.color = color;
         indicatorData.MainData.CustomImage.color = color;
+
         indicatorData.MainData.ArrowText.text = "?";
 
         indicatorData.ActiveString = nameString;
@@ -275,16 +280,29 @@ public class Indicator : MonoBehaviour
 
         IndicatorList.Add(indicatorData);
 
+        if (Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+        {
+            indicatorData.onTerrain = raycastHit.transform.GetComponent<Terrain>();
+
+            if (!indicatorData.onTerrain)
+            {
+                Debug.Log(raycastHit.transform);
+            }
+        }
+
         if (!permenant || customSprite)
         {
             indicatorData.MapData = Instantiate(arrowPrefab, PlayerController.global.MapSpotHolder).GetComponent<ArrowData>();
             indicatorData.MapData.GetComponent<Animation>().enabled = false;
             indicatorData.MapData.transform.localScale *= 2.0f;
             indicatorData.MapData.ArrowImage.gameObject.SetActive(false);
-            indicatorData.MapData.CustomImage.gameObject.SetActive(true);
 
-            indicatorData.MapData.CustomImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
-            indicatorData.MapData.CustomImage.color = color;
+            // indicatorData.MapData.CustomImage.gameObject.SetActive(true);
+
+            //   RectTransform imageTransform = indicatorData.MapData.CustomImage.GetComponent<RectTransform>();
+            //indicatorData.MapData.ArrowText.GetComponent<RectTransform>().anchoredPosition = imageTransform.anchoredPosition;
+            indicatorData.MapData.ArrowText.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            // indicatorData.MapData.CustomImage.color = color;
 
             indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
 

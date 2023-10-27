@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using TMPro;
 
 public class BridgeBuilder : MonoBehaviour
 {
@@ -18,42 +18,27 @@ public class BridgeBuilder : MonoBehaviour
 
     private void Start()
     {
-        if (BridgeTypeInt == 1)
-        {
-            Indicator.global.AddIndicator(transform, Color.magenta, "Marsh", false);
-        }
-
-        if (BridgeTypeInt == 2)
-        {
-            Indicator.global.AddIndicator(transform, new Color(1.0f, 0.6f, 0.0f, 1.0f), "Tussocks", false);
-        }
-
-        if (BridgeTypeInt == 3)
-        {
-            Indicator.global.AddIndicator(transform, Color.blue, "Taiga", false);
-        }
-
-        if (BridgeTypeInt == 4)
-        {
-            Indicator.global.AddIndicator(transform, Color.yellow, "Coast", false);
-        }
-
-        if (BridgeTypeInt == 5)
-        {
-            Indicator.global.AddIndicator(transform, Color.gray, "Volcanic Flats", false);
-        }
-
+        CheckIndicators();
         LevelManager.global.bridgeList.Add(this);
     }
-    void ShowPrompt(bool show)
-    {
-        PlayerController.global.needInteraction = show;
-        PlayerController.global.bridgeInteract = show;
 
-        canBuild = BridgeTypeInt == 2 || BridgeTypeInt == 4;
+    public void CheckIndicators()
+    {
+        bool before = canBuild;
+
+
+        canBuild = BridgeTypeInt == 1;
+
+        //remember the spaced out text below is where the E key goes ingame
+        FloatingTextCanBuildAnimation.GetComponent<TMP_Text>().text = "Press   to build\nthe " + LevelManager.global.terrainDataList[BridgeTypeInt].indictorName + " bridge";
+        FloatingTextCanBuildAnimation.GetComponent<TMP_Text>().color = LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor;
+
+        FloatingTextAnimation.GetComponent<TMP_Text>().text = "Defeat the " + LevelManager.global.terrainDataList[BridgeTypeInt].indictorName + "\nboss to continue";
+        FloatingTextAnimation.GetComponent<TMP_Text>().color = LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor;
 
         for (int i = 0; i < LevelManager.global.bossList.Count; i++)
         {
+
             if (LevelManager.global.bossList[i].health <= 0)
             {
                 if (BridgeTypeInt == 4 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Chieftain)
@@ -75,6 +60,18 @@ public class BridgeBuilder : MonoBehaviour
                 }
             }
         }
+
+        if (!before && canBuild)
+        {
+            Indicator.global.AddIndicator(transform, LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor, LevelManager.global.terrainDataList[BridgeTypeInt].indictorName, false, Indicator.global.BridgeSprite);
+        }
+    }
+
+    void ShowPrompt(bool show)
+    {
+        PlayerController.global.needInteraction = show;
+        PlayerController.global.bridgeInteract = show;
+        CheckIndicators();
 
         PlayerController.global.OpenResourceHolder(show);
         PlayerController.global.needInteraction = show;

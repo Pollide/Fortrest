@@ -21,6 +21,10 @@ public class ItemDrop : MonoBehaviour
     [HideInInspector]
     public bool CollectedBool;
 
+    public bool stoneBool;
+    public bool WoodBool;
+    public bool foodBool;
+
     private void Start()
     {
         LevelManager.global.ItemDropList.Add(gameObject);
@@ -40,7 +44,7 @@ public class ItemDrop : MonoBehaviour
         {
             if (other.CompareTag("Player"))
             {
-                if (name.Contains("Bush Drop") && PlayerController.global.appleAmount >= PlayerController.global.maxApple)
+                if (foodBool && PlayerController.global.appleAmount >= PlayerController.global.maxApple)
                 {
                     Vector3 direction = (transform.position - PlayerController.global.transform.position).normalized;
                     direction.y = 0.4f;
@@ -63,21 +67,21 @@ public class ItemDrop : MonoBehaviour
 
     public void CollectVoid()
     {
-        if (name.Contains("Bush Drop"))
+        if (foodBool)
         {
             PlayerController.global.appleAmount += 1;
             GameManager.PlayAnimation(PlayerController.global.appleText.GetComponent<Animation>(), "EnemyAmount");
             PlayerController.global.UpdateAppleText();
         }
 
-        if (name.Contains("Wood"))
+        if (WoodBool)
         {
             LevelManager.global.WoodTierList[TierInt].ResourceAmount += resourceAmount;
             PopUpResource.global.TierData = LevelManager.global.WoodTierList[TierInt];
             PopUpResource.global.displayNow = true;
         }
 
-        if (name.Contains("Stone"))
+        if (stoneBool)
         {
             LevelManager.global.StoneTierList[TierInt].ResourceAmount += resourceAmount;
             PopUpResource.global.TierData = LevelManager.global.StoneTierList[TierInt];

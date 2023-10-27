@@ -43,7 +43,6 @@ public class PlayerModeHandler : MonoBehaviour
     public GameObject selectionGrid;
     GameObject newSelectionGrid;
     public GameObject KeyBlueprintHintPrefab;
-    private HUDHandler HUD;
 
     public bool inTheFortress;
     private bool centerMouse;
@@ -64,6 +63,7 @@ public class PlayerModeHandler : MonoBehaviour
     private bool cantPlace;
     public bool buildingWithController;
     bool turretMenuOpened;
+    Vector3 defaultPosition;
     private void Awake()
     {
         if (global)
@@ -83,10 +83,10 @@ public class PlayerModeHandler : MonoBehaviour
     void Start()
     {
         buildType = BuildType.Turret;
-        HUD = HUDHandler.global;
         SwitchToBuildMode(false);
         SwitchToResourceMode();
         entryPosition = PlayerController.global.transform.position;
+        defaultPosition = entryPosition;
         occupied = new bool[20, 20];
     }
 
@@ -174,13 +174,14 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL) && canInteractWithHouse)
+        bool walkedthroughdoor = Vector3.Distance(PlayerController.global.transform.position, House.transform.position + House.transform.forward) < 3f && !inTheFortress;
+        if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL || walkedthroughdoor) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
 
             if (!inTheFortress)
             {
-                entryPosition = PlayerController.global.transform.position;
+                entryPosition = walkedthroughdoor ? defaultPosition : PlayerController.global.transform.position;
                 SwitchToBuildMode();
             }
             else

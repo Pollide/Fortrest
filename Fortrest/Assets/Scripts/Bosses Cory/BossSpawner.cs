@@ -45,6 +45,7 @@ public class BossSpawner : MonoBehaviour
     public bool introCompleted = false;
     [SerializeField] private GameObject introCard;
     public Animator bossAnimator;
+    public bool cutsceneMode;
 
     public void Awake()
     {
@@ -54,17 +55,17 @@ public class BossSpawner : MonoBehaviour
 
     public void UpdateHealth(float change = 0)
     {
-        health += change;
-
-        if (change < 0 && health > 0)
-        {
-            GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Damage");
-        }
-
-        health = Mathf.Clamp(health, 0, maxHealth);
+        health = Mathf.Clamp(health + change, 0, maxHealth);
 
         if (bossEncountered)
+        {
+            if (change < 0 && health > 0)
+            {
+                GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Damage");
+            }
+
             BossCanvas.GetComponentInChildren<HealthBar>(true).SetHealth(health, maxHealth);
+        }
     }
 
 
@@ -110,6 +111,12 @@ public class BossSpawner : MonoBehaviour
                 if (health <= 0)
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
+
+
+                    for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
+                    {
+                        LevelManager.global.bridgeList[i].CheckIndicators();
+                    }
                     enabled = false;
                 }
                 else
@@ -119,9 +126,17 @@ public class BossSpawner : MonoBehaviour
 
                 LevelManager.global.activeBossSpawner = open ? this : null;
                 UpdateHealth();
-
+                Indicator.global.GetComponent<Canvas>().enabled = !open;
                 LevelManager.global.dayPaused = open;
+
+                if (open && LevelManager.global.messageDisplayed)
+                {
+                    LevelManager.global.messageDisplayed = false;
+                    GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false, true);
+                }
             }
+
+
 
             bossEncountered = open;
         }
@@ -166,7 +181,7 @@ public class BossSpawner : MonoBehaviour
                 }
 
             }
-            else
+            else if (!cutsceneMode)
             {
                 if (escapeByDistance || !introCompleted)
                     BossEncountered(true);
@@ -197,14 +212,18 @@ public class BossSpawner : MonoBehaviour
 
 
                     PlayerController.global.playerCanMove = introCompleted;
-                    Indicator.global.GetComponent<Canvas>().enabled = introCompleted;
-                    LevelManager.global.HUD.SetActive(introCompleted);
+                    PlayerController.global.HUDGameObject.SetActive(introCompleted);
                 }
             }
         }
         else if (escapeByDistance || health == 0)
         {
             BossEncountered(false);
+        }
+
+        if (bossAwakened && !bossEncountered)
+        {
+            UpdateHealth(Time.deltaTime * 3.0f); //healing
         }
     }
 
@@ -213,7 +232,7 @@ public class BossSpawner : MonoBehaviour
         introTimer = 0;
         introCompleted = false;
 
-        if (bossAnimator.enabled)
+        if (bossAnimator.gameObject.activeSelf && bossAnimator.enabled)
         {
             bossAnimator.Rebind();
             bossAnimator.Update(0f);
@@ -222,7 +241,7 @@ public class BossSpawner : MonoBehaviour
 
     public bool CheckPlayerDistance()
     {
-        return health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (bossAwakened ? Arenasize : 20);
+        return (cutsceneMode || health > 0 && Vector3.Distance(PlayerController.global.transform.position, StartPosition) <= (bossAwakened ? Arenasize : 20));
     }
 
     private void OnDrawGizmosSelected()

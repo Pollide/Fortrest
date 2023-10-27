@@ -138,6 +138,10 @@ public class GameManager : MonoBehaviour
 
     public AudioClip ChestOpenSound;
 
+    [Header("Cutscene")]
+    public AudioClip BossRoarSound;
+    public AudioClip CutsceneChattingOutside;
+
     private Vector3 lastMousePosition;
     public bool CheatInfiniteBuilding;
 
@@ -536,6 +540,11 @@ public class GameManager : MonoBehaviour
         AnimationState state = PlayAnimation(GetComponent<Animation>(), "Load In", true, first);
 
         yield return 0; //gives a frame for sfx to load
+
+        for (int i = 0; i < SoundManager.SFXList.Count; i++)
+        {
+            SoundManager.StopSelectedSound(SoundManager.SFXList[i].Audio.clip);
+        }
 
         //switches between music
         if (GameManager.global)

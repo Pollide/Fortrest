@@ -37,7 +37,8 @@ public class Boar : MonoBehaviour
     [HideInInspector] public bool closerToHouse;
     public bool canInteractWithBoar;
     private bool dismountRight;
-
+    [HideInInspector]
+    public Vector3 respawnLocation;
     private float timer = 0f;
 
     private void Awake()
@@ -58,7 +59,7 @@ public class Boar : MonoBehaviour
         }
 
         text = transform.GetChild(0).gameObject;
-
+        respawnLocation = transform.position;
         Indicator.global.AddIndicator(transform, Color.green, "Mount", false, Indicator.global.MountSprite);
         house = PlayerController.global.house;
     }
@@ -140,22 +141,26 @@ public class Boar : MonoBehaviour
                 transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0.0f, currentTurn, 0.0f));
             }
 
-            Vector3 direction = transform.forward + Vector3.up * 3 * (currentSpeed > 0 ? 1 : -1); //searches area in front of boar or behind if reversing
+            Vector3 direction = (Vector3.up * 2) + (transform.forward * 3 * (currentSpeed > 0 ? 1 : -1)); //searches area in front of boar or behind if reversing
             Collider[] colliders = Physics.OverlapSphere(transform.position + direction, 2, GameManager.ReturnBitShift(new string[] { "Default", "Building", "Resource" }), QueryTriggerInteraction.Ignore);
 
             if (colliders.Length == 0) //stops boar hitting trees and buildings
             {
                 MoveBoar(); //move boar when nothing being collided
             }
+            else
+            {
+
+            }
 
             for (int i = 0; i < colliders.Length; i++)//shakes the building without any damage just for visual fun
             {
                 Building building = colliders[i].GetComponentInParent<Building>();
 
-                if (building && !building.GetComponent<Animation>().IsPlaying("Nature Shake")) //stops building shaking too often
+                if (building && building.health > 0 && !building.GetComponent<Animation>().IsPlaying("Nature Shake")) //stops building shaking too often
                 {
-                    //  GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f);
-                    building.TakeDamage(-2);
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f);
+                    building.TakeDamage(2);
                     break;
                 }
             }
@@ -173,7 +178,7 @@ public class Boar : MonoBehaviour
 
     public void MoveBoar()
     {
-        transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward, (currentSpeed / 8.0f) * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, transform.position + transform.forward * (currentSpeed > 0 ? 1 : -1), (Mathf.Abs(currentSpeed) / 8.0f) * Time.deltaTime);
     }
 
     private void DisplayText()
@@ -230,7 +235,7 @@ public class Boar : MonoBehaviour
             inRange = false;
         }
     }
-
+    PlayerController.ToolData previousTool;
     public void Mount()
     {
         mounted = !mounted;
@@ -246,6 +251,7 @@ public class Boar : MonoBehaviour
             PlayerController.global.GetComponent<CharacterController>().enabled = true;
             PlayerController.global.GetComponent<PlayerController>().playerCanMove = false;
             PlayerController.global.characterAnimator.SetBool("Moving", false);
+            previousTool = PlayerController.global.activeToolData;
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HandBool = true });
             GetComponent<NavMeshObstacle>().enabled = false;
         }
@@ -264,7 +270,7 @@ public class Boar : MonoBehaviour
             PlayerController.global.GetComponent<CharacterController>().enabled = true;
             PlayerController.global.GetComponent<PlayerController>().playerCanMove = true;
             PlayerController.global.characterAnimator.SetBool("Sitting", false);
-            PlayerController.global.ChangeTool(new PlayerController.ToolData() { SwordBool = PlayerModeHandler.global.playerModes == PlayerModes.CombatMode, AxeBool = PlayerController.global.lastWasAxe, PickaxeBool = !PlayerController.global.lastWasAxe });
+            PlayerController.global.ChangeTool(previousTool);
             GetComponent<NavMeshObstacle>().enabled = true;
             StartCoroutine(MidAir());
         }

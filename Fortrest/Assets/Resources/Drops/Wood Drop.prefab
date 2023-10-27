@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 5768701934863156977}
   - component: {fileID: 7467337952233752916}
   - component: {fileID: 4631291428092214686}
+  - component: {fileID: -4450727724729069997}
   - component: {fileID: 6582801417358838220}
   - component: {fileID: 3304083758917883527}
   - component: {fileID: 8527941295002300580}
-  - component: {fileID: -4450727724729069997}
   m_Layer: 0
   m_Name: Wood Drop
   m_TagString: Untagged
@@ -87,6 +87,25 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-4450727724729069997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6576763384888351819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656cb4b3cd074594881b714cba5a30a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TierInt: 0
+  resourceAmount: 1
+  resourceObject: 
+  CollectedBool: 0
+  stoneBool: 0
+  WoodBool: 1
+  foodBool: 0
 --- !u!54 &6582801417358838220
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -129,22 +148,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.046646338, y: 0.027926048, z: 0.09681965}
   m_Center: {x: -0.010412479, y: 0.013962888, z: 0}
---- !u!114 &-4450727724729069997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6576763384888351819}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 656cb4b3cd074594881b714cba5a30a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TierInt: 0
-  resourceAmount: 1
-  stackable: 0
-  name: 
-  dragableItem: {fileID: 0}
-  resourceObject: 
-  CollectedBool: 0

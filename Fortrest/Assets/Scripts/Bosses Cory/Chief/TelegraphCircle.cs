@@ -15,7 +15,7 @@ public class TelegraphCircle : MonoBehaviour
     void Start()
     {
         inner.gameObject.transform.SetParent(null);
-        inner.transform.localScale = Vector3.zero;       
+        inner.transform.localScale = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -40,7 +40,7 @@ public class TelegraphCircle : MonoBehaviour
     public IEnumerator DoAreaDamage(float waitTime, float damage, float radius)
     {
         yield return new WaitForSeconds(waitTime);
-        
+
         Collider[] colliders = Physics.OverlapSphere(inner.transform.position, radius);
 
         foreach (var collider in colliders)
@@ -48,7 +48,7 @@ public class TelegraphCircle : MonoBehaviour
             if (collider.GetComponent<PlayerController>())
             {
                 PlayerController player = collider.GetComponent<PlayerController>();
-                
+
                 player.TakeDamage(damage);
 
                 Vector3 pushDirection = player.transform.position - inner.transform.position;
@@ -63,8 +63,7 @@ public class TelegraphCircle : MonoBehaviour
 
         if (!isAttack)
         {
-            ScreenShake.global.duration = 0.3f;
-            ScreenShake.global.shake = true;
+            ScreenShake.global.ShakeScreen(0.3f);
             slamState.StateMachine.ChangeState(slamState.StateAttack);
         }
         else
@@ -73,7 +72,7 @@ public class TelegraphCircle : MonoBehaviour
 
             phaseOneState.IsAttacking = false;
         }
-       
+
         outer.SetActive(false);
     }
 }
