@@ -754,7 +754,7 @@ public class LevelManager : MonoBehaviour
 
                     int ogresSpawned = 0;
 
-                    GameObject prefab = goblinPrefab;
+                    GameObject prefab = null;
 
                     if (goblinSpawnable)
                     {
@@ -789,7 +789,10 @@ public class LevelManager : MonoBehaviour
                         }
                     }
 
-                    GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
+                    if (prefab != null)
+                    {
+                        GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
+                    }
 
                     enemiesCount--;
                     enemyTimer = 0;
