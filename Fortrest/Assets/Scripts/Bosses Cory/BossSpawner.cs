@@ -54,17 +54,17 @@ public class BossSpawner : MonoBehaviour
 
     public void UpdateHealth(float change = 0)
     {
-        health += change;
-
-        if (change < 0 && health > 0)
-        {
-            GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Damage");
-        }
-
-        health = Mathf.Clamp(health, 0, maxHealth);
+        health = Mathf.Clamp(health + change, 0, maxHealth);
 
         if (bossEncountered)
+        {
+            if (change < 0 && health > 0)
+            {
+                GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Damage");
+            }
+
             BossCanvas.GetComponentInChildren<HealthBar>(true).SetHealth(health, maxHealth);
+        }
     }
 
 
@@ -134,6 +134,8 @@ public class BossSpawner : MonoBehaviour
                     GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false, true);
                 }
             }
+
+
 
             bossEncountered = open;
         }
@@ -216,6 +218,11 @@ public class BossSpawner : MonoBehaviour
         else if (escapeByDistance || health == 0)
         {
             BossEncountered(false);
+        }
+
+        if (bossAwakened && !bossEncountered)
+        {
+            UpdateHealth(Time.deltaTime * 3.0f); //healing
         }
     }
 

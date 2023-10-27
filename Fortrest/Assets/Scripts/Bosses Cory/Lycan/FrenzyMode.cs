@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class FrenzyMode : BossState
 {
     [SerializeField] private BossState idleState;
-    [SerializeField] private float nextAttackTime = 0f;
+    //  [SerializeField] private float nextAttackTime = 0f;
     [SerializeField] private float jumpDistance = 10f;
     [SerializeField] private float jumpSpeed = 10f;
     public float timeBetweenJump = 2f;

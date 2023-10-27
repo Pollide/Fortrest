@@ -16,7 +16,7 @@ public class AnimEventsDnake : MonoBehaviour
 
     void PlayScreenShake()
     {
-        ScreenShake.global.shake = true;
+        ScreenShake.global.ShakeScreen();
     }
 
     void ActivateIntroCard()
