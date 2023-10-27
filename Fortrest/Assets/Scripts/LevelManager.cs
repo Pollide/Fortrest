@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.VFX;
 
 public class LevelManager : MonoBehaviour
-{
+{ 
     // VFXs
     public VisualEffect VFXSlash;
     public VisualEffect VFXSlashReversed;
@@ -20,6 +20,25 @@ public class LevelManager : MonoBehaviour
     public VisualEffect VFXBossSlashReversed;
 
     public static LevelManager global;
+
+    [System.Serializable]
+    public class SpawnEntry
+    {
+        public GameObject objectToSpawn;
+        public float spawnPercentage;
+    }
+
+
+    [Header("Enemies to spawn by chance")]
+    public List<SpawnEntry> spawnEntries = new List<SpawnEntry>();
+
+    public SpawnEntry goblin;
+    public SpawnEntry snake;
+    public SpawnEntry spider;
+    public SpawnEntry wolf;
+    public SpawnEntry lava;
+    [Space]
+
     public Camera SceneCamera;
     public GameObject PlayerPrefab;
     public GameObject mountPrefab;
@@ -79,14 +98,10 @@ public class LevelManager : MonoBehaviour
 
     [HideInInspector]
     public float enemyThreshold;
-    [Header("Enemy Prefabs")]
+    [Header("Ogre Prefab")]
     [Space]
-    public GameObject goblinPrefab;
     public GameObject ogrePrefab;
-    public GameObject spiderPrefab;
-    public GameObject snakePrefab;
-    public GameObject wolfPrefab;
-    public GameObject lavaPrefab;
+    [Space]
     public GameObject HUD;
 
     [HideInInspector]
@@ -98,7 +113,6 @@ public class LevelManager : MonoBehaviour
     public Image clockHand;
     public Image clockSun;
     public Image clockMoon;
-
     public bool waveEnd;
 
     [System.Serializable]
@@ -121,7 +135,8 @@ public class LevelManager : MonoBehaviour
     public int campsCount;
     public int enemiesCount;
     public int ogreDayCount = 3;
-    private int ogreSpawnCounter = 1;
+    private int ogreSpawnCounterMax = 1;
+    private int ogresSpawnCounter = 0;
     public bool spawnEnemies;
     private bool nightAttack;
     public float randomAttackTrigger;
@@ -189,6 +204,7 @@ public class LevelManager : MonoBehaviour
         */
 
         enemyThreshold = 0.0f;
+
     }
 
     private void GetHousePosition()
@@ -541,58 +557,82 @@ public class LevelManager : MonoBehaviour
         lastPanPosition = newPanPosition;
     }
 
+    private GameObject SpawnRandomEnemy()
+    {
+        float totalPercentage = 0f;
+
+        foreach (SpawnEntry entry in spawnEntries)
+        {
+            totalPercentage += entry.spawnPercentage;
+        }
+
+        float randomValue = Random.Range(0f, totalPercentage);
+        float cumulativePercentage = 0f;
+
+        foreach (SpawnEntry entry in spawnEntries)
+        {
+            cumulativePercentage += entry.spawnPercentage;
+            if (randomValue <= cumulativePercentage)
+            {
+                return entry.objectToSpawn; 
+            }
+        }
+
+        return null;
+    }
+
     private void EnemyWaves()
     {
-        // Day Attack
-        if (day > 0 && !ReturnNight() && !randomSet)
-        {
-            float randomChance = Random.Range(0.0f, 1.0f);
+        //// Day Attack
+        //if (day > 0 && !ReturnNight() && !randomSet)
+        //{
+        //    float randomChance = Random.Range(0.0f, 1.0f);
 
-            switch (campsCount)
-            {
-                case 0: // No camps = no day attack
-                    attackHappening = false;
-                    break;
-                case 1: // 1 camp = 20% chance
-                    if (randomChance > 0.8f)
-                    {
-                        attackHappening = true;
-                    }
-                    break;
-                case 2: // 2 camps = 40% chance
-                    if (randomChance > 0.6f)
-                    {
-                        attackHappening = true;
-                    }
-                    break;
-                case 3: // 3 camps = 60% chance
-                    if (randomChance > 0.4f)
-                    {
-                        attackHappening = true;
-                    }
-                    break;
-                case 4: // 4 camps = 80% chance
-                    if (randomChance > 0.2f)
-                    {
-                        attackHappening = true;
-                    }
-                    break;
-                default:
-                    break;
-            }
+        //    switch (campsCount)
+        //    {
+        //        case 0: // No camps = no day attack
+        //            attackHappening = false;
+        //            break;
+        //        case 1: // 1 camp = 20% chance
+        //            if (randomChance > 0.8f)
+        //            {
+        //                attackHappening = true;
+        //            }
+        //            break;
+        //        case 2: // 2 camps = 40% chance
+        //            if (randomChance > 0.6f)
+        //            {
+        //                attackHappening = true;
+        //            }
+        //            break;
+        //        case 3: // 3 camps = 60% chance
+        //            if (randomChance > 0.4f)
+        //            {
+        //                attackHappening = true;
+        //            }
+        //            break;
+        //        case 4: // 4 camps = 80% chance
+        //            if (randomChance > 0.2f)
+        //            {
+        //                attackHappening = true;
+        //            }
+        //            break;
+        //        default:
+        //            break;
+        //    }
 
-            if (campsCount >= 5) // 5+ camps = 100% chance
-            {
-                attackHappening = true;
-            }
+        //    if (campsCount >= 5) // 5+ camps = 100% chance
+        //    {
+        //        attackHappening = true;
+        //    }
 
-            if (attackHappening)
-            {
-                randomAttackTrigger = Random.Range(60.0f, 120.0f); // Attack starts at a random time during the day
-                nightAttack = false; // It is not a night attack
-            }
-            randomSet = true; // Regardless of the outcome, we are not running this again until the next day                     
-        }
+        //    if (attackHappening)
+        //    {
+        //        randomAttackTrigger = Random.Range(60.0f, 120.0f); // Attack starts at a random time during the day
+        //        nightAttack = false; // It is not a night attack
+        //    }
+        //    randomSet = true; // Regardless of the outcome, we are not running this again until the next day                     
+        //}
 
         // Night attack
         if (daylightTimer >= 150.0f && daylightTimer <= 151.0f)
@@ -682,7 +722,6 @@ public class LevelManager : MonoBehaviour
                 // Group of enemies
                 if (randomInt == 1 && enemiesCount > 3)
                 {
-                    int ogresSpawned = 0;
                     int randomRange = Random.Range(2, 5);
 
                     for (int i = 0; i < randomRange; i++)
@@ -690,37 +729,18 @@ public class LevelManager : MonoBehaviour
                         enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
                         enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
 
-                        GameObject prefab = null;
+                        GameObject prefab = SpawnRandomEnemy();
 
-                        if (goblinSpawnable)
-                        {
-                            prefab = goblinPrefab;
-                        }
-                        if (snakeSpawnable && Random.Range(0, 3) == 0)
-                        {
-                            prefab = snakePrefab;
-                        }
-                        if (wolfSpawnable && Random.Range(0, 4) == 0)
-                        {
-                            prefab = wolfPrefab;
-                        }
-                        if (spiderSpawnable && Random.Range(0, 5) == 0)
-                        {
-                            prefab = spiderPrefab;
-                        }
-                        if (lavaSpawnable && Random.Range(0, 6) == 0)
-                        {
-                            prefab = lavaPrefab;
-                        }
-                        if (day % ogreDayCount == 0 && Random.Range(0, 7) == 0 && !ogreSpawned)
+                        if (day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
                         {
                             prefab = ogrePrefab;
 
-                            ogresSpawned++;
+                            ogresSpawnCounter++;
 
-                            if (ogresSpawned == ogreSpawnCounter)
+                            if (ogresSpawnCounter == ogreSpawnCounterMax)
                             {
-                                ogreSpawnCounter++;
+                                ogresSpawnCounter = 0;
+                                ogreSpawnCounterMax++;
                                 ogreSpawned = true;
                             }
                         }
@@ -743,39 +763,18 @@ public class LevelManager : MonoBehaviour
                     enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1);
                     enemySpawnPosition.y = 0; //everything is at ground zero        
 
-                    int ogresSpawned = 0;
+                    GameObject prefab = SpawnRandomEnemy();
 
-                    GameObject prefab = null;
-
-                    if (goblinSpawnable)
-                    {
-                        prefab = goblinPrefab;
-                    }
-                    if (snakeSpawnable && Random.Range(0, 3) == 0)
-                    {
-                        prefab = snakePrefab;
-                    }
-                    if (wolfSpawnable && Random.Range(0, 4) == 0)
-                    {
-                        prefab = wolfPrefab;
-                    }
-                    if (spiderSpawnable && Random.Range(0, 5) == 0)
-                    {
-                        prefab = spiderPrefab;
-                    }
-                    if (lavaSpawnable && Random.Range(0, 6) == 0)
-                    {
-                        prefab = lavaPrefab;
-                    }
-                    if (day % ogreDayCount == 0 && Random.Range(0, 7) == 0 && !ogreSpawned)
+                    if (day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
                     {
                         prefab = ogrePrefab;
 
-                        ogresSpawned++;
+                        ogresSpawnCounter++;
 
-                        if (ogresSpawned == ogreSpawnCounter)
+                        if (ogresSpawnCounter == ogreSpawnCounterMax)
                         {
-                            ogreSpawnCounter++;
+                            ogresSpawnCounter = 0;
+                            ogreSpawnCounterMax++;
                             ogreSpawned = true;
                         }
                     }

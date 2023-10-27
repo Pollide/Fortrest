@@ -283,6 +283,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea4603d0e323171468f589f9a4a40a8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnEntries: []
+  goblin:
+    objectToSpawn: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
+      type: 3}
+    spawnPercentage: 0
+  snake:
+    objectToSpawn: {fileID: 6307758033353301056, guid: 1ac9e20574a8d9c4da3f303481136ebf,
+      type: 3}
+    spawnPercentage: 0
+  spider:
+    objectToSpawn: {fileID: 5936932421964932193, guid: 7aa9da11c0a47014693eeed85fca301e,
+      type: 3}
+    spawnPercentage: 0
+  wolf:
+    objectToSpawn: {fileID: 9064983638505709771, guid: 8b044387f32d2864fa8871fba56a8a17,
+      type: 3}
+    spawnPercentage: 0
+  lava:
+    objectToSpawn: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
+      type: 3}
+    spawnPercentage: 0
   VFXSlash: {fileID: 2811824872228394820}
   VFXSlashReversed: {fileID: 702450964987997474}
   VFXSleeping: {fileID: 8930455027153140060}
@@ -441,17 +462,7 @@ MonoBehaviour:
   daySpeed: 1
   enemyTimer: 0
   enemyThreshold: 0
-  goblinPrefab: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
-    type: 3}
   ogrePrefab: {fileID: 5633042026967272240, guid: 06cff7f448c42c24bb9eed44021c8b05,
-    type: 3}
-  spiderPrefab: {fileID: 5936932421964932193, guid: 7aa9da11c0a47014693eeed85fca301e,
-    type: 3}
-  snakePrefab: {fileID: 6307758033353301056, guid: 1ac9e20574a8d9c4da3f303481136ebf,
-    type: 3}
-  wolfPrefab: {fileID: 9064983638505709771, guid: 8b044387f32d2864fa8871fba56a8a17,
-    type: 3}
-  lavaPrefab: {fileID: 1402647301061185258, guid: 051132bc636477a4894f685c1348af03,
     type: 3}
   HUD: {fileID: 0}
   newDay: 0
