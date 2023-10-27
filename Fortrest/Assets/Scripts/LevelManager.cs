@@ -393,6 +393,7 @@ public class LevelManager : MonoBehaviour
         light.color = SunriseGradient.Evaluate(evaluate);
         SceneCamera.backgroundColor = SkyboxGradient.Evaluate(evaluate);
         RenderSettings.ambientLight = AmbientGradient.Evaluate(evaluate);
+        RenderSettings.skybox.color = SkyboxGradient.Evaluate(evaluate);
 
         if (daylightTimer > cycle)
         {
@@ -731,11 +732,11 @@ public class LevelManager : MonoBehaviour
                         }
 
                         enemySpawnPosition.y = 0; //everything is at ground zero                   
-                        
+
                         if (prefab != null)
                         {
                             GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
-                        } 
+                        }
                     }
                     enemiesCount -= randomRange;
                     enemyTimer = 0;

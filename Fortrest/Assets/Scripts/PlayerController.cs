@@ -1190,7 +1190,7 @@ public class PlayerController : MonoBehaviour
             OpenResourceHolder(map);
         }
     }
-    public float speedy = 1;
+
     void UpdateMap()
     {
         MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
@@ -1208,7 +1208,7 @@ public class PlayerController : MonoBehaviour
                 Vector3 currentMousePosition = Input.mousePosition;
                 Vector3 mouseVelocity = (currentMousePosition - mapMousePosition) / Time.unscaledDeltaTime;
 
-                MapPanningPosition += mouseVelocity * speedy * Time.unscaledDeltaTime;
+                MapPanningPosition += mouseVelocity * speed * Time.unscaledDeltaTime;
                 // MapPanningPosition = Vector3.Slerp(MapPanningPosition, MapPanningPosition + dragDirection, speed);
             }
 
