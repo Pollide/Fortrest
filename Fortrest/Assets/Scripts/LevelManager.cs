@@ -3,9 +3,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.VFX;
-
+using System.Collections;
 public class LevelManager : MonoBehaviour
-{ 
+{
     // VFXs
     public VisualEffect VFXSlash;
     public VisualEffect VFXSlashReversed;
@@ -167,6 +167,8 @@ public class LevelManager : MonoBehaviour
     public bool spiderSpawnable;
     public bool lavaSpawnable;
 
+    public BossSpawner activeBossSpawner;
+    public List<Transform> cutsceneCameraLocations = new List<Transform>();
 
     private void Awake()
     {
@@ -184,6 +186,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
+        RenderSettings.skybox = new Material(RenderSettings.skybox); //stops it changing in git
+
         newDay = true;
         VFXSlash.Stop();
         VFXSlashReversed.Stop();
@@ -209,6 +213,116 @@ public class LevelManager : MonoBehaviour
 
         enemyThreshold = 0.0f;
 
+        if (PlayerPrefs.GetInt("Prologue") == 0)
+        {
+            StartCoroutine(PrologueCutscene());
+        }
+    }
+
+    IEnumerator PrologueCutscene()
+    {
+        PlayerController.global.gameObject.SetActive(false);
+        PlayerController.global.UIAnimation.gameObject.SetActive(false);
+        Indicator.global.GetComponent<Canvas>().enabled = false;
+
+        SceneCamera.orthographic = false;
+        SceneCamera.fieldOfView = 60;
+
+        CameraFollow.global.bossCam = true;
+        SFXManager.SFXData sFXData = GameManager.global.SoundManager.PlaySound(GameManager.global.CutsceneChattingOutside, 1, false);
+
+        CutsceneSet(SceneCamera.transform, 0);
+
+        while (Vector3.Distance(SceneCamera.transform.position, cutsceneCameraLocations[1].position) > 0.5f)
+        {
+            SceneCamera.transform.position = Vector3.Slerp(SceneCamera.transform.position, cutsceneCameraLocations[1].position, 0.6f * Time.deltaTime);
+            yield return 0;
+        }
+
+        float timer = 0;
+
+        yield return new WaitForSeconds(2);
+
+        ScreenShake.global.ShakeScreen(0.5f);
+
+        GameManager.global.SoundManager.StopSelectedSound(sFXData.Audio.clip);
+
+        yield return new WaitForSeconds(1);
+
+        while (timer < 2)
+        {
+            SceneCamera.transform.rotation = Quaternion.Slerp(SceneCamera.transform.rotation, cutsceneCameraLocations[2].transform.rotation, 0.5f * Time.deltaTime);
+            timer += Time.deltaTime;
+            yield return 0;
+        }
+
+        ScreenShake.global.ShakeScreen(1);
+
+
+        for (int i = 0; i < bossList.Count; i++)
+        {
+            if (bossList[i].bossType == BossSpawner.TYPE.IsleMaker)
+            {
+                CutsceneSet(bossList[i].transform, 3);
+
+                while (Vector3.Distance(bossList[i].transform.position, cutsceneCameraLocations[4].position) > 1)
+                {
+                    activeBossSpawner = bossList[i]; //so the music changes
+                    bossList[i].transform.position = Vector3.Slerp(bossList[i].transform.position, cutsceneCameraLocations[4].position, 2 * Time.deltaTime);
+                    yield return 0;
+                }
+
+                break;
+            }
+        }
+        GameManager.global.SoundManager.PlaySound(GameManager.global.BossRoarSound, 1, false);
+
+        yield return new WaitForSeconds(1);
+
+        for (int i = 0; i < bossList.Count; i++)
+        {
+            if (bossList[i].gameObject.activeInHierarchy && bossList[i].bossType != BossSpawner.TYPE.IsleMaker)
+            {
+                if (bossList[i].GetComponent<UnityEngine.AI.NavMeshAgent>())
+                    bossList[i].GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+                bossList[i].cutsceneMode = true;
+                timer = 0;
+                if (bossList[i].bossType == BossSpawner.TYPE.Hrafn)
+                {
+                    bossList[i].GetComponent<BirdBoss>().enabled = false;
+                }
+
+                for (int j = 0; j < cutsceneCameraLocations.Count; j++)
+                {
+                    if (cutsceneCameraLocations[j].name.Contains(bossList[i].bossType.ToString()))
+                    {
+                        CutsceneSet(bossList[i].transform, j);
+                        bossList[i].transform.position -= new Vector3(0, 3, 0);
+
+                        while (timer < 2)
+                        {
+                            bossList[i].transform.position = Vector3.Slerp(bossList[i].transform.position, cutsceneCameraLocations[j].position, 2 * Time.deltaTime);
+                            timer += Time.deltaTime;
+                            yield return 0;
+                        }
+
+                        yield return new WaitForSeconds(1);
+                        break;
+                    }
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(1);
+
+        PlayerPrefs.SetInt("Prologue", 1);
+        GameManager.global.NextScene(1);
+    }
+
+    void CutsceneSet(Transform move, int number)
+    {
+        move.position = cutsceneCameraLocations[number].position;
+        move.rotation = cutsceneCameraLocations[number].rotation;
     }
 
     private void GetHousePosition()
@@ -310,8 +424,6 @@ public class LevelManager : MonoBehaviour
         return daylightTimer > 180;
     }
 
-    public BossSpawner activeBossSpawner;
-
     public void SetGameMusic()
     {
         TerrainData terrainData = currentTerrainData;
@@ -322,7 +434,7 @@ public class LevelManager : MonoBehaviour
         }
         else
         {
-            Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Default", "Terrain" }));
+            Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" }));
             // Debug.Log(raycastHit.transform);
             for (int i = 0; i < terrainDataList.Count; i++)
             {
@@ -347,6 +459,7 @@ public class LevelManager : MonoBehaviour
 
             if (!missing && currentTerrainData.welcomeSprite)
             {
+                PlayerController.global.biomeNameImage.color = currentTerrainData.indicatorColor;
                 PlayerController.global.biomeNameImage.sprite = currentTerrainData.welcomeSprite;
                 GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Biome Name Appear");
                 //GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
@@ -413,6 +526,7 @@ public class LevelManager : MonoBehaviour
         light.color = SunriseGradient.Evaluate(evaluate);
         SceneCamera.backgroundColor = SkyboxGradient.Evaluate(evaluate);
         RenderSettings.ambientLight = AmbientGradient.Evaluate(evaluate);
+        RenderSettings.skybox.SetColor("_Tint", SkyboxGradient.Evaluate(evaluate));
 
         if (daylightTimer > cycle)
         {
@@ -440,7 +554,7 @@ public class LevelManager : MonoBehaviour
 
         //  Light light = DirectionalLightTransform.GetComponent<Light>();
 
-        light.intensity = Mathf.Lerp(light.intensity, 1 - Weather.global.DecreaseDayLightIntensity, 0.4f * Time.deltaTime);
+        light.intensity = Mathf.Lerp(light.intensity, 1 - (ReturnNight() ? 0 : Weather.global.DecreaseDayLightIntensity), 0.4f * Time.deltaTime);
 
 
 
@@ -462,6 +576,11 @@ public class LevelManager : MonoBehaviour
         {
             //   GameManager.global.SoundManager.PlaySound(GameManager.global.WaterSound);
             // GameManager.global.NextScene(1);
+            if (Boar.global.mounted)
+            {
+                Boar.global.Mount();
+                Boar.global.transform.position = Boar.global.respawnLocation;
+            }
             PlayerController.global.TakeDamage(PlayerController.global.playerHealth);
             // enabled = false;
             // return;
@@ -578,7 +697,7 @@ public class LevelManager : MonoBehaviour
             cumulativePercentage += entry.spawnPercentage;
             if (randomValue <= cumulativePercentage)
             {
-                return entry.objectToSpawn; 
+                return entry.objectToSpawn;
             }
         }
 

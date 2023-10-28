@@ -41,7 +41,7 @@ public class BridgeBuilder : MonoBehaviour
 
             if (LevelManager.global.bossList[i].health <= 0)
             {
-                if (BridgeTypeInt == 4 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Chieftain)
+                if (BridgeTypeInt == 2 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Chieftain)
                 {
                     canBuild = true;
                     break;
@@ -52,6 +52,13 @@ public class BridgeBuilder : MonoBehaviour
                     canBuild = true;
                     break;
                 }
+
+                if (BridgeTypeInt == 4 && (LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Hrafn || LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Lycan))
+                {
+                    canBuild = true;
+                    break;
+                }
+
 
                 if (BridgeTypeInt == 5 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.SpiderQueen)
                 {

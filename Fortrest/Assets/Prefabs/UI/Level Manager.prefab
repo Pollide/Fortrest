@@ -366,12 +366,12 @@ MonoBehaviour:
     objectToSpawn: {fileID: 6307758033353301056, guid: 1ac9e20574a8d9c4da3f303481136ebf,
       type: 3}
     spawnPercentage: 15
-  spider:
-    objectToSpawn: {fileID: 5936932421964932193, guid: 7aa9da11c0a47014693eeed85fca301e,
-      type: 3}
-    spawnPercentage: 15
   wolf:
     objectToSpawn: {fileID: 9064983638505709771, guid: 8b044387f32d2864fa8871fba56a8a17,
+      type: 3}
+    spawnPercentage: 15
+  spider:
+    objectToSpawn: {fileID: 5936932421964932193, guid: 7aa9da11c0a47014693eeed85fca301e,
       type: 3}
     spawnPercentage: 15
   lava:
@@ -617,10 +617,21 @@ MonoBehaviour:
   messageDisplayed: 0
   goblinSpawnable: 0
   snakeSpawnable: 0
-  spiderSpawnable: 0
   wolfSpawnable: 0
+  spiderSpawnable: 0
   lavaSpawnable: 0
   activeBossSpawner: {fileID: 0}
+  cutsceneCameraLocations:
+  - {fileID: 3025165054650231512}
+  - {fileID: 3598336273794149321}
+  - {fileID: 3189875138303715755}
+  - {fileID: 7209719940492366605}
+  - {fileID: 951723609325553732}
+  - {fileID: 3229243302225199360}
+  - {fileID: 5561723167154508836}
+  - {fileID: 504215123048894260}
+  - {fileID: 1408716418027938787}
+  - {fileID: 5962012890693442948}
 --- !u!114 &7386932472633630464
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -633,6 +644,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9989ff1f5903f694eac10b15188f3766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  campsToSpawnPerDay: 2
+  campsSpawnedPerDay: 0
   campPrefab: {fileID: 1285012206302860940, guid: 6f112fb65cf7af84fa7dabf857eb2607,
     type: 3}
   mesh: {fileID: 5960873131632778912, guid: 6f112fb65cf7af84fa7dabf857eb2607, type: 3}
