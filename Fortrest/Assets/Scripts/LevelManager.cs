@@ -173,7 +173,7 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         global = this;
-
+        currentTerrainData = terrainDataList[0];
         clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -daylightTimer + 90);
 
         if (!GameManager.global)
@@ -424,6 +424,7 @@ public class LevelManager : MonoBehaviour
         return daylightTimer > 180;
     }
 
+    AudioClip activeMusic;
     public void SetGameMusic()
     {
         TerrainData terrainData = currentTerrainData;
@@ -439,18 +440,33 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (terrainData != null && currentTerrainData != null && currentTerrainData.music != terrainData.music)
+        AudioClip music = terrainData.music;
+
+        if (activeBossSpawner)
+            music = GameManager.global.BossMusic;
+
+        if (ReturnNight())
+            music = GameManager.global.NightMusic;
+
+        if (Time.timeScale == 0)
+            music = GameManager.global.PauseMusic;
+
+
+        if (activeMusic != music)
         {
-            GameManager.global.MusicManager.PlayMusic(activeBossSpawner ? GameManager.global.BossMusic : (ReturnNight() ? GameManager.global.NightMusic : terrainData.music));
+            activeMusic = music;
+
+            GameManager.global.MusicManager.PlayMusic(music);
         }
 
-        if (terrainData != null && currentTerrainData != null && currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
+        if (currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
         {
             PlayerController.global.biomeNameImage.color = terrainData.indicatorColor;
             PlayerController.global.biomeNameImage.sprite = terrainData.welcomeSprite;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Biome Name Appear");
             //GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
         }
+
 
         currentTerrainData = terrainData;
 

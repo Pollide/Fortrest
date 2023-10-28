@@ -1142,14 +1142,6 @@ public class PlayerController : MonoBehaviour
             PauseCanvasGameObject.SetActive(pause);
             controllerImage.sprite = GameManager.global.KeyboardBool ? keyboardSprite : controllerSprite;
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
-            if (pause)
-            {
-                GameManager.global.MusicManager.PlayMusic(GameManager.global.PauseMusic);
-            }
-            else
-            {
-                LevelManager.global.currentTerrainData = null;
-            }
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.PauseMenuSound);
 
@@ -1170,14 +1162,7 @@ public class PlayerController : MonoBehaviour
         if (!pausedBool)
         {
             GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
-            if (map)
-            {
-                GameManager.global.MusicManager.PlayMusic(GameManager.global.PauseMusic);
-            }
-            else
-            {
-                LevelManager.global.currentTerrainData = null;
-            }
+
 
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
             Time.timeScale = map ? 0 : 1;
