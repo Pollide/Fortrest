@@ -174,7 +174,7 @@ public class PlayerModeHandler : MonoBehaviour
             }
         }
 
-        bool walkedthroughdoor = Vector3.Distance(PlayerController.global.transform.position, House.transform.position + House.transform.forward) < 3f && !inTheFortress;
+        bool walkedthroughdoor = Vector3.Distance(PlayerController.global.transform.position, House.transform.position - House.transform.forward * 3) < 3f && !inTheFortress;
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL || walkedthroughdoor) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;

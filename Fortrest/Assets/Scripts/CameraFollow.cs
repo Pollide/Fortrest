@@ -38,8 +38,13 @@ public class CameraFollow : MonoBehaviour
     {
         if (!bossCam)
         {
-            FocusOnTarget(PlayerController.global.transform.position + transform.forward * -15, initialRotation);
+            FocusOnTarget(PlayerController.global.transform.position + offset(), initialRotation);
         }
+    }
+
+    public Vector3 offset()
+    {
+        return transform.forward * -30;
     }
 
     public void FocusOnTarget(Vector3 targetPosition, Vector3 offsetRotation)
@@ -48,8 +53,8 @@ public class CameraFollow : MonoBehaviour
         {
             if (!cameraMoving)
             {
-                transform.position = Vector3.SmoothDamp(transform.position, PlayerController.global.house.transform.position, ref currentVelocity, 0.2f);
-                if (Vector3.Distance(transform.position, PlayerController.global.house.transform.position) < 2.0f)
+                transform.position = Vector3.SmoothDamp(transform.position, PlayerController.global.house.transform.position + offset(), ref currentVelocity, 0.2f);
+                if (Vector3.Distance(transform.position, PlayerController.global.house.transform.position + offset()) < 2.0f)
                 {
                     canMoveCamera = true;
                 }
