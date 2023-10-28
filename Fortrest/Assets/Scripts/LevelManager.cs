@@ -439,12 +439,12 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (currentTerrainData.music != terrainData.music)
+        if (terrainData != null && currentTerrainData != null && currentTerrainData.music != terrainData.music)
         {
             GameManager.global.MusicManager.PlayMusic(activeBossSpawner ? GameManager.global.BossMusic : (ReturnNight() ? GameManager.global.NightMusic : terrainData.music));
         }
 
-        if (currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
+        if (terrainData != null && currentTerrainData != null && currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
         {
             PlayerController.global.biomeNameImage.color = terrainData.indicatorColor;
             PlayerController.global.biomeNameImage.sprite = terrainData.welcomeSprite;

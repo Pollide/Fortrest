@@ -115,6 +115,8 @@ public class BridgeBuilder : MonoBehaviour
 
                 if (PlayerController.global.CheckSufficientResources(true))
                 {
+                    LevelManager manager = LevelManager.global;
+                    CampSpawner spawner = CampSpawner.global;
                     canBuild = false;
                     GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltNoiseSound);
                     GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
@@ -124,30 +126,38 @@ public class BridgeBuilder : MonoBehaviour
                     GameManager.PlayAnimator(bridgeAnimator, "Armature_BridgeSelfBuild");
                     WalkAccrossCollider.SetActive(true);
 
+                    spawner.spawnEnemies = false;
+
                     if (BridgeTypeInt == 1)
                     {
-                        LevelManager.global.goblinSpawnable = true;
-                        LevelManager.global.spawnEntries.Add(LevelManager.global.goblin);
+
+                        manager.goblinSpawnable = true;
+                        manager.spawnEntries.Add(manager.goblin);
+                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.goblin.objectToSpawn, spawner.spawnMaxMarsh, ref spawner.spawnCurrentMarsh);
                     }
                     if (BridgeTypeInt == 2)
                     {
-                        LevelManager.global.snakeSpawnable = true;
-                        LevelManager.global.spawnEntries.Add(LevelManager.global.snake);
+                        manager.snakeSpawnable = true;
+                        manager.spawnEntries.Add(manager.snake);
+                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.snake.objectToSpawn, spawner.spawnMaxTussuck, ref spawner.spawnCurrentTussuck);
                     }
                     if (BridgeTypeInt == 3)
                     {
-                        LevelManager.global.wolfSpawnable = true;
-                        LevelManager.global.spawnEntries.Add(LevelManager.global.wolf);
+                        manager.wolfSpawnable = true;
+                        manager.spawnEntries.Add(manager.wolf);
+                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.wolf.objectToSpawn, spawner.spawnMaxCoast, ref spawner.spawnCurrentCoast);
                     }
                     if (BridgeTypeInt == 4)
                     {
-                        LevelManager.global.spiderSpawnable = true;
-                        LevelManager.global.spawnEntries.Add(LevelManager.global.spider);
+                        manager.spiderSpawnable = true;
+                        manager.spawnEntries.Add(manager.spider);
+                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.spider.objectToSpawn, spawner.spawnCurrentTaiga, ref spawner.spawnCurrentTaiga);
                     }
                     if (BridgeTypeInt == 5)
                     {
-                        LevelManager.global.lavaSpawnable = true;
-                        LevelManager.global.spawnEntries.Add(LevelManager.global.lava);
+                        manager.lavaSpawnable = true;
+                        manager.spawnEntries.Add(manager.lava);
+                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.lava.objectToSpawn, spawner.spawnCurrentVolcanic, ref spawner.spawnCurrentVolcanic);
                     }
                 }
                 else
