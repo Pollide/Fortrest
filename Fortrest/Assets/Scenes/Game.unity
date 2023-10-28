@@ -490,6 +490,11 @@ PrefabInstance:
       objectReference: {fileID: 1973061008}
     - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
+      propertyPath: spawnEntries.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 927623175018942829, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
       propertyPath: terrainDataList.Array.data[0].terrain
       value: 
       objectReference: {fileID: 6625218656589382338}
@@ -525,6 +530,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7386932472633630464, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
         type: 3}
+      propertyPath: mesh
+      value: 
+      objectReference: {fileID: 1008289099}
+    - target: {fileID: 7386932472633630464, guid: ec484cfb130f4a8479e472d3dcb5e2fa,
+        type: 3}
       propertyPath: campUI
       value: 
       objectReference: {fileID: 1355159811}
@@ -535,6 +545,12 @@ PrefabInstance:
       objectReference: {fileID: 612753003}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ec484cfb130f4a8479e472d3dcb5e2fa, type: 3}
+--- !u!23 &1008289099 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 2510072617811892511, guid: eefd96987ab17bd40b5d66ae486fa408,
+    type: 3}
+  m_PrefabInstance: {fileID: 1313716111}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1270996740
 GameObject:
   m_ObjectHideFlags: 0
