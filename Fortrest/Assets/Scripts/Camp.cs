@@ -2,12 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 public class Camp : MonoBehaviour
 {
     private float health;
     public float maxHealth = 15f;
-    
+
     public enum CAMPTYPE
     {
         goblinCamp = 1,
@@ -27,6 +28,7 @@ public class Camp : MonoBehaviour
     void Start()
     {
         LevelManager.global.campList.Add(this);
+        Indicator.global.AddIndicator(transform, Color.red, Regex.Replace(campType.ToString(), "(\\B[A-Z0-9])", " $1"), false);
 
         if (LevelManager.global.spawnEntries.Count > 0)
         {
