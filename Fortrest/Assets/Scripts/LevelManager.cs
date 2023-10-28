@@ -306,14 +306,14 @@ public class LevelManager : MonoBehaviour
                             yield return 0;
                         }
 
-                        yield return new WaitForSeconds(1);
+                        yield return new WaitForSeconds(0.5f);
                         break;
                     }
                 }
             }
         }
 
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1.5f);
 
         PlayerPrefs.SetInt("Prologue", 1);
         GameManager.global.NextScene(1);
@@ -428,43 +428,31 @@ public class LevelManager : MonoBehaviour
     {
         TerrainData terrainData = currentTerrainData;
 
-        if (activeBossSpawner)
-        {
-            terrainData = new TerrainData() { music = GameManager.global.BossMusic };
-        }
-        else
-        {
-            Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" }));
-            // Debug.Log(raycastHit.transform);
-            for (int i = 0; i < terrainDataList.Count; i++)
-            {
-                if (terrainDataList[i].terrain.transform == raycastHit.transform)
-                {
-                    terrainData = terrainDataList[i];
+        Physics.Raycast(PlayerController.global.transform.position, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" }));
 
-                    if (ReturnNight())
-                    {
-                        terrainData = new TerrainData() { terrain = terrainDataList[i].terrain, welcomeSprite = terrainDataList[i].welcomeSprite, music = GameManager.global.NightMusic };
-                    }
-                    break;
-                }
+        for (int i = 0; i < terrainDataList.Count; i++)
+        {
+            if (terrainDataList[i].terrain.transform == raycastHit.transform)
+            {
+                terrainData = terrainDataList[i];
+                break;
             }
         }
 
-        bool missing = currentTerrainData == null || !currentTerrainData.music;
-        if (missing || terrainData != currentTerrainData && terrainData.music != currentTerrainData.music)
+        if (currentTerrainData.music != terrainData.music)
         {
-            currentTerrainData = terrainData;
-            GameManager.global.MusicManager.PlayMusic(terrainData.music);
-
-            if (!missing && currentTerrainData.welcomeSprite)
-            {
-                PlayerController.global.biomeNameImage.color = currentTerrainData.indicatorColor;
-                PlayerController.global.biomeNameImage.sprite = currentTerrainData.welcomeSprite;
-                GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Biome Name Appear");
-                //GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
-            }
+            GameManager.global.MusicManager.PlayMusic(activeBossSpawner ? GameManager.global.BossMusic : (ReturnNight() ? GameManager.global.NightMusic : terrainData.music));
         }
+
+        if (currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
+        {
+            PlayerController.global.biomeNameImage.color = terrainData.indicatorColor;
+            PlayerController.global.biomeNameImage.sprite = terrainData.welcomeSprite;
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Biome Name Appear");
+            //GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
+        }
+
+        currentTerrainData = terrainData;
 
     }
 

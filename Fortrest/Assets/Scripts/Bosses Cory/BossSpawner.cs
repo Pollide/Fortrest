@@ -191,7 +191,7 @@ public class BossSpawner : MonoBehaviour
                     PlayerController.global.characterAnimator.SetBool("Moving", false);
                     introTimer += Time.deltaTime;
                     // Perform the intro animation
-                    Vector3 targetPosition = transform.position + introPositionOffset;
+                    Vector3 targetPosition = transform.position + introPositionOffset + CameraFollow.global.offset();
                     LevelManager.global.SceneCamera.transform.position = Vector3.Lerp(LevelManager.global.SceneCamera.transform.position, targetPosition - LevelManager.global.SceneCamera.transform.forward, 2 * Time.deltaTime);
 
                     if (introTimer >= introLength)

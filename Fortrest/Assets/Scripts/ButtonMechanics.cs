@@ -37,6 +37,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     public bool KeyTipsBool;
     [Header("Build")]
     public int UpgradeInt;
+    public bool CloseTurretMenuBool;
 
     [Header("Menu")]
     public bool ContinueBool;
@@ -178,6 +179,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             Start();
         }
 
+        if (CloseTurretMenuBool)
+        {
+            PlayerModeHandler.global.TurretMenuSet(false);
+        }
+
         if (UpgradeInt < 0)
         {
             CheckUpgrade();
@@ -194,6 +200,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
                 if (UpgradeInt == -2)
                 {
+                    PlayerModeHandler.global.TurretMenuSet(false);
                     PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
                     PlayerModeHandler.global.SelectedTurret.DestroyBuilding();
                 }

@@ -483,8 +483,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        LevelManager manager = LevelManager.global;
-
         // Game Objects
         if (GameObject.Find("Radius Camera"))
         {
@@ -893,6 +891,7 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
+                        GameManager.PlayAnimation(UIAnimation, "Apple Shake");
                     }
                     break;
 
@@ -900,6 +899,10 @@ public class PlayerController : MonoBehaviour
                     if (Unlocks.global.miniTurretUnlocked && !turretSpawned && playerCanMove)
                     {
                         SpawnTurret();
+                    }
+                    else
+                    {
+                        GameManager.PlayAnimation(UIAnimation, "Turret Shake");
                     }
                     break;
 
@@ -998,7 +1001,7 @@ public class PlayerController : MonoBehaviour
         }
 
         if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
-            CameraFollow.global.transform.position = pos;
+            CameraFollow.global.transform.position = pos + CameraFollow.global.offset();
 
         StartCoroutine(RevertBool(true));
     }
