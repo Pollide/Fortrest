@@ -43,12 +43,12 @@ public class Camp : MonoBehaviour
                     campPrefabs[1].SetActive(true);
                     break;
                 case CAMPTYPE.spiderCamp:
-                    LevelManager.global.spawnEntries[2].spawnPercentage += CampSpawner.global.spidergoblinCampPercent;
-                    campPrefabs[2].SetActive(true);
+                    LevelManager.global.spawnEntries[3].spawnPercentage += CampSpawner.global.spidergoblinCampPercent;
+                    campPrefabs[3].SetActive(true);
                     break;
                 case CAMPTYPE.wolfCamp:
-                    LevelManager.global.spawnEntries[3].spawnPercentage += CampSpawner.global.wolfgoblinCampPercents;
-                    campPrefabs[3].SetActive(true);
+                    LevelManager.global.spawnEntries[2].spawnPercentage += CampSpawner.global.wolfgoblinCampPercents;
+                    campPrefabs[2].SetActive(true);
                     break;
                 case CAMPTYPE.lavaCamp:
                     LevelManager.global.spawnEntries[4].spawnPercentage += CampSpawner.global.lavagoblinCampPercent;
@@ -104,10 +104,10 @@ public class Camp : MonoBehaviour
                         LevelManager.global.spawnEntries[1].spawnPercentage -= CampSpawner.global.snakegoblinCampPercent;
                         break;
                     case CAMPTYPE.spiderCamp:
-                        LevelManager.global.spawnEntries[2].spawnPercentage -= CampSpawner.global.spidergoblinCampPercent;
+                        LevelManager.global.spawnEntries[3].spawnPercentage -= CampSpawner.global.spidergoblinCampPercent;
                         break;
                     case CAMPTYPE.wolfCamp:
-                        LevelManager.global.spawnEntries[3].spawnPercentage -= CampSpawner.global.wolfgoblinCampPercents;
+                        LevelManager.global.spawnEntries[2].spawnPercentage -= CampSpawner.global.wolfgoblinCampPercents;
                         break;
                     case CAMPTYPE.lavaCamp:
                         LevelManager.global.spawnEntries[4].spawnPercentage -= CampSpawner.global.lavagoblinCampPercent;
