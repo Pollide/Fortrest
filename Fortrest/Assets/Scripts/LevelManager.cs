@@ -441,7 +441,7 @@ public class LevelManager : MonoBehaviour
 
         if (currentTerrainData.music != terrainData.music)
         {
-            GameManager.global.MusicManager.PlayMusic(activeBossSpawner ? GameManager.global.BossMusic : (ReturnNight() ? terrainData.music : terrainData.music));
+            GameManager.global.MusicManager.PlayMusic(activeBossSpawner ? GameManager.global.BossMusic : (ReturnNight() ? GameManager.global.NightMusic : terrainData.music));
         }
 
         if (!currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
