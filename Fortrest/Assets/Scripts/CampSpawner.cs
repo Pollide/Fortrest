@@ -7,27 +7,49 @@ public class CampSpawner : MonoBehaviour
 {
     public static CampSpawner global;
 
+    [Header("Camp Spawning")]
     private int currentDay;
-    [SerializeField] private int campsToSpawnPerDay = 2;
-    [SerializeField] private int campsSpawnedPerDay = 0;
+    private int lastAmount;
+    private int campInt;
+
     private bool setTime = true;
     private bool spawnCamp = true;
-    private float randomTime;
     private bool onlyOnce = true;
-    public GameObject campPrefab;
-    Vector3 spawnPosition;
-    public MeshRenderer mesh;
+    
+    private float randomTime;
     private float edge = 30.0f;
+
+    private Vector3 spawnPosition;
+
+    public GameObject campPrefab;
+    public MeshRenderer mesh;
     public GameObject campUI;
     public TMP_Text campText;
-    int lastAmount;
-    int campInt;
-
+    [Space]
+    [SerializeField] private int campsToSpawnPerDay = 2;
+    [SerializeField] private int campsSpawnedPerDay = 0;
+    [Space]
     public float goblinCampPercent = 2;
     public float snakegoblinCampPercent = 2;
     public float spidergoblinCampPercent = 2;
     public float wolfgoblinCampPercents = 2;
     public float lavagoblinCampPercent = 2;
+
+    [Header("Enemy Spawning")]
+    public int spawnMaxMarsh = 10;
+    public int spawnMaxTussuck = 10;
+    public int spawnMaxCoast = 8;
+    public int spawnMaxTaiga = 5;
+    public int spawnMaxVolcanic = 8;
+
+    public int spawnCurrentMarsh = 0;
+    public int spawnCurrentTussuck = 0;
+    public int spawnCurrentCoast = 0;
+    public int spawnCurrentTaiga = 0;
+    public int spawnCurrentVolcanic = 0;
+
+    [Space]
+    public bool spawnEnemies = true;
 
     private void Start()
     {
@@ -36,9 +58,72 @@ public class CampSpawner : MonoBehaviour
         lastAmount = 0;
     }
 
-    private void SpawnEnemies()
-    { 
-    
+    public void SpawnEnemies(Terrain terrain, GameObject prefab, int amountMax, ref int amountCurrent)
+    {
+        LevelManager manager = LevelManager.global;
+
+        if (!spawnEnemies)
+        {
+            while (amountCurrent < amountMax)
+            {
+                spawnPosition.x = terrain.transform.position.x + Random.Range(edge, terrain.terrainData.size.x - edge);
+
+                spawnPosition.z = terrain.transform.position.z + Random.Range(edge, terrain.terrainData.size.z - edge);
+
+                spawnPosition.y = (mesh.bounds.size.y / 2.0f) - 4;
+
+                float distance = Vector3.Distance(PlayerController.global.transform.position, spawnPosition);
+
+                if (distance > 40.0f)
+                {
+                    //Define the positions for the four raycasts
+                    Vector3[] raycastPositions = new Vector3[4];
+                    raycastPositions[0] = spawnPosition;
+                    float size = 1;
+                    raycastPositions[1] = spawnPosition + new Vector3(size, 0f, 0f); // Shift in positive X direction
+                    raycastPositions[2] = spawnPosition - new Vector3(size, 0f, 0f); // Shift in negative X direction
+                    raycastPositions[3] = spawnPosition + new Vector3(0f, 0f, size); // Shift in positive Z direction
+
+                    //Loop through each position and cast a ray
+                    bool isSafe = true; //Assuming it's safe until proven otherwise
+
+                    foreach (Vector3 position in raycastPositions)
+                    {
+                        if (!Physics.Raycast(position, Vector3.down, Mathf.Infinity, LayerMask.GetMask("Terrain")))
+                        {
+                            isSafe = false;
+                            break; //Exit the loop if any of the raycasts hit nothing
+                        }
+                    }
+
+                    if (isSafe) //Raycast prevents camp spawning somewhere there isnt terrain has island has unique shape
+                    {
+                        Collider[] colliders = Physics.OverlapSphere(spawnPosition, mesh.bounds.size.x / 2.0f, GameManager.ReturnBitShift(new string[] { "Resource", "Building", "Boar" }));
+
+                        for (int i = 0; i < colliders.Length; i++)
+                        {
+                            if (colliders[i].tag == "Shrine" || colliders[i].tag == "Boar" || colliders[i].tag == "Camp")
+                            {
+                                return;
+                            }
+                            else if (colliders[i].tag == "Resource")
+                            {
+                                Destroy(colliders[i].gameObject);
+                            }
+                        }
+
+                        GameObject enemy = Instantiate(prefab, spawnPosition, Quaternion.identity);
+
+                        amountCurrent++;
+
+                        if (amountCurrent == amountMax)
+                        {
+                            spawnEnemies = true;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void SpawnCamps()
@@ -91,7 +176,7 @@ public class CampSpawner : MonoBehaviour
                 //Define the positions for the four raycasts
                 Vector3[] raycastPositions = new Vector3[4];
                 raycastPositions[0] = spawnPosition;
-                float size = 2;
+                float size = 5;
                 raycastPositions[1] = spawnPosition + new Vector3(size, 0f, 0f); // Shift in positive X direction
                 raycastPositions[2] = spawnPosition - new Vector3(size, 0f, 0f); // Shift in negative X direction
                 raycastPositions[3] = spawnPosition + new Vector3(0f, 0f, size); // Shift in positive Z direction
