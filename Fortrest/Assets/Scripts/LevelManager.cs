@@ -34,8 +34,8 @@ public class LevelManager : MonoBehaviour
 
     public SpawnEntry goblin;
     public SpawnEntry snake;
-    public SpawnEntry spider;
     public SpawnEntry wolf;
+    public SpawnEntry spider;
     public SpawnEntry lava;
     [Space]
 
@@ -163,8 +163,8 @@ public class LevelManager : MonoBehaviour
     [Space]
     public bool goblinSpawnable;
     public bool snakeSpawnable;
-    public bool spiderSpawnable;
     public bool wolfSpawnable;
+    public bool spiderSpawnable;
     public bool lavaSpawnable;
 
 
