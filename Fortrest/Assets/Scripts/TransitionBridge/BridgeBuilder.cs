@@ -53,7 +53,7 @@ public class BridgeBuilder : MonoBehaviour
                     break;
                 }
 
-                if (BridgeTypeInt == 4 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Hrafn)
+                if (BridgeTypeInt == 4 && (LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Hrafn || LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Lycan))
                 {
                     canBuild = true;
                     break;
