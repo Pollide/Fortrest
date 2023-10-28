@@ -96,14 +96,14 @@ public class CampSpawner : MonoBehaviour
                     terrain = LevelManager.global.terrainDataList[rand].terrain;
                 }
 
-                if (manager.spiderSpawnable)
+                if (manager.wolfSpawnable)
                 {
                     int rand = Random.Range(1, 4);
                     campInt = rand;
                     terrain = LevelManager.global.terrainDataList[rand].terrain;
                 }
 
-                if (manager.wolfSpawnable)
+                if (manager.spiderSpawnable)
                 {
                     int rand = Random.Range(1, 5);
                     campInt = rand;
