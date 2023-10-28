@@ -33,23 +33,23 @@ public class Camp : MonoBehaviour
             switch (campType)
             {
                 case CAMPTYPE.goblinCamp:
-                    //LevelManager.global.spawnEntries[0].spawnPercentage += CampSpawner.global.goblinCampPercent;
+                    LevelManager.global.spawnEntries[0].spawnPercentage += CampSpawner.global.goblinCampPercent;
                     campPrefabs[0].SetActive(true);
                     break;
                 case CAMPTYPE.snakesCamp:
-                    //LevelManager.global.spawnEntries[1].spawnPercentage += CampSpawner.global.snakegoblinCampPercent;
+                    LevelManager.global.spawnEntries[1].spawnPercentage += CampSpawner.global.snakegoblinCampPercent;
                     campPrefabs[1].SetActive(true);
                     break;
                 case CAMPTYPE.spiderCamp:
-                    //LevelManager.global.spawnEntries[2].spawnPercentage += CampSpawner.global.spidergoblinCampPercent;
+                    LevelManager.global.spawnEntries[2].spawnPercentage += CampSpawner.global.spidergoblinCampPercent;
                     campPrefabs[2].SetActive(true);
                     break;
                 case CAMPTYPE.wolfCamp:
-                    //LevelManager.global.spawnEntries[3].spawnPercentage += CampSpawner.global.wolfgoblinCampPercents;
+                    LevelManager.global.spawnEntries[3].spawnPercentage += CampSpawner.global.wolfgoblinCampPercents;
                     campPrefabs[3].SetActive(true);
                     break;
                 case CAMPTYPE.lavaCamp:
-                    //LevelManager.global.spawnEntries[4].spawnPercentage += CampSpawner.global.lavagoblinCampPercent;
+                    LevelManager.global.spawnEntries[4].spawnPercentage += CampSpawner.global.lavagoblinCampPercent;
                     campPrefabs[4].SetActive(true);
                     break;
                 default:
