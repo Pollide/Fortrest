@@ -36,6 +36,11 @@ public class CampSpawner : MonoBehaviour
         lastAmount = 0;
     }
 
+    private void SpawnEnemies()
+    { 
+    
+    }
+
     private void SpawnCamps()
     {
         LevelManager manager = LevelManager.global;

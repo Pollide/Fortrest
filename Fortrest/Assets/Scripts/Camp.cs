@@ -31,40 +31,56 @@ public class Camp : MonoBehaviour
         LevelManager.global.campList.Add(this);
         Indicator.global.AddIndicator(transform, Color.red, Regex.Replace(campType.ToString(), "(\\B[A-Z0-9])", " $1"), false);
 
-        if (LevelManager.global.spawnEntries.Count > 0)
+        if (LevelManager.global.goblinSpawnable)
         {
             switch (campType)
             {
                 case CAMPTYPE.goblinCamp:
-                    LevelManager.global.spawnEntries[0].spawnPercentage += CampSpawner.global.goblinCampPercent;
+                    if (LevelManager.global.spawnEntries[0] != null)
+                    {
+                        LevelManager.global.spawnEntries[0].spawnPercentage += CampSpawner.global.goblinCampPercent;
+                    }
+                    
                     campPrefabs[0].SetActive(true);
 
                     SpawnEnemyOnCamp(enemySpawn, LevelManager.global.goblin.objectToSpawn);
 
                     break;
                 case CAMPTYPE.snakesCamp:
-                    LevelManager.global.spawnEntries[1].spawnPercentage += CampSpawner.global.snakegoblinCampPercent;
+                    if (LevelManager.global.spawnEntries[1] != null)
+                    {
+                        LevelManager.global.spawnEntries[1].spawnPercentage += CampSpawner.global.snakegoblinCampPercent;
+                    }
                     campPrefabs[1].SetActive(true);
 
                     SpawnEnemyOnCamp(enemySpawn, LevelManager.global.snake.objectToSpawn);
 
                     break;
                 case CAMPTYPE.spiderCamp:
-                    LevelManager.global.spawnEntries[3].spawnPercentage += CampSpawner.global.spidergoblinCampPercent;
+                    if (LevelManager.global.spawnEntries[3] != null)
+                    {
+                        LevelManager.global.spawnEntries[3].spawnPercentage += CampSpawner.global.spidergoblinCampPercent;
+                    }
                     campPrefabs[3].SetActive(true);
 
                     SpawnEnemyOnCamp(enemySpawn, LevelManager.global.spider.objectToSpawn);
 
                     break;
                 case CAMPTYPE.wolfCamp:
-                    LevelManager.global.spawnEntries[2].spawnPercentage += CampSpawner.global.wolfgoblinCampPercents;
+                    if (LevelManager.global.spawnEntries[2] != null)
+                    {
+                        LevelManager.global.spawnEntries[2].spawnPercentage += CampSpawner.global.wolfgoblinCampPercents;
+                    }
                     campPrefabs[2].SetActive(true);
 
                     SpawnEnemyOnCamp(enemySpawn, LevelManager.global.wolf.objectToSpawn);
 
                     break;
                 case CAMPTYPE.lavaCamp:
-                    LevelManager.global.spawnEntries[4].spawnPercentage += CampSpawner.global.lavagoblinCampPercent;
+                    if (LevelManager.global.spawnEntries[4] != null)
+                    {
+                        LevelManager.global.spawnEntries[4].spawnPercentage += CampSpawner.global.lavagoblinCampPercent;
+                    }
                     campPrefabs[4].SetActive(true);
 
                     SpawnEnemyOnCamp(enemySpawn, LevelManager.global.lava.objectToSpawn);
