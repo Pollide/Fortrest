@@ -22,7 +22,8 @@ public class Camp : MonoBehaviour
     public GameObject[] campPrefabs;
     public bool canBeDamaged = true;
     public HealthBar healthBar;
-    private float HealthAppearTimer = -1;
+    private float healthAppearTimer = -1;
+    public int enemySpawn = 2;
     public Animation healthAnimation;
 
     void Start()
@@ -30,29 +31,60 @@ public class Camp : MonoBehaviour
         LevelManager.global.campList.Add(this);
         Indicator.global.AddIndicator(transform, Color.red, Regex.Replace(campType.ToString(), "(\\B[A-Z0-9])", " $1"), false);
 
-        if (LevelManager.global.spawnEntries.Count > 0)
+        if (LevelManager.global.goblinSpawnable)
         {
             switch (campType)
             {
                 case CAMPTYPE.goblinCamp:
-                    LevelManager.global.spawnEntries[0].spawnPercentage += CampSpawner.global.goblinCampPercent;
+                    if (LevelManager.global.spawnEntries[0] != null)
+                    {
+                        LevelManager.global.spawnEntries[0].spawnPercentage += CampSpawner.global.goblinCampPercent;
+                    }
+                    
                     campPrefabs[0].SetActive(true);
+
+                    SpawnEnemyOnCamp(enemySpawn, LevelManager.global.goblin.objectToSpawn);
+
                     break;
                 case CAMPTYPE.snakesCamp:
-                    LevelManager.global.spawnEntries[1].spawnPercentage += CampSpawner.global.snakegoblinCampPercent;
+                    if (LevelManager.global.spawnEntries[1] != null)
+                    {
+                        LevelManager.global.spawnEntries[1].spawnPercentage += CampSpawner.global.snakegoblinCampPercent;
+                    }
                     campPrefabs[1].SetActive(true);
+
+                    SpawnEnemyOnCamp(enemySpawn, LevelManager.global.snake.objectToSpawn);
+
                     break;
                 case CAMPTYPE.spiderCamp:
-                    LevelManager.global.spawnEntries[3].spawnPercentage += CampSpawner.global.spidergoblinCampPercent;
+                    if (LevelManager.global.spawnEntries[3] != null)
+                    {
+                        LevelManager.global.spawnEntries[3].spawnPercentage += CampSpawner.global.spidergoblinCampPercent;
+                    }
                     campPrefabs[3].SetActive(true);
+
+                    SpawnEnemyOnCamp(enemySpawn, LevelManager.global.spider.objectToSpawn);
+
                     break;
                 case CAMPTYPE.wolfCamp:
-                    LevelManager.global.spawnEntries[2].spawnPercentage += CampSpawner.global.wolfgoblinCampPercents;
+                    if (LevelManager.global.spawnEntries[2] != null)
+                    {
+                        LevelManager.global.spawnEntries[2].spawnPercentage += CampSpawner.global.wolfgoblinCampPercents;
+                    }
                     campPrefabs[2].SetActive(true);
+
+                    SpawnEnemyOnCamp(enemySpawn, LevelManager.global.wolf.objectToSpawn);
+
                     break;
                 case CAMPTYPE.lavaCamp:
-                    LevelManager.global.spawnEntries[4].spawnPercentage += CampSpawner.global.lavagoblinCampPercent;
+                    if (LevelManager.global.spawnEntries[4] != null)
+                    {
+                        LevelManager.global.spawnEntries[4].spawnPercentage += CampSpawner.global.lavagoblinCampPercent;
+                    }
                     campPrefabs[4].SetActive(true);
+
+                    SpawnEnemyOnCamp(enemySpawn, LevelManager.global.lava.objectToSpawn);
+
                     break;
                 default:
                     break;
@@ -63,15 +95,25 @@ public class Camp : MonoBehaviour
         health = maxHealth;
     }
 
+    private void SpawnEnemyOnCamp(int amount, GameObject gameObject)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            Vector3 enemySpawnPos = new(transform.position.x + Random.Range(-2f, 2f), transform.position.y, transform.position.z + Random.Range(-2f, 2f));
+
+            GameObject enemy = Instantiate(gameObject, enemySpawnPos, Quaternion.identity);
+        }
+    }
+
     private void Update()
     {
-        if (HealthAppearTimer != -1)
+        if (healthAppearTimer != -1)
         {
-            HealthAppearTimer += Time.deltaTime;
+            healthAppearTimer += Time.deltaTime;
 
-            if (HealthAppearTimer > 5)
+            if (healthAppearTimer > 5)
             {
-                HealthAppearTimer = -1;
+                healthAppearTimer = -1;
                 GameManager.PlayAnimation(healthAnimation, "Health Appear", false);
             }
         }
@@ -81,11 +123,11 @@ public class Camp : MonoBehaviour
     {
         health -= damage;
 
-        if (HealthAppearTimer == -1)
+        if (healthAppearTimer == -1)
         {
             GameManager.PlayAnimation(healthAnimation, "Health Appear");
         }
-        HealthAppearTimer = 0;
+        healthAppearTimer = 0;
 
         GameManager.PlayAnimation(healthAnimation, "Health Hit");
         healthBar.SetHealth(health, maxHealth);
