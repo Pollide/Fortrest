@@ -18,7 +18,6 @@ public class CampSpawner : MonoBehaviour
     Vector3 spawnPosition;
     public MeshRenderer mesh;
     private float edge = 30.0f;
-    private float buildZone = 85.0f;
     public GameObject campUI;
     public TMP_Text campText;
     int lastAmount;
@@ -35,6 +34,108 @@ public class CampSpawner : MonoBehaviour
         global = this;
         currentDay = LevelManager.global.day;
         lastAmount = 0;
+    }
+
+    private void SpawnCamps()
+    {
+        LevelManager manager = LevelManager.global;
+
+        if (!spawnCamp && manager.goblinSpawnable && campsSpawnedPerDay < campsToSpawnPerDay)
+        {
+            Terrain terrain = LevelManager.global.terrainDataList[1].terrain;
+            campInt = 1;
+
+            if (manager.snakeSpawnable)
+            {
+                int rand = Random.Range(1, 3);
+                campInt = rand;
+                terrain = LevelManager.global.terrainDataList[rand].terrain;
+            }
+
+            if (manager.wolfSpawnable)
+            {
+                int rand = Random.Range(1, 4);
+                campInt = rand;
+                terrain = LevelManager.global.terrainDataList[rand].terrain;
+            }
+
+            if (manager.spiderSpawnable)
+            {
+                int rand = Random.Range(1, 5);
+                campInt = rand;
+                terrain = LevelManager.global.terrainDataList[rand].terrain;
+            }
+
+            if (manager.lavaSpawnable)
+            {
+                int rand = Random.Range(1, 6);
+                campInt = rand;
+                terrain = LevelManager.global.terrainDataList[rand].terrain;
+            }
+
+            spawnPosition.x = terrain.transform.position.x + Random.Range(edge, terrain.terrainData.size.x - edge);
+
+            spawnPosition.z = terrain.transform.position.z + Random.Range(edge, terrain.terrainData.size.z - edge);
+
+            spawnPosition.y = (mesh.bounds.size.y / 2.0f) - 4;
+
+            float distance = Vector3.Distance(PlayerController.global.transform.position, spawnPosition);
+
+            if (distance > 40.0f)
+            {
+                //Define the positions for the four raycasts
+                Vector3[] raycastPositions = new Vector3[4];
+                raycastPositions[0] = spawnPosition;
+                float size = 2;
+                raycastPositions[1] = spawnPosition + new Vector3(size, 0f, 0f); // Shift in positive X direction
+                raycastPositions[2] = spawnPosition - new Vector3(size, 0f, 0f); // Shift in negative X direction
+                raycastPositions[3] = spawnPosition + new Vector3(0f, 0f, size); // Shift in positive Z direction
+
+                //Loop through each position and cast a ray
+                bool isSafe = true; //Assuming it's safe until proven otherwise
+
+                foreach (Vector3 position in raycastPositions)
+                {
+                    if (!Physics.Raycast(position, Vector3.down, Mathf.Infinity, LayerMask.GetMask("Terrain")))
+                    {
+                        isSafe = false;
+                        break; //Exit the loop if any of the raycasts hit nothing
+                    }
+                }
+
+                if (isSafe) //Raycast prevents camp spawning somewhere there isnt terrain has island has unique shape
+                {
+                    Collider[] colliders = Physics.OverlapSphere(spawnPosition, mesh.bounds.size.x / 2.0f, GameManager.ReturnBitShift(new string[] { "Resource", "Building", "Boar" }));
+
+                    for (int i = 0; i < colliders.Length; i++)
+                    {
+                        if (colliders[i].tag == "Shrine" || colliders[i].tag == "Boar" || colliders[i].tag == "Camp")
+                        {
+                            return;
+                        }
+                        else if (colliders[i].tag == "Resource")
+                        {
+                            Destroy(colliders[i].gameObject);
+                        }
+                    }
+                    GameObject camp = Instantiate(campPrefab, spawnPosition, Quaternion.identity);
+
+                    camp.GetComponent<Camp>().campType = (Camp.CAMPTYPE)campInt;
+
+                    campsSpawnedPerDay++;
+
+                    if (campsSpawnedPerDay == campsToSpawnPerDay)
+                    {
+                        campsSpawnedPerDay = 0;
+                        spawnCamp = true;
+                    }
+                }
+            }
+            else
+            {
+                return;
+            }
+        }
     }
 
     void Update()
@@ -82,104 +183,10 @@ public class CampSpawner : MonoBehaviour
                 spawnCamp = false;
             }
 #endif
-            LevelManager manager = LevelManager.global;
 
-            if (!spawnCamp && manager.goblinSpawnable && campsSpawnedPerDay < campsToSpawnPerDay)
-            {
-                Terrain terrain = LevelManager.global.terrainDataList[1].terrain;
-                campInt = 1;
-
-                if (manager.snakeSpawnable)
-                {
-                    int rand = Random.Range(1, 3);
-                    campInt = rand;
-                    terrain = LevelManager.global.terrainDataList[rand].terrain;
-                }
-
-                if (manager.wolfSpawnable)
-                {
-                    int rand = Random.Range(1, 4);
-                    campInt = rand;
-                    terrain = LevelManager.global.terrainDataList[rand].terrain;
-                }
-
-                if (manager.spiderSpawnable)
-                {
-                    int rand = Random.Range(1, 5);
-                    campInt = rand;
-                    terrain = LevelManager.global.terrainDataList[rand].terrain;
-                }
-
-                if (manager.lavaSpawnable)
-                {
-                    int rand = Random.Range(1, 6);
-                    campInt = rand;
-                    terrain = LevelManager.global.terrainDataList[rand].terrain;
-                }
+            SpawnCamps();
 
 
-                spawnPosition.x = terrain.transform.position.x + Random.Range(edge, terrain.terrainData.size.x - edge);
-
-                spawnPosition.z = terrain.transform.position.z + Random.Range(edge, terrain.terrainData.size.z - edge);
-             
-                spawnPosition.y = (mesh.bounds.size.y / 2.0f) - 4;
-
-                float distance = Vector3.Distance(PlayerController.global.transform.position, spawnPosition);
-
-                if (distance > 40.0f)
-                {
-                    //Define the positions for the four raycasts
-                    Vector3[] raycastPositions = new Vector3[4];
-                    raycastPositions[0] = spawnPosition;
-                    float size = 2;
-                    raycastPositions[1] = spawnPosition + new Vector3(size, 0f, 0f); // Shift in positive X direction
-                    raycastPositions[2] = spawnPosition - new Vector3(size, 0f, 0f); // Shift in negative X direction
-                    raycastPositions[3] = spawnPosition + new Vector3(0f, 0f, size); // Shift in positive Z direction
-
-                    //Loop through each position and cast a ray
-                    bool isSafe = true; //Assuming it's safe until proven otherwise
-
-                    foreach (Vector3 position in raycastPositions)
-                    {
-                        if (!Physics.Raycast(position, Vector3.down, Mathf.Infinity, LayerMask.GetMask("Terrain")))
-                        {
-                            isSafe = false;
-                            break; //Exit the loop if any of the raycasts hit nothing
-                        }
-                    }
-
-                    if (isSafe) //Raycast prevents camp spawning somewhere there isnt terrain has island has unique shape
-                    {
-                        Collider[] colliders = Physics.OverlapSphere(spawnPosition, mesh.bounds.size.x / 2.0f, GameManager.ReturnBitShift(new string[] { "Resource", "Building", "Boar" }));
-
-                        for (int i = 0; i < colliders.Length; i++)
-                        {
-                            if (colliders[i].tag == "Shrine" || colliders[i].tag == "Boar" || colliders[i].tag == "Camp")
-                            {
-                                return;
-                            }
-                            else if (colliders[i].tag == "Resource")
-                            {
-                                Destroy(colliders[i].gameObject);
-                            }
-                        }
-                        GameObject camp = Instantiate(campPrefab, spawnPosition, Quaternion.identity);
-
-                        camp.GetComponent<Camp>().campType = (Camp.CAMPTYPE)campInt;
-
-                        campsSpawnedPerDay++;
-
-                        if (campsSpawnedPerDay == campsToSpawnPerDay)
-                        {
-                            spawnCamp = true;
-                        }
-                    }
-                }
-                else
-                {
-                    return;
-                }
-            }
         }
     }
 }
