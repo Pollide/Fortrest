@@ -444,7 +444,7 @@ public class LevelManager : MonoBehaviour
             GameManager.global.MusicManager.PlayMusic(activeBossSpawner ? GameManager.global.BossMusic : (ReturnNight() ? GameManager.global.NightMusic : terrainData.music));
         }
 
-        if (!currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
+        if (currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
         {
             PlayerController.global.biomeNameImage.color = terrainData.indicatorColor;
             PlayerController.global.biomeNameImage.sprite = terrainData.welcomeSprite;
