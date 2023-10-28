@@ -8,6 +8,8 @@ public class CampSpawner : MonoBehaviour
     public static CampSpawner global;
 
     private int currentDay;
+    [SerializeField] private int campsToSpawnPerDay = 2;
+    [SerializeField] private int campsSpawnedPerDay = 0;
     private bool setTime = true;
     private bool spawnCamp = true;
     private float randomTime;
@@ -82,7 +84,7 @@ public class CampSpawner : MonoBehaviour
 #endif
             LevelManager manager = LevelManager.global;
 
-            if (!spawnCamp && manager.goblinSpawnable)
+            if (!spawnCamp && manager.goblinSpawnable && campsSpawnedPerDay < campsToSpawnPerDay)
             {
                 Terrain terrain = LevelManager.global.terrainDataList[1].terrain;
                 campInt = 1;
@@ -120,7 +122,7 @@ public class CampSpawner : MonoBehaviour
 
                 spawnPosition.z = terrain.transform.position.z + Random.Range(edge, terrain.terrainData.size.z - edge);
              
-                spawnPosition.y = (mesh.bounds.size.y / 2.0f) - 3;
+                spawnPosition.y = (mesh.bounds.size.y / 2.0f) - 4;
 
                 float distance = Vector3.Distance(PlayerController.global.transform.position, spawnPosition);
 
@@ -165,8 +167,12 @@ public class CampSpawner : MonoBehaviour
 
                         camp.GetComponent<Camp>().campType = (Camp.CAMPTYPE)campInt;
 
-                        Debug.Log("Camp Spawned Total " + LevelManager.global.campsCount);
-                        spawnCamp = true;
+                        campsSpawnedPerDay++;
+
+                        if (campsSpawnedPerDay == campsToSpawnPerDay)
+                        {
+                            spawnCamp = true;
+                        }
                     }
                 }
                 else
