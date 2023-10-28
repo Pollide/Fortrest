@@ -377,7 +377,7 @@ public class PlayerModeHandler : MonoBehaviour
                             {
                                 ClearBlueprint();
 
-                                PlayerController.global.turretMenuHolder.position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+                                PlayerController.global.turretMenuHolder.GetChild(0).position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
 
                                 SelectedTurret = building;
 

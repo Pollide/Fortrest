@@ -891,6 +891,7 @@ public class PlayerController : MonoBehaviour
                     else
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
+                        GameManager.PlayAnimation(UIAnimation, "Apple Shake");
                     }
                     break;
 
@@ -898,6 +899,10 @@ public class PlayerController : MonoBehaviour
                     if (Unlocks.global.miniTurretUnlocked && !turretSpawned && playerCanMove)
                     {
                         SpawnTurret();
+                    }
+                    else
+                    {
+                        GameManager.PlayAnimation(UIAnimation, "Turret Shake");
                     }
                     break;
 
