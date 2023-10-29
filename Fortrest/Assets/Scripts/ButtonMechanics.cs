@@ -82,7 +82,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
             if (ContinueBool)
             {
-                if (GameManager.Pref("Game Begun", 0, true) == 1)
+                if (GameManager.Pref("Game Has Begun", 0, true) == 1)
                 {
                     gameObject.SetActive(true);
                     ButtonText.text = "Continue Day " + (int)GameManager.Pref("Day", 0, true);
@@ -221,8 +221,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (BeginingBool || PlayBool)
         {
-            GameManager.Pref("Game Begun", 0, false); //restart game
-                                                      // List<ButtonMechanics> buttons = GameManager.FindComponent<ButtonMechanics>(transform.root);
+            GameManager.Pref("Prologue", 0, false);
+            GameManager.Pref("Game Has Begun", 0, false); //restart game
+                                                          // List<ButtonMechanics> buttons = GameManager.FindComponent<ButtonMechanics>(transform.root);
             GetComponentInParent<Buttons>().enabled = false;
             /*
             for (int i = 0; i < buttons.Count; i++) //stops continue disappearing when starting new game

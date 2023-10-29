@@ -570,7 +570,7 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if (Pref("Game Begun", 0, true) == 1)
+            if (Pref("Game Has Begun", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
@@ -595,7 +595,7 @@ public class GameManager : MonoBehaviour
     {
         if (!load)
         {
-            Pref("Game Begun", 1, false);
+            Pref("Game Has Begun", 1, false);
         }
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
@@ -657,6 +657,19 @@ public class GameManager : MonoBehaviour
 
         TierDataVoid(ref LevelManager.global.WoodTierList, load);
         TierDataVoid(ref LevelManager.global.StoneTierList, load);
+
+        int campSize = (int)Pref("Camp Size", LevelManager.global.campList.Count, load);
+
+        CampSpawner.global.campsSpawnedPerDay = (int)Pref("Camps Per Day", CampSpawner.global.campsSpawnedPerDay, load);
+        CampSpawner.global.currentDay = LevelManager.global.day;
+
+        for (int i = 0; i < campSize; i++)
+        {
+            Camp camp = load ? Instantiate(CampSpawner.global.campPrefab).GetComponent<Camp>() : LevelManager.global.campList[i];
+
+            DataPositionVoid("Item Position" + i, camp.transform, load);
+            camp.campType = camp.GetCampType((int)Pref("Camp Type" + i, camp.GetIndex(camp.campType), load));
+        }
 
         for (int i = 0; i < LevelManager.global.chestList.Count; i++)
         {
@@ -733,7 +746,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static float Pref(string pref, float value, bool load)
+    public static float Pref(string pref, float value, bool load = false)
     {
         if (load)
         {
@@ -785,7 +798,7 @@ public class GameManager : MonoBehaviour
 
         if (house && building.health <= 0) //prevents a softlock
         {
-            Pref("Game Begun", 0, false);
+            Pref("Game Has Begun", 0, false);
         }
 
         if (load)

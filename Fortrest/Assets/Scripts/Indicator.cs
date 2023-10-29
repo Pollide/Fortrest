@@ -150,6 +150,8 @@ public class Indicator : MonoBehaviour
                 MainData.ArrowText.color = ActiveColor;
                 MainData.ArrowImage.color = ActiveColor;
 
+                MainData.CustomImage.gameObject.SetActive(CustomSprite);
+
                 if (MapData)
                 {
                     if (!CustomSprite)
@@ -157,7 +159,7 @@ public class Indicator : MonoBehaviour
 
                     MapData.ArrowText.color = ActiveColor;
 
-                    MapData.CustomImage.gameObject.SetActive(MapData.CustomImage);
+                    MapData.CustomImage.gameObject.SetActive(CustomSprite);
                 }
 
 
