@@ -47,6 +47,7 @@ public class BossAnimationEvents : MonoBehaviour
         ScreenShake.global.ShakeScreen(1);
         GameManager.global.SoundManager.PlaySound(slamAudio);
     }
+
     void PlayEnrageSound()
     {
         ScreenShake.global.ShakeScreen(1);

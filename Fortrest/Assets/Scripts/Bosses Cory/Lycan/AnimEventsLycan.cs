@@ -5,6 +5,25 @@ using UnityEngine;
 public class AnimEventsLycan : MonoBehaviour
 {
     public FrenzyMode frenzy;
+    [SerializeField] private AudioClip swipeAudio;
+    [SerializeField] private AudioClip enrageAudio;
+    [SerializeField] private AudioClip jumpAudio;
+
+    void PlayEnrageSound()
+    {
+        ScreenShake.global.ShakeScreen(1);
+        GameManager.global.SoundManager.PlaySound(enrageAudio);
+    }
+    void PlaySwipeSound()
+    {
+        GameManager.global.SoundManager.PlaySound(swipeAudio);
+    }
+
+    void PlayJumpSound()
+    {
+        GameManager.global.SoundManager.PlaySound(jumpAudio);
+    }
+
 
     void isAttacking()
     {
