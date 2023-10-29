@@ -64,6 +64,8 @@ public class PlayerModeHandler : MonoBehaviour
     public bool buildingWithController;
     bool turretMenuOpened;
     Vector3 defaultPosition;
+    public GameObject upgradeTimerPrefab;
+
     private void Awake()
     {
         if (global)
@@ -510,14 +512,20 @@ public class PlayerModeHandler : MonoBehaviour
 
 
         newTurret.GetComponent<Defence>().enabled = false;
+        GameObject upgradeTimer = Instantiate(upgradeTimerPrefab, position, Quaternion.identity);
+        Text upgradeText = upgradeTimer.transform.GetChild(0).GetComponent<Text>();
+        float start = turretTimer;
 
-        float timer = 0f;
-        while (timer < 1.0f)
+        while (turretTimer > 0)
         {
-            timer += Time.deltaTime / turretTimer;
-            newTurret.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, timer);
+            turretTimer -= Time.deltaTime;
+            newTurret.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, start - turretTimer);
+            upgradeText.text = turretTimer.ToString("N2") + "s";
             yield return null;
         }
+        upgradeText.text = "DONE!";
+
+        Destroy(upgradeTimer, GameManager.PlayAnimation(upgradeTimer.GetComponent<Animation>(), "Upgrade Timer Appear", false).length);
 
         LevelManager.global.AddBuildingVoid(newTurret.transform);
         newTurret.GetComponent<Defence>().enabled = true;

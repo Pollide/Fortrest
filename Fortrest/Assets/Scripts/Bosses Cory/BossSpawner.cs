@@ -112,6 +112,7 @@ public class BossSpawner : MonoBehaviour
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
 
+                    Unlocks.global.RefreshUnlocks(this);
 
                     for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
                     {

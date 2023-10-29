@@ -644,18 +644,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9989ff1f5903f694eac10b15188f3766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  campsToSpawnPerDay: 2
-  campsSpawnedPerDay: 0
   campPrefab: {fileID: 1285012206302860940, guid: 6f112fb65cf7af84fa7dabf857eb2607,
     type: 3}
   mesh: {fileID: 5960873131632778912, guid: 6f112fb65cf7af84fa7dabf857eb2607, type: 3}
   campUI: {fileID: 0}
   campText: {fileID: 0}
+  campsToSpawnPerDay: 2
+  campsSpawnedPerDay: 0
   goblinCampPercent: 2
   snakegoblinCampPercent: 2
   spidergoblinCampPercent: 2
   wolfgoblinCampPercents: 2
   lavagoblinCampPercent: 2
+  spawnMaxMarsh: 10
+  spawnMaxTussuck: 10
+  spawnMaxCoast: 8
+  spawnMaxTaiga: 5
+  spawnMaxVolcanic: 8
+  spawnCurrentMarsh: 0
+  spawnCurrentTussuck: 0
+  spawnCurrentCoast: 0
+  spawnCurrentTaiga: 0
+  spawnCurrentVolcanic: 0
+  spawnEnemies: 1
 --- !u!114 &1010599321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -674,6 +685,13 @@ MonoBehaviour:
   extraApplesUnlocked: 0
   upgradedMeleeUnlocked: 0
   upgradedBowUnlocked: 0
+  mountSprite: {fileID: 21300000, guid: 66dd00fee33723548a47bab265bbfa80, type: 3}
+  bowSprite: {fileID: 21300000, guid: 6f82c377418fd1946808542a06949fcd, type: 3}
+  miniTurretSprite: {fileID: 21300000, guid: 37b94d8283b2cc04a834f04e9deb93d9, type: 3}
+  extraApplesSprite: {fileID: 21300000, guid: 6a43392109dfb074fa34de80c38ae6ac, type: 3}
+  upgradedMeleeSprite: {fileID: 21300000, guid: df91453f9f93a964c94f6f2775fde2de,
+    type: 3}
+  upgradedBowSprite: {fileID: 21300000, guid: b4ca72659e96bd04fb6d794f409f5399, type: 3}
 --- !u!1 &975559097986637665
 GameObject:
   m_ObjectHideFlags: 0
