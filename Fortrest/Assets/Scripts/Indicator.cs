@@ -149,6 +149,12 @@ public class Indicator : MonoBehaviour
                 {
                     MapData.ArrowText.text = MainData.ArrowText.text;
                     MapData.ArrowText.color = MainData.ArrowImage.color;
+
+                    if (MapData.CustomImage)
+                    {
+                        MapData.CustomImage.gameObject.SetActive(true);
+
+                    }
                 }
             }
 
@@ -302,6 +308,7 @@ public class Indicator : MonoBehaviour
             //   RectTransform imageTransform = indicatorData.MapData.CustomImage.GetComponent<RectTransform>();
             //indicatorData.MapData.ArrowText.GetComponent<RectTransform>().anchoredPosition = imageTransform.anchoredPosition;
             indicatorData.MapData.ArrowText.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            indicatorData.MapData.CustomImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
             // indicatorData.MapData.CustomImage.color = color;
 
             indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
