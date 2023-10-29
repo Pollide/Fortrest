@@ -545,8 +545,7 @@ public class LevelManager : MonoBehaviour
 
         if (Unlocks.global.mountUnlocked && !Boar.global)
         {
-            Instantiate(mountPrefab, houseTransform.position - houseTransform.forward * 5 -houseTransform.right * 5, Quaternion.identity);
-            // Unlocks.global.mountUnlocked = false;//its just gonna turn back on lol
+            Instantiate(mountPrefab, houseTransform.position - houseTransform.forward * 5 - houseTransform.right * 5, Quaternion.identity);
         }
 
         CalculateCamps();
