@@ -548,7 +548,6 @@ public class PlayerController : MonoBehaviour
 
         if (ResourceHolderOpened && Cursor.visible)
         {
-            BridgeBuilder
             ResourceHolderAnimator.transform.position = Input.mousePosition;
         }
 
