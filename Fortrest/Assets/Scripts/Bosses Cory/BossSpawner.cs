@@ -153,18 +153,19 @@ public class BossSpawner : MonoBehaviour
         }
         if (CheckPlayerDistance())
         {
+            if (introCompleted)
+            {
+                GetComponent<BossStateMachine>().enabled = true;
+            }
+
             if (!bossAwakened)
             {
                 bossAwakened = true;
                 BossIntro();
 
                 if (GetComponent<BossStateMachine>())
-                {
-                    GetComponent<BossStateMachine>().enabled = true;
+                { 
                     bossAnimator.gameObject.SetActive(true);
-
-                    //   if(bossType == TYPE.Basilisk)
-                    //   GameManager.global.SoundManager.PlaySound(enrageAudio);
                 }
                 else
                 {

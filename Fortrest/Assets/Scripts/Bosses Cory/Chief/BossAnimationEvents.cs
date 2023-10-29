@@ -92,6 +92,12 @@ public class BossAnimationEvents : MonoBehaviour
     void DeactivateAttacking()
     {
         attackState1.IsAttacking = false;
+        attackState1.BossCanAttack = true;
+    }
+
+    void CanAttackFalse()
+    {
+        attackState1.BossCanAttack = false;
     }
 
     void SetTiredFalse()
@@ -132,6 +138,7 @@ public class BossAnimationEvents : MonoBehaviour
     void SetDiveFalse()
     {
         stateMachine.BossAnimator.SetBool("isDiving", false);
+        attackState1.BossCanAttack = true;
     }
 
     void EndCharge()
