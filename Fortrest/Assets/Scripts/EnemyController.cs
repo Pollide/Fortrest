@@ -585,7 +585,7 @@ public class EnemyController : MonoBehaviour
 
                 PickSound(hitSound, hitSound2, 1.0f);
 
-                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, (PlayerController.global.swordVFX.gameObject.transform.parent.position + transform.position) / 2, Quaternion.Euler(new Vector3(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f))));
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, ((PlayerController.global.transform.position + transform.position) / 2) + PlayerController.global.transform.forward, Quaternion.identity);
                 tempVFX.GetComponent<VisualEffect>().Play();
                 Destroy(tempVFX, 1.0f);
 

@@ -19,7 +19,7 @@ public class TakeDamageTrigger : MonoBehaviour
         {
             if (player.attacking && stateMachine.CanBeDamaged && player.damageEnemy)
             {
-                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, PlayerController.global.swordVFX.gameObject.transform.parent.position, Quaternion.Euler(new Vector3(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f))));
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, ((PlayerController.global.transform.position + transform.position) / 2) + PlayerController.global.transform.forward, Quaternion.identity);
                 tempVFX.GetComponent<VisualEffect>().Play();
                 Destroy(tempVFX, 3.0f);
                 stateMachine.CanBeDamaged = false;
