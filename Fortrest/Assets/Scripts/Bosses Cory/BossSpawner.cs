@@ -166,6 +166,7 @@ public class BossSpawner : MonoBehaviour
                 if (GetComponent<BossStateMachine>())
                 { 
                     bossAnimator.gameObject.SetActive(true);
+
                 }
                 else
                 {
