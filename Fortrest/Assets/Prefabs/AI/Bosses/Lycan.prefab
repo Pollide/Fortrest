@@ -428,6 +428,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossAwakened: 0
+  escapeByDistance: 1
   Arenasize: 40
   bossType: 4
   BossCanvas: {fileID: 7423440669727652635}
@@ -447,6 +448,8 @@ MonoBehaviour:
   introCompleted: 0
   introCard: {fileID: 6253710933162116347}
   bossAnimator: {fileID: 6850407931364350455}
+  cutsceneMode: 0
+  bossSprite: {fileID: 21300000, guid: e452771c1acdd6b4ab81481c713a9663, type: 3}
 --- !u!114 &7648598950419578789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -564,7 +567,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   idleState: {fileID: 1990839997988401373}
-  nextAttackTime: 0
   jumpDistance: 10
   jumpSpeed: 20
   timeBetweenJump: 4

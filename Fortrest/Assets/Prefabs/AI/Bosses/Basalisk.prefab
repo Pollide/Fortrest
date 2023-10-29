@@ -329,7 +329,7 @@ MonoBehaviour:
   phase2Ran: 0
   phase3Ran: 0
   isDead: 0
-  bossSpawner: {fileID: 0}
+  bossSpawner: {fileID: 7388286947653290419}
 --- !u!114 &7388286947653290419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -343,6 +343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossAwakened: 0
+  escapeByDistance: 1
   Arenasize: 40
   bossType: 1
   BossCanvas: {fileID: 5502665693126012376}
@@ -355,9 +356,15 @@ MonoBehaviour:
   cameraDistance: 5
   introPositionOffset: {x: 0, y: 2, z: -2}
   introTimer: 0
+  introLength: 6
+  introSlowTimeStart: 3
+  introSlowTimeEnd: 4
+  slowRate: 0.3
   introCompleted: 0
   introCard: {fileID: 9048182776193749560}
   bossAnimator: {fileID: 9180576964448709641}
+  cutsceneMode: 0
+  bossSprite: {fileID: 21300000, guid: e452771c1acdd6b4ab81481c713a9663, type: 3}
 --- !u!114 &6334537736045912761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,7 +377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85ae25859d725be4aaffeafb7e433673, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackTimer: 0
   attackTime: 0
   attackDuration: 5
   stoppingDistance: 3
@@ -400,12 +406,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d07584372cb58df46808b848e1fb02fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextStateOne: {fileID: 6334537736045912761}
-  nextStateIntro: {fileID: 6334537736045912761}
+  nextState: {fileID: 0}
   lastState: {fileID: 0}
+  resetTimer: 0
   idleRuns: 0
   resetTimerDuration: 5
   stoppingDistance: 3
+  introRan: 0
 --- !u!1 &4632391821758241518
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,7 +524,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a03aa9a46947714aac9ee20e92b0432, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snakeSweep: {fileID: 0}
   size: 0
   timer: 0
   isJumpIndicator: 0
@@ -525,6 +531,7 @@ MonoBehaviour:
   isSnakeIndicator: 0
   isBirdIndicatorCircle: 0
   isBirdIndicatorBigCircle: 0
+  isAsileMakerFireballIndicator: 0
 --- !u!1001 &3824686513915610074
 PrefabInstance:
   m_ObjectHideFlags: 0
