@@ -135,6 +135,7 @@ public class PlayerController : MonoBehaviour
     public Transform MapResourceHolder;
     public GameObject MapResourcePrefab;
     public Animator ResourceHolderAnimator;
+
     public bool lastWasAxe;
 
     [System.Serializable]
@@ -540,6 +541,11 @@ public class PlayerController : MonoBehaviour
         if (staggerCD > 0f)
         {
             staggerCD -= Time.deltaTime;
+        }
+
+        if (ResourceHolderOpened)
+        {
+            ResourceHolderAnimator.transform.position = Input.mousePosition;
         }
 
 
@@ -1317,14 +1323,18 @@ public class PlayerController : MonoBehaviour
 
                 costText.text = tierList[i].ResourceAmount.ToString("N0");
                 mapResource.transform.GetChild(0).GetComponent<Image>().sprite = tierList[i].ResourceIcon;
-
                 //GameManager.TemporaryAnimation(mapResource, GameManager.global.PopupAnimation, i);
 
                 if (tierList[i].ResourceCost != 0)
                 {
-                    costText.text += " " + tierList[i].ResourceCost.ToString("N0");
+                    costText.text = tierList[i].ResourceCost.ToString("N0");
 
                     costText.color = tierList[i].SufficientResource() ? Color.green : Color.red;
+
+                    if (!tierList[i].SufficientResource())
+                    {
+                        // costText.text = "(Need " + tierList[i].ResourceAmount " more"
+                    }
                 }
             }
 
