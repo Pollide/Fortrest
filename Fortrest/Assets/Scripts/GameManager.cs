@@ -728,7 +728,8 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < Indicator.global.IndicatorList.Count; i++)
         {
-            Indicator.global.IndicatorList[i].Unlocked = Pref("Indicator Unlocked" + i, Indicator.global.IndicatorList[i].Unlocked ? 1 : 0, load) == 1;
+            if (!Indicator.global.IndicatorList[i].Permenant)
+                Indicator.global.IndicatorList[i].Visible = Pref("Indicator Unlocked" + i, Indicator.global.IndicatorList[i].Visible ? 1 : 0, load) == 1;
         }
     }
 
