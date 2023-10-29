@@ -47,7 +47,8 @@ public class Unlocks : MonoBehaviour
     {
         GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Unlock");
         PlayerController.global.unlockImage.sprite = sprite;
-        PlayerController.global.unlockTitleText.text = title;
+        PlayerController.global.unlockImage.color = LevelManager.global.currentTerrainData.indicatorColor;
+     PlayerController.global.unlockTitleText.text = title;
         PlayerController.global.unlockDescriptionText.text = description;
     }
 
@@ -96,7 +97,7 @@ public class Unlocks : MonoBehaviour
                         miniTurretUnlocked = true;
 
                         if (defeated == boss)
-                            BossUnlockAnimation(miniTurretSprite, "Mini Turret Unlocked", "Press " + (GameManager.global.KeyboardBool ? "T" : "the right bumper") + "to place");
+                            BossUnlockAnimation(miniTurretSprite, "Mini Turret Unlocked", "Press " + (GameManager.global.KeyboardBool ? "T" : "the right bumper") + " to place");
                         break;
                     case BossSpawner.TYPE.IsleMaker:
                         upgradedBowUnlocked = true;
