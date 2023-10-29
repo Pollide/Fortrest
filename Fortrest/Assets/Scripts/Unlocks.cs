@@ -59,37 +59,44 @@ public class Unlocks : MonoBehaviour
             {
                 switch (boss.bossType)
                 {
-                    case BossSpawner.TYPE.Chieftain:
-                        mountUnlocked = true;
+                    case BossSpawner.TYPE.Basilisk: //UNUSED?
 
-
-                        if (defeated == boss)
-                            BossUnlockAnimation(mountSprite, "Mount Unlocked", "View map to find your ride");
-                        break;
-                    case BossSpawner.TYPE.Basilisk:
-                        bowUnlocked = true;
-
-                        if (defeated == boss)
-                            BossUnlockAnimation(bowSprite, "Bow Unlocked", "While in combat mode, hold Right click to aim.");
-                        break;
-                    case BossSpawner.TYPE.SpiderQueen:
-
-                        miniTurretUnlocked = true;
-
-                        if (defeated == boss)
-                            BossUnlockAnimation(miniTurretSprite, "Mini Turret Unlocked", "Press T to place");
-                        break;
-                    case BossSpawner.TYPE.Hrafn:
                         extraApplesUnlocked = true;
 
                         if (defeated == boss)
                             BossUnlockAnimation(extraApplesSprite, "Extra Apples", "Can now hold more apples");
+
+                        break;
+                    case BossSpawner.TYPE.Chieftain:
+                        bowUnlocked = true;
+
+                        if (defeated == boss)
+                        {
+                            string top = "While in combat mode, hold " + (GameManager.global.KeyboardBool ? "right click" : "the left trigger") + " to aim.\n";
+                            string bottom = "Then " + (GameManager.global.KeyboardBool ? "left click" : "use right trigger") + " to shoot.";
+                            BossUnlockAnimation(bowSprite, "Bow Unlocked", top + bottom);
+                        }
+                        break;
+                    case BossSpawner.TYPE.Hrafn:
+
+
+                        mountUnlocked = true;
+
+                        if (defeated == boss)
+                            BossUnlockAnimation(mountSprite, "Mount Unlocked", "Return home to find your ride");
                         break;
                     case BossSpawner.TYPE.Lycan:
                         upgradedMeleeUnlocked = true;
 
                         if (defeated == boss)
                             BossUnlockAnimation(upgradedMeleeSprite, "Upgraded Sword", "Your sword is now more powerful");
+                        break;
+                    case BossSpawner.TYPE.SpiderQueen:
+
+                        miniTurretUnlocked = true;
+
+                        if (defeated == boss)
+                            BossUnlockAnimation(miniTurretSprite, "Mini Turret Unlocked", "Press " + (GameManager.global.KeyboardBool ? "T" : "the right bumper") + "to place");
                         break;
                     case BossSpawner.TYPE.IsleMaker:
                         upgradedBowUnlocked = true;
