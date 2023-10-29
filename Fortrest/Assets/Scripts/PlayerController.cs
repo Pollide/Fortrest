@@ -174,8 +174,12 @@ public class PlayerController : MonoBehaviour
     public Sprite controllerSprite;
     public Sprite keyboardSprite;
     public GameObject HUDGameObject;
+    public Image unlockImage;
+    public Text unlockTitleText;
+    public Text unlockDescriptionText;
+
     // Death
-    private float respawnTimer = 0.0f;
+    //private float respawnTimer = 0.0f;
     private bool textAnimated = false;
     [HideInInspector] public bool respawning;
     private GameObject respawnText;
@@ -1997,7 +2001,6 @@ public class PlayerController : MonoBehaviour
         }
         if (!playerRespawned)
         {
-            respawnTimer += Time.deltaTime;
             playerHealth += 12 * Time.deltaTime;
 
             if (playerHealth >= maxHealth)
@@ -2021,7 +2024,7 @@ public class PlayerController : MonoBehaviour
                     playerDead = false;
                     deathEffects = false;
                     playerRespawned = true;
-                    respawnTimer = 0.0f;
+
                     LevelManager.FloatingTextChange(respawnText, false);
                     textAnimated = false;
                     if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport && !bridgeInteract)
