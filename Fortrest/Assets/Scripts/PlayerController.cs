@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool lunge = false; // Used to move the player forward (lunge) during their attack
     [HideInInspector] public bool upgradedMelee; // Used to enable the upgraded melee perks
     public bool attackAnimEnded = true; // Safety bool to avoid attack issues. Becomes true using anim behaviour, and is needed to attack again
+    public VisualEffect swordVFX;
 
     // States
     [Header("Player States")]
@@ -523,6 +524,8 @@ public class PlayerController : MonoBehaviour
 
         speedAnim = 0f;
         staggerCD = staggerCDMax;
+
+        swordVFX.Stop();
     }
     public bool debugfrocemap;
     void Update()

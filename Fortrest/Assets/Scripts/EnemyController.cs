@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class EnemyController : MonoBehaviour
 {
@@ -571,8 +572,6 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
-            //  Debug.Log("trigger" + PlayerController.global.attacking + " && " + canBeDamaged + " && " + PlayerController.global.damageEnemy);
-
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 StopAllCoroutines();
@@ -585,6 +584,10 @@ public class EnemyController : MonoBehaviour
                 canBeDamaged = false;
 
                 PickSound(hitSound, hitSound2, 1.0f);
+
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, ((PlayerController.global.transform.position + transform.position) / 2) + PlayerController.global.transform.forward, Quaternion.identity);
+                tempVFX.GetComponent<VisualEffect>().Play();
+                Destroy(tempVFX, 1.0f);
 
                 if (currentEnemyType == ENEMYTYPE.wolf || currentEnemyType == ENEMYTYPE.spider && !flashing) // remove goblin once we have the anim
                 {
