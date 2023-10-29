@@ -140,10 +140,12 @@ public class Indicator : MonoBehaviour
 
             float distance = Vector3.Distance(PlayerController.global.transform.position, WorldPosition);
             bool closeBool = distance < 22;
-            if ((closeBool || Unlocked) && !CustomSprite)
+            if (closeBool || Unlocked)
             {
                 Unlocked = true;
-                MainData.ArrowText.text = ActiveString;
+
+                if (!CustomSprite)
+                    MainData.ArrowText.text = ActiveString;
                 MainData.ArrowText.color = ActiveColor;
                 MainData.ArrowImage.color = ActiveColor;
 
@@ -156,6 +158,8 @@ public class Indicator : MonoBehaviour
                     {
                         MapData.CustomImage.gameObject.SetActive(true);
 
+                        if (Permenant)
+                            MapData.CustomImage.color = ActiveColor;
                     }
                 }
             }
