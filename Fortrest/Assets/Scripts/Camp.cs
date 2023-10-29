@@ -193,7 +193,7 @@ public class Camp : MonoBehaviour
         {
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
-                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, PlayerController.global.swordVFX.gameObject.transform.parent.position, Quaternion.Euler(new Vector3(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f))));
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, ((PlayerController.global.transform.position + transform.position) / 2) + PlayerController.global.transform.forward, Quaternion.identity);
                 tempVFX.GetComponent<VisualEffect>().Play();
                 Destroy(tempVFX, 1.0f);
                 canBeDamaged = false;
