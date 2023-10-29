@@ -57,12 +57,14 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     bool ToggleBool;
     [Space(10)]
     public Text ButtonText;
-    string TextString;
     Buttons buttons;
 
     public void Start()
     {
         buttons = GetComponentInParent<Buttons>();
+
+        if (!buttons)
+            return;
 
         if (!ButtonText)
         {
@@ -105,8 +107,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
                 // transform.GetChild(2).GetComponent<Slider>().onValueChanged += OnPointerClick(null);
             }
-
-            TextString = ButtonText.text;
         }
     }
 

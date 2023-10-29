@@ -105,7 +105,7 @@ MonoBehaviour:
   phase2Ran: 0
   phase3Ran: 0
   isDead: 0
-  bossSpawner: {fileID: 0}
+  bossSpawner: {fileID: 5411412253301375710}
 --- !u!114 &2852120374224939685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -242,6 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossAwakened: 0
+  escapeByDistance: 1
   Arenasize: 40
   bossType: 0
   BossCanvas: {fileID: 2060798956594959119}
@@ -261,6 +262,8 @@ MonoBehaviour:
   introCompleted: 0
   introCard: {fileID: 3266678436718030063}
   bossAnimator: {fileID: 454620424452102865}
+  cutsceneMode: 0
+  bossSprite: {fileID: 21300000, guid: cbe6fc763e32525489e9de1321390469, type: 3}
 --- !u!1 &4347007020634852079
 GameObject:
   m_ObjectHideFlags: 0
