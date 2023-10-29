@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class TakeDamageTrigger : MonoBehaviour
 {
@@ -18,6 +19,9 @@ public class TakeDamageTrigger : MonoBehaviour
         {
             if (player.attacking && stateMachine.CanBeDamaged && player.damageEnemy)
             {
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, PlayerController.global.swordVFX.gameObject.transform.parent.position, Quaternion.Euler(new Vector3(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f))));
+                tempVFX.GetComponent<VisualEffect>().Play();
+                Destroy(tempVFX, 3.0f);
                 stateMachine.CanBeDamaged = false;
                 stateMachine.TakeDamage(player.attackDamage);
             }
