@@ -1147,10 +1147,7 @@ public class PlayerController : MonoBehaviour
             {
                 Time.timeScale = pause ? 0 : 1;
             }
-            else
-            {
-                mapBool = false;
-            }
+
             pausedBool = pause;
         }
     }
@@ -1169,8 +1166,8 @@ public class PlayerController : MonoBehaviour
             {
                 UpdateMap();
                 MapPanningPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
-                if (!ResourceHolderOpened)
-                    UpdateResourceHolder(showCosts: false);
+
+                UpdateResourceHolder(showCosts: false);
             }
 
             OpenResourceHolder(map);

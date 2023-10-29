@@ -334,10 +334,10 @@ public class PlayerModeHandler : MonoBehaviour
 
         bool placing = Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })) && !MouseOverUI();
 
-        if (!SelectedTurret && turretBlueprint)
+        if (!SelectedTurret)
         {
             PlayerController.global.UpdateResourceHolder();
-            PlayerController.global.OpenResourceHolder(placing);
+            PlayerController.global.OpenResourceHolder(placing && turretBlueprint);
         }
 
         if (placing)
@@ -375,7 +375,7 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     hoveringTurret = true;
 
-                    if (colliders[i].gameObject.transform.localScale == Vector3.one)
+                    if (colliders[i].GetComponent<Defence>() && colliders[i].GetComponent<Defence>().enabled) //finished building
                     {
                         bool enter = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL;
 

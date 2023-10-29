@@ -108,6 +108,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 // transform.GetChild(2).GetComponent<Slider>().onValueChanged += OnPointerClick(null);
             }
         }
+
+        if (TerrainTeleportInt != -1)
+        {
+            GetComponent<Image>().color = LevelManager.global.terrainDataList[TerrainTeleportInt].indicatorColor;
+        }
     }
 
     //checks to see if the pointer has exited the button
