@@ -43,11 +43,14 @@ public class EnemyController : MonoBehaviour
     private bool attacking = false;
     public bool canBeDamagedByBoar = true;
     private bool knockbackIncreased;
-    private bool waveEnemy;
+    public bool waveEnemy;
+    
     // Used for lycan boss
-    public bool isMob = false;
-    public PhaseOneLycan bossScriptOne;
-    public PhaseTwoLycan bossScriptTwo;
+    [HideInInspector] public bool isMob = false;
+    [HideInInspector] public PhaseOneLycan bossScriptOne;
+    [HideInInspector] public PhaseTwoLycan bossScriptTwo;
+        
+    [HideInInspector] public bool addIndicator = true;
 
     // Others
     public Animator ActiveAnimator;
@@ -59,7 +62,8 @@ public class EnemyController : MonoBehaviour
         spider,
         wolf,
         ogre,
-        snake
+        snake,
+        lava
     };
     public ENEMYTYPE currentEnemyType;
 
@@ -98,7 +102,7 @@ public class EnemyController : MonoBehaviour
     private float patrolCooldown;
     private float patrolThreshold;
     public float wolfDistanceBetweenPlayer = 17.5f;
-    bool slowed;
+    private bool slowed;
 
     private void Awake()
     {
@@ -122,7 +126,7 @@ public class EnemyController : MonoBehaviour
         LevelManager.global.enemyList.Add(this); // Adding each object transform with this script attached to the enemy list
         if (agent.isOnNavMesh)
         {
-            if (currentEnemyType != ENEMYTYPE.wolf)
+            if (addIndicator)
             {
                 //  Indicator.global.AddIndicator(transform, Color.red, LevelManager.global.enemiesCount < 10 ? currentEnemyType.ToString() : "");
             }
@@ -130,11 +134,6 @@ public class EnemyController : MonoBehaviour
         if (currentEnemyType == ENEMYTYPE.ogre)
         {
             GameManager.global.SoundManager.PlaySound(ogreSpawnSound, 1.0f);
-        }
-
-        if (currentEnemyType == ENEMYTYPE.goblin)
-        {
-            waveEnemy = true;
         }
     }
 
@@ -204,22 +203,66 @@ public class EnemyController : MonoBehaviour
          });
     }
 
-    void Process()
+    private void Ogre()
     {
-        // Default value
-        float shortestDistance = 9999;
+        if (waveEnemy)
+        {
+            bestTarget = null;
+        }
+        else if (!waveEnemy && bestTarget == null)
+        {
+            bestTarget = house.transform;
+        }
+    }
 
-        // Ogre goes for the house
-        if (currentEnemyType == ENEMYTYPE.ogre)
+    private void GoblinSpiderLava()
+    {
+        if (!waveEnemy) // Spiders that spawn during waves
         {
             if (bestTarget == null)
             {
-                bestTarget = house.transform;
+                Patrol();
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 15f)
+                {
+                    bestTarget = playerPosition;
+                }
+            }
+            else
+            {
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 50.0f)
+                {
+                    bestTarget = null;
+                    isInPosition = false;
+                }
             }
         }
+    }
 
-        // Wolf goes for the player if they get too close, and stops chasing if they get too far or go in the house
-        if (currentEnemyType == ENEMYTYPE.wolf)
+    private void SnakeAndWolf()
+    {
+        if (waveEnemy)
+        {
+            if (bestTarget == null)
+            {
+                if (Boar.global.mounted == true || PlayerModeHandler.global.inTheFortress || Vector3.Distance(transform.position, PlayerController.global.transform.position) > 30f) // If the player is unreachable
+                {
+                    bestTarget = null;
+                }
+                else
+                {
+                    bestTarget = playerPosition;
+                }
+            }
+            else if (bestTarget == playerPosition)
+            {
+                if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 35.0f || PlayerModeHandler.global.inTheFortress)
+                {
+                    bestTarget = null;
+                    isInPosition = false;
+                }
+            }
+        }
+        else
         {
             if (bestTarget == null)
             {
@@ -238,43 +281,39 @@ public class EnemyController : MonoBehaviour
                 }
             }
         }
+    }
 
-        // Spiders roam their biome and target the player when they get too close. Wave spiders target the player if they are reachable.
-        if (currentEnemyType == ENEMYTYPE.spider)
+    void Process()
+    {
+        // Default value
+        float shortestDistance = 9999;
+
+        switch (currentEnemyType)
         {
-            if (waveEnemy) // Spiders that spawn during waves
-            {
-                if (Boar.global.mounted == true || PlayerModeHandler.global.inTheFortress || Vector3.Distance(transform.position, PlayerController.global.transform.position) > 30f) // If the player is unreachable
-                {
-                    bestTarget = null;
-                }
-                else
-                {
-                    bestTarget = playerPosition;
-                }
-            }
-            else // Spiders that roam their biome
-            {
-                if (bestTarget == null)
-                {
-                    Patrol();
-                    if (Vector3.Distance(transform.position, PlayerController.global.transform.position) <= 15f)
-                    {
-                        bestTarget = playerPosition;
-                    }
-                }
-                else
-                {
-                    if (Vector3.Distance(transform.position, PlayerController.global.transform.position) >= 50.0f)
-                    {
-                        bestTarget = null;
-                        isInPosition = false;
-                    }
-                }
-            }
+            case ENEMYTYPE.goblin:
+                GoblinSpiderLava();
+                break;
+            case ENEMYTYPE.spider:
+                GoblinSpiderLava();
+                break;
+            case ENEMYTYPE.wolf:
+                SnakeAndWolf();
+                break;
+            case ENEMYTYPE.ogre:
+                Ogre();
+                break;
+            case ENEMYTYPE.snake:
+                SnakeAndWolf();
+                break;
+            case ENEMYTYPE.lava:
+                GoblinSpiderLava();
+                break;
+            default:
+                break;
         }
+
         // Goblin goes for the player if it gets attacked by them
-        if (currentEnemyType == ENEMYTYPE.goblin)
+        if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.lava)
         {
             if (chasing)
             {
@@ -289,13 +328,6 @@ public class EnemyController : MonoBehaviour
                     chasing = false;
                     chaseTimer = 0;
                 }
-            }
-        }
-        if (currentEnemyType == ENEMYTYPE.snake)
-        {
-            if (bestTarget == null)
-            {
-                bestTarget = playerPosition;
             }
         }
 
@@ -545,7 +577,7 @@ public class EnemyController : MonoBehaviour
             {
                 StopAllCoroutines();
 
-                if (currentEnemyType == ENEMYTYPE.goblin)
+                if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.lava)
                 {
                     chaseTimer = 0;
                     chasing = true;
@@ -606,7 +638,7 @@ public class EnemyController : MonoBehaviour
             if (arrowTrigger && !arrowTrigger.singleHit)
             {
                 arrowTrigger.singleHit = true;
-                if (currentEnemyType == ENEMYTYPE.goblin)
+                if (currentEnemyType == ENEMYTYPE.goblin|| currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.lava)
                 {
                     chaseTimer = 0;
                     chasing = true;

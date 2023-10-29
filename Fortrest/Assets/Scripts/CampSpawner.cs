@@ -115,6 +115,10 @@ public class CampSpawner : MonoBehaviour
 
                         GameObject enemy = Instantiate(prefab, spawnPosition, Quaternion.identity);
 
+                        EnemyController enemyController = enemy.GetComponent<EnemyController>();
+
+                        enemyController.addIndicator = false;
+
                         amountCurrent++;
 
                         if (amountCurrent == amountMax)

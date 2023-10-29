@@ -102,6 +102,10 @@ public class Camp : MonoBehaviour
             Vector3 enemySpawnPos = new(transform.position.x + Random.Range(-2f, 2f), transform.position.y, transform.position.z + Random.Range(-2f, 2f));
 
             GameObject enemy = Instantiate(gameObject, enemySpawnPos, Quaternion.identity);
+
+            EnemyController enemyController = enemy.GetComponent<EnemyController>();
+
+            enemyController.addIndicator = false;
         }
     }
 
