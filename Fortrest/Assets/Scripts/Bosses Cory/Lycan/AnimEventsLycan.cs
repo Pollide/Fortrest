@@ -20,6 +20,17 @@ public class AnimEventsLycan : MonoBehaviour
         frenzy.stopRotation = true;
     }
 
+    void AttackCounter()
+    {
+        frenzy.attackCounter++;
+    }
+
+    void SetTiredFalse()
+    {
+        frenzy.StateMachine.BossAnimator.SetBool("isTired", false);
+        frenzy.StateMachine.BossAnimator.SetBool("inFrenzy", true);
+    }
+
     void DontStopRotation()
     {
         frenzy.stopRotation = false;

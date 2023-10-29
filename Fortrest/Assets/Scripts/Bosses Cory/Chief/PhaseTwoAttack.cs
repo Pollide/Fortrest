@@ -22,6 +22,7 @@ public class PhaseTwoAttack : BossState
     [SerializeField] private float chargePushForce = 5f;
     [SerializeField] private float chargePushDuration = 1f;
     [SerializeField] private float stoppingDistance = 3f;
+    public float rotationSpeed = 4;
     // Damage for attack
     [SerializeField] private float damage = 0f;
     // Holds charge trigger
@@ -73,7 +74,19 @@ public class PhaseTwoAttack : BossState
         if (!isCharging && !hasRun && stateMachine.BossType == BossSpawner.TYPE.Chieftain)
         {
             StartCoroutine(WindUpAndCharge());
+
             hasRun = true;
+        }
+        if (!isCharging)
+        {
+            // Calculate the direction to the target
+            Vector3 targetDirection = playerTransform.position - transform.position;
+
+            // Calculate the rotation needed to face the target
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+
+            // Smoothly interpolate the current rotation to the target rotation
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
     }
 
@@ -100,7 +113,7 @@ public class PhaseTwoAttack : BossState
         chargeDMGTrigger.enabled = true;
         agent.isStopped = false;
         isCharging = true;
-        Vector3 newTarget = playerTransform.position + (playerTransform.position - transform.position) * chargeDistance;
+        Vector3 newTarget = transform.position + transform.forward * chargeDistance;
         WalkTo(newTarget, stoppingDistance);
     }
 

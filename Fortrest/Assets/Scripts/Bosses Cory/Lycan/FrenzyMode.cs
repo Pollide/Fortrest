@@ -14,6 +14,7 @@ public class FrenzyMode : BossState
     public bool stopRotation = false;
     public bool telegraph;
     public float rotationSpeed = 4;
+    public int attackCounter = 0;
 
     public override void EnterState()
     {
@@ -33,7 +34,6 @@ public class FrenzyMode : BossState
 
     public override void UpdateState()
     {
-
         // Switch to Idle if player is outside of arena
         if (!PlayerInArena(stateMachine.ArenaSize))
         {
@@ -47,7 +47,7 @@ public class FrenzyMode : BossState
 
     private void Attack()
     {
-        if (attacking)
+        if (attacking && !stateMachine.BossAnimator.GetBool("isTired"))
         {
             GetComponent<NavMeshAgent>().isStopped = false;
             WalkTo(transform.position + transform.forward * jumpDistance, 1);
@@ -67,5 +67,12 @@ public class FrenzyMode : BossState
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
         }
+
+        if (attackCounter > 3)
+        {
+            stateMachine.BossAnimator.SetBool("isTired", true);
+            stateMachine.BossAnimator.SetBool("inFrenzy", false);
+        }
+
     }
 }

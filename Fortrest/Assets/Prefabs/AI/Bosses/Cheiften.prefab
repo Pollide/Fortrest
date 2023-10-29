@@ -100,7 +100,7 @@ MonoBehaviour:
   currentPhase: 0
   currentState: {fileID: 0}
   initialState: {fileID: 2852120374224939685}
-  speed: 5
+  speed: 10
   inDefence: 0
   phase2Ran: 0
   phase3Ran: 0
@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackTime: 0
-  attackDuration: 5
+  attackDuration: 3
   stoppingDistance: 3
   rotationSpeed: 5
   attackCounter: 0
@@ -147,13 +147,14 @@ MonoBehaviour:
   randomCheckDuration: 5
   damage: 10
   attackDistance: 3.5
-  firstAttackChance: 0.6
-  secondAttackChance: 0.2
-  thirdAttackChance: 0.2
+  firstAttackChance: 0.5
+  secondAttackChance: 0.25
+  thirdAttackChance: 0.25
   isAttacking: 0
   canChangeState: 0
   canAttack: 0
   telegraph: {fileID: 7556151477208924013}
+  telegraphOuter: {fileID: 5567472970536930146}
 --- !u!114 &7004052578520432879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -172,11 +173,12 @@ MonoBehaviour:
   playerHit: 0
   hasRun: 0
   coneIndicator: 0
-  chargeSpeed: 15
-  chargeDistance: 2
-  chargePushForce: 1
+  chargeSpeed: 30
+  chargeDistance: 30
+  chargePushForce: 10
   chargePushDuration: 0.3
   stoppingDistance: 3
+  rotationSpeed: 10
   damage: 15
   chargeDMGTrigger: {fileID: 6793321651510773346}
 --- !u!114 &8740668045474777165

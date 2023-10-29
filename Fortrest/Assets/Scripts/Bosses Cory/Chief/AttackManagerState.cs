@@ -36,6 +36,7 @@ public class AttackManagerState : BossState
     [SerializeField] private bool canChangeState = false;
     [SerializeField] private bool canAttack = false;
     [SerializeField] private GameObject telegraph;
+    [SerializeField] private GameObject telegraphOuter;
 
     // Holds states
     private IdleState idleState;
@@ -77,7 +78,10 @@ public class AttackManagerState : BossState
     public override void ExitState()
     {
         stateMachine.BossAnimator.ResetTrigger("isAttacking");
+        stateMachine.BossAnimator.speed = 1f;
+
         telegraph.SetActive(false);
+        telegraphOuter.SetActive(false);
         isAttacking = false;
         attackTime = 0f;
     }
@@ -123,7 +127,7 @@ public class AttackManagerState : BossState
         float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
 
         float threshold = 0.9f;
-        if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance && stateMachine.BossAnimator.GetBool("isTired") == isTired)
+        if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance && stateMachine.BossAnimator.GetBool("isTired") == isTired && canAttack)
         {
             return true;
         }
@@ -156,40 +160,26 @@ public class AttackManagerState : BossState
                 stateMachine.BossAnimator.SetTrigger("isAttacking");
                 SetTelegraph(true);
                 isAttacking = true;
-                canAttack = true;
+                canAttack = false;
                 // Stop agent
                 agent.isStopped = true;
-            }
-            else if (!CanAttack(true))
-            {
-                // Calculate the direction to the target
-                Vector3 targetDirection = playerTransform.position - transform.position;
-
-                // Calculate the rotation needed to face the target
-                Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-
-                // Smoothly interpolate the current rotation to the target rotation
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             }
         }
         else
         {
             canChangeState = false;
 
-            if (attackTime < attackDuration && canAttack && !stateMachine.BossAnimator.GetBool("isTired"))
+            if (attackTime < attackDuration && isAttacking && !stateMachine.BossAnimator.GetBool("isTired"))
             {
-
                 attackTime += Time.deltaTime;
 
                 telegraph.transform.position = transform.position;
-
             }
 
             if (attackTime >= attackDuration && !stateMachine.BossAnimator.GetBool("isTired"))
             {
                 stateMachine.BossAnimator.speed = 1f;
                 attackTime = 0f;
-                canAttack = false;
 
                 if (telegraph.activeSelf)
                 {
@@ -303,6 +293,12 @@ public class AttackManagerState : BossState
     {
         get { return isAttacking; }
         set { isAttacking = value; }
+    }
+
+    public bool BossCanAttack
+    {
+        get { return canAttack; }
+        set { canAttack = value; }
     }
 
     public bool CanChangeState
