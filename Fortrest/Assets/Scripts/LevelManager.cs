@@ -544,7 +544,7 @@ public class LevelManager : MonoBehaviour
 
         if (Unlocks.global.mountUnlocked && !Boar.global)
         {
-            Instantiate(mountPrefab, new Vector3(-30f, 0f, -120f), Quaternion.identity);
+            Instantiate(mountPrefab, houseTransform.position - houseTransform.forward * 5 -houseTransform.right * 5, Quaternion.identity);
             // Unlocks.global.mountUnlocked = false;//its just gonna turn back on lol
         }
 

@@ -62,6 +62,7 @@ public class Unlocks : MonoBehaviour
                     case BossSpawner.TYPE.Chieftain:
                         mountUnlocked = true;
 
+
                         if (defeated == boss)
                             BossUnlockAnimation(mountSprite, "Mount Unlocked", "View map to find your ride");
                         break;
