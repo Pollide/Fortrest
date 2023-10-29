@@ -1963,13 +1963,13 @@ public class PlayerController : MonoBehaviour
     {
         // Calculate enemy amount and display it
         int goblinsInt = 0;
-        LevelManager.ProcessEnemyList((enemy) =>
-        {
-            if (enemy.currentEnemyType != EnemyController.ENEMYTYPE.wolf)
-            {
-                goblinsInt++;
-            }
-        });
+        //LevelManager.ProcessEnemyList((enemy) =>
+        //{
+        //    if (enemy.currentEnemyType != EnemyController.ENEMYTYPE.wolf)
+        //    {
+        //        goblinsInt++;
+        //    }
+        //});
         int remaining = LevelManager.global.enemiesCount + goblinsInt;
         if (lastAmount != remaining)
         {
