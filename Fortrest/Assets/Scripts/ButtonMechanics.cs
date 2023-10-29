@@ -58,9 +58,12 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     [Space(10)]
     public Text ButtonText;
     string TextString;
+    Buttons buttons;
 
     public void Start()
     {
+        buttons = GetComponentInParent<Buttons>();
+
         if (!ButtonText)
         {
             //this finds all images in the button and makes sure only the top is raycastable so the button clicks properly
@@ -119,8 +122,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     public void OnPointerEnter(PointerEventData eventData)
     {
         //GameManager.global.SoundManager.PlaySound(GameManager.global.MenuClick1Sound);
-        Buttons buttons = GetComponentInParent<Buttons>();
-        buttons.MenuList[buttons.ReturnIndex()] = transform.GetSiblingIndex();
+        if (buttons)
+            buttons.MenuList[buttons.ReturnIndex()] = transform.GetSiblingIndex();
 
         CheckUpgrade();
         //ChangeColourVoid(Color.white);
@@ -139,7 +142,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     //checks to see if the mouse was clicked ontop of the button
     public void OnPointerDown(PointerEventData eventData)
     {
-        GetComponentInParent<Buttons>().pressingDown = true;
+        if (buttons)
+            GetComponentInParent<Buttons>().pressingDown = true;
         SelectVoid();
     }
 
@@ -148,7 +152,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     public void OnPointerUp(PointerEventData eventData)
     {
         //  OnPointerEnter(eventData);
-        GetComponentInParent<Buttons>().pressingDown = false;
+        if (buttons)
+            GetComponentInParent<Buttons>().pressingDown = false;
         //  SelectVoid();
 
 

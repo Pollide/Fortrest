@@ -884,15 +884,7 @@ public class PlayerController : MonoBehaviour
             switch (letter)
             {
                 case KeyCode.R:
-                    if (appleAmount > 0 && playerCanMove)
-                    {
-                        EatApple();
-                    }
-                    else
-                    {
-                        GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
-                        GameManager.PlayAnimation(UIAnimation, "Apple Shake");
-                    }
+                    EatApple(); //I have moved the check of how many apples player has into the function
                     break;
 
                 case KeyCode.T:
@@ -953,14 +945,7 @@ public class PlayerController : MonoBehaviour
             if (healCTRL)
             {
                 healCTRL = false;
-                if (playerCanMove && appleAmount > 0)
-                {
-                    EatApple();
-                }
-                else
-                {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
-                }
+                EatApple(); //I have moved the check of how many apples player has into the function
             }
             if (canTeleport && interactCTRL)
             {
@@ -1183,7 +1168,7 @@ public class PlayerController : MonoBehaviour
     {
         MapPlayerRectTransform.anchoredPosition = ConvertToMapCoordinates(transform.position);
 
-        float speed = 10f * Time.unscaledDeltaTime;
+        float speed = 20f * Time.unscaledDeltaTime;
 
         if (GameManager.global.KeyboardBool)
         {
@@ -1788,7 +1773,7 @@ public class PlayerController : MonoBehaviour
 
     private void EatApple()
     {
-        if (playerHealth < maxHealth)
+        if (appleAmount > 0 && playerHealth < maxHealth && playerCanMove)
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.EatingSound);
             HealthRestore(appleHealAmount);
@@ -1799,6 +1784,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             GameManager.global.SoundManager.PlaySound(GameManager.global.CantEatSound);
+            GameManager.PlayAnimation(UIAnimation, "Apple Shake");
         }
     }
 
