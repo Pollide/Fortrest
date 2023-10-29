@@ -146,6 +146,7 @@ public class Indicator : MonoBehaviour
 
                 if (!CustomSprite)
                     MainData.ArrowText.text = ActiveString;
+
                 MainData.ArrowText.color = ActiveColor;
                 MainData.ArrowImage.color = ActiveColor;
 
@@ -162,6 +163,9 @@ public class Indicator : MonoBehaviour
                             MapData.CustomImage.color = ActiveColor;
                     }
                 }
+
+                if (Permenant)
+                    MainData.CustomImage.color = ActiveColor;
             }
 
             bool missing = !onTerrain || LevelManager.global.currentTerrainData == null || !LevelManager.global.currentTerrainData.terrain;
