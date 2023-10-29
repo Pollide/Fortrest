@@ -298,6 +298,11 @@ public class Indicator : MonoBehaviour
             indicatorData.onTerrain = raycastHit.transform.GetComponent<Terrain>();
         }
 
+        if (activeTarget.GetComponent<BridgeBuilder>())
+        {
+            indicatorData.onTerrain = LevelManager.global.terrainDataList[activeTarget.GetComponent<BridgeBuilder>().BridgeTypeInt].terrain;
+        }
+
         if (!permenant || customSprite)
         {
             indicatorData.MapData = Instantiate(arrowPrefab, PlayerController.global.MapSpotHolder).GetComponent<ArrowData>();
