@@ -47,7 +47,7 @@ public class Unlocks : MonoBehaviour
     {
         GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Unlock");
         PlayerController.global.unlockImage.sprite = sprite;
-        PlayerController.global.turretMenuTitle.text = title;
+        PlayerController.global.unlockTitleText.text = title;
         PlayerController.global.unlockDescriptionText.text = description;
     }
 

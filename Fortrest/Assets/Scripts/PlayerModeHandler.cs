@@ -446,17 +446,17 @@ public class PlayerModeHandler : MonoBehaviour
 
                 if (selectBool)
                 {
-                    float timer = 0f;
+                    float timer;
                     switch (buildType)
                     {
                         case BuildType.Turret:
                             timer = 5.0f;
                             break;
                         case BuildType.Cannon:
-                            timer = 5.0f;
+                            timer = 10.0f;
                             break;
                         case BuildType.Slow:
-                            timer = 5.0f;
+                            timer = 10.0f;
                             break;
                         case BuildType.Scatter:
                             timer = 10.0f;
