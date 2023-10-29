@@ -15,7 +15,7 @@ public class CampSpawner : MonoBehaviour
     private bool setTime = true;
     private bool spawnCamp = true;
     private bool onlyOnce = true;
-    
+
     private float randomTime;
     private float edge = 30.0f;
 
@@ -108,7 +108,8 @@ public class CampSpawner : MonoBehaviour
                             }
                             else if (colliders[i].tag == "Resource")
                             {
-                                Destroy(colliders[i].gameObject);
+                                colliders[i].gameObject.SetActive(false); //dont destroy resources just deactivate like dis thanks
+                                                                          // Destroy(colliders[i].gameObject);
                             }
                         }
 
@@ -209,7 +210,8 @@ public class CampSpawner : MonoBehaviour
                         }
                         else if (colliders[i].tag == "Resource")
                         {
-                            Destroy(colliders[i].gameObject);
+                            colliders[i].gameObject.SetActive(false); //dont destroy resources just deactivate like dis thanks
+                                                                      // Destroy(colliders[i].gameObject);
                         }
                     }
                     GameObject camp = Instantiate(campPrefab, spawnPosition, Quaternion.identity);

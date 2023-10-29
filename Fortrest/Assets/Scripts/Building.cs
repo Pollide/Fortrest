@@ -406,8 +406,8 @@ public class Building : MonoBehaviour
                 ResourceRegenerate();
 
             }
-
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(treeFallingDirection), Time.deltaTime * 2f);
+            else
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.LookRotation(treeFallingDirection), Time.deltaTime * 2f);
 
         }
     }

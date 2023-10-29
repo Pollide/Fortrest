@@ -1322,7 +1322,7 @@ GameObject:
   - component: {fileID: 1410037552901871630}
   - component: {fileID: 1089916034199393642}
   - component: {fileID: 6760250925313585914}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Lantern Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1534,8 +1534,8 @@ GameObject:
   - component: {fileID: 319555843144723853}
   - component: {fileID: 5678806090921065345}
   - component: {fileID: 3165756651650687187}
-  m_Layer: 0
-  m_Name: Cylinder
+  m_Layer: 23
+  m_Name: Nightime Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1548,9 +1548,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4412088012528774691}
-  m_LocalRotation: {x: -0, y: -0.39995575, z: -0, w: 0.91653454}
+  m_LocalRotation: {x: -0, y: -0.3999557, z: -0, w: 0.9165345}
   m_LocalPosition: {x: 0, y: 0.23272656, z: 0}
-  m_LocalScale: {x: 6.7141037, y: 0.19417107, z: 6.714103}
+  m_LocalScale: {x: 6.7141037, y: 0.19417107, z: 6.7141037}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8001351653680436295}
@@ -2061,6 +2061,9 @@ MonoBehaviour:
   controllerSprite: {fileID: 21300000, guid: ddd823b9bb4b9f343af1ac1d577378e1, type: 3}
   keyboardSprite: {fileID: 21300000, guid: 8e43ba4ae12a64847b74def5edca2078, type: 3}
   HUDGameObject: {fileID: 8161709300828371135}
+  unlockImage: {fileID: 4059631797594913693}
+  unlockTitleText: {fileID: 1123572427797648712}
+  unlockDescriptionText: {fileID: 5722423588276742314}
   respawning: 0
   redSlashes:
   - {fileID: 835153175902691278}
@@ -2235,6 +2238,8 @@ MonoBehaviour:
   SelectedTurret: {fileID: 0}
   hoveringTurret: 0
   buildingWithController: 0
+  upgradeTimerPrefab: {fileID: 5889131226544975121, guid: 787aae8361a6acd4384feff3f3750293,
+    type: 3}
 --- !u!1 &5601085607544240354
 GameObject:
   m_ObjectHideFlags: 0
@@ -2943,13 +2948,13 @@ GameObject:
   - component: {fileID: 835200701620826840}
   - component: {fileID: 3455046604852552234}
   - component: {fileID: 7986677608527256840}
-  m_Layer: 0
+  m_Layer: 23
   m_Name: Lantern Light (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &835200701620826840
 Transform:
   m_ObjectHideFlags: 0
@@ -4095,11 +4100,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3447179272816929673, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3dc6b70a22c61f9489be8f4f4eb795d6, type: 3}
 --- !u!224 &161434391228851676 stripped
@@ -4130,6 +4130,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1123572427797648712 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4809635610634067387, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1154040104051433978 stripped
@@ -4210,6 +4222,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4059631797594913693 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8466288655787537262, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4097303497839349009 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8499544719746581986, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
@@ -4280,6 +4304,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5722423588276742314 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 162930985223708761, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &5726370883278248078 stripped

@@ -39,8 +39,9 @@ public class Indicator : MonoBehaviour
         public Vector3 WorldPosition;
         public Vector3 Offset;
         public bool Permenant;
-        public bool Unlocked;
+        public bool Visible;
         public string ActiveString;
+        public Color ActiveColor;
 
         public bool leftBool;
         public bool rightBool;
@@ -139,21 +140,34 @@ public class Indicator : MonoBehaviour
 
             float distance = Vector3.Distance(PlayerController.global.transform.position, WorldPosition);
             bool closeBool = distance < 22;
-            if ((closeBool || Unlocked) && !CustomSprite)
+
+            if (closeBool || Visible)
             {
-                Unlocked = true;
-                MainData.ArrowText.text = ActiveString;
-                MainData.ArrowText.color = MainData.ArrowImage.color;
+                Visible = true;
+
+                if (!CustomSprite)
+                    MainData.ArrowText.text = ActiveString;
+
+                MainData.ArrowText.color = ActiveColor;
+                MainData.ArrowImage.color = ActiveColor;
 
                 if (MapData)
                 {
-                    MapData.ArrowText.text = MainData.ArrowText.text;
-                    MapData.ArrowText.color = MainData.ArrowImage.color;
+                    if (!CustomSprite)
+                        MapData.ArrowText.text = ActiveString;
+
+                    MapData.ArrowText.color = ActiveColor;
+
+                    if (MapData.CustomImage)
+                    {
+                        MapData.CustomImage.gameObject.SetActive(true);
+                    }
                 }
+
+
             }
 
-            bool missing = !onTerrain || LevelManager.global.currentTerrainData == null || !LevelManager.global.currentTerrainData.terrain;
-            bool active = (Permenant || (missing ? distance < 200 : onTerrain == LevelManager.global.currentTerrainData.terrain)) && !closeBool;
+            bool active = !onTerrain ? !closeBool : onTerrain == LevelManager.global.currentTerrainData.terrain;
 
             if (active != AppearBool)
             {
@@ -265,14 +279,15 @@ public class Indicator : MonoBehaviour
         indicatorData.ActiveTarget = activeTarget;
 
         indicatorData.MainData = Instantiate(arrowPrefab, transform).GetComponent<ArrowData>();
-        indicatorData.MainData.ArrowImage.color = color;
-        indicatorData.MainData.CustomImage.color = color;
 
         indicatorData.MainData.ArrowText.text = "?";
 
         indicatorData.ActiveString = nameString;
+        indicatorData.ActiveColor = color;
+
         indicatorData.Permenant = permenant;
-        indicatorData.Unlocked = permenant;
+        indicatorData.Visible = permenant;
+
         indicatorData.CustomSprite = customSprite;
 
         indicatorData.MainData.ArrowTextLocalPosition = indicatorData.MainData.ArrowText.transform.localPosition;
@@ -280,14 +295,9 @@ public class Indicator : MonoBehaviour
 
         IndicatorList.Add(indicatorData);
 
-        if (Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+        if (!permenant && Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
             indicatorData.onTerrain = raycastHit.transform.GetComponent<Terrain>();
-
-            if (!indicatorData.onTerrain)
-            {
-                Debug.Log(raycastHit.transform);
-            }
         }
 
         if (!permenant || customSprite)
@@ -302,6 +312,7 @@ public class Indicator : MonoBehaviour
             //   RectTransform imageTransform = indicatorData.MapData.CustomImage.GetComponent<RectTransform>();
             //indicatorData.MapData.ArrowText.GetComponent<RectTransform>().anchoredPosition = imageTransform.anchoredPosition;
             indicatorData.MapData.ArrowText.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            indicatorData.MapData.CustomImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
             // indicatorData.MapData.CustomImage.color = color;
 
             indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
@@ -315,6 +326,12 @@ public class Indicator : MonoBehaviour
 
                 indicatorData.MainData.ArrowText.text = "";
                 indicatorData.MapData.ArrowText.text = "";
+
+                if (permenant)
+                {
+                    indicatorData.MainData.CustomImage.color = color;
+                    indicatorData.MapData.CustomImage.color = color;
+                }
             }
         }
     }

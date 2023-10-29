@@ -75,8 +75,6 @@ public class LevelManager : MonoBehaviour
     Vector3 lastPanPosition;
     bool OnceDetection;
 
-    // public List<Transform> enemyList = new List<Transform>();
-    private List<Transform> BuildingList = new List<Transform>(); //This list is private as now you use ProcessBuildingList((building) => . Do not reference this list any other way. dm to ask how to use
 
     public Transform ResourceHolderTransform;
     public GameObject ActiveBuildingGameObject;
@@ -86,13 +84,16 @@ public class LevelManager : MonoBehaviour
 
     public float daylightTimer;
     public int day = 0;
+
+    [Header("Lists below should be left alone, the game will fill them automatically")]
     public List<EnemyController> enemyList = new List<EnemyController>();
     public List<GameObject> ItemDropList = new List<GameObject>();
     public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
     public List<BossSpawner> bossList = new List<BossSpawner>();
     public List<Chest> chestList = new List<Chest>();
-
+    public List<Transform> BuildingList = new List<Transform>();
     public List<Camp> campList = new List<Camp>();
+
     public float daySpeed = 1;
     public float enemyTimer;
 
@@ -144,10 +145,8 @@ public class LevelManager : MonoBehaviour
     public bool spawnEnemies;
     private bool nightAttack;
     public float randomAttackTrigger;
-    private bool randomSet;
     private bool countSet;
     private bool ogreSpawned;
-    private bool attackHappening;
     public bool dayPaused;
     private int groupSpawnAmount;
     private int laneInt;
@@ -173,7 +172,7 @@ public class LevelManager : MonoBehaviour
     private void Awake()
     {
         global = this;
-
+        currentTerrainData = terrainDataList[0];
         clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -daylightTimer + 90);
 
         if (!GameManager.global)
@@ -424,6 +423,7 @@ public class LevelManager : MonoBehaviour
         return daylightTimer > 180;
     }
 
+    AudioClip activeMusic;
     public void SetGameMusic()
     {
         TerrainData terrainData = currentTerrainData;
@@ -439,18 +439,33 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        if (terrainData != null && currentTerrainData != null && currentTerrainData.music != terrainData.music)
+        AudioClip music = terrainData.music;
+
+        if (activeBossSpawner)
+            music = GameManager.global.BossMusic;
+
+        if (ReturnNight())
+            music = GameManager.global.NightMusic;
+
+        if (Time.timeScale == 0)
+            music = GameManager.global.PauseMusic;
+
+
+        if (activeMusic != music)
         {
-            GameManager.global.MusicManager.PlayMusic(activeBossSpawner ? GameManager.global.BossMusic : (ReturnNight() ? GameManager.global.NightMusic : terrainData.music));
+            activeMusic = music;
+
+            GameManager.global.MusicManager.PlayMusic(music);
         }
 
-        if (terrainData != null && currentTerrainData != null && currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
+        if (currentTerrainData.welcomeSprite != terrainData.welcomeSprite)
         {
             PlayerController.global.biomeNameImage.color = terrainData.indicatorColor;
             PlayerController.global.biomeNameImage.sprite = terrainData.welcomeSprite;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Biome Name Appear");
             //GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
         }
+
 
         currentTerrainData = terrainData;
 
@@ -518,9 +533,7 @@ public class LevelManager : MonoBehaviour
 
         if (daylightTimer > cycle)
         {
-            attackHappening = false;
             randomAttackTrigger = 0f;
-            randomSet = false;
             messageDisplayed = false;
             daylightTimer = 0;
             day++;
@@ -532,8 +545,7 @@ public class LevelManager : MonoBehaviour
 
         if (Unlocks.global.mountUnlocked && !Boar.global)
         {
-            Instantiate(mountPrefab, new Vector3(-30f, 0f, -120f), Quaternion.identity);
-            // Unlocks.global.mountUnlocked = false;//its just gonna turn back on lol
+            Instantiate(mountPrefab, houseTransform.position - houseTransform.forward * 5 - houseTransform.right * 5, Quaternion.identity);
         }
 
         CalculateCamps();
@@ -589,38 +601,6 @@ public class LevelManager : MonoBehaviour
             return;
 
         //HandleMouse();
-    }
-
-    void HandleMouse()
-    {
-        // On mouse down, capture it's position.
-        // Otherwise, if the mouse is still down, pan the camera.
-        if (Input.GetMouseButtonDown(0))
-        {
-            lastPanPosition = Input.mousePosition;
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            PanCamera(Input.mousePosition);
-        }
-
-        // Check for scrolling to zoom the camera
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (Input.GetKey(KeyCode.Minus))
-        {
-            scroll = -0.1f;
-        }
-        if (Input.GetKey(KeyCode.Equals))
-        {
-            scroll = 0.1f;
-        }
-
-        if (scroll != 0)
-        {
-            SceneCamera.orthographicSize = Mathf.Clamp(SceneCamera.orthographicSize - (scroll * ZoomSpeedMouse), ZoomBounds[0], ZoomBounds[1]);
-        }
-
-        PanSpeed = SceneCamera.orthographicSize / 2.5f;
     }
 
     void PanCamera(Vector3 newPanPosition)

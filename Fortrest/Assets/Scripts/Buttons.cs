@@ -22,6 +22,7 @@ public class Buttons : MonoBehaviour
     public List<int> MenuList = new List<int>();
     public bool pressingDown;
     public bool AllowControllerToNavigate = true;
+    public string runAnimationName = "";
     private void OnEnable()
     {
         Start();
@@ -123,6 +124,12 @@ public class Buttons : MonoBehaviour
 
                 button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
                 buttonMechanics.Start(); //refreshes text
+
+                if (runAnimationName != null && runAnimationName != "")
+                {
+                    if (button.GetComponent<Animation>().IsPlaying(runAnimationName) != selected)
+                        GameManager.PlayAnimation(button.GetComponent<Animation>(), runAnimationName, true, !selected);
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)

@@ -128,7 +128,7 @@ public class EnemyController : MonoBehaviour
         {
             if (addIndicator)
             {
-                Indicator.global.AddIndicator(transform, Color.red, LevelManager.global.enemiesCount < 10 ? currentEnemyType.ToString() : "");
+                //  Indicator.global.AddIndicator(transform, Color.red, LevelManager.global.enemiesCount < 10 ? currentEnemyType.ToString() : "");
             }
         }
         if (currentEnemyType == ENEMYTYPE.ogre)
