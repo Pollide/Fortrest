@@ -543,7 +543,7 @@ public class PlayerController : MonoBehaviour
             staggerCD -= Time.deltaTime;
         }
 
-        if (ResourceHolderOpened)
+        if (ResourceHolderOpened && GameManager.global.KeyboardBool)
         {
             ResourceHolderAnimator.transform.position = Input.mousePosition;
         }
