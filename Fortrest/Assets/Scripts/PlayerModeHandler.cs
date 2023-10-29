@@ -332,7 +332,15 @@ public class PlayerModeHandler : MonoBehaviour
 
         TurretMenuSet(SelectedTurret);
 
-        if (!MouseOverUI() && Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })))
+        bool placing = Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })) && !MouseOverUI();
+
+        if (!SelectedTurret && turretBlueprint)
+        {
+            PlayerController.global.UpdateResourceHolder();
+            PlayerController.global.OpenResourceHolder(placing);
+        }
+
+        if (placing)
         {
             GameObject turretPrefab = turretPrefabs[0];
 
@@ -616,7 +624,6 @@ public class PlayerModeHandler : MonoBehaviour
                 Destroy(KeyHint.gameObject);
         }
         PlayerModeHandler.global.TurretMenuSet(false);
-        PlayerController.global.UpdateResourceHolder();
     }
 
     void ClearSelectionGrid()

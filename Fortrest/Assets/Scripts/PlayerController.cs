@@ -543,8 +543,9 @@ public class PlayerController : MonoBehaviour
             staggerCD -= Time.deltaTime;
         }
 
-        if (ResourceHolderOpened && GameManager.global.KeyboardBool)
+        if (ResourceHolderOpened && Cursor.visible)
         {
+            BridgeBuilder
             ResourceHolderAnimator.transform.position = Input.mousePosition;
         }
 
