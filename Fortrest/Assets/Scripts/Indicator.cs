@@ -167,7 +167,7 @@ public class Indicator : MonoBehaviour
 
             }
 
-            bool active = (Permenant ? closeBool : onTerrain == LevelManager.global.currentTerrainData.terrain);
+            bool active = (Permenant || !onTerrain) ? closeBool : onTerrain == LevelManager.global.currentTerrainData.terrain;
 
             if (active != AppearBool)
             {
