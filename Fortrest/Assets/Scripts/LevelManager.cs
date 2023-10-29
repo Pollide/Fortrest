@@ -861,6 +861,7 @@ public class LevelManager : MonoBehaviour
                         if (prefab != null)
                         {
                             GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
+                            enemy.GetComponent<EnemyController>().waveEnemy = true;
                         }
                     }
                     enemiesCount -= randomRange;
@@ -893,6 +894,7 @@ public class LevelManager : MonoBehaviour
                     if (prefab != null)
                     {
                         GameObject enemy = Instantiate(prefab, enemySpawnPosition, Quaternion.identity);
+                        enemy.GetComponent<EnemyController>().waveEnemy = true;
                     }
 
                     enemiesCount--;
