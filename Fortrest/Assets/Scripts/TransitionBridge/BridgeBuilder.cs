@@ -24,9 +24,6 @@ public class BridgeBuilder : MonoBehaviour
 
     public void CheckIndicators()
     {
-        bool before = canBuild;
-
-
         canBuild = BridgeTypeInt == 1;
 
         //remember the spaced out text below is where the E key goes ingame
@@ -68,9 +65,14 @@ public class BridgeBuilder : MonoBehaviour
             }
         }
 
-        if (!before && canBuild)
+        if (canBuild)
         {
-            Indicator.global.AddIndicator(transform, LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor, LevelManager.global.terrainDataList[BridgeTypeInt].indictorName, false, Indicator.global.BridgeSprite);
+            for (int i = 0; i < Indicator.global.IndicatorList.Count; i++)
+            {
+                if (Indicator.global.IndicatorList[i].ActiveString == LevelManager.global.terrainDataList[BridgeTypeInt].indictorName)
+                    return;
+            }
+            Indicator.global.AddIndicator(transform, LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor, LevelManager.global.terrainDataList[BridgeTypeInt].indictorName, false);
         }
     }
 

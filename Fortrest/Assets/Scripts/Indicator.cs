@@ -15,7 +15,6 @@ public class Indicator : MonoBehaviour
 
     public Sprite HomeSprite;
     public Sprite MountSprite;
-    public Sprite BridgeSprite;
 
     public int bottomRightStack;
     public int bottomLeftStack;
@@ -158,10 +157,7 @@ public class Indicator : MonoBehaviour
 
                     MapData.ArrowText.color = ActiveColor;
 
-                    if (MapData.CustomImage)
-                    {
-                        MapData.CustomImage.gameObject.SetActive(true);
-                    }
+                    MapData.CustomImage.gameObject.SetActive(MapData.CustomImage);
                 }
 
 
@@ -319,8 +315,6 @@ public class Indicator : MonoBehaviour
 
             if (customSprite)
             {
-                indicatorData.MainData.CustomImage.gameObject.SetActive(true);
-
                 indicatorData.MainData.CustomImage.sprite = customSprite;
                 indicatorData.MapData.CustomImage.sprite = customSprite;
 
