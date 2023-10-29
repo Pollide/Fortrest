@@ -41,6 +41,7 @@ public class Indicator : MonoBehaviour
         public bool Permenant;
         public bool Unlocked;
         public string ActiveString;
+        public Color ActiveColor;
 
         public bool leftBool;
         public bool rightBool;
@@ -143,12 +144,13 @@ public class Indicator : MonoBehaviour
             {
                 Unlocked = true;
                 MainData.ArrowText.text = ActiveString;
-                MainData.ArrowText.color = MainData.ArrowImage.color;
+                MainData.ArrowText.color = ActiveColor;
+                MainData.ArrowImage.color = ActiveColor;
 
                 if (MapData)
                 {
-                    MapData.ArrowText.text = MainData.ArrowText.text;
-                    MapData.ArrowText.color = MainData.ArrowImage.color;
+                    MapData.ArrowText.text = ActiveString;
+                    MapData.ArrowText.color = ActiveColor;
 
                     if (MapData.CustomImage)
                     {
@@ -271,14 +273,15 @@ public class Indicator : MonoBehaviour
         indicatorData.ActiveTarget = activeTarget;
 
         indicatorData.MainData = Instantiate(arrowPrefab, transform).GetComponent<ArrowData>();
-        indicatorData.MainData.ArrowImage.color = color;
-        indicatorData.MainData.CustomImage.color = color;
 
         indicatorData.MainData.ArrowText.text = "?";
 
         indicatorData.ActiveString = nameString;
+        indicatorData.ActiveColor = color;
+
         indicatorData.Permenant = permenant;
         indicatorData.Unlocked = permenant;
+
         indicatorData.CustomSprite = customSprite;
 
         indicatorData.MainData.ArrowTextLocalPosition = indicatorData.MainData.ArrowText.transform.localPosition;
