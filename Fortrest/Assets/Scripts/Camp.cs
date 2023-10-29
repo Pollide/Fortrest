@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 using System.Text.RegularExpressions;
 
 public class Camp : MonoBehaviour
@@ -174,6 +175,9 @@ public class Camp : MonoBehaviour
         {
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, PlayerController.global.swordVFX.gameObject.transform.parent.position, Quaternion.Euler(new Vector3(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f))));
+                tempVFX.GetComponent<VisualEffect>().Play();
+                Destroy(tempVFX, 1.0f);
                 canBeDamaged = false;
                 TakeDamage(PlayerController.global.attackDamage);
             }

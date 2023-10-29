@@ -366,6 +366,9 @@ public class SpiderBoss : MonoBehaviour
         {
             if (PlayerController.global.attacking && bossSpawner.canBeDamaged && PlayerController.global.damageEnemy)
             {
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, PlayerController.global.swordVFX.gameObject.transform.parent.position, Quaternion.Euler(new Vector3(Random.Range(0f, 360f), Random.Range(0f, 360f), Random.Range(0f, 360f))));
+                tempVFX.GetComponent<VisualEffect>().Play();
+                Destroy(tempVFX, 1.0f);
                 GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
                 bossSpawner.canBeDamaged = false;
                 ScreenShake.global.ShakeScreen();
