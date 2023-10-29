@@ -144,10 +144,8 @@ public class LevelManager : MonoBehaviour
     public bool spawnEnemies;
     private bool nightAttack;
     public float randomAttackTrigger;
-    private bool randomSet;
     private bool countSet;
     private bool ogreSpawned;
-    private bool attackHappening;
     public bool dayPaused;
     private int groupSpawnAmount;
     private int laneInt;
@@ -534,9 +532,7 @@ public class LevelManager : MonoBehaviour
 
         if (daylightTimer > cycle)
         {
-            attackHappening = false;
             randomAttackTrigger = 0f;
-            randomSet = false;
             messageDisplayed = false;
             daylightTimer = 0;
             day++;
@@ -605,38 +601,6 @@ public class LevelManager : MonoBehaviour
             return;
 
         //HandleMouse();
-    }
-
-    void HandleMouse()
-    {
-        // On mouse down, capture it's position.
-        // Otherwise, if the mouse is still down, pan the camera.
-        if (Input.GetMouseButtonDown(0))
-        {
-            lastPanPosition = Input.mousePosition;
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            PanCamera(Input.mousePosition);
-        }
-
-        // Check for scrolling to zoom the camera
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (Input.GetKey(KeyCode.Minus))
-        {
-            scroll = -0.1f;
-        }
-        if (Input.GetKey(KeyCode.Equals))
-        {
-            scroll = 0.1f;
-        }
-
-        if (scroll != 0)
-        {
-            SceneCamera.orthographicSize = Mathf.Clamp(SceneCamera.orthographicSize - (scroll * ZoomSpeedMouse), ZoomBounds[0], ZoomBounds[1]);
-        }
-
-        PanSpeed = SceneCamera.orthographicSize / 2.5f;
     }
 
     void PanCamera(Vector3 newPanPosition)

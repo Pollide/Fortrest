@@ -205,9 +205,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
                 if (UpgradeInt == -2)
                 {
-                    PlayerModeHandler.global.TurretMenuSet(false);
                     PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
                     PlayerModeHandler.global.SelectedTurret.DestroyBuilding();
+                    PlayerModeHandler.global.TurretMenuSet(false);
                 }
             }
             else
