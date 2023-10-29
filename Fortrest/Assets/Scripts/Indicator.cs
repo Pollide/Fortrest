@@ -39,7 +39,7 @@ public class Indicator : MonoBehaviour
         public Vector3 WorldPosition;
         public Vector3 Offset;
         public bool Permenant;
-        public bool Unlocked;
+        public bool Visible;
         public string ActiveString;
         public Color ActiveColor;
 
@@ -141,9 +141,9 @@ public class Indicator : MonoBehaviour
             float distance = Vector3.Distance(PlayerController.global.transform.position, WorldPosition);
             bool closeBool = distance < 22;
 
-            if (closeBool || Unlocked)
+            if (closeBool || Visible)
             {
-                Unlocked = true;
+                Visible = true;
 
                 if (!CustomSprite)
                     MainData.ArrowText.text = ActiveString;
@@ -167,7 +167,7 @@ public class Indicator : MonoBehaviour
 
             }
 
-            bool active = (Permenant || !onTerrain) ? closeBool : onTerrain == LevelManager.global.currentTerrainData.terrain;
+            bool active = !onTerrain ? !closeBool : onTerrain == LevelManager.global.currentTerrainData.terrain;
 
             if (active != AppearBool)
             {
@@ -286,7 +286,7 @@ public class Indicator : MonoBehaviour
         indicatorData.ActiveColor = color;
 
         indicatorData.Permenant = permenant;
-        indicatorData.Unlocked = permenant;
+        indicatorData.Visible = permenant;
 
         indicatorData.CustomSprite = customSprite;
 
@@ -295,14 +295,9 @@ public class Indicator : MonoBehaviour
 
         IndicatorList.Add(indicatorData);
 
-        if (Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+        if (!permenant && Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
             indicatorData.onTerrain = raycastHit.transform.GetComponent<Terrain>();
-
-            if (!indicatorData.onTerrain)
-            {
-                Debug.Log(raycastHit.transform);
-            }
         }
 
         if (!permenant || customSprite)
