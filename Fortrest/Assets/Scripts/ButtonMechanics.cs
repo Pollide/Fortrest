@@ -120,7 +120,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         //Pause.global.SelectedList[Pause.global.ReturnIndex()] = -1;
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
-
+        CheckUpgrade(false);
     }
 
     //checks to see if the pointer has entered the button
@@ -134,13 +134,14 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         //ChangeColourVoid(Color.white);
     }
 
-    void CheckUpgrade()
+    void CheckUpgrade(bool open = true)
     {
         if (UpgradeInt != 0)
         {
-            PlayerController.global.UpdateResourceHolder(UpgradeInt);
+            if (open)
+                PlayerController.global.UpdateResourceHolder(UpgradeInt);
 
-            PlayerController.global.OpenResourceHolder(true);
+            PlayerController.global.OpenResourceHolder(open);
         }
     }
 

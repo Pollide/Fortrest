@@ -1139,13 +1139,13 @@ public class PlayerController : MonoBehaviour
 
             PauseCanvasGameObject.SetActive(pause);
             controllerImage.sprite = GameManager.global.KeyboardBool ? keyboardSprite : controllerSprite;
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.PauseMenuSound);
 
             if (!mapBool)
             {
                 Time.timeScale = pause ? 0 : 1;
+                GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             }
 
             pausedBool = pause;
@@ -1162,6 +1162,7 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
+
             if (mapBool)
             {
                 UpdateMap();

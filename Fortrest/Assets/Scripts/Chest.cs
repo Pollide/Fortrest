@@ -7,7 +7,7 @@ public class Chest : MonoBehaviour
 {
     private bool canBeOpened;
     private string resource;
-    public TMP_Text promptText;
+    public Animation floatingTextAnimation;
     private bool textDisplayed;
     [HideInInspector]
     public bool opened;
@@ -24,22 +24,21 @@ public class Chest : MonoBehaviour
     {
         if (canBeOpened && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
         {
-            opened = true;
-            promptText.gameObject.SetActive(false);
+            LevelManager.FloatingTextChange(floatingTextAnimation.gameObject, false);
             SpawnResources();
-            canBeOpened = false;
             PlayerController.global.interactCTRL = false;
             PlayerController.global.needInteraction = false;
-            GameManager.PlayAnimation(openAnimation, "ChestOpen");
             GameManager.global.SoundManager.PlaySound(GameManager.global.ChestOpenSound);
+
+            LoadOpen(false);
         }
     }
 
-    public void LoadOpen()
+    public void LoadOpen(bool quick = true)
     {
         opened = true;
         canBeOpened = false;
-        GameManager.PlayAnimation(openAnimation, "ChestOpen", true, true);
+        GameManager.PlayAnimation(openAnimation, "ChestOpen", true, quick);
     }
 
     private void SpawnResources()
@@ -115,7 +114,7 @@ public class Chest : MonoBehaviour
             canBeOpened = true;
             if (!textDisplayed)
             {
-                promptText.gameObject.SetActive(true);
+                LevelManager.FloatingTextChange(floatingTextAnimation.gameObject, true);
                 textDisplayed = true;
             }
             PlayerController.global.needInteraction = true;
@@ -129,7 +128,7 @@ public class Chest : MonoBehaviour
             canBeOpened = false;
             if (textDisplayed)
             {
-                promptText.gameObject.SetActive(false);
+                LevelManager.FloatingTextChange(floatingTextAnimation.gameObject, false);
                 textDisplayed = false;
             }
             PlayerController.global.needInteraction = false;
