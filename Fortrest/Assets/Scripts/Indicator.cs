@@ -140,6 +140,7 @@ public class Indicator : MonoBehaviour
 
             float distance = Vector3.Distance(PlayerController.global.transform.position, WorldPosition);
             bool closeBool = distance < 22;
+
             if (closeBool || Unlocked)
             {
                 Unlocked = true;
@@ -152,24 +153,21 @@ public class Indicator : MonoBehaviour
 
                 if (MapData)
                 {
-                    MapData.ArrowText.text = ActiveString;
+                    if (!CustomSprite)
+                        MapData.ArrowText.text = ActiveString;
+
                     MapData.ArrowText.color = ActiveColor;
 
                     if (MapData.CustomImage)
                     {
                         MapData.CustomImage.gameObject.SetActive(true);
-
-                        if (Permenant)
-                            MapData.CustomImage.color = ActiveColor;
                     }
                 }
 
-                if (Permenant)
-                    MainData.CustomImage.color = ActiveColor;
+
             }
 
-            bool missing = !onTerrain || LevelManager.global.currentTerrainData == null || !LevelManager.global.currentTerrainData.terrain;
-            bool active = (Permenant || (missing ? distance < 200 : onTerrain == LevelManager.global.currentTerrainData.terrain)) && !closeBool;
+            bool active = (Permenant ? closeBool : onTerrain == LevelManager.global.currentTerrainData.terrain);
 
             if (active != AppearBool)
             {
@@ -333,6 +331,12 @@ public class Indicator : MonoBehaviour
 
                 indicatorData.MainData.ArrowText.text = "";
                 indicatorData.MapData.ArrowText.text = "";
+
+                if (permenant)
+                {
+                    indicatorData.MainData.CustomImage.color = color;
+                    indicatorData.MapData.CustomImage.color = color;
+                }
             }
         }
     }

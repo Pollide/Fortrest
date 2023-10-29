@@ -60,7 +60,7 @@ public class Boar : MonoBehaviour
 
         text = transform.GetChild(0).gameObject;
         respawnLocation = transform.position;
-        Indicator.global.AddIndicator(transform, Color.green, "Mount", false, Indicator.global.MountSprite);
+        Indicator.global.AddIndicator(transform, Color.green, "Mount", true, Indicator.global.MountSprite);
         house = PlayerController.global.house;
     }
 

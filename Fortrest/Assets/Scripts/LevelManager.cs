@@ -75,8 +75,6 @@ public class LevelManager : MonoBehaviour
     Vector3 lastPanPosition;
     bool OnceDetection;
 
-    // public List<Transform> enemyList = new List<Transform>();
-    private List<Transform> BuildingList = new List<Transform>(); //This list is private as now you use ProcessBuildingList((building) => . Do not reference this list any other way. dm to ask how to use
 
     public Transform ResourceHolderTransform;
     public GameObject ActiveBuildingGameObject;
@@ -86,13 +84,16 @@ public class LevelManager : MonoBehaviour
 
     public float daylightTimer;
     public int day = 0;
+
+    [Header("Lists below should be left alone, the game will fill them automatically")]
     public List<EnemyController> enemyList = new List<EnemyController>();
     public List<GameObject> ItemDropList = new List<GameObject>();
     public List<BridgeBuilder> bridgeList = new List<BridgeBuilder>();
     public List<BossSpawner> bossList = new List<BossSpawner>();
     public List<Chest> chestList = new List<Chest>();
-
+    public List<Transform> BuildingList = new List<Transform>();
     public List<Camp> campList = new List<Camp>();
+
     public float daySpeed = 1;
     public float enemyTimer;
 
