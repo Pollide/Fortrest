@@ -572,25 +572,25 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: c50b6cb3da380aa4197d5ed9034052b3, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: a7b83db934c27c348ba58f10fb732e83, type: 2}
     indictorName: Plains
-    indicatorColor: {r: 0, g: 1, b: 0.108952045, a: 1}
+    indicatorColor: {r: 0.2009167, g: 0.990566, b: 0.2876233, a: 1}
   - terrain: {fileID: 0}
     welcomeSprite: {fileID: 21300000, guid: 14ade843d79d7c145adca2aec12f3f9d, type: 3}
     music: {fileID: 8300000, guid: 8936ba70ea08eda439c9eeef81969247, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: 716b70db87e766148aec7f12c0239a75, type: 2}
     indictorName: Marsh
-    indicatorColor: {r: 0.73166656, g: 0, b: 1, a: 1}
+    indicatorColor: {r: 0.80754733, g: 0.2783019, b: 1, a: 1}
   - terrain: {fileID: 0}
     welcomeSprite: {fileID: 21300000, guid: 1b71bc36897a96045a1f49e16941b4d9, type: 3}
     music: {fileID: 8300000, guid: b011934c800d34b4eba21e3e9209a172, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: 092d8e1dfdb2fa9428b7e3e624da358c, type: 2}
     indictorName: Tussocks
-    indicatorColor: {r: 1, g: 0.83915305, b: 0, a: 1}
+    indicatorColor: {r: 1, g: 0.87182766, b: 0.2028302, a: 1}
   - terrain: {fileID: 0}
     welcomeSprite: {fileID: 21300000, guid: 5d88963606fec6744ae6f28ae2bc47c4, type: 3}
     music: {fileID: 8300000, guid: c50b6cb3da380aa4197d5ed9034052b3, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: c2c8faa308702074982798a64a53aeb8, type: 2}
     indictorName: Coast
-    indicatorColor: {r: 0.42745098, g: 0.117713064, b: 0, a: 1}
+    indicatorColor: {r: 0.6037736, g: 0.2549342, b: 0.12246352, a: 1}
   - terrain: {fileID: 0}
     welcomeSprite: {fileID: 21300000, guid: 054d48345f166544bb90912236b1bbc1, type: 3}
     music: {fileID: 8300000, guid: 8936ba70ea08eda439c9eeef81969247, type: 3}
@@ -602,7 +602,7 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: b011934c800d34b4eba21e3e9209a172, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: 716b70db87e766148aec7f12c0239a75, type: 2}
     indictorName: Volcanic
-    indicatorColor: {r: 1, g: 0.26329398, b: 0, a: 1}
+    indicatorColor: {r: 1, g: 0.42619312, b: 0.2216981, a: 1}
   clockHand: {fileID: 0}
   clockSun: {fileID: 0}
   clockMoon: {fileID: 0}
@@ -645,6 +645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9989ff1f5903f694eac10b15188f3766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentDay: 0
   campPrefab: {fileID: 1285012206302860940, guid: 6f112fb65cf7af84fa7dabf857eb2607,
     type: 3}
   mesh: {fileID: 0}
@@ -1862,7 +1863,6 @@ MonoBehaviour:
   RemovedSprite: {fileID: 21300000, guid: fedb542a4d1265545a84526c3578a2d9, type: 3}
   HomeSprite: {fileID: 21300000, guid: f1095d3a51e7c6a4497b254ef38e0037, type: 3}
   MountSprite: {fileID: 21300000, guid: 7be8bb784ea9adb429814eb08616eeed, type: 3}
-  BridgeSprite: {fileID: 0}
   bottomRightStack: 0
   bottomLeftStack: 0
   topRightStack: 0
