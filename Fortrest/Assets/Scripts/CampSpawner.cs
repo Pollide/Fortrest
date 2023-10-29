@@ -8,7 +8,8 @@ public class CampSpawner : MonoBehaviour
     public static CampSpawner global;
 
     [Header("Camp Spawning")]
-    private int currentDay;
+    [HideInInspector]
+    public int currentDay;
     private int lastAmount;
     private int campInt;
 
@@ -27,7 +28,7 @@ public class CampSpawner : MonoBehaviour
     public TMP_Text campText;
     [Space]
     [SerializeField] private int campsToSpawnPerDay = 2;
-    [SerializeField] private int campsSpawnedPerDay = 0;
+    [SerializeField] public int campsSpawnedPerDay = 0;
     [Space]
     public float goblinCampPercent = 2;
     public float snakegoblinCampPercent = 2;
