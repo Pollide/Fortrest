@@ -224,7 +224,7 @@ public class Building : MonoBehaviour
 
             if (GetComponent<Defence>())
             {
-                PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
+                //PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
                 LevelManager.global.RemoveBuildingVoid(transform);
                 Destroy(gameObject);
             }
