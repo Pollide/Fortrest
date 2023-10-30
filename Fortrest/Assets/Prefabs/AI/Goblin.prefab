@@ -30,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1402647301061185258}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.72, y: 0, z: 8.11}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -116,6 +116,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea845b5433f796146be446269510fdee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugingoredamage: 0
+  bestTarget: {fileID: 0}
   house: {fileID: 0}
   health: 0
   healthBar: {fileID: 9047142486049862574}
@@ -123,9 +125,11 @@ MonoBehaviour:
   chasing: 0
   canBeDamaged: 1
   canBeDamagedByBoar: 1
+  waveEnemy: 0
   isMob: 0
   bossScriptOne: {fileID: 0}
   bossScriptTwo: {fileID: 0}
+  addIndicator: 1
   ActiveAnimator: {fileID: 8403680569878307525}
   knockBackScript: {fileID: 0}
   currentEnemyType: 1
@@ -143,6 +147,7 @@ MonoBehaviour:
   ogreAttackSound: {fileID: 0}
   flashingAnimation: {fileID: 8011458941628339803}
   flashing: 0
+  wolfDistanceBetweenPlayer: 17.5
 --- !u!114 &5949272027921974290
 MonoBehaviour:
   m_ObjectHideFlags: 0
