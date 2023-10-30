@@ -152,7 +152,7 @@ public class BossSpawner : MonoBehaviour
         }
         if (CheckPlayerDistance())
         {
-            if (introCompleted)
+            if (introCompleted && GetComponent<BossStateMachine>())
             {
                 GetComponent<BossStateMachine>().enabled = true;
             }
