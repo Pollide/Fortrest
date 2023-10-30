@@ -60,11 +60,11 @@ public class EnemyController : MonoBehaviour
     public enum ENEMYTYPE
     {
         goblin = 1,
-        spider,
-        wolf,
-        ogre,
         snake,
-        lava
+        wolf,
+        spider,
+        lava,
+        ogre
     };
     public ENEMYTYPE currentEnemyType;
 
@@ -671,63 +671,75 @@ public class EnemyController : MonoBehaviour
     {
         if (currentEnemyType == ENEMYTYPE.goblin)
         {
-            agent.speed = 3.0f;
-            agent.acceleration = 20.0f;
-            agent.angularSpeed = 120.0f;
-            maxHealth = 3.0f;
-            attackTimerMax = 1.75f;
+            agent.speed = 3.5f;
+            agent.acceleration = 10.0f;
+            agent.angularSpeed = 100.0f;
+            maxHealth = 3.5f;
+            attackTimerMax = 2f;
             agent.stoppingDistance = 2.0f;
             offset = 0.25f;
             enemyDamage = 3.0f;
             knockBackScript.strength = 50.0f;
         }
-        else if (currentEnemyType == ENEMYTYPE.spider)
+        else if (currentEnemyType == ENEMYTYPE.snake)
         {
-            agent.speed = 4.0f;
-            agent.acceleration = 50.0f;
-            agent.angularSpeed = 200.0f;
-            maxHealth = 4.0f;
-            attackTimerMax = 2.0f;
+            agent.speed = 5.5f;
+            agent.acceleration = 30.0f;
+            agent.angularSpeed = 150.0f;
+            maxHealth = 4.5f;
+            attackTimerMax = 2.5f;
             agent.stoppingDistance = 2.5f;
-            offset = 0.3f;
+            offset = 0.5f;
             enemyDamage = 4.0f;
-            knockBackScript.strength = 45.0f;
+            knockBackScript.strength = 60.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
             agent.speed = 8.5f;
-            agent.acceleration = 40.0f;
+            agent.acceleration = 20.0f;
             agent.angularSpeed = 130.0f;
             maxHealth = 6.0f;
-            attackTimerMax = 2.75f;
+            attackTimerMax = 3.5f;
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
-            enemyDamage = 8.0f;
+            enemyDamage = 6.0f;
+            knockBackScript.strength = 40.0f;
+        }
+        else if (currentEnemyType == ENEMYTYPE.spider)
+        {
+            agent.speed = 7.0f;
+            agent.acceleration = 40.0f;
+            agent.angularSpeed = 180.0f;
+            maxHealth = 8.0f;
+            attackTimerMax = 1.75f;
+            agent.stoppingDistance = 2.5f;
+            offset = 0.3f;
+            enemyDamage = 5.5f;
             knockBackScript.strength = 20.0f;
+        }          
+        else if (currentEnemyType == ENEMYTYPE.lava)
+        {
+            agent.speed = 6.0f;
+            agent.acceleration = 20.0f;
+            agent.angularSpeed = 200.0f;
+            maxHealth = 10f;
+            attackTimerMax = 2.0f;
+            agent.stoppingDistance = 2.5f;
+            offset = 0.5f;
+            enemyDamage = 10.0f;
+            knockBackScript.strength = 10.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.ogre)
         {
-            agent.speed = 2.0f;
-            agent.acceleration = 20.0f;
+            agent.speed = 2.5f;
+            agent.acceleration = 10.0f;
             agent.angularSpeed = 80.0f;
-            maxHealth = 10.0f;
-            attackTimerMax = 6.0f;
+            maxHealth = 20.0f;
+            attackTimerMax = 8.0f;
             agent.stoppingDistance = 4.5f;
             offset = 0.2f;
-            enemyDamage = 10.0f;
+            enemyDamage = 12.0f;
             knockBackScript.strength = 0.0f;
-        }
-        else if (currentEnemyType == ENEMYTYPE.snake)
-        {
-            agent.speed = 5.0f;
-            agent.acceleration = 70.0f;
-            agent.angularSpeed = 150.0f;
-            maxHealth = 3.5f;
-            attackTimerMax = 3.0f;
-            agent.stoppingDistance = 2.5f;
-            offset = 0.5f;
-            enemyDamage = 5.0f;
-            knockBackScript.strength = 60.0f;
         }
         health = maxHealth;
         health = maxHealth;
