@@ -30,6 +30,12 @@ public class HUDHandler : MonoBehaviour
         global = this;
     }
 
+    private void Start()
+    {
+        LerpRectScale(gatherIcon.rectTransform, true, 1f, 0.52f);
+        LerpRectScale(combatIcon.rectTransform, false, 1f, 0.52f);
+    }
+
     private void Update()
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
@@ -67,8 +73,8 @@ public class HUDHandler : MonoBehaviour
 
         if (time < duration)
         {
-            LerpRectScale(gatherIcon.rectTransform, gather, 0.5f);
-            LerpRectScale(combatIcon.rectTransform, !gather, 0.5f);
+            LerpRectScale(gatherIcon.rectTransform, gather, 1f, 0.52f);
+            LerpRectScale(combatIcon.rectTransform, !gather, 1f, 0.52f);
 
             time += Time.deltaTime;
         }
@@ -138,9 +144,9 @@ public class HUDHandler : MonoBehaviour
         }
     }
 
-    void LerpRectScale(RectTransform rectTransform, bool flip = false, float size = 1)
+    void LerpRectScale(RectTransform rectTransform, bool flip = false, float size = 1, float scaleMulti = 0.7f)
     {
-        Vector3 scale = new(0.7f, 0.7f, 1);
+        Vector3 scale = new(scaleMulti, scaleMulti, 1);
 
         Vector3 a = scale * (flip ? size : size * 2);
         Vector3 b = scale * (flip ? size * 2 : size);
