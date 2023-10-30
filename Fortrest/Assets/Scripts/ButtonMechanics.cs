@@ -138,10 +138,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         if (UpgradeInt != 0)
         {
-            if (open)
-                PlayerController.global.UpdateResourceHolder(UpgradeInt);
-
-            PlayerController.global.OpenResourceHolder(open);
+            PlayerController.global.UpdateResourceHolder(upgradeTypeInt: UpgradeInt, open: open);
         }
     }
 

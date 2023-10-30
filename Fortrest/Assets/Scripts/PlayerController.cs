@@ -133,7 +133,8 @@ public class PlayerController : MonoBehaviour
     public GameObject PauseCanvasGameObject;
     public Transform MapSpotHolder;
     public RectTransform MapPlayerRectTransform;
-    public Transform MapResourceHolder;
+    public Transform ResourceHolder;
+    public Transform CostHolder;
     public GameObject MapResourcePrefab;
     public Animator ResourceHolderAnimator;
 
@@ -168,6 +169,8 @@ public class PlayerController : MonoBehaviour
     // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
+    public Animator pauseAnimator;
+    public Animator mapAnimator;
     public GameObject turretTierOne;
     public GameObject turretTierTwo;
     public Image turretBoarderImage;
@@ -179,7 +182,8 @@ public class PlayerController : MonoBehaviour
     public Image unlockImage;
     public Text unlockTitleText;
     public Text unlockDescriptionText;
-
+    public Color costGreen;
+    public Color costRed;
     // Death
     //private float respawnTimer = 0.0f;
     private bool textAnimated = false;
@@ -340,15 +344,6 @@ public class PlayerController : MonoBehaviour
             {
                 sprintingCTRL = false;
             }
-        }
-    }
-
-    public void OpenResourceHolder(bool open)
-    {
-        if (ResourceHolderOpened != open)
-        {
-            ResourceHolderOpened = open;
-            GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
         }
     }
 
@@ -545,12 +540,6 @@ public class PlayerController : MonoBehaviour
         {
             staggerCD -= Time.deltaTime;
         }
-
-        if (ResourceHolderOpened && Cursor.visible)
-        {
-            ResourceHolderAnimator.transform.position = Input.mousePosition;
-        }
-
 
         if (!canEvade)
         {
@@ -791,14 +780,8 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerModeHandler.global.inTheFortress)
         {
-            if (playerHealth < maxHealth)
-            {
-                playerHealth += Time.deltaTime * 2.0f;
-            }
-            else
-            {
-                playerHealth = maxHealth;
-            }
+            //this also runs when you are dead
+            playerHealth = Mathf.Clamp(playerHealth + Time.deltaTime * 8.0f, 0, maxHealth);
         }
     }
 
@@ -1144,11 +1127,11 @@ public class PlayerController : MonoBehaviour
             controllerImage.sprite = GameManager.global.KeyboardBool ? keyboardSprite : controllerSprite;
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.PauseMenuSound);
+            GameManager.PlayAnimator(pauseAnimator, "Pause Appear", pause);
 
             if (!mapBool)
             {
                 Time.timeScale = pause ? 0 : 1;
-                GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
             }
 
             pausedBool = pause;
@@ -1159,7 +1142,7 @@ public class PlayerController : MonoBehaviour
     {
         if (!pausedBool)
         {
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
+            GameManager.PlayAnimator(mapAnimator, "Map Appear", map);
 
 
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
@@ -1170,11 +1153,9 @@ public class PlayerController : MonoBehaviour
             {
                 UpdateMap();
                 MapPanningPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
-
-                UpdateResourceHolder(showCosts: false);
             }
 
-            OpenResourceHolder(map);
+            UpdateResourceHolder(open: map);
         }
     }
 
@@ -1213,11 +1194,27 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void UpdateResourceHolder(int bridgeTypeInt = 0, int upgradeTypeInt = 0, bool showCosts = true)
+    public void UpdateResourceHolder(int bridgeTypeInt = 0, int upgradeTypeInt = 0, BuildType buildType = BuildType.None, bool open = true)
     {
-        for (int i = 0; i < MapResourceHolder.childCount; i++)
+        if (ResourceHolderOpened != open)
         {
-            Destroy(MapResourceHolder.GetChild(i).gameObject);
+            ResourceHolderOpened = open;
+            GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
+        }
+
+        if (!open)
+        {
+            return;
+        }
+
+        for (int i = 1; i < ResourceHolder.childCount; i++) //i = 1 skips title
+        {
+            Destroy(ResourceHolder.GetChild(i).gameObject);
+        }
+
+        for (int i = 1; i < CostHolder.childCount; i++) //skips title
+        {
+            Destroy(CostHolder.GetChild(i).gameObject);
         }
 
         List<LevelManager.TierData> woodCostList = new List<LevelManager.TierData>();
@@ -1233,36 +1230,69 @@ public class PlayerController : MonoBehaviour
             stoneCostList.Add(new LevelManager.TierData());
         }
 
+        if (buildType == BuildType.Turret)
+        {
+            woodCostList[0].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -5;
+        }
+
+        if (buildType == BuildType.Cannon)
+        {
+            woodCostList[0].ResourceCost = -3;
+            stoneCostList[0].ResourceCost = -3;
+            woodCostList[1].ResourceCost = -5;
+            stoneCostList[1].ResourceCost = -5;
+        }
+
+        if (buildType == BuildType.Slow)
+        {
+            stoneCostList[0].ResourceCost = -5;
+            stoneCostList[1].ResourceCost = -10;
+            stoneCostList[2].ResourceCost = -2;
+        }
+
+        if (buildType == BuildType.Scatter)
+        {
+            woodCostList[2].ResourceCost = -10;
+            stoneCostList[2].ResourceCost = -10;
+        }
+
         if (upgradeTypeInt == -1) //repair
         {
             woodCostList[0].ResourceCost = -10;
             stoneCostList[0].ResourceCost = -5;
         }
-        else if (upgradeTypeInt == -2) //destroy
+
+        if (upgradeTypeInt == -2) //destroy
         {
             woodCostList[0].ResourceCost = -5;
         }
-        else if (upgradeTypeInt > 0) //upgrade
+
+        if (upgradeTypeInt > 0) //upgrade
         {
             woodCostList[0].ResourceCost = -5;
             stoneCostList[0].ResourceCost = -5;
         }
-        else if (bridgeTypeInt == 1)
+
+        if (bridgeTypeInt == 1) //marsh
         {
             woodCostList[0].ResourceCost = -30;
             stoneCostList[0].ResourceCost = -10;
         }
-        else if (bridgeTypeInt == 2)
+
+        if (bridgeTypeInt == 2) //tussocks
         {
             woodCostList[1].ResourceCost = -30;
             stoneCostList[1].ResourceCost = -10;
         }
-        else if (bridgeTypeInt == 3)
+
+        if (bridgeTypeInt == 3) //taiga
         {
             woodCostList[2].ResourceCost = -30;
             stoneCostList[2].ResourceCost = -10;
         }
-        else if (bridgeTypeInt == 4)
+
+        if (bridgeTypeInt == 4) //coast
         {
             woodCostList[0].ResourceCost = -10;
             stoneCostList[0].ResourceCost = -10;
@@ -1271,78 +1301,50 @@ public class PlayerController : MonoBehaviour
             woodCostList[2].ResourceCost = -10;
             stoneCostList[2].ResourceCost = -10;
         }
-        else if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+
+        if (bridgeTypeInt == 5) //volanic
         {
-            if (PlayerModeHandler.global.buildType == BuildType.Turret)
-            {
-                woodCostList[0].ResourceCost = -10;
-                stoneCostList[0].ResourceCost = -5;
-            }
-
-            if (PlayerModeHandler.global.buildType == BuildType.Cannon)
-            {
-                woodCostList[0].ResourceCost = -3;
-                stoneCostList[0].ResourceCost = -3;
-                woodCostList[1].ResourceCost = -5;
-                stoneCostList[1].ResourceCost = -5;
-            }
-
-            if (PlayerModeHandler.global.buildType == BuildType.Slow)
-            {
-                stoneCostList[0].ResourceCost = -5;
-                stoneCostList[1].ResourceCost = -10;
-                stoneCostList[2].ResourceCost = -2;
-            }
-
-            if (PlayerModeHandler.global.buildType == BuildType.Scatter)
-            {
-                woodCostList[2].ResourceCost = -10;
-                stoneCostList[2].ResourceCost = -10;
-            }
+            woodCostList[0].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -10;
+            woodCostList[1].ResourceCost = -10;
+            stoneCostList[1].ResourceCost = -10;
+            woodCostList[2].ResourceCost = -10;
+            stoneCostList[2].ResourceCost = -10;
         }
 
-        //      Debug.Log("UPDATE");
 
-        ResourceGenerate(LevelManager.global.WoodTierList, woodCostList, showCosts);
-        ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList, showCosts);
+
+        //      Debug.Log("UPDATE");
+        ResourceGenerate(LevelManager.global.WoodTierList, woodCostList);
+        ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList);
     }
 
-    void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList, bool showCosts = true)
+    void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
-
+        bool costBool = false;
         for (int i = 0; i < tierList.Count; i++)
         {
             tierList[i].ResourceCost = costList[i].ResourceCost;
 
-            if (showCosts && costList[i].ResourceCost == 0)
+            CreateResource(ResourceHolder, tierList[i].ResourceAmount, tierList[i].ResourceIcon, Color.white);
+
+            if (tierList[i].ResourceCost != 0)
             {
-                continue;
+                costBool = true;
+                CreateResource(CostHolder, Mathf.Abs(tierList[i].ResourceCost), tierList[i].ResourceIcon, tierList[i].SufficientResource() ? costGreen : costRed);
             }
-
-            // Debug.Log(tierList[i].ResourceAmount + "> 0 || " + tierList[i].ResourceCost + "> 0");
-            if (tierList[i].ResourceAmount != 0 || tierList[i].ResourceCost != 0)
-            {
-                GameObject mapResource = Instantiate(MapResourcePrefab, MapResourceHolder);
-                Text costText = mapResource.transform.GetChild(1).GetComponent<Text>();
-
-                costText.text = tierList[i].ResourceAmount.ToString("N0");
-                mapResource.transform.GetChild(0).GetComponent<Image>().sprite = tierList[i].ResourceIcon;
-                //GameManager.TemporaryAnimation(mapResource, GameManager.global.PopupAnimation, i);
-
-                if (tierList[i].ResourceCost != 0)
-                {
-                    costText.text = tierList[i].ResourceCost.ToString("N0");
-
-                    costText.color = tierList[i].SufficientResource() ? Color.green : Color.red;
-
-                    if (!tierList[i].SufficientResource())
-                    {
-                        // costText.text = "(Need " + tierList[i].ResourceAmount " more"
-                    }
-                }
-            }
-
         }
+
+        CostHolder.gameObject.SetActive(costBool);
+    }
+
+    void CreateResource(Transform location, int number, Sprite icon, Color color)
+    {
+        GameObject mapResource = Instantiate(MapResourcePrefab, location);
+        Text costText = mapResource.transform.GetChild(1).GetComponent<Text>();
+        costText.color = color;
+        costText.text = number.ToString("N0");
+        mapResource.transform.GetChild(0).GetComponent<Image>().sprite = icon;
     }
 
     public bool CheckSufficientResources(bool purchase = false)
@@ -2013,42 +2015,38 @@ public class PlayerController : MonoBehaviour
             playerRespawned = false;
             deathEffects = true;
         }
-        if (!playerRespawned)
+
+        if (playerHealth >= maxHealth && !playerRespawned)
         {
-            playerHealth += 12 * Time.deltaTime;
-
-            if (playerHealth >= maxHealth)
+            needInteraction = true;
+            if (!textAnimated)
             {
-                needInteraction = true;
-                if (!textAnimated)
-                {
-                    LevelManager.FloatingTextChange(respawnText, true);
-                    textAnimated = true;
-                }
-                if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
-                {
-                    playSoundOnce = false;
-                    characterAnimator.gameObject.SetActive(true);
-                    characterAnimator.ResetTrigger("Death");
-                    characterAnimator.SetTrigger("Respawn");
-                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                    LevelManager.global.VFXSleeping.Stop();
-                    TeleportPlayer(houseSpawnPoint.transform.position, true);
-                    playerCanMove = true;
-                    playerDead = false;
-                    deathEffects = false;
-                    playerRespawned = true;
+                LevelManager.FloatingTextChange(respawnText, true);
+                textAnimated = true;
+            }
+            if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
+            {
+                playSoundOnce = false;
+                characterAnimator.gameObject.SetActive(true);
+                characterAnimator.ResetTrigger("Death");
+                characterAnimator.SetTrigger("Respawn");
+                GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
+                LevelManager.global.VFXSleeping.Stop();
+                TeleportPlayer(houseSpawnPoint.transform.position, true);
+                playerCanMove = true;
+                playerDead = false;
+                deathEffects = false;
+                playerRespawned = true;
 
-                    LevelManager.FloatingTextChange(respawnText, false);
-                    textAnimated = false;
-                    if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport && !bridgeInteract)
-                    {
-                        needInteraction = false;
-                    }
-                    interactCTRL = false;
-                    respawning = true;
-                    StartCoroutine(RevertBool(false));
+                LevelManager.FloatingTextChange(respawnText, false);
+                textAnimated = false;
+                if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport && !bridgeInteract)
+                {
+                    needInteraction = false;
                 }
+                interactCTRL = false;
+                respawning = true;
+                StartCoroutine(RevertBool(false));
             }
         }
     }
