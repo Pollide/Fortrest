@@ -244,6 +244,8 @@ public class PlayerController : MonoBehaviour
     public RectTransform turretMenuHolder;
     public TMP_Text turretMenuTitle;
     public Image turretImageIcon;
+    bool resourceCostBool = false;
+    public Text resourceInfoText;
 
     // Animation
     private float speedAnim;
@@ -347,11 +349,6 @@ public class PlayerController : MonoBehaviour
                 sprintingCTRL = false;
             }
         }
-    }
-
-    public void ShakeResourceHolder()
-    {
-        GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
     }
 
     private void BuildSelectController()
@@ -694,7 +691,7 @@ public class PlayerController : MonoBehaviour
             if (playerCanBeDamaged)
             {
                 playerHealth -= 3f;
-            }          
+            }
             yield return new WaitForSeconds(0.5f);
         }
     }
@@ -1239,12 +1236,14 @@ public class PlayerController : MonoBehaviour
 
         if (buildType == BuildType.Turret)
         {
+            resourceInfoText.text = "Turret";
             woodCostList[0].ResourceCost = -10;
             stoneCostList[0].ResourceCost = -5;
         }
 
         if (buildType == BuildType.Cannon)
         {
+            resourceInfoText.text = "Cannon";
             woodCostList[0].ResourceCost = -3;
             stoneCostList[0].ResourceCost = -3;
             woodCostList[1].ResourceCost = -5;
@@ -1253,6 +1252,7 @@ public class PlayerController : MonoBehaviour
 
         if (buildType == BuildType.Slow)
         {
+            resourceInfoText.text = "Slow";
             stoneCostList[0].ResourceCost = -5;
             stoneCostList[1].ResourceCost = -10;
             stoneCostList[2].ResourceCost = -2;
@@ -1260,26 +1260,47 @@ public class PlayerController : MonoBehaviour
 
         if (buildType == BuildType.Scatter)
         {
+            resourceInfoText.text = "Scatter";
+
             woodCostList[2].ResourceCost = -10;
             stoneCostList[2].ResourceCost = -10;
         }
 
         if (upgradeTypeInt == -1) //repair
         {
+            resourceInfoText.text = "Repair";
+
             woodCostList[0].ResourceCost = -10;
             stoneCostList[0].ResourceCost = -5;
         }
 
         if (upgradeTypeInt == -2) //destroy
         {
+            resourceInfoText.text = "Destroy";
             woodCostList[0].ResourceCost = -5;
         }
 
         if (upgradeTypeInt > 0) //upgrade
         {
+            if (upgradeTypeInt == 1)
+                resourceInfoText.text = "Damage";
+
+            if (upgradeTypeInt == 1)
+                resourceInfoText.text = "Health";
+
+            if (upgradeTypeInt == 2)
+                resourceInfoText.text = "Range";
+
+            if (upgradeTypeInt == 3)
+                resourceInfoText.text = "Rate";
+
+
             woodCostList[0].ResourceCost = -5;
             stoneCostList[0].ResourceCost = -5;
         }
+
+        if (bridgeTypeInt != 0)
+            resourceInfoText.text = LevelManager.global.terrainDataList[bridgeTypeInt].indictorName + " Bridge";
 
         if (bridgeTypeInt == 1) //marsh
         {
@@ -1328,43 +1349,50 @@ public class PlayerController : MonoBehaviour
 
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
-        bool costBool = false;
+        bool showCostBool = false;
         for (int i = 0; i < tierList.Count; i++)
         {
             tierList[i].ResourceCost = costList[i].ResourceCost;
 
-            CreateResource(ResourceHolder, tierList[i].ResourceAmount, tierList[i].ResourceIcon, Color.white);
+            CreateResource(ResourceHolder, tierList[i].ResourceAmount, tierList[i].ResourceIcon, Color.white, i);
 
             if (tierList[i].ResourceCost != 0)
             {
-                costBool = true;
-                CreateResource(CostHolder, Mathf.Abs(tierList[i].ResourceCost), tierList[i].ResourceIcon, tierList[i].SufficientResource() ? costGreen : costRed);
+                showCostBool = true;
+                CreateResource(CostHolder, Mathf.Abs(tierList[i].ResourceCost), tierList[i].ResourceIcon, tierList[i].SufficientResource() ? costGreen : costRed, i);
             }
         }
 
-        CostHolder.gameObject.SetActive(costBool);
+        if (resourceCostBool != showCostBool)
+        {
+            resourceCostBool = showCostBool;
+            GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", showCostBool);
+            GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", showCostBool);
+        }
     }
 
-    void CreateResource(Transform location, int number, Sprite icon, Color color)
+    void CreateResource(Transform location, int number, Sprite icon, Color color, int i)
     {
         GameObject mapResource = Instantiate(MapResourcePrefab, location);
         Text costText = mapResource.transform.GetChild(1).GetComponent<Text>();
         costText.color = color;
         costText.text = number.ToString("N0");
         mapResource.transform.GetChild(0).GetComponent<Image>().sprite = icon;
+
+        if (Time.timeScale == 1)
+        {
+            AnimationState animationState = GameManager.PlayAnimation(mapResource.GetComponent<Animation>(), "Popup Resource");
+            mapResource.GetComponent<Animation>()["Popup Resource"].time -= i / 14;
+        }
     }
 
     public bool CheckSufficientResources(bool purchase = false)
     {
         if (!GameManager.global.CheatInfiniteBuilding)
         {
-            if (!Sufficient(LevelManager.global.WoodTierList, purchase))
+            if (!Sufficient(LevelManager.global.WoodTierList, purchase) || !Sufficient(LevelManager.global.StoneTierList, purchase))
             {
-                return false;
-            }
-
-            if (!Sufficient(LevelManager.global.StoneTierList, purchase))
-            {
+                GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
                 return false;
             }
         }

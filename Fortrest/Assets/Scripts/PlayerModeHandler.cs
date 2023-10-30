@@ -482,11 +482,7 @@ public class PlayerModeHandler : MonoBehaviour
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                         runOnce = true;
-
-                        if (!PlayerController.global.CheckSufficientResources())
-                        {
-                            PlayerController.global.ShakeResourceHolder();
-                        }
+                        PlayerController.global.CheckSufficientResources(); //will shake
                     }
                 }
             }
