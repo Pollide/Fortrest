@@ -138,7 +138,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         if (UpgradeInt != 0)
         {
-            PlayerController.global.UpdateResourceHolder(upgradeTypeInt: UpgradeInt, open: open);
+            PlayerController.global.UpdateResourceHolder(upgradeTypeInt: open ? UpgradeInt : 0); //hides cost UI if not hover
         }
     }
 
