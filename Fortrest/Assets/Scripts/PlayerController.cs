@@ -94,15 +94,15 @@ public class PlayerController : MonoBehaviour
     private float resetAttack = 0.75f; // Attack cooldown
     private float comboTimer = 0.0f; // Timer to reset the combo
     private float resetCombo = 1.10f; // Combo cooldown
-    private float staggerCD; // Combo cooldown
-    public float staggerCDMax = 1.5f; // Combo cooldown
+    private float staggerCD; // Timer to reset the stagger
+    public float staggerCDMax = 1.5f; // Stagger cooldwon
     private int attackCount = 0; // Current attack number in the combo
     [HideInInspector] public Building currentResource; // Current resource type being gathered
     public bool damageEnemy = false; // Used to enable a time frame during the animation where the enemy can be damaged
     [HideInInspector] public bool lunge = false; // Used to move the player forward (lunge) during their attack
     [HideInInspector] public bool upgradedMelee; // Used to enable the upgraded melee perks
     public bool attackAnimEnded = true; // Safety bool to avoid attack issues. Becomes true using anim behaviour, and is needed to attack again
-    public VisualEffect swordVFX;
+    public VisualEffect swordVFX; // Sword hitting the enemy VFX
 
     // States
     [Header("Player States")]
@@ -684,7 +684,10 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            playerHealth -= 3f;
+            if (playerCanBeDamaged)
+            {
+                playerHealth -= 3f;
+            }          
             yield return new WaitForSeconds(0.5f);
         }
     }
@@ -1719,7 +1722,7 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
-            if (Input.GetMouseButton(1) || aimingCTRL)
+            if ((Input.GetMouseButton(1) || aimingCTRL) && !staggered)
             {
                 if (!initialShot)
                 {
@@ -2121,8 +2124,10 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Staggered()
     {
         staggered = true;
+        characterAnimator.SetBool("Staggered", true);
         yield return new WaitForSeconds(0.33f);
         staggered = false;
+        characterAnimator.SetBool("Staggered", false);
     }
 
     private bool Facing(Vector3 otherPosition, float desiredAngle) // Making sure the enemy always faces what it is attacking
