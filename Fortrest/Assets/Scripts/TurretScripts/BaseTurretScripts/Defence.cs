@@ -11,17 +11,23 @@ public class Defence : MonoBehaviour
     public int turretID;
     public TurretStats.Tier changeTier = new TurretStats.Tier();
 
-    float ReturnDamage()
+    public float ReturnDamage()
     {
         return damage + changeTier.damageTier;
     }
 
-    float ReturnFireRate()
+    public float ReturnHealth()
+    {
+        return GetComponent<Building>().health + changeTier.healthTier;
+    }
+
+
+    public float ReturnFireRate()
     {
         return fireRate + changeTier.rateTier;
     }
 
-    float ReturnRange()
+    public float ReturnRange()
     {
         return shootingRange + changeTier.rangeTier;
     }
