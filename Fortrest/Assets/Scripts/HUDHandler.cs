@@ -71,12 +71,20 @@ public class HUDHandler : MonoBehaviour
             isCombat = !gather;
         }
 
+        gatherIcon.GetComponent<Image>().color = gather ? new Color32(255, 255, 255, 255) : new Color32(214, 90, 90, 255);
+        combatIcon.GetComponent<Image>().color = gather ? new Color32(214, 90, 90, 255) : new Color32(255, 255, 255, 255);
+
         if (time < duration)
         {
             LerpRectScale(gatherIcon.rectTransform, gather, 1f, 0.52f);
             LerpRectScale(combatIcon.rectTransform, !gather, 1f, 0.52f);
 
             time += Time.deltaTime;
+        }
+        else
+        {
+            gatherIcon.rectTransform.localScale = gather ? new Vector3(0.94f, 0.94f, 1f) : new Vector3(0.62f, 0.62f, 1f);           
+            combatIcon.rectTransform.localScale = gather ? new Vector3(0.62f, 0.62f, 1f) : new Vector3(0.94f, 0.94f, 1f);            
         }
     }
 

@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
     public GameObject evadeCooldownImage; // Game object used to show the cooldown of the evade
     private Vector3 evadeImageStartPos = new Vector3(0f, -95f, 0f); // Initial position of the image
     private float evadeTimer;
+    public Image dodgeIcon;
 
     // Shooting
     [HideInInspector] public bool canShoot; // Used to allow the player to shoot the bow. True when aiming
@@ -83,6 +84,7 @@ public class PlayerController : MonoBehaviour
     private float newHealth; // Used to pick up on changes in the health amount
     public HealthBar healthBar; // Health bar UI
     public HealthBar houseHealthBar; // Health bar UI
+
     // Eating
     [HideInInspector] public int appleAmount = 0; // The current amount of apples being held by the player
     private float appleHealAmount = 10.0f; // The amount of health restored when eating an apple
@@ -544,7 +546,12 @@ public class PlayerController : MonoBehaviour
         if (!canEvade)
         {
             evadeTimer += Time.deltaTime;
+            dodgeIcon.color = new Color32(214, 90, 90, 255);
             evadeCooldownImage.transform.localPosition = Vector3.Lerp(evadeImageStartPos, new Vector3(evadeImageStartPos.x, evadeImageStartPos.y + 90f, evadeImageStartPos.z), evadeTimer / evadeCooldown);
+        }
+        else
+        {
+            dodgeIcon.color = new Color32(255, 255, 255, 255);
         }
 
         if (mapBool)
