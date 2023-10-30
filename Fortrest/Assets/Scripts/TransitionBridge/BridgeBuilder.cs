@@ -160,11 +160,6 @@ public class BridgeBuilder : MonoBehaviour
                         spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.lava.objectToSpawn, spawner.spawnCurrentVolcanic, ref spawner.spawnCurrentVolcanic);
                     }
                 }
-                else
-                {
-                    PlayerController.global.ShakeResourceHolder();
-                }
-
             }
 
         }
