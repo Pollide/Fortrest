@@ -450,7 +450,6 @@ public class LevelManager : MonoBehaviour
         if (Time.timeScale == 0)
             music = GameManager.global.PauseMusic;
 
-
         if (activeMusic != music)
         {
             activeMusic = music;
@@ -463,12 +462,9 @@ public class LevelManager : MonoBehaviour
             PlayerController.global.biomeNameImage.color = terrainData.indicatorColor;
             PlayerController.global.biomeNameImage.sprite = terrainData.welcomeSprite;
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Biome Name Appear");
-            //GameManager.global.SoundManager.PlaySound(GameManager.global.NewDaySound);
         }
 
-
         currentTerrainData = terrainData;
-
     }
 
     private void CalculateCamps()
@@ -511,13 +507,12 @@ public class LevelManager : MonoBehaviour
             daySpeed = ReturnNight() ? 2 : 1;
         }
 
-
 #if UNITY_EDITOR
         // daySpeed = 7.0f; // FOR TESTING
 #endif
-        //  DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
+        // DirectionalLightTransform.Rotate(new Vector3(1, 0, 0), daySpeed * Time.deltaTime);
         DirectionalLightTransform.eulerAngles = new Vector3(45, 0, 0);
-        //        DirectionalLightTransform.eulerAngles = new Vector3(daylightTimer, 0, 0);
+        // DirectionalLightTransform.eulerAngles = new Vector3(daylightTimer, 0, 0);
         clockHand.transform.rotation = Quaternion.Euler(clockHand.transform.rotation.eulerAngles.x, clockHand.transform.rotation.eulerAngles.y, -daylightTimer + 90);
         daylightTimer += daySpeed * Time.deltaTime;
 
@@ -556,8 +551,6 @@ public class LevelManager : MonoBehaviour
 
         light.intensity = Mathf.Lerp(light.intensity, 1 - (ReturnNight() ? 0 : Weather.global.DecreaseDayLightIntensity), 0.4f * Time.deltaTime);
 
-
-
         if (PlayerController.global.LanternLighted != ReturnNight())
         {
             PlayerController.global.LanternLighted = ReturnNight();
@@ -586,7 +579,6 @@ public class LevelManager : MonoBehaviour
             // return;
         }
 
-
         //if (Physics.Raycast(SceneCamera.ScreenPointToRay(Input.mousePosition), out RaycastHit hit))
         //{
         //    Debug.Log(hit.transform);
@@ -595,7 +587,6 @@ public class LevelManager : MonoBehaviour
         //        hit.transform.GetComponent<Building>().MouseOverVoid();
         //    }
         //}
-
 
         if (ActiveBuildingGameObject)
             return;
@@ -771,28 +762,54 @@ public class LevelManager : MonoBehaviour
                 countSet = true;
             }
 
-            // North position
-            enemySpawnPosition = houseTransform.position + new Vector3(spawnDistance, 0.0f, spawnDistance);
-
             enemyTimer += Time.deltaTime;
 
             // Spawn delay for enemies. Happens till the count reaches 0
             if (enemyTimer >= enemyThreshold && enemiesCount > 0)
             {
-                // Random position out of 3
-                laneInt = Random.Range(1, 4);
+                // Random position out of 4 based on day
+                laneInt = 1;
+
+                if (day > 3)
+                {
+                    laneInt = Random.Range(1, 3);
+                }
+                if (day > 7)
+                {
+                    laneInt = Random.Range(1, 4);
+                }
+                if (day > 10)
+                {
+                    laneInt = Random.Range(1, 5);
+                }
+
+                float isometricAngle = 45.0f; // Isometric angle in degrees
+                float isometricAngleInRadians = isometricAngle * Mathf.Deg2Rad;
+                Vector3 forwardDirection = new Vector3(Mathf.Cos(isometricAngleInRadians), 0, Mathf.Sin(isometricAngleInRadians));
+
+                Vector3 spawnDirection;
+
                 switch (laneInt)
                 {
                     case 1:
-                        lane = SPAWNLANE.Left;
-                        enemySpawnPosition += new Vector3(-10.0f, 0.0f, 10.0f);
+                        // Forward
+                        spawnDirection = forwardDirection;
+                        enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
                         break;
                     case 2:
-                        lane = SPAWNLANE.Middle;
+                        // Right
+                        spawnDirection = Quaternion.Euler(0, 0, -45) * forwardDirection;
+                        enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
                         break;
                     case 3:
-                        lane = SPAWNLANE.Right;
-                        enemySpawnPosition += new Vector3(10.0f, 0.0f, -10.0f);
+                        // Back
+                        spawnDirection = -forwardDirection;
+                        enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
+                        break;
+                    case 4:
+                        // Left
+                        spawnDirection = Quaternion.Euler(0, 0, 45) * forwardDirection;
+                        enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
                         break;
                     default:
                         break;
@@ -857,7 +874,7 @@ public class LevelManager : MonoBehaviour
 
                     GameObject prefab = SpawnRandomEnemy();
 
-                    if (day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
+                    if (day > 1 && day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
                     {
                         prefab = ogrePrefab;
 
