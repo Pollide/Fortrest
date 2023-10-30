@@ -5,9 +5,9 @@ public class Defence : MonoBehaviour
 {
     public List<Sprite> spriteTierList = new List<Sprite>();
     public float turn_speed;
-    public float shootingRange = 10f;
-    public float fireRate = 1f;
-    public float damage = 10;
+    public float shootingRange;
+    public float fireRate;
+    public float damage;
     public int turretID;
     public TurretStats.Tier changeTier = new TurretStats.Tier();
 
