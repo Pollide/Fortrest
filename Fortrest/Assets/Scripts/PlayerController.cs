@@ -533,7 +533,7 @@ public class PlayerController : MonoBehaviour
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.L))
         {
-            playerHealth = 0f;
+            playerHealth -= 10f;
         }
 
         if (debugfrocemap)
@@ -695,7 +695,10 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            playerHealth -= 3f;
+            if (playerCanBeDamaged)
+            {
+                playerHealth -= 3f;
+            }          
             yield return new WaitForSeconds(0.5f);
         }
     }
