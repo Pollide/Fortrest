@@ -767,37 +767,48 @@ public class LevelManager : MonoBehaviour
             // Spawn delay for enemies. Happens till the count reaches 0
             if (enemyTimer >= enemyThreshold && enemiesCount > 0)
             {
-                // Random position out of 3
-                laneInt = Random.Range(1, 5);
+                // Random position out of 4 based on day
+                laneInt = 1;
+
+                if (day > 3)
+                {
+                    laneInt = Random.Range(1, 3);
+                }
+                if (day > 7)
+                {
+                    laneInt = Random.Range(1, 4);
+                }
+                if (day > 10)
+                {
+                    laneInt = Random.Range(1, 5);
+                }
 
                 float isometricAngle = 45.0f; // Isometric angle in degrees
-                float forwardAngle = isometricAngle + 45.0f; // Angle for forward direction
-
-                // Calculate the forward direction vector
-                Vector3 forwardDirection = new Vector3(Mathf.Cos(forwardAngle * Mathf.Deg2Rad), 0, Mathf.Sin(forwardAngle * Mathf.Deg2Rad));
+                float isometricAngleInRadians = isometricAngle * Mathf.Deg2Rad;
+                Vector3 forwardDirection = new Vector3(Mathf.Cos(isometricAngleInRadians), 0, Mathf.Sin(isometricAngleInRadians));
 
                 Vector3 spawnDirection;
 
                 switch (laneInt)
                 {
                     case 1:
-                        // Right
-                        spawnDirection = Quaternion.Euler(0, 0, -45) * forwardDirection;
-                        enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
-                        break;
-                    case 2:
-                        // Left
-                        spawnDirection = Quaternion.Euler(0, 0, 45) * forwardDirection;
-                        enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
-                        break;
-                    case 3:
                         // Forward
                         spawnDirection = forwardDirection;
                         enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
                         break;
-                    case 4:
+                    case 2:
+                        // Right
+                        spawnDirection = Quaternion.Euler(0, 0, -45) * forwardDirection;
+                        enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
+                        break;
+                    case 3:
                         // Back
                         spawnDirection = -forwardDirection;
+                        enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
+                        break;
+                    case 4:
+                        // Left
+                        spawnDirection = Quaternion.Euler(0, 0, 45) * forwardDirection;
                         enemySpawnPosition = houseTransform.position + spawnDirection.normalized * spawnDistance;
                         break;
                     default:
@@ -863,7 +874,7 @@ public class LevelManager : MonoBehaviour
 
                     GameObject prefab = SpawnRandomEnemy();
 
-                    if (day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
+                    if (day > 1 && day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
                     {
                         prefab = ogrePrefab;
 
