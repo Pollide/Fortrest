@@ -212,7 +212,7 @@ public class LevelManager : MonoBehaviour
 
         enemyThreshold = 0.0f;
 
-        if (GameManager.Pref("Prologue", 0, true) == 0)
+        if (GameManager.Pref("Game Has Begun", 0, true) == 0)
         {
             StartCoroutine(PrologueCutscene());
         }
@@ -314,7 +314,6 @@ public class LevelManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        GameManager.Pref("Prologue", 1);
         GameManager.global.NextScene(1);
     }
 

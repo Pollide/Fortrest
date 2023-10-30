@@ -132,7 +132,6 @@ public class BossSpawner : MonoBehaviour
 
                 if (open && LevelManager.global.messageDisplayed)
                 {
-                    LevelManager.global.messageDisplayed = false;
                     GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false, true);
                 }
             }
@@ -164,7 +163,7 @@ public class BossSpawner : MonoBehaviour
                 BossIntro();
 
                 if (GetComponent<BossStateMachine>())
-                { 
+                {
                     bossAnimator.gameObject.SetActive(true);
 
                 }
