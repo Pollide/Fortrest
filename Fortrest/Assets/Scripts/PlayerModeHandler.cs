@@ -213,10 +213,6 @@ public class PlayerModeHandler : MonoBehaviour
             turretMenuOpened = open;
             if (!open)
             {
-
-                if (SelectedTurret)
-                    PlayerController.global.UpdateResourceHolder(); //so the turret costs update
-
                 SelectedTurret = null;
             }
 
@@ -336,8 +332,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (!SelectedTurret)
         {
-            PlayerController.global.UpdateResourceHolder();
-            PlayerController.global.OpenResourceHolder(placing && turretBlueprint);
+            PlayerController.global.UpdateResourceHolder(buildType: buildType, open: placing && turretBlueprint);
         }
 
         if (placing)
@@ -655,7 +650,7 @@ public class PlayerModeHandler : MonoBehaviour
     public void SwitchToBuildMode(bool active = true)
     {
         buildGrid.gameObject.SetActive(active);
-        PlayerController.global.OpenResourceHolder(active);
+        // PlayerController.global.UpdateResourceHolder(open: active);
 
         PlayerController.global.characterAnimator.gameObject.SetActive(!active);
         if (active)
@@ -676,8 +671,11 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.playerCanMove = false;
 
             playerModes = PlayerModes.BuildMode;
-            PlayerController.global.UpdateResourceHolder();
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
+        }
+        else
+        {
+            PlayerController.global.UpdateResourceHolder(open: false);
         }
     }
 

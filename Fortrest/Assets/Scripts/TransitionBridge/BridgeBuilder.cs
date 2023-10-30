@@ -82,18 +82,11 @@ public class BridgeBuilder : MonoBehaviour
         PlayerController.global.bridgeInteract = show;
         CheckIndicators();
 
-        if (!GameManager.global.KeyboardBool)
-        {
-            Vector3 screenPosition = LevelManager.global.SceneCamera.WorldToScreenPoint(FloatingTextCanBuildAnimation.transform.position + Vector3.up * 5);
-            PlayerController.global.ResourceHolderAnimator.transform.position = screenPosition;
-        }
-        PlayerController.global.OpenResourceHolder(show);
         PlayerController.global.needInteraction = show;
         PlayerController.global.bridgeInteract = show;
         LevelManager.FloatingTextChange(canBuild ? FloatingTextCanBuildAnimation.gameObject : FloatingTextAnimation.gameObject, show);
 
-        if (show)
-            PlayerController.global.UpdateResourceHolder(BridgeTypeInt);
+        PlayerController.global.UpdateResourceHolder(bridgeTypeInt: BridgeTypeInt, open: show);
     }
 
     private void Update()
