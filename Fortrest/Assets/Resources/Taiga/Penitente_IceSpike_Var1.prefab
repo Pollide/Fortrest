@@ -41,7 +41,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8707849239115483156}
-  - component: {fileID: 8707849239115483157}
   - component: {fileID: -6799876280890107172}
   - component: {fileID: -1345251657013764140}
   m_Layer: 9
@@ -60,7 +59,7 @@ Transform:
   m_GameObject: {fileID: 8707849239115483162}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1.4999996, y: 1.5, z: 1.4999996}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2527211686187960271}
@@ -68,35 +67,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8707849239115483157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8707849239115483162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e2a0c58f038a6f40ac2dcb3006ea0fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  NaturalBool: 1
-  resourceObject: 5
-  buildingObject: 6
-  health: 0
-  maxHealth: 8
-  resourceAmount: 10
-  constructionCostWood: 5
-  constructionCostStone: 5
-  HUDHealthBar: {fileID: 0}
-  playerinRange: 0
-  normalHouse: {fileID: 0}
-  destroyedHouse: {fileID: 0}
-  interactText: {fileID: 0}
-  textDisplayed: 0
-  DebugDestroyInstantly: 0
-  gridLocation: {x: 0, y: 0}
-  destroyedTimer: 0
 --- !u!111 &-6799876280890107172
 Animation:
   m_ObjectHideFlags: 0
