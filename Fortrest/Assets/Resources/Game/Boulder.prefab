@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6747837648208604695}
-  - component: {fileID: 8262592524415384705}
+  - component: {fileID: 4956444783843874465}
   m_Layer: 9
   m_Name: Model
   m_TagString: Resource
@@ -37,8 +37,8 @@ Transform:
   m_Father: {fileID: 6935669614047997176}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8262592524415384705
-SphereCollider:
+--- !u!136 &4956444783843874465
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -47,9 +47,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 3.59
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 3.6
+  m_Height: 10
+  m_Direction: 1
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &7713437358430713410
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +107,6 @@ MonoBehaviour:
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
-  HUDHealthBar: {fileID: 0}
   playerinRange: 0
   normalHouse: {fileID: 0}
   destroyedHouse: {fileID: 0}
