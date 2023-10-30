@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 9042061743958791025}
   - component: {fileID: 8458094183806817661}
   - component: {fileID: 1291244798047708635}
-  - component: {fileID: 5759019112172937666}
+  - component: {fileID: 3326911348672388548}
   m_Layer: 7
   m_Name: Slow
   m_TagString: Turret
@@ -133,7 +133,6 @@ MonoBehaviour:
   resourceAmount: 5
   constructionCostWood: 15
   constructionCostStone: 10
-  HUDHealthBar: {fileID: 2305894520213176843}
   playerinRange: 0
   normalHouse: {fileID: 0}
   destroyedHouse: {fileID: 0}
@@ -168,15 +167,15 @@ NavMeshObstacle:
   m_GameObject: {fileID: 4568575667695550563}
   m_Enabled: 1
   serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 2, y: 2, z: 2}
+  m_Shape: 0
+  m_Extents: {x: 1.1, y: 2, z: 1.1}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 0
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
   m_TimeToStationary: 0.5
---- !u!65 &5759019112172937666
-BoxCollider:
+--- !u!136 &3326911348672388548
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -185,9 +184,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 2, z: 3}
-  m_Center: {x: 0, y: 1.3, z: 0}
+  m_Radius: 1.1
+  m_Height: 4
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!1001 &6981169296151299254
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -460,15 +460,3 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 7304682816812388741}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2305894520213176843 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4998815853741020046, guid: 412f881170d2477458b73d3eddd5ab20,
-    type: 3}
-  m_PrefabInstance: {fileID: 7304682816812388741}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

@@ -46,7 +46,7 @@ GameObject:
   - component: {fileID: 8741814616103344503}
   - component: {fileID: 2153438666847805586}
   - component: {fileID: 7101719424413169726}
-  - component: {fileID: 7434200447892280958}
+  - component: {fileID: 2791489212492566921}
   m_Layer: 7
   m_Name: Cannon
   m_TagString: Turret
@@ -136,7 +136,6 @@ MonoBehaviour:
   resourceAmount: 5
   constructionCostWood: 15
   constructionCostStone: 10
-  HUDHealthBar: {fileID: 1918455762915562425}
   playerinRange: 0
   normalHouse: {fileID: 0}
   destroyedHouse: {fileID: 0}
@@ -154,12 +153,12 @@ NavMeshObstacle:
   m_GameObject: {fileID: 6178621800414324515}
   m_Enabled: 1
   serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 1.5, y: 1, z: 1.5}
+  m_Shape: 0
+  m_Extents: {x: 1.1, y: 2, z: 1.1}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 0
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.75, z: 0}
   m_TimeToStationary: 0.5
 --- !u!111 &7101719424413169726
 Animation:
@@ -178,8 +177,8 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!65 &7434200447892280958
-BoxCollider:
+--- !u!136 &2791489212492566921
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -188,9 +187,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 2, z: 2}
-  m_Center: {x: 0, y: 1.2, z: 0}
+  m_Radius: 1.1
+  m_Height: 4
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.75, z: 0}
 --- !u!1 &6199130863876766055
 GameObject:
   m_ObjectHideFlags: 0
@@ -880,18 +880,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 412f881170d2477458b73d3eddd5ab20, type: 3}
---- !u!114 &1918455762915562425 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4998815853741020046, guid: 412f881170d2477458b73d3eddd5ab20,
-    type: 3}
-  m_PrefabInstance: {fileID: 6899767321958613047}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4123347344999839596 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7420233728111343451, guid: 412f881170d2477458b73d3eddd5ab20,
