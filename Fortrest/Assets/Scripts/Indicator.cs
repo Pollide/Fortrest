@@ -144,8 +144,9 @@ public class Indicator : MonoBehaviour
             {
                 Visible = true;
 
-                if (!CustomSprite)
-                    MainData.ArrowText.text = ActiveString;
+                string visibleString = CustomSprite ? "" : ActiveString;
+
+                MainData.ArrowText.text = visibleString;
 
                 MainData.ArrowText.color = ActiveColor;
                 MainData.ArrowImage.color = ActiveColor;
@@ -154,8 +155,8 @@ public class Indicator : MonoBehaviour
 
                 if (MapData)
                 {
-                    if (!CustomSprite)
-                        MapData.ArrowText.text = ActiveString;
+
+                    MapData.ArrowText.text = visibleString;
 
                     MapData.ArrowText.color = ActiveColor;
 
@@ -278,6 +279,8 @@ public class Indicator : MonoBehaviour
 
         indicatorData.MainData = Instantiate(arrowPrefab, transform).GetComponent<ArrowData>();
 
+
+
         indicatorData.MainData.ArrowText.text = "?";
 
         indicatorData.ActiveString = nameString;
@@ -318,15 +321,12 @@ public class Indicator : MonoBehaviour
             indicatorData.MapData.CustomImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
             // indicatorData.MapData.CustomImage.color = color;
 
-            indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
+            indicatorData.MapData.ArrowText.text = "?";
 
             if (customSprite)
             {
                 indicatorData.MainData.CustomImage.sprite = customSprite;
                 indicatorData.MapData.CustomImage.sprite = customSprite;
-
-                indicatorData.MainData.ArrowText.text = "";
-                indicatorData.MapData.ArrowText.text = "";
 
                 if (permenant)
                 {
