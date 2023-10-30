@@ -1479,6 +1479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea845b5433f796146be446269510fdee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugingoredamage: 0
+  bestTarget: {fileID: 0}
   house: {fileID: 0}
   health: 0
   healthBar: {fileID: 7646260862211229927}
@@ -1486,12 +1488,14 @@ MonoBehaviour:
   chasing: 0
   canBeDamaged: 1
   canBeDamagedByBoar: 1
+  waveEnemy: 0
   isMob: 0
   bossScriptOne: {fileID: 0}
   bossScriptTwo: {fileID: 0}
+  addIndicator: 1
   ActiveAnimator: {fileID: 2106938913424930742}
   knockBackScript: {fileID: 0}
-  currentEnemyType: 2
+  currentEnemyType: 4
   hitSound: {fileID: 8300000, guid: df19ab739cef55b4387888f679f9899e, type: 3}
   hitSound2: {fileID: 8300000, guid: 75455dd3d90c87b4f943b86361f5f4b5, type: 3}
   attackSound: {fileID: 8300000, guid: 9a0e07d02a24f6a4ba41f1de14bf3d99, type: 3}
@@ -1506,6 +1510,7 @@ MonoBehaviour:
   ogreAttackSound: {fileID: 0}
   flashingAnimation: {fileID: 335623215080273736}
   flashing: 0
+  wolfDistanceBetweenPlayer: 17.5
 --- !u!114 &7711817039593075443
 MonoBehaviour:
   m_ObjectHideFlags: 0
