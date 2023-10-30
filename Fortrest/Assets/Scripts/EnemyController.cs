@@ -586,6 +586,10 @@ public class EnemyController : MonoBehaviour
                 PickSound(hitSound, hitSound2, 1.0f);
 
                 GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, ((PlayerController.global.transform.position + transform.position) / 2) + PlayerController.global.transform.forward, Quaternion.identity);
+                if (tempVFX.transform.position.y < 0)
+                {
+                    tempVFX.transform.position = new Vector3(tempVFX.transform.position.x, PlayerController.global.transform.position.y, tempVFX.transform.position.z);
+                }
                 tempVFX.GetComponent<VisualEffect>().Play();
                 Destroy(tempVFX, 1.0f);
 
@@ -610,7 +614,11 @@ public class EnemyController : MonoBehaviour
                     GameManager.PlayAnimation(flashingAnimation, "Flashing");
                     flashing = true;
                 }
-                knockBackScript.knock = true;
+                if (currentEnemyType != ENEMYTYPE.ogre)
+                {
+                    knockBackScript.knock = true;
+                }
+                
                 ScreenShake.global.ShakeScreen();
                 Damaged(PlayerController.global.attackDamage);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
