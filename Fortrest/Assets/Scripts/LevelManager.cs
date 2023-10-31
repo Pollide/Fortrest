@@ -665,6 +665,23 @@ public class LevelManager : MonoBehaviour
         return null;
     }
 
+    private void SpawnOgre(ref GameObject gameObject)
+    {
+        if (day > 1 && day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
+        {
+            gameObject = ogrePrefab;
+
+            ogresSpawnCounter++;
+
+            if (ogresSpawnCounter == ogreSpawnCounterMax)
+            {
+                ogresSpawnCounter = 0;
+                ogreSpawnCounterMax++;
+                ogreSpawned = true;
+            }
+        }
+    }
+
     private void EnemyWaves()
     {
         //// Day Attack
@@ -838,24 +855,11 @@ public class LevelManager : MonoBehaviour
                     {
                         enemySpawnPosition.x += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
                         enemySpawnPosition.z += Random.Range(2, 6) * (Random.Range(0, 2) == 0 ? -1 : 1) + (i * Random.Range(0, 2) == 0 ? -2 : 2);
+                        enemySpawnPosition.y = 0; //everything is at ground zero  
 
                         GameObject prefab = SpawnRandomEnemy();
 
-                        if (day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
-                        {
-                            prefab = ogrePrefab;
-
-                            ogresSpawnCounter++;
-
-                            if (ogresSpawnCounter == ogreSpawnCounterMax)
-                            {
-                                ogresSpawnCounter = 0;
-                                ogreSpawnCounterMax++;
-                                ogreSpawned = true;
-                            }
-                        }
-
-                        enemySpawnPosition.y = 0; //everything is at ground zero                   
+                        SpawnOgre(ref prefab);
 
                         if (prefab != null)
                         {
@@ -876,19 +880,7 @@ public class LevelManager : MonoBehaviour
 
                     GameObject prefab = SpawnRandomEnemy();
 
-                    if (day > 1 && day % ogreDayCount == 0 && Random.Range(0, 3) == 0 && !ogreSpawned)
-                    {
-                        prefab = ogrePrefab;
-
-                        ogresSpawnCounter++;
-
-                        if (ogresSpawnCounter == ogreSpawnCounterMax)
-                        {
-                            ogresSpawnCounter = 0;
-                            ogreSpawnCounterMax++;
-                            ogreSpawned = true;
-                        }
-                    }
+                    SpawnOgre(ref prefab);
 
                     if (prefab != null)
                     {
