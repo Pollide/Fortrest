@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 8707849239115483156}
   - component: {fileID: 8707849239115483157}
   - component: {fileID: -6799876280890107172}
-  - component: {fileID: -1345251657013764140}
   - component: {fileID: 7418936820835333988}
   m_Layer: 9
   m_Name: GiantBone_Skull_Volcanic 1
@@ -114,19 +113,6 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!135 &-1345251657013764140
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8707849239115483162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 2.74
-  m_Center: {x: 0, y: 0.81, z: -0.69}
 --- !u!208 &7418936820835333988
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -137,7 +123,7 @@ NavMeshObstacle:
   m_Enabled: 1
   serializedVersion: 3
   m_Shape: 1
-  m_Extents: {x: 1, y: 1, z: 2}
+  m_Extents: {x: 1, y: 1, z: 1}
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
@@ -275,8 +261,8 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5228381603355259566}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &742531053952073197
-MeshCollider:
+--- !u!65 &4796804260903053577
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -285,10 +271,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4516925854223757603, guid: 8b0dacf23e3f8104584df2f68828d951, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &4111915459659159143 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
