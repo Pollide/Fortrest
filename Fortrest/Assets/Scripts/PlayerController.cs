@@ -246,7 +246,7 @@ public class PlayerController : MonoBehaviour
     public Image turretImageIcon;
     bool resourceCostBool = false;
     public Text resourceInfoText;
-
+    public Text resourceCostText;
     // Animation
     private float speedAnim;
     private float transitionSpeed = 20f;
@@ -1208,6 +1208,10 @@ public class PlayerController : MonoBehaviour
         if (ResourceHolderOpened != open)
         {
             ResourceHolderOpened = open;
+
+            if (!open)
+                ResourceCostUI(false);
+
             GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
         }
 
@@ -1216,15 +1220,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        for (int i = 1; i < ResourceHolder.childCount; i++) //i = 1 skips title
-        {
-            Destroy(ResourceHolder.GetChild(i).gameObject);
-        }
-
-        for (int i = 1; i < CostHolder.childCount; i++) //skips title
-        {
-            Destroy(CostHolder.GetChild(i).gameObject);
-        }
+        GameManager.ResetChosenHolder(ResourceHolder, 1);
+        GameManager.ResetChosenHolder(CostHolder, 1);
 
         damageInfoData.gameObject.SetActive(false);
         healthInfoData.gameObject.SetActive(false);
@@ -1247,33 +1244,30 @@ public class PlayerController : MonoBehaviour
         if (buildType == BuildType.Turret)
         {
             resourceInfoText.text = "Turret";
-            woodCostList[0].ResourceCost = -10;
-            stoneCostList[0].ResourceCost = -5;
+            woodCostList[0].ResourceCost = -20;
+            stoneCostList[0].ResourceCost = -20;
         }
 
         if (buildType == BuildType.Cannon)
         {
             resourceInfoText.text = "Cannon";
-            woodCostList[0].ResourceCost = -3;
-            stoneCostList[0].ResourceCost = -3;
-            woodCostList[1].ResourceCost = -5;
-            stoneCostList[1].ResourceCost = -5;
+            woodCostList[1].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -30;
         }
 
         if (buildType == BuildType.Slow)
         {
             resourceInfoText.text = "Slow";
-            stoneCostList[0].ResourceCost = -5;
-            stoneCostList[1].ResourceCost = -10;
-            stoneCostList[2].ResourceCost = -2;
+            woodCostList[2].ResourceCost = -20;
+            stoneCostList[2].ResourceCost = -10;
         }
 
         if (buildType == BuildType.Scatter)
         {
             resourceInfoText.text = "Scatter";
 
-            woodCostList[2].ResourceCost = -10;
-            stoneCostList[2].ResourceCost = -10;
+            woodCostList[3].ResourceCost = -10;
+            stoneCostList[3].ResourceCost = -10;
         }
 
         if (upgradeTypeInt == -1) //repair
@@ -1284,15 +1278,32 @@ public class PlayerController : MonoBehaviour
             Building building = PlayerModeHandler.global.SelectedTurret;
 
             healthInfoData.currentFill.fillAmount = building.health / building.maxHealth;
-            healthInfoData.upgradeFill.fillAmount = Mathf.Clamp(building.health + (building.maxHealth / 2) / building.maxHealth, 0, 1);
-            woodCostList[0].ResourceCost = -10;
-            stoneCostList[0].ResourceCost = -5;
+            healthInfoData.upgradeFill.fillAmount = Mathf.Clamp(building.health + building.ReturnRepair() / building.maxHealth, 0, 1);
+
+            for (int i = 0; i < woodCostList.Count; i++)
+            {
+                woodCostList[i].ResourceCost /= 5;
+            }
+
+            for (int i = 0; i < stoneCostList.Count; i++)
+            {
+                stoneCostList[i].ResourceCost /= 5;
+            }
         }
 
         if (upgradeTypeInt == -2) //destroy
         {
-            resourceInfoText.text = "Destroy";
-            woodCostList[0].ResourceCost = -5;
+            resourceInfoText.text = "Remove";
+
+            for (int i = 0; i < woodCostList.Count; i++)
+            {
+                woodCostList[i].ResourceCost = -(woodCostList[i].ResourceCost / 2);
+            }
+
+            for (int i = 0; i < stoneCostList.Count; i++)
+            {
+                stoneCostList[i].ResourceCost = -(stoneCostList[i].ResourceCost / 2);
+            }
         }
 
         if (upgradeTypeInt > 0 && PlayerModeHandler.global.SelectedTurret) //upgrade
@@ -1340,9 +1351,9 @@ public class PlayerController : MonoBehaviour
                 rateInfoData.currentFill.fillAmount = defence.ReturnFireRate() / rate;
                 rateInfoData.upgradeFill.fillAmount = (defence.ReturnFireRate() + changeTier.rateTier) / rate;
             }
-
-            woodCostList[0].ResourceCost = -5;
-            stoneCostList[0].ResourceCost = -5;
+            int tier = defence.CurrentTier == 0 ? 1 : 3;
+            woodCostList[tier].ResourceCost = -5;
+            stoneCostList[tier].ResourceCost = -5;
         }
 
         if (bridgeTypeInt != 0)
@@ -1351,42 +1362,35 @@ public class PlayerController : MonoBehaviour
         if (bridgeTypeInt == 1) //marsh
         {
             woodCostList[0].ResourceCost = -30;
-            stoneCostList[0].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -30;
         }
 
         if (bridgeTypeInt == 2) //tussocks
         {
-            woodCostList[1].ResourceCost = -30;
-            stoneCostList[1].ResourceCost = -10;
+            woodCostList[1].ResourceCost = -25;
+            stoneCostList[0].ResourceCost = -30;
         }
 
         if (bridgeTypeInt == 3) //taiga
         {
-            woodCostList[2].ResourceCost = -30;
-            stoneCostList[2].ResourceCost = -10;
+            woodCostList[1].ResourceCost = -25;
+            stoneCostList[1].ResourceCost = -25;
         }
 
         if (bridgeTypeInt == 4) //coast
         {
-            woodCostList[0].ResourceCost = -10;
-            stoneCostList[0].ResourceCost = -10;
+            woodCostList[0].ResourceCost = -15;
+            stoneCostList[0].ResourceCost = -15;
+
             woodCostList[1].ResourceCost = -10;
             stoneCostList[1].ResourceCost = -10;
-            woodCostList[2].ResourceCost = -10;
-            stoneCostList[2].ResourceCost = -10;
         }
 
         if (bridgeTypeInt == 5) //volanic
         {
-            woodCostList[0].ResourceCost = -10;
-            stoneCostList[0].ResourceCost = -10;
-            woodCostList[1].ResourceCost = -10;
-            stoneCostList[1].ResourceCost = -10;
-            woodCostList[2].ResourceCost = -10;
-            stoneCostList[2].ResourceCost = -10;
+            woodCostList[2].ResourceCost = -20;
+            stoneCostList[2].ResourceCost = -20;
         }
-
-
 
         //      Debug.Log("UPDATE");
         ResourceGenerate(LevelManager.global.WoodTierList, woodCostList);
@@ -1396,28 +1400,36 @@ public class PlayerController : MonoBehaviour
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
         bool showCostBool = false;
+        int total = 0;
         for (int i = 0; i < tierList.Count; i++)
         {
             tierList[i].ResourceCost = costList[i].ResourceCost;
-
-            CreateResource(ResourceHolder, tierList[i].ResourceAmount, tierList[i].ResourceIcon, Color.white, i);
+            total += costList[i].ResourceCost;
+            CreateResource(ResourceHolder, tierList[i].ResourceAmount, tierList[i].ResourceIcon, Color.white, i, tierList);
 
             if (tierList[i].ResourceCost != 0)
             {
                 showCostBool = true;
-                CreateResource(CostHolder, Mathf.Abs(tierList[i].ResourceCost), tierList[i].ResourceIcon, tierList[i].SufficientResource() ? costGreen : costRed, i);
+                CreateResource(CostHolder, Mathf.Abs(tierList[i].ResourceCost), tierList[i].ResourceIcon, tierList[i].SufficientResource() ? costGreen : costRed, i, tierList);
             }
         }
 
-        if (resourceCostBool != showCostBool)
+        ResourceCostUI(showCostBool);
+
+        resourceCostText.text = total > 0 ? "Refund" : "Cost";
+    }
+
+    void ResourceCostUI(bool show)
+    {
+        if (resourceCostBool != show)
         {
-            resourceCostBool = showCostBool;
-            GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", showCostBool);
-            GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", showCostBool);
+            resourceCostBool = show;
+            GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", show);
+            GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", show);
         }
     }
 
-    void CreateResource(Transform location, int number, Sprite icon, Color color, int i)
+    void CreateResource(Transform location, int number, Sprite icon, Color color, int i, List<LevelManager.TierData> tierList)
     {
         GameObject mapResource = Instantiate(MapResourcePrefab, location);
         Text costText = mapResource.transform.GetChild(1).GetComponent<Text>();
@@ -1427,8 +1439,24 @@ public class PlayerController : MonoBehaviour
 
         if (Time.timeScale == 1)
         {
-            AnimationState animationState = GameManager.PlayAnimation(mapResource.GetComponent<Animation>(), "Popup Resource");
-            mapResource.GetComponent<Animation>()["Popup Resource"].time -= i / 14;
+            //  AnimationState animationState = GameManager.PlayAnimation(mapResource.GetComponent<Animation>(), "Popup Resource");
+            //  mapResource.GetComponent<Animation>()["Popup Resource"].time -= i / 14;
+        }
+
+        //sorting resources by rarity
+        if (tierList == LevelManager.global.StoneTierList)
+        {
+            Sprite sprite = LevelManager.global.WoodTierList[i].ResourceIcon; //look for wood as its same rarity
+
+            for (int j = 1; j < location.childCount; j++)
+            {
+                Sprite compare = location.GetChild(j).GetChild(0).GetComponent<Image>().sprite;
+                if (compare == sprite)
+                {
+                    mapResource.transform.SetSiblingIndex(j + 1);
+                    break;
+                }
+            }
         }
     }
 

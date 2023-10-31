@@ -39,6 +39,11 @@ public class Building : MonoBehaviour
     public int constructionCostWood = 5;
     public int constructionCostStone = 5;
 
+    public float ReturnRepair()
+    {
+        return maxHealth / 5;
+    }
+
     HealthBar HUDHealthBar;
 
     float HealthAppearTimer = -1;

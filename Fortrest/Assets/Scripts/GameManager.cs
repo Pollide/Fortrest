@@ -352,6 +352,29 @@ public class GameManager : MonoBehaviour
     }
     */
 
+
+    public static void ResetChosenHolder(Transform holderTransform, int StartNumber = 0)
+    {
+        if (holderTransform)
+        {
+            List<Transform> AllChilds = new List<Transform>();
+
+            for (int i = StartNumber; i < holderTransform.childCount; i++)
+            {
+
+                AllChilds.Add(holderTransform.GetChild(i));
+            }
+
+            for (int i = 0; i < AllChilds.Count; i++)
+            {
+                AllChilds[i].gameObject.transform.SetParent(null);
+                AllChilds[i].gameObject.SetActive(false);
+                Destroy(AllChilds[i].gameObject);
+            }
+        }
+    }
+
+
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueFloat, float maxFloat, float minFloat = 0, bool wrapBool = true)
     {
@@ -765,21 +788,6 @@ public class GameManager : MonoBehaviour
 
         return value;
     }
-
-    string PrefString(string pref, string value, bool load)
-    {
-        if (load)
-        {
-            value = PlayerPrefs.GetString(pref);
-        }
-        else
-        {
-            PlayerPrefs.SetString(pref, value);
-        }
-
-        return value;
-    }
-
 
     public void DataBuildingVoid(Transform value, bool load)
     {

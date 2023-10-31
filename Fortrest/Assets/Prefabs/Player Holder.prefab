@@ -2931,6 +2931,7 @@ MonoBehaviour:
   turretMenuTitle: {fileID: 1413848136156042208}
   turretImageIcon: {fileID: 6222562049863200850}
   resourceInfoText: {fileID: 3916722505038261489}
+  resourceCostText: {fileID: 3894502482163893727}
   bowAnimator: {fileID: 5709866159686491231}
   horizontalAnim: 0
   verticalAnim: 0
@@ -3063,8 +3064,6 @@ MonoBehaviour:
   - {fileID: 5034843378620606342, guid: 92e8530c83e34174985fd27de9afe83e, type: 3}
   turretBlueprintRed: {fileID: 2100000, guid: 8d763678d7123e347b760cbd1313f174, type: 2}
   turretBlueprintBlue: {fileID: 2100000, guid: 1d0c9c39a2f4f764081420e60614ab27, type: 2}
-  distanceAwayFromPlayerX: {x: 68.7, y: 11.3}
-  distanceAwayFromPlayerZ: {x: 68.7, y: 14.5}
   buildingLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -4654,8 +4653,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7819742262357962372}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0, z: 0}
-  m_LocalScale: {x: 0.05, y: 0.05, z: 0.05}
+  m_LocalPosition: {x: -0.541, y: 0.227, z: 0}
+  m_LocalScale: {x: 0.12, y: 0.12, z: 0.12}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3885170995468675016}
@@ -4702,12 +4701,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 20, y: 20}
+  m_Size: {x: 6, y: 6}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 0
@@ -7626,6 +7625,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3894502482163893727 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8873485922782760236, guid: 3dc6b70a22c61f9489be8f4f4eb795d6,
+    type: 3}
+  m_PrefabInstance: {fileID: 5559967730861656307}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &3916722505038261489 stripped
