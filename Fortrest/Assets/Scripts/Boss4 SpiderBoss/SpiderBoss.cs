@@ -307,7 +307,7 @@ public class SpiderBoss : MonoBehaviour
         switch (stage)
         {
             case 1:
-                bossSpawner.bossAnimator.SetTrigger("JumpAttack");
+                bossSpawner.bossAnimator.SetTrigger("PoisonAttack");
                 break;
             case 2:
                 if (distanceToPlayer < webAttackRange)
@@ -366,6 +366,13 @@ public class SpiderBoss : MonoBehaviour
         {
             if (PlayerController.global.attacking && bossSpawner.canBeDamaged && PlayerController.global.damageEnemy)
             {
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, ((PlayerController.global.transform.position + transform.position) / 2) + PlayerController.global.transform.forward, Quaternion.identity);
+                if (tempVFX.transform.position.y < 0)
+                {
+                    tempVFX.transform.position = new Vector3(tempVFX.transform.position.x, PlayerController.global.transform.position.y, tempVFX.transform.position.z);
+                }
+                tempVFX.GetComponent<VisualEffect>().Play();
+                Destroy(tempVFX, 1.0f);
                 GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
                 bossSpawner.canBeDamaged = false;
                 ScreenShake.global.ShakeScreen();

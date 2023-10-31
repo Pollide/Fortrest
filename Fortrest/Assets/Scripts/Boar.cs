@@ -157,7 +157,7 @@ public class Boar : MonoBehaviour
             {
                 Building building = colliders[i].GetComponentInParent<Building>();
 
-                if (building && building.health > 0 && !building.GetComponent<Animation>().IsPlaying("Nature Shake")) //stops building shaking too often
+                if (building && building.health > 0 && building.DropPrefab && !building.GetComponent<Animation>().IsPlaying("Nature Shake")) //stops building shaking too often
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f);
                     building.TakeDamage(2);

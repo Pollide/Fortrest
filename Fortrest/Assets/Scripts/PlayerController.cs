@@ -46,6 +46,7 @@ public class PlayerController : MonoBehaviour
     public GameObject evadeCooldownImage; // Game object used to show the cooldown of the evade
     private Vector3 evadeImageStartPos = new Vector3(0f, -95f, 0f); // Initial position of the image
     private float evadeTimer;
+    public Image dodgeIcon;
 
     // Shooting
     [HideInInspector] public bool canShoot; // Used to allow the player to shoot the bow. True when aiming
@@ -83,6 +84,7 @@ public class PlayerController : MonoBehaviour
     private float newHealth; // Used to pick up on changes in the health amount
     public HealthBar healthBar; // Health bar UI
     public HealthBar houseHealthBar; // Health bar UI
+
     // Eating
     [HideInInspector] public int appleAmount = 0; // The current amount of apples being held by the player
     private float appleHealAmount = 10.0f; // The amount of health restored when eating an apple
@@ -94,14 +96,15 @@ public class PlayerController : MonoBehaviour
     private float resetAttack = 0.75f; // Attack cooldown
     private float comboTimer = 0.0f; // Timer to reset the combo
     private float resetCombo = 1.10f; // Combo cooldown
-    private float staggerCD; // Combo cooldown
-    public float staggerCDMax = 1.5f; // Combo cooldown
+    private float staggerCD; // Timer to reset the stagger
+    public float staggerCDMax = 1.5f; // Stagger cooldwon
     private int attackCount = 0; // Current attack number in the combo
     [HideInInspector] public Building currentResource; // Current resource type being gathered
     public bool damageEnemy = false; // Used to enable a time frame during the animation where the enemy can be damaged
     [HideInInspector] public bool lunge = false; // Used to move the player forward (lunge) during their attack
     [HideInInspector] public bool upgradedMelee; // Used to enable the upgraded melee perks
     public bool attackAnimEnded = true; // Safety bool to avoid attack issues. Becomes true using anim behaviour, and is needed to attack again
+    public VisualEffect swordVFX; // Sword hitting the enemy VFX
 
     // States
     [Header("Player States")]
@@ -132,9 +135,11 @@ public class PlayerController : MonoBehaviour
     public GameObject PauseCanvasGameObject;
     public Transform MapSpotHolder;
     public RectTransform MapPlayerRectTransform;
-    public Transform MapResourceHolder;
+    public Transform ResourceHolder;
+    public Transform CostHolder;
     public GameObject MapResourcePrefab;
     public Animator ResourceHolderAnimator;
+
     public bool lastWasAxe;
 
     [System.Serializable]
@@ -166,6 +171,8 @@ public class PlayerController : MonoBehaviour
     // Pause
     [HideInInspector] public bool pausedBool;
     public Animation UIAnimation;
+    public Animator pauseAnimator;
+    public Animator mapAnimator;
     public GameObject turretTierOne;
     public GameObject turretTierTwo;
     public Image turretBoarderImage;
@@ -177,7 +184,8 @@ public class PlayerController : MonoBehaviour
     public Image unlockImage;
     public Text unlockTitleText;
     public Text unlockDescriptionText;
-
+    public Color costGreen;
+    public Color costRed;
     // Death
     //private float respawnTimer = 0.0f;
     private bool textAnimated = false;
@@ -236,7 +244,9 @@ public class PlayerController : MonoBehaviour
     public RectTransform turretMenuHolder;
     public TMP_Text turretMenuTitle;
     public Image turretImageIcon;
-
+    bool resourceCostBool = false;
+    public Text resourceInfoText;
+    public Text resourceCostText;
     // Animation
     private float speedAnim;
     private float transitionSpeed = 20f;
@@ -248,6 +258,11 @@ public class PlayerController : MonoBehaviour
 
     private bool wasHit;
     public bool canAttack = true;
+
+    public InfoData damageInfoData;
+    public InfoData healthInfoData;
+    public InfoData rangeInfoData;
+    public InfoData rateInfoData;
 
     // Start is called before the first frame update
     void Awake()
@@ -339,20 +354,6 @@ public class PlayerController : MonoBehaviour
                 sprintingCTRL = false;
             }
         }
-    }
-
-    public void OpenResourceHolder(bool open)
-    {
-        if (ResourceHolderOpened != open)
-        {
-            ResourceHolderOpened = open;
-            GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
-        }
-    }
-
-    public void ShakeResourceHolder()
-    {
-        GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
     }
 
     private void BuildSelectController()
@@ -522,6 +523,8 @@ public class PlayerController : MonoBehaviour
 
         speedAnim = 0f;
         staggerCD = staggerCDMax;
+
+        swordVFX.Stop();
     }
     public bool debugfrocemap;
     void Update()
@@ -542,11 +545,15 @@ public class PlayerController : MonoBehaviour
             staggerCD -= Time.deltaTime;
         }
 
-
         if (!canEvade)
         {
             evadeTimer += Time.deltaTime;
+            dodgeIcon.color = new Color32(214, 90, 90, 255);
             evadeCooldownImage.transform.localPosition = Vector3.Lerp(evadeImageStartPos, new Vector3(evadeImageStartPos.x, evadeImageStartPos.y + 90f, evadeImageStartPos.z), evadeTimer / evadeCooldown);
+        }
+        else
+        {
+            dodgeIcon.color = new Color32(255, 255, 255, 255);
         }
 
         if (mapBool)
@@ -686,7 +693,10 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < 5; i++)
         {
-            playerHealth -= 3f;
+            if (playerCanBeDamaged)
+            {
+                playerHealth -= 3f;
+            }
             yield return new WaitForSeconds(0.5f);
         }
     }
@@ -777,16 +787,10 @@ public class PlayerController : MonoBehaviour
 
     private void Resting()
     {
-        if (PlayerModeHandler.global.inTheFortress)
+        if (PlayerModeHandler.global.inTheFortress || playerDead)
         {
-            if (playerHealth < maxHealth)
-            {
-                playerHealth += Time.deltaTime * 2.0f;
-            }
-            else
-            {
-                playerHealth = maxHealth;
-            }
+            //this also runs when you are dead
+            playerHealth = Mathf.Clamp(playerHealth + Time.deltaTime * 8.0f, 0, maxHealth);
         }
     }
 
@@ -989,7 +993,7 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.TeleportSound, 0.7f);
         }
 
-        if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
+        if (Vector3.Distance(pos + CameraFollow.global.offset(), CameraFollow.global.transform.position) > 25)
             CameraFollow.global.transform.position = pos + CameraFollow.global.offset();
 
         StartCoroutine(RevertBool(true));
@@ -1130,18 +1134,15 @@ public class PlayerController : MonoBehaviour
 
             PauseCanvasGameObject.SetActive(pause);
             controllerImage.sprite = GameManager.global.KeyboardBool ? keyboardSprite : controllerSprite;
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Pause Appear", pause);
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.PauseMenuSound);
+            GameManager.PlayAnimator(pauseAnimator, "Pause Appear", pause);
 
             if (!mapBool)
             {
                 Time.timeScale = pause ? 0 : 1;
             }
-            else
-            {
-                mapBool = false;
-            }
+
             pausedBool = pause;
         }
     }
@@ -1150,21 +1151,20 @@ public class PlayerController : MonoBehaviour
     {
         if (!pausedBool)
         {
-            GameManager.PlayAnimator(UIAnimation.GetComponent<Animator>(), "Map Appear", map);
+            GameManager.PlayAnimator(mapAnimator, "Map Appear", map);
 
 
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
             Time.timeScale = map ? 0 : 1;
             mapBool = map;
+
             if (mapBool)
             {
                 UpdateMap();
                 MapPanningPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
-                if (!ResourceHolderOpened)
-                    UpdateResourceHolder(showCosts: false);
             }
 
-            OpenResourceHolder(map);
+            UpdateResourceHolder(open: map);
         }
     }
 
@@ -1203,12 +1203,30 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void UpdateResourceHolder(int bridgeTypeInt = 0, int upgradeTypeInt = 0, bool showCosts = true)
+    public void UpdateResourceHolder(int bridgeTypeInt = 0, int upgradeTypeInt = 0, BuildType buildType = BuildType.None, bool open = true)
     {
-        for (int i = 0; i < MapResourceHolder.childCount; i++)
+        if (ResourceHolderOpened != open)
         {
-            Destroy(MapResourceHolder.GetChild(i).gameObject);
+            ResourceHolderOpened = open;
+
+            if (!open)
+                ResourceCostUI(false);
+
+            GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
         }
+
+        if (!open)
+        {
+            return;
+        }
+
+        GameManager.ResetChosenHolder(ResourceHolder, 1);
+        GameManager.ResetChosenHolder(CostHolder, 1);
+
+        damageInfoData.gameObject.SetActive(false);
+        healthInfoData.gameObject.SetActive(false);
+        rangeInfoData.gameObject.SetActive(false);
+        rateInfoData.gameObject.SetActive(false);
 
         List<LevelManager.TierData> woodCostList = new List<LevelManager.TierData>();
         List<LevelManager.TierData> stoneCostList = new List<LevelManager.TierData>();
@@ -1223,111 +1241,222 @@ public class PlayerController : MonoBehaviour
             stoneCostList.Add(new LevelManager.TierData());
         }
 
+        if (buildType == BuildType.Turret)
+        {
+            resourceInfoText.text = "Turret";
+            woodCostList[0].ResourceCost = -20;
+            stoneCostList[0].ResourceCost = -20;
+        }
+
+        if (buildType == BuildType.Cannon)
+        {
+            resourceInfoText.text = "Cannon";
+            woodCostList[1].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -30;
+        }
+
+        if (buildType == BuildType.Slow)
+        {
+            resourceInfoText.text = "Slow";
+            woodCostList[2].ResourceCost = -20;
+            stoneCostList[2].ResourceCost = -10;
+        }
+
+        if (buildType == BuildType.Scatter)
+        {
+            resourceInfoText.text = "Scatter";
+
+            woodCostList[3].ResourceCost = -10;
+            stoneCostList[3].ResourceCost = -10;
+        }
+
         if (upgradeTypeInt == -1) //repair
         {
-            woodCostList[0].ResourceCost = -10;
-            stoneCostList[0].ResourceCost = -5;
+            resourceInfoText.text = "Repair";
+            healthInfoData.gameObject.SetActive(true);
+
+            Building building = PlayerModeHandler.global.SelectedTurret;
+
+            healthInfoData.currentFill.fillAmount = building.health / building.maxHealth;
+            healthInfoData.upgradeFill.fillAmount = Mathf.Clamp(building.health + building.ReturnRepair() / building.maxHealth, 0, 1);
+
+            for (int i = 0; i < woodCostList.Count; i++)
+            {
+                woodCostList[i].ResourceCost /= 5;
+            }
+
+            for (int i = 0; i < stoneCostList.Count; i++)
+            {
+                stoneCostList[i].ResourceCost /= 5;
+            }
         }
-        else if (upgradeTypeInt == -2) //destroy
+
+        if (upgradeTypeInt == -2) //destroy
         {
-            woodCostList[0].ResourceCost = -5;
+            resourceInfoText.text = "Remove";
+
+            for (int i = 0; i < woodCostList.Count; i++)
+            {
+                woodCostList[i].ResourceCost = -(woodCostList[i].ResourceCost / 2);
+            }
+
+            for (int i = 0; i < stoneCostList.Count; i++)
+            {
+                stoneCostList[i].ResourceCost = -(stoneCostList[i].ResourceCost / 2);
+            }
         }
-        else if (upgradeTypeInt > 0) //upgrade
+
+        if (upgradeTypeInt > 0 && PlayerModeHandler.global.SelectedTurret) //upgrade
         {
-            woodCostList[0].ResourceCost = -5;
-            stoneCostList[0].ResourceCost = -5;
+            Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
+            List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
+            resourceInfoText.text = "Upgrade";
+            TurretStats.Tier changeTier = turretStats[upgradeTypeInt - 1].changeTier;
+            TurretStats.Tier maxTier = turretStats[upgradeTypeInt - 1].maxTier;
+
+            if (upgradeTypeInt == 1)
+            {
+                // resourceInfoText.text = "Damage";
+                damageInfoData.gameObject.SetActive(true);
+                float max = defence.damage + maxTier.damageTier;
+                damageInfoData.currentFill.fillAmount = defence.ReturnDamage() / max;
+                damageInfoData.upgradeFill.fillAmount = (defence.ReturnDamage() + changeTier.damageTier) / max;
+
+
+            }
+
+            if (upgradeTypeInt == 2)
+            {
+                //  resourceInfoText.text = "Health";
+                healthInfoData.gameObject.SetActive(true);
+                float health = defence.GetComponent<Building>().health + maxTier.healthTier;
+                healthInfoData.currentFill.fillAmount = defence.ReturnHealth() / health;
+                healthInfoData.upgradeFill.fillAmount = (defence.ReturnHealth() + changeTier.healthTier) / health;
+            }
+
+            if (upgradeTypeInt == 3)
+            {
+                //  resourceInfoText.text = "Range";
+                rangeInfoData.gameObject.SetActive(true);
+                float range = defence.shootingRange + maxTier.rangeTier;
+                rangeInfoData.currentFill.fillAmount = defence.ReturnRange() / range;
+                rangeInfoData.upgradeFill.fillAmount = (defence.ReturnRange() + changeTier.rangeTier) / range;
+            }
+
+            if (upgradeTypeInt == 4)
+            {
+                //  resourceInfoText.text = "Rate";
+                rateInfoData.gameObject.SetActive(true);
+                float rate = defence.shootingRange + maxTier.rateTier;
+                rateInfoData.currentFill.fillAmount = defence.ReturnFireRate() / rate;
+                rateInfoData.upgradeFill.fillAmount = (defence.ReturnFireRate() + changeTier.rateTier) / rate;
+            }
+            int tier = defence.CurrentTier == 0 ? 1 : 3;
+            woodCostList[tier].ResourceCost = -5;
+            stoneCostList[tier].ResourceCost = -5;
         }
-        else if (bridgeTypeInt == 1)
+
+        if (bridgeTypeInt != 0)
+            resourceInfoText.text = LevelManager.global.terrainDataList[bridgeTypeInt].indictorName + " Bridge";
+
+        if (bridgeTypeInt == 1) //marsh
         {
             woodCostList[0].ResourceCost = -30;
-            stoneCostList[0].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -30;
         }
-        else if (bridgeTypeInt == 2)
+
+        if (bridgeTypeInt == 2) //tussocks
         {
-            woodCostList[1].ResourceCost = -30;
-            stoneCostList[1].ResourceCost = -10;
+            woodCostList[1].ResourceCost = -25;
+            stoneCostList[0].ResourceCost = -30;
         }
-        else if (bridgeTypeInt == 3)
+
+        if (bridgeTypeInt == 3) //taiga
         {
-            woodCostList[2].ResourceCost = -30;
-            stoneCostList[2].ResourceCost = -10;
+            woodCostList[1].ResourceCost = -25;
+            stoneCostList[1].ResourceCost = -25;
         }
-        else if (bridgeTypeInt == 4)
+
+        if (bridgeTypeInt == 4) //coast
         {
-            woodCostList[0].ResourceCost = -10;
-            stoneCostList[0].ResourceCost = -10;
+            woodCostList[0].ResourceCost = -15;
+            stoneCostList[0].ResourceCost = -15;
+
             woodCostList[1].ResourceCost = -10;
             stoneCostList[1].ResourceCost = -10;
-            woodCostList[2].ResourceCost = -10;
-            stoneCostList[2].ResourceCost = -10;
         }
-        else if (PlayerModeHandler.global.playerModes == PlayerModes.BuildMode)
+
+        if (bridgeTypeInt == 5) //volanic
         {
-            if (PlayerModeHandler.global.buildType == BuildType.Turret)
-            {
-                woodCostList[0].ResourceCost = -10;
-                stoneCostList[0].ResourceCost = -5;
-            }
-
-            if (PlayerModeHandler.global.buildType == BuildType.Cannon)
-            {
-                woodCostList[0].ResourceCost = -3;
-                stoneCostList[0].ResourceCost = -3;
-                woodCostList[1].ResourceCost = -5;
-                stoneCostList[1].ResourceCost = -5;
-            }
-
-            if (PlayerModeHandler.global.buildType == BuildType.Slow)
-            {
-                stoneCostList[0].ResourceCost = -5;
-                stoneCostList[1].ResourceCost = -10;
-                stoneCostList[2].ResourceCost = -2;
-            }
-
-            if (PlayerModeHandler.global.buildType == BuildType.Scatter)
-            {
-                woodCostList[2].ResourceCost = -10;
-                stoneCostList[2].ResourceCost = -10;
-            }
+            woodCostList[2].ResourceCost = -20;
+            stoneCostList[2].ResourceCost = -20;
         }
 
         //      Debug.Log("UPDATE");
-
-        ResourceGenerate(LevelManager.global.WoodTierList, woodCostList, showCosts);
-        ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList, showCosts);
+        ResourceGenerate(LevelManager.global.WoodTierList, woodCostList);
+        ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList);
     }
 
-    void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList, bool showCosts = true)
+    void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
-
+        bool showCostBool = false;
+        int total = 0;
         for (int i = 0; i < tierList.Count; i++)
         {
             tierList[i].ResourceCost = costList[i].ResourceCost;
+            total += costList[i].ResourceCost;
+            CreateResource(ResourceHolder, tierList[i].ResourceAmount, tierList[i].ResourceIcon, Color.white, i, tierList);
 
-            if (showCosts && costList[i].ResourceCost == 0)
+            if (tierList[i].ResourceCost != 0)
             {
-                continue;
+                showCostBool = true;
+                CreateResource(CostHolder, Mathf.Abs(tierList[i].ResourceCost), tierList[i].ResourceIcon, tierList[i].SufficientResource() ? (total > 0 ? Color.cyan : costGreen) : costRed, i, tierList);
             }
+        }
 
-            // Debug.Log(tierList[i].ResourceAmount + "> 0 || " + tierList[i].ResourceCost + "> 0");
-            if (tierList[i].ResourceAmount != 0 || tierList[i].ResourceCost != 0)
+        ResourceCostUI(showCostBool);
+
+        resourceCostText.text = total > 0 ? "Refund" : "Cost";
+    }
+
+    void ResourceCostUI(bool show)
+    {
+        if (resourceCostBool != show)
+        {
+            resourceCostBool = show;
+            GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", show);
+            GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", show);
+        }
+    }
+
+    void CreateResource(Transform location, int number, Sprite icon, Color color, int i, List<LevelManager.TierData> tierList)
+    {
+        GameObject mapResource = Instantiate(MapResourcePrefab, location);
+        Text costText = mapResource.transform.GetChild(1).GetComponent<Text>();
+        costText.color = color;
+        costText.text = number.ToString("N0");
+        mapResource.transform.GetChild(0).GetComponent<Image>().sprite = icon;
+
+        if (Time.timeScale == 1)
+        {
+            //  AnimationState animationState = GameManager.PlayAnimation(mapResource.GetComponent<Animation>(), "Popup Resource");
+            //  mapResource.GetComponent<Animation>()["Popup Resource"].time -= i / 14;
+        }
+
+        //sorting resources by rarity
+        if (tierList == LevelManager.global.StoneTierList)
+        {
+            Sprite sprite = LevelManager.global.WoodTierList[i].ResourceIcon; //look for wood as its same rarity
+
+            for (int j = 1; j < location.childCount; j++)
             {
-                GameObject mapResource = Instantiate(MapResourcePrefab, MapResourceHolder);
-                Text costText = mapResource.transform.GetChild(1).GetComponent<Text>();
-
-                costText.text = tierList[i].ResourceAmount.ToString("N0");
-                mapResource.transform.GetChild(0).GetComponent<Image>().sprite = tierList[i].ResourceIcon;
-
-                //GameManager.TemporaryAnimation(mapResource, GameManager.global.PopupAnimation, i);
-
-                if (tierList[i].ResourceCost != 0)
+                Sprite compare = location.GetChild(j).GetChild(0).GetComponent<Image>().sprite;
+                if (compare == sprite)
                 {
-                    costText.text += " " + tierList[i].ResourceCost.ToString("N0");
-
-                    costText.color = tierList[i].SufficientResource() ? Color.green : Color.red;
+                    mapResource.transform.SetSiblingIndex(j + 1);
+                    break;
                 }
             }
-
         }
     }
 
@@ -1335,13 +1464,9 @@ public class PlayerController : MonoBehaviour
     {
         if (!GameManager.global.CheatInfiniteBuilding)
         {
-            if (!Sufficient(LevelManager.global.WoodTierList, purchase))
+            if (!Sufficient(LevelManager.global.WoodTierList, purchase) || !Sufficient(LevelManager.global.StoneTierList, purchase))
             {
-                return false;
-            }
-
-            if (!Sufficient(LevelManager.global.StoneTierList, purchase))
-            {
+                GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
                 return false;
             }
         }
@@ -1655,7 +1780,7 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4.0f;
             float distanceFloat = Vector3.Distance(transform.position, building.position);
             float smallestDistance = 5.0f;
-            if (building.GetComponent<Building>().resourceObject == Building.ResourceType.Stone)
+            if (building.GetComponent<Building>().ReturnStone())
             {
                 minDistanceFloat = 5.0f;
             }
@@ -1675,7 +1800,7 @@ public class PlayerController : MonoBehaviour
                 {
                     gathering = true;
                     gatherTimer = 0;
-                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.ResourceType.Bush });
+                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.ReturnBush() });
 
                     if (currentResource.ReturnWood())
                     {
@@ -1687,7 +1812,7 @@ public class PlayerController : MonoBehaviour
                         characterAnimator.ResetTrigger("Stone");
                         characterAnimator.SetTrigger("Stone");
                     }
-                    if (currentResource.resourceObject == Building.ResourceType.Bush)
+                    if (currentResource.ReturnBush())
                     {
                         characterAnimator.ResetTrigger("Bush");
                         characterAnimator.SetTrigger("Bush");
@@ -1706,7 +1831,7 @@ public class PlayerController : MonoBehaviour
     {
         if (PlayerModeHandler.global.playerModes == PlayerModes.CombatMode)
         {
-            if (Input.GetMouseButton(1) || aimingCTRL)
+            if ((Input.GetMouseButton(1) || aimingCTRL) && !staggered)
             {
                 if (!initialShot)
                 {
@@ -1873,7 +1998,7 @@ public class PlayerController : MonoBehaviour
                 LevelManager.global.VFXPebble.transform.position = currentResource.transform.position;
                 LevelManager.global.VFXPebble.Play();
             }
-            if (currentResource.resourceObject == Building.ResourceType.Bush)
+            if (currentResource.ReturnBush())
             {
                 StopCoroutine("ToolAppear");
                 StartCoroutine("ToolAppear");
@@ -1999,42 +2124,38 @@ public class PlayerController : MonoBehaviour
             playerRespawned = false;
             deathEffects = true;
         }
-        if (!playerRespawned)
+
+        if (playerHealth >= maxHealth && !playerRespawned)
         {
-            playerHealth += 12 * Time.deltaTime;
-
-            if (playerHealth >= maxHealth)
+            needInteraction = true;
+            if (!textAnimated)
             {
-                needInteraction = true;
-                if (!textAnimated)
-                {
-                    LevelManager.FloatingTextChange(respawnText, true);
-                    textAnimated = true;
-                }
-                if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
-                {
-                    playSoundOnce = false;
-                    characterAnimator.gameObject.SetActive(true);
-                    characterAnimator.ResetTrigger("Death");
-                    characterAnimator.SetTrigger("Respawn");
-                    GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                    LevelManager.global.VFXSleeping.Stop();
-                    TeleportPlayer(houseSpawnPoint.transform.position, true);
-                    playerCanMove = true;
-                    playerDead = false;
-                    deathEffects = false;
-                    playerRespawned = true;
+                LevelManager.FloatingTextChange(respawnText, true);
+                textAnimated = true;
+            }
+            if (Input.GetKeyDown(KeyCode.E) || interactCTRL)
+            {
+                playSoundOnce = false;
+                characterAnimator.gameObject.SetActive(true);
+                characterAnimator.ResetTrigger("Death");
+                characterAnimator.SetTrigger("Respawn");
+                GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
+                LevelManager.global.VFXSleeping.Stop();
+                TeleportPlayer(houseSpawnPoint.transform.position, true);
+                playerCanMove = true;
+                playerDead = false;
+                deathEffects = false;
+                playerRespawned = true;
 
-                    LevelManager.FloatingTextChange(respawnText, false);
-                    textAnimated = false;
-                    if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport && !bridgeInteract)
-                    {
-                        needInteraction = false;
-                    }
-                    interactCTRL = false;
-                    respawning = true;
-                    StartCoroutine(RevertBool(false));
+                LevelManager.FloatingTextChange(respawnText, false);
+                textAnimated = false;
+                if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && !canTeleport && !bridgeInteract)
+                {
+                    needInteraction = false;
                 }
+                interactCTRL = false;
+                respawning = true;
+                StartCoroutine(RevertBool(false));
             }
         }
     }
@@ -2112,8 +2233,10 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Staggered()
     {
         staggered = true;
+        characterAnimator.SetBool("Staggered", true);
         yield return new WaitForSeconds(0.33f);
         staggered = false;
+        characterAnimator.SetBool("Staggered", false);
     }
 
     private bool Facing(Vector3 otherPosition, float desiredAngle) // Making sure the enemy always faces what it is attacking

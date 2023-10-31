@@ -34,8 +34,8 @@ public class PlayerModeHandler : MonoBehaviour
     Transform KeyHint;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
-    public Vector2 distanceAwayFromPlayerX;
-    public Vector2 distanceAwayFromPlayerZ;
+    //public Vector2 distanceAwayFromPlayerX;
+    //public Vector2 distanceAwayFromPlayerZ;
     public LayerMask buildingLayer;
     public Grid buildGrid;
 
@@ -177,6 +177,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
 
         bool walkedthroughdoor = Vector3.Distance(PlayerController.global.transform.position, House.transform.position - House.transform.forward * 3) < 3f && !inTheFortress;
+
         if ((Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL || walkedthroughdoor) && canInteractWithHouse)
         {
             PlayerController.global.interactCTRL = false;
@@ -213,17 +214,16 @@ public class PlayerModeHandler : MonoBehaviour
             turretMenuOpened = open;
             if (!open)
             {
-
-                if (SelectedTurret)
-                    PlayerController.global.UpdateResourceHolder(); //so the turret costs update
-
                 SelectedTurret = null;
+
+                PlayerController.global.UpdateResourceHolder(buildType: buildType);
             }
 
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
         }
 
     }
+
 
 
     public bool SetTeir(Image fillImage, ref float buttonTier, ref float defenceTier, bool upgrade)
@@ -250,9 +250,6 @@ public class PlayerModeHandler : MonoBehaviour
 
             }
 
-
-
-
             fillImage.fillAmount = ((float)defenceTier - shift) / max;
             fillImage.color = next ? Color.magenta : Color.cyan;
 
@@ -265,7 +262,6 @@ public class PlayerModeHandler : MonoBehaviour
             return true;
         }
     }
-
 
     void TierChange(bool instant)
     {
@@ -289,7 +285,6 @@ public class PlayerModeHandler : MonoBehaviour
 
     }
 
-
     public void UpdateTier(TurretStats buttonStat = null)
     {
         List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
@@ -302,7 +297,7 @@ public class PlayerModeHandler : MonoBehaviour
             bool upgrade = turretStats[i] == buttonStat;
 
             bool damage = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.damageTier, ref defence.changeTier.damageTier, upgrade);
-            //bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade);
+            bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade);
             bool range = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rangeTier, ref defence.changeTier.rangeTier, upgrade);
             bool rate = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rateTier, ref defence.changeTier.rateTier, upgrade);
 
@@ -330,9 +325,11 @@ public class PlayerModeHandler : MonoBehaviour
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
-        TurretMenuSet(SelectedTurret);
+        bool placing = Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })) && !MouseOverUI();
 
-        if (!MouseOverUI() && Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })))
+
+
+        if (placing)
         {
             GameObject turretPrefab = turretPrefabs[0];
 
@@ -367,7 +364,7 @@ public class PlayerModeHandler : MonoBehaviour
                 {
                     hoveringTurret = true;
 
-                    if (colliders[i].gameObject.transform.localScale == Vector3.one)
+                    if (colliders[i].GetComponent<Defence>() && colliders[i].GetComponent<Defence>().enabled) //finished building
                     {
                         bool enter = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL;
 
@@ -386,6 +383,7 @@ public class PlayerModeHandler : MonoBehaviour
                                 TierChange(true);
 
                                 UpdateTier();
+                                TurretMenuSet(true);
                             }
 
                         }
@@ -440,7 +438,7 @@ public class PlayerModeHandler : MonoBehaviour
                 runOnce = false;
             }
 
-            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !hoveringTurret && !cantPlace)
+            if (PlayerController.global.CheckSufficientResources() && !hoveringTurret && !cantPlace) // && IsInRange(worldPos)
             {
                 BluePrintSet(turretBlueprintBlue);
 
@@ -450,13 +448,13 @@ public class PlayerModeHandler : MonoBehaviour
                     switch (buildType)
                     {
                         case BuildType.Turret:
-                            timer = 5.0f;
+                            timer = 10.0f;
                             break;
                         case BuildType.Cannon:
-                            timer = 10.0f;
+                            timer = 15.0f;
                             break;
                         case BuildType.Slow:
-                            timer = 10.0f;
+                            timer = 20.0f;
                             break;
                         case BuildType.Scatter:
                             timer = 10.0f;
@@ -479,11 +477,7 @@ public class PlayerModeHandler : MonoBehaviour
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                         runOnce = true;
-
-                        if (!PlayerController.global.CheckSufficientResources())
-                        {
-                            PlayerController.global.ShakeResourceHolder();
-                        }
+                        PlayerController.global.CheckSufficientResources(); //will shake
                     }
                 }
             }
@@ -555,6 +549,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void ScrollSwitchTurret()
     {
+        BuildType oldbuildType = buildType;
         if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
             PlayerController.global.scrollCTRL = false;
@@ -598,6 +593,9 @@ public class PlayerModeHandler : MonoBehaviour
                 SwitchBuildTypeSlow();
             }
         }
+
+        if (oldbuildType != buildType)
+            PlayerController.global.UpdateResourceHolder(buildType: buildType);
     }
 
     IEnumerator PlayerAwake()
@@ -615,8 +613,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (KeyHint)
                 Destroy(KeyHint.gameObject);
         }
-        PlayerModeHandler.global.TurretMenuSet(false);
-        PlayerController.global.UpdateResourceHolder();
+        TurretMenuSet(false);
     }
 
     void ClearSelectionGrid()
@@ -648,7 +645,7 @@ public class PlayerModeHandler : MonoBehaviour
     public void SwitchToBuildMode(bool active = true)
     {
         buildGrid.gameObject.SetActive(active);
-        PlayerController.global.OpenResourceHolder(active);
+        // PlayerController.global.UpdateResourceHolder(open: active);
 
         PlayerController.global.characterAnimator.gameObject.SetActive(!active);
         if (active)
@@ -669,8 +666,11 @@ public class PlayerModeHandler : MonoBehaviour
             PlayerController.global.playerCanMove = false;
 
             playerModes = PlayerModes.BuildMode;
-            PlayerController.global.UpdateResourceHolder();
             PlayerController.global.ChangeTool(new PlayerController.ToolData() { HammerBool = true });
+        }
+        else
+        {
+            PlayerController.global.UpdateResourceHolder(open: false);
         }
     }
 
@@ -720,22 +720,22 @@ public class PlayerModeHandler : MonoBehaviour
     //    Gizmos.DrawLine(house, houseZ2);
     //}
 
-    public bool IsInRange(Vector3 currentTarget)
-    {
-        Vector3 playerPos = PlayerController.global.transform.position;
-
-        float top = playerPos.x + distanceAwayFromPlayerX.x;
-        float bot = playerPos.x - distanceAwayFromPlayerX.y;
-        float right = playerPos.z + distanceAwayFromPlayerZ.x;
-        float left = playerPos.z - distanceAwayFromPlayerZ.y;
-
-        if (currentTarget.x < top && currentTarget.x > bot && currentTarget.z < right && currentTarget.z > left)
-        {
-            return true;
-        }
-
-        return false;
-    }
+    //public bool IsInRange(Vector3 currentTarget)
+    //{
+    //    Vector3 playerPos = PlayerController.global.transform.position;
+    //
+    //    float top = playerPos.x + distanceAwayFromPlayerX.x;
+    //    float bot = playerPos.x - distanceAwayFromPlayerX.y;
+    //    float right = playerPos.z + distanceAwayFromPlayerZ.x;
+    //    float left = playerPos.z - distanceAwayFromPlayerZ.y;
+    //
+    //    if (currentTarget.x < top && currentTarget.x > bot && currentTarget.z < right && currentTarget.z > left)
+    //    {
+    //        return true;
+    //    }
+    //
+    //    return false;
+    //}
 
 
     public static void SetMouseActive(bool isActive, bool buildMode)

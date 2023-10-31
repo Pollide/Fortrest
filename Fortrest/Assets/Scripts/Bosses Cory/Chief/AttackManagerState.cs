@@ -9,7 +9,7 @@ public class AttackManagerState : BossState
 
     // The speed of attacks 
     [SerializeField] private float stoppingDistance = 3f;
-    [SerializeField] private float rotationSpeed = 5.0f;
+    //[SerializeField] private float rotationSpeed = 5.0f;
     public int attackCounter = 0;
     public float attackRadius = 10f;
 

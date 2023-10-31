@@ -24,9 +24,6 @@ public class BridgeBuilder : MonoBehaviour
 
     public void CheckIndicators()
     {
-        bool before = canBuild;
-
-
         canBuild = BridgeTypeInt == 1;
 
         //remember the spaced out text below is where the E key goes ingame
@@ -68,9 +65,14 @@ public class BridgeBuilder : MonoBehaviour
             }
         }
 
-        if (!before && canBuild)
+        if (canBuild)
         {
-            Indicator.global.AddIndicator(transform, LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor, LevelManager.global.terrainDataList[BridgeTypeInt].indictorName, false, Indicator.global.BridgeSprite);
+            for (int i = 0; i < Indicator.global.IndicatorList.Count; i++)
+            {
+                if (Indicator.global.IndicatorList[i].ActiveString == LevelManager.global.terrainDataList[BridgeTypeInt].indictorName)
+                    return;
+            }
+            Indicator.global.AddIndicator(transform, LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor, LevelManager.global.terrainDataList[BridgeTypeInt].indictorName, false);
         }
     }
 
@@ -80,13 +82,11 @@ public class BridgeBuilder : MonoBehaviour
         PlayerController.global.bridgeInteract = show;
         CheckIndicators();
 
-        PlayerController.global.OpenResourceHolder(show);
         PlayerController.global.needInteraction = show;
         PlayerController.global.bridgeInteract = show;
         LevelManager.FloatingTextChange(canBuild ? FloatingTextCanBuildAnimation.gameObject : FloatingTextAnimation.gameObject, show);
 
-        if (show)
-            PlayerController.global.UpdateResourceHolder(BridgeTypeInt);
+        PlayerController.global.UpdateResourceHolder(bridgeTypeInt: BridgeTypeInt, open: show);
     }
 
     private void Update()
@@ -160,11 +160,6 @@ public class BridgeBuilder : MonoBehaviour
                         spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.lava.objectToSpawn, spawner.spawnCurrentVolcanic, ref spawner.spawnCurrentVolcanic);
                     }
                 }
-                else
-                {
-                    PlayerController.global.ShakeResourceHolder();
-                }
-
             }
 
         }

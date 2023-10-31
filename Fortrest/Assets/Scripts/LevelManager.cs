@@ -56,6 +56,7 @@ public class LevelManager : MonoBehaviour
     public Gradient SunriseGradient;
     public Gradient SkyboxGradient;
     public Gradient AmbientGradient;
+    public GameObject applePrefab;
 
     [System.Serializable]
     public class TierData
@@ -65,6 +66,7 @@ public class LevelManager : MonoBehaviour
         public int ResourceAmount;
         public int ResourceCost;
 
+        public GameObject prefab;
         public bool SufficientResource()
         {
             return ResourceAmount + ResourceCost >= 0;
@@ -212,7 +214,7 @@ public class LevelManager : MonoBehaviour
 
         enemyThreshold = 0.0f;
 
-        if (PlayerPrefs.GetInt("Prologue") == 0)
+        if (GameManager.Pref("Prologue", 0, true) == 0)
         {
             StartCoroutine(PrologueCutscene());
         }
@@ -314,7 +316,7 @@ public class LevelManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        PlayerPrefs.SetInt("Prologue", 1);
+        GameManager.Pref("Prologue", 1);
         GameManager.global.NextScene(1);
     }
 
@@ -396,7 +398,7 @@ public class LevelManager : MonoBehaviour
 
                 if (building)
                 {
-                    if (building.NaturalBool == naturalBool)
+                    if (building.DropPrefab == naturalBool)
                         processAction(LevelManager.global.BuildingList[i]);
                 }
                 else
@@ -540,7 +542,7 @@ public class LevelManager : MonoBehaviour
 
         if (Unlocks.global.mountUnlocked && !Boar.global)
         {
-            Instantiate(mountPrefab, houseTransform.position - houseTransform.forward * 5 - houseTransform.right * 5, Quaternion.identity);
+            Instantiate(mountPrefab, houseTransform.position - houseTransform.forward * 15 - houseTransform.right * 15, Quaternion.identity);
         }
 
         CalculateCamps();

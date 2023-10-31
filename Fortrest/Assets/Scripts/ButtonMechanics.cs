@@ -82,7 +82,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
             if (ContinueBool)
             {
-                if (GameManager.Pref("Game Begun", 0, true) == 1)
+                if (GameManager.Pref("Game Has Begun", 0, true) == 1)
                 {
                     gameObject.SetActive(true);
                     ButtonText.text = "Continue Day " + (int)GameManager.Pref("Day", 0, true);
@@ -108,6 +108,11 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 // transform.GetChild(2).GetComponent<Slider>().onValueChanged += OnPointerClick(null);
             }
         }
+
+        if (TerrainTeleportInt != -1)
+        {
+            GetComponent<Image>().color = LevelManager.global.terrainDataList[TerrainTeleportInt].indicatorColor;
+        }
     }
 
     //checks to see if the pointer has exited the button
@@ -115,7 +120,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         //Pause.global.SelectedList[Pause.global.ReturnIndex()] = -1;
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
-
+        CheckUpgrade(false);
     }
 
     //checks to see if the pointer has entered the button
@@ -129,13 +134,28 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         //ChangeColourVoid(Color.white);
     }
 
-    void CheckUpgrade()
+    void CheckUpgrade(bool open = true)
     {
         if (UpgradeInt != 0)
         {
-            PlayerController.global.UpdateResourceHolder(UpgradeInt);
+            BuildType buildType = BuildType.None;
 
-            PlayerController.global.OpenResourceHolder(true);
+            if (UpgradeInt < 0)
+            {
+                if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Ballista)
+                    buildType = BuildType.Turret;
+
+                if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Cannon)
+                    buildType = BuildType.Cannon;
+
+                if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Slow)
+                    buildType = BuildType.Slow;
+
+                if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Scatter)
+                    buildType = BuildType.Scatter;
+            }
+
+            PlayerController.global.UpdateResourceHolder(buildType: buildType, upgradeTypeInt: open ? UpgradeInt : 0); //hides cost UI if not hover
         }
     }
 
@@ -199,8 +219,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 if (UpgradeInt == -1)
                 {
                     PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
-                    PlayerModeHandler.global.SelectedTurret.health = PlayerModeHandler.global.SelectedTurret.maxHealth;
-                    PlayerModeHandler.global.SelectedTurret.TakeDamage(0);
+                    PlayerModeHandler.global.SelectedTurret.TakeDamage(-PlayerModeHandler.global.SelectedTurret.GetComponent<Building>().ReturnRepair()); //minus will actually increase its health
                 }
 
                 if (UpgradeInt == -2)
@@ -221,8 +240,9 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
         if (BeginingBool || PlayBool)
         {
-            GameManager.Pref("Game Begun", 0, false); //restart game
-                                                      // List<ButtonMechanics> buttons = GameManager.FindComponent<ButtonMechanics>(transform.root);
+            GameManager.Pref("Prologue", 0, false);
+            GameManager.Pref("Game Has Begun", 0, false); //restart game
+                                                          // List<ButtonMechanics> buttons = GameManager.FindComponent<ButtonMechanics>(transform.root);
             GetComponentInParent<Buttons>().enabled = false;
             /*
             for (int i = 0; i < buttons.Count; i++) //stops continue disappearing when starting new game
@@ -303,9 +323,10 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
             if (Screen.fullScreen)
                 Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
-
+            else
+                Screen.fullScreenMode = FullScreenMode.Windowed;
 #if UNITY_EDITOR
-            ButtonText.text = "Won't work\nin editor";
+            ButtonText.text = "Won't work in editor";
 #endif
         }
 

@@ -15,7 +15,6 @@ public class Indicator : MonoBehaviour
 
     public Sprite HomeSprite;
     public Sprite MountSprite;
-    public Sprite BridgeSprite;
 
     public int bottomRightStack;
     public int bottomLeftStack;
@@ -145,23 +144,23 @@ public class Indicator : MonoBehaviour
             {
                 Visible = true;
 
-                if (!CustomSprite)
-                    MainData.ArrowText.text = ActiveString;
+                string visibleString = CustomSprite ? "" : ActiveString;
+
+                MainData.ArrowText.text = visibleString;
 
                 MainData.ArrowText.color = ActiveColor;
                 MainData.ArrowImage.color = ActiveColor;
 
+                MainData.CustomImage.gameObject.SetActive(CustomSprite);
+
                 if (MapData)
                 {
-                    if (!CustomSprite)
-                        MapData.ArrowText.text = ActiveString;
+
+                    MapData.ArrowText.text = visibleString;
 
                     MapData.ArrowText.color = ActiveColor;
 
-                    if (MapData.CustomImage)
-                    {
-                        MapData.CustomImage.gameObject.SetActive(true);
-                    }
+                    MapData.CustomImage.gameObject.SetActive(CustomSprite);
                 }
 
 
@@ -280,6 +279,8 @@ public class Indicator : MonoBehaviour
 
         indicatorData.MainData = Instantiate(arrowPrefab, transform).GetComponent<ArrowData>();
 
+
+
         indicatorData.MainData.ArrowText.text = "?";
 
         indicatorData.ActiveString = nameString;
@@ -295,7 +296,8 @@ public class Indicator : MonoBehaviour
 
         IndicatorList.Add(indicatorData);
 
-        if (!permenant && Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+        //i dont want bridges to have terrain as some of them when raycast down will not hit anything
+        if (!permenant && !activeTarget.GetComponent<BridgeBuilder>() && Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
             indicatorData.onTerrain = raycastHit.transform.GetComponent<Terrain>();
         }
@@ -305,6 +307,8 @@ public class Indicator : MonoBehaviour
             indicatorData.MapData = Instantiate(arrowPrefab, PlayerController.global.MapSpotHolder).GetComponent<ArrowData>();
             indicatorData.MapData.GetComponent<Animation>().enabled = false;
             indicatorData.MapData.transform.localScale *= 2.0f;
+            indicatorData.MapData.CustomImage.transform.localScale *= 1.5f;
+
             indicatorData.MapData.ArrowImage.gameObject.SetActive(false);
 
             // indicatorData.MapData.CustomImage.gameObject.SetActive(true);
@@ -315,17 +319,12 @@ public class Indicator : MonoBehaviour
             indicatorData.MapData.CustomImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
             // indicatorData.MapData.CustomImage.color = color;
 
-            indicatorData.MapData.ArrowText.text = indicatorData.MainData.ArrowText.text;
+            indicatorData.MapData.ArrowText.text = "?";
 
             if (customSprite)
             {
-                indicatorData.MainData.CustomImage.gameObject.SetActive(true);
-
                 indicatorData.MainData.CustomImage.sprite = customSprite;
                 indicatorData.MapData.CustomImage.sprite = customSprite;
-
-                indicatorData.MainData.ArrowText.text = "";
-                indicatorData.MapData.ArrowText.text = "";
 
                 if (permenant)
                 {

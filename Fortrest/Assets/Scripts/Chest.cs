@@ -7,7 +7,7 @@ public class Chest : MonoBehaviour
 {
     private bool canBeOpened;
     private string resource;
-    public TMP_Text promptText;
+    public Animation floatingTextAnimation;
     private bool textDisplayed;
     [HideInInspector]
     public bool opened;
@@ -24,22 +24,21 @@ public class Chest : MonoBehaviour
     {
         if (canBeOpened && (Input.GetKeyDown(KeyCode.E) || PlayerController.global.interactCTRL))
         {
-            opened = true;
-            promptText.gameObject.SetActive(false);
+            LevelManager.FloatingTextChange(floatingTextAnimation.gameObject, false);
             SpawnResources();
-            canBeOpened = false;
             PlayerController.global.interactCTRL = false;
             PlayerController.global.needInteraction = false;
-            GameManager.PlayAnimation(openAnimation, "ChestOpen");
             GameManager.global.SoundManager.PlaySound(GameManager.global.ChestOpenSound);
+
+            LoadOpen(false);
         }
     }
 
-    public void LoadOpen()
+    public void LoadOpen(bool quick = true)
     {
         opened = true;
         canBeOpened = false;
-        GameManager.PlayAnimation(openAnimation, "ChestOpen", true, true);
+        GameManager.PlayAnimation(openAnimation, "ChestOpen", true, quick);
     }
 
     private void SpawnResources()
@@ -49,7 +48,6 @@ public class Chest : MonoBehaviour
         float posZ = 0.0f;
         for (int i = 0; i < 8; i++)
         {
-            PickResource();
             if (i == 0)
             {
                 posX = 3f;
@@ -78,33 +76,11 @@ public class Chest : MonoBehaviour
                 posX *= -1;
                 posZ *= -1;
             }
-            GameManager.ReturnResource(resource, new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resource.Contains("Wood") ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
-        }
-    }
 
-    private void PickResource()
-    {
-        int randomInt = Random.Range(1, 7);
-        switch (randomInt)
-        {
-            case 1:
-                resource = "Wood";
-                break;
-            case 2:
-                resource = "Stone";
-                break;
-            case 3:
-                resource = "HardWood";
-                break;
-            case 4:
-                resource = "SlateStone";
-                break;
-            case 5:
-                resource = "CoarseWood";
-                break;
-            case 6:
-                resource = "MossyStone";
-                break;
+            int randomTier = Random.Range(0, LevelManager.global.WoodTierList.Count);
+            GameObject prefab = Random.Range(0, 2) == 0 ? LevelManager.global.WoodTierList[randomTier].prefab : LevelManager.global.StoneTierList[randomTier].prefab;
+
+            GameManager.ReturnResource(prefab, new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resource.Contains("Wood") ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
         }
     }
 
@@ -115,7 +91,7 @@ public class Chest : MonoBehaviour
             canBeOpened = true;
             if (!textDisplayed)
             {
-                promptText.gameObject.SetActive(true);
+                LevelManager.FloatingTextChange(floatingTextAnimation.gameObject, true);
                 textDisplayed = true;
             }
             PlayerController.global.needInteraction = true;
@@ -129,7 +105,7 @@ public class Chest : MonoBehaviour
             canBeOpened = false;
             if (textDisplayed)
             {
-                promptText.gameObject.SetActive(false);
+                LevelManager.FloatingTextChange(floatingTextAnimation.gameObject, false);
                 textDisplayed = false;
             }
             PlayerController.global.needInteraction = false;

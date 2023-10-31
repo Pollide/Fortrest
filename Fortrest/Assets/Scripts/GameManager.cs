@@ -352,6 +352,29 @@ public class GameManager : MonoBehaviour
     }
     */
 
+
+    public static void ResetChosenHolder(Transform holderTransform, int StartNumber = 0)
+    {
+        if (holderTransform)
+        {
+            List<Transform> AllChilds = new List<Transform>();
+
+            for (int i = StartNumber; i < holderTransform.childCount; i++)
+            {
+
+                AllChilds.Add(holderTransform.GetChild(i));
+            }
+
+            for (int i = 0; i < AllChilds.Count; i++)
+            {
+                AllChilds[i].gameObject.transform.SetParent(null);
+                AllChilds[i].gameObject.SetActive(false);
+                Destroy(AllChilds[i].gameObject);
+            }
+        }
+    }
+
+
     //this function will compare values and check it is in a certain range, and will correct itself it too far over
     public static float ReturnThresholds(float valueFloat, float maxFloat, float minFloat = 0, bool wrapBool = true)
     {
@@ -570,15 +593,14 @@ public class GameManager : MonoBehaviour
         {
             yield return 0; //gives a second for everything on Start to run
 
-            if (Pref("Game Begun", 0, true) == 1)
+            if (Pref("Game Has Begun", 0, true) == 1)
                 GameManager.global.DataSetVoid(true);
         }
     }
 
-    public static GameObject ReturnResource(string resourceObject, Vector3 position, Quaternion rotation)
+    public static GameObject ReturnResource(GameObject dropPrefab, Vector3 position, Quaternion rotation)
     {
-        GameObject item = Instantiate(Resources.Load("Drops/" + resourceObject + " Drop"), position, rotation) as GameObject;
-        item.GetComponent<ItemDrop>().resourceObject = resourceObject;
+        GameObject item = Instantiate(dropPrefab, position, rotation) as GameObject;
 
         return item;
     }
@@ -595,7 +617,7 @@ public class GameManager : MonoBehaviour
     {
         if (!load)
         {
-            Pref("Game Begun", 1, false);
+            Pref("Game Has Begun", 1, false);
         }
 
         DataPositionVoid("Player", PlayerController.global.transform, load);
@@ -639,12 +661,19 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < itemSize; i++)
         {
-            string original = load ? "" : LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().resourceObject.ToString();
-            string resourceObject = PrefString("Item Resource" + i, original, load);
+            int wood = (int)Pref("Item Wood" + i, LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().WoodBool ? 1 : 0, load);
+            int stone = (int)Pref("Item Stone" + i, LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().stoneBool ? 1 : 0, load);
+            int tier = (int)Pref("Item Tier" + i, LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().TierInt, load);
 
-            Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.ItemDropList[i].transform;
+            GameObject prefab = LevelManager.global.applePrefab;
 
-            // int collected = (int)Pref("Item Collected" + i, resource.GetComponent<ItemDrop>().CollectedBool ? 1 : 0, load);
+            if (wood == 1)
+                prefab = LevelManager.global.WoodTierList[tier].prefab;
+
+            if (stone == 1)
+                prefab = LevelManager.global.StoneTierList[tier].prefab;
+
+            Transform resource = load ? ReturnResource(prefab, Vector3.zero, Quaternion.identity).transform : LevelManager.global.ItemDropList[i].transform;
 
             resource.GetComponent<ItemDrop>().resourceAmount = (int)Pref("Item Amount" + i, resource.GetComponent<ItemDrop>().resourceAmount, load);
 
@@ -657,6 +686,19 @@ public class GameManager : MonoBehaviour
 
         TierDataVoid(ref LevelManager.global.WoodTierList, load);
         TierDataVoid(ref LevelManager.global.StoneTierList, load);
+
+        int campSize = (int)Pref("Camp Size", LevelManager.global.campList.Count, load);
+
+        CampSpawner.global.campsSpawnedPerDay = (int)Pref("Camps Per Day", CampSpawner.global.campsSpawnedPerDay, load);
+        CampSpawner.global.currentDay = LevelManager.global.day;
+
+        for (int i = 0; i < campSize; i++)
+        {
+            Camp camp = load ? Instantiate(CampSpawner.global.campPrefab).GetComponent<Camp>() : LevelManager.global.campList[i];
+
+            DataPositionVoid("Item Position" + i, camp.transform, load);
+            camp.campType = camp.GetCampType((int)Pref("Camp Type" + i, camp.GetIndex(camp.campType), load));
+        }
 
         for (int i = 0; i < LevelManager.global.chestList.Count; i++)
         {
@@ -733,7 +775,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static float Pref(string pref, float value, bool load)
+    public static float Pref(string pref, float value, bool load = false)
     {
         if (load)
         {
@@ -746,21 +788,6 @@ public class GameManager : MonoBehaviour
 
         return value;
     }
-
-    string PrefString(string pref, string value, bool load)
-    {
-        if (load)
-        {
-            value = PlayerPrefs.GetString(pref);
-        }
-        else
-        {
-            PlayerPrefs.SetString(pref, value);
-        }
-
-        return value;
-    }
-
 
     public void DataBuildingVoid(Transform value, bool load)
     {
@@ -785,7 +812,7 @@ public class GameManager : MonoBehaviour
 
         if (house && building.health <= 0) //prevents a softlock
         {
-            Pref("Game Begun", 0, false);
+            Pref("Game Has Begun", 0, false);
         }
 
         if (load)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class EnemyController : MonoBehaviour
 {
@@ -59,11 +60,11 @@ public class EnemyController : MonoBehaviour
     public enum ENEMYTYPE
     {
         goblin = 1,
-        spider,
-        wolf,
-        ogre,
         snake,
-        lava
+        wolf,
+        spider,
+        lava,
+        ogre
     };
     public ENEMYTYPE currentEnemyType;
 
@@ -571,8 +572,6 @@ public class EnemyController : MonoBehaviour
     {
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
-            //  Debug.Log("trigger" + PlayerController.global.attacking + " && " + canBeDamaged + " && " + PlayerController.global.damageEnemy);
-
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
                 StopAllCoroutines();
@@ -585,6 +584,14 @@ public class EnemyController : MonoBehaviour
                 canBeDamaged = false;
 
                 PickSound(hitSound, hitSound2, 1.0f);
+
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, ((PlayerController.global.transform.position + transform.position) / 2) + PlayerController.global.transform.forward, Quaternion.identity);
+                if (tempVFX.transform.position.y < 0)
+                {
+                    tempVFX.transform.position = new Vector3(tempVFX.transform.position.x, PlayerController.global.transform.position.y, tempVFX.transform.position.z);
+                }
+                tempVFX.GetComponent<VisualEffect>().Play();
+                Destroy(tempVFX, 1.0f);
 
                 if (currentEnemyType == ENEMYTYPE.wolf || currentEnemyType == ENEMYTYPE.spider && !flashing) // remove goblin once we have the anim
                 {
@@ -607,7 +614,11 @@ public class EnemyController : MonoBehaviour
                     GameManager.PlayAnimation(flashingAnimation, "Flashing");
                     flashing = true;
                 }
-                knockBackScript.knock = true;
+                if (currentEnemyType != ENEMYTYPE.ogre)
+                {
+                    knockBackScript.knock = true;
+                }
+                
                 ScreenShake.global.ShakeScreen();
                 Damaged(PlayerController.global.attackDamage);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
@@ -668,63 +679,75 @@ public class EnemyController : MonoBehaviour
     {
         if (currentEnemyType == ENEMYTYPE.goblin)
         {
-            agent.speed = 3.0f;
-            agent.acceleration = 20.0f;
-            agent.angularSpeed = 120.0f;
-            maxHealth = 3.0f;
-            attackTimerMax = 1.75f;
+            agent.speed = 3.5f;
+            agent.acceleration = 10.0f;
+            agent.angularSpeed = 100.0f;
+            maxHealth = 3.5f;
+            attackTimerMax = 2f;
             agent.stoppingDistance = 2.0f;
             offset = 0.25f;
             enemyDamage = 3.0f;
             knockBackScript.strength = 50.0f;
         }
-        else if (currentEnemyType == ENEMYTYPE.spider)
+        else if (currentEnemyType == ENEMYTYPE.snake)
         {
-            agent.speed = 4.0f;
-            agent.acceleration = 50.0f;
-            agent.angularSpeed = 200.0f;
-            maxHealth = 4.0f;
-            attackTimerMax = 2.0f;
+            agent.speed = 5.5f;
+            agent.acceleration = 30.0f;
+            agent.angularSpeed = 150.0f;
+            maxHealth = 4.5f;
+            attackTimerMax = 2.5f;
             agent.stoppingDistance = 2.5f;
-            offset = 0.3f;
+            offset = 0.5f;
             enemyDamage = 4.0f;
-            knockBackScript.strength = 45.0f;
+            knockBackScript.strength = 60.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.wolf)
         {
             agent.speed = 8.5f;
-            agent.acceleration = 40.0f;
+            agent.acceleration = 20.0f;
             agent.angularSpeed = 130.0f;
             maxHealth = 6.0f;
-            attackTimerMax = 2.75f;
+            attackTimerMax = 3.5f;
             agent.stoppingDistance = 6.5f;
             offset = 0.2f;
-            enemyDamage = 8.0f;
+            enemyDamage = 6.0f;
+            knockBackScript.strength = 40.0f;
+        }
+        else if (currentEnemyType == ENEMYTYPE.spider)
+        {
+            agent.speed = 7.0f;
+            agent.acceleration = 40.0f;
+            agent.angularSpeed = 180.0f;
+            maxHealth = 8.0f;
+            attackTimerMax = 1.75f;
+            agent.stoppingDistance = 2.5f;
+            offset = 0.3f;
+            enemyDamage = 5.5f;
             knockBackScript.strength = 20.0f;
+        }          
+        else if (currentEnemyType == ENEMYTYPE.lava)
+        {
+            agent.speed = 6.0f;
+            agent.acceleration = 20.0f;
+            agent.angularSpeed = 200.0f;
+            maxHealth = 10f;
+            attackTimerMax = 2.0f;
+            agent.stoppingDistance = 2.5f;
+            offset = 0.5f;
+            enemyDamage = 10.0f;
+            knockBackScript.strength = 10.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.ogre)
         {
-            agent.speed = 2.0f;
-            agent.acceleration = 20.0f;
+            agent.speed = 2.5f;
+            agent.acceleration = 10.0f;
             agent.angularSpeed = 80.0f;
-            maxHealth = 10.0f;
-            attackTimerMax = 6.0f;
+            maxHealth = 20.0f;
+            attackTimerMax = 8.0f;
             agent.stoppingDistance = 4.5f;
             offset = 0.2f;
-            enemyDamage = 10.0f;
+            enemyDamage = 12.0f;
             knockBackScript.strength = 0.0f;
-        }
-        else if (currentEnemyType == ENEMYTYPE.snake)
-        {
-            agent.speed = 5.0f;
-            agent.acceleration = 70.0f;
-            agent.angularSpeed = 150.0f;
-            maxHealth = 3.5f;
-            attackTimerMax = 3.0f;
-            agent.stoppingDistance = 2.5f;
-            offset = 0.5f;
-            enemyDamage = 5.0f;
-            knockBackScript.strength = 60.0f;
         }
         health = maxHealth;
         health = maxHealth;

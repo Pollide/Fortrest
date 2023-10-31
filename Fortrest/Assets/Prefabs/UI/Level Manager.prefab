@@ -397,30 +397,54 @@ MonoBehaviour:
   - 85
   WoodTierList:
   - ResourceName: Wood
-    ResourceIcon: {fileID: 21300000, guid: b8ef945820ce1aa449a47db46b2c3af5, type: 3}
+    ResourceIcon: {fileID: 21300000, guid: 13f608270aae3fb4c9f33180d87d9e0d, type: 3}
     ResourceAmount: 0
     ResourceCost: 0
-  - ResourceName: Hard Wood
-    ResourceIcon: {fileID: 21300000, guid: dfeeefa3bd037cb44af21f947e114bfc, type: 3}
+    prefab: {fileID: 6576763384888351819, guid: 216e89e08d8f32f46bbf6dc3efb7bb7a,
+      type: 3}
+  - ResourceName: Willow
+    ResourceIcon: {fileID: 21300000, guid: 74cf2cb7cb62935438da51f38e36fe64, type: 3}
     ResourceAmount: 0
     ResourceCost: 0
-  - ResourceName: Coarse Wood
-    ResourceIcon: {fileID: 21300000, guid: 380a631162efbdf4ba01faf2e2f84f9d, type: 3}
+    prefab: {fileID: 6576763384888351819, guid: 746bc4cebd7f0eb40a8cb9af3b71114e,
+      type: 3}
+  - ResourceName: Coarse
+    ResourceIcon: {fileID: 21300000, guid: 1c2dd7cc5f6e1c34d81912e3e869aba2, type: 3}
     ResourceAmount: 0
     ResourceCost: 0
+    prefab: {fileID: 6576763384888351819, guid: f8f419355ceab314ba31f8d4e8a6099b,
+      type: 3}
+  - ResourceName: Dragon Blood
+    ResourceIcon: {fileID: 21300000, guid: b5ba6e8ae6735a547b14fc23ff6e1104, type: 3}
+    ResourceAmount: 0
+    ResourceCost: 0
+    prefab: {fileID: 6576763384888351819, guid: 25e3eed5aadd2b545a211ec8fcb0e3e5,
+      type: 3}
   StoneTierList:
   - ResourceName: Stone
-    ResourceIcon: {fileID: 21300000, guid: 7e90e710ef0f8054c9c3258fff33c484, type: 3}
+    ResourceIcon: {fileID: 21300000, guid: b90418cc53dfc7544909fbd43f9a9c67, type: 3}
     ResourceAmount: 0
     ResourceCost: 0
-  - ResourceName: Mossy Stone
-    ResourceIcon: {fileID: 21300000, guid: 1efeeb957dc3b56458a409e5ec41d29b, type: 3}
+    prefab: {fileID: 8830191839845132694, guid: 35003ac2339e6ee45a62361386c901ca,
+      type: 3}
+  - ResourceName: Bones
+    ResourceIcon: {fileID: 21300000, guid: 71370dfc123882e4785fdfd3dbd8620e, type: 3}
     ResourceAmount: 0
     ResourceCost: 0
-  - ResourceName: Slate Stone
-    ResourceIcon: {fileID: 21300000, guid: 5492d2b18629c9a40917f02227eeecea, type: 3}
+    prefab: {fileID: 8830191839845132694, guid: fb9a92cbb04af5a4c90e41f7f982e9da,
+      type: 3}
+  - ResourceName: Titanium
+    ResourceIcon: {fileID: 21300000, guid: dacafe99ff5ddce42aa9138ecea98328, type: 3}
     ResourceAmount: 0
     ResourceCost: 0
+    prefab: {fileID: 8830191839845132694, guid: e404f7e34fb99164697a25dee90f05f7,
+      type: 3}
+  - ResourceName: Blackstone
+    ResourceIcon: {fileID: 21300000, guid: bd56533658fb2ce45853be7c96428c1b, type: 3}
+    ResourceAmount: 0
+    ResourceCost: 0
+    prefab: {fileID: 8830191839845132694, guid: 5f44298dbec179040abc06044d13b934,
+      type: 3}
   SunriseGradient:
     serializedVersion: 2
     key0: {r: 1, g: 0.3454259, b: 0, a: 1}
@@ -508,6 +532,8 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 7
     m_NumAlphaKeys: 2
+  applePrefab: {fileID: 6463501546040604733, guid: e76cd90b1d4854041a890d1bdb43d4e2,
+    type: 3}
   ResourceHolderTransform: {fileID: 0}
   ActiveBuildingGameObject: {fileID: 0}
   DirectionalLightTransform: {fileID: 7444467798429044014}
@@ -521,6 +547,7 @@ MonoBehaviour:
   bridgeList: []
   bossList: []
   chestList: []
+  BuildingList: []
   campList: []
   daySpeed: 1
   enemyTimer: 0
@@ -571,37 +598,37 @@ MonoBehaviour:
     music: {fileID: 8300000, guid: c50b6cb3da380aa4197d5ed9034052b3, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: a7b83db934c27c348ba58f10fb732e83, type: 2}
     indictorName: Plains
-    indicatorColor: {r: 0, g: 1, b: 0.108952045, a: 1}
+    indicatorColor: {r: 0.2009167, g: 0.990566, b: 0.2876233, a: 1}
   - terrain: {fileID: 0}
     welcomeSprite: {fileID: 21300000, guid: 14ade843d79d7c145adca2aec12f3f9d, type: 3}
     music: {fileID: 8300000, guid: 8936ba70ea08eda439c9eeef81969247, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: 716b70db87e766148aec7f12c0239a75, type: 2}
     indictorName: Marsh
-    indicatorColor: {r: 0.73166656, g: 0, b: 1, a: 1}
+    indicatorColor: {r: 0.80754733, g: 0.2783019, b: 1, a: 1}
   - terrain: {fileID: 0}
     welcomeSprite: {fileID: 21300000, guid: 1b71bc36897a96045a1f49e16941b4d9, type: 3}
     music: {fileID: 8300000, guid: b011934c800d34b4eba21e3e9209a172, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: 092d8e1dfdb2fa9428b7e3e624da358c, type: 2}
     indictorName: Tussocks
-    indicatorColor: {r: 1, g: 0.83915305, b: 0, a: 1}
-  - terrain: {fileID: 0}
-    welcomeSprite: {fileID: 21300000, guid: 5d88963606fec6744ae6f28ae2bc47c4, type: 3}
-    music: {fileID: 8300000, guid: c50b6cb3da380aa4197d5ed9034052b3, type: 3}
-    rabbitMaterial: {fileID: 2100000, guid: c2c8faa308702074982798a64a53aeb8, type: 2}
-    indictorName: Coast
-    indicatorColor: {r: 0.42745098, g: 0.117713064, b: 0, a: 1}
+    indicatorColor: {r: 1, g: 0.87182766, b: 0.2028302, a: 1}
   - terrain: {fileID: 0}
     welcomeSprite: {fileID: 21300000, guid: 054d48345f166544bb90912236b1bbc1, type: 3}
     music: {fileID: 8300000, guid: 8936ba70ea08eda439c9eeef81969247, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: 3c59fad4aed9b39478ffdcedda94298a, type: 2}
     indictorName: Taiga
-    indicatorColor: {r: 0, g: 0.44864416, b: 1, a: 1}
+    indicatorColor: {r: 0, g: 0.6069405, b: 1, a: 1}
+  - terrain: {fileID: 0}
+    welcomeSprite: {fileID: 21300000, guid: 5d88963606fec6744ae6f28ae2bc47c4, type: 3}
+    music: {fileID: 8300000, guid: c50b6cb3da380aa4197d5ed9034052b3, type: 3}
+    rabbitMaterial: {fileID: 2100000, guid: c2c8faa308702074982798a64a53aeb8, type: 2}
+    indictorName: Coast
+    indicatorColor: {r: 0.6792453, g: 0.3059938, b: 0.16340333, a: 1}
   - terrain: {fileID: 0}
     welcomeSprite: {fileID: 21300000, guid: 72e0e4946851b8449a1b03486bfc973f, type: 3}
     music: {fileID: 8300000, guid: b011934c800d34b4eba21e3e9209a172, type: 3}
     rabbitMaterial: {fileID: 2100000, guid: 716b70db87e766148aec7f12c0239a75, type: 2}
     indictorName: Volcanic
-    indicatorColor: {r: 1, g: 0.26329398, b: 0, a: 1}
+    indicatorColor: {r: 1, g: 0.37309968, b: 0.3176471, a: 1}
   clockHand: {fileID: 0}
   clockSun: {fileID: 0}
   clockMoon: {fileID: 0}
@@ -644,6 +671,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9989ff1f5903f694eac10b15188f3766, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentDay: 0
   campPrefab: {fileID: 1285012206302860940, guid: 6f112fb65cf7af84fa7dabf857eb2607,
     type: 3}
   mesh: {fileID: 0}
@@ -761,7 +789,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4620255
+    m_Bits: 13074399
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1861,7 +1889,6 @@ MonoBehaviour:
   RemovedSprite: {fileID: 21300000, guid: fedb542a4d1265545a84526c3578a2d9, type: 3}
   HomeSprite: {fileID: 21300000, guid: f1095d3a51e7c6a4497b254ef38e0037, type: 3}
   MountSprite: {fileID: 21300000, guid: 7be8bb784ea9adb429814eb08616eeed, type: 3}
-  BridgeSprite: {fileID: 0}
   bottomRightStack: 0
   bottomLeftStack: 0
   topRightStack: 0

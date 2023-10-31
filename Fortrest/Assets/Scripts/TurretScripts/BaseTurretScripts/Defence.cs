@@ -5,23 +5,29 @@ public class Defence : MonoBehaviour
 {
     public List<Sprite> spriteTierList = new List<Sprite>();
     public float turn_speed;
-    public float shootingRange = 10f;
-    public float fireRate = 1f;
-    public float damage = 10;
+    public float shootingRange;
+    public float fireRate;
+    public float damage;
     public int turretID;
     public TurretStats.Tier changeTier = new TurretStats.Tier();
 
-    float ReturnDamage()
+    public float ReturnDamage()
     {
         return damage + changeTier.damageTier;
     }
 
-    float ReturnFireRate()
+    public float ReturnHealth()
+    {
+        return GetComponent<Building>().health + changeTier.healthTier;
+    }
+
+
+    public float ReturnFireRate()
     {
         return fireRate + changeTier.rateTier;
     }
 
-    float ReturnRange()
+    public float ReturnRange()
     {
         return shootingRange + changeTier.rangeTier;
     }

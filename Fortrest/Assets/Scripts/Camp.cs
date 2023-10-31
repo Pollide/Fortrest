@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 using System.Text.RegularExpressions;
+using System;
 
 public class Camp : MonoBehaviour
 {
@@ -26,6 +28,23 @@ public class Camp : MonoBehaviour
     public int enemySpawn = 2;
     public Animation healthAnimation;
 
+    public int GetIndex(CAMPTYPE campType)
+    {
+        CAMPTYPE[] values = (CAMPTYPE[])Enum.GetValues(typeof(CAMPTYPE));
+        return Array.IndexOf(values, campType);
+    }
+
+    public CAMPTYPE GetCampType(int index)
+    {
+        CAMPTYPE[] values = (CAMPTYPE[])Enum.GetValues(typeof(CAMPTYPE));
+        if (index >= 0 && index < values.Length)
+        {
+            return values[index];
+        }
+        // Handle invalid index
+        return CAMPTYPE.goblinCamp; // or throw an exception
+    }
+
     void Start()
     {
         LevelManager.global.campList.Add(this);
@@ -40,7 +59,7 @@ public class Camp : MonoBehaviour
                     {
                         LevelManager.global.spawnEntries[0].spawnPercentage += CampSpawner.global.goblinCampPercent;
                     }
-                    
+
                     campPrefabs[0].SetActive(true);
 
                     SpawnEnemyOnCamp(enemySpawn, LevelManager.global.goblin.objectToSpawn);
@@ -99,7 +118,7 @@ public class Camp : MonoBehaviour
     {
         for (int i = 0; i < amount; i++)
         {
-            Vector3 enemySpawnPos = new(transform.position.x + Random.Range(-2f, 2f), transform.position.y, transform.position.z + Random.Range(-2f, 2f));
+            Vector3 enemySpawnPos = new(transform.position.x + UnityEngine.Random.Range(-2f, 2f), transform.position.y, transform.position.z + UnityEngine.Random.Range(-2f, 2f));
 
             GameObject enemy = Instantiate(gameObject, enemySpawnPos, Quaternion.identity);
 
@@ -174,6 +193,13 @@ public class Camp : MonoBehaviour
         {
             if (PlayerController.global.attacking && canBeDamaged && PlayerController.global.damageEnemy)
             {
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, ((PlayerController.global.transform.position + transform.position) / 2) + PlayerController.global.transform.forward, Quaternion.identity);
+                if (tempVFX.transform.position.y < 0)
+                {
+                    tempVFX.transform.position = new Vector3(tempVFX.transform.position.x, PlayerController.global.transform.position.y, tempVFX.transform.position.z);
+                }
+                tempVFX.GetComponent<VisualEffect>().Play();
+                Destroy(tempVFX, 1.0f);
                 canBeDamaged = false;
                 TakeDamage(PlayerController.global.attackDamage);
             }

@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 3032954196529066518}
   - component: {fileID: 5756975981901921715}
   - component: {fileID: 5657225773570764442}
-  - component: {fileID: 5749843956598990194}
+  - component: {fileID: 6367428414308361601}
   m_Layer: 9
   m_Name: Boulder_Var2
   m_TagString: Untagged
@@ -117,8 +117,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5749843956598990194
-MeshCollider:
+--- !u!65 &6367428414308361601
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -127,10 +127,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8858704730550788251, guid: 311c6b3777ec1ec449ff7eb899c65952, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 1.5706851, y: 2.842871, z: 1.8329246}
+  m_Center: {x: 0.06173089, y: 1.3299221, z: -0.19285011}
 --- !u!1 &7509142344824591087
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +141,6 @@ GameObject:
   - component: {fileID: 5281902838922232862}
   - component: {fileID: 4012779519441861351}
   - component: {fileID: 1345044777623596542}
-  - component: {fileID: 775337696238727481}
   - component: {fileID: 1622656302796097390}
   m_Layer: 9
   m_Name: Boulder_Var2
@@ -180,15 +178,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e2a0c58f038a6f40ac2dcb3006ea0fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NaturalBool: 1
-  resourceObject: 6
   buildingObject: 6
   health: 0
-  maxHealth: 5
+  maxHealth: 4
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
-  HUDHealthBar: {fileID: 0}
   playerinRange: 0
   normalHouse: {fileID: 0}
   destroyedHouse: {fileID: 0}
@@ -197,6 +192,8 @@ MonoBehaviour:
   DebugDestroyInstantly: 0
   gridLocation: {x: 0, y: 0}
   destroyedTimer: 0
+  DropPrefab: {fileID: 8830191839845132694, guid: 35003ac2339e6ee45a62361386c901ca,
+    type: 3}
 --- !u!111 &1345044777623596542
 Animation:
   m_ObjectHideFlags: 0
@@ -214,19 +211,6 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!135 &775337696238727481
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7509142344824591087}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.28428712
-  m_Center: {x: 0.012346178, y: 0.26598445, z: -0.038570017}
 --- !u!208 &1622656302796097390
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -254,27 +238,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Resource Health Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 7150008790253612511, guid: c3d78a57dfcef2848ba5e11d67aa986a,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: e4dcbe26f74fb9440ac85d7f60ab9a33,
-        type: 3}
-    - target: {fileID: 7150008790253612511, guid: c3d78a57dfcef2848ba5e11d67aa986a,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7150008790253612511, guid: c3d78a57dfcef2848ba5e11d67aa986a,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7150008790253612511, guid: c3d78a57dfcef2848ba5e11d67aa986a,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0.18498743
       objectReference: {fileID: 0}
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
@@ -339,22 +302,22 @@ PrefabInstance:
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.92649376
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.1932256
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.31614196
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0657843
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
@@ -364,22 +327,22 @@ PrefabInstance:
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 23.556
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 37.685
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7877032738024274867, guid: c3d78a57dfcef2848ba5e11d67aa986a,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0.017
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3d78a57dfcef2848ba5e11d67aa986a, type: 3}
