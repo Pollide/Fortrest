@@ -50,7 +50,7 @@ public class PhaseThreeAttack : BossState
         slamWaitTime = 0f;
         SetTelegraph(false);
         stateMachine.BossAnimator.SetBool("isJumping", false);
-        stateMachine.BossAnimator.SetBool("isDiving", false);
+        stateMachine.BossAnimator.SetBool("isDiving", true);
         hasJumped = false;
     }
 

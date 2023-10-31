@@ -94,6 +94,11 @@ public class AttackManagerState : BossState
             stateMachine.ChangeState(idleState);
         }
 
+        if (IsAttacking)
+        {
+
+        }
+
         if (!stateMachine.PhaseTwoRan && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Two && canChangeState)
         {
             stateMachine.PhaseTwoRan = true;
