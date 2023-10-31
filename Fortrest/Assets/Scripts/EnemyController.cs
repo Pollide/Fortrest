@@ -105,6 +105,12 @@ public class EnemyController : MonoBehaviour
     public float wolfDistanceBetweenPlayer = 17.5f;
     private bool slowed;
 
+    public bool lavaAttacks;
+    private Vector3 directionToPlayer;
+    private float distanceToPlayer;
+    private float jumpDistance;
+    private bool setDistance;
+
     private void Awake()
     {
         if (GameManager.ReturnInMainMenu())
@@ -166,23 +172,37 @@ public class EnemyController : MonoBehaviour
                     GetComponentInChildren<BoxCollider>().center = new Vector3(-1.5f, 3f, 1.5f);
                 }
             }
-        }
 
-        if (PlayerController.global.upgradedMelee && !knockbackIncreased)
-        {
-            knockBackScript.strength *= 1.25f;
-            knockbackIncreased = true;
-        }
-        if (HealthAppearTimer != -1)
-        {
-            HealthAppearTimer += Time.deltaTime;
+            distanceToPlayer = Vector3.Distance(PlayerController.global.transform.position, transform.position);
+            directionToPlayer = (new Vector3(PlayerController.global.transform.position.x, 0f, PlayerController.global.transform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
 
-            if (HealthAppearTimer > 5)
+            if (lavaAttacks)
             {
-                HealthAppearTimer = -1;
-                GameManager.PlayAnimation(healthAnimation, "Health Appear", false);
+                if (!setDistance)
+                {
+                    jumpDistance = distanceToPlayer * 2;
+                    setDistance = true;
+                }
+                
+                agent.Move(directionToPlayer * (Time.deltaTime * jumpDistance));
             }
-        }
+
+            if (PlayerController.global.upgradedMelee && !knockbackIncreased)
+            {
+                knockBackScript.strength *= 1.25f;
+                knockbackIncreased = true;
+            }
+            if (HealthAppearTimer != -1)
+            {
+                HealthAppearTimer += Time.deltaTime;
+
+                if (HealthAppearTimer > 5)
+                {
+                    HealthAppearTimer = -1;
+                    GameManager.PlayAnimation(healthAnimation, "Health Appear", false);
+                }
+            }
+        }      
     }
 
     void CheckHouse()
@@ -482,6 +502,7 @@ public class EnemyController : MonoBehaviour
 
     void Attack()
     {
+        setDistance = false;
         attacking = true;
         attackTimer = 0;
         ActiveAnimator.ResetTrigger("Attack");
@@ -741,7 +762,7 @@ public class EnemyController : MonoBehaviour
             agent.angularSpeed = 200.0f;
             maxHealth = 10f;
             attackTimerMax = 2.0f;
-            agent.stoppingDistance = 9f;
+            agent.stoppingDistance = 10f;
             offset = 0.5f;
             enemyDamage = 10.0f;
             knockBackScript.strength = 10.0f;
@@ -784,6 +805,11 @@ public class EnemyController : MonoBehaviour
 
     public void AnimationAttack()
     {
+        if (currentEnemyType == ENEMYTYPE.lava)
+        {
+            lavaAttacks = false;
+        }
+
         if (currentEnemyType != ENEMYTYPE.ogre)
         {
             if (currentEnemyType == ENEMYTYPE.goblin)
