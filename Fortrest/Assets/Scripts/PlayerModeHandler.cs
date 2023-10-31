@@ -215,12 +215,15 @@ public class PlayerModeHandler : MonoBehaviour
             if (!open)
             {
                 SelectedTurret = null;
+
+                PlayerController.global.UpdateResourceHolder(buildType: buildType);
             }
 
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
         }
 
     }
+
 
 
     public bool SetTeir(Image fillImage, ref float buttonTier, ref float defenceTier, bool upgrade)
@@ -322,14 +325,9 @@ public class PlayerModeHandler : MonoBehaviour
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
 
-        TurretMenuSet(SelectedTurret);
-
         bool placing = Physics.Raycast(ray, out RaycastHit hitData, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Grid" })) && !MouseOverUI();
 
-        if (!SelectedTurret)
-        {
-            PlayerController.global.UpdateResourceHolder(buildType: buildType, open: placing && turretBlueprint);
-        }
+
 
         if (placing)
         {
@@ -385,6 +383,7 @@ public class PlayerModeHandler : MonoBehaviour
                                 TierChange(true);
 
                                 UpdateTier();
+                                TurretMenuSet(true);
                             }
 
                         }
@@ -550,6 +549,7 @@ public class PlayerModeHandler : MonoBehaviour
 
     private void ScrollSwitchTurret()
     {
+        BuildType oldbuildType = buildType;
         if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
             PlayerController.global.scrollCTRL = false;
@@ -593,6 +593,9 @@ public class PlayerModeHandler : MonoBehaviour
                 SwitchBuildTypeSlow();
             }
         }
+
+        if (oldbuildType != buildType)
+            PlayerController.global.UpdateResourceHolder(buildType: buildType);
     }
 
     IEnumerator PlayerAwake()
@@ -610,7 +613,7 @@ public class PlayerModeHandler : MonoBehaviour
             if (KeyHint)
                 Destroy(KeyHint.gameObject);
         }
-        PlayerModeHandler.global.TurretMenuSet(false);
+        TurretMenuSet(false);
     }
 
     void ClearSelectionGrid()

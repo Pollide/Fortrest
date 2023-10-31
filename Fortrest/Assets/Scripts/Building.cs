@@ -96,7 +96,7 @@ public class Building : MonoBehaviour
 
         if (buildingObject == BuildingType.House)
         {
-            Indicator.global.AddIndicator(transform, Color.yellow, "Home", customSprite: Indicator.global.HomeSprite);
+            Indicator.global.AddIndicator(transform, Color.yellow, "Home", false, customSprite: Indicator.global.HomeSprite);
             SetLastHealth();
             if (HUDHealthBar != null)
             {

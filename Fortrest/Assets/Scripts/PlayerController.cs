@@ -787,7 +787,7 @@ public class PlayerController : MonoBehaviour
 
     private void Resting()
     {
-        if (PlayerModeHandler.global.inTheFortress)
+        if (PlayerModeHandler.global.inTheFortress || playerDead)
         {
             //this also runs when you are dead
             playerHealth = Mathf.Clamp(playerHealth + Time.deltaTime * 8.0f, 0, maxHealth);
@@ -1410,7 +1410,7 @@ public class PlayerController : MonoBehaviour
             if (tierList[i].ResourceCost != 0)
             {
                 showCostBool = true;
-                CreateResource(CostHolder, Mathf.Abs(tierList[i].ResourceCost), tierList[i].ResourceIcon, tierList[i].SufficientResource() ? costGreen : costRed, i, tierList);
+                CreateResource(CostHolder, Mathf.Abs(tierList[i].ResourceCost), tierList[i].ResourceIcon, tierList[i].SufficientResource() ? (total > 0 ? Color.cyan : costGreen) : costRed, i, tierList);
             }
         }
 
