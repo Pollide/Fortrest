@@ -111,11 +111,6 @@ public class BossAnimationEvents : MonoBehaviour
         stateMachine.BossAnimator.SetBool("isTired", true);
     }
 
-    void SetTelegraphFalse()
-    {
-        attackState1.SetTelegraph(false);
-    }
-
     void PlayScreenShake()
     {
         ScreenShake.global.ShakeScreen();

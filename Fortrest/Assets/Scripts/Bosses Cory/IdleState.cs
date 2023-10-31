@@ -16,14 +16,14 @@ public class IdleState : BossState
     public override void EnterState()
     {
         idleRuns++;
-
+        stateMachine.inIdle = true;
         resetTimer = resetTimerDuration;
         introRan = false;
     }
 
     public override void ExitState()
     {
-
+        stateMachine.inIdle = false;
     }
 
     public override void UpdateState()
@@ -65,6 +65,12 @@ public class IdleState : BossState
             {
                 stateMachine.bossSpawner.Awake();
                 StateMachine.bossSpawner.BossEncountered(false);
+
+                stateMachine.PhaseTwoRan = false;
+                stateMachine.PhaseThreeRan = false;
+
+                stateMachine.bossSpawner.UpdateHealth();
+
                 if (GetComponent<PhaseOneLycan>())
                 {
                     GetComponent<PhaseOneLycan>().DestroyEnemies();
@@ -73,6 +79,10 @@ public class IdleState : BossState
                 {
                     GetComponent<PhaseTwoLycan>().DestroyEnemies();
                 }
+            }
+            else
+            {
+                resetTimer -= Time.deltaTime;
             }
 
             if (stateMachine.BossType == BossSpawner.TYPE.Chieftain)
@@ -83,8 +93,6 @@ public class IdleState : BossState
             {
                 WalkTo(initialSpawn, stoppingDistance);
             }
-
-            resetTimer -= Time.deltaTime;
         }
     }
 
