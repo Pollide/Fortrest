@@ -575,10 +575,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public static GameObject ReturnResource(string resourceObject, Vector3 position, Quaternion rotation)
+    public static GameObject ReturnResource(GameObject dropPrefab, Vector3 position, Quaternion rotation)
     {
-        GameObject item = Instantiate(Resources.Load("Drops/" + resourceObject + " Drop"), position, rotation) as GameObject;
-        item.GetComponent<ItemDrop>().resourceObject = resourceObject;
+        GameObject item = Instantiate(dropPrefab, position, rotation) as GameObject;
 
         return item;
     }
@@ -639,12 +638,19 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < itemSize; i++)
         {
-            string original = load ? "" : LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().resourceObject.ToString();
-            string resourceObject = PrefString("Item Resource" + i, original, load);
+            int wood = (int)Pref("Item Wood" + i, LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().WoodBool ? 1 : 0, load);
+            int stone = (int)Pref("Item Stone" + i, LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().stoneBool ? 1 : 0, load);
+            int tier = (int)Pref("Item Tier" + i, LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().TierInt, load);
 
-            Transform resource = load ? ReturnResource(resourceObject, Vector3.zero, Quaternion.identity).transform : LevelManager.global.ItemDropList[i].transform;
+            GameObject prefab = LevelManager.global.applePrefab;
 
-            // int collected = (int)Pref("Item Collected" + i, resource.GetComponent<ItemDrop>().CollectedBool ? 1 : 0, load);
+            if (wood == 1)
+                prefab = LevelManager.global.WoodTierList[tier].prefab;
+
+            if (stone == 1)
+                prefab = LevelManager.global.StoneTierList[tier].prefab;
+
+            Transform resource = load ? ReturnResource(prefab, Vector3.zero, Quaternion.identity).transform : LevelManager.global.ItemDropList[i].transform;
 
             resource.GetComponent<ItemDrop>().resourceAmount = (int)Pref("Item Amount" + i, resource.GetComponent<ItemDrop>().resourceAmount, load);
 

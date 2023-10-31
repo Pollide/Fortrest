@@ -259,6 +259,11 @@ public class PlayerController : MonoBehaviour
     private bool wasHit;
     public bool canAttack = true;
 
+    public InfoData damageInfoData;
+    public InfoData healthInfoData;
+    public InfoData rangeInfoData;
+    public InfoData rateInfoData;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -1221,6 +1226,11 @@ public class PlayerController : MonoBehaviour
             Destroy(CostHolder.GetChild(i).gameObject);
         }
 
+        damageInfoData.gameObject.SetActive(false);
+        healthInfoData.gameObject.SetActive(false);
+        rangeInfoData.gameObject.SetActive(false);
+        rateInfoData.gameObject.SetActive(false);
+
         List<LevelManager.TierData> woodCostList = new List<LevelManager.TierData>();
         List<LevelManager.TierData> stoneCostList = new List<LevelManager.TierData>();
 
@@ -1269,7 +1279,12 @@ public class PlayerController : MonoBehaviour
         if (upgradeTypeInt == -1) //repair
         {
             resourceInfoText.text = "Repair";
+            healthInfoData.gameObject.SetActive(true);
 
+            Building building = PlayerModeHandler.global.SelectedTurret;
+
+            healthInfoData.currentFill.fillAmount = building.health / building.maxHealth;
+            healthInfoData.upgradeFill.fillAmount = Mathf.Clamp(building.health + (building.maxHealth / 2) / building.maxHealth, 0, 1);
             woodCostList[0].ResourceCost = -10;
             stoneCostList[0].ResourceCost = -5;
         }
@@ -1280,20 +1295,51 @@ public class PlayerController : MonoBehaviour
             woodCostList[0].ResourceCost = -5;
         }
 
-        if (upgradeTypeInt > 0) //upgrade
+        if (upgradeTypeInt > 0 && PlayerModeHandler.global.SelectedTurret) //upgrade
         {
-            if (upgradeTypeInt == 1)
-                resourceInfoText.text = "Damage";
+            Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
+            List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
+            resourceInfoText.text = "Upgrade";
+            TurretStats.Tier changeTier = turretStats[upgradeTypeInt - 1].changeTier;
+            TurretStats.Tier maxTier = turretStats[upgradeTypeInt - 1].maxTier;
 
             if (upgradeTypeInt == 1)
-                resourceInfoText.text = "Health";
+            {
+                // resourceInfoText.text = "Damage";
+                damageInfoData.gameObject.SetActive(true);
+                float max = defence.damage + maxTier.damageTier;
+                damageInfoData.currentFill.fillAmount = defence.ReturnDamage() / max;
+                damageInfoData.upgradeFill.fillAmount = (defence.ReturnDamage() + changeTier.damageTier) / max;
+
+
+            }
 
             if (upgradeTypeInt == 2)
-                resourceInfoText.text = "Range";
+            {
+                //  resourceInfoText.text = "Health";
+                healthInfoData.gameObject.SetActive(true);
+                float health = defence.GetComponent<Building>().health + maxTier.healthTier;
+                healthInfoData.currentFill.fillAmount = defence.ReturnHealth() / health;
+                healthInfoData.upgradeFill.fillAmount = (defence.ReturnHealth() + changeTier.healthTier) / health;
+            }
 
             if (upgradeTypeInt == 3)
-                resourceInfoText.text = "Rate";
+            {
+                //  resourceInfoText.text = "Range";
+                rangeInfoData.gameObject.SetActive(true);
+                float range = defence.shootingRange + maxTier.rangeTier;
+                rangeInfoData.currentFill.fillAmount = defence.ReturnRange() / range;
+                rangeInfoData.upgradeFill.fillAmount = (defence.ReturnRange() + changeTier.rangeTier) / range;
+            }
 
+            if (upgradeTypeInt == 4)
+            {
+                //  resourceInfoText.text = "Rate";
+                rateInfoData.gameObject.SetActive(true);
+                float rate = defence.shootingRange + maxTier.rateTier;
+                rateInfoData.currentFill.fillAmount = defence.ReturnFireRate() / rate;
+                rateInfoData.upgradeFill.fillAmount = (defence.ReturnFireRate() + changeTier.rateTier) / rate;
+            }
 
             woodCostList[0].ResourceCost = -5;
             stoneCostList[0].ResourceCost = -5;
@@ -1706,7 +1752,7 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4.0f;
             float distanceFloat = Vector3.Distance(transform.position, building.position);
             float smallestDistance = 5.0f;
-            if (building.GetComponent<Building>().resourceObject == Building.ResourceType.Stone)
+            if (building.GetComponent<Building>().ReturnStone())
             {
                 minDistanceFloat = 5.0f;
             }
@@ -1726,7 +1772,7 @@ public class PlayerController : MonoBehaviour
                 {
                     gathering = true;
                     gatherTimer = 0;
-                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.ResourceType.Bush });
+                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.ReturnBush() });
 
                     if (currentResource.ReturnWood())
                     {
@@ -1738,7 +1784,7 @@ public class PlayerController : MonoBehaviour
                         characterAnimator.ResetTrigger("Stone");
                         characterAnimator.SetTrigger("Stone");
                     }
-                    if (currentResource.resourceObject == Building.ResourceType.Bush)
+                    if (currentResource.ReturnBush())
                     {
                         characterAnimator.ResetTrigger("Bush");
                         characterAnimator.SetTrigger("Bush");
@@ -1924,7 +1970,7 @@ public class PlayerController : MonoBehaviour
                 LevelManager.global.VFXPebble.transform.position = currentResource.transform.position;
                 LevelManager.global.VFXPebble.Play();
             }
-            if (currentResource.resourceObject == Building.ResourceType.Bush)
+            if (currentResource.ReturnBush())
             {
                 StopCoroutine("ToolAppear");
                 StartCoroutine("ToolAppear");

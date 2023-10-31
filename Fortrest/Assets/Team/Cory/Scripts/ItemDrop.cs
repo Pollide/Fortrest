@@ -11,9 +11,6 @@ public class ItemDrop : MonoBehaviour
     public int TierInt;
     public int resourceAmount = 1;
 
-    [HideInInspector]
-    public string resourceObject;
-
     private float timer;
     private bool rotationSet;
     private Quaternion randomRotation;

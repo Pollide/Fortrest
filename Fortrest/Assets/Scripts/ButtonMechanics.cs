@@ -202,8 +202,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 if (UpgradeInt == -1)
                 {
                     PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
-                    PlayerModeHandler.global.SelectedTurret.health = PlayerModeHandler.global.SelectedTurret.maxHealth;
-                    PlayerModeHandler.global.SelectedTurret.TakeDamage(0);
+                    PlayerModeHandler.global.SelectedTurret.TakeDamage(-(PlayerModeHandler.global.SelectedTurret.maxHealth / 2)); //minus will actually increase its health
                 }
 
                 if (UpgradeInt == -2)
