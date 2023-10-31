@@ -18,22 +18,6 @@ using TMPro;
 
 public class Building : MonoBehaviour
 {
-    public bool NaturalBool;
-
-    public enum ResourceType
-    {
-        Wood,
-        Stone,
-        Bush,
-        HardWood,
-        CoarseWood,
-        SlateStone,
-        MossyStone,
-        none,
-        Bone,
-    }
-
-    public ResourceType resourceObject;
 
     public enum BuildingType
     {
@@ -79,6 +63,9 @@ public class Building : MonoBehaviour
     // [HideInInspector]
     public float destroyedTimer;
     Quaternion startingRotation;
+
+    public GameObject DropPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -113,7 +100,7 @@ public class Building : MonoBehaviour
 
             }
         }
-        else if (NaturalBool || buildingObject == BuildingType.HouseNode)
+        else if (DropPrefab || buildingObject == BuildingType.HouseNode)
         {
             LevelManager.global.AddBuildingVoid(transform);
         }
@@ -149,7 +136,7 @@ public class Building : MonoBehaviour
                 posZ = posX;
                 posX *= -1;
             }
-            GameManager.ReturnResource(resourceObject.ToString(), new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resourceObject.ToString().Contains("Wood") ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
+            GameManager.ReturnResource(DropPrefab, new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
         }
     }
 
@@ -184,7 +171,7 @@ public class Building : MonoBehaviour
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound);
                     }
-                    else if (resourceObject == ResourceType.Bush)
+                    else if (ReturnBush())
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound);
                     }
@@ -279,12 +266,16 @@ public class Building : MonoBehaviour
 
     public bool ReturnWood()
     {
-        return resourceObject == ResourceType.HardWood || resourceObject == ResourceType.Wood || resourceObject == ResourceType.CoarseWood;
+        return DropPrefab.GetComponent<ItemDrop>().WoodBool;
     }
 
     public bool ReturnStone()
     {
-        return resourceObject == ResourceType.Stone || resourceObject == ResourceType.MossyStone || resourceObject == ResourceType.SlateStone || resourceObject == ResourceType.Bone;
+        return DropPrefab.GetComponent<ItemDrop>().stoneBool;
+    }
+    public bool ReturnBush()
+    {
+        return DropPrefab.GetComponent<ItemDrop>().foodBool;
     }
 
     private void Update()

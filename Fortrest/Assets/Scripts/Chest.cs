@@ -48,7 +48,6 @@ public class Chest : MonoBehaviour
         float posZ = 0.0f;
         for (int i = 0; i < 8; i++)
         {
-            PickResource();
             if (i == 0)
             {
                 posX = 3f;
@@ -77,33 +76,11 @@ public class Chest : MonoBehaviour
                 posX *= -1;
                 posZ *= -1;
             }
-            GameManager.ReturnResource(resource, new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resource.Contains("Wood") ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
-        }
-    }
 
-    private void PickResource()
-    {
-        int randomInt = Random.Range(1, 7);
-        switch (randomInt)
-        {
-            case 1:
-                resource = "Wood";
-                break;
-            case 2:
-                resource = "Stone";
-                break;
-            case 3:
-                resource = "HardWood";
-                break;
-            case 4:
-                resource = "SlateStone";
-                break;
-            case 5:
-                resource = "CoarseWood";
-                break;
-            case 6:
-                resource = "MossyStone";
-                break;
+            int randomTier = Random.Range(0, LevelManager.global.WoodTierList.Count);
+            GameObject prefab = Random.Range(0, 2) == 0 ? LevelManager.global.WoodTierList[randomTier].prefab : LevelManager.global.StoneTierList[randomTier].prefab;
+
+            GameManager.ReturnResource(prefab, new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(resource.Contains("Wood") ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
         }
     }
 

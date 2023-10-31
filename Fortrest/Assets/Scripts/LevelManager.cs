@@ -56,6 +56,7 @@ public class LevelManager : MonoBehaviour
     public Gradient SunriseGradient;
     public Gradient SkyboxGradient;
     public Gradient AmbientGradient;
+    public GameObject applePrefab;
 
     [System.Serializable]
     public class TierData
@@ -65,6 +66,7 @@ public class LevelManager : MonoBehaviour
         public int ResourceAmount;
         public int ResourceCost;
 
+        public GameObject prefab;
         public bool SufficientResource()
         {
             return ResourceAmount + ResourceCost >= 0;
@@ -396,7 +398,7 @@ public class LevelManager : MonoBehaviour
 
                 if (building)
                 {
-                    if (building.NaturalBool == naturalBool)
+                    if (building.DropPrefab == naturalBool)
                         processAction(LevelManager.global.BuildingList[i]);
                 }
                 else

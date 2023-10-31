@@ -1752,7 +1752,7 @@ public class PlayerController : MonoBehaviour
             float minDistanceFloat = 4.0f;
             float distanceFloat = Vector3.Distance(transform.position, building.position);
             float smallestDistance = 5.0f;
-            if (building.GetComponent<Building>().resourceObject == Building.ResourceType.Stone)
+            if (building.GetComponent<Building>().ReturnStone())
             {
                 minDistanceFloat = 5.0f;
             }
@@ -1772,7 +1772,7 @@ public class PlayerController : MonoBehaviour
                 {
                     gathering = true;
                     gatherTimer = 0;
-                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.resourceObject == Building.ResourceType.Bush });
+                    ChangeTool(new ToolData() { AxeBool = currentResource.ReturnWood(), PickaxeBool = currentResource.ReturnStone(), HandBool = currentResource.ReturnBush() });
 
                     if (currentResource.ReturnWood())
                     {
@@ -1784,7 +1784,7 @@ public class PlayerController : MonoBehaviour
                         characterAnimator.ResetTrigger("Stone");
                         characterAnimator.SetTrigger("Stone");
                     }
-                    if (currentResource.resourceObject == Building.ResourceType.Bush)
+                    if (currentResource.ReturnBush())
                     {
                         characterAnimator.ResetTrigger("Bush");
                         characterAnimator.SetTrigger("Bush");
@@ -1970,7 +1970,7 @@ public class PlayerController : MonoBehaviour
                 LevelManager.global.VFXPebble.transform.position = currentResource.transform.position;
                 LevelManager.global.VFXPebble.Play();
             }
-            if (currentResource.resourceObject == Building.ResourceType.Bush)
+            if (currentResource.ReturnBush())
             {
                 StopCoroutine("ToolAppear");
                 StartCoroutine("ToolAppear");
