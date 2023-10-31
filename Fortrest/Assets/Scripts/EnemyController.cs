@@ -593,24 +593,33 @@ public class EnemyController : MonoBehaviour
                 tempVFX.GetComponent<VisualEffect>().Play();
                 Destroy(tempVFX, 1.0f);
 
-                if (currentEnemyType == ENEMYTYPE.wolf || currentEnemyType == ENEMYTYPE.spider && !flashing) // remove goblin once we have the anim
+                if (currentEnemyType == ENEMYTYPE.lava || currentEnemyType == ENEMYTYPE.wolf || currentEnemyType == ENEMYTYPE.spider && !flashing) // remove goblin once we have the anim
                 {
-                    ActiveAnimator.ResetTrigger("Hit1");
-                    ActiveAnimator.ResetTrigger("Hit2");
-                    ActiveAnimator.ResetTrigger("Hit3");
-                    int random = Random.Range(1, 4);
-                    if (random == 1)
+                    if (currentEnemyType == ENEMYTYPE.lava)
                     {
-                        ActiveAnimator.SetTrigger("Hit1");
-                    }
-                    else if (random == 2)
-                    {
-                        ActiveAnimator.SetTrigger("Hit2");
+                        ActiveAnimator.ResetTrigger("Hit");
+                        ActiveAnimator.SetTrigger("Hit");
                     }
                     else
                     {
-                        ActiveAnimator.SetTrigger("Hit3");
+                        ActiveAnimator.ResetTrigger("Hit1");
+                        ActiveAnimator.ResetTrigger("Hit2");
+                        ActiveAnimator.ResetTrigger("Hit3");
+                        int random = Random.Range(1, 4);
+                        if (random == 1)
+                        {
+                            ActiveAnimator.SetTrigger("Hit1");
+                        }
+                        else if (random == 2)
+                        {
+                            ActiveAnimator.SetTrigger("Hit2");
+                        }
+                        else
+                        {
+                            ActiveAnimator.SetTrigger("Hit3");
+                        }
                     }
+                    
                     GameManager.PlayAnimation(flashingAnimation, "Flashing");
                     flashing = true;
                 }
@@ -732,7 +741,7 @@ public class EnemyController : MonoBehaviour
             agent.angularSpeed = 200.0f;
             maxHealth = 10f;
             attackTimerMax = 2.0f;
-            agent.stoppingDistance = 2.5f;
+            agent.stoppingDistance = 9f;
             offset = 0.5f;
             enemyDamage = 10.0f;
             knockBackScript.strength = 10.0f;
