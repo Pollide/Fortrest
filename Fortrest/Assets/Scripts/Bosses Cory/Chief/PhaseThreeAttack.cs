@@ -17,7 +17,7 @@ public class PhaseThreeAttack : BossState
     [SerializeField] private TakeDamageTrigger trigger;
     [SerializeField] private bool damageDone = false;
     [SerializeField] private bool hasJumped = false;
-
+    public bool telegraphBool = false;
 
 
     public override void EnterState()
@@ -35,20 +35,17 @@ public class PhaseThreeAttack : BossState
             attackState = GetComponent<AttackManagerState>();
         }
 
-        SetTelegraph(true);
         agent.isStopped = true;
-        stateMachine.BossAnimator.SetBool("attacking", false);
         stateMachine.BossAnimator.SetBool("isJumping", true);
-        GetComponent<TelegraphCircle>().isAttack = false;
         slamWaitTime = 0f;
         damageDone = false;
+        telegraphBool = true;
     }
 
     public override void ExitState()
     {
         damageDone = true;
         slamWaitTime = 0f;
-        SetTelegraph(false);
         stateMachine.BossAnimator.SetBool("isJumping", false);
         stateMachine.BossAnimator.SetBool("isDiving", true);
         hasJumped = false;
@@ -56,6 +53,11 @@ public class PhaseThreeAttack : BossState
 
     public override void UpdateState()
     {
+        if (stateMachine.IsDead)
+        {
+            telegraphBool = false;
+            return;
+        }
         if (!PlayerInArena(stateMachine.ArenaSize) && !stateMachine.BossAnimator.GetBool("isJumping") && !stateMachine.BossAnimator.GetBool("isDiving"))
         {
             stateMachine.ChangeState(idleState);
@@ -79,7 +81,6 @@ public class PhaseThreeAttack : BossState
             stateMachine.BossAnimator.SetBool("isDiving", true);
             if (telegraph.activeSelf)
             {
-                StartCoroutine(GetComponent<TelegraphCircle>().DoAreaDamage(slamWaitAfterIndicator, Damage, SlamRadius));
                 damageDone = true;
             }
         }
@@ -95,12 +96,11 @@ public class PhaseThreeAttack : BossState
                 trigger.enabled = true;
             }
         }
-    }
 
-    public void SetTelegraph(bool isActive)
-    {
-        telegraph.SetActive(isActive);
-        GetComponent<TelegraphCircle>().outer.SetActive(isActive);
+        if (damageDone)
+        {
+            stateMachine.ChangeState(idleState);
+        }
     }
 
     public float SlamDuration

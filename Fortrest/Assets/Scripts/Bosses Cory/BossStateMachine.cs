@@ -22,6 +22,8 @@ public class BossStateMachine : MonoBehaviour
     // Holds the initial state the boss starts with
     [SerializeField] private BossState initialState;
 
+    [SerializeField] private TelegraphLycan[] telegraphs;
+
     // Agent current speed
     [SerializeField] private float speed;
 
@@ -29,6 +31,7 @@ public class BossStateMachine : MonoBehaviour
     [SerializeField] private bool inDefence = false;
     [SerializeField] private bool phase2Ran = false;
     [SerializeField] private bool phase3Ran = false;
+    public bool inIdle = false;
 
     // Bool to see if in death state
     [SerializeField] private bool isDead = false;
@@ -49,6 +52,14 @@ public class BossStateMachine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        foreach (var item in telegraphs)
+        {
+            if (inIdle)
+            {
+                item.timer = 0;
+            }
+        }
+
         if (currentState != null)
         {
             currentState.UpdateState();

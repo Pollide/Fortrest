@@ -32,11 +32,10 @@ public class AttackManagerState : BossState
     private float randValue = 0f;
 
     // Holds the attack 
-    [SerializeField] private bool isAttacking = false;
+    public bool isAttacking = false;
+    public bool inSwipe = false;
     [SerializeField] private bool canChangeState = false;
     [SerializeField] private bool canAttack = false;
-    [SerializeField] private GameObject telegraph;
-    [SerializeField] private GameObject telegraphOuter;
 
     // Holds states
     private IdleState idleState;
@@ -45,6 +44,7 @@ public class AttackManagerState : BossState
 
     public override void EnterState()
     {
+        inSwipe = true;
         if (idleState == null)
         {
             // Gets the connected state
@@ -61,7 +61,7 @@ public class AttackManagerState : BossState
             // Gets the connected state
             phaseThreeAttack = GetComponent<PhaseThreeAttack>();
         }
-
+        attackTime = 0f;
         canChangeState = true;
         canAttack = true;
         randValue = 0f;
@@ -77,11 +77,10 @@ public class AttackManagerState : BossState
 
     public override void ExitState()
     {
+        inSwipe = false;
         stateMachine.BossAnimator.ResetTrigger("isAttacking");
         stateMachine.BossAnimator.speed = 1f;
 
-        telegraph.SetActive(false);
-        telegraphOuter.SetActive(false);
         isAttacking = false;
         attackTime = 0f;
     }
@@ -92,11 +91,6 @@ public class AttackManagerState : BossState
         if (!PlayerInArena(stateMachine.ArenaSize))
         {
             stateMachine.ChangeState(idleState);
-        }
-
-        if (IsAttacking)
-        {
-
         }
 
         if (!stateMachine.PhaseTwoRan && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Two && canChangeState)
@@ -125,14 +119,7 @@ public class AttackManagerState : BossState
     // Run checks to see if the attack can be called
     private bool CanAttack(bool isTired)
     {
-        Vector3 directionToTarget = (playerTransform.position - transform.position);
-        directionToTarget.y = 0; // Set the Y component to 0
-        directionToTarget.Normalize(); // Normalize the vector to make it so player can get close
-
-        float dotProduct = Vector3.Dot(transform.forward, directionToTarget);
-
-        float threshold = 0.9f;
-        if (dotProduct > threshold && Vector3.Distance(transform.position, playerTransform.position) <= attackDistance && stateMachine.BossAnimator.GetBool("isTired") == isTired && canAttack)
+        if (Vector3.Distance(transform.position, playerTransform.position) <= attackDistance && stateMachine.BossAnimator.GetBool("isTired") == isTired && canAttack)
         {
             return true;
         }
@@ -153,7 +140,6 @@ public class AttackManagerState : BossState
 
         if (stateMachine.BossAnimator.GetBool("isTired"))
         {
-            SetTelegraph(false);
             canChangeState = false;
         }
         if (!isAttacking)
@@ -163,7 +149,6 @@ public class AttackManagerState : BossState
             {
                 stateMachine.BossAnimator.ResetTrigger("isAttacking");
                 stateMachine.BossAnimator.SetTrigger("isAttacking");
-                SetTelegraph(true);
                 isAttacking = true;
                 canAttack = false;
                 // Stop agent
@@ -177,30 +162,15 @@ public class AttackManagerState : BossState
             if (attackTime < attackDuration && isAttacking && !stateMachine.BossAnimator.GetBool("isTired"))
             {
                 attackTime += Time.deltaTime;
-
-                telegraph.transform.position = transform.position;
             }
 
             if (attackTime >= attackDuration && !stateMachine.BossAnimator.GetBool("isTired"))
             {
                 stateMachine.BossAnimator.speed = 1f;
                 attackTime = 0f;
-
-                if (telegraph.activeSelf)
-                {
-                    StartCoroutine(GetComponent<TelegraphCircle>().DoAreaDamage(0.1f, Damage, attackRadius));
-                }
-
             }
         }
     }
-
-    public void SetTelegraph(bool isActive)
-    {
-        telegraph.SetActive(isActive);
-        GetComponent<TelegraphCircle>().outer.SetActive(isActive);
-    }
-
 
     public void PlaySlash(int _index)
     {
@@ -310,10 +280,5 @@ public class AttackManagerState : BossState
     {
         get { return canChangeState; }
         set { canChangeState = value; }
-    }
-
-    public GameObject Telegraph
-    {
-        get { return telegraph; }
     }
 }
