@@ -36,15 +36,15 @@ public class CameraMovement : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            xMin = -4.4f;
-            xMax = 4.6f;
-            float offsetX = Mathf.Abs(2f - yMove);
-            xMin = xMin + (offsetX / 1.6f);
-            xMax = xMax - (offsetX / 1.6f);
+            xMin = -3f;
+            xMax = 3f;
+            float offsetX = Mathf.Abs(yMove);
+            xMin = xMin + offsetX;
+            xMax = xMax - offsetX;
 
-            yMin = -2.15f;
-            yMax = 6.5f;
-            float offsetY = Mathf.Abs(0.01f - xMove);
+            yMin = -3f;
+            yMax = 3f;
+            float offsetY = Mathf.Abs(xMove);
             yMin = yMin + (offsetY / 1.6f);
             yMax = yMax - (offsetY / 1.6f);
 
