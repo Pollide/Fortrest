@@ -306,9 +306,10 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
 
             if (Screen.fullScreen)
                 Screen.fullScreenMode = FullScreenMode.ExclusiveFullScreen;
-
+            else
+                Screen.fullScreenMode = FullScreenMode.Windowed;
 #if UNITY_EDITOR
-            ButtonText.text = "Won't work\nin editor";
+            ButtonText.text = "Won't work in editor";
 #endif
         }
 
