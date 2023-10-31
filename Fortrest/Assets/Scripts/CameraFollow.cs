@@ -44,7 +44,7 @@ public class CameraFollow : MonoBehaviour
 
     public Vector3 offset()
     {
-        return transform.forward * -40;
+        return transform.forward * -60;
     }
 
     public void FocusOnTarget(Vector3 targetPosition, Vector3 offsetRotation)

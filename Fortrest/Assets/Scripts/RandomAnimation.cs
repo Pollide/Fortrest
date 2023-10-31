@@ -11,6 +11,10 @@ public class RandomAnimation : MonoBehaviour
 
         if (Random.Range(0, 2) == 0)
         {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                transform.GetChild(i).rotation = Quaternion.identity;
+            }
             GameManager.PlayAnimation(GetComponent<Animation>(), "Birds Rotate", false);
         }
     }

@@ -14,26 +14,32 @@ public class TelegraphCircle : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        inner.gameObject.transform.SetParent(null);
-        inner.transform.localScale = Vector3.zero;
+        if (inner)
+        {
+            inner.gameObject.transform.SetParent(null);
+            inner.transform.localScale = Vector3.zero;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        outer.transform.position = transform.position;
+        if (outer)
+        {
+            outer.transform.position = transform.position;
 
-        if (!isAttack)
-        {
-            Vector3 newScale = new(slamState.SlamRadius * 2, slamState.SlamRadius * 2, 1);
-            inner.transform.localScale = Vector3.Lerp(Vector3.zero, newScale, slamState.SlamWaitTime / slamState.SlamDuration);
-            outer.transform.localScale = newScale / 3.8f;
-        }
-        else
-        {
-            Vector3 newScale = new(phaseOneState.attackRadius * 2, phaseOneState.attackRadius * 2, 1);
-            inner.transform.localScale = Vector3.Lerp(Vector3.zero, newScale, phaseOneState.attackTime / phaseOneState.attackDuration);
-            outer.transform.localScale = newScale / 3.8f;
+            if (!isAttack)
+            {
+                Vector3 newScale = new(slamState.SlamRadius * 2, slamState.SlamRadius * 2, 1);
+                inner.transform.localScale = Vector3.Lerp(Vector3.zero, newScale, slamState.SlamWaitTime / slamState.SlamDuration);
+                outer.transform.localScale = newScale / 3.8f;
+            }
+            else
+            {
+                Vector3 newScale = new(phaseOneState.attackRadius * 2, phaseOneState.attackRadius * 2, 1);
+                inner.transform.localScale = Vector3.Lerp(Vector3.zero, newScale, phaseOneState.attackTime / phaseOneState.attackDuration);
+                outer.transform.localScale = newScale / 3.8f;
+            }
         }
     }
 

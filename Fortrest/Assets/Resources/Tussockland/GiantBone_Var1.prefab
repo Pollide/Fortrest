@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3157555497717778201}
   - component: {fileID: 947223265740206140}
   - component: {fileID: 5627409989593695152}
+  - component: {fileID: 6944496338774903863}
   m_Layer: 9
   m_Name: SM_Bones
   m_TagString: Untagged
@@ -84,6 +85,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6944496338774903863
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376672527167098669}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 2, z: 1}
+  m_Center: {x: 0, y: 0.5, z: -0.3}
 --- !u!1 &1793311138157048063
 GameObject:
   m_ObjectHideFlags: 0
@@ -160,7 +174,6 @@ GameObject:
   - component: {fileID: 8707849239115483157}
   - component: {fileID: -6799876280890107172}
   - component: {fileID: 7418936820835333988}
-  - component: {fileID: 2991172097092403593}
   m_Layer: 9
   m_Name: GiantBone_Var1
   m_TagString: Resource
@@ -244,21 +257,8 @@ NavMeshObstacle:
   m_MoveThreshold: 0.1
   m_Carve: 1
   m_CarveOnlyStationary: 1
-  m_Center: {x: 0, y: 2, z: -0.3}
+  m_Center: {x: 0, y: 1, z: -0.3}
   m_TimeToStationary: 0.5
---- !u!65 &2991172097092403593
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8707849239115483162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2, y: 4, z: 1}
-  m_Center: {x: 0, y: 2, z: -0.3}
 --- !u!1001 &4933643834134625414
 PrefabInstance:
   m_ObjectHideFlags: 0
