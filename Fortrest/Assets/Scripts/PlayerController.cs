@@ -993,7 +993,7 @@ public class PlayerController : MonoBehaviour
             GameManager.global.SoundManager.PlaySound(GameManager.global.TeleportSound, 0.7f);
         }
 
-        if (Vector3.Distance(pos, CameraFollow.global.transform.position) > 15)
+        if (Vector3.Distance(pos + CameraFollow.global.offset(), CameraFollow.global.transform.position) > 25)
             CameraFollow.global.transform.position = pos + CameraFollow.global.offset();
 
         StartCoroutine(RevertBool(true));
