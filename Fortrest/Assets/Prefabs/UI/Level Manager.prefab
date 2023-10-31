@@ -505,13 +505,13 @@ MonoBehaviour:
     m_NumAlphaKeys: 2
   AmbientGradient:
     serializedVersion: 2
-    key0: {r: 0.509434, g: 0.10919533, b: 0, a: 1}
+    key0: {r: 0.3962264, g: 0.25984746, b: 0.2224101, a: 1}
     key1: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 1}
     key2: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 0}
-    key3: {r: 0.509434, g: 0.10919533, b: 0, a: 0}
-    key4: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 0}
-    key5: {r: 0.33962262, g: 0.33962262, b: 0.33962262, a: 0}
-    key6: {r: 0.509434, g: 0.10919533, b: 0, a: 0}
+    key3: {r: 0.3962264, g: 0.25984746, b: 0.2224101, a: 0}
+    key4: {r: 0.34118018, g: 0.38514185, b: 0.38679248, a: 0}
+    key5: {r: 0.34118018, g: 0.38514185, b: 0.38679248, a: 0}
+    key6: {r: 0.3962264, g: 0.25984746, b: 0.2224101, a: 0}
     key7: {r: 1, g: 0.3454259, b: 0, a: 0}
     ctime0: 0
     ctime1: 10216
@@ -750,7 +750,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975559097986637665}
   m_LocalRotation: {x: 0.27781588, y: 0.36497167, z: -0.1150751, w: 0.8811196}
-  m_LocalPosition: {x: 56.04703, y: 9.972008, z: -63.01184}
+  m_LocalPosition: {x: 25.834387, y: 35.78382, z: -88.170364}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -781,7 +781,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.01
+  near clip plane: 1.5
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -789,7 +789,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 13074399
+    m_Bits: 15695839
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1466,7 +1466,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: -40
+  near clip plane: 1.5
   far clip plane: 1000
   field of view: 60
   orthographic: 1
@@ -1821,7 +1821,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 5250873861041330196}
-  m_PlaneDistance: 0.5
+  m_PlaneDistance: 2
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0

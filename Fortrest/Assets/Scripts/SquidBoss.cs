@@ -26,7 +26,7 @@ public class SquidBoss : MonoBehaviour
     {
         if (bossSpawner.introCompleted && bossSpawner.bossEncountered)
         {
-            if (fireballTimer > 3)
+            if (fireballTimer > 1)
             {
                 fireballTimer = 0;
 

@@ -23,7 +23,7 @@ public class BossSpawner : MonoBehaviour
         IsleMaker,
     }
 
-    [HideInInspector]
+    //   [HideInInspector]
     public float health = 100;
     // Holds the bosses max health
     public float maxHealth = 100f;

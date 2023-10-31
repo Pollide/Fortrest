@@ -27,10 +27,11 @@ public class BridgeBuilder : MonoBehaviour
         canBuild = BridgeTypeInt == 1;
 
         //remember the spaced out text below is where the E key goes ingame
+
         FloatingTextCanBuildAnimation.GetComponent<TMP_Text>().text = "Press   to build\nthe " + LevelManager.global.terrainDataList[BridgeTypeInt].indictorName + " bridge";
         FloatingTextCanBuildAnimation.GetComponent<TMP_Text>().color = LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor;
 
-        FloatingTextAnimation.GetComponent<TMP_Text>().text = "Defeat the " + LevelManager.global.terrainDataList[BridgeTypeInt].indictorName + "\nboss to continue";
+        FloatingTextAnimation.GetComponent<TMP_Text>().text = "Clear the " + LevelManager.global.terrainDataList[BridgeTypeInt - 1].indictorName + "\n to continue"; //-1 for previous
         FloatingTextAnimation.GetComponent<TMP_Text>().color = LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor;
 
         for (int i = 0; i < LevelManager.global.bossList.Count; i++)
