@@ -34,8 +34,8 @@ public class PlayerModeHandler : MonoBehaviour
     Transform KeyHint;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
-    public Vector2 distanceAwayFromPlayerX;
-    public Vector2 distanceAwayFromPlayerZ;
+    //public Vector2 distanceAwayFromPlayerX;
+    //public Vector2 distanceAwayFromPlayerZ;
     public LayerMask buildingLayer;
     public Grid buildGrid;
 
@@ -246,9 +246,6 @@ public class PlayerModeHandler : MonoBehaviour
 
             }
 
-
-
-
             fillImage.fillAmount = ((float)defenceTier - shift) / max;
             fillImage.color = next ? Color.magenta : Color.cyan;
 
@@ -261,7 +258,6 @@ public class PlayerModeHandler : MonoBehaviour
             return true;
         }
     }
-
 
     void TierChange(bool instant)
     {
@@ -284,7 +280,6 @@ public class PlayerModeHandler : MonoBehaviour
         }
 
     }
-
 
     public void UpdateTier(TurretStats buttonStat = null)
     {
@@ -443,7 +438,7 @@ public class PlayerModeHandler : MonoBehaviour
                 runOnce = false;
             }
 
-            if (IsInRange(worldPos) && PlayerController.global.CheckSufficientResources() && !hoveringTurret && !cantPlace)
+            if (PlayerController.global.CheckSufficientResources() && !hoveringTurret && !cantPlace) // && IsInRange(worldPos)
             {
                 BluePrintSet(turretBlueprintBlue);
 
@@ -721,22 +716,22 @@ public class PlayerModeHandler : MonoBehaviour
     //    Gizmos.DrawLine(house, houseZ2);
     //}
 
-    public bool IsInRange(Vector3 currentTarget)
-    {
-        Vector3 playerPos = PlayerController.global.transform.position;
-
-        float top = playerPos.x + distanceAwayFromPlayerX.x;
-        float bot = playerPos.x - distanceAwayFromPlayerX.y;
-        float right = playerPos.z + distanceAwayFromPlayerZ.x;
-        float left = playerPos.z - distanceAwayFromPlayerZ.y;
-
-        if (currentTarget.x < top && currentTarget.x > bot && currentTarget.z < right && currentTarget.z > left)
-        {
-            return true;
-        }
-
-        return false;
-    }
+    //public bool IsInRange(Vector3 currentTarget)
+    //{
+    //    Vector3 playerPos = PlayerController.global.transform.position;
+    //
+    //    float top = playerPos.x + distanceAwayFromPlayerX.x;
+    //    float bot = playerPos.x - distanceAwayFromPlayerX.y;
+    //    float right = playerPos.z + distanceAwayFromPlayerZ.x;
+    //    float left = playerPos.z - distanceAwayFromPlayerZ.y;
+    //
+    //    if (currentTarget.x < top && currentTarget.x > bot && currentTarget.z < right && currentTarget.z > left)
+    //    {
+    //        return true;
+    //    }
+    //
+    //    return false;
+    //}
 
 
     public static void SetMouseActive(bool isActive, bool buildMode)
