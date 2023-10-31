@@ -11,6 +11,11 @@ public class SlimeAnimEvents : MonoBehaviour
         script.AnimationAttack();
     }
 
+    void StartJump()
+    {
+        script.lavaAttacks = true;
+    }
+
     void Death()
     {
         script.Death();
