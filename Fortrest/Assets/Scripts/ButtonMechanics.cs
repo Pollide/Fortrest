@@ -138,7 +138,24 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         if (UpgradeInt != 0)
         {
-            PlayerController.global.UpdateResourceHolder(upgradeTypeInt: open ? UpgradeInt : 0); //hides cost UI if not hover
+            BuildType buildType = BuildType.None;
+
+            if (UpgradeInt < 0)
+            {
+                if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Ballista)
+                    buildType = BuildType.Turret;
+
+                if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Cannon)
+                    buildType = BuildType.Cannon;
+
+                if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Slow)
+                    buildType = BuildType.Slow;
+
+                if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Scatter)
+                    buildType = BuildType.Scatter;
+            }
+
+            PlayerController.global.UpdateResourceHolder(buildType: buildType, upgradeTypeInt: open ? UpgradeInt : 0); //hides cost UI if not hover
         }
     }
 
@@ -202,7 +219,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 if (UpgradeInt == -1)
                 {
                     PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
-                    PlayerModeHandler.global.SelectedTurret.TakeDamage(-(PlayerModeHandler.global.SelectedTurret.maxHealth / 2)); //minus will actually increase its health
+                    PlayerModeHandler.global.SelectedTurret.TakeDamage(-PlayerModeHandler.global.SelectedTurret.GetComponent<Building>().ReturnRepair()); //minus will actually increase its health
                 }
 
                 if (UpgradeInt == -2)

@@ -307,7 +307,7 @@ public class Indicator : MonoBehaviour
             indicatorData.MapData = Instantiate(arrowPrefab, PlayerController.global.MapSpotHolder).GetComponent<ArrowData>();
             indicatorData.MapData.GetComponent<Animation>().enabled = false;
             indicatorData.MapData.transform.localScale *= 2.0f;
-            indicatorData.MapData.CustomImage.transform.localScale *= 2.0f;
+            indicatorData.MapData.CustomImage.transform.localScale *= 1.5f;
 
             indicatorData.MapData.ArrowImage.gameObject.SetActive(false);
 
