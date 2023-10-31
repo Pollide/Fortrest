@@ -9,16 +9,19 @@ public class TelegraphLycan : MonoBehaviour
     private Transform outerShape;
     public PhaseThreeLycan lycanPhaseThree;
     public FrenzyMode frenzyMode;
+    public PhaseThreeAttack slam;
+    public AttackManagerState atkManager;
     public float multiplier = 0.0f;
     public float duration = 0.0f;
     public float size = 0.0f;
     public float timer = 0.0f;
     public float pushDuration = 0.5f;
+    public float pushForce = 3f;
     public float damage = 5f;
     public bool sweepIndicator;
     public bool lungeIndicator;
-
-    private bool pushBack;
+    public bool chiefIndicatorSwipe;
+    public bool chiefIndicatorSlam;
     private bool doDamage;
 
     void Start()
@@ -33,10 +36,6 @@ public class TelegraphLycan : MonoBehaviour
     {
         if (sweepIndicator)
         {
-            if (pushBack)
-            {
-                SetPushBack(lycanPhaseThree.DirectionToPlayer, 10);
-            }
             Indicator(ref lycanPhaseThree.telegraph);
         }
 
@@ -47,7 +46,19 @@ public class TelegraphLycan : MonoBehaviour
             transform.parent.position = frenzyMode.transform.position;
             transform.parent.localEulerAngles = new(0, frenzyMode.transform.localEulerAngles.y, frenzyMode.transform.localEulerAngles.z);
         }
-     
+
+        if (chiefIndicatorSwipe)
+        {
+            if (atkManager.inSwipe)
+            {
+                Indicator(ref atkManager.isAttacking);
+            } 
+        }
+
+        if (chiefIndicatorSlam)
+        {
+            Indicator(ref slam.telegraphBool);
+        }
     }
 
     void Indicator(ref bool indicator, bool unique = false)
@@ -84,6 +95,10 @@ public class TelegraphLycan : MonoBehaviour
 
             if (indicator)
             {
+                if (chiefIndicatorSwipe)
+                {
+                    atkManager.StateMachine.BossAnimator.speed = 1f;
+                }
                 doDamage = true;
             }
             else
@@ -102,22 +117,23 @@ public class TelegraphLycan : MonoBehaviour
             if (doDamage)
             {
                 PlayerController.global.TakeDamage(damage);
-                StartCoroutine(PushBack());
+                StartCoroutine(DoAreaDamage());
             }
         }
     }
 
-    private void SetPushBack(Vector3 pushDirection, float pushForce)
+    public IEnumerator DoAreaDamage()
     {
-        PlayerController.global.playerCanMove = false;
-        PlayerController.global.playerCC.Move(pushDirection * pushForce * Time.deltaTime);
-    }
+        yield return new WaitForSeconds(0);
 
-    public IEnumerator PushBack()
-    {
-        yield return new WaitForSeconds(pushDuration);
-
-        pushBack = false;
-        PlayerController.global.playerCanMove = true;
+        Vector3 pushDirection = innerShape.transform.position - PlayerController.global.transform.position;
+        float distanceToEnemy = pushDirection.magnitude;
+        // Calculate the push force based on the distance
+        float calculatedPushForce = pushForce / distanceToEnemy;
+        Debug.Log(calculatedPushForce);
+        float angle = Vector3.Angle(pushDirection, PlayerController.global.transform.position - innerShape.transform.position);
+        pushDirection = Quaternion.Euler(0f, angle, 0f) * pushDirection;
+        PlayerController.global.SetPushDirection(pushDirection, calculatedPushForce);
+        StartCoroutine(PlayerController.global.PushPlayer(pushDuration));
     }
 }

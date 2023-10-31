@@ -30,7 +30,6 @@ public class PhaseTwoAttack : BossState
 
     public override void EnterState()
     {
-        stateMachine.BossAnimator.SetBool("attacking", false);
         // Checks if the state is null
         if (idleState == null)
         {
@@ -44,8 +43,9 @@ public class PhaseTwoAttack : BossState
             attackState = GetComponent<AttackManagerState>();
         }
 
+        attackState.isAttacking = false;
         coneIndicator = true;
-
+        hasRun = false;
         if (stateMachine.BossType == BossSpawner.TYPE.Basilisk)
         {
             stateMachine.BossAnimator.SetBool("isCharging", true);
@@ -108,7 +108,6 @@ public class PhaseTwoAttack : BossState
         agent.isStopped = true;
         agent.speed = chargeSpeed;
         stateMachine.BossAnimator.SetBool("isCharging", true);
-        stateMachine.BossAnimator.SetBool("attacking", false);
         yield return new WaitForSeconds(windUpDuration);
         chargeDMGTrigger.enabled = true;
         agent.isStopped = false;
