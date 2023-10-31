@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8196819728047928108}
+  - component: {fileID: 1737502689793649553}
   - component: {fileID: 5075327568181918857}
   - component: {fileID: 7028949969535633475}
   - component: {fileID: -63628865183272622}
   - component: {fileID: -8946152043099323548}
   - component: {fileID: -4063508483239744869}
-  - component: {fileID: 1737502689793649553}
   m_Layer: 0
   m_Name: Stone
   m_TagString: Untagged
@@ -37,6 +37,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1737502689793649553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8830191839845132694}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 656cb4b3cd074594881b714cba5a30a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TierInt: 0
+  resourceAmount: 1
+  CollectedBool: 0
+  stoneBool: 1
+  WoodBool: 0
+  foodBool: 0
 --- !u!33 &5075327568181918857
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -129,22 +147,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.05, y: 0.09, z: 0.06}
   m_Center: {x: 0.0020954339, y: 0.047071308, z: 0.0020545311}
---- !u!114 &1737502689793649553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8830191839845132694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 656cb4b3cd074594881b714cba5a30a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TierInt: 0
-  resourceAmount: 1
-  resourceObject: 
-  CollectedBool: 0
-  stoneBool: 1
-  WoodBool: 0
-  foodBool: 0
