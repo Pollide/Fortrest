@@ -212,6 +212,7 @@ public class PlayerModeHandler : MonoBehaviour
         if (open != turretMenuOpened)
         {
             turretMenuOpened = open;
+
             if (!open)
             {
                 SelectedTurret = null;
@@ -670,6 +671,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
         else
         {
+            TurretMenuSet(false);
             PlayerController.global.UpdateResourceHolder(open: false);
         }
     }
