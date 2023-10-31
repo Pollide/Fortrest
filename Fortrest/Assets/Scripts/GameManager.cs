@@ -661,9 +661,9 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < itemSize; i++)
         {
-            int wood = (int)Pref("Item Wood" + i, LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().WoodBool ? 1 : 0, load);
-            int stone = (int)Pref("Item Stone" + i, LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().stoneBool ? 1 : 0, load);
-            int tier = (int)Pref("Item Tier" + i, LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().TierInt, load);
+            int wood = (int)Pref("Item Wood" + i, !load && LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().WoodBool ? 1 : 0, load);
+            int stone = (int)Pref("Item Stone" + i, !load && LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().stoneBool ? 1 : 0, load);
+            int tier = (int)Pref("Item Tier" + i, load ? 0 : LevelManager.global.ItemDropList[i].GetComponent<ItemDrop>().TierInt, load);
 
             GameObject prefab = LevelManager.global.applePrefab;
 

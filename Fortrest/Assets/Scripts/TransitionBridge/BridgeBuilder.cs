@@ -27,12 +27,19 @@ public class BridgeBuilder : MonoBehaviour
         canBuild = BridgeTypeInt == 1;
 
         //remember the spaced out text below is where the E key goes ingame
+        // FloatingTextCanBuildAnimation.gameObject.SetActive(canBuild);
+        // FloatingTextAnimation.gameObject.SetActive(!canBuild);
+
+        FloatingTextAnimation.GetComponent<TMP_Text>().text = "Clear the " + LevelManager.global.terrainDataList[BridgeTypeInt - 1].indictorName + "\n to continue"; //-1 for previous
+
+        FloatingTextAnimation.GetComponent<TMP_Text>().color = LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor;
+
+
 
         FloatingTextCanBuildAnimation.GetComponent<TMP_Text>().text = "Press   to build\nthe " + LevelManager.global.terrainDataList[BridgeTypeInt].indictorName + " bridge";
         FloatingTextCanBuildAnimation.GetComponent<TMP_Text>().color = LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor;
 
-        FloatingTextAnimation.GetComponent<TMP_Text>().text = "Clear the " + LevelManager.global.terrainDataList[BridgeTypeInt - 1].indictorName + "\n to continue"; //-1 for previous
-        FloatingTextAnimation.GetComponent<TMP_Text>().color = LevelManager.global.terrainDataList[BridgeTypeInt].indicatorColor;
+
 
         for (int i = 0; i < LevelManager.global.bossList.Count; i++)
         {
@@ -85,6 +92,7 @@ public class BridgeBuilder : MonoBehaviour
 
         PlayerController.global.needInteraction = show;
         PlayerController.global.bridgeInteract = show;
+        Debug.Log(canBuild);
         LevelManager.FloatingTextChange(canBuild ? FloatingTextCanBuildAnimation.gameObject : FloatingTextAnimation.gameObject, show);
 
         PlayerController.global.UpdateResourceHolder(bridgeTypeInt: BridgeTypeInt, open: show);

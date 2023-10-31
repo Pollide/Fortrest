@@ -11,7 +11,7 @@ public class PhaseThreeAttack : BossState
     private float slamWaitTime = 0f;
     [SerializeField] private float slamDuration = 5f;
     [SerializeField] private float slamRadius = 5f;
-    [SerializeField] private float slamWaitAfterIndicator = 2f;
+    //  [SerializeField] private float slamWaitAfterIndicator = 2f;
     [SerializeField] private float damage = 5f;
     [SerializeField] private GameObject telegraph;
     [SerializeField] private TakeDamageTrigger trigger;

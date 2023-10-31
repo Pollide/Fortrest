@@ -263,7 +263,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 LevelManager.global.StoneTierList[i].ResourceAmount = 9999;
             }
 
-            PlayerController.global.UpdateResourceHolder();
+            // PlayerController.global.UpdateResourceHolder();
         }
 
         if (TerrainTeleportInt != -1)
