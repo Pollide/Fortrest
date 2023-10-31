@@ -1424,7 +1424,7 @@ public class PlayerController : MonoBehaviour
         if (resourceCostBool != show)
         {
             resourceCostBool = show;
-            GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", show);
+            //  GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", show);
             GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", show);
         }
     }

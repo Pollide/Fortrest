@@ -326,7 +326,7 @@ public class Indicator : MonoBehaviour
                 indicatorData.MainData.CustomImage.sprite = customSprite;
                 indicatorData.MapData.CustomImage.sprite = customSprite;
 
-                if (permenant)
+                if (customSprite == HomeSprite || customSprite == MountSprite)
                 {
                     indicatorData.MainData.CustomImage.color = color;
                     indicatorData.MapData.CustomImage.color = color;
