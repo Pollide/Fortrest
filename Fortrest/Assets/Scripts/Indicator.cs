@@ -296,14 +296,10 @@ public class Indicator : MonoBehaviour
 
         IndicatorList.Add(indicatorData);
 
-        if (!permenant && Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
+        //i dont want bridges to have terrain as some of them when raycast down will not hit anything
+        if (!permenant && !activeTarget.GetComponent<BridgeBuilder>() && Physics.Raycast(activeTarget.transform.position + Vector3.up * 2, -Vector3.up, out RaycastHit raycastHit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Terrain" })))
         {
             indicatorData.onTerrain = raycastHit.transform.GetComponent<Terrain>();
-        }
-
-        if (activeTarget.GetComponent<BridgeBuilder>())
-        {
-            indicatorData.onTerrain = LevelManager.global.terrainDataList[activeTarget.GetComponent<BridgeBuilder>().BridgeTypeInt].terrain;
         }
 
         if (!permenant || customSprite)
