@@ -45,6 +45,7 @@ GameObject:
   - component: {fileID: 6616909577248919489}
   - component: {fileID: 6035926034071678771}
   - component: {fileID: 2464144752978590791}
+  - component: {fileID: 3717628555672761897}
   m_Layer: 0
   m_Name: Chest
   m_TagString: Untagged
@@ -99,7 +100,7 @@ BoxCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!135 &6035926034071678771
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -128,6 +129,22 @@ MonoBehaviour:
   floatingTextAnimation: {fileID: 5516985091670045526}
   opened: 0
   openAnimation: {fileID: 6806064859585402392}
+--- !u!208 &3717628555672761897
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767009751829133936}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.5, y: 0.5, z: 0.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1 &1527094658103205202
 GameObject:
   m_ObjectHideFlags: 0
