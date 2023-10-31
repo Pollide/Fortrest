@@ -415,9 +415,21 @@ public class LevelManager : MonoBehaviour
 
     public static void FloatingTextChange(GameObject floatingText, bool enable)
     {
+        global.StartCoroutine(DisableVoid(floatingText, enable));
+    }
+
+    static IEnumerator DisableVoid(GameObject floatingText, bool enable)
+    {
         floatingText.gameObject.SetActive(true);
 
-        GameManager.PlayAnimation(floatingText.GetComponent<Animation>(), "BobbingText Appear", enable);
+        float length = GameManager.PlayAnimation(floatingText.GetComponent<Animation>(), "BobbingText Appear", enable).length;
+
+        if (!enable)
+        {
+            yield return new WaitForSeconds(length);
+
+            floatingText.gameObject.SetActive(false);
+        }
     }
 
     public bool ReturnNight()
