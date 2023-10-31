@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 8707849239115483156}
   - component: {fileID: 8707849239115483157}
   - component: {fileID: -6799876280890107172}
+  - component: {fileID: 4251909559502479130}
   m_Layer: 9
   m_Name: Titanium
   m_TagString: Resource
@@ -112,6 +113,22 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!208 &4251909559502479130
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8707849239115483162}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2, y: 2, z: 2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &5228381603355259566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -250,8 +267,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2.7386558, y: 3.4934254, z: 2}
-  m_Center: {x: 0.08292206, y: 0.7467126, z: -0.0000000058968905}
+  m_Size: {x: 2.7386558, y: 3.4934254, z: 2.6313057}
+  m_Center: {x: 0.08292203, y: 0.7467127, z: -0.31565285}
 --- !u!4 &4111915459659159143 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
