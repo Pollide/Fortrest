@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 8707849239115483156}
   - component: {fileID: 8707849239115483157}
   - component: {fileID: -6799876280890107172}
-  - component: {fileID: 8363705255332609687}
   m_Layer: 9
   m_Name: Titanium
   m_TagString: Resource
@@ -113,19 +112,6 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!65 &8363705255332609687
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8707849239115483162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 2.7386558, y: 3.4934254, z: 2}
-  m_Center: {x: 0.08292206, y: 0.7467126, z: -0.0000000058968905}
 --- !u!1001 &5228381603355259566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -247,6 +233,25 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 2201514103370431727, guid: edbc04a15628aaa4dbc8ece363929e4f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: edbc04a15628aaa4dbc8ece363929e4f, type: 3}
+--- !u!1 &376672527167098669 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5599316802004647299, guid: edbc04a15628aaa4dbc8ece363929e4f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5228381603355259566}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &5752200488946524688
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376672527167098669}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.7386558, y: 3.4934254, z: 2}
+  m_Center: {x: 0.08292206, y: 0.7467126, z: -0.0000000058968905}
 --- !u!4 &4111915459659159143 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,

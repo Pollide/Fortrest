@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 3032954196529066518}
   - component: {fileID: 5756975981901921715}
   - component: {fileID: 5657225773570764442}
-  - component: {fileID: 5749843956598990194}
+  - component: {fileID: 6367428414308361601}
   m_Layer: 9
   m_Name: Boulder_Var2
   m_TagString: Untagged
@@ -117,8 +117,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5749843956598990194
-MeshCollider:
+--- !u!65 &6367428414308361601
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -127,10 +127,9 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 8858704730550788251, guid: 311c6b3777ec1ec449ff7eb899c65952, type: 3}
+  serializedVersion: 2
+  m_Size: {x: 1.5706851, y: 2.842871, z: 1.8329246}
+  m_Center: {x: 0.06173089, y: 1.3299221, z: -0.19285011}
 --- !u!1 &7509142344824591087
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +141,6 @@ GameObject:
   - component: {fileID: 5281902838922232862}
   - component: {fileID: 4012779519441861351}
   - component: {fileID: 1345044777623596542}
-  - component: {fileID: 775337696238727481}
   - component: {fileID: 1622656302796097390}
   m_Layer: 9
   m_Name: Boulder_Var2
@@ -213,19 +211,6 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!135 &775337696238727481
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7509142344824591087}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.28428712
-  m_Center: {x: 0.012346178, y: 0.26598445, z: -0.038570017}
 --- !u!208 &1622656302796097390
 NavMeshObstacle:
   m_ObjectHideFlags: 0
