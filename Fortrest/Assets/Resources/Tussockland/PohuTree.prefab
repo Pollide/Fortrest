@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 8707849239115483156}
   - component: {fileID: 8707849239115483157}
   - component: {fileID: -6799876280890107172}
-  - component: {fileID: -1345251657013764140}
   - component: {fileID: 6099089745086984705}
   m_Layer: 9
   m_Name: PohuTree
@@ -114,19 +113,6 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!135 &-1345251657013764140
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8707849239115483162}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.0903306
-  m_Center: {x: 0.0927262, y: 0.6220403, z: -0.12395942}
 --- !u!208 &6099089745086984705
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -417,8 +403,28 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 9
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2201514103370431727, guid: edbc04a15628aaa4dbc8ece363929e4f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: edbc04a15628aaa4dbc8ece363929e4f, type: 3}
+--- !u!1 &3628676441658068189 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8851073699574906483, guid: edbc04a15628aaa4dbc8ece363929e4f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5228381603355259566}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &5005854963913990981
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3628676441658068189}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 4.1533985, z: 1.1396904}
+  m_Center: {x: 0, y: 1.5766993, z: 0.0698452}
 --- !u!4 &4111915459659159143 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
