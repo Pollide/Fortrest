@@ -111,6 +111,7 @@ public class EnemyController : MonoBehaviour
     private float distanceToPlayer;
     private float jumpDistance;
     private bool setDistance;
+    public bool freezeMovement;
 
     private void Awake()
     {
@@ -853,7 +854,17 @@ public class EnemyController : MonoBehaviour
 
         if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
         {
-            PlayerController.global.TakeDamage(enemyDamage);
+            if (currentEnemyType == ENEMYTYPE.lava)
+            {
+                if (distanceToPlayer <= 4f)
+                {
+                    PlayerController.global.TakeDamage(enemyDamage);
+                }
+            }
+            else
+            {
+                PlayerController.global.TakeDamage(enemyDamage);
+            }               
         }
         else if (bestTarget)
         {
