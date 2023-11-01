@@ -293,14 +293,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lycanPhaseThree: {fileID: 5035358121503287246}
   frenzyMode: {fileID: 2702527554755493925}
+  slam: {fileID: 0}
+  atkManager: {fileID: 0}
   multiplier: 1.7
   duration: 2
   size: 0
   timer: 0
   pushDuration: 0.5
+  pushForce: 3
   damage: 5
   sweepIndicator: 0
   lungeIndicator: 1
+  chiefIndicatorSwipe: 0
+  chiefIndicatorSlam: 0
 --- !u!65 &52192268877868886
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -465,10 +470,12 @@ MonoBehaviour:
   currentPhase: 0
   currentState: {fileID: 0}
   initialState: {fileID: 1990839997988401373}
+  telegraphs: []
   speed: 4
   inDefence: 0
   phase2Ran: 0
   phase3Ran: 0
+  inIdle: 0
   isDead: 0
   bossSpawner: {fileID: 7055684526235057948}
 --- !u!114 &1990839997988401373
@@ -574,6 +581,7 @@ MonoBehaviour:
   stopRotation: 0
   telegraph: 0
   rotationSpeed: 4
+  attackCounter: 0
 --- !u!54 &7296249777344085743
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -737,14 +745,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lycanPhaseThree: {fileID: 5035358121503287246}
   frenzyMode: {fileID: 2702527554755493925}
+  slam: {fileID: 0}
+  atkManager: {fileID: 0}
   multiplier: 0.5
   duration: 1.5
   size: 0
   timer: 0
   pushDuration: 0.5
+  pushForce: 3
   damage: 5
   sweepIndicator: 1
   lungeIndicator: 0
+  chiefIndicatorSwipe: 0
+  chiefIndicatorSlam: 0
 --- !u!1 &6602196440814918247
 GameObject:
   m_ObjectHideFlags: 0
@@ -2227,6 +2240,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   frenzy: {fileID: 2702527554755493925}
+  swipeAudio: {fileID: 0}
+  enrageAudio: {fileID: 0}
+  jumpAudio: {fileID: 0}
 --- !u!4 &733963794326002772 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ab584f96b6aaef140afbd7da0f09acb6,
@@ -2249,6 +2265,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4627837457633724989, guid: 44375879c0871ad48801120b3c517b5e,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 5283328030002937211, guid: 44375879c0871ad48801120b3c517b5e,
         type: 3}
