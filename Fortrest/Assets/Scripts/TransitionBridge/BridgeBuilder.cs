@@ -130,9 +130,6 @@ public class BridgeBuilder : MonoBehaviour
 
                     if (BridgeTypeInt == 1)
                     {
-
-                        manager.goblinSpawnable = true;
-                        manager.spawnEntries.Add(manager.goblin);
                         spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.goblin.objectToSpawn, spawner.spawnMaxMarsh, ref spawner.spawnCurrentMarsh);
                     }
                     if (BridgeTypeInt == 2)
