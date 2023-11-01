@@ -13,6 +13,8 @@ public class BridgeBuilder : MonoBehaviour
     public GameObject WalkAccrossCollider;
     public Animator bridgeAnimator;
     bool canBuild;
+    CampSpawner spawner;
+    LevelManager manager;
 
     public bool debugforcebuild;
 
@@ -20,6 +22,8 @@ public class BridgeBuilder : MonoBehaviour
     {
         CheckIndicators();
         LevelManager.global.bridgeList.Add(this);
+        spawner = CampSpawner.global;
+        manager = LevelManager.global;
     }
 
     public void CheckIndicators()
@@ -124,8 +128,6 @@ public class BridgeBuilder : MonoBehaviour
 
                 if (PlayerController.global.CheckSufficientResources())
                 {
-                    LevelManager manager = LevelManager.global;
-                    CampSpawner spawner = CampSpawner.global;
                     canBuild = false;
                     GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltNoiseSound);
                     GameManager.global.SoundManager.PlaySound(GameManager.global.BridgeBuiltSound);
@@ -139,35 +141,56 @@ public class BridgeBuilder : MonoBehaviour
 
                     if (BridgeTypeInt == 1)
                     {
-                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.goblin.objectToSpawn, spawner.spawnMaxMarsh, ref spawner.spawnCurrentMarsh);
+                        manager.goblinSpawnable = true;
                     }
                     if (BridgeTypeInt == 2)
                     {
                         manager.snakeSpawnable = true;
                         manager.spawnEntries.Add(manager.snake);
-                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.snake.objectToSpawn, spawner.spawnMaxTussuck, ref spawner.spawnCurrentTussuck);
                     }
                     if (BridgeTypeInt == 3)
                     {
                         manager.wolfSpawnable = true;
                         manager.spawnEntries.Add(manager.wolf);
-                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.wolf.objectToSpawn, spawner.spawnMaxCoast, ref spawner.spawnCurrentCoast);
                     }
                     if (BridgeTypeInt == 4)
                     {
                         manager.spiderSpawnable = true;
                         manager.spawnEntries.Add(manager.spider);
-                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.spider.objectToSpawn, spawner.spawnMaxTaiga, ref spawner.spawnCurrentTaiga);
                     }
                     if (BridgeTypeInt == 5)
                     {
                         manager.lavaSpawnable = true;
                         manager.spawnEntries.Add(manager.lava);
-                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.lava.objectToSpawn, spawner.spawnMaxVolcanic, ref spawner.spawnCurrentVolcanic);
                     }
                 }
             }
-
+        }
+        else
+        {
+            if (!spawner.spawnEnemies)
+            {
+                if (BridgeTypeInt == 1)
+                {
+                    spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.goblin.objectToSpawn, spawner.spawnMaxMarsh, ref spawner.spawnCurrentMarsh);
+                }
+                if (BridgeTypeInt == 2)
+                {
+                    spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.snake.objectToSpawn, spawner.spawnMaxTussuck, ref spawner.spawnCurrentTussuck);
+                }
+                if (BridgeTypeInt == 3)
+                {
+                    spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.wolf.objectToSpawn, spawner.spawnMaxCoast, ref spawner.spawnCurrentCoast);
+                }
+                if (BridgeTypeInt == 4)
+                {
+                    spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.spider.objectToSpawn, spawner.spawnMaxTaiga, ref spawner.spawnCurrentTaiga);
+                }
+                if (BridgeTypeInt == 5)
+                {
+                    spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.lava.objectToSpawn, spawner.spawnMaxVolcanic, ref spawner.spawnCurrentVolcanic);
+                }
+            }
         }
     }
 }

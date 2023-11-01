@@ -42,28 +42,6 @@ public class ModeSwitchText : MonoBehaviour
         {
             GetComponent<TMP_Text>().enabled = false;
         }
-
-        switch (PlayerModeHandler.global.playerModes)
-        {
-            //idk if we need this anymore. it only shows resource/build text and its self explanatory what build mode is?
-
-            /*
-            case PlayerModes.BuildMode:
-                GetComponent<TMP_Text>().text = "Build Mode";
-                break;
-            case PlayerModes.ResourceMode:
-                GetComponent<TMP_Text>().text = "Resource Mode";
-                break;
-            case PlayerModes.CombatMode:
-                GetComponent<TMP_Text>().text = "Combat Mode";
-                break;
-            case PlayerModes.Paused:
-                GetComponent<TMP_Text>().text = "Paused Mode";
-                break;
-            default:
-                break;
-            */
-        }
     }
 
     public void ResetText()
