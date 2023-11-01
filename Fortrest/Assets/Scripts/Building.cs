@@ -206,6 +206,7 @@ public class Building : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseDestroyedSound);
                 normalHouse.SetActive(false);
                 destroyedHouse.SetActive(true);
+                PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData(), false);
                 PlayerController.global.playerCanMove = false;
                 LevelManager.global.enabled = false;//stop the day progressing
 

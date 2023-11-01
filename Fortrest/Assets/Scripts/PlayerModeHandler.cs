@@ -241,7 +241,7 @@ public class PlayerModeHandler : MonoBehaviour
             return (defenceTier - shift) >= max;
         }
 
-        fillImage.GetComponentInParent<TurretStats>().gameObject.SetActive(active);
+        fillImage.GetComponentInParent<TurretStats>(true).gameObject.SetActive(active);
 
         if (buttonTier != 0 && active) //active in hiarachy as some tiers are hidden depending on the turret
         {
