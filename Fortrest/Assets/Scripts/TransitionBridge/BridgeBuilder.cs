@@ -191,6 +191,15 @@ public class BridgeBuilder : MonoBehaviour
                     spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.lava.objectToSpawn, spawner.spawnMaxVolcanic, ref spawner.spawnCurrentVolcanic);
                 }
             }
+
+            if (manager.currentTerrainData == manager.terrainDataList[0])
+            {
+                spawner.spawnEnemies = false;
+            }
+            else
+            {
+                spawner.spawnEnemies = true;
+            }
         }
     }
 }
