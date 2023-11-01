@@ -85,6 +85,8 @@ public class Creature : MonoBehaviour
         {
             if (other.gameObject == PlayerController.global.SwordGameObject || other.gameObject.tag == "Arrow")
             {
+                enabled = false;
+                animator.enabled = false;
                 GameManager.global.SoundManager.PlaySound(GameManager.global.ArrowHitBuildingSound, 1.0f);
                 LevelManager.global.DeathParticle(transform);
                 // Destroy(gameObject);

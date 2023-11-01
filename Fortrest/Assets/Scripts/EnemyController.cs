@@ -897,6 +897,7 @@ public class EnemyController : MonoBehaviour
     {
         agent.enabled = false;
         enabled = false;
+        ActiveAnimator.enabled = false;
 
         LevelManager.global.DeathParticle(transform); //this handles Destroy(gameobject) btw through dissolving the material
 

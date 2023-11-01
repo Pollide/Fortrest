@@ -13,6 +13,8 @@ public class DissolveMaterial : MonoBehaviour
 
         for (int i = skinnedMeshRendererList.Count - 1; i >= 0; i--)
         {
+            skinnedMeshRendererList[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
             for (int j = 0; j < skinnedMeshRendererList[i].materials.Length; j++)
             {
                 if (skinnedMeshRendererList[i].materials[j].HasProperty("_DissolveAmount"))
@@ -31,14 +33,14 @@ public class DissolveMaterial : MonoBehaviour
 
         if (disolvingTimer > 0)
         {
-            disolvingTimer -= (GetComponent<BossSpawner>() ? 0.2f : 0.8f) * Time.deltaTime;
+            disolvingTimer -= 0.5f * Time.deltaTime;
         }
         else
         {
             disolvingTimer = 0;
             enabled = false;
 
-            if (GetComponent<EnemyController>())
+            if (!GetComponent<BossSpawner>())
             {
                 Destroy(gameObject);
             }
