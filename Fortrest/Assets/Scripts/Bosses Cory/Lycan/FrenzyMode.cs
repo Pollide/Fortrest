@@ -71,7 +71,6 @@ public class FrenzyMode : BossState
         if (attackCounter > 3)
         {
             stateMachine.BossAnimator.SetBool("isTired", true);
-            stateMachine.BossAnimator.SetBool("inFrenzy", false);
         }
 
     }
