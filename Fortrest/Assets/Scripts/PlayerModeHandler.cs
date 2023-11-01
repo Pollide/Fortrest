@@ -220,7 +220,7 @@ public class PlayerModeHandler : MonoBehaviour
 
                 PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
             }
-            Debug.Log(open);
+           
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
         }
 
@@ -249,6 +249,7 @@ public class PlayerModeHandler : MonoBehaviour
                 defenceTier += buttonTier;
                 GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
                 GameManager.PlayAnimation(fillImage.GetComponentInParent<Animation>(), "TierUpgrade");
+                PlayerController.global.UpdateResourceHolder(PlayerController.global.previousResourceData); //so the bars update with the new defenceTier addition
 
             }
 

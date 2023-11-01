@@ -183,7 +183,7 @@ public class Building : MonoBehaviour
                             GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound);
                         }
                     }
-                   
+
                     DestroyBuilding();
                 }
             }
@@ -275,16 +275,16 @@ public class Building : MonoBehaviour
 
     public bool ReturnWood()
     {
-        return DropPrefab.GetComponent<ItemDrop>().WoodBool;
+        return DropPrefab && DropPrefab.GetComponent<ItemDrop>().WoodBool;
     }
 
     public bool ReturnStone()
     {
-        return DropPrefab.GetComponent<ItemDrop>().stoneBool;
+        return DropPrefab && DropPrefab.GetComponent<ItemDrop>().stoneBool;
     }
     public bool ReturnBush()
     {
-        return DropPrefab.GetComponent<ItemDrop>().foodBool;
+        return DropPrefab && DropPrefab.GetComponent<ItemDrop>().foodBool;
     }
 
     private void Update()
