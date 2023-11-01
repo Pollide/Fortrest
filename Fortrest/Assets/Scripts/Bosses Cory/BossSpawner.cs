@@ -120,6 +120,7 @@ public class BossSpawner : MonoBehaviour
                     {
                         LevelManager.global.bridgeList[i].CheckIndicators();
                     }
+                    bossAnimator.enabled = false;
                     enabled = false;
                 }
                 else
