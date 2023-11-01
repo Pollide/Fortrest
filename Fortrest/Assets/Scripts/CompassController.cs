@@ -53,7 +53,7 @@ public class CompassController : MonoBehaviour
             eastRan = true;
         }
 
-        if (manager.goblinSpawnable && !eastRan && manager.day > 7)
+        if (manager.goblinSpawnable && !southRan && manager.day > 7)
         {
             ChangeText("You hear rumbling from the south");
             StartCoroutine(FadeText());
@@ -61,7 +61,7 @@ public class CompassController : MonoBehaviour
             southRan = true;
         }
 
-        if (manager.goblinSpawnable && !eastRan && manager.day > 10)
+        if (manager.goblinSpawnable && !westRan && manager.day > 10)
         {
             ChangeText("You hear rumbling from the west");
             StartCoroutine(FadeText());

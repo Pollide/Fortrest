@@ -66,7 +66,7 @@ public class AttackManagerState : BossState
         canChangeState = true;
         canAttack = true;
         randValue = 0f;
-
+        stateMachine.BossAnimator.SetBool("isCharging", false);
         randomCheckTimer = randomCheckDuration;
         isAttacking = false;
     }
@@ -80,6 +80,12 @@ public class AttackManagerState : BossState
         randomCheckTimer = randomCheckDuration;
         isAttacking = false;
         attackTime = 0f;
+        randValue = 0f;
+        if (stateMachine.telegraphs[0].outerShape.gameObject.activeInHierarchy)
+        {
+            stateMachine.telegraphs[0].outerShape.gameObject.SetActive(false);
+        }
+        
     }
 
     public override void UpdateState()
@@ -156,6 +162,10 @@ public class AttackManagerState : BossState
         }
         else
         {
+            if (!stateMachine.telegraphs[0].outerShape.gameObject.activeInHierarchy)
+            {
+                stateMachine.BossAnimator.speed = 1f;
+            }
             canChangeState = false;
 
             if (attackTime < attackDuration && isAttacking && !stateMachine.BossAnimator.GetBool("isTired"))

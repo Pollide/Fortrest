@@ -22,7 +22,7 @@ public class BossStateMachine : MonoBehaviour
     // Holds the initial state the boss starts with
     [SerializeField] private BossState initialState;
 
-    [SerializeField] private TelegraphLycan[] telegraphs;
+    public TelegraphLycan[] telegraphs;
 
     // Agent current speed
     [SerializeField] private float speed;
