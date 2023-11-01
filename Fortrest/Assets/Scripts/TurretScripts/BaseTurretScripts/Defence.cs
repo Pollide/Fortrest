@@ -138,7 +138,7 @@ public class Defence : MonoBehaviour
 
                 if (building.buildingObject == Building.BuildingType.Slow)
                 {
-                    target.GetComponent<EnemyController>().ApplySlow(enemySpeedPercentage);
+                    target.GetComponent<EnemyController>().ApplySlow(enemySpeedPercentage, transform);
                 }
                 else
                 {

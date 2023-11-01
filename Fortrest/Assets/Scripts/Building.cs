@@ -32,7 +32,7 @@ public class Building : MonoBehaviour
 
     public BuildingType buildingObject;
 
-    //[HideInInspector]
+    [HideInInspector]
     public float health;
     public float maxHealth = 4;
     public int resourceAmount = 5;
@@ -86,7 +86,7 @@ public class Building : MonoBehaviour
                 GetComponent<BoxCollider>().enabled = false;
             return;
         }
-        health = maxHealth;
+        health = ReturnMaxHealth();
         startingRotation = transform.rotation;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
 
@@ -100,7 +100,7 @@ public class Building : MonoBehaviour
             SetLastHealth();
             if (HUDHealthBar != null)
             {
-                HUDHealthBar.SetHealth(health, maxHealth);
+                HUDHealthBar.SetHealth(health, ReturnMaxHealth());
 
 
             }
@@ -152,13 +152,13 @@ public class Building : MonoBehaviour
             health -= amount;
 
             if (HUDHealthBar) //house doesnt have one
-                HUDHealthBar.SetHealth(health, maxHealth);
+                HUDHealthBar.SetHealth(health, ReturnMaxHealth());
 
             if (buildingObject == BuildingType.House)
             {
-                PlayerController.global.houseHealthBar.SetHealth(health, maxHealth);
+                PlayerController.global.houseHealthBar.SetHealth(health, ReturnMaxHealth());
 
-                if (health < maxHealth && amount != 0)
+                if (health < ReturnMaxHealth() && amount != 0)
                     GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash");
             }
 
@@ -190,6 +190,10 @@ public class Building : MonoBehaviour
         }
     }
 
+    public float ReturnMaxHealth()
+    {
+        return GetComponent<Defence>() ? GetComponent<Defence>().ReturnHealth() : maxHealth;
+    }
 
     public void DestroyBuilding()
     {
@@ -202,6 +206,7 @@ public class Building : MonoBehaviour
                 GameManager.global.SoundManager.PlaySound(GameManager.global.HouseDestroyedSound);
                 normalHouse.SetActive(false);
                 destroyedHouse.SetActive(true);
+                PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData(), false);
                 PlayerController.global.playerCanMove = false;
                 LevelManager.global.enabled = false;//stop the day progressing
 
@@ -360,7 +365,7 @@ public class Building : MonoBehaviour
                 transform.rotation = startingRotation;
                 GameManager.PlayAnimation(GetComponent<Animation>(), "Nature Destroy", false);
                 transform.localScale = Vector3.one;
-                health = maxHealth;
+                health = ReturnMaxHealth();
                 destroyedTimer = 0;
             }
             else

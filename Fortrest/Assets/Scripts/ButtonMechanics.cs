@@ -236,7 +236,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         {
             CheckUpgrade();
 
-            if ((UpgradeInt == -2 || PlayerModeHandler.global.SelectedTurret.health < PlayerModeHandler.global.SelectedTurret.maxHealth) && PlayerController.global.CheckSufficientResources())
+            if ((UpgradeInt == -2 || PlayerModeHandler.global.SelectedTurret.health < PlayerModeHandler.global.SelectedTurret.ReturnMaxHealth()) && PlayerController.global.CheckSufficientResources())
             {
 
                 if (UpgradeInt == -1)
@@ -285,6 +285,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 LevelManager.global.WoodTierList[i].ResourceAmount = 9999;
                 LevelManager.global.StoneTierList[i].ResourceAmount = 9999;
             }
+
+            PlayerController.global.UpdateResourceHolder(PlayerController.global.previousResourceData, PlayerController.global.ResourceHolderOpened);
         }
 
         if (TerrainTeleportInt != -1)

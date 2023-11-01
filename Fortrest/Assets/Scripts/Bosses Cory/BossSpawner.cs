@@ -122,6 +122,10 @@ public class BossSpawner : MonoBehaviour
                     }
                     bossAnimator.enabled = false;
                     enabled = false;
+                    if (GetComponent<UnityEngine.AI.NavMeshAgent>())
+                    {
+                        GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+                    }
                 }
                 else
                 {

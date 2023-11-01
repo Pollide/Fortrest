@@ -603,10 +603,13 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    public void ApplySlow(float _slowPercent)
+    public void ApplySlow(float _slowPercent, Transform defence)
     {
         if (!slowed)
         {
+            Destroy(Instantiate(LevelManager.global.VFXSlowPrefab, defence.position, Quaternion.identity), 3);
+            Destroy(Instantiate(LevelManager.global.VFXSlowPrefab, transform.position, Quaternion.identity), 3);
+
             GameManager.global.SoundManager.PlaySound(GameManager.global.SlowShootSound, SpatialTransform: transform);
             slowed = true;
             agent.speed *= _slowPercent;
@@ -864,7 +867,7 @@ public class EnemyController : MonoBehaviour
             else
             {
                 PlayerController.global.TakeDamage(enemyDamage);
-            }               
+            }
         }
         else if (bestTarget)
         {

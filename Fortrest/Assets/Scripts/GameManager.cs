@@ -537,9 +537,12 @@ public class GameManager : MonoBehaviour
             int indexInt = 0;
             foreach (AnimationState clip in animation)
             {
-                animation[clip.name].layer = indexInt;
-                animation[clip.name].speed = 1;
                 indexInt += 1;
+                if (animation[clip.name].layer == 0)
+                {
+                    animation[clip.name].layer = indexInt;
+                    animation[clip.name].speed = 1;
+                }
 
                 if (playBool)
                     animation.Play(clip.name);
@@ -734,6 +737,7 @@ public class GameManager : MonoBehaviour
 
         });
 
+        /* no longer saving and loading enemies
         LevelManager.ProcessEnemyList((enemy) =>
     {
         int i = LevelManager.global.enemyList.IndexOf(enemy);
@@ -747,6 +751,7 @@ public class GameManager : MonoBehaviour
         }
 
     });
+        */
 
         int turretSize = (int)Pref("Turret Size", 0, load); //also resets on save
 

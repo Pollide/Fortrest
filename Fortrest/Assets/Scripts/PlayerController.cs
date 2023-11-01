@@ -495,7 +495,7 @@ public class PlayerController : MonoBehaviour
         {
             RadiusCamGameObject = GameObject.Find("Radius Camera");
         }
-
+        previousResourceData = new ResourceData();
         respawnText = house.transform.GetChild(4).gameObject;
 
         // Setting default values
@@ -1170,7 +1170,7 @@ public class PlayerController : MonoBehaviour
                 MapPanningPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
             }
 
-            UpdateResourceHolder(new ResourceData(), open: map);
+            UpdateResourceHolder(map ? new ResourceData() : previousResourceData, open: map || previousResourceData.previousOpen, updatePrevious: false);
         }
     }
 
@@ -1215,13 +1215,12 @@ public class PlayerController : MonoBehaviour
         public int bridgeTypeInt = 0;
         public int upgradeTypeInt = 0;
         public BuildType buildType = BuildType.None;
+        public bool previousOpen = true;
     }
     [HideInInspector]
     public ResourceData previousResourceData = new ResourceData();
 
-
-
-    public void UpdateResourceHolder(ResourceData resourceData, bool open = true)
+    public void UpdateResourceHolder(ResourceData resourceData, bool open = true, bool updatePrevious = true)
     {
         if (ResourceHolderOpened != open)
         {
@@ -1230,7 +1229,8 @@ public class PlayerController : MonoBehaviour
             GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
         }
 
-        if (resourceData.bridgeTypeInt == 0 && resourceData.upgradeTypeInt == 0 && resourceData.buildType == BuildType.None)
+        // Debug.Log(resourceData.bridgeTypeInt + " == 0 && " + resourceData.upgradeTypeInt + " == 0 && " + resourceData.buildType + " == " + BuildType.None);
+        if (!open || resourceData.bridgeTypeInt == 0 && resourceData.upgradeTypeInt == 0 && resourceData.buildType == BuildType.None)
         {
             ResourceCostUI(false);
             return;
@@ -1241,8 +1241,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        previousResourceData = resourceData;
-
+        if (updatePrevious)
+        {
+            previousResourceData = resourceData;
+            previousResourceData.previousOpen = open;
+        }
         GameManager.ResetChosenHolder(ResourceHolder, 1);
 
         damageInfoData.gameObject.SetActive(false);
@@ -1346,7 +1349,7 @@ public class PlayerController : MonoBehaviour
                         maxTier.rateTier += turretStats[i].ReturnMaxTier().rateTier;
                     }
 
-                    maxTier.healthTier = defence.GetComponent<Building>().maxHealth;
+                    maxTier.healthTier = defence.GetComponent<Building>().ReturnMaxHealth();
 
                     if (resourceData.upgradeTypeInt == -1) //repair
                     {
@@ -1433,6 +1436,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    AnimationState animationState;
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
         int total = 0;
@@ -1467,7 +1471,17 @@ public class PlayerController : MonoBehaviour
         {
             resourceCostBool = show;
             //  GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", show);
-            GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", show);
+            // Debug.Log(Time.deltaTime + " " + show);
+
+            if (Time.timeScale == 0)
+            {
+                ResourceHolder.gameObject.SetActive(show);
+            }
+            else
+            {
+
+                GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", show);
+            }
         }
     }
 
@@ -1508,8 +1522,11 @@ public class PlayerController : MonoBehaviour
         {
             if (!Sufficient(LevelManager.global.WoodTierList, purchase) || !Sufficient(LevelManager.global.StoneTierList, purchase))
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-                GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
+                if (purchase)
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                    GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
+                }
                 return false;
             }
         }
@@ -2166,6 +2183,7 @@ public class PlayerController : MonoBehaviour
             playerCC.enabled = false;
             playerRespawned = false;
             deathEffects = true;
+            UpdateResourceHolder(new ResourceData(), false);
         }
 
         if (playerHealth >= maxHealth && !playerRespawned)
