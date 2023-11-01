@@ -38,7 +38,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     [Header("Build")]
     public int UpgradeInt;
     public bool CloseTurretMenuBool;
-
+    public int TurretSelectInt;
     [Header("Menu")]
     public bool ContinueBool;
     public bool PlayBool;
@@ -164,6 +164,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         if (buttons)
             GetComponentInParent<Buttons>().pressingDown = true;
+
         SelectVoid();
     }
 
@@ -197,6 +198,27 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
             CheckUpgrade();
             PlayerModeHandler.global.UpdateTier(GetComponent<TurretStats>());
         }
+
+        if (TurretSelectInt == 1)
+        {
+            PlayerModeHandler.global.SwitchBuildTypeTurret();
+        }
+
+        if (TurretSelectInt == 2)
+        {
+            PlayerModeHandler.global.SwitchBuildTypeCannon();
+        }
+
+        if (TurretSelectInt == 3)
+        {
+            PlayerModeHandler.global.SwitchBuildTypeSlow();
+        }
+
+        if (TurretSelectInt == 4)
+        {
+            PlayerModeHandler.global.SwitchBuildTypeScatter();
+        }
+
 
         if (KeyTipsBool)
         {

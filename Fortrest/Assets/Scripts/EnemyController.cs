@@ -45,12 +45,12 @@ public class EnemyController : MonoBehaviour
     public bool canBeDamagedByBoar = true;
     private bool knockbackIncreased;
     public bool waveEnemy;
-    
+
     // Used for lycan boss
     [HideInInspector] public bool isMob = false;
     [HideInInspector] public PhaseOneLycan bossScriptOne;
     [HideInInspector] public PhaseTwoLycan bossScriptTwo;
-        
+
     [HideInInspector] public bool addIndicator = true;
 
     // Others
@@ -183,7 +183,7 @@ public class EnemyController : MonoBehaviour
                     jumpDistance = distanceToPlayer * 2;
                     setDistance = true;
                 }
-                
+
                 agent.Move(directionToPlayer * (Time.deltaTime * jumpDistance));
             }
 
@@ -202,7 +202,7 @@ public class EnemyController : MonoBehaviour
                     GameManager.PlayAnimation(healthAnimation, "Health Appear", false);
                 }
             }
-        }      
+        }
     }
 
     void CheckHouse()
@@ -640,7 +640,7 @@ public class EnemyController : MonoBehaviour
                             ActiveAnimator.SetTrigger("Hit3");
                         }
                     }
-                    
+
                     GameManager.PlayAnimation(flashingAnimation, "Flashing");
                     flashing = true;
                 }
@@ -648,7 +648,7 @@ public class EnemyController : MonoBehaviour
                 {
                     knockBackScript.knock = true;
                 }
-                
+
                 ScreenShake.global.ShakeScreen();
                 Damaged(PlayerController.global.attackDamage);
                 PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
@@ -679,7 +679,7 @@ public class EnemyController : MonoBehaviour
             if (arrowTrigger && !arrowTrigger.singleHit)
             {
                 arrowTrigger.singleHit = true;
-                if (currentEnemyType == ENEMYTYPE.goblin|| currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.lava)
+                if (currentEnemyType == ENEMYTYPE.goblin || currentEnemyType == ENEMYTYPE.spider || currentEnemyType == ENEMYTYPE.lava)
                 {
                     chaseTimer = 0;
                     chasing = true;
@@ -754,7 +754,7 @@ public class EnemyController : MonoBehaviour
             offset = 0.3f;
             enemyDamage = 5.5f;
             knockBackScript.strength = 20.0f;
-        }          
+        }
         else if (currentEnemyType == ENEMYTYPE.lava)
         {
             agent.speed = 6.0f;
@@ -894,15 +894,11 @@ public class EnemyController : MonoBehaviour
     public void Death()
     {
         agent.enabled = false;
-        if (currentEnemyType != ENEMYTYPE.wolf)
-        {
-            LevelManager.global.enemyList.Remove(this);
-            Destroy(gameObject);
-        }
-        else
-        {
-            gameObject.SetActive(false); //wolves spawn in the scene on start so they need to stay in memory
-        }
+        enabled = false;
+        LevelManager.global.DeathParticle(transform);
+
+        LevelManager.global.enemyList.Remove(this);
+        Destroy(gameObject);
 
         if (isMob)
         {

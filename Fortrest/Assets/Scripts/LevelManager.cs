@@ -78,7 +78,7 @@ public class LevelManager : MonoBehaviour
     bool OnceDetection;
 
 
-    public Transform ResourceHolderTransform;
+    [HideInInspector]
     public GameObject ActiveBuildingGameObject;
     public Transform DirectionalLightTransform;
     public Material LanternGlowingMaterial;
@@ -102,6 +102,7 @@ public class LevelManager : MonoBehaviour
     [HideInInspector]
     public float enemyThreshold;
     [Header("Ogre Prefab")]
+    public GameObject DeathVFXPrefab;
     [Space]
     public GameObject ogrePrefab;
     [Space]
@@ -324,6 +325,12 @@ public class LevelManager : MonoBehaviour
     {
         move.position = cutsceneCameraLocations[number].position;
         move.rotation = cutsceneCameraLocations[number].rotation;
+    }
+
+    public void DeathParticle(Transform target)
+    {
+        Destroy(Instantiate(DeathVFXPrefab, target.position, Quaternion.identity), 5);
+
     }
 
     private void GetHousePosition()
@@ -916,4 +923,5 @@ public class LevelManager : MonoBehaviour
             }
         }
     }
+
 }

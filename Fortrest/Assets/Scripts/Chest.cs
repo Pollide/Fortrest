@@ -86,7 +86,7 @@ public class Chest : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject == PlayerController.global.gameObject && !opened)
+        if (other.gameObject == PlayerController.global.gameObject && !canBeOpened && !opened)
         {
             canBeOpened = true;
             if (!textDisplayed)
@@ -100,7 +100,7 @@ public class Chest : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject == PlayerController.global.gameObject && !opened)
+        if (other.gameObject == PlayerController.global.gameObject && canBeOpened && !opened)
         {
             canBeOpened = false;
             if (textDisplayed)
