@@ -597,6 +597,8 @@ public class PlayerController : MonoBehaviour
             UpgradeBow();
         }
 
+        SmokeTrail(); //keep above player can move
+
         if (playerCanMove)
         {
             // Controller
@@ -616,7 +618,7 @@ public class PlayerController : MonoBehaviour
             HandleSpeed();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
-            SmokeTrail();
+
             BlendTreeAnimation();
 
             // Mechanics
@@ -2321,11 +2323,11 @@ public class PlayerController : MonoBehaviour
     public void SmokeTrail()
     {
         smokeTimer += Time.deltaTime;
-        bool boarMoving = Boar.global && Boar.global.IsMoving();
-        if ((boarMoving || PlayerController.global.playerisMoving && running) && smokeTimer > 0.08f)
+        bool boarMoving = Boar.global && Boar.global.mounted && Boar.global.IsMoving();
+        if ((boarMoving || playerisMoving && running) && smokeTimer > 0.08f)
         {
             smokeTimer = 0f;
-            Vector3 position = boarMoving ? Boar.global.transform.position + new Vector3(0f, 0.5f, 0f) - (Vector3.forward * 1.25f) - Vector3.right : transform.position - new Vector3(0f, 0.5f, 0f);
+            Vector3 position = boarMoving ? Boar.global.transform.position + new Vector3(0f, 0.5f, 0f) - (Vector3.forward * 1.25f) - Vector3.right : transform.position - new Vector3(0f, 1.3f, 0f);
             GameObject SmokeVFXRight = Instantiate(LevelManager.global.VFXSmoke.gameObject, position, Quaternion.identity);
             float randomeFloat = Random.Range(0.2f, 0.275f);
             SmokeVFXRight.transform.localScale = new Vector3(randomeFloat * 2f, randomeFloat, randomeFloat * 2f);
