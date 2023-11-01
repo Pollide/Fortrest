@@ -220,7 +220,7 @@ public class PlayerModeHandler : MonoBehaviour
 
                 PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
             }
-           
+
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
         }
 
@@ -351,7 +351,7 @@ public class PlayerModeHandler : MonoBehaviour
 
 
 
-        if (placing)
+        if (!turretMenuOpened && placing)
         {
             GameObject turretPrefab = ReturnTurretPrefab();
 

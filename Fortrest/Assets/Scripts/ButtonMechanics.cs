@@ -118,7 +118,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     //checks to see if the pointer has exited the button
     public void OnPointerExit(PointerEventData eventData)
     {
-        //Pause.global.SelectedList[Pause.global.ReturnIndex()] = -1;
+        if (buttons)
+            buttons.MenuList[buttons.ReturnIndex()] = -1; //makes the button unselected
         //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
         CheckUpgrade(false);
     }
@@ -235,13 +236,13 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         {
             CheckUpgrade();
 
-            if (PlayerController.global.CheckSufficientResources())
+            if ((UpgradeInt == -2 || PlayerModeHandler.global.SelectedTurret.health < PlayerModeHandler.global.SelectedTurret.maxHealth) && PlayerController.global.CheckSufficientResources())
             {
 
                 if (UpgradeInt == -1)
                 {
                     PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
-                    PlayerModeHandler.global.SelectedTurret.TakeDamage(-PlayerModeHandler.global.SelectedTurret.GetComponent<Building>().ReturnRepair()); //minus will actually increase its health
+                    PlayerModeHandler.global.SelectedTurret.TakeDamage(-PlayerModeHandler.global.SelectedTurret.ReturnRepair()); //minus will actually increase its health
                 }
 
                 if (UpgradeInt == -2)

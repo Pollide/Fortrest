@@ -98,7 +98,8 @@ public class Buttons : MonoBehaviour
 
             MenuList[menu] += direction;
 
-            MenuList[menu] = (int)GameManager.ReturnThresholds(MenuList[menu], ButtonHolder.GetChild(menu).childCount - 1);
+            if (direction != 0) //stops a forced deselected button (as its -1 when mouse off)
+                MenuList[menu] = (int)GameManager.ReturnThresholds(MenuList[menu], ButtonHolder.GetChild(menu).childCount - 1);
 
             for (int i = 0; i < ButtonHolder.GetChild(menu).childCount; i++)
             {
@@ -132,7 +133,7 @@ public class Buttons : MonoBehaviour
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL)
+            if (MenuList[menu] != 0 && (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL))
             {
                 GameManager.global.selectCTRL = false;
                 ButtonHolder.GetChild(menu).GetChild(MenuList[menu]).GetComponent<ButtonMechanics>().SelectVoid();
