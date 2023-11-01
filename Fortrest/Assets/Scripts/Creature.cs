@@ -87,7 +87,7 @@ public class Creature : MonoBehaviour
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.ArrowHitBuildingSound, 1.0f);
                 LevelManager.global.DeathParticle(transform);
-                Destroy(gameObject);
+                // Destroy(gameObject);
             }
         }
     }

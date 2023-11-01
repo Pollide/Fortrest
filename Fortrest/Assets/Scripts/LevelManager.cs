@@ -103,7 +103,6 @@ public class LevelManager : MonoBehaviour
     public float enemyThreshold;
     [Header("Ogre Prefab")]
     public GameObject SpawnVFXPrefab;
-    public GameObject DeathVFXPrefab;
     [Space]
     public GameObject ogrePrefab;
     [Space]
@@ -330,7 +329,7 @@ public class LevelManager : MonoBehaviour
 
     public void DeathParticle(Transform target)
     {
-        Destroy(Instantiate(DeathVFXPrefab, target.position, Quaternion.identity), 5);
+        Destroy(Instantiate(DissolveAshParticle, target.position, Quaternion.identity), 10);
 
         target.gameObject.AddComponent<DissolveMaterial>();
 

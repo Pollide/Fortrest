@@ -6,18 +6,21 @@ public class DissolveMaterial : MonoBehaviour
 {
     // Start is called before the first frame update
     public List<SkinnedMeshRenderer> skinnedMeshRendererList = new List<SkinnedMeshRenderer>();
-    float disolvingTimer = 1;
+    public float disolvingTimer = 1;
     void Start()
     {
         skinnedMeshRendererList = GameManager.FindComponent<SkinnedMeshRenderer>(transform);
 
         for (int i = skinnedMeshRendererList.Count - 1; i >= 0; i--)
         {
-            if (skinnedMeshRendererList[i].material.HasProperty("_DissolveAmount"))
-                skinnedMeshRendererList[i].material = new Material(skinnedMeshRendererList[i].material);
-            else
+            for (int j = 0; j < skinnedMeshRendererList[i].materials.Length; j++)
             {
-                skinnedMeshRendererList.RemoveAt(i);
+                if (skinnedMeshRendererList[i].materials[j].HasProperty("_DissolveAmount"))
+                    skinnedMeshRendererList[i].materials[j] = new Material(skinnedMeshRendererList[i].materials[j]);
+                else
+                {
+                    skinnedMeshRendererList.RemoveAt(i);
+                }
             }
         }
     }
@@ -28,7 +31,7 @@ public class DissolveMaterial : MonoBehaviour
 
         if (disolvingTimer > 0)
         {
-            disolvingTimer -= (GetComponent<BossSpawner>() ? 0.2f : 0.5f) * Time.deltaTime;
+            disolvingTimer -= (GetComponent<BossSpawner>() ? 0.2f : 0.8f) * Time.deltaTime;
         }
         else
         {
@@ -43,7 +46,10 @@ public class DissolveMaterial : MonoBehaviour
 
         for (int i = 0; i < skinnedMeshRendererList.Count; i++)
         {
-            skinnedMeshRendererList[i].material.SetFloat("_DissolveAmount", disolvingTimer);
+            for (int j = 0; j < skinnedMeshRendererList[i].materials.Length; j++)
+            {
+                skinnedMeshRendererList[i].materials[j].SetFloat("_DissolveAmount", disolvingTimer);
+            }
         }
     }
 }
