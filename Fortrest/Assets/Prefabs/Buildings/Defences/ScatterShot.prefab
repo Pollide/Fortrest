@@ -230,15 +230,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e2a0c58f038a6f40ac2dcb3006ea0fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NaturalBool: 0
-  resourceObject: 7
   buildingObject: 3
   health: 0
   maxHealth: 4
   resourceAmount: 5
   constructionCostWood: 5
   constructionCostStone: 5
-  HUDHealthBar: {fileID: 8527177790033142228}
   playerinRange: 0
   normalHouse: {fileID: 0}
   destroyedHouse: {fileID: 0}
@@ -247,6 +244,7 @@ MonoBehaviour:
   DebugDestroyInstantly: 0
   gridLocation: {x: 0, y: 0}
   destroyedTimer: 0
+  DropPrefab: {fileID: 0}
 --- !u!208 &804743355647506232
 NavMeshObstacle:
   m_ObjectHideFlags: 0
@@ -893,7 +891,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 126533bbcaa46354d86ffbca118e102e, type: 2}
+  - {fileID: 2100000, guid: b5bbca87a2daf764eb20987a3fd46918, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1145,7 +1143,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 551c65c3fd150f84ba80aeca80c30db7, type: 2}
+  - {fileID: 2100000, guid: 4e1b6e48e68ea4e44b0e488186c13141, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1515,15 +1513,3 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 3677685584779129434}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8527177790033142228 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4998815853741020046, guid: 412f881170d2477458b73d3eddd5ab20,
-    type: 3}
-  m_PrefabInstance: {fileID: 3677685584779129434}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba2c04dd18217cb448d7d648f7fa8d4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
