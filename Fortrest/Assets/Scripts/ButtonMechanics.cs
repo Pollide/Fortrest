@@ -140,7 +140,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         {
             BuildType buildType = BuildType.None;
 
-            if (UpgradeInt < 0)
+            if (UpgradeInt < 0 && PlayerModeHandler.global.SelectedTurret && open)
             {
                 if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Ballista)
                     buildType = BuildType.Turret;

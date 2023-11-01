@@ -1213,7 +1213,8 @@ public class PlayerController : MonoBehaviour
         public int upgradeTypeInt = 0;
         public BuildType buildType = BuildType.None;
     }
-    ResourceData previousResourceData = new ResourceData();
+    [HideInInspector]
+    public ResourceData previousResourceData = new ResourceData();
 
 
 
@@ -1286,27 +1287,6 @@ public class PlayerController : MonoBehaviour
             stoneCostList[3].ResourceCost = -10;
         }
 
-        if (resourceData.upgradeTypeInt == -1) //repair
-        {
-            resourceInfoText.text = "Repair";
-            healthInfoData.gameObject.SetActive(true);
-
-            Building building = PlayerModeHandler.global.SelectedTurret;
-
-            healthInfoData.currentFill.fillAmount = building.health / building.maxHealth;
-            healthInfoData.upgradeFill.fillAmount = Mathf.Clamp(building.health + building.ReturnRepair() / building.maxHealth, 0, 1);
-
-            for (int i = 0; i < woodCostList.Count; i++)
-            {
-                woodCostList[i].ResourceCost /= 5;
-            }
-
-            for (int i = 0; i < stoneCostList.Count; i++)
-            {
-                stoneCostList[i].ResourceCost /= 5;
-            }
-        }
-
         if (resourceData.upgradeTypeInt == -2) //destroy
         {
             resourceInfoText.text = "Remove";
@@ -1321,63 +1301,83 @@ public class PlayerController : MonoBehaviour
                 stoneCostList[i].ResourceCost = -(stoneCostList[i].ResourceCost / 2);
             }
         }
-        bool upgradeBool = resourceData.upgradeTypeInt > 0;
-        if (upgradeBool || resourceData.buildType != BuildType.None) //upgrade
+        else
         {
-            Defence defence = PlayerModeHandler.global.ReturnTurretPrefab().GetComponent<Defence>();
-
-            if (PlayerModeHandler.global.SelectedTurret)
+            bool upgradeBool = resourceData.upgradeTypeInt > 0;
+            if (upgradeBool || resourceData.buildType != BuildType.None) //upgrade.
             {
-                defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
-            }
+                Defence defence = PlayerModeHandler.global.ReturnTurretPrefab().GetComponent<Defence>();
 
-            List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(turretMenuHolder.transform);
-
-            int index = Mathf.Clamp(resourceData.upgradeTypeInt - 1, 0, turretStats.Count);
-
-            TurretStats.Tier changeTier = turretStats[index].changeTier;
-            TurretStats.Tier maxTier = turretStats[index].maxTier;
-
-            if (upgradeBool)
-            {
-                resourceInfoText.text = "Upgrade";
-
-                int tier = defence.CurrentTier == 0 ? 1 : 3;
-                woodCostList[tier].ResourceCost = -5;
-                stoneCostList[tier].ResourceCost = -5;
-            }
-            else
-            {
-                changeTier = new TurretStats.Tier();//so doesnt effect
-                maxTier = new TurretStats.Tier();
-
-                for (int i = 0; i < turretStats.Count; i++)
+                if (PlayerModeHandler.global.SelectedTurret)
                 {
-                    maxTier.damageTier += turretStats[i].maxTier.damageTier;
-                    maxTier.healthTier += turretStats[i].maxTier.healthTier;
-                    maxTier.rangeTier += turretStats[i].maxTier.rangeTier;
-                    maxTier.rateTier += turretStats[i].maxTier.rateTier;
+                    defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
                 }
-            }
 
-            if (resourceData.upgradeTypeInt == 1 || !upgradeBool)
-            {
-                damageInfoData.InfoRefresh(defence.ReturnDamage(), changeTier.damageTier, defence.damage + maxTier.damageTier);
-            }
+                List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(turretMenuHolder.transform);
 
-            if (resourceData.upgradeTypeInt == 2 || !upgradeBool)
-            {
-                healthInfoData.InfoRefresh(defence.ReturnHealth(), changeTier.healthTier, defence.GetComponent<Building>().health + maxTier.healthTier);
-            }
+                int index = Mathf.Clamp(resourceData.upgradeTypeInt - 1, 0, turretStats.Count);
 
-            if (resourceData.upgradeTypeInt == 3 || !upgradeBool)
-            {
-                rangeInfoData.InfoRefresh(defence.ReturnRange(), changeTier.rangeTier, defence.shootingRange + maxTier.rangeTier);
-            }
+                TurretStats.Tier changeTier = turretStats[index].changeTier;
+                TurretStats.Tier maxTier = turretStats[index].ReturnMaxTier();
 
-            if (resourceData.upgradeTypeInt == 4 || !upgradeBool)
-            {
-                rateInfoData.InfoRefresh(defence.ReturnFireRate(), changeTier.rateTier, defence.fireRate + maxTier.rateTier);
+                if (upgradeBool)
+                {
+                    resourceInfoText.text = "Upgrade";
+
+                    int tier = defence.CurrentTier == 0 ? 1 : 3;
+                    woodCostList[tier].ResourceCost = -5;
+                    stoneCostList[tier].ResourceCost = -5;
+                }
+                else
+                {
+                    changeTier = new TurretStats.Tier();//so doesnt effect
+                    maxTier = new TurretStats.Tier();
+
+                    for (int i = 0; i < turretStats.Count; i++)
+                    {
+                        maxTier.damageTier += turretStats[i].ReturnMaxTier().damageTier;
+                        maxTier.healthTier += turretStats[i].ReturnMaxTier().healthTier;
+                        maxTier.rangeTier += turretStats[i].ReturnMaxTier().rangeTier;
+                        maxTier.rateTier += turretStats[i].ReturnMaxTier().rateTier;
+                    }
+
+                    if (resourceData.upgradeTypeInt == -1) //repair
+                    {
+                        resourceInfoText.text = "Repair";
+                        for (int i = 0; i < woodCostList.Count; i++)
+                        {
+                            woodCostList[i].ResourceCost /= 5;
+                        }
+
+                        for (int i = 0; i < stoneCostList.Count; i++)
+                        {
+                            stoneCostList[i].ResourceCost /= 5;
+                        }
+                        changeTier.healthTier = defence.GetComponent<Building>().ReturnRepair();
+                        resourceData.upgradeTypeInt = 1;
+                        upgradeBool = true;
+                    }
+                }
+
+                if (resourceData.upgradeTypeInt == 1 || !upgradeBool)
+                {
+                    damageInfoData.InfoRefresh(defence.ReturnDamage(), changeTier.damageTier, defence.damage + maxTier.damageTier);
+                }
+
+                if (resourceData.upgradeTypeInt == 2 || !upgradeBool)
+                {
+                    healthInfoData.InfoRefresh(defence.ReturnHealth(), changeTier.healthTier, defence.GetComponent<Building>().health + maxTier.healthTier);
+                }
+
+                if (resourceData.upgradeTypeInt == 3 || !upgradeBool)
+                {
+                    rangeInfoData.InfoRefresh(defence.ReturnRange(), changeTier.rangeTier, defence.shootingRange + maxTier.rangeTier);
+                }
+
+                if (resourceData.upgradeTypeInt == 4 || !upgradeBool)
+                {
+                    rateInfoData.InfoRefresh(defence.ReturnFireRate(), changeTier.rateTier, defence.fireRate + maxTier.rateTier);
+                }
             }
         }
 

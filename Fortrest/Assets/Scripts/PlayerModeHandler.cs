@@ -249,6 +249,7 @@ public class PlayerModeHandler : MonoBehaviour
                 defenceTier += buttonTier;
                 GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
                 GameManager.PlayAnimation(fillImage.GetComponentInParent<Animation>(), "TierUpgrade");
+                PlayerController.global.UpdateResourceHolder(PlayerController.global.previousResourceData); //so the bars update with the new defenceTier addition
 
             }
 
