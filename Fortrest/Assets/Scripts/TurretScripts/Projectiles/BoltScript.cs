@@ -44,7 +44,6 @@ public class BoltScript : MonoBehaviour
                 {
                     enemy.Damaged(damage); // Apply damage to the enemy
                     damageDealt = true;
-
                 }
 
                 Destroy(gameObject); // Destroy the bullet

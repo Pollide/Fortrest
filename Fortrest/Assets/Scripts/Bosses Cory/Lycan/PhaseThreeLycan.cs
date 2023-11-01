@@ -7,6 +7,7 @@ public class PhaseThreeLycan : BossState
     [SerializeField] private BossState idleState;
     [SerializeField] private BossState nextState;
     [SerializeField] private float nextAttackTime = 0f;
+    public float rotationSpeed = 4;
     public bool telegraph;
     public float attackRange = 2f;
     public float attackCooldown = 2f;
@@ -35,6 +36,14 @@ public class PhaseThreeLycan : BossState
         else
         {
             WalkTo(playerTransform.position, 3);
+            // Calculate the direction to the target
+            Vector3 targetDirection = playerTransform.position - transform.position;
+            targetDirection.y = 0f;
+            // Calculate the rotation needed to face the target
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+
+            // Smoothly interpolate the current rotation to the target rotation
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
             Attack();
         }
     }

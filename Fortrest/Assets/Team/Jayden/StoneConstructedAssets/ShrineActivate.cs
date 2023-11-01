@@ -10,7 +10,7 @@ public class ShrineActivate : MonoBehaviour
     public TMP_Text interactText;
     bool textDisplayed;
     bool notGood;
-    SFXManager.SFXData sFXData;
+
     private void Start()
     {
         if (GameManager.ReturnInMainMenu())
@@ -38,9 +38,6 @@ public class ShrineActivate : MonoBehaviour
 
                 PropAnimator.ResetTrigger(AnimationTriggerName);
                 PropAnimator.SetTrigger(AnimationTriggerName);
-
-                if(!GameManager.global.SoundManager.ReturnActiveAudio(sFXData))
-                sFXData = GameManager.global.SoundManager.PlaySound(GameManager.global.TeleporterEnterSound);
             }
             PlayerController.global.canTeleport = true;
             PlayerController.global.needInteraction = true;

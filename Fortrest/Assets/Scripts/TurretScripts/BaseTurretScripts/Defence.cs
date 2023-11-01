@@ -10,6 +10,7 @@ public class Defence : MonoBehaviour
     public float damage;
     public int turretID;
     public TurretStats.Tier changeTier = new TurretStats.Tier();
+    public GameObject rangeIndicator;
 
     public float ReturnDamage()
     {
@@ -105,6 +106,8 @@ public class Defence : MonoBehaviour
 
     private void Update()
     {
+        rangeIndicator.transform.localScale = new Vector3(ReturnRange() / 5, ReturnRange() / 5, ReturnRange() / 5);
+
         if (building.buildingObject == Building.BuildingType.Scatter)
         {
             // Rotate the GameObject around its up axis

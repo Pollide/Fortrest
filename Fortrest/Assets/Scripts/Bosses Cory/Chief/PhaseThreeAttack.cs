@@ -22,6 +22,7 @@ public class PhaseThreeAttack : BossState
 
     public override void EnterState()
     {
+        Debug.Log("Phase3");
         // Checks if the state is null
         if (idleState == null)
         {
@@ -41,6 +42,12 @@ public class PhaseThreeAttack : BossState
         slamWaitTime = 0f;
         damageDone = false;
         telegraphBool = true;
+        if (stateMachine.telegraphs[0].outerShape.gameObject.activeInHierarchy)
+        {
+            stateMachine.telegraphs[0].outerShape.gameObject.SetActive(false);
+        }
+        stateMachine.BossAnimator.SetBool("isCharging", false);
+        stateMachine.BossAnimator.SetBool("isDiving", false);
     }
 
     public override void ExitState()
@@ -50,6 +57,12 @@ public class PhaseThreeAttack : BossState
         stateMachine.BossAnimator.SetBool("isJumping", false);
         stateMachine.BossAnimator.SetBool("isDiving", true);
         hasJumped = false;
+        agent.isStopped = false;
+        telegraphBool = false;
+        if (stateMachine.telegraphs[1].outerShape.gameObject.activeInHierarchy)
+        {
+            stateMachine.telegraphs[1].outerShape.gameObject.SetActive(false);
+        }
     }
 
     public override void UpdateState()

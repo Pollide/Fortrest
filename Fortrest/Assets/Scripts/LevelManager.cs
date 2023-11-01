@@ -202,6 +202,8 @@ public class LevelManager : MonoBehaviour
         VFXSmokeRing.Stop();
         VFXBuilding.Stop();
         VFXSmoke.Stop();
+        VFXBossSlash.Stop();
+        VFXBossSlashReversed.Stop();
 
         spawnEntries.Add(goblin);
 

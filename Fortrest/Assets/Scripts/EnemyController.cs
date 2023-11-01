@@ -555,9 +555,9 @@ public class EnemyController : MonoBehaviour
 
             healthAnimation.gameObject.SetActive(false);
             dead = true;
-            if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin) // remove once we got anims
+            if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin && currentEnemyType != ENEMYTYPE.snake && currentEnemyType != ENEMYTYPE.lava) // remove once we got anims
             {
-                agent.SetDestination(transform.position);
+                agent.isStopped = true;
                 ActiveAnimator.SetTrigger("Death");
             }
             else

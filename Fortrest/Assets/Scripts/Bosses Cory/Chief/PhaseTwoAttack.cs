@@ -51,6 +51,15 @@ public class PhaseTwoAttack : BossState
         {
             stateMachine.BossAnimator.SetBool("isCharging", true);
         }
+        if (stateMachine.telegraphs[0].outerShape.gameObject.activeInHierarchy)
+        {
+            stateMachine.telegraphs[0].outerShape.gameObject.SetActive(false);
+        }
+        if (stateMachine.telegraphs[1].outerShape.gameObject.activeInHierarchy)
+        {
+            stateMachine.telegraphs[1].outerShape.gameObject.SetActive(false);
+        }
+        stateMachine.BossAnimator.SetBool("isDiving", false);
     }
 
     public override void ExitState()
@@ -63,6 +72,7 @@ public class PhaseTwoAttack : BossState
         chargeDMGTrigger.enabled = false;
         hasRun = false;
         coneIndicator = false;
+        agent.isStopped = false;
     }
 
     public override void UpdateState()
@@ -82,7 +92,7 @@ public class PhaseTwoAttack : BossState
         {
             // Calculate the direction to the target
             Vector3 targetDirection = playerTransform.position - transform.position;
-
+            targetDirection.y = 0f;
             // Calculate the rotation needed to face the target
             Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
 
