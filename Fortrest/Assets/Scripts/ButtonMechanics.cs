@@ -164,6 +164,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         if (buttons)
             GetComponentInParent<Buttons>().pressingDown = true;
+
         SelectVoid();
     }
 

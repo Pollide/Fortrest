@@ -105,6 +105,7 @@ public class PlayerController : MonoBehaviour
     [HideInInspector] public bool upgradedMelee; // Used to enable the upgraded melee perks
     public bool attackAnimEnded = true; // Safety bool to avoid attack issues. Becomes true using anim behaviour, and is needed to attack again
     public VisualEffect swordVFX; // Sword hitting the enemy VFX
+    private float smokeTimer = 0f;
 
     // States
     [Header("Player States")]
@@ -615,7 +616,7 @@ public class PlayerController : MonoBehaviour
             HandleSpeed();
             ApplyGravity();
             ApplyMovement(horizontalMovement, verticalMovement);
-
+            SmokeTrail();
             BlendTreeAnimation();
 
             // Mechanics
@@ -1243,7 +1244,7 @@ public class PlayerController : MonoBehaviour
 
         if (buildType == BuildType.Turret)
         {
-            resourceInfoText.text = "Turret";
+            resourceInfoText.text = "Ballista";
             woodCostList[0].ResourceCost = -20;
             stoneCostList[0].ResourceCost = -20;
         }
@@ -2175,7 +2176,7 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
-        if (playerCanBeDamaged)
+        if (playerCanBeDamaged && enabled)
         {
             if (!Boar.global.mounted)
             {
@@ -2314,6 +2315,22 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 direction = Boar.global.transform.position - transform.position;
             playerCC.Move(direction * Time.deltaTime * 2.0f);
+        }
+    }
+
+    public void SmokeTrail()
+    {
+        smokeTimer += Time.deltaTime;
+        bool boarMoving = Boar.global && Boar.global.IsMoving();
+        if ((boarMoving || PlayerController.global.playerisMoving) && smokeTimer > 0.08f)
+        {
+            smokeTimer = 0f;
+            Vector3 offset = boarMoving ? new Vector3(0f, 0.5f, 0f) - (Vector3.forward * 1.25f) - Vector3.right : Vector3.zero;
+            GameObject SmokeVFXRight = Instantiate(LevelManager.global.VFXSmoke.gameObject, PlayerController.global.transform.position + offset, Quaternion.identity);
+            float randomeFloat = Random.Range(0.2f, 0.275f);
+            SmokeVFXRight.transform.localScale = new Vector3(randomeFloat * 2f, randomeFloat, randomeFloat * 2f);
+            SmokeVFXRight.GetComponent<VisualEffect>().Play();
+            Destroy(SmokeVFXRight, 1.5f);
         }
     }
 }

@@ -39,7 +39,6 @@ public class Boar : MonoBehaviour
     private bool dismountRight;
     [HideInInspector]
     public Vector3 respawnLocation;
-    private float timer = 0f;
 
     private void Awake()
     {
@@ -98,7 +97,6 @@ public class Boar : MonoBehaviour
             PlayAnimations();
             if (canMove)
             {
-                SmokeTrail();
                 Ride();
             }
         }
@@ -400,20 +398,6 @@ public class Boar : MonoBehaviour
         else
         {
             return false;
-        }
-    }
-
-    private void SmokeTrail()
-    {
-        timer += Time.deltaTime;
-        if (isMoving && timer > 0.08f)
-        {
-            timer = 0f;
-            GameObject SmokeVFXRight = Instantiate(LevelManager.global.VFXSmoke.gameObject, transform.position + new Vector3(0f, 0.5f, 0f) - (Vector3.forward * 1.25f) - Vector3.right, Quaternion.identity);
-            float randomeFloat = Random.Range(0.2f, 0.275f);
-            SmokeVFXRight.transform.localScale = new Vector3(randomeFloat * 2f, randomeFloat, randomeFloat * 2f);
-            SmokeVFXRight.GetComponent<VisualEffect>().Play();
-            Destroy(SmokeVFXRight, 1.5f);
         }
     }
 }
