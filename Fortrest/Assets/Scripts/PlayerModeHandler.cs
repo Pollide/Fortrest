@@ -439,11 +439,11 @@ public class PlayerModeHandler : MonoBehaviour
                 runOnce = false;
             }
 
-            if (PlayerController.global.CheckSufficientResources() && !hoveringTurret && !cantPlace) // && IsInRange(worldPos)
+            if (!hoveringTurret && !cantPlace) // &&put sufficient at the end
             {
                 BluePrintSet(turretBlueprintBlue);
 
-                if (selectBool)
+                if (selectBool && PlayerController.global.CheckSufficientResources(true))
                 {
                     float timer;
                     switch (buildType)
@@ -478,7 +478,6 @@ public class PlayerModeHandler : MonoBehaviour
                     {
                         GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                         runOnce = true;
-                        PlayerController.global.CheckSufficientResources(); //will shake
                     }
                 }
             }
@@ -497,7 +496,6 @@ public class PlayerModeHandler : MonoBehaviour
 
     private IEnumerator TurretConstructing(float turretTimer, GameObject prefab, Vector3 position, Vector2 gridPos)
     {
-        PlayerController.global.CheckSufficientResources(true);
         GameObject newTurret = Instantiate(prefab, position, Quaternion.identity);
 
         newTurret.transform.localScale = Vector3.zero;
@@ -646,8 +644,6 @@ public class PlayerModeHandler : MonoBehaviour
     public void SwitchToBuildMode(bool active = true)
     {
         buildGrid.gameObject.SetActive(active);
-        // PlayerController.global.UpdateResourceHolder(open: active);
-
         PlayerController.global.characterAnimator.gameObject.SetActive(!active);
         if (active)
         {
@@ -672,8 +668,9 @@ public class PlayerModeHandler : MonoBehaviour
         else
         {
             TurretMenuSet(false);
-            PlayerController.global.UpdateResourceHolder(open: false);
         }
+
+        PlayerController.global.UpdateResourceHolder(buildType: buildType, open: active);
     }
 
     public void SwitchToResourceMode()

@@ -157,7 +157,8 @@ public class LevelManager : MonoBehaviour
     private Vector3 enemySpawnPosition;
     bool housePosObtained = false;
     private float spawnDistance = 39.0f;
-    AnimationState enemyIncomingState;
+    [HideInInspector]
+    public AnimationState enemyIncomingState;
     [HideInInspector]
     public bool messageDisplayed;
 
@@ -428,6 +429,7 @@ public class LevelManager : MonoBehaviour
 
     public static void FloatingTextChange(GameObject floatingText, bool enable)
     {
+
         global.StartCoroutine(DisableVoid(floatingText, enable));
     }
 
@@ -441,7 +443,8 @@ public class LevelManager : MonoBehaviour
         {
             yield return new WaitForSeconds(length);
 
-            floatingText.gameObject.SetActive(false);
+            if (floatingText.GetComponent<Animation>()["BobbingText Appear"].speed < 0)
+                floatingText.gameObject.SetActive(false);
         }
     }
 
@@ -772,22 +775,24 @@ public class LevelManager : MonoBehaviour
         float enemiesIncoming = randomAttackTrigger - PlayerController.global.UIAnimation["Enemies Incoming"].length;
 
         //Debug.Log(daylightTimer + " >= " + noon);
-
-        if (daylightTimer >= enemiesIncoming && randomAttackTrigger != 0f && !messageDisplayed)
+        if (!activeBossSpawner)
         {
-            enemyIncomingState = GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Incoming"); // Display enemies are coming a bit before an attack
-            messageDisplayed = true;
-            GameManager.global.SoundManager.PlaySound(GameManager.global.ClockSound);
-        }
+            if (daylightTimer >= enemiesIncoming && randomAttackTrigger != 0f && !messageDisplayed)
+            {
+                enemyIncomingState = GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Incoming"); // Display enemies are coming a bit before an attack
+                messageDisplayed = true;
+                GameManager.global.SoundManager.PlaySound(GameManager.global.ClockSound);
+            }
 
 
-        // Enemies start spawning after enemy incoming animation is finished
-        if (!spawnEnemies && messageDisplayed && enemyIncomingState && !enemyIncomingState.enabled)
-        {
-            enemyIncomingState = null;
-            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear");
-            spawnEnemies = true; // Attack starts when the time is reached
-            countSet = false;
+            // Enemies start spawning after enemy incoming animation is finished
+            if (!spawnEnemies && messageDisplayed && enemyIncomingState && !enemyIncomingState.enabled)
+            {
+                enemyIncomingState = null;
+                GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear");
+                spawnEnemies = true; // Attack starts when the time is reached
+                countSet = false;
+            }
         }
 
         if (spawnEnemies)
