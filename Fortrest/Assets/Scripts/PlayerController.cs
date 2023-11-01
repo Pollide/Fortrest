@@ -1236,7 +1236,7 @@ public class PlayerController : MonoBehaviour
         }
 
         previousResourceData = resourceData;
-
+        Debug.Log("CLEAR");
         GameManager.ResetChosenHolder(ResourceHolder, 1);
         GameManager.ResetChosenHolder(CostHolder, 1);
 
@@ -1354,7 +1354,7 @@ public class PlayerController : MonoBehaviour
                             stoneCostList[i].ResourceCost /= 5;
                         }
                         changeTier.healthTier = defence.GetComponent<Building>().ReturnRepair();
-                        resourceData.upgradeTypeInt = 1;
+                        resourceData.upgradeTypeInt = 2;
                         upgradeBool = true;
                     }
                 }

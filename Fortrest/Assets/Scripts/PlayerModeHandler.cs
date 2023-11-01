@@ -220,7 +220,7 @@ public class PlayerModeHandler : MonoBehaviour
 
                 PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
             }
-            Debug.Log(open);
+           
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
         }
 
