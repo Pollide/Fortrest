@@ -22,7 +22,7 @@ public class Creature : MonoBehaviour
     public NavMeshAgent navMeshAgent;
     public Animator animator;
     // Update is called once per frame
-    public GameObject DeathVFX;
+
     float idleThreshold;
     float idleTimer;
 
@@ -86,9 +86,7 @@ public class Creature : MonoBehaviour
             if (other.gameObject == PlayerController.global.SwordGameObject || other.gameObject.tag == "Arrow")
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.ArrowHitBuildingSound, 1.0f);
-                DeathVFX.transform.SetParent(null);
-                DeathVFX.SetActive(true);
-
+                LevelManager.global.DeathParticle(transform);
                 Destroy(gameObject);
             }
         }
