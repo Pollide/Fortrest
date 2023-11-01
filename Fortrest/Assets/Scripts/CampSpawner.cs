@@ -62,7 +62,6 @@ public class CampSpawner : MonoBehaviour
     public void SpawnEnemies(Terrain terrain, GameObject prefab, int amountMax, ref int amountCurrent)
     {
         LevelManager manager = LevelManager.global;
-
         if (!spawnEnemies)
         {
             while (amountCurrent < amountMax)
