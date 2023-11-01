@@ -221,6 +221,7 @@ public class PlayerModeHandler : MonoBehaviour
                 if (buildGrid.gameObject.activeSelf)
                     PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
             }
+            Debug.Log("OPEN: " + open);
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
         }
 
@@ -452,9 +453,9 @@ public class PlayerModeHandler : MonoBehaviour
                 runOnce = false;
             }
 
-            if (!hoveringTurret && !cantPlace && PlayerController.global.CheckSufficientResources(false)) // && sufficient false just so it turns red
+            if (!hoveringTurret && !cantPlace) // && sufficient false just so it turns red
             {
-                BluePrintSet(turretBlueprintBlue);
+                BluePrintSet(PlayerController.global.CheckSufficientResources(false) ? turretBlueprintBlue : turretBlueprintRed);
 
                 if (selectBool && PlayerController.global.CheckSufficientResources()) //but here is where you purchase
                 {

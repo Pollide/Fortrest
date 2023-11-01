@@ -1226,7 +1226,7 @@ public class PlayerController : MonoBehaviour
             GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
         }
 
-        Debug.Log(resourceData.bridgeTypeInt + " == 0 && " + resourceData.upgradeTypeInt + " == 0 && " + resourceData.buildType + " == " + BuildType.None);
+        // Debug.Log(resourceData.bridgeTypeInt + " == 0 && " + resourceData.upgradeTypeInt + " == 0 && " + resourceData.buildType + " == " + BuildType.None);
         if (!open || resourceData.bridgeTypeInt == 0 && resourceData.upgradeTypeInt == 0 && resourceData.buildType == BuildType.None)
         {
             ResourceCostUI(false);
@@ -1467,7 +1467,9 @@ public class PlayerController : MonoBehaviour
         {
             resourceCostBool = show;
             //  GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", show);
-            if (Time.deltaTime == 0)
+            // Debug.Log(Time.deltaTime + " " + show);
+
+            if (Time.timeScale == 0)
             {
                 ResourceHolder.gameObject.SetActive(show);
             }
@@ -2176,6 +2178,7 @@ public class PlayerController : MonoBehaviour
             playerCC.enabled = false;
             playerRespawned = false;
             deathEffects = true;
+            UpdateResourceHolder(new ResourceData(), false);
         }
 
         if (playerHealth >= maxHealth && !playerRespawned)

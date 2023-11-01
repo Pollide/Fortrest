@@ -40,6 +40,10 @@ public class Buttons : MonoBehaviour
 
     private void Update()
     {
+        if (runAnimationName != "" && !PlayerModeHandler.global.SelectedTurret)
+        {
+            return;
+        }
         if (MenuList.Count > 0 && ButtonHolder.gameObject.activeInHierarchy)
             ButtonInput();
     }
