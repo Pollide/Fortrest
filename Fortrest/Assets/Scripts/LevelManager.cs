@@ -425,6 +425,7 @@ public class LevelManager : MonoBehaviour
 
     public static void FloatingTextChange(GameObject floatingText, bool enable)
     {
+
         global.StartCoroutine(DisableVoid(floatingText, enable));
     }
 
@@ -438,7 +439,8 @@ public class LevelManager : MonoBehaviour
         {
             yield return new WaitForSeconds(length);
 
-            floatingText.gameObject.SetActive(false);
+            if (floatingText.GetComponent<Animation>()["BobbingText Appear"].speed < 0)
+                floatingText.gameObject.SetActive(false);
         }
     }
 

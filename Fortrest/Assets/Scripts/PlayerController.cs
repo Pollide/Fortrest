@@ -1469,6 +1469,7 @@ public class PlayerController : MonoBehaviour
         {
             if (!Sufficient(LevelManager.global.WoodTierList, purchase) || !Sufficient(LevelManager.global.StoneTierList, purchase))
             {
+                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
                 GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
                 return false;
             }
