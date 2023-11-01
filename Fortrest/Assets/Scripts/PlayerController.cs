@@ -1227,7 +1227,7 @@ public class PlayerController : MonoBehaviour
             GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
         }
 
-        if (resourceData.bridgeTypeInt == 0 && resourceData.upgradeTypeInt == 0 && resourceData.buildType == BuildType.None)
+        if (!open || resourceData.bridgeTypeInt == 0 && resourceData.upgradeTypeInt == 0 && resourceData.buildType == BuildType.None)
         {
             ResourceCostUI(false);
             return;

@@ -218,7 +218,8 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 SelectedTurret = null;
 
-                PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
+                if (buildGrid.gameObject.activeSelf)
+                    PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
             }
 
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);

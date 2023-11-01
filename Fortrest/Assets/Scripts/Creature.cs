@@ -87,6 +87,8 @@ public class Creature : MonoBehaviour
             {
                 enabled = false;
                 animator.enabled = false;
+                navMeshAgent.enabled = false;
+
                 GameManager.global.SoundManager.PlaySound(GameManager.global.ArrowHitBuildingSound, 1.0f);
                 LevelManager.global.DeathParticle(transform);
                 // Destroy(gameObject);

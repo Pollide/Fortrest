@@ -734,6 +734,7 @@ public class GameManager : MonoBehaviour
 
         });
 
+        /* no longer saving and loading enemies
         LevelManager.ProcessEnemyList((enemy) =>
     {
         int i = LevelManager.global.enemyList.IndexOf(enemy);
@@ -747,6 +748,7 @@ public class GameManager : MonoBehaviour
         }
 
     });
+        */
 
         int turretSize = (int)Pref("Turret Size", 0, load); //also resets on save
 
