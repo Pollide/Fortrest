@@ -14,6 +14,7 @@ public class SlimeAnimEvents : MonoBehaviour
     void StartJump()
     {
         script.lavaAttacks = true;
+        script.freezeMovement = false;
     }
 
     void Death()
