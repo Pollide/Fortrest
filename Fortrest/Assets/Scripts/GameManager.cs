@@ -677,6 +677,10 @@ public class GameManager : MonoBehaviour
 
             resource.GetComponent<ItemDrop>().resourceAmount = (int)Pref("Item Amount" + i, resource.GetComponent<ItemDrop>().resourceAmount, load);
 
+            if (load)
+            {
+                resource.GetComponent<ItemDrop>().soundPlayed = true;
+            }
             // if (load && collected == 1)
             //    resource.GetComponent<ItemDrop>().CollectVoid();
 

@@ -7,7 +7,8 @@ using TMPro;
 
 public class ItemDrop : MonoBehaviour
 {
-    bool soundPlayed;
+    [HideInInspector]
+    public bool soundPlayed;
     public int TierInt;
     public int resourceAmount = 1;
 
@@ -21,6 +22,8 @@ public class ItemDrop : MonoBehaviour
     public bool stoneBool;
     public bool WoodBool;
     public bool foodBool;
+
+
 
     private void Start()
     {

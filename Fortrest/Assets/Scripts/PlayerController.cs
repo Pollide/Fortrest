@@ -2322,11 +2322,11 @@ public class PlayerController : MonoBehaviour
     {
         smokeTimer += Time.deltaTime;
         bool boarMoving = Boar.global && Boar.global.IsMoving();
-        if ((boarMoving || PlayerController.global.playerisMoving) && smokeTimer > 0.08f)
+        if ((boarMoving || PlayerController.global.playerisMoving && running) && smokeTimer > 0.08f)
         {
             smokeTimer = 0f;
-            Vector3 offset = boarMoving ? new Vector3(0f, 0.5f, 0f) - (Vector3.forward * 1.25f) - Vector3.right : Vector3.zero;
-            GameObject SmokeVFXRight = Instantiate(LevelManager.global.VFXSmoke.gameObject, PlayerController.global.transform.position + offset, Quaternion.identity);
+            Vector3 position = boarMoving ? Boar.global.transform.position + new Vector3(0f, 0.5f, 0f) - (Vector3.forward * 1.25f) - Vector3.right : transform.position - new Vector3(0f, 0.5f, 0f);
+            GameObject SmokeVFXRight = Instantiate(LevelManager.global.VFXSmoke.gameObject, position, Quaternion.identity);
             float randomeFloat = Random.Range(0.2f, 0.275f);
             SmokeVFXRight.transform.localScale = new Vector3(randomeFloat * 2f, randomeFloat, randomeFloat * 2f);
             SmokeVFXRight.GetComponent<VisualEffect>().Play();
