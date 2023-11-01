@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 evadeImageStartPos = new Vector3(0f, -95f, 0f); // Initial position of the image
     private float evadeTimer;
     public Image dodgeIcon;
+    private bool visualEvadeCD;
 
     // Shooting
     [HideInInspector] public bool canShoot; // Used to allow the player to shoot the bow. True when aiming
@@ -546,7 +547,7 @@ public class PlayerController : MonoBehaviour
             staggerCD -= Time.deltaTime;
         }
 
-        if (!canEvade)
+        if (visualEvadeCD)
         {
             evadeTimer += Time.deltaTime;
             dodgeIcon.color = new Color32(214, 90, 90, 255);
@@ -1117,9 +1118,11 @@ public class PlayerController : MonoBehaviour
         GameManager.global.SoundManager.PlaySound(GameManager.global.PlayerEvadeSound);
         evadeTimer = 0f;
         evadeCooldownImage.transform.localPosition = evadeImageStartPos;
+        visualEvadeCD = true;
 
         yield return new WaitForSeconds(evadeCooldown);
         canEvade = true;
+        visualEvadeCD = false;
     }
 
     public void PauseVoid(bool pause)
