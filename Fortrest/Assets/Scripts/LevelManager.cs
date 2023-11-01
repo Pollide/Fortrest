@@ -58,6 +58,7 @@ public class LevelManager : MonoBehaviour
     public Gradient AmbientGradient;
     public GameObject applePrefab;
     public GameObject DissolveAshParticle;
+    public GameObject VFXSlowPrefab;
     [System.Serializable]
     public class TierData
     {

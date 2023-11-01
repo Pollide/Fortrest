@@ -1167,7 +1167,7 @@ public class PlayerController : MonoBehaviour
                 MapPanningPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
             }
 
-            UpdateResourceHolder(new ResourceData(), open: map);
+            UpdateResourceHolder(map ? new ResourceData() : previousResourceData, open: map || previousResourceData.previousOpen, updatePrevious: false);
         }
     }
 
@@ -1212,13 +1212,12 @@ public class PlayerController : MonoBehaviour
         public int bridgeTypeInt = 0;
         public int upgradeTypeInt = 0;
         public BuildType buildType = BuildType.None;
+        public bool previousOpen = true;
     }
     [HideInInspector]
     public ResourceData previousResourceData = new ResourceData();
 
-
-
-    public void UpdateResourceHolder(ResourceData resourceData, bool open = true)
+    public void UpdateResourceHolder(ResourceData resourceData, bool open = true, bool updatePrevious = true)
     {
         if (ResourceHolderOpened != open)
         {
@@ -1238,8 +1237,11 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        previousResourceData = resourceData;
-
+        if (updatePrevious)
+        {
+            previousResourceData = resourceData;
+            previousResourceData.previousOpen = open;
+        }
         GameManager.ResetChosenHolder(ResourceHolder, 1);
 
         damageInfoData.gameObject.SetActive(false);
@@ -1343,7 +1345,7 @@ public class PlayerController : MonoBehaviour
                         maxTier.rateTier += turretStats[i].ReturnMaxTier().rateTier;
                     }
 
-                    maxTier.healthTier = defence.GetComponent<Building>().maxHealth;
+                    maxTier.healthTier = defence.GetComponent<Building>().ReturnMaxHealth();
 
                     if (resourceData.upgradeTypeInt == -1) //repair
                     {
@@ -1505,8 +1507,11 @@ public class PlayerController : MonoBehaviour
         {
             if (!Sufficient(LevelManager.global.WoodTierList, purchase) || !Sufficient(LevelManager.global.StoneTierList, purchase))
             {
-                GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
-                GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
+                if (purchase)
+                {
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.CantPlaceSound);
+                    GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Shake");
+                }
                 return false;
             }
         }

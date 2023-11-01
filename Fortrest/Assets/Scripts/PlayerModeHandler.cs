@@ -221,7 +221,6 @@ public class PlayerModeHandler : MonoBehaviour
                 if (buildGrid.gameObject.activeSelf)
                     PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
             }
-
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
         }
 
@@ -229,7 +228,7 @@ public class PlayerModeHandler : MonoBehaviour
 
 
 
-    public bool SetTeir(Image fillImage, ref float buttonTier, ref float defenceTier, bool upgrade)
+    public bool SetTeir(Image fillImage, ref float buttonTier, ref float defenceTier, bool upgrade, bool active)
     {
         int tier = SelectedTurret.GetComponent<Defence>().CurrentTier;
         float max = buttonTier * 5;
@@ -242,7 +241,9 @@ public class PlayerModeHandler : MonoBehaviour
             return (defenceTier - shift) >= max;
         }
 
-        if (buttonTier != 0)
+        fillImage.GetComponentInParent<TurretStats>().gameObject.SetActive(active);
+
+        if (buttonTier != 0 && active) //active in hiarachy as some tiers are hidden depending on the turret
         {
 
             if (upgrade && !ReturnMax(ref defenceTier) && PlayerController.global.CheckSufficientResources())
@@ -300,13 +301,18 @@ public class PlayerModeHandler : MonoBehaviour
         {
             bool upgrade = turretStats[i] == buttonStat;
 
-            bool damage = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.damageTier, ref defence.changeTier.damageTier, upgrade);
-            bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade);
-            bool range = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rangeTier, ref defence.changeTier.rangeTier, upgrade);
-            bool rate = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rateTier, ref defence.changeTier.rateTier, upgrade);
+            bool ballista = SelectedTurret.buildingObject == Building.BuildingType.Ballista;
+            bool cannon = SelectedTurret.buildingObject == Building.BuildingType.Cannon;
+            bool slow = SelectedTurret.buildingObject == Building.BuildingType.Slow;
+            bool scatter = SelectedTurret.buildingObject == Building.BuildingType.Scatter;
+
+            bool damage = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.damageTier, ref defence.changeTier.damageTier, upgrade, ballista || cannon || scatter);
+            bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade, cannon || slow || scatter);
+            bool range = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rangeTier, ref defence.changeTier.rangeTier, upgrade, ballista || cannon || slow);
+            bool rate = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rateTier, ref defence.changeTier.rateTier, upgrade, ballista || slow || scatter);
 
 
-            if (damage && range && rate)
+            if (damage && range && rate && health)
             {
                 complete++;
             }
@@ -446,11 +452,11 @@ public class PlayerModeHandler : MonoBehaviour
                 runOnce = false;
             }
 
-            if (!hoveringTurret && !cantPlace) // &&put sufficient at the end
+            if (!hoveringTurret && !cantPlace && PlayerController.global.CheckSufficientResources(false)) // && sufficient false just so it turns red
             {
                 BluePrintSet(turretBlueprintBlue);
 
-                if (selectBool && PlayerController.global.CheckSufficientResources())
+                if (selectBool && PlayerController.global.CheckSufficientResources()) //but here is where you purchase
                 {
                     float timer;
                     switch (buildType)
