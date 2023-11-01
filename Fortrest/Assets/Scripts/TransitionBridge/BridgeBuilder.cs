@@ -157,13 +157,13 @@ public class BridgeBuilder : MonoBehaviour
                     {
                         manager.spiderSpawnable = true;
                         manager.spawnEntries.Add(manager.spider);
-                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.spider.objectToSpawn, spawner.spawnCurrentTaiga, ref spawner.spawnCurrentTaiga);
+                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.spider.objectToSpawn, spawner.spawnMaxTaiga, ref spawner.spawnCurrentTaiga);
                     }
                     if (BridgeTypeInt == 5)
                     {
                         manager.lavaSpawnable = true;
                         manager.spawnEntries.Add(manager.lava);
-                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.lava.objectToSpawn, spawner.spawnCurrentVolcanic, ref spawner.spawnCurrentVolcanic);
+                        spawner.SpawnEnemies(manager.terrainDataList[BridgeTypeInt].terrain, manager.lava.objectToSpawn, spawner.spawnMaxVolcanic, ref spawner.spawnCurrentVolcanic);
                     }
                 }
             }

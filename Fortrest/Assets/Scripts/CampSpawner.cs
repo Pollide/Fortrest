@@ -62,7 +62,6 @@ public class CampSpawner : MonoBehaviour
     public void SpawnEnemies(Terrain terrain, GameObject prefab, int amountMax, ref int amountCurrent)
     {
         LevelManager manager = LevelManager.global;
-
         if (!spawnEnemies)
         {
             while (amountCurrent < amountMax)
@@ -71,7 +70,7 @@ public class CampSpawner : MonoBehaviour
 
                 spawnPosition.z = terrain.transform.position.z + Random.Range(edge, terrain.terrainData.size.z - edge);
 
-                spawnPosition.y = (mesh.bounds.size.y / 2.0f - 2);
+                spawnPosition.y = (mesh.bounds.size.y / 2.0f - 3);
 
                 float distance = Vector3.Distance(PlayerController.global.transform.position, spawnPosition);
 
