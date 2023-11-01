@@ -141,7 +141,7 @@ public class Building : MonoBehaviour
                 posZ = posX;
                 posX *= -1;
             }
-            GameManager.ReturnResource(DropPrefab, new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
+            GameManager.ReturnResource(DropPrefab, new Vector3(transform.position.x + posX, transform.position.y + 2.0f, transform.position.z + posZ), transform.rotation * Quaternion.Euler(DropPrefab.GetComponent<ItemDrop>().WoodBool ? 0 : Random.Range(0, 361), Random.Range(0, 361), Random.Range(0, 361)));
         }
     }
 
