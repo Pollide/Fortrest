@@ -202,6 +202,10 @@ public class LevelManager : MonoBehaviour
         VFXBuilding.Stop();
         VFXSmoke.Stop();
 
+        spawnEntries.Add(goblin);
+
+        goblinSpawnable = true;
+
         //LanternSkinnedRenderer = playerController.transform.Find("Dwarf_main_chracter_Updated").Find("Dwarf_Player_character_updated").GetComponent<SkinnedMeshRenderer>();
         //NightLightGameObject = playerController.transform.Find("Spot Light").gameObject;
         //terrainList = GameObject.FindObjectsOfType<Terrain>().ToList();
