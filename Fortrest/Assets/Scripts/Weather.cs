@@ -12,9 +12,10 @@ public class Weather : MonoBehaviour
     private float weatherDuration;
     private bool weatherTriggered;
     private bool stepComplete;
-    private int randomInt;
     private float startEmission;
     public float DecreaseDayLightIntensity;
+    public int currentWeatherInt;
+    private bool wasInTaiga;
 
     public bool DebugForceRain;
     public bool DebugEndRain;
@@ -32,14 +33,6 @@ public class Weather : MonoBehaviour
         stepComplete = true;
         weatherTimer = Random.Range(200.0f, 250.0f);
         weatherDuration = Random.Range(100.0f, 150.0f);
-        //weatherTimer = Random.Range(2.0f, 2.5f);
-        //weatherDuration = Random.Range(15.0f, 20.0f);
-        /*
-        ColorUtility.TryParseHtmlString("#FFF4D6", out colorInitial); // Normal
-        ColorUtility.TryParseHtmlString("#B0B0B0", out color1); // Light Rain
-        ColorUtility.TryParseHtmlString("#202020", out color2); // Heavy Rain
-        ColorUtility.TryParseHtmlString("#CFCFCF", out color3); // Snow
-        */
         startEmission = 0.0f;
     }
 
@@ -59,77 +52,69 @@ public class Weather : MonoBehaviour
 
         }
 #endif
-        timer += Time.deltaTime;
-
-        if (timer > weatherTimer && !weatherTriggered)
+        if (LevelManager.global.currentTerrainData == LevelManager.global.terrainDataList[3])
         {
-            timer = 0;
-            weatherTimer = Random.Range(200.0f, 250.0f);
-            //weatherTimer = Random.Range(15.0f, 20.0f);
-            weatherTriggered = true;
-            stepComplete = false;
+            wasInTaiga = true;
+            currentWeatherInt = 2;
+            weatherType[currentWeatherInt].SetActive(true);
+            StartCoroutine(LerpParticles(90.0f));
+            DecreaseDayLightIntensity = 0.25f;
         }
-        else if (weatherTriggered && !stepComplete)
+        else
         {
-            weatherDuration = Random.Range(100.0f, 150.0f);
-            randomInt = Random.Range(0, 2); // Make the 2 a 3 to allow for snow
-            weatherType[randomInt].SetActive(true);
-            switch (randomInt)
+            if (wasInTaiga)
             {
-                case 0: // Light Rain
-                        // StartCoroutine(LerpSky(color1));
-                    StartCoroutine(LerpParticles(125.0f));
-                    DecreaseDayLightIntensity = 0.5f;
-                    break;
-                case 1: // Heavy Rain
-                        // StartCoroutine(LerpSky(color2));
-                    StartCoroutine(LerpParticles(350.0f));
-                    DecreaseDayLightIntensity = 0.75f;
-                    break;
-                case 2: // Snow
-                        //StartCoroutine(LerpSky(color2));
-                    StartCoroutine(LerpParticles(75.0f));
-                    DecreaseDayLightIntensity = 0.25f;
-                    break;
-                default:
-                    break;
+                wasInTaiga = false;
+                timer = 0;
+                StartCoroutine(LerpParticles(0.0f));
+                DecreaseDayLightIntensity = 0;
+                weatherTriggered = false;
+                stepComplete = true;
             }
-            stepComplete = true;
-        }
-        else if (timer > weatherDuration && weatherTriggered)
-        {
-            timer = 0;
-            // StartCoroutine(LerpSky(colorInitial)); // Normal
-            StartCoroutine(LerpParticles(0.0f));
-            DecreaseDayLightIntensity = 0;
-            weatherTriggered = false;
-        }
-    }
 
-    private IEnumerator LerpSky(Color color)
-    {
-        float tempTimer = 0;
-        Color startColor = LevelManager.global.DirectionalLightTransform.GetComponent<Light>().color;
+            timer += Time.deltaTime;
 
-        while (true)
-        {
-            tempTimer += Time.deltaTime / 7.5f;
-            LevelManager.global.DirectionalLightTransform.GetComponent<Light>().color = Color.Lerp(startColor, color, tempTimer / 1.5f);
-            if (tempTimer >= 1.5f)
+            if (timer > weatherTimer && !weatherTriggered)
             {
-                yield break;
+                timer = 0;
+                weatherTimer = Random.Range(200.0f, 250.0f);
+                weatherTriggered = true;
+                stepComplete = false;
             }
-            else
+            else if (weatherTriggered && !stepComplete)
             {
-                yield return 0;
+                weatherDuration = Random.Range(100.0f, 150.0f);
+                currentWeatherInt = Random.Range(0, 2);
+                weatherType[currentWeatherInt].SetActive(true);
+                switch (currentWeatherInt)
+                {
+                    case 0: // Light Rain
+                        StartCoroutine(LerpParticles(125.0f));
+                        DecreaseDayLightIntensity = 0.5f;
+                        break;
+                    case 1: // Heavy Rain
+                        StartCoroutine(LerpParticles(350.0f));
+                        DecreaseDayLightIntensity = 0.75f;
+                        break;
+                    default:
+                        break;
+                }
+                stepComplete = true;
             }
-        }
+            else if (timer > weatherDuration && weatherTriggered)
+            {
+                timer = 0;
+                StartCoroutine(LerpParticles(0.0f));
+                DecreaseDayLightIntensity = 0;
+                weatherTriggered = false;
+            }
+        }      
     }
 
     private IEnumerator LerpParticles(float emissionStrength)
     {
         float tempTimer = 0;
-        var emissionModule = weatherType[randomInt].GetComponent<ParticleSystem>().emission;
+        var emissionModule = weatherType[currentWeatherInt].GetComponent<ParticleSystem>().emission;
 
         while (true)
         {
@@ -139,7 +124,7 @@ public class Weather : MonoBehaviour
             {
                 if (emissionStrength == 0.0f)
                 {
-                    weatherType[randomInt].SetActive(false);
+                    weatherType[currentWeatherInt].SetActive(false);
                 }
                 startEmission = emissionStrength;
                 yield break;

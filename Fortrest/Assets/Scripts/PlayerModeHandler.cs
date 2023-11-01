@@ -509,17 +509,17 @@ public class PlayerModeHandler : MonoBehaviour
 
         ReturnVFXBuilding(newTurret.transform, turretTimer);
 
-
         newTurret.GetComponent<Defence>().enabled = false;
         GameObject upgradeTimer = Instantiate(upgradeTimerPrefab, position, Quaternion.identity);
         Text upgradeText = upgradeTimer.transform.GetChild(0).GetComponent<Text>();
-        float start = turretTimer;
+        float start = 0f;
 
-        while (turretTimer > 0)
+        while (newTurret.transform.localScale.x < 1.0f)
         {
-            turretTimer -= Time.deltaTime;
-            newTurret.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, start - turretTimer);
-            upgradeText.text = turretTimer.ToString("N2") + "s";
+            start += Time.deltaTime;
+            newTurret.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, start / turretTimer);
+            float time = turretTimer - start;
+            upgradeText.text = time.ToString("N2") + "s";
             yield return null;
         }
         upgradeText.text = "DONE!";
