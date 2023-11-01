@@ -30,6 +30,7 @@ public class PhaseTwoAttack : BossState
 
     public override void EnterState()
     {
+        Debug.Log("Phase2");
         // Checks if the state is null
         if (idleState == null)
         {

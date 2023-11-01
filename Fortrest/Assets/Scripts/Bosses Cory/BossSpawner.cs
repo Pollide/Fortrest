@@ -141,8 +141,6 @@ public class BossSpawner : MonoBehaviour
                 }
             }
 
-
-
             bossEncountered = open;
         }
     }
