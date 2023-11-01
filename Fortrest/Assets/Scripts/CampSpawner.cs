@@ -52,9 +52,13 @@ public class CampSpawner : MonoBehaviour
     [Space]
     public bool spawnEnemies = true;
 
-    private void Start()
+    private void Awake()
     {
         global = this;
+    }
+
+    private void Start()
+    {
         currentDay = LevelManager.global.day;
         lastAmount = 0;
     }

@@ -104,12 +104,14 @@ public class EnemyController : MonoBehaviour
     private float patrolThreshold;
     public float wolfDistanceBetweenPlayer = 17.5f;
     private bool slowed;
+    private bool isRemoved = false;
 
     public bool lavaAttacks;
     private Vector3 directionToPlayer;
     private float distanceToPlayer;
     private float jumpDistance;
     private bool setDistance;
+    public bool freezeMovement;
 
     private void Awake()
     {
@@ -525,6 +527,32 @@ public class EnemyController : MonoBehaviour
 
         if (health <= 0)
         {
+            if (!isRemoved && !isMob && !waveEnemy)
+            {
+                CampSpawner spawner = CampSpawner.global;
+                switch (currentEnemyType)
+                {
+                    case ENEMYTYPE.goblin:
+                        spawner.spawnCurrentMarsh--;
+                        break;
+                    case ENEMYTYPE.snake:
+                        spawner.spawnCurrentTussuck--;
+                        break;
+                    case ENEMYTYPE.wolf:
+                        spawner.spawnCurrentTaiga--;
+                        break;
+                    case ENEMYTYPE.spider:
+                        spawner.spawnCurrentCoast--;
+                        break;
+                    case ENEMYTYPE.lava:
+                        spawner.spawnCurrentVolcanic--;
+                        break;
+                    default:
+                        break;
+                }
+                isRemoved = true;
+            }
+
             healthAnimation.gameObject.SetActive(false);
             dead = true;
             if (currentEnemyType != ENEMYTYPE.ogre && currentEnemyType != ENEMYTYPE.goblin) // remove once we got anims
@@ -826,7 +854,17 @@ public class EnemyController : MonoBehaviour
 
         if (bestTarget == playerPosition || (Boar.global && bestTarget == Boar.global.transform))
         {
-            PlayerController.global.TakeDamage(enemyDamage);
+            if (currentEnemyType == ENEMYTYPE.lava)
+            {
+                if (distanceToPlayer <= 4f)
+                {
+                    PlayerController.global.TakeDamage(enemyDamage);
+                }
+            }
+            else
+            {
+                PlayerController.global.TakeDamage(enemyDamage);
+            }               
         }
         else if (bestTarget)
         {

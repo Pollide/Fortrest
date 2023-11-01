@@ -70,6 +70,7 @@ public class TelegraphLycan : MonoBehaviour
         }
         else
         {
+            timer = 0f;
             outerShape.gameObject.SetActive(false);
         }
 
@@ -133,6 +134,7 @@ public class TelegraphLycan : MonoBehaviour
         Debug.Log(calculatedPushForce);
         float angle = Vector3.Angle(pushDirection, PlayerController.global.transform.position - innerShape.transform.position);
         pushDirection = Quaternion.Euler(0f, angle, 0f) * pushDirection;
+        Debug.Log(pushDirection);
         PlayerController.global.SetPushDirection(pushDirection, calculatedPushForce);
         StartCoroutine(PlayerController.global.PushPlayer(pushDuration));
     }

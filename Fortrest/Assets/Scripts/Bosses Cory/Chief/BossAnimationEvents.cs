@@ -19,6 +19,11 @@ public class BossAnimationEvents : MonoBehaviour
         //not in use anymore, found in boss spawner
     }
 
+    void ChangeStateIdle()
+    {
+        attackState3.StateMachine.ChangeState(attackState3.IdleStateProp);
+    }
+
     void PlaySlashOne()
     {
         attackState1.PlaySlash(0);

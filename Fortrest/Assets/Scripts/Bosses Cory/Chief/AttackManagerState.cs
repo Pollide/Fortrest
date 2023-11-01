@@ -44,6 +44,7 @@ public class AttackManagerState : BossState
 
     public override void EnterState()
     {
+        Debug.Log("Attackmanager");
         inSwipe = true;
         if (idleState == null)
         {
@@ -66,11 +67,6 @@ public class AttackManagerState : BossState
         canAttack = true;
         randValue = 0f;
 
-        if (GetComponent<TelegraphCircle>())
-        {
-            GetComponent<TelegraphCircle>().isAttack = true;
-        }
-
         randomCheckTimer = randomCheckDuration;
         isAttacking = false;
     }
@@ -81,6 +77,7 @@ public class AttackManagerState : BossState
         stateMachine.BossAnimator.ResetTrigger("isAttacking");
         stateMachine.BossAnimator.speed = 1f;
 
+        randomCheckTimer = randomCheckDuration;
         isAttacking = false;
         attackTime = 0f;
     }
@@ -97,11 +94,13 @@ public class AttackManagerState : BossState
         {
             stateMachine.PhaseTwoRan = true;
             stateMachine.ChangeState(phaseTwoAttack);
+            canChangeState = false;
         }
         if (!stateMachine.PhaseThreeRan && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Three && canChangeState)
         {
             stateMachine.PhaseThreeRan = true;
             stateMachine.ChangeState(phaseThreeAttack);
+            canChangeState = false;
         }
 
         // Set agent destination
