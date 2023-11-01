@@ -95,7 +95,7 @@ public class BridgeBuilder : MonoBehaviour
 
         LevelManager.FloatingTextChange(canBuild ? FloatingTextCanBuildAnimation.gameObject : FloatingTextAnimation.gameObject, show);
 
-        PlayerController.global.UpdateResourceHolder(bridgeTypeInt: BridgeTypeInt, open: show);
+        PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { bridgeTypeInt = BridgeTypeInt }, open: show);
     }
 
     private void Update()

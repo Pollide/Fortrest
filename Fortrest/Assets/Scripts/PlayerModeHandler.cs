@@ -30,7 +30,8 @@ public class PlayerModeHandler : MonoBehaviour
     private PlayerModes lastMode;
     public BuildType buildType;
     public GameObject[] turretPrefabs;
-    GameObject turretBlueprint;
+    [HideInInspector]
+    public GameObject turretBlueprint;
     Transform KeyHint;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
@@ -217,7 +218,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 SelectedTurret = null;
 
-                PlayerController.global.UpdateResourceHolder(buildType: buildType);
+                PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
             }
             Debug.Log(open);
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
@@ -322,6 +323,25 @@ public class PlayerModeHandler : MonoBehaviour
 
     }
 
+    public GameObject ReturnTurretPrefab()
+    {
+        GameObject turretPrefab = turretPrefabs[0];
+
+        if (buildType == BuildType.Slow)
+        {
+            turretPrefab = turretPrefabs[1];
+        }
+        else if (buildType == BuildType.Cannon)
+        {
+            turretPrefab = turretPrefabs[2];
+        }
+        else if (buildType == BuildType.Scatter)
+        {
+            turretPrefab = turretPrefabs[3];
+        }
+        return turretPrefab;
+    }
+
     private void BuildMode()
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
@@ -332,20 +352,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (placing)
         {
-            GameObject turretPrefab = turretPrefabs[0];
-
-            if (buildType == BuildType.Slow)
-            {
-                turretPrefab = turretPrefabs[1];
-            }
-            else if (buildType == BuildType.Cannon)
-            {
-                turretPrefab = turretPrefabs[2];
-            }
-            else if (buildType == BuildType.Scatter)
-            {
-                turretPrefab = turretPrefabs[3];
-            }
+            GameObject turretPrefab = ReturnTurretPrefab();
 
             Vector3 worldPos = hitData.point;
             Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
@@ -417,9 +424,7 @@ public class PlayerModeHandler : MonoBehaviour
                 //NOT IN USE RIGHT NOW but basically it would hover over the building to say to place
                 //KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
 
-                Defence defence = turretBlueprint.GetComponent<Defence>();
-                defence.enabled = false;
-                Destroy(defence);
+                turretBlueprint.GetComponent<Defence>().enabled = false;
 
             }
 
@@ -594,7 +599,7 @@ public class PlayerModeHandler : MonoBehaviour
         }
 
         if (oldbuildType != buildType)
-            PlayerController.global.UpdateResourceHolder(buildType: buildType);
+            PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
     }
 
     IEnumerator PlayerAwake()
@@ -670,7 +675,7 @@ public class PlayerModeHandler : MonoBehaviour
             TurretMenuSet(false);
         }
 
-        PlayerController.global.UpdateResourceHolder(buildType: buildType, open: active);
+        PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType }, open: active);
     }
 
     public void SwitchToResourceMode()

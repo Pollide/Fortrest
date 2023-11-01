@@ -155,7 +155,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                     buildType = BuildType.Scatter;
             }
 
-            PlayerController.global.UpdateResourceHolder(buildType: buildType, upgradeTypeInt: open ? UpgradeInt : 0); //hides cost UI if not hover
+            PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType, upgradeTypeInt = (open ? UpgradeInt : 0) }); //hides cost UI if not hover
         }
     }
 
@@ -284,8 +284,6 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 LevelManager.global.WoodTierList[i].ResourceAmount = 9999;
                 LevelManager.global.StoneTierList[i].ResourceAmount = 9999;
             }
-
-            // PlayerController.global.UpdateResourceHolder();
         }
 
         if (TerrainTeleportInt != -1)
