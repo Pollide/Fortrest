@@ -71,7 +71,7 @@ public class CampSpawner : MonoBehaviour
 
                 spawnPosition.z = terrain.transform.position.z + Random.Range(edge, terrain.terrainData.size.z - edge);
 
-                spawnPosition.y = (mesh.bounds.size.y / 2.0f) - 4;
+                spawnPosition.y = (mesh.bounds.size.y / 2.0f - 2);
 
                 float distance = Vector3.Distance(PlayerController.global.transform.position, spawnPosition);
 
@@ -282,8 +282,6 @@ public class CampSpawner : MonoBehaviour
 #endif
 
             SpawnCamps();
-
-
         }
     }
 }
