@@ -57,7 +57,7 @@ public class LevelManager : MonoBehaviour
     public Gradient SkyboxGradient;
     public Gradient AmbientGradient;
     public GameObject applePrefab;
-
+    public GameObject DissolveAshParticle;
     [System.Serializable]
     public class TierData
     {
@@ -102,6 +102,7 @@ public class LevelManager : MonoBehaviour
     [HideInInspector]
     public float enemyThreshold;
     [Header("Ogre Prefab")]
+    public GameObject SpawnVFXPrefab;
     public GameObject DeathVFXPrefab;
     [Space]
     public GameObject ogrePrefab;
