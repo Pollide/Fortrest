@@ -136,7 +136,7 @@ public class TelegraphLycan : MonoBehaviour
         Vector3 pushDirectionCheck = new(1f, 1f, 1f);
         if (pushDirection.x < pushDirectionCheck.x && pushDirection.y < pushDirectionCheck.y && pushDirection.z < pushDirectionCheck.z)
         {
-            pushDirectionCheck = new(Random.Range(1f, 3f), Random.Range(1f, 3f), Random.Range(1f, 3f));
+            pushDirection = new(Random.Range(1f, 3f), Random.Range(1f, 3f), Random.Range(1f, 3f));
         }
         PlayerController.global.SetPushDirection(pushDirection, calculatedPushForce);
         StartCoroutine(PlayerController.global.PushPlayer(pushDuration));
