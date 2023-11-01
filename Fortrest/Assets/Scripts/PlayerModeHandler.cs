@@ -197,7 +197,7 @@ public class PlayerModeHandler : MonoBehaviour
                     LevelManager.FloatingTextChange(House.GetComponent<Building>().interactText.gameObject, true);
                     House.GetComponent<Building>().textDisplayed = true;
                 }
-                PlayerModeHandler.global.TurretMenuSet(false);
+
                 ExitHouseCleanUp();
             }
         }
@@ -293,42 +293,44 @@ public class PlayerModeHandler : MonoBehaviour
 
     public void UpdateTier(TurretStats buttonStat = null)
     {
-        List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
-        Defence defence = SelectedTurret.GetComponent<Defence>();
-
-        int complete = 0;
-
-        for (int i = 0; i < turretStats.Count; i++)
+        if (PlayerModeHandler.global.SelectedTurret)
         {
-            bool upgrade = turretStats[i] == buttonStat;
+            List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
+            Defence defence = SelectedTurret.GetComponent<Defence>();
 
-            bool ballista = SelectedTurret.buildingObject == Building.BuildingType.Ballista;
-            bool cannon = SelectedTurret.buildingObject == Building.BuildingType.Cannon;
-            bool slow = SelectedTurret.buildingObject == Building.BuildingType.Slow;
-            bool scatter = SelectedTurret.buildingObject == Building.BuildingType.Scatter;
+            int complete = 0;
 
-            bool damage = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.damageTier, ref defence.changeTier.damageTier, upgrade, ballista || cannon || scatter);
-            bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade, cannon || slow || scatter);
-            bool range = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rangeTier, ref defence.changeTier.rangeTier, upgrade, ballista || cannon || slow);
-            bool rate = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rateTier, ref defence.changeTier.rateTier, upgrade, ballista || slow || scatter);
-
-
-            if (damage && range && rate && health)
+            for (int i = 0; i < turretStats.Count; i++)
             {
-                complete++;
+                bool upgrade = turretStats[i] == buttonStat;
+
+                bool ballista = SelectedTurret.buildingObject == Building.BuildingType.Ballista;
+                bool cannon = SelectedTurret.buildingObject == Building.BuildingType.Cannon;
+                bool slow = SelectedTurret.buildingObject == Building.BuildingType.Slow;
+                bool scatter = SelectedTurret.buildingObject == Building.BuildingType.Scatter;
+
+                bool damage = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.damageTier, ref defence.changeTier.damageTier, upgrade, ballista || cannon || scatter);
+                bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade, cannon || slow || scatter);
+                bool range = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rangeTier, ref defence.changeTier.rangeTier, upgrade, ballista || cannon || slow);
+                bool rate = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rateTier, ref defence.changeTier.rateTier, upgrade, ballista || slow || scatter);
+
+
+                if (damage && range && rate && health)
+                {
+                    complete++;
+                }
+            }
+
+            if (complete == turretStats.Count && defence.CurrentTier < 2)
+            {
+                defence.CurrentTier++;
+                defence.ReturnAnimator();
+
+                TierChange(false);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
+                UpdateTier(); //updates fill
             }
         }
-
-        if (complete == turretStats.Count && defence.CurrentTier < 2)
-        {
-            defence.CurrentTier++;
-            defence.ReturnAnimator();
-
-            TierChange(false);
-            GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
-            UpdateTier(); //updates fill
-        }
-
 
     }
 
@@ -392,7 +394,7 @@ public class PlayerModeHandler : MonoBehaviour
                             if (enter)
                             {
                                 ClearBlueprint();
-
+                                Debug.Log("GO");
                                 PlayerController.global.turretMenuHolder.GetChild(0).position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
 
                                 SelectedTurret = building;

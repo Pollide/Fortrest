@@ -537,9 +537,12 @@ public class GameManager : MonoBehaviour
             int indexInt = 0;
             foreach (AnimationState clip in animation)
             {
-                animation[clip.name].layer = indexInt;
-                animation[clip.name].speed = 1;
                 indexInt += 1;
+                if (animation[clip.name].layer == 0)
+                {
+                    animation[clip.name].layer = indexInt;
+                    animation[clip.name].speed = 1;
+                }
 
                 if (playBool)
                     animation.Play(clip.name);

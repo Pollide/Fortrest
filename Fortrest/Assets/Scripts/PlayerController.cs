@@ -1433,6 +1433,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
+    AnimationState animationState;
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
         int total = 0;
@@ -1475,6 +1476,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+
                 GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", show);
             }
         }
