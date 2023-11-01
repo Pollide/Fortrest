@@ -44,6 +44,7 @@ public class AttackManagerState : BossState
 
     public override void EnterState()
     {
+        Debug.Log("Attackmanager");
         inSwipe = true;
         if (idleState == null)
         {
@@ -93,11 +94,13 @@ public class AttackManagerState : BossState
         {
             stateMachine.PhaseTwoRan = true;
             stateMachine.ChangeState(phaseTwoAttack);
+            canChangeState = false;
         }
         if (!stateMachine.PhaseThreeRan && stateMachine.CurrentPhase == BossStateMachine.BossPhase.Three && canChangeState)
         {
             stateMachine.PhaseThreeRan = true;
             stateMachine.ChangeState(phaseThreeAttack);
+            canChangeState = false;
         }
 
         // Set agent destination

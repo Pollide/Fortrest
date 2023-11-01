@@ -36,6 +36,7 @@ public class PhaseThreeAttack : BossState
         }
 
         agent.isStopped = true;
+        stateMachine.BossAnimator.SetBool("isDiving", false);
         stateMachine.BossAnimator.SetBool("isJumping", true);
         slamWaitTime = 0f;
         damageDone = false;

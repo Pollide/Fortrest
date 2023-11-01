@@ -66,10 +66,10 @@ public class IdleState : BossState
                 stateMachine.bossSpawner.Awake();
                 StateMachine.bossSpawner.BossEncountered(false);
 
+                stateMachine.bossSpawner.UpdateHealth(stateMachine.bossSpawner.maxHealth - stateMachine.bossSpawner.health);
+
                 stateMachine.PhaseTwoRan = false;
                 stateMachine.PhaseThreeRan = false;
-
-                stateMachine.bossSpawner.UpdateHealth();
 
                 if (GetComponent<PhaseOneLycan>())
                 {
