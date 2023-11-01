@@ -895,6 +895,7 @@ public class EnemyController : MonoBehaviour
     {
         agent.enabled = false;
         enabled = false;
+
         LevelManager.global.DeathParticle(transform);
 
         LevelManager.global.enemyList.Remove(this);

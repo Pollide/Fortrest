@@ -331,6 +331,8 @@ public class LevelManager : MonoBehaviour
     {
         Destroy(Instantiate(DeathVFXPrefab, target.position, Quaternion.identity), 5);
 
+        target.gameObject.AddComponent<DissolveMaterial>();
+
     }
 
     private void GetHousePosition()

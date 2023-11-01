@@ -47,9 +47,7 @@ public class BossSpawner : MonoBehaviour
     public Animator bossAnimator;
     public bool cutsceneMode;
     public Sprite bossSprite;
-    Material dissolveMaterial;
-    float disolvingTimer;
-    bool hasDied;
+
     public void Awake()
     {
         health = maxHealth;//on awake before the game loads
@@ -107,21 +105,22 @@ public class BossSpawner : MonoBehaviour
     public void BossEncountered(bool open)
     {
 
-        if (bossAwakened && !hasDied)
+        if (bossAwakened && enabled)
         {
             if (bossEncountered != open)
             {
                 if (health <= 0)
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
-                    disolvingTimer = 1;
+
+                    LevelManager.global.DeathParticle(transform);
                     Unlocks.global.RefreshUnlocks(this);
 
                     for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
                     {
                         LevelManager.global.bridgeList[i].CheckIndicators();
                     }
-                    hasDied = true;
+                    enabled = false;
                 }
                 else
                 {
@@ -148,16 +147,6 @@ public class BossSpawner : MonoBehaviour
 
     private void Update()
     {
-        if (dissolveMaterial && disolvingTimer != 0)
-        {
-            disolvingTimer -= 0.5f * Time.deltaTime;
-            dissolveMaterial.SetFloat("DissolveAmount", disolvingTimer);
-
-            if (disolvingTimer <= 0)
-            {
-                enabled = false;
-            }
-        }
 
         if (DebugDamageBoss)
         {
