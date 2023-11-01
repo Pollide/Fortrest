@@ -8,7 +8,7 @@ public class ModeSwitchText : MonoBehaviour
 {
     public static ModeSwitchText global;
 
-    [SerializeField] private float upTimeMax = 1;
+    [SerializeField] private float upTimeMax = 1.5f;
     public float upTime = 0;
     public bool isActive = false;
 
@@ -45,6 +45,9 @@ public class ModeSwitchText : MonoBehaviour
 
         switch (PlayerModeHandler.global.playerModes)
         {
+            //idk if we need this anymore. it only shows resource/build text and its self explanatory what build mode is?
+
+            /*
             case PlayerModes.BuildMode:
                 GetComponent<TMP_Text>().text = "Build Mode";
                 break;
@@ -59,6 +62,7 @@ public class ModeSwitchText : MonoBehaviour
                 break;
             default:
                 break;
+            */
         }
     }
 

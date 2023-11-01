@@ -30,7 +30,8 @@ public class PlayerModeHandler : MonoBehaviour
     private PlayerModes lastMode;
     public BuildType buildType;
     public GameObject[] turretPrefabs;
-    GameObject turretBlueprint;
+    [HideInInspector]
+    public GameObject turretBlueprint;
     Transform KeyHint;
     public Material turretBlueprintRed;
     public Material turretBlueprintBlue;
@@ -217,7 +218,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 SelectedTurret = null;
 
-                PlayerController.global.UpdateResourceHolder(buildType: buildType);
+                PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
             }
             Debug.Log(open);
             GameManager.PlayAnimation(PlayerController.global.UIAnimation, "TurretMenuUI", open);
@@ -322,6 +323,25 @@ public class PlayerModeHandler : MonoBehaviour
 
     }
 
+    public GameObject ReturnTurretPrefab()
+    {
+        GameObject turretPrefab = turretPrefabs[0];
+
+        if (buildType == BuildType.Slow)
+        {
+            turretPrefab = turretPrefabs[1];
+        }
+        else if (buildType == BuildType.Cannon)
+        {
+            turretPrefab = turretPrefabs[2];
+        }
+        else if (buildType == BuildType.Scatter)
+        {
+            turretPrefab = turretPrefabs[3];
+        }
+        return turretPrefab;
+    }
+
     private void BuildMode()
     {
         Ray ray = LevelManager.global.SceneCamera.ScreenPointToRay(cursorPosition);
@@ -332,20 +352,7 @@ public class PlayerModeHandler : MonoBehaviour
 
         if (placing)
         {
-            GameObject turretPrefab = turretPrefabs[0];
-
-            if (buildType == BuildType.Slow)
-            {
-                turretPrefab = turretPrefabs[1];
-            }
-            else if (buildType == BuildType.Cannon)
-            {
-                turretPrefab = turretPrefabs[2];
-            }
-            else if (buildType == BuildType.Scatter)
-            {
-                turretPrefab = turretPrefabs[3];
-            }
+            GameObject turretPrefab = ReturnTurretPrefab();
 
             Vector3 worldPos = hitData.point;
             Vector3 gridPos = buildGrid.GetCellCenterWorld(buildGrid.WorldToCell(worldPos));
@@ -417,9 +424,7 @@ public class PlayerModeHandler : MonoBehaviour
                 //NOT IN USE RIGHT NOW but basically it would hover over the building to say to place
                 //KeyHint = Instantiate(KeyBlueprintHintPrefab).transform;
 
-                Defence defence = turretBlueprint.GetComponent<Defence>();
-                defence.enabled = false;
-                Destroy(defence);
+                turretBlueprint.GetComponent<Defence>().enabled = false;
 
             }
 
@@ -443,7 +448,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 BluePrintSet(turretBlueprintBlue);
 
-                if (selectBool && PlayerController.global.CheckSufficientResources(true))
+                if (selectBool && PlayerController.global.CheckSufficientResources())
                 {
                     float timer;
                     switch (buildType)
@@ -545,10 +550,9 @@ public class PlayerModeHandler : MonoBehaviour
         Destroy(tempVFX2, 2.0f);
         //!hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource")        
     }
-
+    BuildType oldbuildType;
     private void ScrollSwitchTurret()
     {
-        BuildType oldbuildType = buildType;
         if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
             PlayerController.global.scrollCTRL = false;
@@ -594,7 +598,10 @@ public class PlayerModeHandler : MonoBehaviour
         }
 
         if (oldbuildType != buildType)
-            PlayerController.global.UpdateResourceHolder(buildType: buildType);
+        {
+            oldbuildType = buildType;
+            PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
+        }
     }
 
     IEnumerator PlayerAwake()
@@ -670,7 +677,7 @@ public class PlayerModeHandler : MonoBehaviour
             TurretMenuSet(false);
         }
 
-        PlayerController.global.UpdateResourceHolder(buildType: buildType, open: active);
+        PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType }, open: active);
     }
 
     public void SwitchToResourceMode()
@@ -696,46 +703,6 @@ public class PlayerModeHandler : MonoBehaviour
             meshRenderers[i].material = colorMaterial;
         }
     }
-
-    //// Check building distance
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-
-    //    Vector3 house = House.transform.position;
-
-    //    float top = house.x + distanceAwayFromPlayerX.x;
-    //    float bot = house.x - distanceAwayFromPlayerX.y;
-    //    float right = house.z + distanceAwayFromPlayerZ.x;
-    //    float left = house.z - distanceAwayFromPlayerZ.y;
-
-    //    Vector3 houseX1 = new(top, house.y, house.z);
-    //    Vector3 houseX2 = new(bot, house.y, house.z);
-    //    Vector3 houseZ1 = new(house.x, house.y, right);
-    //    Vector3 houseZ2 = new(house.x, house.y, left);
-    //    Gizmos.DrawLine(house, houseX1);
-    //    Gizmos.DrawLine(house, houseX2);
-    //    Gizmos.DrawLine(house, houseZ1);
-    //    Gizmos.DrawLine(house, houseZ2);
-    //}
-
-    //public bool IsInRange(Vector3 currentTarget)
-    //{
-    //    Vector3 playerPos = PlayerController.global.transform.position;
-    //
-    //    float top = playerPos.x + distanceAwayFromPlayerX.x;
-    //    float bot = playerPos.x - distanceAwayFromPlayerX.y;
-    //    float right = playerPos.z + distanceAwayFromPlayerZ.x;
-    //    float left = playerPos.z - distanceAwayFromPlayerZ.y;
-    //
-    //    if (currentTarget.x < top && currentTarget.x > bot && currentTarget.z < right && currentTarget.z > left)
-    //    {
-    //        return true;
-    //    }
-    //
-    //    return false;
-    //}
-
 
     public static void SetMouseActive(bool isActive, bool buildMode)
     {

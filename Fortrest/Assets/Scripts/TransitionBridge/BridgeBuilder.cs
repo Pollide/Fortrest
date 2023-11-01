@@ -95,7 +95,7 @@ public class BridgeBuilder : MonoBehaviour
 
         LevelManager.FloatingTextChange(canBuild ? FloatingTextCanBuildAnimation.gameObject : FloatingTextAnimation.gameObject, show);
 
-        PlayerController.global.UpdateResourceHolder(bridgeTypeInt: BridgeTypeInt, open: show);
+        PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { bridgeTypeInt = BridgeTypeInt }, open: show);
     }
 
     private void Update()
@@ -122,7 +122,7 @@ public class BridgeBuilder : MonoBehaviour
                 PlayerController.global.interactCTRL = false;
                 PlayerController.global.evading = false;
 
-                if (PlayerController.global.CheckSufficientResources(true))
+                if (PlayerController.global.CheckSufficientResources())
                 {
                     LevelManager manager = LevelManager.global;
                     CampSpawner spawner = CampSpawner.global;

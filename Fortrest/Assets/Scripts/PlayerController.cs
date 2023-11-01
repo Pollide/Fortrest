@@ -1167,7 +1167,7 @@ public class PlayerController : MonoBehaviour
                 MapPanningPosition = new Vector2(-MapPlayerRectTransform.anchoredPosition.x, -MapPlayerRectTransform.anchoredPosition.y - 200);
             }
 
-            UpdateResourceHolder(open: map);
+            UpdateResourceHolder(new ResourceData(), open: map);
         }
     }
 
@@ -1206,7 +1206,18 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    public void UpdateResourceHolder(int bridgeTypeInt = 0, int upgradeTypeInt = 0, BuildType buildType = BuildType.None, bool open = true)
+    [System.Serializable]
+    public class ResourceData
+    {
+        public int bridgeTypeInt = 0;
+        public int upgradeTypeInt = 0;
+        public BuildType buildType = BuildType.None;
+    }
+    ResourceData previousResourceData = new ResourceData();
+
+
+
+    public void UpdateResourceHolder(ResourceData resourceData, bool open = true)
     {
         if (ResourceHolderOpened != open)
         {
@@ -1222,6 +1233,8 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
+
+        previousResourceData = resourceData;
 
         GameManager.ResetChosenHolder(ResourceHolder, 1);
         GameManager.ResetChosenHolder(CostHolder, 1);
@@ -1244,28 +1257,28 @@ public class PlayerController : MonoBehaviour
             stoneCostList.Add(new LevelManager.TierData());
         }
 
-        if (buildType == BuildType.Turret)
+        if (resourceData.buildType == BuildType.Turret)
         {
             resourceInfoText.text = "Ballista";
             woodCostList[0].ResourceCost = -20;
             stoneCostList[0].ResourceCost = -20;
         }
 
-        if (buildType == BuildType.Cannon)
+        if (resourceData.buildType == BuildType.Cannon)
         {
             resourceInfoText.text = "Cannon";
             woodCostList[1].ResourceCost = -10;
             stoneCostList[0].ResourceCost = -30;
         }
 
-        if (buildType == BuildType.Slow)
+        if (resourceData.buildType == BuildType.Slow)
         {
             resourceInfoText.text = "Slow";
             woodCostList[2].ResourceCost = -20;
             stoneCostList[2].ResourceCost = -10;
         }
 
-        if (buildType == BuildType.Scatter)
+        if (resourceData.buildType == BuildType.Scatter)
         {
             resourceInfoText.text = "Scatter";
 
@@ -1273,7 +1286,7 @@ public class PlayerController : MonoBehaviour
             stoneCostList[3].ResourceCost = -10;
         }
 
-        if (upgradeTypeInt == -1) //repair
+        if (resourceData.upgradeTypeInt == -1) //repair
         {
             resourceInfoText.text = "Repair";
             healthInfoData.gameObject.SetActive(true);
@@ -1294,7 +1307,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (upgradeTypeInt == -2) //destroy
+        if (resourceData.upgradeTypeInt == -2) //destroy
         {
             resourceInfoText.text = "Remove";
 
@@ -1308,79 +1321,90 @@ public class PlayerController : MonoBehaviour
                 stoneCostList[i].ResourceCost = -(stoneCostList[i].ResourceCost / 2);
             }
         }
-
-        if (upgradeTypeInt > 0 && PlayerModeHandler.global.SelectedTurret) //upgrade
+        bool upgradeBool = resourceData.upgradeTypeInt > 0;
+        if (upgradeBool || resourceData.buildType != BuildType.None) //upgrade
         {
-            Defence defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
-            List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(PlayerController.global.turretMenuHolder.transform);
-            resourceInfoText.text = "Upgrade";
-            TurretStats.Tier changeTier = turretStats[upgradeTypeInt - 1].changeTier;
-            TurretStats.Tier maxTier = turretStats[upgradeTypeInt - 1].maxTier;
+            Defence defence = PlayerModeHandler.global.ReturnTurretPrefab().GetComponent<Defence>();
 
-            if (upgradeTypeInt == 1)
+            if (PlayerModeHandler.global.SelectedTurret)
             {
-                // resourceInfoText.text = "Damage";
-                damageInfoData.gameObject.SetActive(true);
-                float max = defence.damage + maxTier.damageTier;
-                damageInfoData.currentFill.fillAmount = defence.ReturnDamage() / max;
-                damageInfoData.upgradeFill.fillAmount = (defence.ReturnDamage() + changeTier.damageTier) / max;
-
-
+                defence = PlayerModeHandler.global.SelectedTurret.GetComponent<Defence>();
             }
 
-            if (upgradeTypeInt == 2)
+            List<TurretStats> turretStats = GameManager.FindComponent<TurretStats>(turretMenuHolder.transform);
+
+            int index = Mathf.Clamp(resourceData.upgradeTypeInt - 1, 0, turretStats.Count);
+
+            TurretStats.Tier changeTier = turretStats[index].changeTier;
+            TurretStats.Tier maxTier = turretStats[index].maxTier;
+
+            if (upgradeBool)
             {
-                //  resourceInfoText.text = "Health";
-                healthInfoData.gameObject.SetActive(true);
-                float health = defence.GetComponent<Building>().health + maxTier.healthTier;
-                healthInfoData.currentFill.fillAmount = defence.ReturnHealth() / health;
-                healthInfoData.upgradeFill.fillAmount = (defence.ReturnHealth() + changeTier.healthTier) / health;
+                resourceInfoText.text = "Upgrade";
+
+                int tier = defence.CurrentTier == 0 ? 1 : 3;
+                woodCostList[tier].ResourceCost = -5;
+                stoneCostList[tier].ResourceCost = -5;
+            }
+            else
+            {
+                changeTier = new TurretStats.Tier();//so doesnt effect
+                maxTier = new TurretStats.Tier();
+
+                for (int i = 0; i < turretStats.Count; i++)
+                {
+                    maxTier.damageTier += turretStats[i].maxTier.damageTier;
+                    maxTier.healthTier += turretStats[i].maxTier.healthTier;
+                    maxTier.rangeTier += turretStats[i].maxTier.rangeTier;
+                    maxTier.rateTier += turretStats[i].maxTier.rateTier;
+                }
             }
 
-            if (upgradeTypeInt == 3)
+            if (resourceData.upgradeTypeInt == 1 || !upgradeBool)
             {
-                //  resourceInfoText.text = "Range";
-                rangeInfoData.gameObject.SetActive(true);
-                float range = defence.shootingRange + maxTier.rangeTier;
-                rangeInfoData.currentFill.fillAmount = defence.ReturnRange() / range;
-                rangeInfoData.upgradeFill.fillAmount = (defence.ReturnRange() + changeTier.rangeTier) / range;
+                damageInfoData.InfoRefresh(defence.ReturnDamage(), changeTier.damageTier, defence.damage + maxTier.damageTier);
             }
 
-            if (upgradeTypeInt == 4)
+            if (resourceData.upgradeTypeInt == 2 || !upgradeBool)
             {
-                //  resourceInfoText.text = "Rate";
-                rateInfoData.gameObject.SetActive(true);
-                float rate = defence.shootingRange + maxTier.rateTier;
-                rateInfoData.currentFill.fillAmount = defence.ReturnFireRate() / rate;
-                rateInfoData.upgradeFill.fillAmount = (defence.ReturnFireRate() + changeTier.rateTier) / rate;
+                healthInfoData.InfoRefresh(defence.ReturnHealth(), changeTier.healthTier, defence.GetComponent<Building>().health + maxTier.healthTier);
             }
-            int tier = defence.CurrentTier == 0 ? 1 : 3;
-            woodCostList[tier].ResourceCost = -5;
-            stoneCostList[tier].ResourceCost = -5;
+
+            if (resourceData.upgradeTypeInt == 3 || !upgradeBool)
+            {
+                rangeInfoData.InfoRefresh(defence.ReturnRange(), changeTier.rangeTier, defence.shootingRange + maxTier.rangeTier);
+            }
+
+            if (resourceData.upgradeTypeInt == 4 || !upgradeBool)
+            {
+                rateInfoData.InfoRefresh(defence.ReturnFireRate(), changeTier.rateTier, defence.fireRate + maxTier.rateTier);
+            }
         }
 
-        if (bridgeTypeInt != 0)
-            resourceInfoText.text = LevelManager.global.terrainDataList[bridgeTypeInt].indictorName + " Bridge";
+        if (resourceData.bridgeTypeInt != 0)
+        {
+            resourceInfoText.text = LevelManager.global.terrainDataList[resourceData.bridgeTypeInt].indictorName + " Bridge";
+        }
 
-        if (bridgeTypeInt == 1) //marsh
+        if (resourceData.bridgeTypeInt == 1) //marsh
         {
             woodCostList[0].ResourceCost = -30;
             stoneCostList[0].ResourceCost = -30;
         }
 
-        if (bridgeTypeInt == 2) //tussocks
+        if (resourceData.bridgeTypeInt == 2) //tussocks
         {
             woodCostList[1].ResourceCost = -25;
             stoneCostList[0].ResourceCost = -30;
         }
 
-        if (bridgeTypeInt == 3) //taiga
+        if (resourceData.bridgeTypeInt == 3) //taiga
         {
             woodCostList[1].ResourceCost = -25;
             stoneCostList[1].ResourceCost = -25;
         }
 
-        if (bridgeTypeInt == 4) //coast
+        if (resourceData.bridgeTypeInt == 4) //coast
         {
             woodCostList[0].ResourceCost = -15;
             stoneCostList[0].ResourceCost = -15;
@@ -1389,15 +1413,16 @@ public class PlayerController : MonoBehaviour
             stoneCostList[1].ResourceCost = -10;
         }
 
-        if (bridgeTypeInt == 5) //volanic
+        if (resourceData.bridgeTypeInt == 5) //volanic
         {
             woodCostList[2].ResourceCost = -20;
             stoneCostList[2].ResourceCost = -20;
         }
 
-        //      Debug.Log("UPDATE");
+
         ResourceGenerate(LevelManager.global.WoodTierList, woodCostList);
         ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList);
+
     }
 
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
@@ -1463,7 +1488,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool CheckSufficientResources(bool purchase = false)
+    public bool CheckSufficientResources(bool purchase = true)
     {
         if (!GameManager.global.CheatInfiniteBuilding)
         {
@@ -1477,7 +1502,7 @@ public class PlayerController : MonoBehaviour
 
         if (purchase)
         {
-            UpdateResourceHolder();
+            UpdateResourceHolder(previousResourceData);
         }
 
         return true;
