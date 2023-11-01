@@ -122,7 +122,7 @@ public class BridgeBuilder : MonoBehaviour
                 PlayerController.global.interactCTRL = false;
                 PlayerController.global.evading = false;
 
-                if (PlayerController.global.CheckSufficientResources(true))
+                if (PlayerController.global.CheckSufficientResources())
                 {
                     LevelManager manager = LevelManager.global;
                     CampSpawner spawner = CampSpawner.global;

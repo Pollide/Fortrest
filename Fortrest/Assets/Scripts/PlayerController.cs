@@ -1349,24 +1349,33 @@ public class PlayerController : MonoBehaviour
             else
             {
                 changeTier = new TurretStats.Tier();//so doesnt effect
+                maxTier = new TurretStats.Tier();
+
+                for (int i = 0; i < turretStats.Count; i++)
+                {
+                    maxTier.damageTier += turretStats[i].maxTier.damageTier;
+                    maxTier.healthTier += turretStats[i].maxTier.healthTier;
+                    maxTier.rangeTier += turretStats[i].maxTier.rangeTier;
+                    maxTier.rateTier += turretStats[i].maxTier.rateTier;
+                }
             }
 
-            if (resourceData.upgradeTypeInt == 1 || upgradeBool)
+            if (resourceData.upgradeTypeInt == 1 || !upgradeBool)
             {
                 damageInfoData.InfoRefresh(defence.ReturnDamage(), changeTier.damageTier, defence.damage + maxTier.damageTier);
             }
 
-            if (resourceData.upgradeTypeInt == 2 || upgradeBool)
+            if (resourceData.upgradeTypeInt == 2 || !upgradeBool)
             {
                 healthInfoData.InfoRefresh(defence.ReturnHealth(), changeTier.healthTier, defence.GetComponent<Building>().health + maxTier.healthTier);
             }
 
-            if (resourceData.upgradeTypeInt == 3 || upgradeBool)
+            if (resourceData.upgradeTypeInt == 3 || !upgradeBool)
             {
                 rangeInfoData.InfoRefresh(defence.ReturnRange(), changeTier.rangeTier, defence.shootingRange + maxTier.rangeTier);
             }
 
-            if (resourceData.upgradeTypeInt == 4 || upgradeBool)
+            if (resourceData.upgradeTypeInt == 4 || !upgradeBool)
             {
                 rateInfoData.InfoRefresh(defence.ReturnFireRate(), changeTier.rateTier, defence.fireRate + maxTier.rateTier);
             }
@@ -1479,7 +1488,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public bool CheckSufficientResources(bool purchase = false)
+    public bool CheckSufficientResources(bool purchase = true)
     {
         if (!GameManager.global.CheatInfiniteBuilding)
         {

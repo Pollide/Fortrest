@@ -448,7 +448,7 @@ public class PlayerModeHandler : MonoBehaviour
             {
                 BluePrintSet(turretBlueprintBlue);
 
-                if (selectBool && PlayerController.global.CheckSufficientResources(true))
+                if (selectBool && PlayerController.global.CheckSufficientResources())
                 {
                     float timer;
                     switch (buildType)
@@ -550,10 +550,9 @@ public class PlayerModeHandler : MonoBehaviour
         Destroy(tempVFX2, 2.0f);
         //!hitData.transform.CompareTag("Player") && !hitData.transform.CompareTag("Building") && !hitData.transform.CompareTag("Resource")        
     }
-
+    BuildType oldbuildType;
     private void ScrollSwitchTurret()
     {
-        BuildType oldbuildType = buildType;
         if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
             PlayerController.global.scrollCTRL = false;
@@ -599,7 +598,10 @@ public class PlayerModeHandler : MonoBehaviour
         }
 
         if (oldbuildType != buildType)
+        {
+            oldbuildType = buildType;
             PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType });
+        }
     }
 
     IEnumerator PlayerAwake()
@@ -701,46 +703,6 @@ public class PlayerModeHandler : MonoBehaviour
             meshRenderers[i].material = colorMaterial;
         }
     }
-
-    //// Check building distance
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.red;
-
-    //    Vector3 house = House.transform.position;
-
-    //    float top = house.x + distanceAwayFromPlayerX.x;
-    //    float bot = house.x - distanceAwayFromPlayerX.y;
-    //    float right = house.z + distanceAwayFromPlayerZ.x;
-    //    float left = house.z - distanceAwayFromPlayerZ.y;
-
-    //    Vector3 houseX1 = new(top, house.y, house.z);
-    //    Vector3 houseX2 = new(bot, house.y, house.z);
-    //    Vector3 houseZ1 = new(house.x, house.y, right);
-    //    Vector3 houseZ2 = new(house.x, house.y, left);
-    //    Gizmos.DrawLine(house, houseX1);
-    //    Gizmos.DrawLine(house, houseX2);
-    //    Gizmos.DrawLine(house, houseZ1);
-    //    Gizmos.DrawLine(house, houseZ2);
-    //}
-
-    //public bool IsInRange(Vector3 currentTarget)
-    //{
-    //    Vector3 playerPos = PlayerController.global.transform.position;
-    //
-    //    float top = playerPos.x + distanceAwayFromPlayerX.x;
-    //    float bot = playerPos.x - distanceAwayFromPlayerX.y;
-    //    float right = playerPos.z + distanceAwayFromPlayerZ.x;
-    //    float left = playerPos.z - distanceAwayFromPlayerZ.y;
-    //
-    //    if (currentTarget.x < top && currentTarget.x > bot && currentTarget.z < right && currentTarget.z > left)
-    //    {
-    //        return true;
-    //    }
-    //
-    //    return false;
-    //}
-
 
     public static void SetMouseActive(bool isActive, bool buildMode)
     {
