@@ -73,7 +73,6 @@ public class PhaseTwoAttack : BossState
         hasRun = false;
         coneIndicator = false;
         agent.isStopped = false;
-        
     }
 
     public override void UpdateState()
