@@ -96,11 +96,6 @@ public class PhaseThreeAttack : BossState
                 trigger.enabled = true;
             }
         }
-
-        if (damageDone)
-        {
-            stateMachine.ChangeState(idleState);
-        }
     }
 
     public float SlamDuration
@@ -126,6 +121,11 @@ public class PhaseThreeAttack : BossState
     public AttackManagerState StateAttack
     {
         get { return attackState; }
+    }
+    
+    public IdleState IdleStateProp
+    {
+        get { return idleState; }
     }
 
     public bool HasJumped
