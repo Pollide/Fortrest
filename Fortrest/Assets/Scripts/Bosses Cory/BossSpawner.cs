@@ -133,9 +133,11 @@ public class BossSpawner : MonoBehaviour
                 Indicator.global.GetComponent<Canvas>().enabled = !open;
                 LevelManager.global.dayPaused = open;
 
-                if (open && LevelManager.global.messageDisplayed)
+                if (open && LevelManager.global.enemyIncomingState != null && LevelManager.global.enemyIncomingState.enabled)
                 {
-                    GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Enemies Appear", false, true);
+                    LevelManager.global.messageDisplayed = false;
+                    LevelManager.global.enemyIncomingState.time = LevelManager.global.enemyIncomingState.length;
+                    LevelManager.global.enemyIncomingState = null;
                 }
             }
 
