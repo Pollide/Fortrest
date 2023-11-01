@@ -1224,10 +1224,13 @@ public class PlayerController : MonoBehaviour
         {
             ResourceHolderOpened = open;
 
-            if (!open)
-                ResourceCostUI(false);
-
             GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
+        }
+
+        if (resourceData.bridgeTypeInt == 0 && resourceData.upgradeTypeInt == 0 && resourceData.buildType == BuildType.None)
+        {
+            ResourceCostUI(false);
+            return;
         }
 
         if (!open)
@@ -1236,9 +1239,8 @@ public class PlayerController : MonoBehaviour
         }
 
         previousResourceData = resourceData;
-        Debug.Log("CLEAR");
+
         GameManager.ResetChosenHolder(ResourceHolder, 1);
-        GameManager.ResetChosenHolder(CostHolder, 1);
 
         damageInfoData.gameObject.SetActive(false);
         healthInfoData.gameObject.SetActive(false);
@@ -1341,6 +1343,8 @@ public class PlayerController : MonoBehaviour
                         maxTier.rateTier += turretStats[i].ReturnMaxTier().rateTier;
                     }
 
+                    maxTier.healthTier = defence.GetComponent<Building>().maxHealth;
+
                     if (resourceData.upgradeTypeInt == -1) //repair
                     {
                         resourceInfoText.text = "Repair";
@@ -1355,6 +1359,7 @@ public class PlayerController : MonoBehaviour
                         }
                         changeTier.healthTier = defence.GetComponent<Building>().ReturnRepair();
                         resourceData.upgradeTypeInt = 2;
+                        maxTier.healthTier -= defence.GetComponent<Building>().health; //as repair just wants normal max, not potential max
                         upgradeBool = true;
                     }
                 }
@@ -1427,28 +1432,34 @@ public class PlayerController : MonoBehaviour
 
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
-        bool showCostBool = false;
         int total = 0;
+
         for (int i = 0; i < tierList.Count; i++)
         {
             tierList[i].ResourceCost = costList[i].ResourceCost;
             total += costList[i].ResourceCost;
+
+        }
+        ResourceCostUI(total != 0); //put above CreateResource
+
+        for (int i = 0; i < tierList.Count; i++)
+        {
             CreateResource(ResourceHolder, tierList[i].ResourceAmount, tierList[i].ResourceIcon, Color.white, i, tierList);
 
             if (tierList[i].ResourceCost != 0)
             {
-                showCostBool = true;
                 CreateResource(CostHolder, Mathf.Abs(tierList[i].ResourceCost), tierList[i].ResourceIcon, tierList[i].SufficientResource() ? (total > 0 ? Color.cyan : costGreen) : costRed, i, tierList);
             }
         }
-
-        ResourceCostUI(showCostBool);
 
         resourceCostText.text = total > 0 ? "Refund" : "Cost";
     }
 
     void ResourceCostUI(bool show)
     {
+        if (show)
+            GameManager.ResetChosenHolder(CostHolder, 1);
+
         if (resourceCostBool != show)
         {
             resourceCostBool = show;
