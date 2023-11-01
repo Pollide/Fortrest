@@ -70,7 +70,9 @@ public class IdleState : BossState
 
                 stateMachine.PhaseTwoRan = false;
                 stateMachine.PhaseThreeRan = false;
+
                 stateMachine.CurrentPhase = BossStateMachine.BossPhase.One;
+
                 if (GetComponent<PhaseOneLycan>())
                 {
                     GetComponent<PhaseOneLycan>().DestroyEnemies();
