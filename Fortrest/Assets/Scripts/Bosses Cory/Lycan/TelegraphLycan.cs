@@ -70,6 +70,7 @@ public class TelegraphLycan : MonoBehaviour
         }
         else
         {
+            timer = 0f;
             outerShape.gameObject.SetActive(false);
         }
 

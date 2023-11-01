@@ -66,11 +66,6 @@ public class AttackManagerState : BossState
         canAttack = true;
         randValue = 0f;
 
-        if (GetComponent<TelegraphCircle>())
-        {
-            GetComponent<TelegraphCircle>().isAttack = true;
-        }
-
         randomCheckTimer = randomCheckDuration;
         isAttacking = false;
     }
@@ -81,6 +76,7 @@ public class AttackManagerState : BossState
         stateMachine.BossAnimator.ResetTrigger("isAttacking");
         stateMachine.BossAnimator.speed = 1f;
 
+        randomCheckTimer = randomCheckDuration;
         isAttacking = false;
         attackTime = 0f;
     }
