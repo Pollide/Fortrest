@@ -142,6 +142,8 @@ public class EnemyController : MonoBehaviour
         {
             GameManager.global.SoundManager.PlaySound(ogreSpawnSound, 1.0f);
         }
+
+        Destroy(Instantiate(LevelManager.global.SpawnVFXPrefab, transform.position, Quaternion.identity), 5);
     }
 
     void Update()
@@ -895,10 +897,10 @@ public class EnemyController : MonoBehaviour
     {
         agent.enabled = false;
         enabled = false;
-        LevelManager.global.DeathParticle(transform);
+
+        LevelManager.global.DeathParticle(transform); //this handles Destroy(gameobject) btw through dissolving the material
 
         LevelManager.global.enemyList.Remove(this);
-        Destroy(gameObject);
 
         if (isMob)
         {

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Billboard : MonoBehaviour
 {
-    void LateUpdate()
+    void FixedUpdate()
     {
 
         if (!GameManager.ReturnInMainMenu())

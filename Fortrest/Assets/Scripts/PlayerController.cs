@@ -2324,7 +2324,7 @@ public class PlayerController : MonoBehaviour
     {
         smokeTimer += Time.deltaTime;
         bool boarMoving = Boar.global && Boar.global.mounted && Boar.global.IsMoving();
-        if ((boarMoving || playerisMoving && running) && smokeTimer > 0.08f)
+        if ((boarMoving || playerisMoving && running) && smokeTimer > 0.08f * (boarMoving ? 1 : 3))
         {
             smokeTimer = 0f;
             Vector3 position = boarMoving ? Boar.global.transform.position + new Vector3(0f, 0.5f, 0f) - (Vector3.forward * 1.25f) - Vector3.right : transform.position - new Vector3(0f, 1.3f, 0f);

@@ -47,6 +47,7 @@ public class BossSpawner : MonoBehaviour
     public Animator bossAnimator;
     public bool cutsceneMode;
     public Sprite bossSprite;
+
     public void Awake()
     {
         health = maxHealth;//on awake before the game loads
@@ -112,6 +113,7 @@ public class BossSpawner : MonoBehaviour
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
 
+                    LevelManager.global.DeathParticle(transform);
                     Unlocks.global.RefreshUnlocks(this);
 
                     for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
@@ -145,6 +147,7 @@ public class BossSpawner : MonoBehaviour
 
     private void Update()
     {
+
         if (DebugDamageBoss)
         {
             DebugDamageBoss = false;
@@ -227,6 +230,8 @@ public class BossSpawner : MonoBehaviour
         {
             UpdateHealth(Time.deltaTime * 3.0f); //healing
         }
+
+
     }
 
     public void BossIntro()
