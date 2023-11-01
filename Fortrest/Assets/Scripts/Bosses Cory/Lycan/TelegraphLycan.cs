@@ -5,8 +5,8 @@ using UnityEngine;
 public class TelegraphLycan : MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
-    private Transform innerShape;
-    private Transform outerShape;
+    public Transform innerShape;
+    public Transform outerShape;
     public PhaseThreeLycan lycanPhaseThree;
     public FrenzyMode frenzyMode;
     public PhaseThreeAttack slam;
@@ -131,10 +131,13 @@ public class TelegraphLycan : MonoBehaviour
         float distanceToEnemy = pushDirection.magnitude;
         // Calculate the push force based on the distance
         float calculatedPushForce = pushForce / distanceToEnemy;
-        Debug.Log(calculatedPushForce);
         float angle = Vector3.Angle(pushDirection, PlayerController.global.transform.position - innerShape.transform.position);
         pushDirection = Quaternion.Euler(0f, angle, 0f) * pushDirection;
-        Debug.Log(pushDirection);
+        Vector3 pushDirectionCheck = new(1f, 1f, 1f);
+        if (pushDirection.x < pushDirectionCheck.x && pushDirection.y < pushDirectionCheck.y && pushDirection.z < pushDirectionCheck.z)
+        {
+            pushDirectionCheck = new(Random.Range(1f, 3f), Random.Range(1f, 3f), Random.Range(1f, 3f));
+        }
         PlayerController.global.SetPushDirection(pushDirection, calculatedPushForce);
         StartCoroutine(PlayerController.global.PushPlayer(pushDuration));
     }
