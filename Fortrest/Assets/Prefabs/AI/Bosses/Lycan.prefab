@@ -291,6 +291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef62ec4bad758d64ba12a418c7db017b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  innerShape: {fileID: 0}
+  outerShape: {fileID: 0}
   lycanPhaseThree: {fileID: 5035358121503287246}
   frenzyMode: {fileID: 2702527554755493925}
   slam: {fileID: 0}
@@ -439,7 +441,7 @@ MonoBehaviour:
   BossCanvas: {fileID: 7423440669727652635}
   DebugDamageBoss: 0
   health: 100
-  maxHealth: 15
+  maxHealth: 30
   bossEncountered: 0
   canBeDamaged: 1
   StartPosition: {x: 0, y: 0, z: 0}
@@ -558,6 +560,7 @@ MonoBehaviour:
   idleState: {fileID: 1990839997988401373}
   nextState: {fileID: 2702527554755493925}
   nextAttackTime: 0
+  rotationSpeed: 4
   telegraph: 0
   attackRange: 4
   attackCooldown: 3
@@ -743,6 +746,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef62ec4bad758d64ba12a418c7db017b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  innerShape: {fileID: 0}
+  outerShape: {fileID: 0}
   lycanPhaseThree: {fileID: 5035358121503287246}
   frenzyMode: {fileID: 2702527554755493925}
   slam: {fileID: 0}
@@ -1196,7 +1201,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 2e48c53e9e784fe4e952c17d30bdda13, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 025602b84b579be4eb1a60dd3e081bcb, type: 3}
   m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
