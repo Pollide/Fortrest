@@ -1384,7 +1384,7 @@ public class PlayerController : MonoBehaviour
 
                 if (resourceData.upgradeTypeInt == 4 || !upgradeBool)
                 {
-                    rateInfoData.InfoRefresh(defence.ReturnFireRate(), changeTier.rateTier, defence.fireRate + maxTier.rateTier);
+                    rateInfoData.InfoRefresh(defence.ReturnSpeed(), changeTier.rateTier, defence.fireRate + maxTier.rateTier);
                 }
             }
         }

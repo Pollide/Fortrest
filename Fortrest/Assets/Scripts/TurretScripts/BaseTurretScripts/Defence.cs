@@ -23,7 +23,7 @@ public class Defence : MonoBehaviour
     }
 
 
-    public float ReturnFireRate()
+    public float ReturnSpeed()
     {
         return fireRate + changeTier.rateTier;
     }
@@ -51,7 +51,7 @@ public class Defence : MonoBehaviour
     public float bulletLifetime = 3f; // Bullet lifetime in seconds
     public Transform[] spawnPositions; // Array of designated spawn positions
     public float cooldownTime = 0.5f; // Cooldown time in seconds
-    private float cooldownTimer = 0f;
+    float cooldownTimer = 0f;
 
     [Header("Projectile")]
     public GameObject ProjectilePrefab;
@@ -97,7 +97,7 @@ public class Defence : MonoBehaviour
 
         if (animator)
         {
-            animator.speed = ReturnFireRate();
+            animator.speed = ReturnSpeed();
         }
 
         animator.gameObject.SetActive(true);
@@ -114,7 +114,7 @@ public class Defence : MonoBehaviour
             transform.Rotate(turn_speed * Time.deltaTime * Vector3.up);
 
             // Update the cooldown timer
-            cooldownTimer -= Time.deltaTime;
+            cooldownTimer -= ReturnSpeed() * Time.deltaTime;
 
             if (cooldownTimer <= 0f)
             {
@@ -217,16 +217,14 @@ public class Defence : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(direction);
 
         // Check if it's time to fire
-        if (fireCountdown <= 0f && Mathf.Abs(Quaternion.Dot(transform.rotation, lookRotation)) > 0.8f)
+        if (fireCountdown >= 1 && Mathf.Abs(Quaternion.Dot(transform.rotation, lookRotation)) > 0.8f)
         {
             attackStarted = true;
             ReturnAnimator().ResetTrigger("Fire");
             ReturnAnimator().SetTrigger("Fire");
-
-            fireCountdown = 1f / ReturnFireRate();
         }
 
-        fireCountdown -= Time.deltaTime;
+        fireCountdown += ReturnSpeed() * Time.deltaTime; ///fire rate internally is just called speed
     }
 
     public void ProjectileEvent() //CALLS ON THE ANIMATOR
