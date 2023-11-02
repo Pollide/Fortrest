@@ -15,12 +15,8 @@ public class ScattershotBullet : MonoBehaviour
             if (enemy != null)
             {
                 enemy.Damaged(damage);
+                Destroy(gameObject); // Destroy the bullet
             }
-        }
-
-        if (other.isTrigger == false)
-        {
-            Destroy(gameObject); // Destroy the bullet
         }
     }
 
