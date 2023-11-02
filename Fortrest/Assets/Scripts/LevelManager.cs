@@ -289,12 +289,19 @@ public class LevelManager : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
-        for (int i = 0; i < bossList.Count; i++)
+        for (int i = bossList.Count - 1; i >= 0; i--)
         {
             if (bossList[i].gameObject.activeInHierarchy && bossList[i].bossType != BossSpawner.TYPE.IsleMaker)
             {
                 if (bossList[i].GetComponent<UnityEngine.AI.NavMeshAgent>())
                     bossList[i].GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
+
+                if (bossList[i].GetComponent<Rigidbody>())
+                {
+                    bossList[i].GetComponent<Rigidbody>().isKinematic = true;
+                    bossList[i].GetComponent<Rigidbody>().useGravity = false;
+                }
+
                 bossList[i].cutsceneMode = true;
                 timer = 0;
                 if (bossList[i].bossType == BossSpawner.TYPE.Hrafn)

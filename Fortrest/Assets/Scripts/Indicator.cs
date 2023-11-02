@@ -33,8 +33,6 @@ public class Indicator : MonoBehaviour
         public Sprite CustomSprite;
         public Transform ActiveTarget;
         public bool AppearBool = true;
-        public float DestroyedTimerFloat = -1;
-
         public Vector3 WorldPosition;
         public Vector3 Offset;
         public bool Permenant;
@@ -238,11 +236,18 @@ public class Indicator : MonoBehaviour
         // GetComponent<Canvas>().enabled = !PlayerModeHandler.global.inTheFortress;
         for (int i = 0; i < IndicatorList.Count; i++)
         {
-            bool enemy = IndicatorList[i].ActiveTarget && IndicatorList[i].ActiveTarget.GetComponent<EnemyController>() && IndicatorList[i].ActiveTarget.GetComponent<EnemyController>().health <= 0;
+            //  bool enemy = IndicatorList[i].ActiveTarget && IndicatorList[i].ActiveTarget.GetComponent<EnemyController>() && IndicatorList[i].ActiveTarget.GetComponent<EnemyController>().health <= 0;
             bool boss = IndicatorList[i].ActiveTarget && IndicatorList[i].ActiveTarget.GetComponent<BossSpawner>() && IndicatorList[i].ActiveTarget.GetComponent<BossSpawner>().health <= 0;
 
-            if (!IndicatorList[i].ActiveTarget || enemy || boss)
+            if (!IndicatorList[i].ActiveTarget || boss)
             {
+                IndicatorList[i].MainData.ArrowImage.gameObject.SetActive(true);
+                IndicatorList[i].MainData.ArrowImage.sprite = RemovedSprite;
+
+                if (IndicatorList[i].MapData)
+                    IndicatorList[i].MapData.ArrowImage.gameObject.SetActive(true);
+                IndicatorList[i].MapData.ArrowImage.sprite = RemovedSprite;
+                /*
                 if (IndicatorList[i].DestroyedTimerFloat == -1)
                 {
                     IndicatorList[i].MainData.ArrowImage.sprite = RemovedSprite;
@@ -251,8 +256,10 @@ public class Indicator : MonoBehaviour
 
                     if (IndicatorList[i].AppearBool)
                         GameManager.PlayAnimation(IndicatorList[i].MainData.GetComponent<Animation>(), "Arrow Appear", false);
+                *?
                 }
 
+                /*
                 IndicatorList[i].DestroyedTimerFloat -= Time.fixedDeltaTime;
 
                 if (IndicatorList[i].DestroyedTimerFloat <= 0)
@@ -265,6 +272,7 @@ public class Indicator : MonoBehaviour
 
                     continue;
                 }
+                */
             }
 
             IndicatorList[i].Refresh();

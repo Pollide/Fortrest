@@ -164,25 +164,25 @@ public class Building : MonoBehaviour
 
             if (amount != 0)
             {
-                HealthAnimation();
+                if (buildingObject != BuildingType.House)
+                    HealthAnimation();
 
                 if (health <= 0)
                 {
-                    if (buildingObject == BuildingType.House)
+
+                    if (ReturnWood())
                     {
-                        if (ReturnWood())
-                        {
-                            GameManager.global.SoundManager.PlaySound(GameManager.global.TreeBreakingSound);
-                        }
-                        else if (ReturnStone())
-                        {
-                            GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound);
-                        }
-                        else if (ReturnBush())
-                        {
-                            GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound);
-                        }
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.TreeBreakingSound);
                     }
+                    else if (ReturnStone())
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.BoulderBreakingSound);
+                    }
+                    else if (ReturnBush())
+                    {
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound);
+                    }
+
 
                     DestroyBuilding();
                 }

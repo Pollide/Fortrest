@@ -264,6 +264,12 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         if (BeginingBool || PlayBool)
         {
             GameManager.Pref("Prologue", 0, false);
+
+            if (GameManager.Pref("Game Has Begun", 0, true) == 1)
+            {
+                GameManager.Pref("Played Before", 1, false);
+            }
+
             GameManager.Pref("Game Has Begun", 0, false); //restart game
                                                           // List<ButtonMechanics> buttons = GameManager.FindComponent<ButtonMechanics>(transform.root);
             GetComponentInParent<Buttons>().enabled = false;

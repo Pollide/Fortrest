@@ -73,6 +73,7 @@ public class BossSpawner : MonoBehaviour
         else
         {
             health = 0;
+            BossEncountered(false);
         }
     }
 
@@ -81,8 +82,8 @@ public class BossSpawner : MonoBehaviour
     {
         LevelManager.global.bossList.Add(this);
 
-        if (health > 0)
-            Indicator.global.AddIndicator(transform, Color.red, bossType.ToString(), false, bossSprite);
+
+        Indicator.global.AddIndicator(transform, Color.red, bossType.ToString(), false, bossSprite);
 
         if (GetComponent<BossStateMachine>())
         {
@@ -121,7 +122,7 @@ public class BossSpawner : MonoBehaviour
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
 
                     LevelManager.global.DeathParticle(transform);
-                    Unlocks.global.RefreshUnlocks(this);
+
 
                     for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
                     {
@@ -130,6 +131,9 @@ public class BossSpawner : MonoBehaviour
                     bossAnimator.enabled = false;
                     enabled = false;
                     health = 0;
+
+                    Unlocks.global.RefreshUnlocks(this);
+
                     if (GetComponent<UnityEngine.AI.NavMeshAgent>())
                     {
                         GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
@@ -234,7 +238,7 @@ public class BossSpawner : MonoBehaviour
                 }
             }
         }
-        else if (escapeByDistance || health == 0)
+        else if (escapeByDistance || health <= 0)
         {
             BossEncountered(false);
         }

@@ -121,7 +121,7 @@ public class Buttons : MonoBehaviour
                 if (buttonMechanics.SelectedGameObject)
                     buttonMechanics.SelectedGameObject.SetActive(selected);
 
-                float shrinkScale = selected ? (pressingDown ? 0.95f : 1.05f) : 1;
+                float shrinkScale = selected ? (pressingDown ? 1.0f : 1.05f) : 1;
 
                 button.localScale = new Vector3(shrinkScale, shrinkScale, shrinkScale);
                 buttonMechanics.Start(); //refreshes text

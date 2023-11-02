@@ -20,6 +20,7 @@ public class ArenaTrigger : MonoBehaviour
             Boar.global.MoveBoar();
         }
 
-        bossSpawner.BossEncountered(EnteringBool);
+        if (other.CompareTag("Player"))
+            bossSpawner.BossEncountered(EnteringBool);
     }
 }

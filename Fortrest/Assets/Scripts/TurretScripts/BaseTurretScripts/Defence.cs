@@ -210,6 +210,8 @@ public class Defence : MonoBehaviour
             Destroy(bullet, bulletLifetime);
         }
     }
+
+    float lookingDot;
     private void Attack()
     {
         if (target.GetComponent<EnemyController>())
@@ -224,20 +226,28 @@ public class Defence : MonoBehaviour
         Vector3 direction = targetPos - transform.position;
 
         Quaternion lookRotation = Quaternion.LookRotation(direction);
-
+        lookingDot = Mathf.Abs(Quaternion.Dot(transform.rotation, lookRotation));
         // Check if it's time to fire
-        if (fireCountdown >= 1 && Mathf.Abs(Quaternion.Dot(transform.rotation, lookRotation)) > 0.8f)
+        if (!attackStarted && lookingDot > 0.8f)
         {
-            attackStarted = true;
-            ReturnAnimator().ResetTrigger("Fire");
-            ReturnAnimator().SetTrigger("Fire");
+            if (fireCountdown >= 1)
+            {
+                fireCountdown = 0;
+                attackStarted = true;
+                ReturnAnimator().ResetTrigger("Fire");
+                ReturnAnimator().SetTrigger("Fire");
+            }
+            else
+            {
+                fireCountdown += ReturnSpeed() * Time.deltaTime; ///fire rate internally is just called speed
+            }
         }
-
-        fireCountdown += ReturnSpeed() * Time.deltaTime; ///fire rate internally is just called speed
     }
 
     public void ProjectileEvent() //CALLS ON THE ANIMATOR
     {
+        attackStarted = false;
+
         GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
         //       GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
 
@@ -255,11 +265,7 @@ public class Defence : MonoBehaviour
         {
 
             GameManager.global.SoundManager.PlaySound(GameManager.global.CannonShootSound, 0.3f, true, 0, false, transform);
-            // Spawn a projectile
-            ProjectileExplosion explosion = projectile.GetComponent<ProjectileExplosion>();
-            //  explosion.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-            explosion.explosionRadius = explosionRadius;
-            explosion.damage = ReturnDamage();
+            boltScript.explosionRadius = explosionRadius;
         }
         else
         {

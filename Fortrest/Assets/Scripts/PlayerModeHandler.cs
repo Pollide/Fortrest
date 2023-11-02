@@ -732,7 +732,8 @@ public class PlayerModeHandler : MonoBehaviour
 
         for (int i = 0; i < meshRenderers.Count; i++)
         {
-            meshRenderers[i].material = colorMaterial;
+            if (!meshRenderers[i].GetComponent<SpriteRenderer>())
+                meshRenderers[i].material = colorMaterial;
         }
     }
 
