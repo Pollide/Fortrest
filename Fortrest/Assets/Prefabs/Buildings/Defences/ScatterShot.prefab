@@ -955,6 +955,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1457100395578635945}
+  - component: {fileID: 2303158419308486498}
   m_Layer: 7
   m_Name: Tier 1
   m_TagString: Untagged
@@ -981,6 +982,26 @@ Transform:
   m_Father: {fileID: 4248787014743862506}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &2303158419308486498
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4159547995915493345}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4389246835280073274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1288,14 +1309,14 @@ MonoBehaviour:
   - {fileID: 5034843380181389572}
   - {fileID: 5034843378941687754}
   - {fileID: 5034843378592234578}
-  cooldownTime: 0.1
+  cooldownTime: 0.2
   ProjectilePrefab: {fileID: 4323165861798559352, guid: fd480eb6e8c30914a8a962e6e75d7bd3,
     type: 3}
   FirePoint: {fileID: 5034843379706570171}
   ModelHolder: {fileID: 4248787014743862506}
   CurrentTier: 0
-  TierOneAnimator: {fileID: 0}
-  TierTwoAnimator: {fileID: 0}
+  TierOneAnimator: {fileID: 2303158419308486498}
+  TierTwoAnimator: {fileID: 6009662643119967879}
   MiniTurret: 0
   MiniTurretAnimator: {fileID: 0}
 --- !u!114 &5374597453168542865
@@ -2411,6 +2432,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5068311466599099595}
+  - component: {fileID: 6009662643119967879}
   m_Layer: 7
   m_Name: Tier 2
   m_TagString: Untagged
@@ -2437,6 +2459,26 @@ Transform:
   m_Father: {fileID: 4248787014743862506}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &6009662643119967879
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5653628185284489628}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5873264514198354253
 GameObject:
   m_ObjectHideFlags: 0
