@@ -5910,7 +5910,6 @@ GameObject:
   - component: {fileID: 1729611811535699973}
   - component: {fileID: 2301296212842469266}
   - component: {fileID: 1472740299455886614}
-  - component: {fileID: 7601675137465644314}
   m_Layer: 5
   m_Name: Resource Animator
   m_TagString: Untagged
@@ -5969,27 +5968,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!223 &7601675137465644314
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7285140038269978954}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 1
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 1
-  m_TargetDisplay: 0
 --- !u!1 &7398948525919731449
 GameObject:
   m_ObjectHideFlags: 0
@@ -10284,6 +10262,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba1e1c42f8301694bbe5391d867d2e68, type: 3}
+--- !u!1 &3766977748952588974 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4754381337117715948, guid: ba1e1c42f8301694bbe5391d867d2e68,
+    type: 3}
+  m_PrefabInstance: {fileID: 8483667819919789890}
+  m_PrefabAsset: {fileID: 0}
+--- !u!223 &2078019453546781926
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3766977748952588974}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 2
+  m_TargetDisplay: 0
 --- !u!224 &8499544719746581986 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 20398194809735840, guid: ba1e1c42f8301694bbe5391d867d2e68,

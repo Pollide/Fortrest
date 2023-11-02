@@ -1161,9 +1161,8 @@ public class PlayerController : MonoBehaviour
 
 
             GameManager.global.SoundManager.PlaySound(map ? GameManager.global.MapOpenSound : GameManager.global.MapCloseSound);
-            Time.timeScale = map ? 0 : 1;
             mapBool = map;
-
+            Time.timeScale = map ? 0 : 1;
             if (mapBool)
             {
                 UpdateMap();
@@ -1233,7 +1232,6 @@ public class PlayerController : MonoBehaviour
         if (!open || resourceData.bridgeTypeInt == 0 && resourceData.upgradeTypeInt == 0 && resourceData.buildType == BuildType.None)
         {
             ResourceCostUI(false);
-            return;
         }
 
         if (!open)
@@ -1436,7 +1434,6 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    AnimationState animationState;
     void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
     {
         int total = 0;
@@ -1473,15 +1470,7 @@ public class PlayerController : MonoBehaviour
             //  GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", show);
             // Debug.Log(Time.deltaTime + " " + show);
 
-            if (Time.timeScale == 0)
-            {
-                ResourceHolder.gameObject.SetActive(show);
-            }
-            else
-            {
-
-                GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", show);
-            }
+            GameManager.PlayAnimation(UIAnimation, "Resource Cost Appear", show);
         }
     }
 
