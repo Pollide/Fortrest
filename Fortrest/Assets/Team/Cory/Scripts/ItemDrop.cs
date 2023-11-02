@@ -42,7 +42,7 @@ public class ItemDrop : MonoBehaviour
     {
         if (!CollectedBool)
         {
-            if (other.CompareTag("Player"))
+            if (other.CompareTag("Player") || other.CompareTag("Boar"))
             {
                 if (foodBool && PlayerController.global.appleAmount >= PlayerController.global.maxApple)
                 {
@@ -55,12 +55,6 @@ public class ItemDrop : MonoBehaviour
                     soundPlayed = false;
                     CollectVoid();
                 }
-            }
-            else if (other.CompareTag("Boar"))
-            {
-                Vector3 direction = (transform.position - other.transform.position).normalized;
-                direction.y = 0.4f;
-                GetComponent<Rigidbody>().AddForce(direction / 4f, ForceMode.Impulse);
             }
 
             if (!soundPlayed)
