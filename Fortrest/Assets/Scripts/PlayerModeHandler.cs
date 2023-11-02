@@ -333,7 +333,9 @@ public class PlayerModeHandler : MonoBehaviour
                     {
                         if (!turretStats[j].gameObject.activeSelf)
                         {
-                            turretStats[i].GetComponent<RectTransform>().position = turretStats[j].GetComponent<RectTransform>().position;
+                            Debug.Log(turretStats[i] + " found " + turretStats[j]);
+
+                            turretStats[i].GetComponent<RectTransform>().anchoredPosition = turretStats[j].GetComponent<RectTransform>().anchoredPosition;
                             break;
                         }
                     }
