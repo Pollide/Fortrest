@@ -156,7 +156,7 @@ public class Building : MonoBehaviour
 
             if (!DropPrefab)
             {
-                if (amount < 10)
+                if (health < 10)
                 {
                     if (!turretOnFire)
                         turretOnFire = Instantiate(PlayerModeHandler.global.turretOnFirePrefab, transform);
