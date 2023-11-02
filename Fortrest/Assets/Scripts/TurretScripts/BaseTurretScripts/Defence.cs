@@ -17,9 +17,9 @@ public class Defence : MonoBehaviour
         return damage + changeTier.damageTier;
     }
 
-    public float ReturnHealth()
+    public float ReturnHealth(bool forceMax = false)
     {
-        return GetComponent<Building>().health + changeTier.healthTier;
+        return (GetComponent<Building>().health == 0 || forceMax ? GetComponent<Building>().maxHealth : GetComponent<Building>().health) + changeTier.healthTier;
     }
 
 

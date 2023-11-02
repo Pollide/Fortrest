@@ -1347,7 +1347,7 @@ public class PlayerController : MonoBehaviour
                         maxTier.rateTier += turretStats[i].ReturnMaxTier().rateTier;
                     }
 
-                    maxTier.healthTier += defence.GetComponent<Building>().ReturnMaxHealth(); //DO NOT USE ReturnMaxHealth() function here 
+                    maxTier.healthTier += defence.GetComponent<Building>().ReturnMaxHealth();
 
                     if (resourceData.upgradeTypeInt == -1) //repair
                     {
