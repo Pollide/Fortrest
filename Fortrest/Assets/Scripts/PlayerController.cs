@@ -1233,16 +1233,17 @@ public class PlayerController : MonoBehaviour
             ResourceCostUI(false);
         }
 
+        if (updatePrevious) //keep it before open return as i do want it reset for opening inventory
+        {
+            previousResourceData = resourceData;
+            previousResourceData.previousOpen = open;
+        }
+
         if (!open)
         {
             return;
         }
 
-        if (updatePrevious)
-        {
-            previousResourceData = resourceData;
-            previousResourceData.previousOpen = open;
-        }
         GameManager.ResetChosenHolder(ResourceHolder, 1);
 
         damageInfoData.gameObject.SetActive(false);
