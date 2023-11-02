@@ -156,10 +156,15 @@ public class Building : MonoBehaviour
 
             if (!DropPrefab)
             {
-                if (health < 10)
+                if (health < maxHealth * 0.4f)
                 {
                     if (!turretOnFire)
                         turretOnFire = Instantiate(PlayerModeHandler.global.turretOnFirePrefab, transform);
+
+                    if (buildingObject == BuildingType.House)
+                    {
+                        turretOnFire.transform.localScale = new Vector3(9, 9, 9);
+                    }
                 }
                 else if (turretOnFire)
                 {
