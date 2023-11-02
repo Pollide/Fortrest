@@ -122,7 +122,7 @@ public class BossSpawner : MonoBehaviour
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
 
                     LevelManager.global.DeathParticle(transform);
-                    Unlocks.global.RefreshUnlocks(this);
+
 
                     for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
                     {
@@ -131,6 +131,9 @@ public class BossSpawner : MonoBehaviour
                     bossAnimator.enabled = false;
                     enabled = false;
                     health = 0;
+
+                    Unlocks.global.RefreshUnlocks(this);
+
                     if (GetComponent<UnityEngine.AI.NavMeshAgent>())
                     {
                         GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;

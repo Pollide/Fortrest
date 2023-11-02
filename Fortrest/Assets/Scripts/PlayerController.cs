@@ -2077,12 +2077,19 @@ public class PlayerController : MonoBehaviour
     {
         LevelManager.global.newDay = true;
         DayTMP_Text.text = "DAY " + (LevelManager.global.day + 1).ToString();
+
+
         RemaningTMP_Text.text = "Highscore: " + (PlayerPrefs.GetInt("Number of Days") + 1);
 
         if (LevelManager.global.day > PlayerPrefs.GetInt("Number of Days"))
         {
             RemaningTMP_Text.text = "Highscore Beaten!";
             PlayerPrefs.SetInt("Number of Days", LevelManager.global.day);
+        }
+
+        if (GameManager.Pref("Played Before", 0, true) == 0)
+        {
+            RemaningTMP_Text.text = "";
         }
 
         /*
