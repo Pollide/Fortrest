@@ -936,6 +936,7 @@ public class EnemyController : MonoBehaviour
 
     public void Death()
     {
+        tag = "Untagged";
         agent.enabled = false;
         enabled = false;
         ActiveAnimator.enabled = false;

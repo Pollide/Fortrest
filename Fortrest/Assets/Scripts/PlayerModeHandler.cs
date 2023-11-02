@@ -406,6 +406,8 @@ public class PlayerModeHandler : MonoBehaviour
 
                     if (colliders[i].GetComponent<Defence>() && colliders[i].GetComponent<Defence>().enabled) //finished building
                     {
+                        ClearBlueprint();
+
                         bool enter = Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return) || GameManager.global.selectCTRL;
 
                         Building building = colliders[i].GetComponentInParent<Building>();
@@ -414,7 +416,6 @@ public class PlayerModeHandler : MonoBehaviour
                         {
                             if (enter)
                             {
-                                ClearBlueprint();
                                 //  Debug.Log("GO");
                                 PlayerController.global.turretMenuHolder.GetChild(0).position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point + LevelManager.global.SceneCamera.transform.up * 6);
 

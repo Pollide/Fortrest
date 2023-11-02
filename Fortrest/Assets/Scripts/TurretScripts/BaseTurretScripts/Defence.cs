@@ -229,7 +229,7 @@ public class Defence : MonoBehaviour
         // Check if it's time to fire
 
 
-        if (fireCountdown >= 1)
+        if (fireCountdown >= 1.5f) //0.5f second gives time to actually shoot
         {
             if (lookingDot > 0.8f)
             {
