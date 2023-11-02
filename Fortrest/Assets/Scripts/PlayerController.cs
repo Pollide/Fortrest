@@ -1428,12 +1428,12 @@ public class PlayerController : MonoBehaviour
         }
 
 
-        ResourceGenerate(LevelManager.global.WoodTierList, woodCostList);
+        ResourceGenerate(LevelManager.global.WoodTierList, woodCostList, true);
         ResourceGenerate(LevelManager.global.StoneTierList, stoneCostList);
 
     }
 
-    void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList)
+    void ResourceGenerate(List<LevelManager.TierData> tierList, List<LevelManager.TierData> costList, bool reset = false)
     {
         int total = 0;
 
@@ -1443,7 +1443,7 @@ public class PlayerController : MonoBehaviour
             total += costList[i].ResourceCost;
 
         }
-        ResourceCostUI(total != 0); //put above CreateResource
+        ResourceCostUI(total != 0, reset); //put above CreateResource
 
         for (int i = 0; i < tierList.Count; i++)
         {
@@ -1458,14 +1458,13 @@ public class PlayerController : MonoBehaviour
         resourceCostText.text = total > 0 ? "Refund" : "Cost";
     }
 
-    void ResourceCostUI(bool show)
+    void ResourceCostUI(bool show, bool reset = false)
     {
-
+        if (show && reset)
+            GameManager.ResetChosenHolder(CostHolder, 1);
 
         if (resourceCostBool != show)
         {
-            if (show)
-                GameManager.ResetChosenHolder(CostHolder, 1);
 
             resourceCostBool = show;
             //  GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", show);
