@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 8707849239115483157}
   - component: {fileID: -6799876280890107172}
   - component: {fileID: 4251909559502479130}
-  - component: {fileID: 3838940390864414304}
+  - component: {fileID: 9203424076682236313}
   m_Layer: 9
   m_Name: Titanium
   m_TagString: Resource
@@ -245,8 +245,8 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: 2, z: 0}
   m_TimeToStationary: 0.5
---- !u!65 &3838940390864414304
-BoxCollider:
+--- !u!136 &9203424076682236313
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -255,9 +255,10 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 4, y: 4, z: 4}
-  m_Center: {x: 0, y: 2, z: 0}
+  m_Radius: 2.3
+  m_Height: 10
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &6310471205038683442
 PrefabInstance:
   m_ObjectHideFlags: 0

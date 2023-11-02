@@ -108,6 +108,15 @@ public class Defence : MonoBehaviour
     {
         rangeIndicator.transform.localScale = new Vector3(ReturnRange() / 5, ReturnRange() / 5, ReturnRange() / 5);
 
+        if (PlayerModeHandler.global.inTheFortress)
+        {
+            rangeIndicator.SetActive(true);
+        }
+        else
+        {
+            rangeIndicator.SetActive(false);
+        }
+
         if (building.buildingObject == Building.BuildingType.Scatter)
         {
             // Rotate the GameObject around its up axis
