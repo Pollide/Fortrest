@@ -1460,11 +1460,13 @@ public class PlayerController : MonoBehaviour
 
     void ResourceCostUI(bool show)
     {
-        if (show)
-            GameManager.ResetChosenHolder(CostHolder, 1);
+
 
         if (resourceCostBool != show)
         {
+            if (show)
+                GameManager.ResetChosenHolder(CostHolder, 1);
+
             resourceCostBool = show;
             //  GameManager.PlayAnimation(UIAnimation, "Resource Info Appear", show);
             // Debug.Log(Time.deltaTime + " " + show);
