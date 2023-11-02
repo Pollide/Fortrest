@@ -242,31 +242,31 @@ public class PlayerModeHandler : MonoBehaviour
             return (defenceTier - shift) >= max;
         }
 
-        fillImage.GetComponentInParent<TurretStats>(true).gameObject.SetActive(active);
-
-        if (buttonTier != 0 && active) //active in hiarachy as some tiers are hidden depending on the turret
+        if (buttonTier != 0) //active in hiarachy as some tiers are hidden depending on the turret
         {
+            TurretStats turretStats = fillImage.GetComponentInParent<TurretStats>(true);
+            turretStats.gameObject.SetActive(active);
 
-            if (upgrade && !ReturnMax(ref defenceTier) && PlayerController.global.CheckSufficientResources())
+            if (active)
             {
-                defenceTier += buttonTier;
-                GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
-                GameManager.PlayAnimation(fillImage.GetComponentInParent<Animation>(), "TierUpgrade");
-                PlayerController.global.UpdateResourceHolder(PlayerController.global.previousResourceData); //so the bars update with the new defenceTier addition
+                if (upgrade && !ReturnMax(ref defenceTier) && PlayerController.global.CheckSufficientResources())
+                {
+                    defenceTier += buttonTier;
+                    GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
+                    GameManager.PlayAnimation(fillImage.GetComponentInParent<Animation>(), "TierUpgrade");
+                    PlayerController.global.UpdateResourceHolder(PlayerController.global.previousResourceData); //so the bars update with the new defenceTier addition
 
+                }
+
+                fillImage.fillAmount = ((float)defenceTier - shift) / max;
+                fillImage.color = next ? Color.magenta : Color.cyan;
+
+
+                return ReturnMax(ref defenceTier);
             }
-
-            fillImage.fillAmount = ((float)defenceTier - shift) / max;
-            fillImage.color = next ? Color.magenta : Color.cyan;
-
-
-            return ReturnMax(ref defenceTier);
-
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 
     void TierChange(bool instant)
@@ -309,15 +309,34 @@ public class PlayerModeHandler : MonoBehaviour
                 bool slow = SelectedTurret.buildingObject == Building.BuildingType.Slow;
                 bool scatter = SelectedTurret.buildingObject == Building.BuildingType.Scatter;
 
-                bool damage = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.damageTier, ref defence.changeTier.damageTier, upgrade, ballista || cannon || scatter);
-                bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade, cannon || slow || scatter);
-                bool range = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rangeTier, ref defence.changeTier.rangeTier, upgrade, ballista || cannon || slow);
-                bool rate = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rateTier, ref defence.changeTier.rateTier, upgrade, ballista || slow || scatter);
+                bool allowDamage = ballista || cannon || scatter;
+                bool allowHealth = cannon || slow || scatter;
+                bool allowRange = ballista || cannon || slow;
+                bool allowRate = ballista || slow || scatter;
 
+                bool damage = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.damageTier, ref defence.changeTier.damageTier, upgrade, allowDamage);
+                bool health = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.healthTier, ref defence.changeTier.healthTier, upgrade, allowHealth);
+                bool range = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rangeTier, ref defence.changeTier.rangeTier, upgrade, allowRange);
+                bool rate = SetTeir(turretStats[i].fillImage, ref turretStats[i].changeTier.rateTier, ref defence.changeTier.rateTier, upgrade, allowRate);
 
                 if (damage && range && rate && health)
                 {
                     complete++;
+                }
+            }
+
+            for (int i = 0; i < turretStats.Count; i++)
+            {
+                if (turretStats[i].gameObject.activeSelf && turretStats[i].changeTier.damageTier != 0)
+                {
+                    for (int j = 0; j < turretStats.Count; j++)
+                    {
+                        if (!turretStats[j].gameObject.activeSelf)
+                        {
+                            turretStats[i].GetComponent<RectTransform>().position = turretStats[j].GetComponent<RectTransform>().position;
+                            break;
+                        }
+                    }
                 }
             }
 
