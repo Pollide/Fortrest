@@ -36,7 +36,7 @@ public class IdleState : BossState
             {
                 if (resetTimer <= 0 || resetTimer == resetTimerDuration)
                 {
-                    if (!introRan)
+                    if (!introRan && idleRuns > 1)
                     {
                         stateMachine.bossSpawner.BossIntro();
                         introRan = true;

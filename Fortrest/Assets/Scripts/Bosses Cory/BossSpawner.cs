@@ -73,6 +73,7 @@ public class BossSpawner : MonoBehaviour
         else
         {
             health = 0;
+            BossEncountered(false);
         }
     }
 
@@ -81,8 +82,8 @@ public class BossSpawner : MonoBehaviour
     {
         LevelManager.global.bossList.Add(this);
 
-        if (health > 0)
-            Indicator.global.AddIndicator(transform, Color.red, bossType.ToString(), false, bossSprite);
+
+        Indicator.global.AddIndicator(transform, Color.red, bossType.ToString(), false, bossSprite);
 
         if (GetComponent<BossStateMachine>())
         {
@@ -234,7 +235,7 @@ public class BossSpawner : MonoBehaviour
                 }
             }
         }
-        else if (escapeByDistance || health == 0)
+        else if (escapeByDistance || health <= 0)
         {
             BossEncountered(false);
         }

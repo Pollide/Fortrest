@@ -780,7 +780,19 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < Indicator.global.IndicatorList.Count; i++)
         {
             if (!Indicator.global.IndicatorList[i].Permenant)
-                Indicator.global.IndicatorList[i].Visible = Pref("Indicator Unlocked" + i, Indicator.global.IndicatorList[i].Visible ? 1 : 0, load) == 1;
+            {
+                int index = 0;
+
+                for (int j = 0; j < LevelManager.global.terrainDataList.Count; j++)
+                {
+                    if (LevelManager.global.terrainDataList[j].terrain == Indicator.global.IndicatorList[i].onTerrain)
+                    {
+                        index = j;
+                        break;
+                    }
+                }
+                Indicator.global.IndicatorList[i].Visible = Pref("Indicator Unlocked" + Indicator.global.IndicatorList[i].ActiveString + index, Indicator.global.IndicatorList[i].Visible ? 1 : 0, load) == 1;
+            }
         }
     }
 
