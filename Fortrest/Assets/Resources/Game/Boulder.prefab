@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6747837648208604695}
+  - component: {fileID: 1726560183312405619}
   m_Layer: 9
   m_Name: Model
   m_TagString: Resource
@@ -36,6 +37,20 @@ Transform:
   m_Father: {fileID: 6935669614047997176}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &1726560183312405619
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408861648568435910}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1.7
+  m_Height: 6
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0.25}
 --- !u!1 &7713437358430713410
 GameObject:
   m_ObjectHideFlags: 0
@@ -573,25 +588,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2873672825065302400}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3107553993094124753 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 3a25bb911a1098b468e28a419cc05a5e,
-    type: 3}
-  m_PrefabInstance: {fileID: 2873672825065302400}
-  m_PrefabAsset: {fileID: 0}
---- !u!65 &6365071029907310105
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3107553993094124753}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 7.883502, y: 7.311068, z: 7.622704}
-  m_Center: {x: -0.6041941, y: 0.87366503, z: 0.88068956}
 --- !u!1001 &3896840473418917760
 PrefabInstance:
   m_ObjectHideFlags: 0

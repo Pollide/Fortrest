@@ -39,6 +39,9 @@ public class Boar : MonoBehaviour
     private bool dismountRight;
     [HideInInspector]
     public Vector3 respawnLocation;
+    private float timer;
+    private float hitResourceTimer = 1.5f;
+    private bool hitResource;
 
     private void Awake()
     {
@@ -91,9 +94,18 @@ public class Boar : MonoBehaviour
             }
         }
 
+        if (hitResource)
+        {
+            timer += Time.deltaTime;
+            if (timer > hitResourceTimer)
+            {
+                hitResource = false;
+            }
+        }
+
         if (mounted)
         {
-            GetComponent<SphereCollider>().radius = 2.5f;
+            GetComponent<SphereCollider>().radius = 2f;
             PlayerStick();
             PlayAnimations();
             if (canMove)
@@ -153,15 +165,20 @@ public class Boar : MonoBehaviour
 
             }
 
-            for (int i = 0; i < colliders.Length; i++)//shakes the building without any damage just for visual fun
+            if (isMoving)
             {
-                Building building = colliders[i].GetComponentInParent<Building>();
-
-                if (building && building.health > 0 && building.DropPrefab && !building.GetComponent<Animation>().IsPlaying("Nature Shake")) //stops building shaking too often
+                for (int i = 0; i < colliders.Length; i++)//shakes the building without any damage just for visual fun
                 {
-                    GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f);
-                    building.TakeDamage(1);
-                    break;
+                    Building building = colliders[i].GetComponentInParent<Building>();
+
+                    if (building && building.health > 0 && building.DropPrefab && !hitResource) //stops building shaking too often
+                    {
+                        timer = 0f;
+                        hitResource = true;
+                        GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f);
+                        building.TakeDamage(1);
+                        break;
+                    }
                 }
             }
 
@@ -225,8 +242,7 @@ public class Boar : MonoBehaviour
         else
         {
             dismountRight = false;
-        }
-        Debug.Log(dismountRight);
+        }          
     }
 
     private void OnTriggerExit(Collider other)
@@ -265,7 +281,7 @@ public class Boar : MonoBehaviour
             }
             else
             {
-                PlayerController.global.transform.position -= transform.right * 2;
+                PlayerController.global.transform.position += -transform.right * 2;
             }
             PlayerController.global.transform.rotation = transform.rotation;
             PlayerController.global.GetComponent<CharacterController>().enabled = true;
