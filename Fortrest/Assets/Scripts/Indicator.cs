@@ -24,7 +24,7 @@ public class Indicator : MonoBehaviour
     public int ShiftAmount = 13;
     public int TextMulti = -25;
 
-
+    public float randommulti = 1;
     [System.Serializable]
     public class IndicatorData
     {
@@ -95,7 +95,7 @@ public class Indicator : MonoBehaviour
             MainData.transform.localEulerAngles = Vector3.zero;
 
             Vector3 transition = Vector3.zero;
-
+            Vector3 textShift = Vector3.zero;
 
             if (rightBool)
             {
@@ -103,6 +103,7 @@ public class Indicator : MonoBehaviour
                 MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
                 transition -= Vector3.right;
                 MainData.ArrowText.alignment = TextAnchor.MiddleRight;
+                textShift = -MainData.ArrowText.transform.up * global.randommulti;
             }
             else if (leftBool)
             {
@@ -110,6 +111,8 @@ public class Indicator : MonoBehaviour
                 MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
                 transition += Vector3.right;
                 MainData.ArrowText.alignment = TextAnchor.MiddleLeft;
+                textShift = MainData.ArrowText.transform.up * global.randommulti;
+
             }
             else
             {
@@ -205,9 +208,9 @@ public class Indicator : MonoBehaviour
 
             Offset = new Vector3(ignoreX != 0 ? ignoreX : shift * flip, ignoreY != 0 ? ignoreY : shift, 0) + (leftBool || rightBool ? transition * global.TextMulti * flip : Vector3.zero);
             // shift = 0;
-
+            Offset = Vector3.zero;
             MainData.CustomImage.transform.localPosition = MainData.CustomImageLocalPosition + Offset;
-            MainData.ArrowText.transform.localPosition = MainData.ArrowTextLocalPosition + Offset;
+            MainData.ArrowText.transform.localPosition = MainData.ArrowTextLocalPosition + textShift + Offset;
         }
     }
 
