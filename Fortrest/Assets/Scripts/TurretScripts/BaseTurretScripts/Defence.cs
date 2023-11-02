@@ -19,7 +19,7 @@ public class Defence : MonoBehaviour
 
     public float ReturnHealth(bool forceMax = false)
     {
-        return (GetComponent<Building>().health == 0 || forceMax ? GetComponent<Building>().maxHealth : GetComponent<Building>().health) + changeTier.healthTier;
+        return ((GetComponent<Building>().health == 0 || forceMax) ? GetComponent<Building>().maxHealth + changeTier.healthTier : GetComponent<Building>().health);
     }
 
 
@@ -38,7 +38,6 @@ public class Defence : MonoBehaviour
     private Transform target;
     float fireCountdown = 0f;
     float nextRotationChangeTime;
-    public bool attackStarted;
 
     [Header("Cannon")]
     public float explosionRadius = 5;
@@ -155,7 +154,7 @@ public class Defence : MonoBehaviour
                 }
             }
 
-            if (Vector3.Distance(transform.position, target.position) > ReturnRange() && !attackStarted || target.GetComponent<EnemyController>().health <= 0f)
+            if (Vector3.Distance(transform.position, target.position) > ReturnRange() || target.GetComponent<EnemyController>().health <= 0f)
             {
                 if (building.buildingObject == Building.BuildingType.Slow)
                 {
@@ -228,26 +227,23 @@ public class Defence : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(direction);
         lookingDot = Mathf.Abs(Quaternion.Dot(transform.rotation, lookRotation));
         // Check if it's time to fire
-        if (!attackStarted && lookingDot > 0.8f)
+
+
+        if (fireCountdown >= 1)
         {
-            if (fireCountdown >= 1)
+            if (lookingDot > 0.8f)
             {
                 fireCountdown = 0;
-                attackStarted = true;
                 ReturnAnimator().ResetTrigger("Fire");
                 ReturnAnimator().SetTrigger("Fire");
             }
-            else
-            {
-                fireCountdown += ReturnSpeed() * Time.deltaTime; ///fire rate internally is just called speed
-            }
         }
+        fireCountdown += ReturnSpeed() * Time.deltaTime; ///fire rate internally is just called speed
+
     }
 
     public void ProjectileEvent() //CALLS ON THE ANIMATOR
     {
-        attackStarted = false;
-
         GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
         //       GameObject projectile = Instantiate(ProjectilePrefab, FirePoint.position, FirePoint.rotation);
 

@@ -1363,8 +1363,12 @@ public class PlayerController : MonoBehaviour
                         }
                         changeTier.healthTier = defence.GetComponent<Building>().ReturnRepair();
                         resourceData.upgradeTypeInt = 2;
-                        maxTier.healthTier -= defence.GetComponent<Building>().health; //as repair just wants normal max, not potential max
+                        maxTier.healthTier = defence.GetComponent<Building>().ReturnMaxHealth(); //as repair just wants normal max, not potential max
                         upgradeBool = true;
+                    }
+                    else
+                    {
+
                     }
                 }
 

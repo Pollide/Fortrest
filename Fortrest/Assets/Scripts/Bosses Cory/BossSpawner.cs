@@ -138,6 +138,8 @@ public class BossSpawner : MonoBehaviour
                     {
                         GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
                     }
+
+                    GameManager.global.DataSetVoid(false); //game saves after a boss
                 }
                 else
                 {

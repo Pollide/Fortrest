@@ -56,13 +56,13 @@ public class BridgeBuilder : MonoBehaviour
                     break;
                 }
 
-                if (BridgeTypeInt == 3 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Basilisk)
+                if (BridgeTypeInt == 3 && LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Hrafn)
                 {
                     canBuild = true;
                     break;
                 }
 
-                if (BridgeTypeInt == 4 && (LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Hrafn || LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Lycan))
+                if (BridgeTypeInt == 4 && (LevelManager.global.bossList[i].bossType == BossSpawner.TYPE.Lycan))
                 {
                     canBuild = true;
                     break;
