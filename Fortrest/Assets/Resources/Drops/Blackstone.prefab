@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 656cb4b3cd074594881b714cba5a30a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundPlayed: 0
   TierInt: 3
   resourceAmount: 1
   CollectedBool: 0
@@ -81,8 +82,8 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.1
-  m_Center: {x: 0, y: 0.05, z: 0}
+  m_Radius: 1.4625
+  m_Center: {x: 0, y: 0.25, z: 0}
 --- !u!65 &-4063508483239744869
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -94,8 +95,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.98, y: 1.53, z: 1.04}
-  m_Center: {x: -0.06, y: 0.65, z: 0.0020545311}
+  m_Size: {x: 0.98, y: 1, z: 1.04}
+  m_Center: {x: -0.06, y: 0.5, z: 0.0020545311}
 --- !u!1001 &201890774863272642
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -142,17 +143,17 @@ PrefabInstance:
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.20451
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.20451
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.20451
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
@@ -162,7 +163,7 @@ PrefabInstance:
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.342
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8187126372117161161, guid: edbc04a15628aaa4dbc8ece363929e4f,
         type: 3}

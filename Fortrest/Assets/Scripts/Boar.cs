@@ -93,6 +93,7 @@ public class Boar : MonoBehaviour
 
         if (mounted)
         {
+            GetComponent<SphereCollider>().radius = 2.5f;
             PlayerStick();
             PlayAnimations();
             if (canMove)
@@ -102,6 +103,7 @@ public class Boar : MonoBehaviour
         }
         else
         {
+            GetComponent<SphereCollider>().radius = 5f;
             if (currentSpeed > 0)
             {
                 Lerping(100f, 300f, ref deceleration, 20 / 9f); // Deceleration
@@ -158,7 +160,7 @@ public class Boar : MonoBehaviour
                 if (building && building.health > 0 && building.DropPrefab && !building.GetComponent<Animation>().IsPlaying("Nature Shake")) //stops building shaking too often
                 {
                     GameManager.global.SoundManager.PlaySound(GameManager.global.BushBreakingSound, 1.0f);
-                    building.TakeDamage(2);
+                    building.TakeDamage(1);
                     break;
                 }
             }
@@ -224,6 +226,7 @@ public class Boar : MonoBehaviour
         {
             dismountRight = false;
         }
+        Debug.Log(dismountRight);
     }
 
     private void OnTriggerExit(Collider other)
@@ -262,7 +265,7 @@ public class Boar : MonoBehaviour
             }
             else
             {
-                PlayerController.global.transform.position += -transform.right * 2;
+                PlayerController.global.transform.position -= transform.right * 2;
             }
             PlayerController.global.transform.rotation = transform.rotation;
             PlayerController.global.GetComponent<CharacterController>().enabled = true;

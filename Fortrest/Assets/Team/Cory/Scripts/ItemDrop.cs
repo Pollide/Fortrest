@@ -56,6 +56,12 @@ public class ItemDrop : MonoBehaviour
                     CollectVoid();
                 }
             }
+            else if (other.CompareTag("Boar"))
+            {
+                Vector3 direction = (transform.position - other.transform.position).normalized;
+                direction.y = 0.4f;
+                GetComponent<Rigidbody>().AddForce(direction / 4f, ForceMode.Impulse);
+            }
 
             if (!soundPlayed)
             {
@@ -88,9 +94,6 @@ public class ItemDrop : MonoBehaviour
             PopUpResource.global.displayNow = true;
         }
 
-
-
-        // InventoryManager.global.AddItem(this, resourceAmount);
         CollectedBool = true;
         LevelManager.global.ItemDropList.Remove(gameObject);
     }
