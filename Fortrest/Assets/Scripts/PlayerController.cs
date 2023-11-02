@@ -225,7 +225,6 @@ public class PlayerController : MonoBehaviour
     public Vector2 rotateCTRL;
     [HideInInspector] public bool releasedCTRL;
     [HideInInspector] public bool scrollCTRL;
-
     // Keyboard Controls
     private KeyCode[] keyCodes;
 
