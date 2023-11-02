@@ -44,7 +44,7 @@ public class PlayerModeHandler : MonoBehaviour
     public GameObject selectionGrid;
     GameObject newSelectionGrid;
     public GameObject KeyBlueprintHintPrefab;
-
+    public GameObject turretOnFirePrefab;
     public bool inTheFortress;
     private bool centerMouse;
     Vector2 cursorPosition;

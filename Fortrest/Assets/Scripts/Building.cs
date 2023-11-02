@@ -70,7 +70,7 @@ public class Building : MonoBehaviour
     Quaternion startingRotation;
 
     public GameObject DropPrefab;
-
+    GameObject turretOnFire;
     // Start is called before the first frame update
     void Start()
     {
@@ -153,6 +153,19 @@ public class Building : MonoBehaviour
 
             if (HUDHealthBar) //house doesnt have one
                 HUDHealthBar.SetHealth(health, ReturnMaxHealth());
+
+            if (!DropPrefab)
+            {
+                if (amount < 10)
+                {
+                    if (!turretOnFire)
+                        turretOnFire = Instantiate(PlayerModeHandler.global.turretOnFirePrefab, transform);
+                }
+                else if (turretOnFire)
+                {
+                    Destroy(turretOnFire);
+                }
+            }
 
             if (buildingObject == BuildingType.House)
             {
