@@ -44,7 +44,7 @@ public class PlayerModeHandler : MonoBehaviour
     public GameObject selectionGrid;
     GameObject newSelectionGrid;
     public GameObject KeyBlueprintHintPrefab;
-
+    public GameObject turretOnFirePrefab;
     public bool inTheFortress;
     private bool centerMouse;
     Vector2 cursorPosition;
@@ -237,9 +237,9 @@ public class PlayerModeHandler : MonoBehaviour
         float shift = (next ? max : 0);
 
 
-        bool ReturnMax(ref float defenceTier)
+        bool ReturnMax(ref float defenceTier, float buttonTier)
         {
-            return (defenceTier - shift) >= max;
+            return (defenceTier - shift) >= max - (buttonTier / 2); //the buttonTier/2 just hides any incorrect floating values
         }
 
         if (buttonTier != 0) //active in hiarachy as some tiers are hidden depending on the turret
@@ -249,7 +249,7 @@ public class PlayerModeHandler : MonoBehaviour
 
             if (active)
             {
-                if (upgrade && !ReturnMax(ref defenceTier) && PlayerController.global.CheckSufficientResources())
+                if (upgrade && !ReturnMax(ref defenceTier, buttonTier) && PlayerController.global.CheckSufficientResources())
                 {
                     defenceTier += buttonTier;
                     GameManager.global.SoundManager.PlaySound(GameManager.global.UpgradeMenuClickSound);
@@ -262,7 +262,7 @@ public class PlayerModeHandler : MonoBehaviour
                 fillImage.color = next ? Color.magenta : Color.cyan;
 
 
-                return ReturnMax(ref defenceTier);
+                return ReturnMax(ref defenceTier, buttonTier);
             }
         }
 

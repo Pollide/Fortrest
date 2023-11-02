@@ -48,7 +48,7 @@ public class Unlocks : MonoBehaviour
         GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Unlock");
         PlayerController.global.unlockImage.sprite = sprite;
         PlayerController.global.unlockImage.color = LevelManager.global.currentTerrainData.indicatorColor;
-     PlayerController.global.unlockTitleText.text = title;
+        PlayerController.global.unlockTitleText.text = title;
         PlayerController.global.unlockDescriptionText.text = description;
     }
 
@@ -114,7 +114,6 @@ public class Unlocks : MonoBehaviour
 
     private void Update()
     {
-        if (!PlayerModeHandler.global.inTheFortress)
-            PlayerController.global.MiniTurretUI.SetActive(miniTurretUnlocked);
+        PlayerController.global.MiniTurretUI.SetActive(!PlayerModeHandler.global.inTheFortress && miniTurretUnlocked);
     }
 }
