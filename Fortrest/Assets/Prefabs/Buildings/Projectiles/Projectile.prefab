@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7281693922789053899}
   - component: {fileID: 2259373432877075917}
   - component: {fileID: 6871647525366733927}
-  - component: {fileID: 2513738952014007482}
   - component: {fileID: -4583171827207095457}
   m_Layer: 12
   m_Name: Projectile
@@ -65,22 +64,9 @@ MonoBehaviour:
   speed: 10
   turretShootingScript: {fileID: 0}
   ActiveTarget: {fileID: 0}
---- !u!114 &2513738952014007482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4323165861798559352}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52e81f4d514ecd84a9d0a8446091e58f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   explosionRadius: 0
-  damage: 0
-  pushForce: 10
-  explosionEffect: {fileID: 0}
+  explosionEffect: {fileID: 8118711551768289692, guid: 6820525a1327630499ccea217600c948,
+    type: 3}
 --- !u!54 &-4583171827207095457
 Rigidbody:
   m_ObjectHideFlags: 0

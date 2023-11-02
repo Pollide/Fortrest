@@ -16,6 +16,10 @@ public class BoltScript : MonoBehaviour
     public Transform ActiveTarget;
     private bool damageDealt;
 
+    public float explosionRadius = 0;
+    public GameObject explosionEffect;
+
+
     // Update is called once per frame
     void Update()
     {
@@ -33,7 +37,7 @@ public class BoltScript : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (!damageDealt && turretShootingScript && !GetComponent<ProjectileExplosion>())
+        if (!damageDealt && turretShootingScript)
         {
             if (other.CompareTag("Enemy"))
             {
@@ -44,9 +48,21 @@ public class BoltScript : MonoBehaviour
                 {
                     enemy.Damaged(damage); // Apply damage to the enemy
                     damageDealt = true;
-                }
 
-                Destroy(gameObject); // Destroy the bullet
+
+                    if (explosionRadius > 0)
+                    {
+                        if (explosionEffect != null)
+                        {
+                            Destroy(Instantiate(explosionEffect, transform.position, Quaternion.identity), 5);
+                        }
+
+                        Explode();
+                    }
+
+
+                    Destroy(gameObject); // Destroy the bullet
+                }
             }
         }
     }
@@ -55,5 +71,43 @@ public class BoltScript : MonoBehaviour
     public void SetDamage(float _damageValue)
     {
         damage = _damageValue;
+    }
+
+    void Explode()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+
+        foreach (Collider collider in colliders)
+        {
+            if (collider.GetComponent<EnemyController>())
+            {
+                collider.GetComponent<EnemyController>().Damaged(damage * 0.1f);
+            }
+
+            Rigidbody enemyRigidbody = collider.GetComponent<Rigidbody>();
+            NavMeshAgent enemyAgent = collider.GetComponent<NavMeshAgent>();
+
+            if (enemyRigidbody != null)
+            {
+                Vector3 direction = (enemyRigidbody.transform.position - transform.position).normalized;
+                enemyRigidbody.AddForce(direction * pushForce, ForceMode.Impulse);
+            }
+
+            if (enemyAgent != null)
+            {
+                Vector3 direction = (enemyAgent.transform.position - transform.position).normalized;
+                enemyAgent.velocity = direction * pushForce;
+            }
+
+        }
+
+        // Instantiate explosion effect if specified
+
+    }
+    private void OnDrawGizmosSelected()
+    {
+        // Draw a wire sphere in the editor to visualize the tower's radius
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }
