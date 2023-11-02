@@ -192,7 +192,7 @@ public class Building : MonoBehaviour
 
     public float ReturnMaxHealth()
     {
-        return GetComponent<Defence>() ? GetComponent<Defence>().ReturnHealth() : maxHealth;
+        return GetComponent<Defence>() ? maxHealth + GetComponent<Defence>().changeTier.healthTier : maxHealth;
     }
 
     public void DestroyBuilding()
