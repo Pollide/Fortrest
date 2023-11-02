@@ -226,6 +226,10 @@ public class Building : MonoBehaviour
             if (GetComponent<Defence>())
             {
                 //PlayerModeHandler.global.occupied[(int)gridLocation.x, (int)gridLocation.y] = false;
+                if (PlayerModeHandler.global.SelectedTurret == this)
+                {
+                    PlayerModeHandler.global.TurretMenuSet(false);
+                }
                 LevelManager.global.RemoveBuildingVoid(transform);
                 Destroy(gameObject);
             }
