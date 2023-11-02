@@ -342,7 +342,7 @@ public class PlayerModeHandler : MonoBehaviour
                 }
             }
 
-            if (complete == turretStats.Count && defence.CurrentTier < 2)
+            if (complete >= turretStats.Count && defence.CurrentTier < 2)
             {
                 defence.CurrentTier++;
                 defence.ReturnAnimator();
@@ -415,8 +415,8 @@ public class PlayerModeHandler : MonoBehaviour
                             if (enter)
                             {
                                 ClearBlueprint();
-                                Debug.Log("GO");
-                                PlayerController.global.turretMenuHolder.GetChild(0).position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point);
+                                //  Debug.Log("GO");
+                                PlayerController.global.turretMenuHolder.GetChild(0).position = LevelManager.global.SceneCamera.WorldToScreenPoint(hitData.point + LevelManager.global.SceneCamera.transform.up * 6);
 
                                 SelectedTurret = building;
 
@@ -585,7 +585,7 @@ public class PlayerModeHandler : MonoBehaviour
     BuildType oldbuildType;
     private void ScrollSwitchTurret()
     {
-        if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
+        if ((Input.mouseScrollDelta.y < 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
             PlayerController.global.scrollCTRL = false;
             GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SwapTurretSound);
@@ -607,7 +607,7 @@ public class PlayerModeHandler : MonoBehaviour
                 SwitchBuildTypeTurret();
             }
         }
-        if ((Input.mouseScrollDelta.y < 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
+        if ((Input.mouseScrollDelta.y > 0f || PlayerController.global.scrollCTRL) && playerModes == PlayerModes.BuildMode)
         {
             PlayerController.global.scrollCTRL = false;
             GameManager.global.SoundManager.PlaySound(GameManager.global.SwapTurretSound);
