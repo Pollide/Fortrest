@@ -106,7 +106,7 @@ public class Indicator : MonoBehaviour
                 MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
                 transition -= Vector3.right;
                 MainData.ArrowText.alignment = TextAnchor.MiddleRight;
-                textShift = -MainData.ArrowText.transform.up * -52.84f - MainData.ArrowText.transform.forward * 15;
+                textShift = -MainData.ArrowText.transform.up * -54.84f - MainData.ArrowText.transform.right * 10;
                 textShift.z = 0;
             }
             else if (leftBool)
