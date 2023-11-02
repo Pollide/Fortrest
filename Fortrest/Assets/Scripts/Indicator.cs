@@ -24,8 +24,10 @@ public class Indicator : MonoBehaviour
     public int ShiftAmount = 13;
     public int TextMulti = -25;
 
-    public float randommulti = 1;
+    public float multi = 1;
+
     [System.Serializable]
+    [System.Runtime.InteropServices.Guid("82559C7F-F1D1-4100-BEBC-F8890E7D2C9B")]
     public class IndicatorData
     {
         public ArrowData MainData;
@@ -48,6 +50,7 @@ public class Indicator : MonoBehaviour
         public Terrain onTerrain;
         public float ignoreX;
         public float ignoreY;
+
         public void Refresh()
         {
             if (ActiveTarget)
@@ -103,7 +106,8 @@ public class Indicator : MonoBehaviour
                 MainData.transform.localEulerAngles = new Vector3(0, 0, 90);
                 transition -= Vector3.right;
                 MainData.ArrowText.alignment = TextAnchor.MiddleRight;
-                textShift = -MainData.ArrowText.transform.up * global.randommulti;
+                textShift = -MainData.ArrowText.transform.up * -52.84f - MainData.ArrowText.transform.forward * 15;
+                textShift.z = 0;
             }
             else if (leftBool)
             {
@@ -111,7 +115,8 @@ public class Indicator : MonoBehaviour
                 MainData.transform.localEulerAngles = new Vector3(0, 0, -90);
                 transition += Vector3.right;
                 MainData.ArrowText.alignment = TextAnchor.MiddleLeft;
-                textShift = MainData.ArrowText.transform.up * global.randommulti;
+                textShift = MainData.ArrowText.transform.up * 35;
+                textShift.z = 0;
 
             }
             else
