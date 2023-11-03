@@ -12,6 +12,7 @@ public class SquidBoss : MonoBehaviour
     public GameObject fireBallPrefab;
     public GameObject telegraphedCirclePrefab;
     float fireballTimer;
+    float swipeAttack;
     public AudioClip slamAudio;
 
     [System.Serializable]
@@ -26,8 +27,13 @@ public class SquidBoss : MonoBehaviour
 
     private void Update()
     {
-        if (bossSpawner.introCompleted && bossSpawner.bossEncountered)
+        if (bossSpawner.introCompleted && bossSpawner.bossEncountered && !death)
         {
+            if (swipeAttack > 10)
+            {
+                bossSpawner.bossAnimator.ResetTrigger("Swipe Attack");
+                bossSpawner.bossAnimator.SetTrigger("Swipe Attack");
+            }
             if (fireballTimer > 1)
             {
                 fireballTimer = 0;
@@ -41,6 +47,9 @@ public class SquidBoss : MonoBehaviour
             {
                 fireballTimer += Time.deltaTime;
             }
+
+            swipeAttack += Time.deltaTime;
+
         }
 
 
@@ -59,7 +68,7 @@ public class SquidBoss : MonoBehaviour
                 LevelManager.global.CreateCrackInGround(fireballList[i].fireball.transform.position);
                 Destroy(fireballList[i].fireball.gameObject);
                 TelegraphedAttack telegraphedAttack = fireballList[i].telegraphedCircle.GetComponentInChildren<TelegraphedAttack>();
-                telegraphedAttack.StartCoroutine(telegraphedAttack.TriggerDamage());
+                telegraphedAttack.damageNow = true;
                 GameManager.global.SoundManager.PlaySound(slamAudio);
                 Destroy(fireballList[i].telegraphedCircle.gameObject);
                 fireballList.RemoveAt(i);
@@ -76,16 +85,18 @@ public class SquidBoss : MonoBehaviour
         // fireBallData.telegraphedCircle.GetComponentInChildren<TelegraphedAttack>().getRockObject(fireBallData.fireball.gameObject);
         fireballList.Add(fireBallData);
     }
-
+    bool death;
     private void Damaged(float amount)
     {
         bossSpawner.UpdateHealth(-amount);
 
-        if (bossSpawner.health <= 0)
+        if (bossSpawner.health <= 0 && !death)
         {
             bossSpawner.bossAnimator.SetTrigger("Death");
             GameManager.global.SoundManager.PlaySound(GameManager.global.BossRoarSound, 1f, true, 0, false, transform);
 
+            death = true;
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Win Screen");
         }
     }
 
