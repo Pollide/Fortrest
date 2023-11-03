@@ -163,7 +163,7 @@ public class Building : MonoBehaviour
 
                     if (buildingObject == BuildingType.House)
                     {
-                        turretOnFire.transform.localScale = new Vector3(9, 9, 9);
+                        turretOnFire.transform.localScale = new Vector3(6, 6, 6);
                     }
                 }
                 else if (turretOnFire)
@@ -353,15 +353,21 @@ public class Building : MonoBehaviour
                 }
             }
 
+            if (!LevelManager.global.ReturnNight() && health > 0 && health < maxHealth) //house regens slowly
+            {
+                health += 0.05f * Time.deltaTime;
+                GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash Green");
+            }
+
             if (health != lastHealth)
             {
-                SetLastHealth();
-                timerText = 0.0f;
-                if (!underAttack)
+                if (!underAttack && health < lastHealth)
                 {
                     underAttack = true;
                     GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttacked");
                 }
+                SetLastHealth();
+                timerText = 0.0f;
             }
             else
             {

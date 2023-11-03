@@ -834,7 +834,16 @@ public class LevelManager : MonoBehaviour
                 if (nightAttack)
                 {
                     //enemiesCount += 5 * (day + 1) + (campsCount * 2);
-                    enemiesCount += (int)(-1 * Mathf.Pow(1.05f, (-day + 79.1f)) + 51) + (campsCount * 2);//TRIALING OUT NEW SYSTEM
+
+                    /*
+                     
+                    BELOW IS NEW SYSTEM
+                    V calculated a new model which has upper limits to not break the game and is less punishing in early days and more punishing in later days
+                    He has tested this model in his latestplaythrough and works well
+
+                    */
+
+                    enemiesCount += (int)(-1 * Mathf.Pow(1.05f, (-day + 79.1f)) + 51) + (campsCount * 2);
 
                 }
                 countSet = true;
