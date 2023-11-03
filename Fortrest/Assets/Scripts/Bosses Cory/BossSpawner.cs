@@ -131,8 +131,8 @@ public class BossSpawner : MonoBehaviour
                         LevelManager.global.bridgeList[i].CheckIndicators();
                     }
 
-                    if (bossType == TYPE.Hrafn) //no death animation on bird
-                        bossAnimator.enabled = false;
+                    //    if (bossType == TYPE.Hrafn) //no death animation on bird
+                    //     bossAnimator.enabled = false;
 
                     enabled = false;
                     health = 0;
