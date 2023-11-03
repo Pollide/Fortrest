@@ -4320,6 +4320,22 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 5607359810841713479}
   m_PrefabAsset: {fileID: 0}
+--- !u!54 &8063648126634440081
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4688302016161162774}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!65 &600403524905823306
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4390,8 +4406,8 @@ MonoBehaviour:
   bossType: 5
   BossCanvas: {fileID: 2060798956594959119}
   DebugDamageBoss: 0
-  health: 100
-  maxHealth: 150
+  health: 80
+  maxHealth: 80
   bossEncountered: 0
   canBeDamaged: 1
   StartPosition: {x: 0, y: 0, z: 0}
@@ -4407,22 +4423,6 @@ MonoBehaviour:
   bossAnimator: {fileID: 902255068813967466}
   cutsceneMode: 0
   bossSprite: {fileID: 21300000, guid: b385b41be76699d41aa65d4ce59f6159, type: 3}
---- !u!54 &8063648126634440081
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4688302016161162774}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!4 &5358124072363949228 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: fcbc40f372ac8b64fb8664339f273e32,
