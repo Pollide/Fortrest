@@ -450,7 +450,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slamDuration: 5
   slamRadius: 8
-  slamWaitAfterIndicator: 0.5
   damage: 20
   telegraph: {fileID: 846189645236265923}
   trigger: {fileID: 383893996414990895}
@@ -488,7 +487,7 @@ MonoBehaviour:
   bossType: 0
   BossCanvas: {fileID: 2060798956594959119}
   DebugDamageBoss: 0
-  health: 100
+  health: 50
   maxHealth: 50
   bossEncountered: 0
   canBeDamaged: 1
@@ -928,6 +927,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef62ec4bad758d64ba12a418c7db017b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  innerShape: {fileID: 0}
+  outerShape: {fileID: 0}
   lycanPhaseThree: {fileID: 0}
   frenzyMode: {fileID: 0}
   slam: {fileID: 0}
@@ -1053,6 +1054,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef62ec4bad758d64ba12a418c7db017b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  innerShape: {fileID: 0}
+  outerShape: {fileID: 0}
   lycanPhaseThree: {fileID: 0}
   frenzyMode: {fileID: 0}
   slam: {fileID: 8740668045474777165}
