@@ -162,7 +162,7 @@ public class BossSpawner : MonoBehaviour
 
                     if (bossType == TYPE.Chieftain)
                     {
-
+                        bossAnimator.SetTrigger("Quick Dead");
                         bossAnimator.SetBool("isDead", true);
                     }
 
