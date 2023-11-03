@@ -826,7 +826,9 @@ public class LevelManager : MonoBehaviour
             {
                 if (nightAttack)
                 {
-                    enemiesCount += 5 * (day + 1) + (campsCount * 2);
+                    //enemiesCount += 5 * (day + 1) + (campsCount * 2);
+                    enemiesCount += (int)(-1 * Mathf.Pow(1.05f, (-day + 79.1f)) + 51) + (campsCount * 2);//TRIALING OUT NEW SYSTEM
+
                 }
                 countSet = true;
             }
