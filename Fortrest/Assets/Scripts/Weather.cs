@@ -83,7 +83,7 @@ public class Weather : MonoBehaviour
             }
             else if (weatherTriggered && !stepComplete)
             {
-                weatherDuration = Random.Range(100.0f, 150.0f);
+                weatherDuration = Random.Range(10.0f, 15.0f);
                 currentWeatherInt = Random.Range(0, 2);
                 weatherType[currentWeatherInt].SetActive(true);
                 switch (currentWeatherInt)
@@ -100,9 +100,11 @@ public class Weather : MonoBehaviour
                         break;
                 }
                 stepComplete = true;
+                GameManager.global.SoundManager.PlaySound(GameManager.global.RainSound);
             }
             else if (timer > weatherDuration && weatherTriggered)
             {
+                GameManager.global.SoundManager.StopSelectedSound(GameManager.global.RainSound);
                 timer = 0;
                 StartCoroutine(LerpParticles(0.0f));
                 DecreaseDayLightIntensity = 0;
