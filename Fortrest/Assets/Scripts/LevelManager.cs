@@ -826,11 +826,7 @@ public class LevelManager : MonoBehaviour
             {
                 if (nightAttack)
                 {
-                    enemiesCount += 10 * (day + 1) + (campsCount * 3);
-                }
-                else
-                {
-                    enemiesCount += 6 * (day + 1) + (campsCount * 2);
+                    enemiesCount += 5 * (day + 1) + (campsCount * 2);
                 }
                 countSet = true;
             }
