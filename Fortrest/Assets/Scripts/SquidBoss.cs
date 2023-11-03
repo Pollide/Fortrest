@@ -33,15 +33,15 @@ public class SquidBoss : MonoBehaviour
             {
                 hitplayer = true;
                 swipeAttack = 0;
-                fireballTimer = 0;
-                bossSpawner.bossAnimator.ResetTrigger("Punch");
-                bossSpawner.bossAnimator.SetTrigger("Punch");
+                fireballTimer = -10;
+                //    bossSpawner.bossAnimator.ResetTrigger("Punch");
+                bossSpawner.bossAnimator.SetBool("Punch New", true);
             }
 
             if (fireballTimer > 1)
             {
                 fireballTimer = 0;
-
+                bossSpawner.bossAnimator.SetBool("Punch New", false);
                 bossSpawner.bossAnimator.ResetTrigger("Fire Vomit");
                 bossSpawner.bossAnimator.SetTrigger("Fire Vomit");
 
@@ -118,7 +118,7 @@ public class SquidBoss : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject == PlayerController.global.gameObject && hitplayer)
+        if (other.tr..gameObject == PlayerController.global.gameObject && hitplayer)
         {
             hitplayer = false;
             PlayerController.global.TakeDamage(20.0f);
