@@ -176,8 +176,15 @@ public class Building : MonoBehaviour
             {
                 PlayerController.global.houseHealthBar.SetHealth(health, ReturnMaxHealth());
 
-                if (health < ReturnMaxHealth() && amount != 0)
-                    GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash");
+                if (health < ReturnMaxHealth())
+                {
+                    if (amount > 0)
+                        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash");
+                    else
+                    {
+                        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash Green");
+                    }
+                }
             }
 
             if (amount != 0)
@@ -355,8 +362,7 @@ public class Building : MonoBehaviour
 
             if (!LevelManager.global.ReturnNight() && health > 0 && health < maxHealth) //house regens slowly
             {
-                health += 0.05f * Time.deltaTime;
-                GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash Green");
+                TakeDamage(-0.01f); //negative double will be positive
             }
 
             if (health != lastHealth)
