@@ -13,6 +13,11 @@ public class BossAnimationEvents : MonoBehaviour
     [SerializeField] private AudioClip slamAudio;
     [SerializeField] private AudioClip enrageAudio;
 
+    public void CrackIntheFloor()
+    {
+        LevelManager.global.CreateCrackInGround(transform.position, false);
+        GameManager.global.SoundManager.PlaySound(slamAudio, 0.6f);
+    }
 
     void ActivateIntroCard()
     {
@@ -50,6 +55,7 @@ public class BossAnimationEvents : MonoBehaviour
     void PlaySlamSound()
     {
         ScreenShake.global.ShakeScreen(1);
+        LevelManager.global.CreateCrackInGround(transform.position, true);
         GameManager.global.SoundManager.PlaySound(slamAudio);
     }
 

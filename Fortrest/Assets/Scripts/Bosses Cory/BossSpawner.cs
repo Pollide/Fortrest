@@ -128,7 +128,10 @@ public class BossSpawner : MonoBehaviour
                     {
                         LevelManager.global.bridgeList[i].CheckIndicators();
                     }
-                    bossAnimator.enabled = false;
+
+                    if (bossType == TYPE.Hrafn) //no death animation on bird
+                        bossAnimator.enabled = false;
+
                     enabled = false;
                     health = 0;
 
@@ -138,7 +141,15 @@ public class BossSpawner : MonoBehaviour
                     {
                         GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
                     }
+                    if (GetComponent<BoxCollider>())
+                    {
+                        GetComponent<BoxCollider>().enabled = false;
+                    }
 
+                    if (GetComponent<CapsuleCollider>())
+                    {
+                        GetComponent<CapsuleCollider>().enabled = false;
+                    }
                     GameManager.global.DataSetVoid(false); //game saves after a boss
                 }
                 else
