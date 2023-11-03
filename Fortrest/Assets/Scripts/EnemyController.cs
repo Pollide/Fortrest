@@ -16,7 +16,7 @@ public class EnemyController : MonoBehaviour
     public GameObject house;
 
     // Parameters
-    private float offset;
+    public float offset;
     private float speed;
     private float stoppingDist;
     private float enemyDamage;
@@ -107,11 +107,13 @@ public class EnemyController : MonoBehaviour
     private bool isRemoved = false;
 
     public bool lavaAttacks;
-    private Vector3 directionToPlayer;
-    private float distanceToPlayer;
+    private Vector3 directionToTarget;
+    private float distanceToTarget;
     private float jumpDistance;
     private bool setDistance;
     public bool freezeMovement;
+
+    public BoxCollider secondCollider;
 
     private void Awake()
     {
@@ -167,28 +169,35 @@ public class EnemyController : MonoBehaviour
             {
                 if (ActiveAnimator.GetBool("Moving") == true)
                 {
-                    GetComponentInChildren<BoxCollider>().size = new Vector3(11f, 6f, 7f);
-                    GetComponentInChildren<BoxCollider>().center = new Vector3(1.5f, 3f, 0f);
+                    GetComponent<BoxCollider>().size = new Vector3(1.75f, 1f, 3f);
+                    GetComponent<BoxCollider>().center = new Vector3(0f, 0.5f, -0.5f);
+                    secondCollider.size = new Vector3(1.75f, 3f, 3f);
+                    secondCollider.center = new Vector3(0f, 1.5f, -0.5f);
                 }
                 else
                 {
-                    GetComponentInChildren<BoxCollider>().size = new Vector3(5.5f, 6f, 5.5f);
-                    GetComponentInChildren<BoxCollider>().center = new Vector3(-1.5f, 3f, 1.5f);
+                    GetComponent<BoxCollider>().size = new Vector3(1.75f, 1f, 1.75f);
+                    GetComponent<BoxCollider>().center = new Vector3(0.3f, 0.5f, 0.5f);
+                    secondCollider.size = new Vector3(1.75f, 3f, 1.75f);
+                    secondCollider.center = new Vector3(0.3f, 1.5f, 0.5f);
                 }
             }
 
-            distanceToPlayer = Vector3.Distance(PlayerController.global.transform.position, transform.position);
-            directionToPlayer = (new Vector3(PlayerController.global.transform.position.x, 0f, PlayerController.global.transform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
+            if (bestTarget)
+            {
+                distanceToTarget = Vector3.Distance(bestTarget.transform.position, transform.position);
+                directionToTarget = (new Vector3(bestTarget.transform.position.x, 0f, bestTarget.transform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
+            }           
 
             if (lavaAttacks)
             {
                 if (!setDistance)
                 {
-                    jumpDistance = distanceToPlayer * 2;
+                    jumpDistance = distanceToTarget * 2;
                     setDistance = true;
                 }
 
-                agent.Move(directionToPlayer * (Time.deltaTime * jumpDistance));
+                agent.Move(directionToTarget * (Time.deltaTime * jumpDistance));
             }
 
             if (PlayerController.global.upgradedMelee && !knockbackIncreased)
@@ -400,14 +409,7 @@ public class EnemyController : MonoBehaviour
             // Stopping distance for turret
             if (bestTarget.gameObject.GetComponent<Building>())
             {
-                if (bestTarget.gameObject.GetComponent<Building>().buildingObject == Building.BuildingType.Ballista || bestTarget.gameObject.GetComponent<Building>().buildingObject == Building.BuildingType.Slow)
-                {
-                    agent.stoppingDistance = stoppingDist + 2.5f;
-                }
-                else if (bestTarget.gameObject.GetComponent<Building>().buildingObject == Building.BuildingType.Scatter || bestTarget.gameObject.GetComponent<Building>().buildingObject == Building.BuildingType.Cannon)
-                {
-                    agent.stoppingDistance = stoppingDist + 2.0f;
-                }
+                agent.stoppingDistance = stoppingDist + 2.5f;
             }
 
             // Enemy Attacks (works differently for the house
@@ -748,7 +750,7 @@ public class EnemyController : MonoBehaviour
             maxHealth = 3.5f;
             attackTimerMax = 2f;
             agent.stoppingDistance = 2.0f;
-            offset = 0.25f;
+            offset = 0.6f;
             enemyDamage = 3.0f;
             knockBackScript.strength = 50.0f;
         }
@@ -784,7 +786,7 @@ public class EnemyController : MonoBehaviour
             maxHealth = 8.0f;
             attackTimerMax = 1.75f;
             agent.stoppingDistance = 2.5f;
-            offset = 0.3f;
+            offset = 0.4f;
             enemyDamage = 5.5f;
             knockBackScript.strength = 20.0f;
         }
@@ -859,7 +861,7 @@ public class EnemyController : MonoBehaviour
         {
             if (currentEnemyType == ENEMYTYPE.lava)
             {
-                if (distanceToPlayer <= 4f)
+                if (distanceToTarget <= 4f)
                 {
                     PlayerController.global.TakeDamage(enemyDamage);
                 }
@@ -883,7 +885,7 @@ public class EnemyController : MonoBehaviour
                 {
                     building = building.transform.parent.GetComponent<Building>();
                 }
-                building.TakeDamage(1f);
+                building.TakeDamage(enemyDamage / 3);
             }
         }
 

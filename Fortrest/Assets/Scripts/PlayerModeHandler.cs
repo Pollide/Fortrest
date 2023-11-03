@@ -487,16 +487,16 @@ public class PlayerModeHandler : MonoBehaviour
                     switch (buildType)
                     {
                         case BuildType.Turret:
-                            timer = 10.0f;
+                            timer = 5.0f;
                             break;
                         case BuildType.Cannon:
-                            timer = 15.0f;
+                            timer = 10.0f;
                             break;
                         case BuildType.Slow:
-                            timer = 20.0f;
+                            timer = 15.0f;
                             break;
                         case BuildType.Scatter:
-                            timer = 10.0f;
+                            timer = 15.0f;
                             break;
                         default:
                             timer = 0f;
