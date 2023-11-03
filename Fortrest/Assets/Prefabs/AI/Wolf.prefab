@@ -1983,16 +1983,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea845b5433f796146be446269510fdee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugingoredamage: 0
+  bestTarget: {fileID: 0}
   house: {fileID: 0}
+  offset: 0
   health: 0
   healthBar: {fileID: 608194623096920370}
   healthAnimation: {fileID: 4125947487881263171}
   chasing: 0
   canBeDamaged: 1
   canBeDamagedByBoar: 1
+  waveEnemy: 0
   isMob: 0
   bossScriptOne: {fileID: 0}
   bossScriptTwo: {fileID: 0}
+  addIndicator: 1
   ActiveAnimator: {fileID: 2456781144617800690}
   knockBackScript: {fileID: 0}
   currentEnemyType: 3
@@ -2010,6 +2015,10 @@ MonoBehaviour:
   ogreAttackSound: {fileID: 0}
   flashingAnimation: {fileID: 4801667003439677623}
   flashing: 0
+  wolfDistanceBetweenPlayer: 17.5
+  lavaAttacks: 0
+  freezeMovement: 0
+  secondCollider: {fileID: 0}
 --- !u!114 &6763374028765096810
 MonoBehaviour:
   m_ObjectHideFlags: 0

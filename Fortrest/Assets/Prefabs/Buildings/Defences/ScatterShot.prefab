@@ -1284,7 +1284,7 @@ MonoBehaviour:
   turn_speed: 20
   shootingRange: 6
   fireRate: 1
-  damage: 1
+  damage: 0.5
   turretID: 0
   changeTier:
     damageTier: 0
@@ -1295,7 +1295,6 @@ MonoBehaviour:
   targetLayer:
     serializedVersion: 2
     m_Bits: 8192
-  attackStarted: 0
   explosionRadius: 5
   enemySpeedPercentage: 0.5
   bulletSpeed: 15
@@ -1309,7 +1308,7 @@ MonoBehaviour:
   - {fileID: 5034843380181389572}
   - {fileID: 5034843378941687754}
   - {fileID: 5034843378592234578}
-  cooldownTime: 0.4
+  cooldownTime: 0.7
   ProjectilePrefab: {fileID: 4323165861798559352, guid: fd480eb6e8c30914a8a962e6e75d7bd3,
     type: 3}
   FirePoint: {fileID: 5034843379706570171}

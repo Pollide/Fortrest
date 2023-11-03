@@ -304,12 +304,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3418677104603253113}
   - component: {fileID: 2610473813264241602}
-  - component: {fileID: 2610473813264241662}
-  - component: {fileID: 2610473813264241663}
   - component: {fileID: 2610473813264241661}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: VolcanicSlime
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -352,32 +350,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!65 &2610473813264241662
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2610473813264241603}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 3, z: 2}
-  m_Center: {x: 0.5, y: 1.5, z: 0}
---- !u!65 &2610473813264241663
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2610473813264241603}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 4, y: 3, z: 3}
-  m_Center: {x: 0.5, y: 1.5, z: 0}
 --- !u!114 &2610473813264241661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -806,9 +778,11 @@ GameObject:
   - component: {fileID: 4539787152075875279}
   - component: {fileID: 4539787152075875280}
   - component: {fileID: 4539787152075875281}
-  m_Layer: 0
+  - component: {fileID: 6582783118715224024}
+  - component: {fileID: 8325022547883188500}
+  m_Layer: 13
   m_Name: VolcanicEnemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -882,6 +856,7 @@ MonoBehaviour:
   debugingoredamage: 0
   bestTarget: {fileID: 0}
   house: {fileID: 0}
+  offset: 0
   health: 0
   healthBar: {fileID: 8817991807619032493}
   healthAnimation: {fileID: 5435069029943510236}
@@ -912,6 +887,8 @@ MonoBehaviour:
   flashing: 0
   wolfDistanceBetweenPlayer: 17.5
   lavaAttacks: 0
+  freezeMovement: 0
+  secondCollider: {fileID: 0}
 --- !u!114 &4539787152075875281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -927,6 +904,32 @@ MonoBehaviour:
   strength: 10
   knock: 0
   mountKnock: 0
+--- !u!65 &6582783118715224024
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4539787152075875283}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.75, y: 3, z: 3.75}
+  m_Center: {x: 0, y: 1.5, z: -0.5}
+--- !u!65 &8325022547883188500
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4539787152075875283}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 3.25, z: 4}
+  m_Center: {x: 0, y: 1.5, z: -0.5}
 --- !u!1 &4576777640150695021
 GameObject:
   m_ObjectHideFlags: 0

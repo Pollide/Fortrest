@@ -49,7 +49,7 @@ public class Defence : MonoBehaviour
     public float bulletSpeed = 10f;
     public float bulletLifetime = 3f; // Bullet lifetime in seconds
     public Transform[] spawnPositions; // Array of designated spawn positions
-    public float cooldownTime = 0.5f; // Cooldown time in seconds
+    public float cooldownTime = 1f; // Cooldown time in seconds
     float cooldownTimer = 0f;
 
     [Header("Projectile")]
@@ -259,7 +259,6 @@ public class Defence : MonoBehaviour
 
         if (building.buildingObject == Building.BuildingType.Cannon)
         {
-
             GameManager.global.SoundManager.PlaySound(GameManager.global.CannonShootSound, 0.3f, true, 0, false, transform);
             boltScript.explosionRadius = explosionRadius;
         }
@@ -288,6 +287,7 @@ public class Defence : MonoBehaviour
             }
         }
     }
+
     private void FindTarget()
     {
         Collider[] colliders = Physics.OverlapSphere(transform.position, ReturnRange(), targetLayer);
