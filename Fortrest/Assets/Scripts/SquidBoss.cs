@@ -31,9 +31,12 @@ public class SquidBoss : MonoBehaviour
         {
             if (swipeAttack > 10)
             {
-                bossSpawner.bossAnimator.ResetTrigger("Swipe Attack");
-                bossSpawner.bossAnimator.SetTrigger("Swipe Attack");
+                swipeAttack = 0;
+                fireballTimer = 0;
+                bossSpawner.bossAnimator.ResetTrigger("Punch");
+                bossSpawner.bossAnimator.SetTrigger("Punch");
             }
+
             if (fireballTimer > 1)
             {
                 fireballTimer = 0;
@@ -90,6 +93,10 @@ public class SquidBoss : MonoBehaviour
     {
         bossSpawner.UpdateHealth(-amount);
 
+        bossSpawner.bossAnimator.ResetTrigger("Stun");
+        bossSpawner.bossAnimator.SetTrigger("Stun");
+        fireballTimer = 0;
+        swipeAttack = 0;
         if (bossSpawner.health <= 0 && !death)
         {
             bossSpawner.bossAnimator.SetTrigger("Death");
