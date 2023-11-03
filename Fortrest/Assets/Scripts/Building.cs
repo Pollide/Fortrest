@@ -362,7 +362,7 @@ public class Building : MonoBehaviour
 
             if (!LevelManager.global.ReturnNight() && health > 0 && health < maxHealth) //house regens slowly
             {
-                TakeDamage(-0.2f * Time.deltaTime); //negative double will be positive
+                TakeDamage(-0.5f * Time.deltaTime); //negative double will be positive
             }
 
             if (health != lastHealth)
