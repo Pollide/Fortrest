@@ -32,7 +32,7 @@ public class Building : MonoBehaviour
 
     public BuildingType buildingObject;
 
-    [HideInInspector]
+    //  [HideInInspector]
     public float health;
     public float maxHealth = 4;
     public int resourceAmount = 5;
