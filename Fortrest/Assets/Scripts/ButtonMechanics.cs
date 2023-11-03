@@ -120,8 +120,8 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
     {
         if (buttons)
             buttons.MenuList[buttons.ReturnIndex()] = -1; //makes the button unselected
-        //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
-        CheckUpgrade(false);
+                                                          //ChangeColourVoid(new Color(164.0f / 255.0f, 164.0f / 255.0f, 164.0f / 255.0f));
+                                                          //  CheckUpgrade(false);
     }
 
     //checks to see if the pointer has entered the button
@@ -141,7 +141,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
         {
             BuildType buildType = BuildType.None;
 
-            if (UpgradeInt < 0 && open)
+            if (UpgradeInt < 0)
             {
                 if (PlayerModeHandler.global.SelectedTurret.buildingObject == Building.BuildingType.Ballista)
                     buildType = BuildType.Turret;
@@ -156,7 +156,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                     buildType = BuildType.Scatter;
             }
 
-            PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType, upgradeTypeInt = (open ? UpgradeInt : 0) }); //hides cost UI if not hover
+            PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData() { buildType = buildType, upgradeTypeInt = UpgradeInt }); //hides cost UI if not hover
         }
     }
 

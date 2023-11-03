@@ -12,6 +12,7 @@ public class SquidBoss : MonoBehaviour
     public GameObject fireBallPrefab;
     public GameObject telegraphedCirclePrefab;
     float fireballTimer;
+    public AudioClip slamAudio;
 
     [System.Serializable]
     public class FireBallData
@@ -55,7 +56,11 @@ public class SquidBoss : MonoBehaviour
 
             if (Vector3.Distance(fireballList[i].fireball.position, fireballList[i].landingPosition) < 1)
             {
+                LevelManager.global.CreateCrackInGround(fireballList[i].fireball.transform.position);
                 Destroy(fireballList[i].fireball.gameObject);
+                TelegraphedAttack telegraphedAttack = fireballList[i].telegraphedCircle.GetComponentInChildren<TelegraphedAttack>();
+                telegraphedAttack.StartCoroutine(telegraphedAttack.TriggerDamage());
+                GameManager.global.SoundManager.PlaySound(slamAudio);
                 Destroy(fireballList[i].telegraphedCircle.gameObject);
                 fireballList.RemoveAt(i);
             }
