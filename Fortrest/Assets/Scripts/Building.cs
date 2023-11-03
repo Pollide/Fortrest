@@ -220,9 +220,10 @@ public class Building : MonoBehaviour
         return GetComponent<Defence>() ? GetComponent<Defence>().ReturnHealth(true) : maxHealth;
     }
 
+
     public void DestroyBuilding()
     {
-        if (destroyedTimer == 0 && GetComponent<Animation>())
+        if (destroyedTimer == 0 && GetComponent<Animation>() && LevelManager.global.enabled)
         {
             HealthAppearTimer = 999;//so it fades away
             if (buildingObject == BuildingType.House)

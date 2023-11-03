@@ -217,7 +217,7 @@ public class Defence : MonoBehaviour
         {
             if (target.GetComponent<EnemyController>().health - ReturnDamage() <= 0)
             {
-                target.gameObject.layer = 0; //so it doesnt get detected
+                //  target.gameObject.layer = 0; //so it doesnt get detected
             }
         }
         Vector3 targetPos = new(target.transform.position.x, transform.position.y, target.transform.position.z);
