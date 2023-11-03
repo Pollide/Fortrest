@@ -32,7 +32,7 @@ public class Building : MonoBehaviour
 
     public BuildingType buildingObject;
 
-    [HideInInspector]
+    //  [HideInInspector]
     public float health;
     public float maxHealth = 4;
     public int resourceAmount = 5;
@@ -163,7 +163,7 @@ public class Building : MonoBehaviour
 
                     if (buildingObject == BuildingType.House)
                     {
-                        turretOnFire.transform.localScale = new Vector3(9, 9, 9);
+                        turretOnFire.transform.localScale = new Vector3(6, 6, 6);
                     }
                 }
                 else if (turretOnFire)
@@ -176,8 +176,15 @@ public class Building : MonoBehaviour
             {
                 PlayerController.global.houseHealthBar.SetHealth(health, ReturnMaxHealth());
 
-                if (health < ReturnMaxHealth() && amount != 0)
-                    GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash");
+                if (health < ReturnMaxHealth())
+                {
+                    if (amount > 0)
+                        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash");
+                    else
+                    {
+                        GameManager.PlayAnimation(PlayerController.global.UIAnimation, "House Flash Green");
+                    }
+                }
             }
 
             if (amount != 0)
@@ -353,15 +360,20 @@ public class Building : MonoBehaviour
                 }
             }
 
+            if (!LevelManager.global.ReturnNight() && health > 0 && health < maxHealth) //house regens slowly
+            {
+                TakeDamage(-0.01f); //negative double will be positive
+            }
+
             if (health != lastHealth)
             {
-                SetLastHealth();
-                timerText = 0.0f;
-                if (!underAttack)
+                if (!underAttack && health < lastHealth)
                 {
                     underAttack = true;
                     GameManager.PlayAnimation(PlayerController.global.houseUnderAttackText.GetComponent<Animation>(), "HouseAttacked");
                 }
+                SetLastHealth();
+                timerText = 0.0f;
             }
             else
             {

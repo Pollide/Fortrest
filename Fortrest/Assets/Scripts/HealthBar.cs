@@ -11,7 +11,7 @@ public class HealthBar : MonoBehaviour
     {
         if (healthBarImage)
         {
-            healthBarImage.fillAmount = Mathf.Lerp(0.0f, 1f, health / maxHealth);
-        }                         
+            healthBarImage.fillAmount = health / maxHealth;
+        }
     }
 }

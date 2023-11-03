@@ -343,12 +343,19 @@ public class LevelManager : MonoBehaviour
         move.rotation = cutsceneCameraLocations[number].rotation;
     }
 
-    public void DeathParticle(Transform target)
+    public void DeathParticle(Transform target, float delay = 0)
     {
+        StartCoroutine(DelayTime(target, delay));
+
+    }
+
+    IEnumerator DelayTime(Transform target, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
         Destroy(Instantiate(DissolveAshParticle, target.position, Quaternion.identity), 10);
 
         target.gameObject.AddComponent<DissolveMaterial>();
-
     }
 
     private void GetHousePosition()
@@ -826,7 +833,18 @@ public class LevelManager : MonoBehaviour
             {
                 if (nightAttack)
                 {
-                    enemiesCount += 5 * (day + 1) + (campsCount * 2);
+                    //enemiesCount += 5 * (day + 1) + (campsCount * 2);
+
+                    /*
+                     
+                    BELOW IS NEW SYSTEM
+                    V calculated a new model which has upper limits to not break the game and is less punishing in early days and more punishing in later days
+                    He has tested this model in his latestplaythrough and works well
+
+                    */
+
+                    enemiesCount += (int)(-1 * Mathf.Pow(1.05f, (-day + 79.1f)) + 54) + (campsCount * 2);
+
                 }
                 countSet = true;
             }

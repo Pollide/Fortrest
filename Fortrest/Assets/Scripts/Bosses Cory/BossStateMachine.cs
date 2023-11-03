@@ -98,7 +98,7 @@ public class BossStateMachine : MonoBehaviour
         currentState.Initialize(this); // Pass a reference to the state machine
         currentState.EnterState();
     }
-   
+
     public void TakeDamage(float damage)
     {
         if (bossSpawner.health > 0)
@@ -113,7 +113,7 @@ public class BossStateMachine : MonoBehaviour
             }
         }
 
-        if (bossSpawner.health <= bossSpawner.maxHealth / 3f && bossSpawner.bossType != BossSpawner.TYPE.Lycan) 
+        if (bossSpawner.health <= bossSpawner.maxHealth / 3f && bossSpawner.bossType != BossSpawner.TYPE.Lycan)
         {
             currentPhase = BossPhase.Three;
         }
@@ -121,7 +121,7 @@ public class BossStateMachine : MonoBehaviour
         {
             currentPhase = BossPhase.Two;
         }
-        else if(bossSpawner.health > bossSpawner.maxHealth * 2f / 3f && bossSpawner.bossType != BossSpawner.TYPE.Lycan)
+        else if (bossSpawner.health > bossSpawner.maxHealth * 2f / 3f && bossSpawner.bossType != BossSpawner.TYPE.Lycan)
         {
             currentPhase = BossPhase.One;
         }
@@ -137,7 +137,7 @@ public class BossStateMachine : MonoBehaviour
         isDead = true;
         BossAnimator.SetBool("isDead", true);
         yield return new WaitForSeconds(3);
-        gameObject.SetActive(false); //i dont want bosses to be destroyed so i can save their HP as zero thanks
+        //  gameObject.SetActive(false);// dont need to disable here
     }
 
     private void OnDrawGizmosSelected()

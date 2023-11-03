@@ -24,7 +24,8 @@ public class PhaseTwoLycan : BossState
                 enemy.GetComponent<EnemyController>().isMob = true;
                 enemy.GetComponent<EnemyController>().wolfDistanceBetweenPlayer = 100;
 
-                enemyList.Add(enemy);
+                if (!stateMachine.PhaseThreeRan)
+                    enemyList.Add(enemy);
 
             }
         }
