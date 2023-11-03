@@ -162,7 +162,8 @@ public class LevelManager : MonoBehaviour
     public AnimationState enemyIncomingState;
     [HideInInspector]
     public bool messageDisplayed;
-
+    public GameObject CrackInGroundPrefab;
+    public GameObject BigCrackInGroundPrefab;
     [Header("Enemies Spawnable")]
     [Space]
     public bool goblinSpawnable;
@@ -173,7 +174,7 @@ public class LevelManager : MonoBehaviour
 
     public BossSpawner activeBossSpawner;
     public List<Transform> cutsceneCameraLocations = new List<Transform>();
-
+    public bool testcrack;
     private void Awake()
     {
         global = this;
@@ -239,7 +240,7 @@ public class LevelManager : MonoBehaviour
         SceneCamera.fieldOfView = 60;
 
         CameraFollow.global.bossCam = true;
-        SFXManager.SFXData sFXData = GameManager.global.SoundManager.PlaySound(GameManager.global.CutsceneChattingOutside, 1, false);
+        //  SFXManager.SFXData sFXData = GameManager.global.SoundManager.PlaySound(GameManager.global.CutsceneChattingOutside, 1, false);
 
         CutsceneSet(SceneCamera.transform, 0);
 
@@ -255,7 +256,7 @@ public class LevelManager : MonoBehaviour
 
         ScreenShake.global.ShakeScreen(0.5f);
 
-        GameManager.global.SoundManager.StopSelectedSound(sFXData.Audio.clip);
+        //  GameManager.global.SoundManager.StopSelectedSound(sFXData.Audio.clip);
 
         yield return new WaitForSeconds(1);
 
@@ -363,6 +364,14 @@ public class LevelManager : MonoBehaviour
         });
     }
 
+    public void CreateCrackInGround(Vector3 position, bool large = false)
+    {
+        if (Physics.Raycast(position + Vector3.up, Vector3.down, out RaycastHit hit, Mathf.Infinity, GameManager.ReturnBitShift(new string[] { "Default", "Terrain" })))
+        {
+            position = hit.point + new Vector3(0, 0.01f, 0);
+            Destroy(Instantiate(large ? BigCrackInGroundPrefab : CrackInGroundPrefab, position, Quaternion.LookRotation(hit.normal, -transform.up)), 6);
+        }
+    }
 
     public void AddBuildingVoid(Transform addTransform)
     {
@@ -518,6 +527,11 @@ public class LevelManager : MonoBehaviour
 
     private void Update()
     {
+        if (testcrack)
+        {
+            testcrack = false;
+            CreateCrackInGround(PlayerController.global.transform.position);
+        }
         if (!housePosObtained)
         {
             GetHousePosition();

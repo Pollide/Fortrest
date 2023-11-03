@@ -221,7 +221,7 @@ public class Building : MonoBehaviour
             if (buildingObject == BuildingType.House)
             {
                 GameManager.global.SoundManager.StopSelectedSound(GameManager.global.SnoringSound);
-                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseDestroyedSound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.HouseDestroyedSound, 0.8f);
                 normalHouse.SetActive(false);
                 destroyedHouse.SetActive(true);
                 PlayerController.global.UpdateResourceHolder(new PlayerController.ResourceData(), false);

@@ -51,12 +51,12 @@ public class TelegraphedAttack : MonoBehaviour
             {
                 if (SpiderBoss.global.directionToPlayer == Vector3.zero)
                 {
-                    PlayerController.global.playerCC.Move(new Vector3(Random.Range(0,2), 0f, Random.Range(0, 2)) * 15.0f * Time.deltaTime);
+                    PlayerController.global.playerCC.Move(new Vector3(Random.Range(0, 2), 0f, Random.Range(0, 2)) * 15.0f * Time.deltaTime);
                 }
                 else
                 {
                     PlayerController.global.playerCC.Move(SpiderBoss.global.directionToPlayer * 12.0f * Time.deltaTime);
-                }               
+                }
             }
         }
     }
@@ -91,8 +91,10 @@ public class TelegraphedAttack : MonoBehaviour
             if (rockObject)
             {
                 GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossRockSound, 1f, true, 0, false, rockObject.transform);
+
                 StartCoroutine(TriggerDamage());
                 Destroy(rockObject);
+                LevelManager.global.CreateCrackInGround(rockObject.transform.position);
             }
             size = 0;
             timer = 0;

@@ -90,11 +90,11 @@ public class Weather : MonoBehaviour
                 {
                     case 0: // Light Rain
                         StartCoroutine(LerpParticles(125.0f));
-                        DecreaseDayLightIntensity = 0.5f;
+                        DecreaseDayLightIntensity = 0.2f;
                         break;
                     case 1: // Heavy Rain
                         StartCoroutine(LerpParticles(350.0f));
-                        DecreaseDayLightIntensity = 0.75f;
+                        DecreaseDayLightIntensity = 0.3f;
                         break;
                     default:
                         break;
@@ -108,7 +108,7 @@ public class Weather : MonoBehaviour
                 DecreaseDayLightIntensity = 0;
                 weatherTriggered = false;
             }
-        }      
+        }
     }
 
     private IEnumerator LerpParticles(float emissionStrength)
