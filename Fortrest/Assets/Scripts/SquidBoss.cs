@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class SquidBoss : MonoBehaviour
 {
@@ -69,5 +70,53 @@ public class SquidBoss : MonoBehaviour
         fireBallData.telegraphedCircle = Instantiate(telegraphedCirclePrefab, fireBallData.landingPosition, Quaternion.identity);
         // fireBallData.telegraphedCircle.GetComponentInChildren<TelegraphedAttack>().getRockObject(fireBallData.fireball.gameObject);
         fireballList.Add(fireBallData);
+    }
+
+    private void Damaged(float amount)
+    {
+        bossSpawner.UpdateHealth(-amount);
+
+        if (bossSpawner.health <= 0)
+        {
+            bossSpawner.bossAnimator.SetTrigger("Death");
+            GameManager.global.SoundManager.PlaySound(GameManager.global.BossRoarSound, 1f, true, 0, false, transform);
+
+        }
+    }
+
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject == PlayerController.global.SwordGameObject)
+        {
+            if (PlayerController.global.attacking && bossSpawner.canBeDamaged && PlayerController.global.damageEnemy)
+            {
+                GameObject tempVFX = Instantiate(PlayerController.global.swordVFX.gameObject, ((PlayerController.global.transform.position + transform.position) / 2) + PlayerController.global.transform.forward, Quaternion.identity);
+                if (tempVFX.transform.position.y < 0)
+                {
+                    tempVFX.transform.position = new Vector3(tempVFX.transform.position.x, PlayerController.global.transform.position.y, tempVFX.transform.position.z);
+                }
+                tempVFX.GetComponent<VisualEffect>().Play();
+                Destroy(tempVFX, 1.0f);
+                GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
+                bossSpawner.canBeDamaged = false;
+                ScreenShake.global.ShakeScreen();
+                Damaged(PlayerController.global.attackDamage);
+                PlayerController.global.StartCoroutine(PlayerController.global.FreezeTime());
+            }
+        }
+        if (other.gameObject.tag == "Arrow" && other.GetComponent<ArrowTrigger>())
+        {
+            if (!other.GetComponent<ArrowTrigger>().singleHit)
+            {
+                GameManager.global.SoundManager.PlaySound(Random.Range(1, 3) == 1 ? GameManager.global.SpiderBossHit1Sound : GameManager.global.SpiderBossHit2Sound, 1f, true, 0, false, transform);
+                other.GetComponent<ArrowTrigger>().singleHit = true;
+                Damaged(PlayerController.global.bowDamage);
+                if (!PlayerController.global.upgradedBow || other.GetComponent<ArrowTrigger>().hitSecondEnemy)
+                {
+                    Destroy(other.gameObject.transform.parent.gameObject);
+                }
+            }
+        }
     }
 }
