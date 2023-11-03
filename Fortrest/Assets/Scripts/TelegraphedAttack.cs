@@ -17,7 +17,7 @@ public class TelegraphedAttack : MonoBehaviour
     public bool isAsileMakerFireballIndicator;
     private bool appearOnStart = true;
     private GameObject rockObject;
-    private bool damageNow;
+    public bool damageNow;
     private bool pushBack;
 
     void Start()
@@ -38,7 +38,7 @@ public class TelegraphedAttack : MonoBehaviour
             Indicator(ref BirdBoss.global.circleAttackIndicator, 0.75f, 1.65f);
 
         if (isAsileMakerFireballIndicator)
-            Indicator(ref appearOnStart, 0.75f, 1.5f);
+            Indicator(ref appearOnStart, 0.75f, 1.8f);
 
         if (pushBack)
         {
@@ -83,6 +83,7 @@ public class TelegraphedAttack : MonoBehaviour
 
         if (!active)
         {
+
             if (isBirdIndicatorBigCircle && indicator)
             {
                 StartCoroutine(TriggerDamage());
@@ -103,7 +104,7 @@ public class TelegraphedAttack : MonoBehaviour
         }
     }
 
-    private IEnumerator TriggerDamage()
+    public IEnumerator TriggerDamage()
     {
         damageNow = true;
         yield return new WaitForFixedUpdate();
@@ -126,9 +127,9 @@ public class TelegraphedAttack : MonoBehaviour
                 pushBack = true;
                 StartCoroutine(PushBack());
             }
-            else if ((isBirdIndicatorCircle || isBirdIndicatorBigCircle) && damageNow)
+            else if ((isBirdIndicatorCircle || isBirdIndicatorBigCircle || isAsileMakerFireballIndicator) && damageNow)
             {
-                if (isBirdIndicatorBigCircle && PlayerController.global.playerCanBeDamaged)
+                if ((isAsileMakerFireballIndicator || isBirdIndicatorBigCircle) && PlayerController.global.playerCanBeDamaged)
                 {
                     pushBack = true;
                     StartCoroutine(PushBack());

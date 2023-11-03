@@ -12,7 +12,9 @@ public class SquidBoss : MonoBehaviour
     public GameObject fireBallPrefab;
     public GameObject telegraphedCirclePrefab;
     float fireballTimer;
-
+    float swipeAttack;
+    public AudioClip slamAudio;
+    bool hitplayer;
     [System.Serializable]
     public class FireBallData
     {
@@ -25,8 +27,17 @@ public class SquidBoss : MonoBehaviour
 
     private void Update()
     {
-        if (bossSpawner.introCompleted && bossSpawner.bossEncountered)
+        if (bossSpawner.introCompleted && bossSpawner.bossEncountered && !death)
         {
+            if (swipeAttack > 10)
+            {
+                hitplayer = true;
+                swipeAttack = 0;
+                fireballTimer = 0;
+                bossSpawner.bossAnimator.ResetTrigger("Punch");
+                bossSpawner.bossAnimator.SetTrigger("Punch");
+            }
+
             if (fireballTimer > 1)
             {
                 fireballTimer = 0;
@@ -40,6 +51,9 @@ public class SquidBoss : MonoBehaviour
             {
                 fireballTimer += Time.deltaTime;
             }
+
+            swipeAttack += Time.deltaTime;
+
         }
 
 
@@ -55,7 +69,11 @@ public class SquidBoss : MonoBehaviour
 
             if (Vector3.Distance(fireballList[i].fireball.position, fireballList[i].landingPosition) < 1)
             {
+                LevelManager.global.CreateCrackInGround(fireballList[i].fireball.transform.position);
                 Destroy(fireballList[i].fireball.gameObject);
+                TelegraphedAttack telegraphedAttack = fireballList[i].telegraphedCircle.GetComponentInChildren<TelegraphedAttack>();
+                telegraphedAttack.damageNow = true;
+                GameManager.global.SoundManager.PlaySound(slamAudio);
                 Destroy(fireballList[i].telegraphedCircle.gameObject);
                 fireballList.RemoveAt(i);
             }
@@ -71,22 +89,34 @@ public class SquidBoss : MonoBehaviour
         // fireBallData.telegraphedCircle.GetComponentInChildren<TelegraphedAttack>().getRockObject(fireBallData.fireball.gameObject);
         fireballList.Add(fireBallData);
     }
-
+    bool death;
     private void Damaged(float amount)
     {
         bossSpawner.UpdateHealth(-amount);
 
-        if (bossSpawner.health <= 0)
+        bossSpawner.bossAnimator.ResetTrigger("Stun");
+        bossSpawner.bossAnimator.SetTrigger("Stun");
+        fireballTimer = 0;
+        swipeAttack = 0;
+        if (bossSpawner.health <= 0 && !death)
         {
             bossSpawner.bossAnimator.SetTrigger("Death");
             GameManager.global.SoundManager.PlaySound(GameManager.global.BossRoarSound, 1f, true, 0, false, transform);
 
+            death = true;
+            GameManager.PlayAnimation(PlayerController.global.UIAnimation, "Win Screen");
         }
     }
 
 
     private void OnTriggerStay(Collider other)
     {
+        if (other.gameObject == PlayerController.global.gameObject && hitplayer)
+        {
+            hitplayer = false;
+            PlayerController.global.TakeDamage(20.0f);
+        }
+
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
             if (PlayerController.global.attacking && bossSpawner.canBeDamaged && PlayerController.global.damageEnemy)

@@ -105,7 +105,7 @@ public class Boar : MonoBehaviour
 
         if (mounted)
         {
-            GetComponent<SphereCollider>().radius = 2f;
+            GetComponent<SphereCollider>().radius = 1.5f;
             PlayerStick();
             PlayAnimations();
             if (canMove)
@@ -154,7 +154,7 @@ public class Boar : MonoBehaviour
             }
 
             Vector3 direction = (Vector3.up * 2) + (transform.forward * 3 * (currentSpeed > 0 ? 1 : -1)); //searches area in front of boar or behind if reversing
-            Collider[] colliders = Physics.OverlapSphere(transform.position + direction, 2, GameManager.ReturnBitShift(new string[] { "Default", "Building", "Resource" }), QueryTriggerInteraction.Ignore);
+            Collider[] colliders = Physics.OverlapSphere(transform.position + direction, 1.8f, GameManager.ReturnBitShift(new string[] { "Default", "Building", "Resource" }), QueryTriggerInteraction.Ignore);
 
             if (colliders.Length == 0) //stops boar hitting trees and buildings
             {
@@ -242,7 +242,7 @@ public class Boar : MonoBehaviour
         else
         {
             dismountRight = false;
-        }          
+        }
     }
 
     private void OnTriggerExit(Collider other)
