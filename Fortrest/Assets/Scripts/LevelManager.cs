@@ -343,12 +343,19 @@ public class LevelManager : MonoBehaviour
         move.rotation = cutsceneCameraLocations[number].rotation;
     }
 
-    public void DeathParticle(Transform target)
+    public void DeathParticle(Transform target, float delay = 0)
     {
+        StartCoroutine(DelayTime(target, delay));
+
+    }
+
+    IEnumerator DelayTime(Transform target, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
         Destroy(Instantiate(DissolveAshParticle, target.position, Quaternion.identity), 10);
 
         target.gameObject.AddComponent<DissolveMaterial>();
-
     }
 
     private void GetHousePosition()

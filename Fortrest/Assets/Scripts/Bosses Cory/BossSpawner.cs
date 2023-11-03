@@ -110,6 +110,8 @@ public class BossSpawner : MonoBehaviour
         }
     }
 
+
+
     public void BossEncountered(bool open)
     {
 
@@ -121,7 +123,7 @@ public class BossSpawner : MonoBehaviour
                 {
                     GameManager.PlayAnimation(BossCanvas.GetComponent<Animation>(), "Boss Health Death");
 
-                    LevelManager.global.DeathParticle(transform);
+                    LevelManager.global.DeathParticle(transform, bossType == TYPE.Hrafn ? 0 : 4);
 
 
                     for (int i = 0; i < LevelManager.global.bridgeList.Count; i++)
@@ -137,10 +139,6 @@ public class BossSpawner : MonoBehaviour
 
                     Unlocks.global.RefreshUnlocks(this);
 
-                    if (GetComponent<UnityEngine.AI.NavMeshAgent>())
-                    {
-                        GetComponent<UnityEngine.AI.NavMeshAgent>().enabled = false;
-                    }
                     if (GetComponent<BoxCollider>())
                     {
                         GetComponent<BoxCollider>().enabled = false;
@@ -151,8 +149,15 @@ public class BossSpawner : MonoBehaviour
                         GetComponent<CapsuleCollider>().enabled = false;
                     }
 
+                    if (GetComponent<UnityEngine.AI.NavMeshAgent>())
+                    {
+                        GetComponent<UnityEngine.AI.NavMeshAgent>().angularSpeed = 0;
+                        GetComponent<UnityEngine.AI.NavMeshAgent>().speed = 0;
+                    }
+
                     if (bossType == TYPE.Chieftain)
                     {
+
                         bossAnimator.SetBool("isDead", true);
                     }
 
