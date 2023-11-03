@@ -843,7 +843,7 @@ public class LevelManager : MonoBehaviour
 
                     */
 
-                    enemiesCount += (int)(-1 * Mathf.Pow(1.05f, (-day + 79.1f)) + 54) + (campsCount * 2);
+                    enemiesCount += (int)(-1 * Mathf.Pow(1.05f, (-day + 79.1f)) + 51) + (campsCount * 2);
 
                 }
                 countSet = true;
