@@ -144,6 +144,11 @@ public class BossSpawner : MonoBehaviour
                         GetComponent<BoxCollider>().enabled = false;
                     }
 
+                    if (GetComponent<BossStateMachine>())
+                    {
+                        GetComponent<BossStateMachine>().enabled = false;
+
+                    }
                     if (GetComponent<CapsuleCollider>())
                     {
                         GetComponent<CapsuleCollider>().enabled = false;
