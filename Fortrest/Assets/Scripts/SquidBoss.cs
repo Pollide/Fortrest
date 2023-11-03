@@ -14,7 +14,7 @@ public class SquidBoss : MonoBehaviour
     float fireballTimer;
     float swipeAttack;
     public AudioClip slamAudio;
-
+    bool hitplayer;
     [System.Serializable]
     public class FireBallData
     {
@@ -31,6 +31,7 @@ public class SquidBoss : MonoBehaviour
         {
             if (swipeAttack > 10)
             {
+                hitplayer = true;
                 swipeAttack = 0;
                 fireballTimer = 0;
                 bossSpawner.bossAnimator.ResetTrigger("Punch");
@@ -110,6 +111,12 @@ public class SquidBoss : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
+        if (other.gameObject == PlayerController.global.gameObject && hitplayer)
+        {
+            hitplayer = false;
+            PlayerController.global.TakeDamage(20.0f);
+        }
+
         if (other.gameObject == PlayerController.global.SwordGameObject)
         {
             if (PlayerController.global.attacking && bossSpawner.canBeDamaged && PlayerController.global.damageEnemy)
