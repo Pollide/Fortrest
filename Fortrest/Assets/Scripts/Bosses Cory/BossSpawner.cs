@@ -150,6 +150,12 @@ public class BossSpawner : MonoBehaviour
                     {
                         GetComponent<CapsuleCollider>().enabled = false;
                     }
+
+                    if (bossType == TYPE.Chieftain)
+                    {
+                        bossAnimator.SetBool("isDead", true);
+                    }
+
                     GameManager.global.DataSetVoid(false); //game saves after a boss
                 }
                 else
