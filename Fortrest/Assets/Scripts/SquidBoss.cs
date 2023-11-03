@@ -118,7 +118,7 @@ public class SquidBoss : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.tr..gameObject == PlayerController.global.gameObject && hitplayer)
+        if (other.GetComponentInParent<PlayerController>(true) == PlayerController.global && hitplayer)
         {
             hitplayer = false;
             PlayerController.global.TakeDamage(20.0f);
