@@ -71,10 +71,17 @@ public class SquidBoss : MonoBehaviour
             {
                 LevelManager.global.CreateCrackInGround(fireballList[i].fireball.transform.position);
                 Destroy(fireballList[i].fireball.gameObject);
-                TelegraphedAttack telegraphedAttack = fireballList[i].telegraphedCircle.GetComponentInChildren<TelegraphedAttack>();
-                telegraphedAttack.damageNow = true;
-                GameManager.global.SoundManager.PlaySound(slamAudio);
+                //  TelegraphedAttack telegraphedAttack = fireballList[i].telegraphedCircle.GetComponentInChildren<TelegraphedAttack>();
+                // //  telegraphedAttack.damageNow = true;
+                //  GameManager.global.SoundManager.PlaySound(slamAudio);
+
+                if (Vector3.Distance(PlayerController.global.transform.position, fireballList[i].fireball.transform.position) < 5)
+                {
+                    PlayerController.global.TakeDamage(10.0f);
+                }
+
                 Destroy(fireballList[i].telegraphedCircle.gameObject);
+
                 fireballList.RemoveAt(i);
             }
         }
