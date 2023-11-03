@@ -60,45 +60,51 @@ public class BirdBoss : MonoBehaviour
 
     void Update()
     {
-
-        if (bossSpawner.bossAwakened && !bossSpawner.bossEncountered)
+        if (!dead)
         {
-            hitReceived = 0;
-            crashed = false;
-            altitudeReached = false;
-            bossSpawner.bossAnimator.SetBool("Attack1", false);
-            bossSpawner.bossAnimator.SetBool("Attack2", false);
-            bossSpawner.bossAnimator.SetBool("Attack3", false);
-            // bossSpawner.bossAnimator.SetBool("Flying", false);
-            //   flying = false;
-            MoveToTarget(initialPosition, initialDirection);
+            if (bossSpawner.bossAwakened && !bossSpawner.bossEncountered)
+            {
+                hitReceived = 0;
+                crashed = false;
+                altitudeReached = false;
+                bossSpawner.bossAnimator.SetBool("Attack1", false);
+                bossSpawner.bossAnimator.SetBool("Attack2", false);
+                bossSpawner.bossAnimator.SetBool("Attack3", false);
+                // bossSpawner.bossAnimator.SetBool("Flying", false);
+                //   flying = false;
+                MoveToTarget(initialPosition, initialDirection);
+            }
+            else
+            {
+                directionToPlayer = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
+                distanceToPlayer = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
+                capsuleCollider.enabled = crashed ? true : false;
+                boxCollider.enabled = crashed ? false : true;
+                telegraphCollider.enabled = boxCollider.enabled ? false : true;
+
+                // Boss flies up at the start
+                if (flying && !altitudeReached)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 7.5f, transform.position.z), Time.deltaTime * (speed / 2.0f));
+                    if (transform.position.y >= 7.5f)
+                    {
+                        altitudeReached = true;
+                    }
+                }
+
+                // Boss crashes after being hit 3 times
+                if (hitReceived >= 3)
+                {
+                    bossSpawner.bossAnimator.ResetTrigger("Crash");
+                    bossSpawner.bossAnimator.SetTrigger("Crash");
+                    hitReceived = 0;
+                }
+            }
         }
         else
         {
-            directionToPlayer = (new Vector3(playerTransform.position.x, 0f, playerTransform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
-            distanceToPlayer = Vector3.Distance(new Vector3(playerTransform.position.x, 0f, playerTransform.position.z), new Vector3(transform.position.x, 0f, transform.position.z));
-            capsuleCollider.enabled = crashed ? true : false;
-            boxCollider.enabled = crashed ? false : true;
-            telegraphCollider.enabled = boxCollider.enabled ? false : true;
-
-            // Boss flies up at the start
-            if (flying && !altitudeReached)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, 7.5f, transform.position.z), Time.deltaTime * (speed / 2.0f));
-                if (transform.position.y >= 7.5f)
-                {
-                    altitudeReached = true;
-                }
-            }
-
-            // Boss crashes after being hit 3 times
-            if (hitReceived >= 3)
-            {
-                bossSpawner.bossAnimator.ResetTrigger("Crash");
-                bossSpawner.bossAnimator.SetTrigger("Crash");
-                hitReceived = 0;
-            }
-
+            bossSpawner.bossAnimator.SetTrigger("Dead");
+            MoveToTarget(transform.position, transform.position);
         }
     }
 
@@ -156,10 +162,8 @@ public class BirdBoss : MonoBehaviour
         bossSpawner.UpdateHealth(-amount);
 
         if (bossSpawner.health <= 0)
-        {
-            bossSpawner.bossAnimator.SetTrigger("Dead");
-            StopAllCoroutines();
-            MoveToTarget(transform.position, transform.position);
+        {          
+            StopAllCoroutines();           
             dead = true;
             Time.timeScale = 1;
             GameManager.global.SoundManager.PlaySound(GameManager.global.BirdBossDeadSound);

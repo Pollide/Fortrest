@@ -137,6 +137,7 @@ public class GameManager : MonoBehaviour
     public AudioClip BirdBossDeadSound;
 
     public AudioClip ChestOpenSound;
+    public AudioClip RainSound;
 
     [Header("Cutscene")]
     public AudioClip BossRoarSound;
