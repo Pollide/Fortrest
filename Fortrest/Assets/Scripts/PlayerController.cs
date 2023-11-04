@@ -1220,7 +1220,7 @@ public class PlayerController : MonoBehaviour
         public int bridgeTypeInt = 0;
         public int upgradeTypeInt = 0;
         public BuildType buildType = BuildType.None;
-        public bool previousOpen;
+        public bool previousOpen; //dont have this on by default
     }
     [HideInInspector]
     public ResourceData previousResourceData = new ResourceData();
@@ -1230,7 +1230,7 @@ public class PlayerController : MonoBehaviour
         if (ResourceHolderOpened != open)
         {
             ResourceHolderOpened = open;
-            Debug.Log(open);
+            // Debug.Log(open);
 
             GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open);
         }

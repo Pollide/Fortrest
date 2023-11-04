@@ -161,7 +161,7 @@ public class Building : MonoBehaviour
 
                     if (buildingObject == BuildingType.House)
                     {
-                        turretOnFire.transform.localScale = new Vector3(6, 6, 6);
+                        turretOnFire.transform.localScale = new Vector3(4, 4, 4);
                     }
                 }
                 else if (turretOnFire)
