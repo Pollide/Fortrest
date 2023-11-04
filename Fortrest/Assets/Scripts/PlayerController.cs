@@ -1220,7 +1220,7 @@ public class PlayerController : MonoBehaviour
         public int bridgeTypeInt = 0;
         public int upgradeTypeInt = 0;
         public BuildType buildType = BuildType.None;
-        public bool previousOpen = true;
+        public bool previousOpen;
     }
     [HideInInspector]
     public ResourceData previousResourceData = new ResourceData();
@@ -1230,8 +1230,9 @@ public class PlayerController : MonoBehaviour
         if (ResourceHolderOpened != open)
         {
             ResourceHolderOpened = open;
-            // Debug.Log(open);
-            GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
+            Debug.Log(open);
+
+            GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open);
         }
 
         // Debug.Log(resourceData.bridgeTypeInt + " == 0 && " + resourceData.upgradeTypeInt + " == 0 && " + resourceData.buildType + " == " + BuildType.None);
