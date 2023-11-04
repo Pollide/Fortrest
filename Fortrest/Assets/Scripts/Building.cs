@@ -36,8 +36,6 @@ public class Building : MonoBehaviour
     public float health;
     public float maxHealth = 4;
     public int resourceAmount = 5;
-    public int constructionCostWood = 5;
-    public int constructionCostStone = 5;
 
     public float ReturnRepair()
     {
@@ -163,7 +161,7 @@ public class Building : MonoBehaviour
 
                     if (buildingObject == BuildingType.House)
                     {
-                        turretOnFire.transform.localScale = new Vector3(6, 6, 6);
+                        turretOnFire.transform.localScale = new Vector3(4, 4, 4);
                     }
                 }
                 else if (turretOnFire)

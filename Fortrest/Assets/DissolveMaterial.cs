@@ -18,7 +18,10 @@ public class DissolveMaterial : MonoBehaviour
             for (int j = 0; j < skinnedMeshRendererList[i].materials.Length; j++)
             {
                 if (skinnedMeshRendererList[i].materials[j].HasProperty("_DissolveAmount"))
+                {
+                    skinnedMeshRendererList[i].gameObject.layer = 0;
                     skinnedMeshRendererList[i].materials[j] = new Material(skinnedMeshRendererList[i].materials[j]);
+                }
                 else
                 {
                     skinnedMeshRendererList.RemoveAt(i);

@@ -100,7 +100,7 @@ public class Weather : MonoBehaviour
                         break;
                 }
                 stepComplete = true;
-                GameManager.global.SoundManager.PlaySound(GameManager.global.RainSound);
+                GameManager.global.SoundManager.PlaySound(GameManager.global.RainSound, 1, false, isLooped: true);
             }
             else if (timer > weatherDuration && weatherTriggered)
             {
