@@ -984,6 +984,13 @@ public class PlayerController : MonoBehaviour
             playerCC.enabled = true;
             characterAnimator.SetBool("Moving", false);
         }
+
+        if (LevelManager.global.activeBossSpawner)
+        {
+            LevelManager.global.activeBossSpawner.BossEncountered(false);
+            LevelManager.global.activeBossSpawner = null;
+        }
+
         interactCTRL = false;
         canTeleport = false;
         if (!Boar.global.canInteractWithBoar && !PlayerModeHandler.global.canInteractWithHouse && playerRespawned && !bridgeInteract)
@@ -1223,7 +1230,7 @@ public class PlayerController : MonoBehaviour
         if (ResourceHolderOpened != open)
         {
             ResourceHolderOpened = open;
-
+            // Debug.Log(open);
             GameManager.PlayAnimator(ResourceHolderAnimator, "Resource Holder Appear", open, false);
         }
 
@@ -1267,15 +1274,15 @@ public class PlayerController : MonoBehaviour
         if (resourceData.buildType == BuildType.Turret)
         {
             resourceInfoText.text = "Ballista";
-            woodCostList[0].ResourceCost = -20;
-            stoneCostList[0].ResourceCost = -20;
+            woodCostList[0].ResourceCost = -15;
+            stoneCostList[0].ResourceCost = -15;
         }
 
         if (resourceData.buildType == BuildType.Cannon)
         {
             resourceInfoText.text = "Cannon";
             woodCostList[1].ResourceCost = -10;
-            stoneCostList[0].ResourceCost = -30;
+            stoneCostList[0].ResourceCost = -20;
         }
 
         if (resourceData.buildType == BuildType.Slow)
@@ -1331,8 +1338,8 @@ public class PlayerController : MonoBehaviour
                     resourceInfoText.text = "Upgrade";
 
                     int tier = defence.CurrentTier == 0 ? 1 : 3;
-                    woodCostList[tier].ResourceCost = -5;
-                    stoneCostList[tier].ResourceCost = -5;
+                    woodCostList[tier].ResourceCost = -3;
+                    stoneCostList[tier].ResourceCost = -3;
                 }
                 else
                 {
@@ -1401,26 +1408,26 @@ public class PlayerController : MonoBehaviour
 
         if (resourceData.bridgeTypeInt == 1) //marsh
         {
-            woodCostList[0].ResourceCost = -30;
-            stoneCostList[0].ResourceCost = -30;
+            woodCostList[0].ResourceCost = -20;
+            stoneCostList[0].ResourceCost = -20;
         }
 
         if (resourceData.bridgeTypeInt == 2) //tussocks
         {
-            woodCostList[1].ResourceCost = -25;
-            stoneCostList[0].ResourceCost = -30;
+            woodCostList[1].ResourceCost = -20;
+            stoneCostList[0].ResourceCost = -20;
         }
 
         if (resourceData.bridgeTypeInt == 3) //taiga
         {
-            woodCostList[1].ResourceCost = -25;
-            stoneCostList[1].ResourceCost = -25;
+            woodCostList[1].ResourceCost = -20;
+            stoneCostList[1].ResourceCost = -20;
         }
 
         if (resourceData.bridgeTypeInt == 4) //coast
         {
-            woodCostList[0].ResourceCost = -15;
-            stoneCostList[0].ResourceCost = -15;
+            woodCostList[0].ResourceCost = -10;
+            stoneCostList[0].ResourceCost = -10;
 
             woodCostList[1].ResourceCost = -10;
             stoneCostList[1].ResourceCost = -10;

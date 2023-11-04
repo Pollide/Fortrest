@@ -36,8 +36,6 @@ public class Building : MonoBehaviour
     public float health;
     public float maxHealth = 4;
     public int resourceAmount = 5;
-    public int constructionCostWood = 5;
-    public int constructionCostStone = 5;
 
     public float ReturnRepair()
     {

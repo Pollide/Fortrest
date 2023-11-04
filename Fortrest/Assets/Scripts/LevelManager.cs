@@ -143,7 +143,7 @@ public class LevelManager : MonoBehaviour
 
     public int campsCount;
     public int enemiesCount;
-    public int ogreDayCount = 3;
+    public int ogreDayCount = 4;
     private int ogreSpawnCounterMax = 1;
     private int ogresSpawnCounter = 0;
     public bool spawnEnemies;
@@ -835,16 +835,12 @@ public class LevelManager : MonoBehaviour
                 {
                     //enemiesCount += 5 * (day + 1) + (campsCount * 2);
 
-                    /*
-                     
-                    BELOW IS NEW SYSTEM
-                    V calculated a new model which has upper limits to not break the game and is less punishing in early days and more punishing in later days
-                    He has tested this model in his latestplaythrough and works well
+                    //updated model where its just one more enemy per day
+                    enemiesCount += (day > 10 ? 2 : 1)  *(day + 1) + (campsCount * 2);
 
-                    */
-
-                    enemiesCount += (int)(-1 * Mathf.Pow(1.05f, (-day + 79.1f)) + 51) + (campsCount * 2);
-
+                    int cap = 50;
+                    if (enemiesCount > cap)
+                        enemiesCount = cap;
                 }
                 countSet = true;
             }
@@ -903,7 +899,7 @@ public class LevelManager : MonoBehaviour
                 }
 
                 // Delay till the next enemy spawns
-                enemyThreshold = Random.Range(5.0f, 7.5f) - (day * 1.0f);
+                enemyThreshold = Random.Range(9.0f, 15f) - (day * 0.5f);
 
                 // Minimum delay
                 if (enemyThreshold < 1.0f)

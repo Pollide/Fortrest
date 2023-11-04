@@ -187,7 +187,7 @@ public class EnemyController : MonoBehaviour
             {
                 distanceToTarget = Vector3.Distance(bestTarget.transform.position, transform.position);
                 directionToTarget = (new Vector3(bestTarget.transform.position.x, 0f, bestTarget.transform.position.z) - new Vector3(transform.position.x, 0f, transform.position.z)).normalized;
-            }           
+            }
 
             if (lavaAttacks)
             {
@@ -751,7 +751,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 2f;
             agent.stoppingDistance = 2.0f;
             offset = 0.6f;
-            enemyDamage = 3.0f;
+            enemyDamage = 1.5f;
             knockBackScript.strength = 50.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.snake)
@@ -783,11 +783,11 @@ public class EnemyController : MonoBehaviour
             agent.speed = 7.0f;
             agent.acceleration = 40.0f;
             agent.angularSpeed = 180.0f;
-            maxHealth = 8.0f;
+            maxHealth = 7.0f;
             attackTimerMax = 1.75f;
             agent.stoppingDistance = 2.5f;
             offset = 0.4f;
-            enemyDamage = 5.5f;
+            enemyDamage = 5f;
             knockBackScript.strength = 20.0f;
         }
         else if (currentEnemyType == ENEMYTYPE.lava)
@@ -811,7 +811,7 @@ public class EnemyController : MonoBehaviour
             attackTimerMax = 8.0f;
             agent.stoppingDistance = 4.5f;
             offset = 0.2f;
-            enemyDamage = 12.0f;
+            enemyDamage = 10.0f;
             knockBackScript.strength = 0.0f;
         }
         health = maxHealth;
