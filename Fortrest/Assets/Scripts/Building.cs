@@ -70,6 +70,10 @@ public class Building : MonoBehaviour
     public GameObject DropPrefab;
     GameObject turretOnFire;
     // Start is called before the first frame update
+    private void Awake()
+    {
+        health = ReturnMaxHealth(); //in awake to not override save and load
+    }
     void Start()
     {
         List<HealthBar> healthBarList = GameManager.FindComponent<HealthBar>(transform);
@@ -84,7 +88,7 @@ public class Building : MonoBehaviour
                 GetComponent<BoxCollider>().enabled = false;
             return;
         }
-        health = ReturnMaxHealth();
+
         startingRotation = transform.rotation;
         //Add a rigidbody to the building so the mouse raycasthit will return the top parent.
 
