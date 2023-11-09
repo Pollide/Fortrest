@@ -1271,6 +1271,7 @@ public class PlayerController : MonoBehaviour
         {
             stoneCostList.Add(new LevelManager.TierData());
         }
+        //  Debug.Log(resourceData.buildType + " -> " + resourceData.upgradeTypeInt + " -> " + resourceData);
 
         if (resourceData.buildType == BuildType.Turret)
         {
@@ -1370,7 +1371,6 @@ public class PlayerController : MonoBehaviour
                             stoneCostList[i].ResourceCost /= 5;
                         }
                         changeTier.healthTier = defence.GetComponent<Building>().ReturnRepair();
-                        resourceData.upgradeTypeInt = 2;
                         maxTier.healthTier = defence.GetComponent<Building>().ReturnMaxHealth(); //as repair just wants normal max, not potential max
                         upgradeBool = true;
                     }
@@ -1385,7 +1385,7 @@ public class PlayerController : MonoBehaviour
                     damageInfoData.InfoRefresh(defence.ReturnDamage(), changeTier.damageTier, defence.damage + maxTier.damageTier);
                 }
 
-                if (resourceData.upgradeTypeInt == 2 || !upgradeBool)
+                if (resourceData.upgradeTypeInt == 2 || resourceData.upgradeTypeInt == -1 || !upgradeBool)
                 {
                     healthInfoData.InfoRefresh(defence.ReturnHealth(), changeTier.healthTier, maxTier.healthTier);
                 }
