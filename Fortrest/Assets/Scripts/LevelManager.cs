@@ -392,7 +392,7 @@ public class LevelManager : MonoBehaviour
 
     public int ReturnIndex(Transform requestedTransform)
     {
-        return BuildingList.IndexOf(requestedTransform);
+        return requestedTransform.GetComponent<Defence>() ? requestedTransform.GetComponent<Defence>().turretID : BuildingList.IndexOf(requestedTransform);
     }
 
     public static void ProcessBossList(System.Action<BossSpawner> processAction)
@@ -836,7 +836,7 @@ public class LevelManager : MonoBehaviour
                     //enemiesCount += 5 * (day + 1) + (campsCount * 2);
 
                     //updated model where its just one more enemy per day
-                    enemiesCount += (day > 10 ? 2 : 1)  *(day + 1) + (campsCount * 2);
+                    enemiesCount += (day > 10 ? 2 : 1) * (day + 1) + (campsCount * 2);
 
                     int cap = 50;
                     if (enemiesCount > cap)
