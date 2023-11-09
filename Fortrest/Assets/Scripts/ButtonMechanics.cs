@@ -243,7 +243,7 @@ public class ButtonMechanics : MonoBehaviour, IPointerUpHandler, IPointerDownHan
                 {
                     PlayerModeHandler.global.ReturnVFXBuilding(PlayerModeHandler.global.SelectedTurret.transform);
                     PlayerModeHandler.global.SelectedTurret.TakeDamage(-PlayerModeHandler.global.SelectedTurret.ReturnRepair()); //minus will actually increase its health
-                    PlayerController.global.UpdateResourceHolder(PlayerController.global.previousResourceData, PlayerController.global.previousResourceData.previousOpen);
+                                                                                                                                 // PlayerController.global.UpdateResourceHolder(PlayerController.global.previousResourceData, PlayerController.global.previousResourceData.previousOpen);
                 }
 
                 if (UpgradeInt == -2)

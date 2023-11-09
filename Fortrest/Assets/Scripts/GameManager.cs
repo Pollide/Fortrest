@@ -814,6 +814,39 @@ public class GameManager : MonoBehaviour
     public void DataBuildingVoid(Transform value, bool load)
     {
         Building building = value.GetComponent<Building>();
+
+        Defence defence = building.GetComponent<Defence>();
+
+        if (defence)
+        {
+            if (!load)
+            {
+                defence.turretID = (int)Pref("Turret Size", Pref("Turret Size", 0, true) + 1, false);
+
+                for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
+                {
+                    if (PlayerModeHandler.global.turretPrefabs[i].GetComponent<Building>().buildingObject == defence.GetComponent<Building>().buildingObject)
+                    {
+                        //Debug.Log(turretSize + " " + i + " " + PlayerModeHandler.global.turretPrefabs[i].name);
+                        Pref("Turret Type" + defence.turretID, i, false);
+                        break;
+                    }
+                }
+            }
+
+            DataPositionVoid("Turret Position" + defence.turretID, building.transform, load);
+            DataEulerVoid("Turret Euler" + defence.turretID, building.transform, load);
+
+            defence.CurrentTier = (int)Pref("Turret Tier" + defence.turretID, defence.CurrentTier, load);
+         //   defence.name = Pref("Turret Type" + defence.turretID, 0, true) + " -> " + defence.turretID.ToString();
+            defence.changeTier.damageTier = (int)Pref("Tier Damage" + defence.turretID, defence.changeTier.damageTier, load);
+            defence.changeTier.healthTier = (int)Pref("Tier Health" + defence.turretID, defence.changeTier.healthTier, load);
+            defence.changeTier.rangeTier = (int)Pref("Tier Range" + defence.turretID, defence.changeTier.rangeTier, load);
+            defence.changeTier.rateTier = (int)Pref("Tier Rate" + defence.turretID, defence.changeTier.rateTier, load);
+
+
+        }
+
         bool house = building.buildingObject == Building.BuildingType.HouseNode;
         if (house)
         {
@@ -840,38 +873,6 @@ public class GameManager : MonoBehaviour
         if (load)
         {
             building.TakeDamage(0); //refreshes the bar
-        }
-
-        Defence defence = building.GetComponent<Defence>();
-
-        if (defence)
-        {
-            if (!load)
-            {
-                defence.turretID = (int)Pref("Turret Size", Pref("Turret Size", 0, true) + 1, false);
-
-                for (int i = 0; i < PlayerModeHandler.global.turretPrefabs.Length; i++)
-                {
-                    if (PlayerModeHandler.global.turretPrefabs[i].GetComponent<Building>().buildingObject == defence.GetComponent<Building>().buildingObject)
-                    {
-                        //Debug.Log(turretSize + " " + i + " " + PlayerModeHandler.global.turretPrefabs[i].name);
-                        Pref("Turret Type" + defence.turretID, i, false);
-                        break;
-                    }
-                }
-            }
-
-            DataPositionVoid("Turret Position" + defence.turretID, building.transform, load);
-            DataEulerVoid("Turret Euler" + defence.turretID, building.transform, load);
-
-            defence.CurrentTier = (int)Pref("Turret Tier" + defence.turretID, defence.CurrentTier, load);
-            defence.name = Pref("Turret Type" + defence.turretID, 0, true) + " -> " + defence.turretID.ToString();
-            defence.changeTier.damageTier = (int)Pref("Tier Damage" + defence.turretID, defence.changeTier.damageTier, load);
-            defence.changeTier.healthTier = (int)Pref("Tier Health" + defence.turretID, defence.changeTier.healthTier, load);
-            defence.changeTier.rangeTier = (int)Pref("Tier Range" + defence.turretID, defence.changeTier.rangeTier, load);
-            defence.changeTier.rateTier = (int)Pref("Tier Rate" + defence.turretID, defence.changeTier.rateTier, load);
-
-
         }
     }
 
